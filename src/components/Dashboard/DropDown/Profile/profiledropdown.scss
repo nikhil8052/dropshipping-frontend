@@ -1,0 +1,45 @@
+@import '@constants/colors.scss';
+@import '@constants/typography.scss';
+@import '@constants/bootstrap-overrides.scss';
+
+
+.custom-dropdown-toggle{
+    color: $dark-color;
+}
+.profile-dropdown{
+    button{
+        cursor: pointer;
+        font-size: 20px;
+        color: $text-color !important;
+        position: relative;
+        font-family: $font-secondary;
+        font-weight: 500;
+        img{
+            width: 45px;
+            height: 45px;
+            object-fit: cover;
+            border-radius: 50%;
+            border: 2px solid $info-color;
+            margin-right: 10px;
+        }
+        span{
+            margin-right: 10px;
+        }
+        svg{
+            transition: all 0.2s ease-in-out;
+            font-weight: 400;
+        }
+        .angle-up{
+            transform: rotate(180deg);
+        }
+    }
+    #profile-dropdown-menu{
+        width: 100%;
+        box-shadow: 2px 1px 3px rgba(0, 0, 2, 0.057);
+        .dropdown-item{
+            font-family: $font-primary;
+            padding: 10px 15px;
+            color: $text-color;
+        }
+    }
+}

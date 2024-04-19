@@ -1,0 +1,95 @@
+@import './constants/colors.scss';
+@import './constants/typography.scss';
+
+:root {
+    font-family: $font-primary;
+    line-height: $line-height-medium;
+
+    color-scheme: light dark;
+    color: $light-color;
+    background-color: $dark-color;
+
+    font-synthesis: none;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    -webkit-text-size-adjust: 100%;
+}
+
+.wrapper {
+    position: relative;
+    top: 0;
+    height: 100vh;
+}
+
+a {
+    font-weight: 500;
+    color: $link-color;
+    text-decoration: none;
+}
+a:hover {
+    color: $link-hover-color;
+}
+
+body {
+    margin: 0;
+    background-color: $light-color;
+}
+/* width */
+::-webkit-scrollbar {
+    width: 7px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+    background-color: $body-bg-color;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+    background: $dark-color;
+    border-radius: 10px;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+    background: $dark-color;
+}
+p,
+ul {
+    margin: 0px;
+    padding: 0px;
+}
+button {
+    border-radius: 8px;
+    border: 1px solid $btn-info-bg-color;
+    padding: 0.6em 1.2em;
+    font-size: $font-size-medium;
+    font-weight: $font-weight-medium;
+    font-family: $font-primary;
+    background-color: $btn-primary-bg-color;
+    color: $btn-primary-color;
+    cursor: pointer;
+    transition: border-color 0.25s;
+}
+button:hover {
+    border-color: $btn-secondary-bg-color;
+}
+button:focus,
+button:focus-visible {
+    outline: 4px auto -webkit-focus-ring-color;
+}
+
+@media (prefers-color-scheme: light) {
+    :root {
+        color: $dark-color;
+        background-color: $light-color;
+    }
+    a:hover {
+        color: $link-hover-color;
+    }
+}
+
+.ag-center-cols-container {
+    min-width: 100%;
+}
