@@ -14,18 +14,14 @@ const SidebarItem = ({ item, selectedItemId, handleSideBarClick }) => {
         }
     };
 
-    const changeRoute = () =>{
+    const changeRoute = () => {
         handleSideBarClick(item);
-        checkScreenSize()
-    }
+        checkScreenSize();
+    };
 
     return (
-        <Link
-            to={item.linkTo}
-            className={item.id === selectedItemId ? 'active-item' : ''}
-            onClick={changeRoute}
-        >
-            <img src={item.id === selectedItemId ? item.iconDark : item.iconLight} className="side-nav-icon" alt="nav-icon" />
+        <Link to={item.linkTo} className={item.id === selectedItemId ? 'active-item' : ''} onClick={changeRoute}>
+            <img src={item.iconLight} className="side-nav-icon" alt="nav-icon" />
             <span>{item.name}</span>
         </Link>
     );

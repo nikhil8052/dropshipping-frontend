@@ -13,12 +13,19 @@ import ConfirmationBox from '../../ConfirmationBox/ConfirmationBox';
 import { logoutUser } from '@redux/auth/auth_slice';
 import { changeLink } from '@redux/sidebar/sidebarSlice';
 // import all static icons
-import sideBarItems from './sidebarData';
+import { adminSidebarItems, coachSidebarItems, studentSidebarItems, sideBarItems } from './sidebarData';
 
 const Sidebar = () => {
     const dispatch = useDispatch();
     const collapsed = useSelector((state) => state.theme.collapsed);
     const autoCollapsed = useSelector((state) => state.theme.autoCollapsed);
+    const { isLoggedIn, userInfo } = useSelector((state) => state?.auth);
+
+    // Later we change this to actual role
+    const email = userInfo?.email.toLowerCase();
+    const role = email?.includes('admin') ? 'admin' : email?.includes('coach') ? 'coach' : 'student';
+    const items = role === 'admin' ? adminSidebarItems : role === 'coach' ? coachSidebarItems : studentSidebarItems;
+
     const [modalShow, setModalShow] = useState(false);
     const { activeSidebarItem } = useSelector((state) => state.activeSidebarItem);
 
@@ -38,7 +45,7 @@ const Sidebar = () => {
             return null;
         };
 
-        const activeItem = findActiveItem(sideBarItems);
+        const activeItem = findActiveItem(items);
         if (activeItem) {
             dispatch(changeLink(activeItem.id));
         }
@@ -47,13 +54,13 @@ const Sidebar = () => {
     const handleSideBarClick = (item) => {
         console.log(item);
         dispatch(changeLink(item.id)); // Dispatch the selected item to update the activeLink
-    
-        if (item.id === 7) {
+
+        if (item.name === 'Logout') {
             handleLogoutClick();
         } else if (item.linkTo) {
             navigate(item.linkTo);
         }
-    };    
+    };
 
     useEffect(() => {
         selectActiveItem();
@@ -63,6 +70,12 @@ const Sidebar = () => {
     const handleLogoutClick = () => {
         setModalShow(!modalShow);
     };
+
+    useEffect(() => {
+        if (isLoggedIn) {
+            console.log(userInfo, 'userInfo');
+        }
+    }, [isLoggedIn]);
 
     return (
         <React.Fragment>
@@ -95,7 +108,7 @@ const Sidebar = () => {
                     </div>
                     <div className="side-nav-wrapper">
                         <Nav defaultActiveKey="/" className="sidebar-nav-items">
-                            {sideBarItems.map((item) =>
+                            {items.map((item) =>
                                 item.child ? (
                                     <SidebarItemCollapse
                                         key={item.id}
