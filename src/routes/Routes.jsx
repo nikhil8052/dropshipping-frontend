@@ -1,6 +1,8 @@
 import { lazy } from 'react';
 import { Routes, Route } from 'react-router-dom';
-import DashboardLayout from '@layout/DashboardLayout/DashboardLayout';
+import CoachLayout from '@layout/CoachLayout/CoachLayout';
+import StudentLayout from '@layout/StudentLayout/StudentLayout';
+import AdminLayout from '@layout/AdminLayout/AdminLayout';
 import PublicLayout from '@layout/PublicLayout/PublicLayout';
 
 const Home = lazy(() => import('@pages/Home/Home'));
@@ -18,7 +20,19 @@ const MainRoutes = () => {
                 <Route path="signup" exact element={<SignUp />} />
             </Route>
             {/* protected layout */}
-            <Route path="/" element={<DashboardLayout />}>
+            <Route path="/admin" element={<AdminLayout />}>
+                <Route index exact element={<Home />} />
+                <Route path="products" exact element={<Listing />} />
+                <Route path="product/:id" exact element={<ListingDetails />} />
+                <Route path="groups/:id" exact element={<Listing />} />
+            </Route>
+            <Route path="/coach" element={<CoachLayout />}>
+                <Route index exact element={<Home />} />
+                <Route path="products" exact element={<Listing />} />
+                <Route path="product/:id" exact element={<ListingDetails />} />
+                <Route path="groups/:id" exact element={<Listing />} />
+            </Route>
+            <Route path="/student" element={<StudentLayout />}>
                 <Route index exact element={<Home />} />
                 <Route path="products" exact element={<Listing />} />
                 <Route path="product/:id" exact element={<ListingDetails />} />

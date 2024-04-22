@@ -7,6 +7,7 @@ import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { ErrorBoundary } from 'react-error-boundary';
 import { ErrorBoundaryComponent } from './components/ErrorBoundary';
+import './styles/index.scss';
 
 function App() {
     return (

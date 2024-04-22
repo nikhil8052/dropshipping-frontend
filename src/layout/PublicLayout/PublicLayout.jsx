@@ -1,18 +1,25 @@
-import React, { Suspense } from 'react';
+import React, { Suspense, useEffect } from 'react';
 import { Outlet, useNavigate } from 'react-router-dom';
 import Loading from '../../components/Loading/Loading';
 import { useSelector } from 'react-redux';
 
 const PublicLayout = () => {
-    const { isLoggedIn } = useSelector((state) => state?.auth);
+    const { isLoggedIn, userInfo } = useSelector((state) => state?.auth);
+    const email = userInfo?.email.toLowerCase();
+    const role = email?.includes('admin') ? 'admin' : email?.includes('coach') ? 'coach' : 'student';
 
     const navigate = useNavigate();
 
-    if (isLoggedIn) navigate('/');
+    useEffect(() => {
+        if (isLoggedIn) {
+            if (role === 'admin') navigate('/admin');
+            else if (role === 'coach') navigate('/coach');
+            else if (role === 'student') navigate('/student');
+        }
+    }, [navigate, isLoggedIn, role]);
 
     return (
         <React.Fragment>
-            <Header></Header>
             <Suspense fallback={<Loading centered />}>
                 <Outlet />
             </Suspense>

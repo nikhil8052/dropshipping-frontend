@@ -7,7 +7,7 @@ import { collapseSidebar } from '@redux/theme/theme_slice';
 
 const SidebarItemCollapse = ({ item, selectedItemId, handleSideBarClick }) => {
     const dispatch = useDispatch();
-   
+
     const [show, setShow] = useState(false);
 
     const toggleDropdown = () => {
@@ -26,13 +26,13 @@ const SidebarItemCollapse = ({ item, selectedItemId, handleSideBarClick }) => {
         }
     };
 
-    const changeRoute = () =>{
+    const changeRoute = () => {
         handleSideBarClick(item);
-        checkScreenSize()
-    }
+        checkScreenSize();
+    };
 
     useEffect(() => {
-        resetDropdown()
+        resetDropdown();
         dropIfChildSelected(item.child, selectedItemId);
     }, [selectedItemId]);
 
@@ -45,11 +45,7 @@ const SidebarItemCollapse = ({ item, selectedItemId, handleSideBarClick }) => {
         <div className="nested-nav-container">
             <button type="button" onClick={toggleDropdown} className="nested-item-toggler">
                 <span className="nested-toggler-left">
-                    <img
-                        src={item.id === selectedItemId ? item.iconDark : item.iconLight}
-                        className="side-nav-icon"
-                        alt="nav-icon"
-                    />
+                    <img src={item.iconLight} className="side-nav-icon" alt="nav-icon" />
                     {item.name}
                 </span>
                 <FontAwesomeIcon icon={faAngleDown} className={`side-nav-ddn ${show ? 'angle-up' : ''}`} />
@@ -62,11 +58,7 @@ const SidebarItemCollapse = ({ item, selectedItemId, handleSideBarClick }) => {
                         to={childItem.linkTo}
                         onClick={changeRoute}
                     >
-                        <img
-                            src={childItem.id === selectedItemId ? childItem.iconDark : childItem.iconLight}
-                            className="side-nav-icon"
-                            alt="nav-icon"
-                        />
+                        <img src={childItem.iconLight} className="side-nav-icon" alt="nav-icon" />
                         {childItem.name}
                     </Link>
                 ))}
