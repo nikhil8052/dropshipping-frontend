@@ -6,11 +6,7 @@
     height: 100vh;
     flex-direction: column;
     justify-content: center;
-    //handle responsive
-    // @include respond-to($large-screen) {
-    //     height: auto;
-    //     padding: 10px 5px;
-    // }
+ 
     
 }
 .auth-logo{
@@ -24,7 +20,7 @@
         width: 150px;
         height: 40px;
         margin-bottom: 20px;
-            
+        
     }
 }
 .auth-title{
@@ -40,12 +36,14 @@
 
 .auth-form-title{
     font-family: $font-primary;
-    font-size: 22px;
+    font-size: 14px;
+    line-height: 26px;
     margin-top: 24px;
     color: $secondary-color;
     @include respond-to($medium-screen) {
-        font-size: 18px;
+        font-size: 12px;
     }
+   
 }
 
 // .auth-bg{
@@ -108,6 +106,12 @@
     }
     @include respond-to($medium-screen) {
         font-size: 14px;
+
+    }
+    @include respond-to($small-screen) {
+        font-size: 14px;
+    width: 270px;
+
     }
 
 }
@@ -136,10 +140,11 @@
     background-color: #000907;
     @include respond-to($medium-screen){
 display: block;
+
     }
 }
 .auth-left-footer{
-padding-bottom: 150px;
+padding-bottom: 80px;
 }
 .auth-social-logo{
     width: 34px;

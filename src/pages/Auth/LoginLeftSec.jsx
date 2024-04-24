@@ -9,8 +9,8 @@ import './auth.scss';
 const LoginLeftSec = () => {
     return (
         <Col xs={12} sm={12} md={12} lg={6}>
-            <div className="auth-left-header-mob">
-                <img className="auth-logo" src={logoImg} alt="auth-logo" />
+            <div className="auth-left-header-mob ">
+                <img className="auth-logo " src={logoImg} alt="auth-logo" />
             </div>
             <div className="auth-left-bg-column">
                 <img className="auth-logo" src={logoImg} alt="auth-logo" />

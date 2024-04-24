@@ -6,21 +6,18 @@ import Input from '@components/Input/Input';
 import * as Yup from 'yup';
 import { Form as FormikForm, Formik } from 'formik';
 //import { loginUser } from '@redux/auth/auth_actions'; use this function for original login call
-import { Helmet } from 'react-helmet';
 import { loginWithoutAPI } from '@redux/auth/auth_slice';
 import './auth.scss';
 import LoginLeftSec from './LoginLeftSec';
-const ForgetPassword = () => {
+const VerificationCode = () => {
     const dispatch = useDispatch();
     const { loading } = useSelector((state) => state?.auth);
     const inititialValues = {
         email: ''
-        // password: ''
     };
 
     const validationSchema = Yup.object().shape({
         email: Yup.string().email('Please enter a valid email').required('Email is required')
-        // password: Yup.string().required('Password is required')
     });
 
     const handleSubmit = async (values, { setSubmitting }) => {
@@ -34,19 +31,15 @@ const ForgetPassword = () => {
 
     return (
         <React.Fragment>
-            <Helmet>
-                <title>Login | Template</title>
-            </Helmet>
             <div className="auth-main-wrapper">
                 <Row className=" g-0">
                     <LoginLeftSec />
                     <Col xs={12} sm={12} md={12} lg={6}>
                         <div className="auth-form-wrapper ">
                             <div className="auth-form-data ">
-                                {/* <img className="auth-logo" src={logoImg} alt="auth-logo" /> */}
-                                <h1 className="auth-title ">Forgot Password</h1>
+                                <h1 className="auth-title ">Enter Your Verification Code</h1>
                                 <h3 className="auth-form-title">
-                                    Enter the email address associated with your Dropship Academy X.
+                                    Please enter verification code which we sent you on your email for confirmation.
                                 </h3>
                                 <Formik
                                     initialValues={inititialValues}
@@ -56,20 +49,16 @@ const ForgetPassword = () => {
                                     {({ isSubmitting }) => (
                                         <FormikForm>
                                             <Input
-                                                name="email"
-                                                placeholder="E.g kathrine1122@gmail.com"
-                                                label="Email Address"
+                                                name="Verification Code"
+                                                placeholder="E.g 225465822"
+                                                label="Verification Code"
                                                 type="text"
                                             />
-
-                                            {/* <div className=" d-flex flex-column "> */}
-                                            {/* <Link className="auth-link ms-auto" to="/forgot-password">
-                                                    Forgot password?
-                                                </Link> */}
-                                            <Button className="auth-login-button" type="submit" disabled={loading}>
-                                                {isSubmitting ? <Spinner animation="border" size="sm" /> : 'Send Code'}
-                                            </Button>
-                                            {/* </div> */}
+                                            <Link className="auth-link ms-auto" to="/reset-password">
+                                                <Button className="auth-login-button" type="submit" disabled={loading}>
+                                                    {isSubmitting ? <Spinner animation="border" size="sm" /> : 'Veirfy'}
+                                                </Button>
+                                            </Link>
                                         </FormikForm>
                                     )}
                                 </Formik>
@@ -82,4 +71,4 @@ const ForgetPassword = () => {
     );
 };
 
-export default ForgetPassword;
+export default VerificationCode;
