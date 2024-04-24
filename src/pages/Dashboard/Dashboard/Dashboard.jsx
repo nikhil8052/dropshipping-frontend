@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { Row, Col } from 'react-bootstrap';
 import Card from '@components/Card/Card';
 import { StatCard, BarChart, PieChart } from '@components/Home';
@@ -64,10 +64,6 @@ const Dashboard = () => {
             }
         ]
     };
-
-    useEffect(() => {
-        debugger;
-    }, []);
 
     return (
         <React.Fragment>
