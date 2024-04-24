@@ -11,17 +11,15 @@ import { Helmet } from 'react-helmet';
 import { loginWithoutAPI } from '@redux/auth/auth_slice';
 import './auth.scss';
 import LoginLeftSec from './LoginLeftSec';
-const Login = () => {
+const ResetPassword = () => {
     const dispatch = useDispatch();
     const { loading } = useSelector((state) => state?.auth);
     const [showPassword, setShowPassword] = useState(false); // State for password visibility
     const inititialValues = {
-        email: '',
         password: ''
     };
 
     const validationSchema = Yup.object().shape({
-        email: Yup.string().email('Please enter a valid email').required('Email is required'),
         password: Yup.string().required('Password is required')
     });
 
@@ -57,9 +55,11 @@ const Login = () => {
                     <Col xs={12} sm={12} md={12} lg={6}>
                         <div className="auth-form-wrapper ">
                             <div className="auth-form-data ">
-                                {/* <img className="auth-logo" src={logoImg} alt="auth-logo" /> */}
-                                <h1 className="auth-title ">Login</h1>
-                                <h3 className="auth-form-title">Please enter your account details.</h3>
+                                <h1 className="auth-title ">Reset Password</h1>
+                                <h3 className="auth-form-title">
+                                    You new password must be different from your previous <br />
+                                    used passwords for your account security.
+                                </h3>
                                 <Formik
                                     initialValues={inititialValues}
                                     validationSchema={validationSchema}
@@ -67,17 +67,25 @@ const Login = () => {
                                 >
                                     {({ isSubmitting }) => (
                                         <FormikForm>
-                                            <Input
-                                                name="email"
-                                                placeholder="E.g kathrine1122@gmail.com"
-                                                label="Email Address"
-                                                type="text"
-                                            />
                                             <div className="input-password-container">
                                                 <Input
-                                                    name="password"
+                                                    name="Newpassword"
+                                                    placeholder="8+  character"
+                                                    label="New Password"
+                                                    type={showPassword ? 'text' : 'password'}
+                                                />
+                                                <img
+                                                    className={`eye-icon-password ${showPassword ? 'visible' : ''}`}
+                                                    src={eyeIcon}
+                                                    alt="eye-logo"
+                                                    onClick={togglePassword}
+                                                />
+                                            </div>
+                                            <div className="input-password-container">
+                                                <Input
+                                                    name="ConfirmPassword"
                                                     placeholder="password"
-                                                    label="Password"
+                                                    label="Confirm Password"
                                                     type={showPassword ? 'text' : 'password'}
                                                 />
                                                 <img
@@ -88,14 +96,9 @@ const Login = () => {
                                                 />
                                             </div>
 
-                                            <div className=" d-flex flex-column ">
-                                                <Link className="auth-link ms-auto" to="/forgot-password">
-                                                    Forgot password
-                                                </Link>
-                                                <Button className="auth-login-button" type="submit" disabled={loading}>
-                                                    {isSubmitting ? <Spinner animation="border" size="sm" /> : 'Login'}
-                                                </Button>
-                                            </div>
+                                            <Button className="auth-login-button" type="submit" disabled={loading}>
+                                                {isSubmitting ? <Spinner animation="border" size="sm" /> : 'Login'}
+                                            </Button>
                                         </FormikForm>
                                     )}
                                 </Formik>
@@ -108,4 +111,4 @@ const Login = () => {
     );
 };
 
-export default Login;
+export default ResetPassword;

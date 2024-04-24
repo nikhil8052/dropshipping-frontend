@@ -16,26 +16,29 @@
         display: block;
         font-family: $font-primary;
         margin-bottom: 2px;
-        font-size: 16px;
+        font-size: 14px;
         text-transform: capitalize;
         //handle responsive
         @include respond-to($small-screen) {
-            font-size: 14px;
+            font-size: 12px;
         }
     }
     // input type text and password default styles. Please feel free to customize as required
     input[type="text"],input[type="password"],textarea,.custom_select__control{
         font-size: 16px;
         font-family: $font-secondary;
-        border-radius: 5px;
+        border-radius: 50px;
         padding: 6px 7px;
-        border: 1px solid $primary-color;
+        border: 1.34px solid $input-border-color;
         background-color: $light-color;
-        color: $info-color;
-        border-color: $info-color;
+        color: $secondary-color;
+        border-color: $input-border-color;
+        width:474px;
+        height: 55px;
         &::placeholder{
             text-transform: capitalize;
             font-size: 14px;
+            color:$input-placeholder-color
         }
         &:focus{
             outline: 1.5px solid $info-color;
