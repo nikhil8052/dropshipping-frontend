@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { Button, Col, Row, Container, Spinner, Card } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
-import eyeIcon from '../../assets/icons/Eye.svg';
 import Input from '@components/Input/Input';
 import * as Yup from 'yup';
 import { Form as FormikForm, Formik } from 'formik';
@@ -11,18 +10,17 @@ import { Helmet } from 'react-helmet';
 import { loginWithoutAPI } from '@redux/auth/auth_slice';
 import './auth.scss';
 import LoginLeftSec from './LoginLeftSec';
-const Login = () => {
+const ForgetPassword = () => {
     const dispatch = useDispatch();
     const { loading } = useSelector((state) => state?.auth);
-    const [showPassword, setShowPassword] = useState(false); // State for password visibility
     const inititialValues = {
-        email: '',
-        password: ''
+        email: ''
+        // password: ''
     };
 
     const validationSchema = Yup.object().shape({
-        email: Yup.string().email('Please enter a valid email').required('Email is required'),
-        password: Yup.string().required('Password is required')
+        email: Yup.string().email('Please enter a valid email').required('Email is required')
+        // password: Yup.string().required('Password is required')
     });
 
     const handleSubmit = async (values, { setSubmitting }) => {
@@ -32,10 +30,6 @@ const Login = () => {
         } catch (error) {
             setSubmitting(false);
         }
-    };
-    const togglePassword = () => {
-        setShowPassword(!showPassword);
-        console.log('i am clicked ');
     };
 
     return (
@@ -50,8 +44,10 @@ const Login = () => {
                         <div className="auth-form-wrapper ">
                             <div className="auth-form-data ">
                                 {/* <img className="auth-logo" src={logoImg} alt="auth-logo" /> */}
-                                <h1 className="auth-title ">Login</h1>
-                                <h3 className="auth-form-title">Please enter your account details.</h3>
+                                <h1 className="auth-title ">Forgot Password</h1>
+                                <h3 className="auth-form-title">
+                                    Enter the email address associated with your Dropship Academy X.
+                                </h3>
                                 <Formik
                                     initialValues={inititialValues}
                                     validationSchema={validationSchema}
@@ -65,39 +61,18 @@ const Login = () => {
                                                 label="Email Address"
                                                 type="text"
                                             />
-                                            <div className="input-password-container">
-                                                <Input
-                                                    name="password"
-                                                    placeholder="password"
-                                                    label="Password"
-                                                    type={showPassword ? 'text' : 'password'}
-                                                />
-                                                <img
-                                                    className={`eye-icon-password ${showPassword ? 'visible' : ''}`}
-                                                    src={eyeIcon}
-                                                    alt="eye-logo"
-                                                    onClick={togglePassword}
-                                                />
-                                            </div>
 
-                                            <div className=" d-flex flex-column ">
-                                                <Link className="auth-link ms-auto" to="/forgot-password">
+                                            {/* <div className=" d-flex flex-column "> */}
+                                            {/* <Link className="auth-link ms-auto" to="/forgot-password">
                                                     Forgot password?
-                                                </Link>
-                                                <Button className="auth-login-button" type="submit" disabled={loading}>
-                                                    {isSubmitting ? <Spinner animation="border" size="sm" /> : 'Login'}
-                                                </Button>
-                                            </div>
+                                                </Link> */}
+                                            <Button className="auth-login-button" type="submit" disabled={loading}>
+                                                {isSubmitting ? <Spinner animation="border" size="sm" /> : 'Send Code'}
+                                            </Button>
+                                            {/* </div> */}
                                         </FormikForm>
                                     )}
                                 </Formik>
-
-                                {/* <p className="auth-bottom-text">
-                                    Don't have an account?
-                                    <Link className="auth-link" to="/signup">
-                                        Register here
-                                    </Link>
-                                </p> */}
                             </div>
                         </div>
                     </Col>
@@ -107,4 +82,4 @@ const Login = () => {
     );
 };
 
-export default Login;
+export default ForgetPassword;
