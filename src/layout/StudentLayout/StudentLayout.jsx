@@ -5,8 +5,7 @@ import { useSelector } from 'react-redux';
 import { useEffect } from 'react';
 const DashboardLayout = () => {
     const { isLoggedIn, userInfo } = useSelector((state) => state?.auth);
-    const email = userInfo?.email.toLowerCase();
-    const role = email?.includes('admin') ? 'admin' : email?.includes('coach') ? 'coach' : 'student';
+    const role = userInfo?.role;
 
     const navigate = useNavigate();
 

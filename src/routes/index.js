@@ -1,14 +1,12 @@
-import StudentRoutes from './student';
-import CoachRoutes from './coach';
 import PublicRoutes from './public';
-import AdminRoutes from './admin';
+import { adminRoutes, coachesRoutes, studentRoutes } from './protectedRoutes';
 
-export const routes = (role = 'PUBLIC') => {
-    return role === 'STUDENT'
-        ? [...StudentRoutes, ...PublicRoutes]
-        : role === 'COACH'
-          ? [...CoachRoutes, ...PublicRoutes]
-          : role === 'ADMIN'
-            ? [...AdminRoutes, ...PublicRoutes]
+export const routes = (role = 'public') => {
+    return role === 'admin'
+        ? [...adminRoutes, ...PublicRoutes]
+        : role === 'coach'
+          ? [...coachesRoutes, ...PublicRoutes]
+          : role === 'student'
+            ? [...studentRoutes, ...PublicRoutes]
             : [...PublicRoutes];
 };

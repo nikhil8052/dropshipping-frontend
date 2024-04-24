@@ -16,49 +16,70 @@ import payment from '@icons/currency_exchange.svg';
 import settings from '@icons/settings.svg';
 import logout from '@icons/logout-light.svg';
 import csv from '@icons/csv.svg';
+import { roles } from '../../../utils/common';
 
 export const sideBarItems = [
     {
         id: 1,
-        name: 'Home',
-        iconLight: homeLight,
-        iconDark: homeDark,
-        linkTo: '/'
+        name: 'Dashboard',
+        iconLight: dashboardLight,
+        linkTo: '/',
+        access: roles
     },
     {
         id: 2,
-        name: 'Products',
-        iconLight: productLight,
-        iconDark: productDark,
-        linkTo: '/products'
+        name: 'Coaches',
+        iconLight: coaches, // Replace with your icon
+        linkTo: `/${roles[0]}/coaches`,
+        access: [roles[0]]
     },
     {
         id: 3,
-        name: 'Group Items',
-        iconLight: groupLight,
-        iconDark: groupDark,
-        child: [
-            {
-                id: 4,
-                name: 'Item1',
-                iconLight: homeLight,
-                iconDark: homeDark,
-                linkTo: '/groups/1'
-            },
-            {
-                id: 5,
-                name: 'Item2',
-                iconLight: productLight,
-                iconDark: productDark,
-                linkTo: '/groups/2'
-            }
-        ]
+        name: 'Students',
+        iconLight: student, // Replace with your icon
+        linkTo: '/students',
+        access: [roles[0], roles[1]]
+    },
+    {
+        id: 4,
+        name: 'Courses',
+        iconLight: courses, // Replace with,
+        linkTo: '/courses',
+        access: roles
+    },
+    {
+        id: 5,
+        name: 'Events',
+        iconLight: events, // Replace with
+        linkTo: '/events',
+        access: roles
+    },
+    {
+        id: 6,
+        name: 'Payment Management',
+        iconLight: payment, // Replace with
+        linkTo: '/payment',
+        access: [roles[0]]
     },
     {
         id: 7,
+        name: 'Visualize CSV',
+        iconLight: csv,
+        access: [roles[2]],
+        linkTo: '/visualize-csv'
+    },
+    {
+        id: 8,
+        name: 'Settings',
+        iconLight: settings, // Replace with
+        linkTo: '/settings',
+        access: roles
+    },
+    {
+        id: 9,
         name: 'Logout',
-        iconLight: logoutLight,
-        iconDark: logoutDark
+        iconLight: logout, // Replace with
+        access: roles
     }
 ];
 
@@ -73,13 +94,13 @@ export const adminSidebarItems = [
         id: 2,
         name: 'Coaches',
         iconLight: coaches, // Replace with your icon
-        linkTo: '/admin/users'
+        linkTo: '/admin/coaches'
     },
     {
         id: 3,
         name: 'Students',
         iconLight: student, // Replace with your icon
-        linkTo: '/admin/courses'
+        linkTo: '/admin/students'
     },
     {
         id: 4,
@@ -122,7 +143,7 @@ export const coachSidebarItems = [
         id: 2,
         name: 'Students',
         iconLight: student, // Replace with your icon
-        linkTo: '/coach/courses'
+        linkTo: '/coach/students'
     },
     {
         id: 3,
@@ -133,12 +154,14 @@ export const coachSidebarItems = [
     {
         id: 4,
         name: 'Events',
-        iconLight: events // Replace with
+        iconLight: events, // Replace with
+        linkTo: '/coach/events'
     },
     {
         id: 5,
         name: 'Settings',
-        iconLight: settings // Replace with
+        iconLight: settings, // Replace with
+        linkTo: '/coach/settings'
     },
     {
         id: 6,
