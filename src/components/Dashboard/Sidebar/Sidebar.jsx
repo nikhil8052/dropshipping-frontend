@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Container, Nav } from 'react-bootstrap';
 import './sidebar.scss';
 import { useNavigate } from 'react-router-dom';
-import logoImg from '@images/ropstam.svg';
+import logoImg from '@icons/dropship-logo.svg';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCircleXmark } from '@fortawesome/free-solid-svg-icons';
 import { useSelector, useDispatch } from 'react-redux';
@@ -12,22 +12,36 @@ import { collapseSidebar } from '@redux/theme/theme_slice.js';
 import ConfirmationBox from '../../ConfirmationBox/ConfirmationBox';
 import { logoutUser } from '@redux/auth/auth_slice';
 import { changeLink } from '@redux/sidebar/sidebarSlice';
+import profile from '@images/user-img.jpg';
 // import all static icons
-import { adminSidebarItems, coachSidebarItems, studentSidebarItems, sideBarItems } from './sidebarData';
+import { adminSidebarItems, coachSidebarItems, studentSidebarItems } from './sidebarData';
 
 const Sidebar = () => {
     const dispatch = useDispatch();
     const collapsed = useSelector((state) => state.theme.collapsed);
     const autoCollapsed = useSelector((state) => state.theme.autoCollapsed);
-    const { isLoggedIn, userInfo } = useSelector((state) => state?.auth);
+    const { userInfo } = useSelector((state) => state?.auth);
+    const [updatedItems, setUpdatedItems] = useState([]);
 
     // Later we change this to actual role
-    const email = userInfo?.email.toLowerCase();
-    const role = email?.includes('admin') ? 'admin' : email?.includes('coach') ? 'coach' : 'student';
-    const items = role === 'admin' ? adminSidebarItems : role === 'coach' ? coachSidebarItems : studentSidebarItems;
+
+    const role = userInfo?.role;
 
     const [modalShow, setModalShow] = useState(false);
     const { activeSidebarItem } = useSelector((state) => state.activeSidebarItem);
+
+    useEffect(() => {
+        const items = role === 'admin' ? adminSidebarItems : role === 'coach' ? coachSidebarItems : studentSidebarItems;
+        const lastChild = {
+            id: items.length + 1,
+            name: userInfo?.email,
+            role,
+            iconLight: profile,
+            linkTo: null
+        };
+        const updatedItems = [...items, lastChild];
+        setUpdatedItems(updatedItems);
+    }, [role]);
 
     const navigate = useNavigate();
 
@@ -45,14 +59,13 @@ const Sidebar = () => {
             return null;
         };
 
-        const activeItem = findActiveItem(items);
+        const activeItem = findActiveItem(updatedItems);
         if (activeItem) {
             dispatch(changeLink(activeItem.id));
         }
     };
 
     const handleSideBarClick = (item) => {
-        console.log(item);
         dispatch(changeLink(item.id)); // Dispatch the selected item to update the activeLink
 
         if (item.name === 'Logout') {
@@ -65,17 +78,11 @@ const Sidebar = () => {
     useEffect(() => {
         selectActiveItem();
         // This effect should ideally depend on the pathname to update active items on route change
-    }, [location.pathname]);
+    }, [location.pathname, updatedItems]);
 
     const handleLogoutClick = () => {
         setModalShow(!modalShow);
     };
-
-    useEffect(() => {
-        if (isLoggedIn) {
-            console.log(userInfo, 'userInfo');
-        }
-    }, [isLoggedIn]);
 
     return (
         <React.Fragment>
@@ -108,7 +115,7 @@ const Sidebar = () => {
                     </div>
                     <div className="side-nav-wrapper">
                         <Nav defaultActiveKey="/" className="sidebar-nav-items">
-                            {items.map((item) =>
+                            {updatedItems.map((item) =>
                                 item.child ? (
                                     <SidebarItemCollapse
                                         key={item.id}
@@ -125,6 +132,7 @@ const Sidebar = () => {
                                     />
                                 )
                             )}
+                            {/* Last child should be an image and role */}
                         </Nav>
                     </div>
                 </Container>

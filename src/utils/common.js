@@ -11,3 +11,4 @@ export function formatDate(value) {
     }
     return null;
 }
+export const roles = ['admin', 'coach', 'student', 'public'];
