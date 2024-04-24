@@ -27,7 +27,16 @@ const Login = () => {
 
     const handleSubmit = async (values, { setSubmitting }) => {
         try {
-            dispatch(loginWithoutAPI(values));
+            dispatch(
+                loginWithoutAPI({
+                    ...values,
+                    role: values.email?.toLowerCase().includes('admin')
+                        ? 'admin'
+                        : values.email?.toLowerCase().includes('coach')
+                          ? 'coach'
+                          : 'student'
+                })
+            );
             setSubmitting(false);
         } catch (error) {
             setSubmitting(false);
