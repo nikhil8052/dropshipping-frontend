@@ -1,5 +1,4 @@
 import { lazy } from 'react';
-import { roles } from '../utils/common';
 // Component Imports
 const Dashboard = lazy(() => import('@pages/Dashboard/Dashboard/Dashboard'));
 const Coaches = lazy(() => import('@pages/Dashboard/Coaches/Coaches'));

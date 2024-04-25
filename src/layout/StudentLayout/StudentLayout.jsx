@@ -2,7 +2,8 @@ import { Outlet, useNavigate } from 'react-router-dom';
 import { Sidebar, MainPanel } from '@components/Dashboard';
 import { Container } from 'react-bootstrap';
 import { useSelector } from 'react-redux';
-import { useEffect } from 'react';
+import { Suspense, useEffect } from 'react';
+import Loading from '../../components/Loading/Loading';
 const DashboardLayout = () => {
     const { isLoggedIn, userInfo } = useSelector((state) => state?.auth);
     const role = userInfo?.role;
@@ -19,7 +20,9 @@ const DashboardLayout = () => {
             {/* Main Content */}
             <Sidebar />
             <MainPanel>
-                <Outlet />
+                <Suspense fallback={<Loading centered />}>
+                    <Outlet />
+                </Suspense>
             </MainPanel>
         </Container>
     );

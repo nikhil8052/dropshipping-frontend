@@ -1,9 +1,8 @@
-@import url('https://fonts.googleapis.com/css2?family=Raleway:wght@300;400;800&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap');
-// Font Family
-$font-primary: 'Roboto', Arial, sans-serif;
-$font-secondary: 'Raleway', Arial, sans-serif;
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700&display=swap');
 
+// Font Family
+$font-primary: 'Inter', Arial, sans-serif;
+$font-secondary: 'Inter', Arial, sans-serif;
 
 // Font Size
 $font-size-small: 12px;
@@ -21,4 +20,4 @@ $font-weight-bold: 700;
 $line-height-small: 1.2;
 $line-height-medium: 1.5;
 $line-height-large: 1.8;
-$line-height-extra-large: 2.0;
+$line-height-extra-large: 2;

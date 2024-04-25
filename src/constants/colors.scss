@@ -2,25 +2,27 @@
     $primary-gradient: linear-gradient(90.19deg, #00c7cc -0.27%, #009cd8 99.11%);
     background: $primary-gradient;
 }
-
-// Usage
-.selector {
-    @include sidebar-primary-gradient;
+@mixin pagination-gradient {
+    $primary-gradient: linear-gradient(90.19deg, #00c7cc -0.27%, #009cd8 99.11%);
+    background: $primary-gradient;
 }
 
 // Color Palette
 $primary-color: #007bff;
 $secondary-color: #6c757d;
-$success-color: #28a745;
+$success-color: #48c95e;
+$success-light-color: rgba(0, 178, 125, 0.75);
 $info-color: #17a2b8;
 $light-info-color: rgba(77, 107, 140, 1);
 $warning-color: #ffc107;
 $danger-color: #dc3545;
+$danger-light-color: rgba(254, 100, 100, 0.75);
 $light-color: #f8f9fa;
 $medium-light-color: rgba(255, 255, 255, 1);
 $dark-color: rgba(1, 9, 7, 1);
 $light-grey: rgba(177, 182, 191, 1);
-
+$medium-info-color: rgba(245, 248, 249, 1);
+$medium-info-bold-color: #002b5b;
 $secondary-light: #f4f3ef;
 $primary-border: #d7d7d7;
 // Text Colors
@@ -31,7 +33,7 @@ $link-hover-color: darken($link-color, 10%);
 
 // Background Colors
 $body-bg-color: #fff;
-$container-bg-color: #f8f9fa;
+$container-bg-color: #fff;
 
 // Button Colors
 $btn-primary-color: $primary-color;
@@ -89,3 +91,7 @@ $modal-link-hover-color: $link-hover-color;
 // Sidebar Colors
 $sidebar-bg-color: $dark-color;
 $sidebar-profile-color: $light-grey;
+
+// Table Colors
+$table-bg-header: $medium-info-color;
+$table-text-color: $medium-info-bold-color;
