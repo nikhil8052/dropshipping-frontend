@@ -5,12 +5,13 @@ import { InputGroup, Button, Form } from 'react-bootstrap';
 import Loading from '../Loading/Loading';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSearch } from '@fortawesome/free-solid-svg-icons';
+import Search from '../../assets/icons/Search.svg';
 
 import './Table.scss';
 import 'ag-grid-community/styles/ag-grid.css';
 import 'ag-grid-community/styles/ag-theme-alpine.css';
 
-const Table = ({ columns, tableData, width, onRowClicked, createEntry, showCreatebtn, loading }) => {
+const Table = ({ columns, tableData, width, onRowClicked, loading, children }) => {
     const [gridApi, setGridApi] = useState(null);
     const [gridColumnApi, setGridColumnApi] = useState(null);
     const [search, setSearch] = useState('');
@@ -56,21 +57,22 @@ const Table = ({ columns, tableData, width, onRowClicked, createEntry, showCreat
 
     return (
         <div className="ag-theme-alpine custom-table" style={{ height: '100%', width: '100%' }}>
-            <div style={{ marginBottom: '10px' }} className="d-flex justify-content-between">
+            <div style={{ marginBottom: '10px' }} className="d-flex justify-content-between gap-2">
                 <InputGroup>
+                    <InputGroup.Text>
+                        <img src={Search} alt="Search" />
+                    </InputGroup.Text>
                     <Form.Control
                         className="search-input"
                         type="text"
                         name="Search"
                         label="Search"
                         onChange={onFilterTextChange}
-                        placeholder="Search..."
+                        placeholder="Search"
                     />
-                    <InputGroup.Text>
-                        <FontAwesomeIcon icon={faSearch} />
-                    </InputGroup.Text>
                 </InputGroup>
-                {showCreatebtn && <Button onClick={createEntry}>Create</Button>}
+                {children}
+                <div style={{ marginLeft: '2px' }} /> {/* Add spacer element */}
             </div>
             <div className="ag-theme-alpine" style={{ width: width ? width : '100%' }}>
                 {loading ? (
@@ -96,6 +98,7 @@ const Table = ({ columns, tableData, width, onRowClicked, createEntry, showCreat
                         suppressSizeToFit={true}
                         groupSelectsChildren={true}
                         suppressAggFuncInHeader={true}
+                        suppressMovableColumns={true}
                     />
                 )}
             </div>
