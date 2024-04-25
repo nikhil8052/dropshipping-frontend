@@ -1,6 +1,6 @@
 import { Form } from 'react-bootstrap';
 import { Field } from 'formik';
-
+import eyeIcon from '../../assets/icons/Eye.svg';
 function Password(props) {
     return (
         <Field name={props.name} type={props.type}>

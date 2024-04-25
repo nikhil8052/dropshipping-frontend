@@ -6,56 +6,63 @@
     height: 100vh;
     flex-direction: column;
     justify-content: center;
-    //handle responsive
-    @include respond-to($large-screen) {
-        height: auto;
-        padding: 10px 5px;
-    }
+ 
+    
 }
 .auth-logo{
-    width: 200px;
-    height: 100px;
+    width: 202px;
+    height: 44px;
     object-fit: contain;
+    margin-top: 49px;
+    margin-left: 57px;
+
     @include respond-to($medium-screen) {
         width: 150px;
-        height: 90px;
-            
+        height: 40px;
+        margin-bottom: 20px;
+        
     }
 }
-.auth-form-title{
+.auth-title{
     font-family: $font-secondary;
-    font-size: 22px;
-    color: $secondary-color;
+    font-size: 28px;
+    color: $heading-color;
+    font-weight: $font-weight-bold;
     @include respond-to($medium-screen) {
         font-size: 18px;
     }
 }
-.auth-card-wrapper{
-  width: 100%;
-  border-radius: 8px;
-  overflow: hidden; // prevent parent's border radius from overlapping
-  box-shadow: -1px 0px 7px -3px rgba(0,0,0,0.75);
-  -webkit-box-shadow: -1px 0px 7px -3px rgba(0,0,0,0.75);
-  -moz-box-shadow: -1px 0px 7px -3px rgba(0,0,0,0.75);
 
+
+.auth-form-title{
+    font-family: $font-primary;
+    font-size: 14px;
+    line-height: 26px;
+    margin-top: 24px;
+    color: $secondary-color;
+    @include respond-to($medium-screen) {
+        font-size: 12px;
+    }
+   
 }
-.auth-bg{
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
+
 .auth-form-wrapper{
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  padding: 30px 0px;
-}
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+  
+    @include respond-to($large-screen) {
+        margin-top: 20px;
+    }
+  }
 .auth-bottom-text{
     font-family: $font-secondary;
     color: $secondary-color;
     font-size: 18px;
+   display: flex;
     @include respond-to($large-screen) {
         font-size: 16px;
     }
@@ -74,3 +81,86 @@
         font-size: 14px;
     }
 }
+
+.auth-form-data{
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+}
+
+.auth-login-button{
+    width: 473px;
+    height: 55px;
+    margin-block: 28px;
+    font-size: 18px;
+    border-radius: 80px;
+    background: linear-gradient(90.19deg, #00C7CC -0.27%, #009CD8 99.11%);
+    @include respond-to($large-screen) {
+        font-size: 16px;
+    }
+    @include respond-to($medium-screen) {
+        font-size: 14px;
+
+    }
+    @include respond-to($small-screen) {
+        font-size: 14px;
+    width: 270px;
+
+    }
+
+}
+.auth-left-bg-column {
+    background-image: url('@images/login_img.png');
+    background-size: cover;
+    background-position: center;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    @include respond-to($medium-screen){
+        display: none;
+
+            }
+    
+}
+
+.auth-left-header-mob{
+    display: flex;
+   width: 100%;
+    justify-content: center;
+    display: none;
+    position: absolute;
+    top: 0;
+    background-color: #000907;
+    @include respond-to($medium-screen){
+display: block;
+
+    }
+}
+.auth-left-footer{
+padding-bottom: 80px;
+}
+.auth-social-logo{
+    width: 34px;
+    height: 34px;
+}
+
+.auth-left-footer{
+    display: flex;
+    gap:12px
+}
+
+
+.input-password-container {
+    position: relative;
+}
+
+.eye-icon-password {
+    position: absolute;
+    top: 64%;
+    right: 4%; 
+    transform: translateY(-50%);
+    cursor: pointer;
+}
+
+

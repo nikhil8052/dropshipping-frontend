@@ -1,20 +1,20 @@
 import React, { Suspense, useEffect } from 'react';
-import { Outlet, useNavigate } from 'react-router-dom';
+import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 import Loading from '../../components/Loading/Loading';
 import { useSelector } from 'react-redux';
 
 const PublicLayout = () => {
     const { isLoggedIn, userInfo } = useSelector((state) => state?.auth);
     const role = userInfo?.role;
-
     const navigate = useNavigate();
+    const location = useLocation();
 
     useEffect(() => {
         if (isLoggedIn) {
             if (role === 'admin') navigate('/admin');
             else if (role === 'coach') navigate('/coach');
             else if (role === 'student') navigate('/student');
-        } else navigate('/login');
+        } else navigate(location.pathname);
     }, [navigate, isLoggedIn, role]);
 
     return (
