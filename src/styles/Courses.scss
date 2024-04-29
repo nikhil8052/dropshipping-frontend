@@ -1,14 +1,186 @@
-.course-topbar{
-    .input-group-text{
-        color: red ;
+@import '@constants/colors.scss';
+@import '@constants/media.scss';
+@import '@constants/typography.scss';
+
+.course-topbar {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    .input-group-text {
+        color: red;
     }
-   
-   
+    .search-input {
+        max-width: 390px;
+        border-radius: 59px;
+        background-color: rgba(245, 248, 249, 1);
+    }
+    .input-group-text {
+        background: rgb(245, 248, 249) !important;
+        border-radius: 59px;
+    }
+    .add-button {
+        @include pagination-gradient;
+        border-radius: 59px;
+        color: #ffff;
+        font-weight: 400;
+        white-space: nowrap;
+        border: none;
+        @include respond-to($small-screen) {
+            margin-top: 10px;
+        }
+    }
 }
-.custom-card-course{
-    .custom-card{
+.custom-card-course {
+    .card-body {
+        padding: 0px;
+    }
+    .custom-card {
         height: auto;
         width: auto;
+        margin-block: 2.3rem;
     }
 }
 
+.addcourse-section {
+    .addcourse-nav {
+        background-color: #f2f4f5;
+        font-size: $font-size-medium;
+        font-family: $font-primary;
+        color: #5f6c72;
+        padding: 10px;
+        border-radius: 12px;
+    }
+    .course-tabs {
+        display: flex;
+        justify-content: space-evenly;
+        margin-top: 20px;
+        .tab {
+            margin-right: auto;
+            text-align: center;
+        }
+        .tab.active {
+            border-bottom: 2px solid #019ed8;
+        }
+    }
+    .tab-content {
+        margin-top: 20px;
+    }
+}
+
+// css for Add New Course
+
+.add-course-form-section {
+    .section-title {
+        border-bottom: 1px solid #e9eaf0;
+        p {
+            font-size: $font-size-extra-large;
+            font-family: $font-primary;
+            font-weight: $font-weight-bold;
+            color: #1d2026;
+            padding: 16px;
+        }
+    }
+    .add-course-form {
+        .formgroup input[type='text'] {
+            background-color: transparent;
+            width: 100%;
+            height: auto;
+        }
+    }
+
+    .input-field-container {
+        position: relative;
+    }
+
+    .input-count {
+        position: absolute;
+        top: 64%;
+        right: 4%;
+        transform: translateY(-50%);
+        cursor: pointer;
+    }
+    .course-DropdownButton {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        margin-top: 10px;
+        .dropdown-button {
+            background-color: transparent;
+            border-radius: 59px;
+
+            .dropdown-toggle {
+                color: rgba(148, 148, 148, 1);
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                width: 100%;
+            }
+            font-weight: 400;
+            white-space: nowrap;
+            // border: rgba(148, 148, 148, 1) 1px solid !important;
+            border: 1.34px solid #e9eaf0;
+
+            .dropdown-menu {
+                width: 100%;
+                height: 254px;
+                overflow: hidden;
+                overflow-y: auto;
+                border: none;
+                border-radius: 10px;
+                box-shadow: 0px 0px 54px 0px rgba(0, 0, 0, 0.37);
+                .avatar {
+                    width: 20px;
+                    border-radius: 50%;
+                    object-fit: cover;
+                    margin-right: 0.5rem;
+                }
+                .coach-name {
+                    font-size: small;
+                    color: rgba(85, 95, 126, 1);
+                }
+            }
+        }
+    }
+    .course-btn-footer {
+        display: flex;
+        justify-content: space-between;
+        // margin-top: 20px;
+        position: absolute;
+        bottom: 0;
+        margin-bottom: 50px;
+        width: 90%;
+        .save-button {
+            @include pagination-gradient;
+            border-radius: 141px;
+            font-size: $font-size-medium;
+            font-family: $font-primary;
+            color: #ffffff;
+            padding: 0px, 25.61px, 0px, 25.61px;
+        }
+        .cancel-button {
+            border: 0.8px solid #e9eaf0;
+            background-color: transparent;
+            border-radius: 141px;
+            font-size: $font-size-medium;
+            font-family: $font-primary;
+            color: #6e7485;
+            padding: 0px, 25.61px, 0px, 25.61px;
+        }
+    }
+}
+
+//Css for UploadFiles
+.upload-form-section {
+    .section-title {
+        border-bottom: 1px solid #e9eaf0;
+        p {
+            font-size: $font-size-extra-large;
+            font-family: $font-primary;
+            font-weight: $font-weight-bold;
+            color: #1d2026;
+            padding: 16px;
+        }
+    }
+    .upload-course-form {
+    }
+}
