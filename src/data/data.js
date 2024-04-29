@@ -35,7 +35,7 @@ export const studentDummyData = [
                 grade: 'B+'
             }
         ],
-        feesStatus: 'UnPaid',
+        feesStatus: 'Unpaid',
         coursesRoadmap:
             'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla eget semper libero. Fusce commodo libero in velit tempor, id molestie lorem vestibulum. Quisque vitae justo nec justo eleifend gravida. Integer auctor condimentum odio, nec dictum ipsum molestie nec. Mauris nec lorem at velit commodo vehicula.'
     },
@@ -55,7 +55,7 @@ export const studentDummyData = [
                 grade: 'B-'
             }
         ],
-        feesStatus: 'UnPaid',
+        feesStatus: 'Unpaid',
         coursesRoadmap: 'Planned'
     },
     // Add more dummy students below
@@ -95,7 +95,7 @@ export const studentDummyData = [
                 grade: 'A'
             }
         ],
-        feesStatus: 'UnPaid',
+        feesStatus: 'Unpaid',
         coursesRoadmap:
             'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla eget semper libero. Fusce commodo libero in velit tempor, id molestie lorem vestibulum. Quisque vitae justo nec justo eleifend gravida. Integer auctor condimentum odio, nec dictum ipsum molestie nec. Mauris nec lorem at velit commodo vehicula.'
     },
@@ -115,7 +115,7 @@ export const studentDummyData = [
                 grade: 'B'
             }
         ],
-        feesStatus: 'UnPaid',
+        feesStatus: 'Unpaid',
         coursesRoadmap: 'Planned'
     },
     {
@@ -154,7 +154,7 @@ export const studentDummyData = [
                 grade: 'A+'
             }
         ],
-        feesStatus: 'UnPaid',
+        feesStatus: 'Unpaid',
         coursesRoadmap:
             'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla eget semper libero. Fusce commodo libero in velit tempor, id molestie lorem vestibulum. Quisque vitae justo nec justo eleifend gravida. Integer auctor condimentum odio, nec dictum ipsum molestie nec. Mauris nec lorem at velit commodo vehicula.'
     },
@@ -174,7 +174,7 @@ export const studentDummyData = [
                 grade: 'B-'
             }
         ],
-        feesStatus: 'UnPaid',
+        feesStatus: 'Unpaid',
         coursesRoadmap: 'Planned'
     },
     {
@@ -213,7 +213,7 @@ export const studentDummyData = [
                 grade: 'A-'
             }
         ],
-        feesStatus: 'UnPaid',
+        feesStatus: 'Unpaid',
         coursesRoadmap:
             'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla eget semper libero. Fusce commodo libero in velit tempor, id molestie lorem vestibulum. Quisque vitae justo nec justo eleifend gravida. Integer auctor condimentum odio, nec dictum ipsum molestie nec. Mauris nec lorem at velit commodo vehicula.'
     },
@@ -253,7 +253,7 @@ export const studentDummyData = [
                 grade: 'B+'
             }
         ],
-        feesStatus: 'UnPaid',
+        feesStatus: 'Unpaid',
         coursesRoadmap: 'Planned'
     },
     {
@@ -292,7 +292,7 @@ export const studentDummyData = [
                 grade: 'A'
             }
         ],
-        feesStatus: 'UnPaid',
+        feesStatus: 'Unpaid',
         coursesRoadmap:
             'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla eget semper libero. Fusce commodo libero in velit tempor, id molestie lorem vestibulum. Quisque vitae justo nec justo eleifend gravida. Integer auctor condimentum odio, nec dictum ipsum molestie nec. Mauris nec lorem at velit commodo vehicula.'
     }

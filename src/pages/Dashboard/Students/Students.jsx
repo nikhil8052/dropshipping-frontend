@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import Table from '@components/Table/Table';
-import { Button, Col, Row, Form, DropdownButton, Dropdown } from 'react-bootstrap';
+import { Button, Col, Row, DropdownButton, Dropdown } from 'react-bootstrap';
 import Modal from '@components/Modal/Modal';
 import ProductForm from '@components/Listings/ProductForm/ProductForm';
 import ConfirmationBox from '@components/ConfirmationBox/ConfirmationBox';
@@ -121,7 +121,7 @@ const Students = () => {
         setSelectedCoach(coach.name);
     };
 
-    const handleOptionChange = (eventKey, option) => {
+    const handleOptionChange = (option) => {
         setSelectedOption(option);
     };
 
@@ -129,12 +129,12 @@ const Students = () => {
     const ActionsRenderer = (props) => (
         <React.Fragment>
             <Row style={{ width: '100%' }}>
-                <Col lg={4} md={6} sm={6} className="d-flex justify-content-center align-items-center">
+                <Col lg={4} md={6} sm={6} xs={4} className="d-flex justify-content-center align-items-center">
                     <div className="action-button edit-button" onClick={() => props.onEditClick(props.data.id)}>
                         <img src={editIcon} className="action-icon" alt="action-icon" />
                     </div>
                 </Col>
-                <Col lg={1} md={6} sm={6} className="d-flex justify-content-center align-items-center">
+                <Col lg={1} md={6} sm={6} xs={4} className="d-flex justify-content-center align-items-center">
                     <div
                         className="btn-light action-button delete-button"
                         onClick={() => props.onDeleteClick(props.data.id)}
@@ -250,64 +250,77 @@ const Students = () => {
                 onRowClicked={handleRowClick}
                 loading={loading}
                 children={
-                    <>
-                        <DropdownButton
-                            title={
-                                <div className="d-flex justify-content-between w-100">
-                                    <span className="ms-2">{selectedCoach}</span>
-
-                                    <p>
-                                        <img src={downArrow} alt="Filter" srcset="" />
-                                    </p>
-                                </div>
-                            }
-                            defaultValue={selectedCoach}
-                            className="dropdown-button w-25 d-flex justify-content-even align-items-center"
+                    <Row className="mb-3">
+                        <Col
+                            xxl={5}
+                            xl={6}
+                            lg={8}
+                            md={4}
+                            sm={6}
+                            xs={12}
+                            className="mb-2 mb-md-0 mt-md-2 mt-sm-2 mt-xs-2"
                         >
-                            <Dropdown.Header>All Coaches ({coachDummyData.length})</Dropdown.Header>
-                            {coachDummyData.map((coach) => (
-                                <Dropdown.Item
-                                    onClick={(e) => handleCoachSelect(e, coach)}
-                                    key={coach.id}
-                                    eventKey={coach.id}
-                                    className="my-1 ms-2"
-                                >
-                                    <img src={coach.avatarUrl} className="avatar" alt={coach.name} />
-                                    <span className="coach-name"> {coach.name}</span>
-                                </Dropdown.Item>
-                            ))}
-                        </DropdownButton>
-                        <DropdownButton
-                            title={
-                                <div className="d-flex justify-content-between w-100">
-                                    <span className="ms-2">{selectedOption}</span>
-                                    <p>
-                                        <img src={downArrow} alt="Filter" srcset="" />
-                                    </p>
-                                </div>
-                            }
-                            defaultValue={selectedOption}
-                            className="dropdown-button filter w-25 d-flex justify-content-even align-items-center"
+                            <DropdownButton
+                                title={
+                                    <div className="d-flex justify-content-between align-items-center">
+                                        <span className="ms-2">{selectedCoach}</span>
+                                        <img src={downArrow} alt="Filter" />
+                                    </div>
+                                }
+                                defaultValue={selectedCoach}
+                                className="dropdown-button coach-btn w-100"
+                            >
+                                <Dropdown.Header>All Coaches ({coachDummyData.length})</Dropdown.Header>
+                                {coachDummyData.map((coach) => (
+                                    <Dropdown.Item
+                                        onClick={(e) => handleCoachSelect(e, coach)}
+                                        key={coach.id}
+                                        eventKey={coach.id}
+                                        className="my-1 ms-2 w-100"
+                                    >
+                                        <img src={coach.avatarUrl} className="avatar" alt={coach.name} />
+                                        <span className="coach-name">{coach.name}</span>
+                                    </Dropdown.Item>
+                                ))}
+                            </DropdownButton>
+                        </Col>
+                        <Col
+                            xxl={2}
+                            xl={6}
+                            lg={4}
+                            md={4}
+                            sm={6}
+                            xs={12}
+                            className="mb-2 mb-md-0 mt-md-2 mt-sm-2 mt-xs-2"
                         >
-                            {['All', 'HT', 'LT'].map((option) => (
-                                <Dropdown.Item
-                                    key={option}
-                                    onClick={() => handleOptionChange(option)}
-                                    eventKey={option}
-                                    className="my-1 ms-2"
-                                >
-                                    <span className="coach-name">{option}</span>
-                                </Dropdown.Item>
-                            ))}
-                        </DropdownButton>
-
-                        <Button
-                            className="add-button d-flex justify-content-even align-items-center"
-                            onClick={handleCreateClick}
-                        >
-                            <img src={add} alt="" srcset="" /> <span className="ms-2">Add New Student</span>
-                        </Button>
-                    </>
+                            <DropdownButton
+                                title={
+                                    <div className="d-flex justify-content-between align-items-center">
+                                        <span className="ms-2">{selectedOption}</span>
+                                        <img src={downArrow} alt="Filter" />
+                                    </div>
+                                }
+                                defaultValue={selectedOption}
+                                className="dropdown-button-fix w-100"
+                            >
+                                {['All', 'HT', 'LT'].map((option) => (
+                                    <Dropdown.Item
+                                        key={option}
+                                        onClick={() => handleOptionChange(option)}
+                                        eventKey={option}
+                                        className="my-1 ms-2"
+                                    >
+                                        <span className="coach-name">{option}</span>
+                                    </Dropdown.Item>
+                                ))}
+                            </DropdownButton>
+                        </Col>
+                        <Col xxl={5} xl={6} lg={8} md={4} sm={12} xs={12} className="mt-xxl-2 mt-xl-2 mt-lg-2 mt-md-2">
+                            <Button className="add-button w-100" onClick={handleCreateClick}>
+                                <img src={add} alt="" /> <span className="ms-2">Add New Student</span>
+                            </Button>
+                        </Col>
+                    </Row>
                 }
             />
         </div>

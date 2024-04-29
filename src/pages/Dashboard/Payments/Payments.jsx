@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import Table from '@components/Table/Table';
-import { Button, Col, Row, Form, DropdownButton, Dropdown } from 'react-bootstrap';
+import { Col, Row, DropdownButton, Dropdown } from 'react-bootstrap';
 import Modal from '@components/Modal/Modal';
 import ProductForm from '@components/Listings/ProductForm/ProductForm';
 import ConfirmationBox from '@components/ConfirmationBox/ConfirmationBox';
@@ -8,12 +8,9 @@ import { Helmet } from 'react-helmet';
 import axiosWrapper from '@utils/api';
 import { toast } from 'react-toastify';
 import TextExpand from '@components/TextExpand/TextExpand';
-import editIcon from '@icons/edit_square.svg';
-import deleteIcon from '@icons/trash-2.svg';
 import eyeIcon from '@icons/basil_eye-solid.svg';
-import add from '@icons/add.svg';
 import downArrow from '@icons/down-arrow.svg';
-import { studentDummyData, coachDummyData, eventsDummyData, paymentsDummyData } from '../../../data/data';
+import { paymentsDummyData } from '../../../data/data';
 
 const Payments = () => {
     const [showDeleteModal, setShowDeleteModal] = useState(false);
@@ -138,18 +135,6 @@ const Payments = () => {
     );
     /*eslint-disable */
 
-    const obj = {
-        id: 10,
-        topic: 'Training Workshop',
-        join_link: 'https://toom.us/789012',
-        attendees: 20,
-        date_time: 'May 3, 2024 14:30',
-        actions: '',
-        description: 'Workshop on communication skills',
-        status: 'Upcoming',
-        organizer: 'Ava Walker'
-    };
-
     const columns = [
         {
             headerName: 'Student Name',
@@ -237,32 +222,35 @@ const Payments = () => {
                 onRowClicked={handleRowClick}
                 loading={loading}
                 children={
-                    <>
-                        <DropdownButton
-                            title={
-                                <div className="d-flex justify-content-between w-100">
-                                    <span className="ms-2">{selectedOption}</span>
-
-                                    <p>
-                                        <img src={downArrow} alt="Filter" srcset="" />
-                                    </p>
-                                </div>
-                            }
-                            defaultValue={selectedOption}
-                            className="dropdown-button w-25 d-flex justify-content-even align-items-center"
-                        >
-                            {['Paid', 'Overdue', 'HT', 'LT'].map((events) => (
-                                <Dropdown.Item
-                                    onClick={(e) => handleEventSelect(e, events)}
-                                    key={events}
-                                    eventKey={events}
-                                    className="my-1 ms-2"
+                    <Row>
+                        <Col>
+                            <div className="d-flex justify-content-end">
+                                <DropdownButton
+                                    title={
+                                        <div className="d-flex justify-content-between w-100">
+                                            <span className="ms-2">{selectedOption}</span>
+                                            <p>
+                                                <img src={downArrow} alt="Filter" srcset="" />
+                                            </p>
+                                        </div>
+                                    }
+                                    defaultValue={selectedOption}
+                                    className="dropdown-button w-25 d-flex justify-content-even align-items-center"
                                 >
-                                    <span className="coach-name"> {events}</span>
-                                </Dropdown.Item>
-                            ))}
-                        </DropdownButton>
-                    </>
+                                    {['Paid', 'Overdue', 'HT', 'LT'].map((events) => (
+                                        <Dropdown.Item
+                                            onClick={(e) => handleEventSelect(e, events)}
+                                            key={events}
+                                            eventKey={events}
+                                            className="my-1 ms-2"
+                                        >
+                                            <span className="coach-name"> {events}</span>
+                                        </Dropdown.Item>
+                                    ))}
+                                </DropdownButton>
+                            </div>
+                        </Col>
+                    </Row>
                 }
             />
         </div>
