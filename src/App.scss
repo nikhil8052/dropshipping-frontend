@@ -1,5 +1,12 @@
 @import './constants/colors.scss';
 @import './constants/typography.scss';
+@import './styles/Coaches.scss';
+@import './styles/Students.scss';
+@import './styles/Courses.scss';
+@import './styles/Events.scss';
+@import './styles/Payments.scss';
+@import './styles/Settings.scss';
+@import './styles/VisualizeCsv.scss';
 
 :root {
     font-family: $font-primary;
@@ -14,6 +21,32 @@
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     -webkit-text-size-adjust: 100%;
+}
+
+a,
+p,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+ul,
+li,
+div,
+span,
+button,
+input,
+label,
+select,
+option,
+textarea,
+table,
+th,
+td,
+input,
+p {
+    font-family: $font-primary;
 }
 
 .wrapper {
