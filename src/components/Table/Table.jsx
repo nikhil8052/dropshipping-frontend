@@ -1,10 +1,8 @@
 import { useEffect, useState, useDeferredValue } from 'react';
 import { AgGridReact } from 'ag-grid-react';
 import 'ag-grid-community';
-import { InputGroup, Button, Form } from 'react-bootstrap';
+import { InputGroup, Form, Row, Col } from 'react-bootstrap';
 import Loading from '../Loading/Loading';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faSearch } from '@fortawesome/free-solid-svg-icons';
 import Search from '../../assets/icons/Search.svg';
 
 import './Table.scss';
@@ -57,23 +55,26 @@ const Table = ({ columns, tableData, width, onRowClicked, loading, children }) =
 
     return (
         <div className="ag-theme-alpine custom-table" style={{ height: '100%', width: '100%' }}>
-            <div style={{ marginBottom: '10px' }} className="d-flex justify-content-between gap-2">
-                <InputGroup>
-                    <InputGroup.Text>
-                        <img src={Search} alt="Search" />
-                    </InputGroup.Text>
-                    <Form.Control
-                        className="search-input"
-                        type="text"
-                        name="Search"
-                        label="Search"
-                        onChange={onFilterTextChange}
-                        placeholder="Search"
-                    />
-                </InputGroup>
-                {children}
-                <div style={{ marginLeft: '2px' }} /> {/* Add spacer element */}
-            </div>
+            <Row className="mb-3">
+                <Col lg={6} md={12}>
+                    <InputGroup>
+                        <InputGroup.Text>
+                            <img src={Search} alt="Search" />
+                        </InputGroup.Text>
+                        <Form.Control
+                            className="search-input"
+                            type="text"
+                            name="Search"
+                            label="Search"
+                            onChange={onFilterTextChange}
+                            placeholder="Search"
+                        />
+                    </InputGroup>
+                </Col>
+                <Col lg={6} md={12}>
+                    {children}
+                </Col>
+            </Row>
             <div className="ag-theme-alpine" style={{ width: width ? width : '100%' }}>
                 {loading ? (
                     <Loading />
@@ -98,6 +99,7 @@ const Table = ({ columns, tableData, width, onRowClicked, loading, children }) =
                         suppressSizeToFit={true}
                         groupSelectsChildren={true}
                         suppressAggFuncInHeader={true}
+                        rowHeight={57}
                         suppressMovableColumns={true}
                     />
                 )}

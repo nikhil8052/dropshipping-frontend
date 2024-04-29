@@ -1,4 +1,5 @@
 @import '@constants/colors.scss';
+@import '@constants/media.scss';
 
 .custom-table {
     display: flex;
@@ -7,6 +8,26 @@
     border-radius: 5px;
     background: rgba(255, 255, 255, 1);
     box-shadow: 0px 0px 14.83px 0px rgba(0, 0, 0, 0.06);
+    .ag-theme-alpine {
+        height: calc(100vh - 14rem);
+        overflow-y: scroll;
+        // Make the cells padding and alignment w.r.t height
+        // Add the text expandable id here
+        .ag-row
+            .ag-cell:not([col-id='coursesRoadmap']):not([col-id='email']):not([col-id='name']):not(
+                [col-id='join_link']
+            ) {
+            display: flex;
+            justify-content: start;
+            align-items: center;
+        }
+        .ag-row .ag-cell[col-id='coursesRoadmap'],
+        .ag-row .ag-cell[col-id='name'],
+        .ag-row .ag-cell[col-id='email'],
+        .ag-row .ag-cell[col-id='join_link'] {
+            padding: 10px;
+        }
+    }
     .search-input {
         max-width: 390px;
         border-radius: 59px;
@@ -43,9 +64,10 @@
         border-bottom: 0.89px solid rgba(233, 234, 243, 1);
     }
 
+    // Rows padding and height
+
     // Pagination
     .ag-paging-panel {
-        float: left;
         // Hide extra information
         .ag-paging-page-size {
             display: none;
@@ -73,6 +95,12 @@
             border-radius: 11px;
             background: rgba(253, 253, 253, 1);
             box-shadow: 0px 0px 14px 0px rgba(0, 0, 0, 0.15);
+        }
+    }
+    // Adjust the children responsive width
+    @media (max-width: $medium-screen) {
+        .search-input {
+            max-width: 100%;
         }
     }
 }
