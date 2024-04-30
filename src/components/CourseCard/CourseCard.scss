@@ -1,0 +1,22 @@
+.course-card {
+    display: flex;
+    flex-direction: column;
+    gap:4px;
+
+    .course-img {
+        width: 100%; /* or any custom size */
+        height: 100%; 
+        object-fit: contain;
+
+    }
+    .course-title {
+        margin-top: 2px;
+        font-size: 14px;
+    }
+    .course-des {
+        font-size: 12px;
+    }
+    .lecture-No {
+        font-size: 12px;
+    }
+}

@@ -1,8 +1,11 @@
 @import '@constants/colors.scss';
 @import '@constants/typography.scss';
+@import '@constants/media.scss';
+
 
 .card-small{
-    height: 117px;
+  
+  height: 117px;
 }
 .card-large{
     height: 450px;
@@ -42,3 +45,5 @@ margin-bottom: 1.5rem;
     background-color: inherit;
 }
 }
+
+
