@@ -2,6 +2,10 @@
 
 .listing-page {
     .action-button {
+        cursor: pointer;
+        &:hover {
+            border: none !important;
+        }
         width: 30px;
         height: 30px;
         background-color: $light-color;
@@ -15,13 +19,13 @@
         }
     }
     .edit-button {
-        transition: all 0.5s ease-in-out; 
+        transition: all 0.5s ease-in-out;
         &:hover {
             border: 1px solid $info-color;
         }
     }
     .delete-button {
-        transition: all 0.5s ease-in-out; 
+        transition: all 0.5s ease-in-out;
         &:hover {
             border: 1px solid $danger-color;
         }
