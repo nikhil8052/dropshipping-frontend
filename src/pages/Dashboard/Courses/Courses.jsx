@@ -14,11 +14,12 @@ import ClipboardText from '@icons/ClipboardText.svg';
 import Stack from '@icons/Stack.svg';
 import task_alt from '@icons/task_alt.svg';
 
+import Tab from 'react-bootstrap/Tab';
+import Tabs from 'react-bootstrap/Tabs';
+
 const Courses = () => {
     const [search, setSearch] = useState('');
     const [newStudent, setNewStudent] = useState(false);
-
-    const [selectedTab, setSelectedTab] = useState(1);
 
     // Function to handle tab selection
     const handleTabClick = (tabId) => {
@@ -94,20 +95,6 @@ const Courses = () => {
         setNewStudent(true);
     };
 
-    // Function to render content based on the selected tab
-    const renderTabContent = () => {
-        switch (selectedTab) {
-            case 1:
-                return <AddNewCourse />;
-            case 2:
-                return <UploadFiles />;
-            case 3:
-                return <PublishCourses />;
-            default:
-                return null;
-        }
-    };
-
     return (
         <>
             {newStudent ? (
@@ -119,29 +106,45 @@ const Courses = () => {
                     </div>
                     <Row>
                         <div className="course-tabs">
-                            <div
-                                className={`tab ${selectedTab === 1 ? 'active' : ''} `}
-                                onClick={() => handleTabClick(1)}
+                            <Tabs
+                                defaultActiveKey="basic-information"
+                                id="justify-tab-example"
+                                className="mb-3"
+                                justify
+                                variant="underline"
                             >
-                                <img src={Stack} alt="course-icon" />
-                                Basic Information
-                            </div>
-                            <div
-                                className={`tab ${selectedTab === 2 ? 'active' : ''}`}
-                                onClick={() => handleTabClick(2)}
-                            >
-                                <img src={ClipboardText} alt="course-icon" />
-                                Upload Files
-                            </div>
-                            <div
-                                className={`tab ${selectedTab === 3 ? 'active' : ''}`}
-                                onClick={() => handleTabClick(3)}
-                            >
-                                <img src={task_alt} alt="course-icon" />
-                                Publish Course
-                            </div>
+                                <Tab
+                                    eventKey="basic-information"
+                                    title={
+                                        <span>
+                                            <img src={Stack} alt="course-icon" /> Basic Information
+                                        </span>
+                                    }
+                                >
+                                    <AddNewCourse />
+                                </Tab>
+                                <Tab
+                                    eventKey="upload_files"
+                                    title={
+                                        <span>
+                                            <img src={ClipboardText} alt="course-icon" /> Upload Files
+                                        </span>
+                                    }
+                                >
+                                    <UploadFiles />
+                                </Tab>
+                                <Tab
+                                    eventKey="publish-course"
+                                    title={
+                                        <span>
+                                            <img src={task_alt} alt="course-icon" /> Publish Course
+                                        </span>
+                                    }
+                                >
+                                    <PublishCourses />
+                                </Tab>
+                            </Tabs>
                         </div>
-                        <div className="tab-content">{renderTabContent()}</div>
                     </Row>
                 </div>
             ) : (

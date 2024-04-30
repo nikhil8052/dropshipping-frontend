@@ -97,7 +97,11 @@ const ResetPassword = () => {
                                             </div>
 
                                             <Button className="auth-login-button" type="submit" disabled={loading}>
-                                                {isSubmitting ? <Spinner animation="border" size="sm" /> : 'Login'}
+                                                {isSubmitting ? (
+                                                    <Spinner animation="border" size="sm" />
+                                                ) : (
+                                                    'Reset Password'
+                                                )}
                                             </Button>
                                         </FormikForm>
                                     )}
