@@ -726,3 +726,38 @@ export const paymentsDummyData = [
         date_time: 'December 01, 2023 15:25'
     }
 ];
+
+export const countryList = [
+    {
+        id: 1,
+        name: 'United States',
+        code: 'US',
+        dialCode: '+1',
+        currency: 'USD',
+        currencyName: 'United States Dollar'
+    },
+    {
+        id: 2,
+        name: 'United Kingdom',
+        code: 'GB',
+        dialCode: '+44',
+        currency: 'GBP',
+        currencyName: 'British Pound Sterling'
+    },
+    {
+        id: 3,
+        name: 'Canada',
+        code: 'CA',
+        dialCode: '+1',
+        currency: 'CAD',
+        currencyName: 'Canadian Dollar'
+    },
+    {
+        id: 4,
+        name: 'Australia',
+        code: 'AU',
+        dialCode: '+61',
+        currency: 'AUD',
+        currencyName: 'Australian Dollar'
+    }
+];

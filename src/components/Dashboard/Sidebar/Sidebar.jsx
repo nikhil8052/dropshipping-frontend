@@ -32,15 +32,7 @@ const Sidebar = () => {
 
     useEffect(() => {
         const items = role === 'admin' ? adminSidebarItems : role === 'coach' ? coachSidebarItems : studentSidebarItems;
-        const lastChild = {
-            id: items.length + 1,
-            name: userInfo?.email,
-            role,
-            iconLight: profile,
-            linkTo: null
-        };
-        const updatedItems = [...items, lastChild];
-        setUpdatedItems(updatedItems);
+        setUpdatedItems(items);
     }, [role]);
 
     const navigate = useNavigate();
@@ -134,6 +126,15 @@ const Sidebar = () => {
                             )}
                             {/* Last child should be an image and role */}
                         </Nav>
+                        <div className="side-bar-profile">
+                            <div className="profile-wrapper">
+                                <img src={profile} className="profile-pic" alt="nav-icon" />
+                            </div>
+                            <div className="profile-name">
+                                <p>{userInfo?.email}</p>
+                                <span>{userInfo?.role}</span>
+                            </div>
+                        </div>
                     </div>
                 </Container>
             </div>
