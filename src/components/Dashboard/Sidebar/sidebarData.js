@@ -94,7 +94,8 @@ export const adminSidebarItems = [
         id: 2,
         name: 'Coaches',
         iconLight: coaches, // Replace with your icon
-        linkTo: '/admin/coaches'
+        linkTo: '/admin/coaches',
+        pathCombinations: ['/admin/coaches', '/admin/coaches/new', '/admin/coaches/edit']
     },
     {
         id: 3,

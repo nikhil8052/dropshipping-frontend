@@ -230,7 +230,7 @@ const Payments = () => {
                                         <div className="d-flex justify-content-between w-100">
                                             <span className="ms-2">{selectedOption}</span>
                                             <p>
-                                                <img src={downArrow} alt="Filter" srcset="" />
+                                                <img src={downArrow} alt="Filter" />
                                             </p>
                                         </div>
                                     }

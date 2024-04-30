@@ -24,6 +24,10 @@ const Topbar = () => {
                 if (path === item.linkTo) {
                     return item.name;
                 }
+                // Add the possible combinations that have same top bar title
+                if (item?.pathCombinations?.includes(path)) {
+                    return item.name;
+                }
                 if (item.child) {
                     const found = findTitle(item.child);
                     if (found) return found;

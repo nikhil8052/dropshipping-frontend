@@ -8,7 +8,7 @@
 }
 
 // Color Palette
-$primary-color: #2DA5F3;
+$primary-color: #2da5f3;
 $secondary-color: #6c757d;
 $success-color: #48c95e;
 $success-light-color: rgba(0, 178, 125, 0.75);
@@ -17,6 +17,7 @@ $light-info-color: rgba(77, 107, 140, 1);
 $warning-color: #ffc107;
 $danger-color: #dc3545;
 $danger-light-color: rgba(254, 100, 100, 0.75);
+$danger-extra-light-color: rgba(255, 100, 100, 1);
 $light-color: #f8f9fa;
 $medium-light-color: rgba(255, 255, 255, 1);
 $dark-color: rgba(1, 9, 7, 1);
@@ -50,12 +51,11 @@ $btn-danger-color: $danger-color;
 $btn-danger-bg-color: $danger-color;
 
 // Form Colors
-$input-border-color: #E4E7E9;
+$input-border-color: #e4e7e9;
 $input-focus-border-color: $primary-color;
-$input-placeholder-color: #E7DCDC;
+$input-placeholder-color: #e7dcdc;
 $input-disabled-bg-color: #f8f9fa;
 $input-disabled-color: $secondary-color;
-
 
 // Navbar Colors
 $navbar-bg-color: $primary-color;

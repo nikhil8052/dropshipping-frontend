@@ -5,13 +5,13 @@ import Modal from '@components/Modal/Modal';
 import ProductForm from '@components/Listings/ProductForm/ProductForm';
 import ConfirmationBox from '@components/ConfirmationBox/ConfirmationBox';
 import { Helmet } from 'react-helmet';
-import axiosWrapper from '@utils/api';
 import { toast } from 'react-toastify';
 import TextExpand from '@components/TextExpand/TextExpand';
 import editIcon from '@icons/edit_square.svg';
 import deleteIcon from '@icons/trash-2.svg';
 import add from '@icons/add.svg';
 import { coachDummyData } from '../../../data/data';
+import { useNavigate } from 'react-router-dom';
 
 const Coaches = () => {
     const [showDeleteModal, setShowDeleteModal] = useState(false);
@@ -25,7 +25,7 @@ const Coaches = () => {
     });
     const [loading, setLoading] = useState(false);
     const [loadingCRUD, setLoadingCRUD] = useState(false);
-
+    const navigate = useNavigate();
     const [coachesData, setCoachesData] = useState(null);
 
     useEffect(() => {
@@ -57,21 +57,13 @@ const Coaches = () => {
 
     const handleCreateClick = () => {
         // Handle create button click event here
-        setProductModal({
-            show: true,
-            title: 'Create Product',
-            isEditable: false,
-            productId: null
-        });
+        navigate('/admin/coaches/new');
     };
 
-    const handleEditClick = (productId) => {
+    const handleEditClick = (coachId) => {
         // Handle edit action here
-        setProductModal({
-            show: true,
-            title: 'Edit Product',
-            isEditable: true,
-            productId: productId
+        navigate('/admin/coaches/edit', {
+            state: { coachId }
         });
     };
 
@@ -101,11 +93,15 @@ const Coaches = () => {
     const handleDeleteSubmit = async () => {
         try {
             setLoadingCRUD(true);
-            const data = await axiosWrapper(
-                'delete',
-                `${import.meta.env.VITE_JSONPLACEHOLDER}/posts/${selectedRowId}}`
-            );
-            toast.success(data?.message || 'Item deleted successfully');
+            // Delete API call here
+            const copyOfCoachData = [...coachesData];
+            const coach = copyOfCoachData.find((coach) => coach.id === selectedRowId);
+            const index = copyOfCoachData.indexOf(coach);
+            copyOfCoachData.splice(index, 1);
+            setCoachesData(copyOfCoachData);
+            // Call the get API
+            fetchData();
+            toast.success('Coach deleted successfully');
         } catch (error) {
             return;
         } finally {
@@ -242,11 +238,16 @@ const Coaches = () => {
                     show={showDeleteModal}
                     onClose={handleCloseDeleteModal}
                     loading={loadingCRUD}
-                    title="Delete Entry"
-                    body="Are you sure you want to delete this entry?"
+                    title="Delete Coach"
+                    body="Are you sure you wants to delete this Coach ?"
                     onConfirm={handleDeleteSubmit}
+                    customFooterClass="custom-footer-class"
+                    nonActiveBtn="cancel-button"
+                    activeBtn="delete-button"
+                    activeBtnTitle="Delete"
                 />
             )}
+
             <Table
                 columns={columns}
                 tableData={coachesData}
@@ -255,7 +256,7 @@ const Coaches = () => {
                 children={
                     <div className="d-flex justify-content-end">
                         <Button className="add-button btn btn-light btn-block" onClick={handleCreateClick}>
-                            <img src={add} alt="" srcset="" /> <span className="ms-2">Add New Coach</span>
+                            <img src={add} alt="" /> <span className="ms-2">Add New Coach</span>
                         </Button>
                     </div>
                 }
