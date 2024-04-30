@@ -8,7 +8,6 @@ import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import CustomSelect from '../../../../components/Input/Select';
 import { coachDummyData, studentDummyData } from '../../../../data/data';
-import _ from 'lodash';
 import toast from 'react-hot-toast';
 import { useLocation } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
