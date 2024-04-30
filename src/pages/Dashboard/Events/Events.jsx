@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import Table from '@components/Table/Table';
-import { Button, Col, Row, Form, DropdownButton, Dropdown } from 'react-bootstrap';
+import { Button, Col, Row, DropdownButton, Dropdown } from 'react-bootstrap';
 import Modal from '@components/Modal/Modal';
 import ProductForm from '@components/Listings/ProductForm/ProductForm';
 import ConfirmationBox from '@components/ConfirmationBox/ConfirmationBox';
@@ -13,7 +13,7 @@ import deleteIcon from '@icons/trash-2.svg';
 import eyeIcon from '@icons/basil_eye-solid.svg';
 import add from '@icons/add.svg';
 import downArrow from '@icons/down-arrow.svg';
-import { studentDummyData, coachDummyData, eventsDummyData } from '../../../data/data';
+import { eventsDummyData } from '../../../data/data';
 
 const Events = () => {
     const [showDeleteModal, setShowDeleteModal] = useState(false);
@@ -126,7 +126,7 @@ const Events = () => {
     const ActionsRenderer = (props) => (
         <React.Fragment>
             <Row style={{ width: '100%' }}>
-                <Col lg={3} md={6} sm={6} className="d-flex justify-content-center align-items-center">
+                <Col lg={3} md={4} sm={4} xs={4} className="d-flex justify-content-center align-items-center">
                     <div
                         className="btn-light action-button delete-button"
                         onClick={() => props.onDeleteClick(props.data.id)}
@@ -134,12 +134,12 @@ const Events = () => {
                         <img src={eyeIcon} className="action-icon" alt="action-icon" />
                     </div>
                 </Col>
-                <Col lg={3} md={6} sm={6} className="d-flex justify-content-center align-items-center">
+                <Col lg={3} md={4} sm={4} xs={4} className="d-flex justify-content-center align-items-center">
                     <div className="action-button edit-button" onClick={() => props.onEditClick(props.data.id)}>
                         <img src={editIcon} className="action-icon" alt="action-icon" />
                     </div>
                 </Col>
-                <Col lg={3} md={6} sm={6} className="d-flex justify-content-center align-items-center">
+                <Col lg={3} md={4} sm={4} xs={4} className="d-flex justify-content-center align-items-center">
                     <div
                         className="btn-light action-button delete-button"
                         onClick={() => props.onDeleteClick(props.data.id)}
@@ -264,40 +264,40 @@ const Events = () => {
                 onRowClicked={handleRowClick}
                 loading={loading}
                 children={
-                    <>
-                        <div className="text-nowrap d-flex justify-content-even align-items-center">Filter By:</div>
-                        <DropdownButton
-                            title={
-                                <div className="d-flex justify-content-between w-100">
-                                    <span className="ms-2">{selectedEvent}</span>
-
-                                    <p>
-                                        <img src={downArrow} alt="Filter" srcset="" />
-                                    </p>
-                                </div>
-                            }
-                            defaultValue={selectedEvent}
-                            className="dropdown-button w-25 d-flex justify-content-even align-items-center"
-                        >
-                            {['All Events', 'Upcoming Events', 'Past Events'].map((events) => (
-                                <Dropdown.Item
-                                    onClick={(e) => handleEventSelect(e, events)}
-                                    key={events}
-                                    eventKey={events}
-                                    className="my-1 ms-2"
+                    <Row className="mb-3 d-flex justify-content-between align-items-center me-1">
+                        <Col xxl={6} xl={7} lg={12} md={6} sm={6} xs={12} className="">
+                            <div className="text-nowrap filter-by-text d-flex justify-content-even align-items-center">
+                                <span className="me-2"> Filter By:</span>
+                                <DropdownButton
+                                    title={
+                                        <div className="d-flex justify-content-between align-items-center">
+                                            <span className="ms-2">{selectedEvent}</span>
+                                            <img src={downArrow} alt="Filter" />
+                                        </div>
+                                    }
+                                    defaultValue={selectedEvent}
+                                    className="dropdown-button coach-btn w-100"
                                 >
-                                    <span className="coach-name"> {events}</span>
-                                </Dropdown.Item>
-                            ))}
-                        </DropdownButton>
+                                    {['All Events', 'Upcoming Events', 'Past Events'].map((event) => (
+                                        <Dropdown.Item
+                                            onClick={(e) => handleEventSelect(e, event)}
+                                            key={event}
+                                            eventKey={event}
+                                            className="my-1 ms-2 w-100"
+                                        >
+                                            <span className="coach-name"> {event}</span>
+                                        </Dropdown.Item>
+                                    ))}
+                                </DropdownButton>
+                            </div>
+                        </Col>
 
-                        <Button
-                            className="add-button d-flex justify-content-even align-items-center"
-                            onClick={handleCreateClick}
-                        >
-                            <img src={add} alt="" srcset="" /> <span className="ms-2">Create New Event</span>
-                        </Button>
-                    </>
+                        <Col xxl={4} xl={5} lg={12} md={6} sm={12} xs={12}>
+                            <Button className="add-button w-100" onClick={handleCreateClick}>
+                                <img src={add} alt="" /> <span className="ms-2">Create New Event</span>
+                            </Button>
+                        </Col>
+                    </Row>
                 }
             />
         </div>

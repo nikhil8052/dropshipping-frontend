@@ -41,37 +41,51 @@
         white-space: nowrap;
         border: rgba(148, 148, 148, 1) 1px solid !important;
     }
-    .dropdown-button {
+    .dropdown-button,
+    .dropdown-button-fix {
         background-color: transparent;
         border-radius: 59px;
+        font-weight: 400;
+        white-space: nowrap;
+        border: rgba(148, 148, 148, 1) 1px solid !important;
+
         .dropdown-toggle {
             color: rgba(148, 148, 148, 1);
             display: flex;
             align-items: center;
             justify-content: space-between;
             width: 100%;
+
+            & > div {
+                width: 100%;
+            }
         }
-        font-weight: 400;
-        white-space: nowrap;
-        border: rgba(148, 148, 148, 1) 1px solid !important;
 
         .dropdown-menu {
-            height: 254px;
+            width: 100%;
             overflow: hidden;
-            overflow-y: auto;
             border: none;
             border-radius: 10px;
             box-shadow: 0px 0px 54px 0px rgba(0, 0, 0, 0.37);
+
             .avatar {
                 width: 20px;
                 border-radius: 50%;
                 object-fit: cover;
                 margin-right: 0.5rem;
             }
+
             .coach-name {
                 font-size: small;
                 color: rgba(85, 95, 126, 1);
             }
+        }
+    }
+
+    .dropdown-button {
+        .dropdown-menu {
+            height: 254px;
+            overflow-y: auto;
         }
     }
 
@@ -84,12 +98,18 @@
             background-color: $success-light-color;
             padding: 0px 30px;
         }
-        &.UnPaid {
+        &.Unpaid {
             padding: 0px 20px;
             background-color: $danger-light-color;
         }
         &.partial {
             background-color: $warning-color;
+        }
+    }
+
+    @media (max-width: $small-screen) {
+        .coach-btn {
+            margin-top: 0.5rem;
         }
     }
 }

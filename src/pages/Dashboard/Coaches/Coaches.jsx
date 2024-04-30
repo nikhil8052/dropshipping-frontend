@@ -124,12 +124,12 @@ const Coaches = () => {
     const ActionsRenderer = (props) => (
         <React.Fragment>
             <Row style={{ width: '100%' }}>
-                <Col lg={4} md={6} sm={6} className="d-flex justify-content-center align-items-center">
+                <Col lg={4} md={4} sm={6} xs={4} className="d-flex justify-content-center align-items-center">
                     <div className="action-button edit-button" onClick={() => props.onEditClick(props.data.id)}>
                         <img src={editIcon} className="action-icon" alt="action-icon" />
                     </div>
                 </Col>
-                <Col lg={1} md={6} sm={6} className="d-flex justify-content-center align-items-center">
+                <Col lg={1} md={4} sm={6} xs={4} className="d-flex justify-content-center align-items-center">
                     <div
                         className="btn-light action-button delete-button"
                         onClick={() => props.onDeleteClick(props.data.id)}
@@ -217,6 +217,8 @@ const Coaches = () => {
                 onEditClick: handleEditClick,
                 onDeleteClick: handleDeleteClick
             },
+            // Remove the pinned right on small screens
+
             pinned: 'right',
             sortable: false,
             filter: false,
@@ -251,12 +253,11 @@ const Coaches = () => {
                 onRowClicked={handleRowClick}
                 loading={loading}
                 children={
-                    <Button
-                        className="add-button btn btn-light btn-block d-flex justify-content-even align-items-center"
-                        onClick={handleCreateClick}
-                    >
-                        <img src={add} alt="" srcset="" /> <span className="ms-2">Add New Coach</span>
-                    </Button>
+                    <div className="d-flex justify-content-end">
+                        <Button className="add-button btn btn-light btn-block" onClick={handleCreateClick}>
+                            <img src={add} alt="" srcset="" /> <span className="ms-2">Add New Coach</span>
+                        </Button>
+                    </div>
                 }
             />
         </div>

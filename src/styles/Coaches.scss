@@ -1,6 +1,10 @@
 @import '@constants/colors.scss';
+@import '@constants/media.scss';
 
 .coaches-page {
+    box-shadow: 0px 0px 14.83px 0px rgba(0, 0, 0, 0.06);
+    border-radius: 9px;
+    // Fix the table height
     .action-button {
         width: 30px;
         height: 30px;
@@ -36,5 +40,11 @@
         color: #ffff;
         font-weight: 400;
         white-space: nowrap;
+    }
+
+    @media (max-width: $medium-screen) {
+        .add-button {
+            margin-top: 0.5rem;
+        }
     }
 }
