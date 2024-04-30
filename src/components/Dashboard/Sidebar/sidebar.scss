@@ -38,7 +38,8 @@
         }
     }
     .side-nav-wrapper {
-        position: relative;
+        display: flex;
+        flex-direction: column;
         height: calc(100vh - 75px);
         overflow-y: auto;
         width: 245px;
@@ -157,18 +158,17 @@
         }
     }
     .side-bar-profile {
-        position: absolute;
         display: flex;
         align-items: center;
-        justify-content: start;
-        left: 1rem;
-        bottom: 5rem;
+        justify-content: center;
+        gap: 10px;
+        margin-top: auto;
         .profile-wrapper {
-            width: 100%;
+            margin-top: 0.5rem;
             border-radius: 50%;
-            box-shadow: -2px 6px 23px 2px rgb(26 140 208 / 70%);
             .profile-pic {
                 width: 64px;
+                box-shadow: 0px 4px 34px 0px rgba(1, 159, 216, 1);
                 height: 64px;
                 border-radius: 50%;
                 object-fit: cover;
@@ -177,9 +177,11 @@
         .profile-name {
             font-size: 14px;
             text-transform: capitalize;
-            margin-left: 10px;
             p {
                 color: $medium-light-color;
+                text-wrap: wrap;
+                word-wrap: break-word;
+                max-width: 160px;
             }
             span {
                 color: $sidebar-profile-color;

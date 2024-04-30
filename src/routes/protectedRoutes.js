@@ -3,6 +3,7 @@ import { lazy } from 'react';
 const Dashboard = lazy(() => import('@pages/Dashboard/Dashboard/Dashboard'));
 const Coaches = lazy(() => import('@pages/Dashboard/Coaches/Coaches'));
 const NewCoach = lazy(() => import('@pages/Dashboard/Coaches/NewCoach/NewCoach'));
+const NewStudent = lazy(() => import('@pages/Dashboard/Students/NewStudent/NewStudent'));
 const Students = lazy(() => import('@pages/Dashboard/Students/Students'));
 const Courses = lazy(() => import('@pages/Dashboard/Courses/Courses'));
 const Events = lazy(() => import('@pages/Dashboard/Events/Events'));
@@ -44,6 +45,20 @@ export const adminRoutes = [
         exact: true,
         name: 'Students',
         Component: Students,
+        access: 'admin'
+    },
+    {
+        path: 'students/new',
+        exact: true,
+        name: 'Students',
+        Component: NewStudent,
+        access: 'admin'
+    },
+    {
+        path: 'students/edit',
+        exact: true,
+        name: 'Students',
+        Component: NewStudent,
         access: 'admin'
     },
     {

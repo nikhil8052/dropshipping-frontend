@@ -100,7 +100,7 @@ const ResetPassword = () => {
                                                 {isSubmitting ? (
                                                     <Spinner animation="border" size="sm" />
                                                 ) : (
-                                                    'Reset Password'
+                                                    'Update Password'
                                                 )}
                                             </Button>
                                         </FormikForm>

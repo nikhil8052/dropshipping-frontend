@@ -13,6 +13,7 @@ import deleteIcon from '@icons/trash-2.svg';
 import add from '@icons/add.svg';
 import downArrow from '@icons/down-arrow.svg';
 import { studentDummyData, coachDummyData } from '../../../data/data';
+import { useNavigate } from 'react-router-dom';
 
 const Students = () => {
     const [showDeleteModal, setShowDeleteModal] = useState(false);
@@ -24,6 +25,7 @@ const Students = () => {
         studentId: null
     });
     const [loading, setLoading] = useState(false);
+    const navigate = useNavigate();
     const [loadingCRUD, setLoadingCRUD] = useState(false);
 
     const [studentsData, setStudentsData] = useState(null);
@@ -60,12 +62,7 @@ const Students = () => {
 
     const handleCreateClick = () => {
         // Handle create button click event here
-        setStudentModal({
-            show: true,
-            title: 'Create Product',
-            isEditable: false,
-            studentId: null
-        });
+        navigate('/admin/students/new');
     };
 
     const handleEditClick = (studentId) => {
