@@ -6,7 +6,7 @@ import * as Yup from 'yup';
 import { Container, Row, Col, Button } from 'react-bootstrap';
 import 'react-quill/dist/quill.snow.css';
 import CustomSelect from '../../../../components/Input/Select';
-import { studentDummyData } from '../../../../data/data';
+import { countryList, studentDummyData } from '../../../../data/data';
 import toast from 'react-hot-toast';
 import { useLocation } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
@@ -232,12 +232,16 @@ const NewStudent = () => {
                                             as="select"
                                             placeholder="United States"
                                         >
-                                            {studentDummyData.map((student) => (
-                                                <option key={student.id} value={student.name}>
-                                                    {student.name}
+                                            <option defaultChecked value="">
+                                                Select a country...
+                                            </option>
+                                            {countryList.map((country) => (
+                                                <option key={country.id} value={country.name}>
+                                                    {country.name}
                                                 </option>
                                             ))}
                                         </Field>
+
                                         <ErrorMessage name="country" component="div" className="error" />
                                     </Col>
                                     <Col md={6} xs={12}>
