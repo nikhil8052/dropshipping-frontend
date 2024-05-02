@@ -19,6 +19,7 @@ function Select(props) {
                         }
                     });
                 }}
+                components={props.components}
             />
         </div>
     );

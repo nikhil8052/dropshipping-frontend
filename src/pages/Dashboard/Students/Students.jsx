@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import Table from '@components/Table/Table';
 import { Button, Col, Row, DropdownButton, Dropdown } from 'react-bootstrap';
 import Modal from '@components/Modal/Modal';
-import ProductForm from '@components/Listings/ProductForm/ProductForm';
 import ConfirmationBox from '@components/ConfirmationBox/ConfirmationBox';
 import { Helmet } from 'react-helmet';
 import axiosWrapper from '@utils/api';
@@ -14,15 +13,16 @@ import add from '@icons/add.svg';
 import downArrow from '@icons/down-arrow.svg';
 import { studentDummyData, coachDummyData } from '../../../data/data';
 import { useNavigate } from 'react-router-dom';
+import Roadmap from './Roadmap/Roadmap';
 
 const Students = () => {
     const [showDeleteModal, setShowDeleteModal] = useState(false);
     const [selectedRowId, setSelectedRowId] = useState(null);
-    const [studentModal, setStudentModal] = useState({
+    const [coursesModal, setCoursesModal] = useState({
         show: false,
         title: '',
         isEditable: false,
-        studentId: null
+        data: null
     });
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
@@ -64,14 +64,32 @@ const Students = () => {
         // Handle create button click event here
         navigate('/admin/students/new');
     };
-
     const handleEditClick = (studentId) => {
         // Handle edit action here
-        setStudentModal({
+        navigate('/admin/students/edit', {
+            state: { studentId }
+        });
+    };
+
+    const handleCoursesRoadMapClick = (data) => {
+        // Handle edit action here
+        setCoursesModal({
             show: true,
-            title: 'Edit Product',
+            title: (
+                <div>
+                    Courses Roadmap
+                    <p
+                        style={{
+                            color: 'rgba(132, 132, 132, 1)',
+                            fontSize: '14px'
+                        }}
+                    >
+                        (Drag Courses for change their numbers)
+                    </p>
+                </div>
+            ),
             isEditable: true,
-            studentId: studentId
+            data
         });
     };
 
@@ -82,15 +100,15 @@ const Students = () => {
     };
 
     const handleCloseModal = () => {
-        resetProductModal();
+        resetCoursesModal();
     };
 
-    const resetProductModal = () => {
-        setStudentModal({
+    const resetCoursesModal = () => {
+        setCoursesModal({
             show: false,
             title: '',
             isEditable: false,
-            studentId: null
+            data: null
         });
     };
 
@@ -204,7 +222,25 @@ const Students = () => {
             cellRenderer: TextExpand,
             wrapText: true,
             autoHeight: true,
-            resizable: false
+            resizable: false,
+            cellRenderer: ({ data: rowData }) => {
+                const coursesRoadmap = rowData.coursesRoadmap;
+                const firstName = `Course 1 ${coursesRoadmap[0].title}`;
+
+                return (
+                    <div
+                        style={{
+                            overflow: 'hidden',
+                            textOverflow: 'ellipsis',
+                            whiteSpace: 'nowrap',
+                            cursor: 'pointer'
+                        }}
+                        onClick={() => handleCoursesRoadMapClick(coursesRoadmap)}
+                    >
+                        {firstName}
+                    </div>
+                );
+            }
         },
         {
             headerName: 'Actions',
@@ -226,19 +262,24 @@ const Students = () => {
             <Helmet>
                 <title>Coaches | Drop Ship Academy</title>
             </Helmet>
-            {studentModal.show && (
-                <Modal size="large" show={studentModal.show} onClose={handleCloseModal} title={studentModal.title}>
-                    <ProductForm productModal={studentModal} resetModal={resetProductModal} />
+            {coursesModal.show && (
+                <Modal size="large" show={coursesModal.show} onClose={handleCloseModal} title={coursesModal.title}>
+                    <Roadmap coursesModal={coursesModal} resetModal={resetCoursesModal} />
                 </Modal>
             )}
+
             {showDeleteModal && (
                 <ConfirmationBox
                     show={showDeleteModal}
                     onClose={handleCloseDeleteModal}
                     loading={loadingCRUD}
-                    title="Delete Entry"
-                    body="Are you sure you want to delete this entry?"
+                    title="Delete Student"
+                    body="Are you sure you wants to delete this Student ?"
                     onConfirm={handleDeleteSubmit}
+                    customFooterClass="custom-footer-class"
+                    nonActiveBtn="cancel-button"
+                    activeBtn="delete-button"
+                    activeBtnTitle="Delete"
                 />
             )}
             <Table
