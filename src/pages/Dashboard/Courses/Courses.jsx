@@ -32,9 +32,9 @@ const Courses = () => {
     const courseCards = [
         {
             id: 1,
-            title: 'Total budget',
-            detail: '7500$',
-            lectureNo: '1',
+            title: 'Design Conference',
+            detail: 'Coach: David Everson',
+            lectureNo: 'Lectures: 28',
             img: eventImg
         },
         {
@@ -46,45 +46,45 @@ const Courses = () => {
         },
         {
             id: 3,
-            title: 'Valued products',
-            detail: '750',
-            lectureNo: '1',
+            title: 'Structured Query',
+            detail: 'Dropship Academy X',
+            lectureNo: 'Lectures: 28',
             img: eventImg
         },
         {
             id: 4,
-            title: 'active users',
-            detail: '1.5K',
-            lectureNo: '1',
+            title: 'Advance programing',
+            detail: 'Dropship Academy X',
+            lectureNo: 'Lectures: 28',
 
             img: eventImg
         },
         {
             id: 5,
-            title: 'Total budget',
-            detail: '7500$',
-            lectureNo: '1',
+            title: 'Blogs creation',
+            detail: 'Dropship Academy X',
+            lectureNo: 'Lectures: 28',
             img: eventImg
         },
         {
             id: 6,
-            title: 'Expenses',
-            detail: '1500$',
-            lectureNo: '1',
+            title: 'Web Design',
+            detail: 'Dropship Academy X',
+            lectureNo: 'Lectures: 28',
             img: eventImg
         },
         {
             id: 7,
-            title: 'Valued products',
-            detail: '750',
-            lectureNo: '1',
+            title: 'Web Design',
+            detail: 'Dropship Academy X',
+            lectureNo: 'Lectures: 28',
             img: eventImg
         },
         {
             id: 8,
-            title: 'active users',
-            detail: '1.5K',
-            lectureNo: '1',
+            title: 'Web Design',
+            detail: 'Dropship Academy X',
+            lectureNo: 'Lectures: 28',
 
             img: eventImg
         }

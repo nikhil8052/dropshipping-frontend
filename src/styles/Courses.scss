@@ -184,5 +184,276 @@
         }
     }
     .upload-course-form {
+        margin-top: 10px;
+
+        .coachPhoto {
+        }
+        .image-preview {
+            display: flex;
+            justify-content: start;
+            cursor: pointer;
+            align-items: center;
+            gap: 1.5rem;
+            border: 0.8px solid rgba(233, 234, 240, 1);
+            border-radius: 10px;
+            padding: 20px 10px;
+            color: rgba(110, 116, 133, 1);
+            .image-preview-text {
+                display: flex;
+                flex-direction: column;
+                font-size: $font-size-small;
+                gap: 10px;
+
+                .upload-btn {
+                    border-radius: 50px;
+                    padding: 0, 19.13px, 0px, 19.13px;
+                    background-color: #ccecf7;
+                    color: #019ed8;
+                    width: 150px;
+                    height: 39px;
+                    font-size: $font-size-small;
+                    border: transparent;
+                    font-weight: 600;
+                }
+            }
+        }
+        .image-renderer {
+            display: flex;
+            justify-content: start;
+            align-items: center;
+            gap: 1.5rem;
+            padding: 20px 10px;
+            border: 0.8px solid rgba(233, 234, 240, 1);
+            border-radius: 10px;
+            color: rgb(38, 54, 99);
+            text-wrap: wrap;
+            img {
+                width: 180px;
+                height: 127px;
+                // border-radius: 50%;
+                border-radius: 10px !important;
+
+                // object-fit: cover;
+            }
+            video {
+                width: 180px;
+                height: 127px;
+                // border-radius: 50%;
+                border-radius: 10px !important;
+            }
+        }
+        .field-quill-control {
+            .ql-toolbar {
+                border: 0.8px solid rgba(233, 234, 240, 1);
+                border-radius: 10px 10px 0 0;
+                order: -1;
+            }
+            .ql-container {
+                border: 0.8px solid rgba(233, 234, 240, 1);
+                border-radius: 0 0 10px 10px;
+                min-height: 200px;
+            }
+        }
+    }
+    .field-label {
+        font-family: $font-primary !important;
+        font-weight: $font-weight-bold !important;
+        font-size: 14px;
+        font-weight: 400;
+        line-height: 14px;
+        text-align: left;
+        text-transform: capitalize;
+        color: rgba(25, 28, 31, 1);
+    }
+    .submit-btn,
+    .cancel-btn {
+        border-radius: 59px;
+        font-weight: 400;
+        white-space: nowrap;
+        border: none;
+    }
+    .submit-btn {
+        color: #ffff;
+        padding: 10px 30px;
+        @include pagination-gradient;
+    }
+
+    .cancel-btn {
+        padding: 10px 40px;
+        background-color: transparent !important;
+        color: black;
+        border: 1px solid rgba(233, 234, 240, 1);
+    }
+
+    //css for add lecture box
+    .add-lecture-section {
+        background-color: #f5f7fa;
+        padding: 20px;
+        margin-top: 10px;
+        border-radius: 10px;
+        .add-lecture-nav {
+            display: flex;
+            justify-content: space-between;
+            padding-bottom: 10px;
+        }
+        .add-lecture-item {
+            background-color: white;
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            @include respond-to($large-screen) {
+                display: flex;
+                flex-direction: column;
+                justify-content: start;
+            }
+            .items-button {
+                font-family: $font-primary;
+                font-size: $font-size-small;
+                display: flex;
+                gap: 4px;
+                .quizz-btn {
+                    padding: 0px, 12.75px, 0px, 12.75px;
+                    background-color: #f5e021;
+                    border-radius: 50px;
+                    color: #212121;
+                    font-weight: $font-weight-bold;
+                }
+                .quizz-lec-btn {
+                    background-color: #61dd83;
+                    padding: 0px, 12.75px, 0px, 12.75px;
+                    border-radius: 50px;
+                    color: #ffffff;
+                }
+            }
+        }
+    }
+}
+// add lecture modal form css
+.add-lecture-form {
+    input[type='text'] {
+        width: 100% !important;
+        background-color: transparent !important;
+        border: 0.8px solid #e9eaf0;
+        padding: 10px, 24px, 24px, 14px;
+        height: 37px !important;
+        &::placeholder {
+            text-transform: capitalize;
+            font-size: 14px;
+            color: #8c94a3;
+            padding-left: 10px;
+            @include respond-to($medium-screen) {
+                font-size: 10px !important;
+            }
+            @include respond-to($small-screen) {
+                font-size: 10px;
+            }
+        }
+        &:focus {
+            outline: 1.5px solid $info-color;
+        }
+    }
+
+    textarea {
+        width: 100% !important;
+        background-color: transparent !important;
+        border: 0.8px solid #e9eaf0;
+        height: 115px !important;
+        border-radius: 10px !important;
+        &::placeholder {
+            text-transform: capitalize;
+            font-size: 14px;
+            color: #8c94a3;
+            padding-left: 10px;
+            @include respond-to($medium-screen) {
+                font-size: 10px !important;
+            }
+            @include respond-to($small-screen) {
+                font-size: 10px;
+            }
+        }
+        &:focus {
+            outline: 1.5px solid $info-color;
+        }
+    }
+
+    .custom-card {
+        padding: 0px;
+        width: auto;
+        height: auto;
+    }
+    .add-quizz-fields {
+        .add-quizz-label {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-family: $font-primary;
+            font-size: $font-size-medium;
+            span {
+                color: #019ed8;
+            }
+        }
+        .add-quizz-title {
+            color: #212121;
+            font-weight: $font-weight-bold;
+            font-family: $font-primary;
+            font-size: $font-size-large;
+        }
+        .add-quizz-question {
+            .quizz-multiple-choice {
+                display: flex;
+                justify-content: space-between;
+            }
+        }
+    }
+    .add-quizz-file {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        border: 0.8px solid #e9eaf0;
+        border-radius: 10px;
+        margin-top: 15px;
+        padding: 15px;
+        color: #8c94a3;
+        font-size: $font-size-medium;
+
+        h4 {
+            font-size: $font-size-medium;
+
+            font-weight: $font-weight-bold;
+            color: #1d2026;
+        }
+    }
+    //Css for uplading file
+    .guZdik {
+        border: none;
+        width: 100%;
+        position: absolute;
+        svg {
+            display: none;
+        }
+    }
+    .jWkLDY {
+        display: none;
+    }
+    .submit-btn,
+    .cancel-btn {
+        border-radius: 59px;
+        font-weight: 400;
+        white-space: nowrap;
+        border: none;
+    }
+    .submit-btn {
+        color: #ffff;
+        padding: 10px 30px;
+        @include pagination-gradient;
+    }
+
+    .cancel-btn {
+        padding: 10px 40px;
+        background-color: transparent !important;
+        color: black;
+        border: 1px solid rgba(233, 234, 240, 1);
     }
 }
