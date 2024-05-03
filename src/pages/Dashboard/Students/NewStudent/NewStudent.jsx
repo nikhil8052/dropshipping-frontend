@@ -4,23 +4,23 @@ import imagePreview from '@icons/image-preview.svg';
 import { Formik, Form, Field, ErrorMessage, FieldArray } from 'formik';
 import * as Yup from 'yup';
 import { Container, Row, Col, Button } from 'react-bootstrap';
-import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import CustomSelect from '../../../../components/Input/Select';
-import { coachDummyData, studentDummyData, countryList } from '../../../../data/data';
+import { countryList, studentDummyData } from '../../../../data/data';
 import toast from 'react-hot-toast';
 import { useLocation } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 
-const NewCoach = () => {
+const NewStudent = () => {
     const inputRef = useRef();
-    const [coachPhoto, setCoachPhoto] = useState(null);
+    const [studentPhoto, setStudentPhoto] = useState(null);
     const location = useLocation();
-    const coachId = location.state?.coachId;
+    const studentId = location.state?.studentId;
     const navigate = useNavigate();
-    const [coachData, setCoachData] = useState({
-        coachName: '',
-        coachEmail: '',
+    const [studentData, setStudentData] = useState({
+        studentName: '',
+        id: '',
+        studentEmail: '',
         phoneNumber: '',
         country: '',
         region: '',
@@ -31,28 +31,28 @@ const NewCoach = () => {
     });
 
     useEffect(() => {
-        if (coachId) {
+        if (studentId) {
             // For now it is a dummy data, later we will replace it with actual API call
 
             // Fetch data from API here
-            const coach = coachDummyData.find((coach) => coach.id === coachId);
+            const student = studentDummyData.find((student) => student.id === studentId);
             // later we add the details to the form
-            if (coach) {
-                setCoachPhoto(coach.avatarUrl);
-                setCoachData({
-                    coachName: coach.name,
-                    coachEmail: coach.email,
-                    phoneNumber: coach.phoneNumber,
-                    country: coach.country,
-                    region: coach.region,
-                    assignedStudents: coach.assignedStudents,
-                    highTicketSpots: coach.highTicketSpots,
-                    lowTicketSpots: coach.lowTicketSpots,
-                    bio: coach.bio
+            if (student) {
+                setStudentPhoto(student.avatarUrl);
+                setStudentData({
+                    studentName: student.name,
+                    studentEmail: student.email,
+                    phoneNumber: student.phoneNumber,
+                    country: student.country,
+                    region: student.region,
+                    assignedStudents: student.assignedStudents,
+                    highTicketSpots: student.highTicketSpots,
+                    lowTicketSpots: student.lowTicketSpots,
+                    bio: student.bio
                 });
             }
         }
-    }, [coachId]);
+    }, [studentId]);
 
     const handleFileChange = async (e) => {
         const file = e.target.files[0];
@@ -81,7 +81,7 @@ const NewCoach = () => {
                 }
             });
 
-            setCoachPhoto(file);
+            setStudentPhoto(file);
             // Upload File through API
         };
     };
@@ -89,29 +89,25 @@ const NewCoach = () => {
     return (
         <div className="new-coach-page-wrapper">
             <div className="title-top">
-                <span onClick={() => navigate('/admin/coaches')} style={{ cursor: 'pointer' }}>
-                    Coaches <img src={CaretRight} alt=">" />
+                <span onClick={() => navigate('/admin/students')} style={{ cursor: 'pointer' }}>
+                    Students <img src={CaretRight} alt=">" />
                 </span>{' '}
-                {coachId ? 'Coach Profile' : 'Add New Coach'}
+                {studentId ? 'Student Profile' : 'Add New Student'}
             </div>
             <div className="new-coach-page">
                 <Container fluid className="p-3">
-                    <h4 className="mb-3 new-coach-title">{coachId ? 'Coach Profile' : 'Add New Coach'}</h4>
+                    <h4 className="mb-3 new-coach-title">{studentId ? 'Student Profile' : 'Add New Student'}</h4>
                     <Formik
-                        initialValues={coachData}
+                        initialValues={studentData}
                         validationSchema={Yup.object({
-                            coachName: Yup.string().required('Coach name is required'),
-                            coachEmail: Yup.string().email('Invalid email address').required('Coach email is required'),
-                            phoneNumber: Yup.string().required('Phone number is required'),
-                            country: Yup.string().required('Country is required'),
-                            region: Yup.string().required('Region is required'),
+                            studentName: Yup.string().required('Required'),
+                            studentEmail: Yup.string().email('Invalid email address').required('Required'),
+                            phoneNumber: Yup.string().required('Required'),
+                            country: Yup.string().required('Required'),
+                            region: Yup.string().required('Required'),
                             assignedStudents: Yup.array().min(1, 'Select at least one student'),
-                            highTicketSpots: Yup.number()
-                                .required('High ticket spots are required')
-                                .positive('Must be a positive number'),
-                            lowTicketSpots: Yup.number()
-                                .required('Low ticket spots are required')
-                                .positive('Must be a positive number'),
+                            highTicketSpots: Yup.number().required('Required').positive('Must be a positive number'),
+                            lowTicketSpots: Yup.number().required('Required').positive('Must be a positive number'),
                             bio: Yup.string()
                         })}
                         onSubmit={(values, { resetForm, setSubmitting }) => {
@@ -119,7 +115,6 @@ const NewCoach = () => {
                                 // Implement form submission logic here
                                 resetForm();
                                 setSubmitting(false);
-                                navigate('/admin/coaches');
                             }, 1000);
                         }}
                         enableReinitialize
@@ -128,7 +123,7 @@ const NewCoach = () => {
                             <Form onSubmit={handleSubmit}>
                                 <Row className="mb-3">
                                     <Col>
-                                        {coachPhoto ? (
+                                        {studentPhoto ? (
                                             <label className="field-label fw-bold">Profile image</label>
                                         ) : (
                                             <label className="field-label">
@@ -146,18 +141,18 @@ const NewCoach = () => {
                                                         style={{ display: 'none' }}
                                                         onChange={handleFileChange}
                                                     />
-                                                    {coachPhoto ? (
+                                                    {studentPhoto ? (
                                                         <div className="image-renderer">
                                                             <img
                                                                 src={
-                                                                    typeof coachPhoto === 'string'
-                                                                        ? coachPhoto
-                                                                        : URL.createObjectURL(coachPhoto)
+                                                                    typeof studentPhoto === 'string'
+                                                                        ? studentPhoto
+                                                                        : URL.createObjectURL(studentPhoto)
                                                                 }
                                                                 alt=""
                                                                 style={{ borderRadius: '50%' }}
                                                             />
-                                                            <span>{coachPhoto.name}</span>
+                                                            <span>{studentPhoto.name}</span>
                                                         </div>
                                                     ) : (
                                                         <div
@@ -169,7 +164,7 @@ const NewCoach = () => {
                                                         >
                                                             <img src={imagePreview} alt="" />
                                                             <span>
-                                                                Upload Coach Picture here
+                                                                Upload Student Picture here
                                                                 <br />
                                                                 <strong>Important Guidelines:</strong> 1200x800 pixels
                                                                 or 12:8 Ratio
@@ -185,28 +180,38 @@ const NewCoach = () => {
                                 </Row>
                                 <Row>
                                     <Col md={6} xs={12}>
-                                        <label className="field-label">Coach Name</label>
+                                        <label className="field-label">Student Name</label>
                                         <Field
-                                            name="coachName"
+                                            name="studentName"
                                             className="field-control"
                                             type="text"
                                             placeholder="E.g David Henderson"
                                         />
-                                        <ErrorMessage name="coachName" component="div" className="error" />
+                                        <ErrorMessage name="studentName" component="div" className="error" />
                                     </Col>
                                     <Col md={6} xs={12}>
-                                        <label className="field-label">Coach Email</label>
+                                        <label className="field-label">Student ID</label>
                                         <Field
-                                            name="coachEmail"
+                                            name="id"
                                             className="field-control"
-                                            type="email"
-                                            placeholder="kevin12345@gmail.com"
+                                            type="text"
+                                            placeholder="E.g 65435"
                                         />
-                                        <ErrorMessage name="coachEmail" component="div" className="error" />
+                                        <ErrorMessage name="id" component="div" className="error" />
                                     </Col>
                                 </Row>
 
                                 <Row>
+                                    <Col md={6} xs={12}>
+                                        <label className="field-label">Email</label>
+                                        <Field
+                                            name="studentEmail"
+                                            className="field-control"
+                                            type="email"
+                                            placeholder="kevin12345@gmail.com"
+                                        />
+                                        <ErrorMessage name="studentEmail" component="div" className="error" />
+                                    </Col>
                                     <Col md={6} xs={12}>
                                         <label className="field-label">Phone Number</label>
                                         <Field
@@ -217,6 +222,8 @@ const NewCoach = () => {
                                         />
                                         <ErrorMessage name="phoneNumber" component="div" className="error" />
                                     </Col>
+                                </Row>
+                                <Row>
                                     <Col md={6} xs={12}>
                                         <label className="field-label">Country</label>
                                         <Field
@@ -234,10 +241,9 @@ const NewCoach = () => {
                                                 </option>
                                             ))}
                                         </Field>
+
                                         <ErrorMessage name="country" component="div" className="error" />
                                     </Col>
-                                </Row>
-                                <Row>
                                     <Col md={6} xs={12}>
                                         <label className="field-label">Region/State</label>
                                         <Field
@@ -254,8 +260,34 @@ const NewCoach = () => {
                                         </Field>
                                         <ErrorMessage name="region" component="div" className="error" />
                                     </Col>
+                                </Row>
+                                <Row>
                                     <Col md={6} xs={12}>
-                                        <label className="field-label">Assigned Students</label>
+                                        <label className="field-label">Coaching Trajectory</label>
+                                        <FieldArray name="assignedStudents">
+                                            {({ push, remove, form }) => (
+                                                <CustomSelect
+                                                    name="assignedStudents"
+                                                    options={studentDummyData.map((student) => ({
+                                                        value: student.id,
+                                                        label: student.name
+                                                    }))}
+                                                    isMulti={true}
+                                                    value={values.assignedStudents}
+                                                    placeholder="Select or search students..."
+                                                    onChange={(selectedOptions) => {
+                                                        // Update the array with only the selected options
+                                                        form.setFieldValue('assignedStudents', selectedOptions);
+                                                    }}
+                                                    onBlur={() => form.setFieldTouched('assignedStudents', true)}
+                                                />
+                                            )}
+                                        </FieldArray>
+                                        <ErrorMessage name="assignedStudents" component="div" className="error" />
+                                    </Col>
+
+                                    <Col md={6} xs={12}>
+                                        <label className="field-label">Courses Roadmap</label>
                                         <FieldArray name="assignedStudents">
                                             {({ push, remove, form }) => (
                                                 <CustomSelect
@@ -279,57 +311,11 @@ const NewCoach = () => {
                                     </Col>
                                 </Row>
                                 <Row>
-                                    <Col md={6} xs={12}>
-                                        <label className="field-label">High Ticket student spots</label>
-                                        <Field
-                                            name="highTicketSpots"
-                                            className="field-control"
-                                            type="number"
-                                            placeholder="5"
-                                        />
-                                        <ErrorMessage name="highTicketSpots" component="div" className="error" />
-                                    </Col>
-                                    <Col md={6} xs={12}>
-                                        <label className="field-label">Low Ticket Student Spots</label>
-                                        <Field
-                                            name="lowTicketSpots"
-                                            className="field-control"
-                                            type="number"
-                                            placeholder="10"
-                                        />
-                                        <ErrorMessage name="lowTicketSpots" component="div" className="error" />
-                                    </Col>
-                                </Row>
-                                <Row>
-                                    <Col>
-                                        <label className="field-label">
-                                            Bio <span className="label-light">(Optional)</span>
-                                        </label>
-                                        <Field
-                                            name="bio"
-                                            value={values.bio}
-                                            as="textarea"
-                                            placeholder="Enter Bio"
-                                            render={({ field }) => (
-                                                <ReactQuill
-                                                    {...field}
-                                                    value={field.value || ''}
-                                                    name={field.name}
-                                                    onChange={(value) => field.onChange(field.name)(value)} // Update the form value
-                                                    className="field-quill-control"
-                                                    modules={{ toolbar: true }}
-                                                />
-                                            )}
-                                        />
-                                        <ErrorMessage name="bio" component="div" className="error" />
-                                    </Col>
-                                </Row>
-                                <Row>
                                     <Col>
                                         <div className="mt-3 d-flex justify-content-end gap-3">
                                             <Button
                                                 type="button"
-                                                onClick={() => navigate('/admin/coaches')}
+                                                onClick={() => navigate('/admin/students')}
                                                 className="cancel-btn"
                                                 disabled={isSubmitting}
                                             >
@@ -337,12 +323,12 @@ const NewCoach = () => {
                                             </Button>
                                             <Button type="submit" className="submit-btn" disabled={isSubmitting}>
                                                 {isSubmitting
-                                                    ? coachId
+                                                    ? studentId
                                                         ? 'Saving Changes...'
-                                                        : 'Adding Coach...'
-                                                    : coachId
+                                                        : 'Adding Student...'
+                                                    : studentId
                                                       ? 'Save Changes'
-                                                      : 'Add Coach'}
+                                                      : 'Add Student'}
                                             </Button>
                                         </div>
                                     </Col>
@@ -356,4 +342,4 @@ const NewCoach = () => {
     );
 };
 
-export default NewCoach;
+export default NewStudent;

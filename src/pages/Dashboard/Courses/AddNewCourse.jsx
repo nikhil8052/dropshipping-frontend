@@ -28,7 +28,6 @@ const AddNewCourse = () => {
 
     const handleSubmit = async (values, { setSubmitting }) => {
         try {
-            console.log('hello');
             setSubmitting(false);
         } catch (error) {
             setSubmitting(false);

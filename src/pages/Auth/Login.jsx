@@ -49,7 +49,7 @@ const Login = () => {
     return (
         <React.Fragment>
             <Helmet>
-                <title>Login | Template</title>
+                <title>Login | Drop Ship Academy</title>
             </Helmet>
             <div className="auth-main-wrapper">
                 <Row className=" g-0">

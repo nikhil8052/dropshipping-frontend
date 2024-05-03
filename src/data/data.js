@@ -16,8 +16,13 @@ export const studentDummyData = [
             }
         ],
         feesStatus: 'Paid',
-        coursesRoadmap:
-            'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla eget semper libero. Fusce commodo libero in velit tempor, id molestie lorem vestibulum. Quisque vitae justo nec justo eleifend gravida. Integer auctor condimentum odio, nec dictum ipsum molestie nec. Mauris nec lorem at velit commodo vehicula.'
+        coursesRoadmap: [
+            { id: 1, title: 'Meta Data Engineering', progress: 'Completed' },
+            { id: 2, title: 'Python Engineering', progress: 'OnGoing' },
+            { id: 3, title: 'Microsoft Office Expert', progress: 'Not Started' },
+            { id: 4, title: 'Dropshiping For Beginners', progress: 'Not Started' },
+            { id: 5, title: 'Search Engine Optimization', progress: 'Not Started' }
+        ]
     },
     {
         id: 2,
@@ -36,8 +41,13 @@ export const studentDummyData = [
             }
         ],
         feesStatus: 'Unpaid',
-        coursesRoadmap:
-            'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla eget semper libero. Fusce commodo libero in velit tempor, id molestie lorem vestibulum. Quisque vitae justo nec justo eleifend gravida. Integer auctor condimentum odio, nec dictum ipsum molestie nec. Mauris nec lorem at velit commodo vehicula.'
+        coursesRoadmap: [
+            { id: 1, title: 'Meta Data Engineering', progress: 'Completed' },
+            { id: 2, title: 'Python Engineering', progress: 'OnGoing' },
+            { id: 3, title: 'Microsoft Office Expert', progress: 'Not Started' },
+            { id: 4, title: 'Dropshiping For Beginners', progress: 'Not Started' },
+            { id: 5, title: 'Search Engine Optimization', progress: 'Not Started' }
+        ]
     },
     {
         id: 3,
@@ -56,7 +66,13 @@ export const studentDummyData = [
             }
         ],
         feesStatus: 'Unpaid',
-        coursesRoadmap: 'Planned'
+        coursesRoadmap: [
+            { id: 1, title: 'Meta Data Engineering', progress: 'Completed' },
+            { id: 2, title: 'Python Engineering', progress: 'OnGoing' },
+            { id: 3, title: 'Microsoft Office Expert', progress: 'Not Started' },
+            { id: 4, title: 'Dropshiping For Beginners', progress: 'Not Started' },
+            { id: 5, title: 'Search Engine Optimization', progress: 'Not Started' }
+        ]
     },
     // Add more dummy students below
     {
@@ -76,8 +92,13 @@ export const studentDummyData = [
             }
         ],
         feesStatus: 'Paid',
-        coursesRoadmap:
-            'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla eget semper libero. Fusce commodo libero in velit tempor, id molestie lorem vestibulum. Quisque vitae justo nec justo eleifend gravida. Integer auctor condimentum odio, nec dictum ipsum molestie nec. Mauris nec lorem at velit commodo vehicula.'
+        coursesRoadmap: [
+            { id: 1, title: 'Meta Data Engineering', progress: 'Completed' },
+            { id: 2, title: 'Python Engineering', progress: 'OnGoing' },
+            { id: 3, title: 'Microsoft Office Expert', progress: 'Not Started' },
+            { id: 4, title: 'Dropshiping For Beginners', progress: 'Not Started' },
+            { id: 5, title: 'Search Engine Optimization', progress: 'Not Started' }
+        ]
     },
     {
         id: 5,
@@ -96,8 +117,13 @@ export const studentDummyData = [
             }
         ],
         feesStatus: 'Unpaid',
-        coursesRoadmap:
-            'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla eget semper libero. Fusce commodo libero in velit tempor, id molestie lorem vestibulum. Quisque vitae justo nec justo eleifend gravida. Integer auctor condimentum odio, nec dictum ipsum molestie nec. Mauris nec lorem at velit commodo vehicula.'
+        coursesRoadmap: [
+            { id: 1, title: 'Meta Data Engineering', progress: 'Completed' },
+            { id: 2, title: 'Python Engineering', progress: 'OnGoing' },
+            { id: 3, title: 'Microsoft Office Expert', progress: 'Not Started' },
+            { id: 4, title: 'Dropshiping For Beginners', progress: 'Not Started' },
+            { id: 5, title: 'Search Engine Optimization', progress: 'Not Started' }
+        ]
     },
     {
         id: 6,
@@ -116,7 +142,13 @@ export const studentDummyData = [
             }
         ],
         feesStatus: 'Unpaid',
-        coursesRoadmap: 'Planned'
+        coursesRoadmap: [
+            { id: 1, title: 'Meta Data Engineering', progress: 'Completed' },
+            { id: 2, title: 'Python Engineering', progress: 'OnGoing' },
+            { id: 3, title: 'Microsoft Office Expert', progress: 'Not Started' },
+            { id: 4, title: 'Dropshiping For Beginners', progress: 'Not Started' },
+            { id: 5, title: 'Search Engine Optimization', progress: 'Not Started' }
+        ]
     },
     {
         id: 7,
@@ -135,8 +167,13 @@ export const studentDummyData = [
             }
         ],
         feesStatus: 'Paid',
-        coursesRoadmap:
-            'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla eget semper libero. Fusce commodo libero in velit tempor, id molestie lorem vestibulum. Quisque vitae justo nec justo eleifend gravida. Integer auctor condimentum odio, nec dictum ipsum molestie nec. Mauris nec lorem at velit commodo vehicula.'
+        coursesRoadmap: [
+            { id: 1, title: 'Meta Data Engineering', progress: 'Completed' },
+            { id: 2, title: 'Python Engineering', progress: 'OnGoing' },
+            { id: 3, title: 'Microsoft Office Expert', progress: 'Not Started' },
+            { id: 4, title: 'Dropshiping For Beginners', progress: 'Not Started' },
+            { id: 5, title: 'Search Engine Optimization', progress: 'Not Started' }
+        ]
     },
     {
         id: 8,
@@ -155,8 +192,13 @@ export const studentDummyData = [
             }
         ],
         feesStatus: 'Unpaid',
-        coursesRoadmap:
-            'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla eget semper libero. Fusce commodo libero in velit tempor, id molestie lorem vestibulum. Quisque vitae justo nec justo eleifend gravida. Integer auctor condimentum odio, nec dictum ipsum molestie nec. Mauris nec lorem at velit commodo vehicula.'
+        coursesRoadmap: [
+            { id: 1, title: 'Meta Data Engineering', progress: 'Completed' },
+            { id: 2, title: 'Python Engineering', progress: 'OnGoing' },
+            { id: 3, title: 'Microsoft Office Expert', progress: 'Not Started' },
+            { id: 4, title: 'Dropshiping For Beginners', progress: 'Not Started' },
+            { id: 5, title: 'Search Engine Optimization', progress: 'Not Started' }
+        ]
     },
     {
         id: 9,
@@ -175,7 +217,13 @@ export const studentDummyData = [
             }
         ],
         feesStatus: 'Unpaid',
-        coursesRoadmap: 'Planned'
+        coursesRoadmap: [
+            { id: 1, title: 'Meta Data Engineering', progress: 'Completed' },
+            { id: 2, title: 'Python Engineering', progress: 'OnGoing' },
+            { id: 3, title: 'Microsoft Office Expert', progress: 'Not Started' },
+            { id: 4, title: 'Dropshiping For Beginners', progress: 'Not Started' },
+            { id: 5, title: 'Search Engine Optimization', progress: 'Not Started' }
+        ]
     },
     {
         id: 10,
@@ -194,8 +242,13 @@ export const studentDummyData = [
             }
         ],
         feesStatus: 'Paid',
-        coursesRoadmap:
-            'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla eget semper libero. Fusce commodo libero in velit tempor, id molestie lorem vestibulum. Quisque vitae justo nec justo eleifend gravida. Integer auctor condimentum odio, nec dictum ipsum molestie nec. Mauris nec lorem at velit commodo vehicula.'
+        coursesRoadmap: [
+            { id: 1, title: 'Meta Data Engineering', progress: 'Completed' },
+            { id: 2, title: 'Python Engineering', progress: 'OnGoing' },
+            { id: 3, title: 'Microsoft Office Expert', progress: 'Not Started' },
+            { id: 4, title: 'Dropshiping For Beginners', progress: 'Not Started' },
+            { id: 5, title: 'Search Engine Optimization', progress: 'Not Started' }
+        ]
     },
     {
         id: 11,
@@ -214,8 +267,13 @@ export const studentDummyData = [
             }
         ],
         feesStatus: 'Unpaid',
-        coursesRoadmap:
-            'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla eget semper libero. Fusce commodo libero in velit tempor, id molestie lorem vestibulum. Quisque vitae justo nec justo eleifend gravida. Integer auctor condimentum odio, nec dictum ipsum molestie nec. Mauris nec lorem at velit commodo vehicula.'
+        coursesRoadmap: [
+            { id: 1, title: 'Meta Data Engineering', progress: 'Completed' },
+            { id: 2, title: 'Python Engineering', progress: 'OnGoing' },
+            { id: 3, title: 'Microsoft Office Expert', progress: 'Not Started' },
+            { id: 4, title: 'Dropshiping For Beginners', progress: 'Not Started' },
+            { id: 5, title: 'Search Engine Optimization', progress: 'Not Started' }
+        ]
     },
     {
         id: 12,
@@ -234,8 +292,13 @@ export const studentDummyData = [
             }
         ],
         feesStatus: 'Paid',
-        coursesRoadmap:
-            'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla eget semper libero. Fusce commodo libero in velit tempor, id molestie lorem vestibulum. Quisque vitae justo nec justo eleifend gravida. Integer auctor condimentum odio, nec dictum ipsum molestie nec. Mauris nec lorem at velit commodo vehicula.'
+        coursesRoadmap: [
+            { id: 1, title: 'Meta Data Engineering', progress: 'Completed' },
+            { id: 2, title: 'Python Engineering', progress: 'OnGoing' },
+            { id: 3, title: 'Microsoft Office Expert', progress: 'Not Started' },
+            { id: 4, title: 'Dropshiping For Beginners', progress: 'Not Started' },
+            { id: 5, title: 'Search Engine Optimization', progress: 'Not Started' }
+        ]
     },
     {
         id: 13,
@@ -254,7 +317,13 @@ export const studentDummyData = [
             }
         ],
         feesStatus: 'Unpaid',
-        coursesRoadmap: 'Planned'
+        coursesRoadmap: [
+            { id: 1, title: 'Meta Data Engineering', progress: 'Completed' },
+            { id: 2, title: 'Python Engineering', progress: 'OnGoing' },
+            { id: 3, title: 'Microsoft Office Expert', progress: 'Not Started' },
+            { id: 4, title: 'Dropshiping For Beginners', progress: 'Not Started' },
+            { id: 5, title: 'Search Engine Optimization', progress: 'Not Started' }
+        ]
     },
     {
         id: 14,
@@ -273,8 +342,13 @@ export const studentDummyData = [
             }
         ],
         feesStatus: 'Paid',
-        coursesRoadmap:
-            'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla eget semper libero. Fusce commodo libero in velit tempor, id molestie lorem vestibulum. Quisque vitae justo nec justo eleifend gravida. Integer auctor condimentum odio, nec dictum ipsum molestie nec. Mauris nec lorem at velit commodo vehicula.'
+        coursesRoadmap: [
+            { id: 1, title: 'Meta Data Engineering', progress: 'Completed' },
+            { id: 2, title: 'Python Engineering', progress: 'OnGoing' },
+            { id: 3, title: 'Microsoft Office Expert', progress: 'Not Started' },
+            { id: 4, title: 'Dropshiping For Beginners', progress: 'Not Started' },
+            { id: 5, title: 'Search Engine Optimization', progress: 'Not Started' }
+        ]
     },
     {
         id: 15,
@@ -293,8 +367,13 @@ export const studentDummyData = [
             }
         ],
         feesStatus: 'Unpaid',
-        coursesRoadmap:
-            'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla eget semper libero. Fusce commodo libero in velit tempor, id molestie lorem vestibulum. Quisque vitae justo nec justo eleifend gravida. Integer auctor condimentum odio, nec dictum ipsum molestie nec. Mauris nec lorem at velit commodo vehicula.'
+        coursesRoadmap: [
+            { id: 1, title: 'Meta Data Engineering', progress: 'Completed' },
+            { id: 2, title: 'Python Engineering', progress: 'OnGoing' },
+            { id: 3, title: 'Microsoft Office Expert', progress: 'Not Started' },
+            { id: 4, title: 'Dropshiping For Beginners', progress: 'Not Started' },
+            { id: 5, title: 'Search Engine Optimization', progress: 'Not Started' }
+        ]
     }
 ];
 
@@ -724,5 +803,40 @@ export const paymentsDummyData = [
         payment_id: '98765432101',
         avatarUrl: 'https://randomuser.me/api/portraits/men/15.jpg',
         date_time: 'December 01, 2023 15:25'
+    }
+];
+
+export const countryList = [
+    {
+        id: 1,
+        name: 'United States',
+        code: 'US',
+        dialCode: '+1',
+        currency: 'USD',
+        currencyName: 'United States Dollar'
+    },
+    {
+        id: 2,
+        name: 'United Kingdom',
+        code: 'GB',
+        dialCode: '+44',
+        currency: 'GBP',
+        currencyName: 'British Pound Sterling'
+    },
+    {
+        id: 3,
+        name: 'Canada',
+        code: 'CA',
+        dialCode: '+1',
+        currency: 'CAD',
+        currencyName: 'Canadian Dollar'
+    },
+    {
+        id: 4,
+        name: 'Australia',
+        code: 'AU',
+        dialCode: '+61',
+        currency: 'AUD',
+        currencyName: 'Australian Dollar'
     }
 ];

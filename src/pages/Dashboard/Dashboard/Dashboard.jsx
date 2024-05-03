@@ -68,7 +68,7 @@ const Dashboard = () => {
     return (
         <React.Fragment>
             <Helmet>
-                <title>Dashboard | Template</title>
+                <title>Dashboard | Drop Ship Academy</title>
             </Helmet>
             <Row>
                 {statCards.map((stat) => (

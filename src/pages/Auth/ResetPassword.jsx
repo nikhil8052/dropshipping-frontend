@@ -47,7 +47,7 @@ const ResetPassword = () => {
     return (
         <React.Fragment>
             <Helmet>
-                <title>Login | Template</title>
+                <title>Login | Drop Ship Academy</title>
             </Helmet>
             <div className="auth-main-wrapper">
                 <Row className=" g-0">
@@ -100,7 +100,7 @@ const ResetPassword = () => {
                                                 {isSubmitting ? (
                                                     <Spinner animation="border" size="sm" />
                                                 ) : (
-                                                    'Reset Password'
+                                                    'Update Password'
                                                 )}
                                             </Button>
                                         </FormikForm>
