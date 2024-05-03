@@ -382,6 +382,12 @@
         width: auto;
         height: auto;
     }
+    .add-quizz-title {
+        color: #212121;
+        font-weight: $font-weight-bold;
+        font-family: $font-primary;
+        font-size: $font-size-large;
+    }
     .add-quizz-fields {
         .add-quizz-label {
             display: flex;
@@ -391,18 +397,46 @@
             font-size: $font-size-medium;
             span {
                 color: #019ed8;
+                text-wrap: nowrap;
+                cursor: pointer;
             }
         }
-        .add-quizz-title {
-            color: #212121;
-            font-weight: $font-weight-bold;
-            font-family: $font-primary;
-            font-size: $font-size-large;
-        }
+
         .add-quizz-question {
+            .questions {
+                position: relative;
+            }
+            .limit {
+                position: absolute;
+                top: 50%;
+                right: 4%;
+                transform: translateY(-50%);
+                color: #4e5566;
+                font-size: $font-size-small;
+            }
             .quizz-multiple-choice {
                 display: flex;
                 justify-content: space-between;
+                gap: 4px;
+                input[type='text'] {
+                    background-color: #f5f7fa !important;
+                    &::placeholder {
+                        color: #8c94a3;
+                        font-size: $font-size-medium;
+                        text-align: center;
+                    }
+                }
+                .correct-answer {
+                    width: 100%;
+                    input[type='text'] {
+                        background-color: #76ba81 !important;
+                        color: #ffffff !important;
+
+                        &::placeholder {
+                            color: #ffffff !important;
+                        }
+                    }
+                }
             }
         }
     }
@@ -455,5 +489,105 @@
         background-color: transparent !important;
         color: black;
         border: 1px solid rgba(233, 234, 240, 1);
+    }
+}
+
+//Css for Publish Course tab
+.publish-form-section {
+    .section-title {
+        border-bottom: 1px solid #e9eaf0;
+        p {
+            font-size: $font-size-extra-large;
+            font-family: $font-primary;
+            font-weight: $font-weight-bold;
+            color: #1d2026;
+            padding: 16px;
+        }
+    }
+    .custom-card {
+        padding: 0px;
+    }
+    .card-body {
+        padding: 0px;
+    }
+    .card-large {
+        height: 787px;
+    }
+    .card-background {
+        background-image: url('@images/publish-background.svg');
+        width: 100%;
+        height: 50%;
+        background-position: center;
+        background-repeat: no-repeat;
+        background-size: cover;
+        border-top-left-radius: 5px;
+        border-top-right-radius: 5px;
+    }
+    .lecture-details {
+        display: flex;
+        justify-content: space-evenly;
+        margin-inline: 40px;
+        align-items: center;
+        padding: 20px;
+        border: 1px solid transparent;
+        border-radius: 10px;
+        background-color: #ffffff;
+        box-shadow: 0 6px 10px -4px rgba(0, 0, 0, 0.15);
+        position: absolute;
+        width: 90%;
+        top: 44%;
+        @include respond-to($small-screen) {
+            width: 85%;
+        }
+        h1 {
+            color: #000000;
+            font-family: $font-primary;
+            font-weight: $font-weight-bold;
+            font-size: $font-size-medium;
+        }
+        p {
+            color: #9d9d9d;
+            font-size: $font-size-small;
+        }
+        .lecture-details-2 {
+            border-left: 0.3px solid #707070;
+            border-right: 0.3px solid #707070;
+            padding-inline: 66px;
+            @include respond-to($small-screen) {
+                padding-inline: 10px;
+            }
+        }
+    }
+    .carousel-lecture {
+        margin-top: 100px;
+        padding: 20px;
+        .custom-card {
+            width: 224px;
+            height: 200px;
+            padding: 10px;
+        }
+        .swiper-button-next {
+            background-image: url('@icons/next.svg') !important;
+            background-repeat: no-repeat;
+            background-size: 100% auto;
+            background-position: center;
+        }
+        .swiper-button-prev {
+            background-image: url('@icons/previous.svg') !important;
+            background-repeat: no-repeat;
+            background-size: 100% auto;
+            background-position: center;
+        }
+        .swiper-button-next::after {
+            content: ''; /* Keep the content property, but make it empty */
+            visibility: hidden;
+        }
+        .swiper-button-prev:after {
+            content: ''; /* Keep the content property, but make it empty */
+            visibility: hidden;
+        }
+    }
+
+    .slider-section {
     }
 }

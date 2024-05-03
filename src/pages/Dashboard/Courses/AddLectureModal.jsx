@@ -16,7 +16,10 @@ const AddLectureModal = ({ productModal, resetModal }) => {
     const [loading, setLoading] = useState(false);
     const [selectedFile, setSelectedFile] = useState(null);
     const [file, setFile] = useState(null);
+    const [questionCount, setQuestionCount] = useState(1);
+    const [optionalQuestion, setOptionalQuestion] = useState(1);
     const fileTypes = ['JPEG', 'PNG', 'GIF', 'pdf', 'docx'];
+
     const initialValues = {
         title: product.title || '',
         briefSummary: product.briefSummary || '',
@@ -102,6 +105,13 @@ const AddLectureModal = ({ productModal, resetModal }) => {
     const handleChange = (file) => {
         setFile(file);
     };
+
+    const addNewQuestion = () => {
+        setQuestionCount((prevCount) => prevCount + 1); // Increment question count
+    };
+    const addNewOptionalQuestion = () => {
+        setOptionalQuestion((prevCount) => prevCount + 1); // Increment question count
+    };
     return (
         <Container>
             {loading ? (
@@ -116,19 +126,12 @@ const AddLectureModal = ({ productModal, resetModal }) => {
                     {({ isSubmitting }) => (
                         <FormikForm>
                             <div className="add-lecture-form">
-                                <Input
-                                    name="lecturename"
-                                    placeholder="Type lecture name..."
-                                    // label=""
-                                    type="text"
-                                />
+                                <Input name="lecturename" placeholder="Type lecture name..." type="text" />
                                 <Input
                                     name="description"
                                     placeholder="Type lecture description here..."
-                                    // label="description"
                                     type="textarea"
                                 />
-                                {/* <Input name="briefSummary" placeholder="brief summary" label="brief summary" type="text" /> */}
                                 <Card cardType="large">
                                     <div className="add-quizz-title">
                                         <p> ADD Quizz</p>
@@ -139,24 +142,26 @@ const AddLectureModal = ({ productModal, resetModal }) => {
                                                 Please Insert questions for Student’s personal assessments of this
                                                 course. (3/3)
                                             </p>
-                                            <span>
+                                            <span onClick={addNewQuestion}>
                                                 <img src={bluePlus} alt="bluePlus"></img> Add new
                                             </span>
                                         </div>
-                                        <div className="add-quizz-question">
-                                            <Input
-                                                name="lecturename"
-                                                placeholder="What is the main feature of this course?"
-                                                // label=""
-                                                type="text"
-                                            />
-                                            <Input
-                                                name="lecturename"
-                                                placeholder="What is the scope of this course?"
-                                                // label=""
-                                                type="text"
-                                            />
-                                        </div>
+                                        {[...Array(questionCount)].map((_, index) => (
+                                            <div className="add-quizz-question">
+                                                <Input
+                                                    name="lecturename"
+                                                    placeholder="What is the main feature of this course?"
+                                                    // label=""
+                                                    type="text"
+                                                />
+                                                <Input
+                                                    name="lecturename"
+                                                    placeholder="What is the scope of this course?"
+                                                    // label=""
+                                                    type="text"
+                                                />
+                                            </div>
+                                        ))}
                                     </div>
                                     <div className="add-quizz-fields">
                                         <div className="add-quizz-label ">
@@ -164,24 +169,36 @@ const AddLectureModal = ({ productModal, resetModal }) => {
                                                 Please Insert MCQs for Student’s personal assessments of this course.
                                                 (3/3)
                                             </p>
-                                            <span>
+                                            <span onClick={addNewOptionalQuestion}>
                                                 <img src={bluePlus} alt="bluePlus"></img> Add new
                                             </span>
                                         </div>
-                                        <div className="add-quizz-question">
-                                            <Input
-                                                name="lecturename"
-                                                placeholder="Please Type Question Here..."
-                                                // label=""
-                                                type="text"
-                                            />
-                                            <div className="quizz-multiple-choice">
-                                                <Button type="button">Type option 1</Button>
-                                                <Button type="button">Type option 1</Button>
-                                                <Button type="button">Type option 1</Button>
-                                                <Button type="button">Type Correct Ans</Button>
+                                        {[...Array(optionalQuestion)].map((_, index) => (
+                                            <div className="add-quizz-question">
+                                                <div className="questions">
+                                                    <Input
+                                                        name="lecturename"
+                                                        placeholder="Please Type Question Here..."
+                                                        type="text"
+                                                    />
+                                                    <p className="limit">0/120</p>
+                                                </div>
+
+                                                <div className="quizz-multiple-choice">
+                                                    <Input name="option1" placeholder="Type option 1" type="text" />
+                                                    <Input name="option2" placeholder="Type option 3" type="text" />
+                                                    <Input name="option3" placeholder="Type option 3" type="text" />
+                                                    <div className="correct-answer">
+                                                        <Input
+                                                            name="option4"
+                                                            placeholder="Type Correct Ans"
+                                                            type="text"
+                                                            className="correct-answer"
+                                                        />
+                                                    </div>
+                                                </div>
                                             </div>
-                                        </div>
+                                        ))}
                                     </div>
                                     <div className="add-quizz-file">
                                         <h4>Attach File</h4>
@@ -197,16 +214,6 @@ const AddLectureModal = ({ productModal, resetModal }) => {
                                         </p>
                                     </div>
                                 </Card>
-
-                                {/* <Button className="my-3" type="submit" disabled={isSubmitting}>
-                                    {isSubmitting ? (
-                                        <Loading centered size="sm" />
-                                    ) : productModal.isEditable ? (
-                                        'Update'
-                                    ) : (
-                                        'Create'
-                                    )}
-                                </Button> */}
                                 <Row>
                                     <Col>
                                         <div className="mt-3 d-flex justify-content-between gap-3">
