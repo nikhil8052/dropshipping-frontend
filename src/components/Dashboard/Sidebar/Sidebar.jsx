@@ -78,17 +78,6 @@ const Sidebar = () => {
 
     return (
         <React.Fragment>
-            {/* {modalShow && (
-                <ConfirmationBox
-                    show={modalShow}
-                    onClose={handleLogoutClick}
-                    loading={false}
-                    title="Logout"
-                    body="Are you sure you want to logout?"
-                    onConfirm={() => dispatch(logoutUser())}
-                />
-            )} */}
-
             {modalShow && (
                 <ConfirmationBox
                     show={modalShow}
