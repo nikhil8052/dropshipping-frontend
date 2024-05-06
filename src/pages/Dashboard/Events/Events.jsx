@@ -14,6 +14,7 @@ import eyeIcon from '@icons/basil_eye-solid.svg';
 import add from '@icons/add.svg';
 import downArrow from '@icons/down-arrow.svg';
 import { eventsDummyData } from '../../../data/data';
+import { useNavigate } from 'react-router-dom';
 
 const Events = () => {
     const [showDeleteModal, setShowDeleteModal] = useState(false);
@@ -27,6 +28,7 @@ const Events = () => {
     });
     const [loading, setLoading] = useState(false);
     const [loadingCRUD, setLoadingCRUD] = useState(false);
+    const navigate = useNavigate();
 
     const [eventsData, setEventsData] = useState(null);
 
@@ -61,22 +63,12 @@ const Events = () => {
 
     const handleCreateClick = () => {
         // Handle create button click event here
-        setStudentModal({
-            show: true,
-            title: 'Create Product',
-            isEditable: false,
-            studentId: null
-        });
+        navigate('/admin/events/new');
     };
 
     const handleEditClick = (studentId) => {
         // Handle edit action here
-        setStudentModal({
-            show: true,
-            title: 'Edit Product',
-            isEditable: true,
-            studentId: studentId
-        });
+        navigate('/admin/events/edit');
     };
 
     const handleDeleteClick = (id) => {
@@ -253,9 +245,13 @@ const Events = () => {
                     show={showDeleteModal}
                     onClose={handleCloseDeleteModal}
                     loading={loadingCRUD}
-                    title="Delete Entry"
-                    body="Are you sure you want to delete this entry?"
+                    title="Delete Event"
+                    body="Are you sure you wants to delete this Event ?"
                     onConfirm={handleDeleteSubmit}
+                    customFooterClass="custom-footer-class"
+                    nonActiveBtn="cancel-button"
+                    activeBtn="delete-button"
+                    activeBtnTitle="Delete"
                 />
             )}
             <Table

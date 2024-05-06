@@ -2,14 +2,18 @@ import React, { useEffect, useRef, useState } from 'react';
 import CaretRight from '@icons/CaretRight.svg';
 import imagePreview from '@icons/image-preview.svg';
 import { Formik, Form, Field, ErrorMessage, FieldArray } from 'formik';
+import Select from 'react-select';
+import makeAnimated from 'react-select/animated';
 import * as Yup from 'yup';
 import { Container, Row, Col, Button } from 'react-bootstrap';
 import 'react-quill/dist/quill.snow.css';
 import CustomSelect from '../../../../components/Input/Select';
-import { countryList, studentDummyData } from '../../../../data/data';
+import { countryList, coursesRoadmap, studentDummyData } from '../../../../data/data';
 import toast from 'react-hot-toast';
 import { useLocation } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
+import { DndContext } from '@dnd-kit/core';
+// import SortableSelect from './SortedSelect';
 
 const NewStudent = () => {
     const inputRef = useRef();
@@ -84,6 +88,22 @@ const NewStudent = () => {
             setStudentPhoto(file);
             // Upload File through API
         };
+    };
+    // Test Data
+
+    const animatedComponents = makeAnimated();
+
+    const customStyles = {
+        // Add custom styles here
+        control: (base, state) => ({
+            ...base
+            // styles for the control component
+        }),
+        option: (provided, state) => ({
+            ...provided
+            // styles for the option components
+        })
+        // ... more custom styling
     };
 
     return (
@@ -264,25 +284,56 @@ const NewStudent = () => {
                                 <Row>
                                     <Col md={6} xs={12}>
                                         <label className="field-label">Coaching Trajectory</label>
-                                        <FieldArray name="assignedStudents">
+                                        {/* <FieldArray name="assignedStudents">
                                             {({ push, remove, form }) => (
-                                                <CustomSelect
-                                                    name="assignedStudents"
-                                                    options={studentDummyData.map((student) => ({
-                                                        value: student.id,
-                                                        label: student.name
-                                                    }))}
-                                                    isMulti={true}
-                                                    value={values.assignedStudents}
-                                                    placeholder="Select or search students..."
-                                                    onChange={(selectedOptions) => {
-                                                        // Update the array with only the selected options
-                                                        form.setFieldValue('assignedStudents', selectedOptions);
-                                                    }}
-                                                    onBlur={() => form.setFieldTouched('assignedStudents', true)}
-                                                />
+                                                // <CustomSelect
+                                                //     name="assignedStudents"
+                                                //     options={studentDummyData.map((student) => ({
+                                                //         value: student.id,
+                                                //         label: student.name
+                                                //     }))}
+                                                //     isMulti={true}
+                                                //     value={values.assignedStudents}
+                                                //     placeholder="Select or search students..."
+                                                //     onChange={(selectedOptions) => {
+                                                //         // Update the array with only the selected options
+                                                //         form.setFieldValue('assignedStudents', selectedOptions);
+                                                //     }}
+                                                //     onBlur={() => form.setFieldTouched('assignedStudents', true)}
+                                                // />
+                                                // <DndContext onDragEnd={handleDragEnd}>
+                                                //     <Select
+                                                //         components={animatedComponents}
+                                                //         isMulti
+                                                //         options={options}
+                                                //         styles={customStyles}
+                                                //         placeholder="Select courses..."
+                                                //         closeMenuOnSelect={false}
+                                                //         component={{ CustomOption }}
+                                                //     />
+                                                // </DndContext>
+                                                // <SortableSelect
+                                                //     options={coursesRoadmap}
+                                                //     value={form.values.assignedStudents}
+                                                //     onChange={(selectedOptions) => {
+                                                //         // Update the form value with the new array of selected options
+                                                //         form.setFieldValue('assignedStudents', selectedOptions || []);
+                                                //     }}
+                                                // />
                                             )}
-                                        </FieldArray>
+                                        </FieldArray> */}
+                                        <Field
+                                            name="region"
+                                            className="field-select-control"
+                                            as="select"
+                                            placeholder="Select..."
+                                        >
+                                            {studentDummyData.map((student) => (
+                                                <option key={student.id} value={student.name}>
+                                                    {student.name}
+                                                </option>
+                                            ))}
+                                        </Field>
                                         <ErrorMessage name="assignedStudents" component="div" className="error" />
                                     </Col>
 

@@ -1,0 +1,111 @@
+.settings-page {
+    box-shadow: 0px 0px 14.83px 0px rgba(0, 0, 0, 0.06);
+    border-radius: 9px;
+    padding: 10px 20px;
+    height: calc(100vh - 10rem);
+    overflow-y: scroll;
+    box-shadow: 0px 0px 14.83px 0px rgba(0, 0, 0, 0.06);
+    border-radius: 9px;
+    .submit-btn {
+        border-radius: 59px;
+        font-weight: 400;
+        white-space: nowrap;
+        border: none;
+    }
+    .submit-btn {
+        color: #ffff;
+        padding: 10px 50px;
+        @include pagination-gradient;
+    }
+
+    .profile-title {
+        font-family: Inter;
+        font-size: 18px;
+        font-weight: 600;
+        line-height: 21.78px;
+        text-align: left;
+        color: rgba(0, 43, 91, 1);
+    }
+
+    .field-label {
+        font-family: Inter;
+        font-size: 14px;
+        font-weight: 400;
+        line-height: 14px;
+        text-align: left;
+        text-transform: capitalize;
+        color: rgba(25, 28, 31, 1);
+        margin-bottom: 0.5rem;
+    }
+    // Fields
+    .field-control {
+        font-family: Inter;
+        font-size: 14px;
+        font-weight: 400;
+        line-height: 14px;
+        text-align: left;
+        color: rgba(25, 28, 31, 1);
+        border: 0.8px solid rgba(233, 234, 240, 1) !important;
+        border-radius: 50px !important;
+        padding: 10px 20px;
+        width: 100%;
+        margin-bottom: 0.5rem;
+    }
+    // on active or focus the border and color should be bold
+    .field-control:focus-visible,
+    .field-select-control:focus-visible {
+        outline-color: rgba(146, 159, 165, 1) !important;
+        color: rgba(71, 81, 86, 1);
+    }
+    .field-control::placeholder,
+    .field-select-control::placeholder {
+        color: rgba(146, 159, 165, 1);
+    }
+    // Select
+    .field-select-control {
+        appearance: none;
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        background: url('data:image/svg+xml;utf8,<svg fill="rgba(146, 159, 165, 1)" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path d="M7 10l5 5 5-5z"/></svg>')
+            no-repeat;
+        background-position: right 20px top 50%;
+        background-size: 20px;
+        padding: 12px 20px;
+        cursor: pointer;
+        width: 100%;
+    }
+
+    .profile-image {
+        width: 129px;
+        height: 129px;
+        border-radius: 50%;
+        object-fit: cover;
+    }
+    .upload-image-btn {
+        border-radius: 59px;
+        font-weight: 400;
+        white-space: nowrap;
+        border: none;
+        padding: 10px 30px;
+        background: rgba(204, 236, 247, 1);
+        color: rgba(1, 158, 216, 1);
+        margin-top: 1rem;
+    }
+
+    .error {
+        color: $danger-color;
+        font-size: 12px;
+        font-weight: 400;
+        line-height: 14px;
+        text-align: left;
+    }
+
+    .eye-icon {
+        position: absolute;
+        top: 40%;
+        right: 10px;
+        transform: translateY(-50%);
+        cursor: pointer;
+        fill: rgba(200, 202, 216, 1) !important;
+    }
+}

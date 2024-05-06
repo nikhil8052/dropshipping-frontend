@@ -840,3 +840,11 @@ export const countryList = [
         currencyName: 'Australian Dollar'
     }
 ];
+
+export const coursesRoadmap = [
+    { id: 1, label: 'Meta Data Engineering', progress: 'Completed', value: 1 },
+    { id: 2, label: 'Python Engineering', progress: 'OnGoing', value: 2 },
+    { id: 3, label: 'Microsoft Office Expert', progress: 'Not Started', value: 3 },
+    { id: 4, label: 'Dropshiping For Beginners', progress: 'Not Started', value: 4 },
+    { id: 5, label: 'Search Engine Optimization', progress: 'Not Started', value: 5 }
+];
