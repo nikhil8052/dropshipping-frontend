@@ -113,7 +113,8 @@ export const adminSidebarItems = [
         id: 5,
         name: 'Events',
         iconLight: events, // Replace with
-        linkTo: '/admin/events'
+        linkTo: '/admin/events',
+        pathCombinations: ['/admin/events', '/admin/events/new', '/admin/events/edit']
     },
     {
         id: 6,
