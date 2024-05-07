@@ -219,7 +219,6 @@ const Students = () => {
             filter: 'agSetColumnFilter',
             sortable: true,
             unSortIcon: true,
-            cellRenderer: TextExpand,
             wrapText: true,
             autoHeight: true,
             resizable: false,
