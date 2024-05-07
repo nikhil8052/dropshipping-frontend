@@ -9,6 +9,7 @@ import { Form as FormikForm, Formik } from 'formik';
 import { loginWithoutAPI } from '@redux/auth/auth_slice';
 import './auth.scss';
 import LoginLeftSec from './LoginLeftSec';
+import Footer from './Footer';
 const VerificationCode = () => {
     const dispatch = useDispatch();
     const { loading } = useSelector((state) => state?.auth);
@@ -48,12 +49,15 @@ const VerificationCode = () => {
                                 >
                                     {({ isSubmitting }) => (
                                         <FormikForm>
-                                            <Input
-                                                name="Verification Code"
-                                                placeholder="E.g 225465822"
-                                                label="Verification Code"
-                                                type="text"
-                                            />
+                                            <div className="verification-input">
+                                                <Input
+                                                    name="Verification Code"
+                                                    placeholder="E.g 225465822"
+                                                    label="Verification Code"
+                                                    type="text"
+                                                />
+                                                <span className="resend-code">Resend code</span>
+                                            </div>
                                             <Link className="auth-link ms-auto" to="/reset-password">
                                                 <Button className="auth-login-button" type="submit" disabled={loading}>
                                                     {isSubmitting ? <Spinner animation="border" size="sm" /> : 'Veirfy'}
@@ -62,6 +66,7 @@ const VerificationCode = () => {
                                         </FormikForm>
                                     )}
                                 </Formik>
+                                <Footer />
                             </div>
                         </div>
                     </Col>
