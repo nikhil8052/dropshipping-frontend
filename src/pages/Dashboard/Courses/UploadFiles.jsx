@@ -296,10 +296,10 @@ const UploadFiles = () => {
                                                         </p>
                                                     </div>
                                                     <div className="items-button">
-                                                        <Button type="button" className="quizz-btn">
-                                                            Quizzes Added Successfully
+                                                        <Button type="button" className="quiz-btn">
+                                                            Quizes Added Successfully
                                                         </Button>
-                                                        <Button type="button" className="quizz-lec-btn">
+                                                        <Button type="button" className="quiz-lec-btn">
                                                             Lecture 1.mp4
                                                         </Button>
                                                         <img src={PencilLine} alt="PencilLine" />

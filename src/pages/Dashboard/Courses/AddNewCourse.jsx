@@ -10,7 +10,7 @@ import CaretRight from '@icons/CaretRight.svg';
 import '../../../styles/Courses.scss';
 import Tab from 'react-bootstrap/Tab';
 import Tabs from 'react-bootstrap/Tabs';
-import { useLocation } from 'react-router-dom';
+import { useLocation, Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 
 const AddNewCourse = () => {
@@ -21,9 +21,7 @@ const AddNewCourse = () => {
     return (
         <div className="addcourse-section">
             <div className="addcourse-nav ">
-                <p onClick={() => navigate('/admin/courses')} style={{ cursor: 'pointer' }}>
-                    Courses
-                </p>
+                <Link to="/admin/courses">Courses</Link>
                 {isNewCoursePage ? (
                     <span>
                         <img src={CaretRight} alt=">" /> Add New Courses{' '}

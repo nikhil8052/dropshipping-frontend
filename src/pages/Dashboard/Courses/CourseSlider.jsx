@@ -103,7 +103,6 @@ const CourseSlider = () => {
                         <Card cardType="small">
                             <CourseCard {...course} simple={false} />
                         </Card>
-                        {/* <img src={cardPic} height={'100%'} width={'100%'} alt="" /> */}
                     </SwiperSlide>
                 ))}
             </Swiper>

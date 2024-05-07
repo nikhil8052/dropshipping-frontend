@@ -72,6 +72,10 @@
         padding: 10px;
         border-radius: 12px;
         display: flex;
+        a {
+            text-decoration: none;
+            color: #5f6c72;
+        }
     }
     .course-tabs {
         margin-top: 10px;
@@ -348,7 +352,7 @@
                 @include respond-to($small-screen) {
                     margin-top: 15px;
                 }
-                .quizz-btn {
+                .quiz-btn {
                     padding: 0px, 12.75px, 0px, 12.75px;
                     background-color: #f5e021;
                     border-radius: 50px;
@@ -356,7 +360,7 @@
                     font-weight: $font-weight-bold;
                     font-size: $font-size-small;
                 }
-                .quizz-lec-btn {
+                .quiz-lec-btn {
                     background-color: #61dd83;
                     padding: 0px, 12.75px, 0px, 12.75px;
                     border-radius: 50px;
@@ -420,14 +424,14 @@
         width: auto;
         height: auto;
     }
-    .add-quizz-title {
+    .add-quiz-title {
         color: #212121;
         font-weight: $font-weight-bold;
         font-family: $font-primary;
         font-size: $font-size-large;
     }
-    .add-quizz-fields {
-        .add-quizz-label {
+    .add-quiz-fields {
+        .add-quiz-label {
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -440,7 +444,7 @@
             }
         }
 
-        .add-quizz-question {
+        .add-quiz-question {
             .questions {
                 position: relative;
             }
@@ -452,7 +456,7 @@
                 color: #4e5566;
                 font-size: $font-size-small;
             }
-            .quizz-multiple-choice {
+            .quiz-multiple-choice {
                 display: flex;
                 justify-content: space-between;
                 gap: 4px;
@@ -478,7 +482,7 @@
             }
         }
     }
-    .add-quizz-file {
+    .add-quiz-file {
         display: flex;
         flex-direction: column;
         justify-content: center;

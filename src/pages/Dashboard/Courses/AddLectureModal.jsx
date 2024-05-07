@@ -133,11 +133,11 @@ const AddLectureModal = ({ productModal, resetModal }) => {
                                     type="textarea"
                                 />
                                 <Card cardType="large">
-                                    <div className="add-quizz-title">
-                                        <p> ADD Quizz</p>
+                                    <div className="add-quiz-title">
+                                        <p> ADD quiz</p>
                                     </div>
-                                    <div className="add-quizz-fields">
-                                        <div className="add-quizz-label ">
+                                    <div className="add-quiz-fields">
+                                        <div className="add-quiz-label ">
                                             <p>
                                                 Please Insert questions for Student’s personal assessments of this
                                                 course. (3/3)
@@ -147,24 +147,22 @@ const AddLectureModal = ({ productModal, resetModal }) => {
                                             </span>
                                         </div>
                                         {[...Array(questionCount)].map((_, index) => (
-                                            <div className="add-quizz-question">
+                                            <div className="add-quiz-question">
                                                 <Input
                                                     name="lecturename"
                                                     placeholder="What is the main feature of this course?"
-                                                    // label=""
                                                     type="text"
                                                 />
                                                 <Input
                                                     name="lecturename"
                                                     placeholder="What is the scope of this course?"
-                                                    // label=""
                                                     type="text"
                                                 />
                                             </div>
                                         ))}
                                     </div>
-                                    <div className="add-quizz-fields">
-                                        <div className="add-quizz-label ">
+                                    <div className="add-quiz-fields">
+                                        <div className="add-quiz-label ">
                                             <p>
                                                 Please Insert MCQs for Student’s personal assessments of this course.
                                                 (3/3)
@@ -174,7 +172,7 @@ const AddLectureModal = ({ productModal, resetModal }) => {
                                             </span>
                                         </div>
                                         {[...Array(optionalQuestion)].map((_, index) => (
-                                            <div className="add-quizz-question">
+                                            <div className="add-quiz-question">
                                                 <div className="questions">
                                                     <Input
                                                         name="lecturename"
@@ -184,7 +182,7 @@ const AddLectureModal = ({ productModal, resetModal }) => {
                                                     <p className="limit">0/120</p>
                                                 </div>
 
-                                                <div className="quizz-multiple-choice">
+                                                <div className="quiz-multiple-choice">
                                                     <Input name="option1" placeholder="Type option 1" type="text" />
                                                     <Input name="option2" placeholder="Type option 3" type="text" />
                                                     <Input name="option3" placeholder="Type option 3" type="text" />
@@ -200,7 +198,7 @@ const AddLectureModal = ({ productModal, resetModal }) => {
                                             </div>
                                         ))}
                                     </div>
-                                    <div className="add-quizz-file">
+                                    <div className="add-quiz-file">
                                         <h4>Attach File</h4>
                                         <FileUploader
                                             multiple={true}

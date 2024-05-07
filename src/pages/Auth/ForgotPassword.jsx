@@ -10,6 +10,7 @@ import { Helmet } from 'react-helmet';
 import { loginWithoutAPI } from '@redux/auth/auth_slice';
 import './auth.scss';
 import LoginLeftSec from './LoginLeftSec';
+import Footer from './Footer';
 const ForgotPassword = () => {
     const dispatch = useDispatch();
     const { loading } = useSelector((state) => state?.auth);
@@ -67,8 +68,8 @@ const ForgotPassword = () => {
                                         </FormikForm>
                                     )}
                                 </Formik>
+                                <Footer />
                             </div>
-                            <p className="footer-static mx-auto">© 2024 dropship academy x. All Rights Reserved</p>
                         </div>
                     </Col>
                 </Row>
