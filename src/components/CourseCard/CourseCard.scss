@@ -1,21 +1,59 @@
+@import '@constants/typography.scss';
+
 .course-card {
     display: flex;
     flex-direction: column;
-    gap: 4px;
+    gap: 1px;
 
-    .course-img {
-        width: 100%; /* or any custom size */
-        height: 100%;
-        object-fit: contain;
-    }
+    // .course-img {
+    //     width: 100%; /* or any custom size */
+    //     height: 100%;
+    //     object-fit: contain;
+    // }
     .course-title {
         margin-top: 2px;
-        font-size: 14px;
+        font-size: $font-size-large;
+        font-weight: $font-weight-medium;
     }
     .course-des {
-        font-size: 12px;
+        font-size: $font-size-small;
+        color: #646464;
+        font-weight: $font-weight-regular;
     }
     .lecture-No {
-        font-size: 12px;
+        font-size: $font-size-small;
+
+        color: #969696;
     }
 }
+
+.toggle-archive {
+    border-top: 1px solid #f4f4f4;
+    padding: 10px;
+    font-size: $font-size-medium;
+
+    .form-switch {
+        padding-left: 2.5em;
+        display: flex;
+        flex-direction: row-reverse;
+        width: 100%;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0px;
+    }
+    .form-switch .form-check-input {
+        width: 55px;
+        height: 28px;
+    }
+    .form-check-input:checked {
+        background-color: #34c759;
+        border-color: transparent;
+    }
+    .form-check-input:focus {
+        box-shadow: none;
+        border-color: none;
+    }
+}
+
+//
+/* Include necessary styles from your provided CSS */

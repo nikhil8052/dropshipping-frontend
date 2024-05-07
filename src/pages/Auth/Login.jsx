@@ -52,57 +52,68 @@ const Login = () => {
                 <title>Login | Drop Ship Academy</title>
             </Helmet>
             <div className="auth-main-wrapper">
-                <Row className=" g-0">
-                    <LoginLeftSec />
-                    <Col xs={12} sm={12} md={12} lg={6}>
-                        <div className="auth-form-wrapper ">
-                            <div className="auth-form-data ">
-                                {/* <img className="auth-logo" src={logoImg} alt="auth-logo" /> */}
-                                <h1 className="auth-title ">Login</h1>
-                                <h3 className="auth-form-title">Please enter your account details.</h3>
-                                <Formik
-                                    initialValues={inititialValues}
-                                    validationSchema={validationSchema}
-                                    onSubmit={handleSubmit}
-                                >
-                                    {({ isSubmitting }) => (
-                                        <FormikForm>
-                                            <Input
-                                                name="email"
-                                                placeholder="E.g kathrine1122@gmail.com"
-                                                label="Email Address"
-                                                type="text"
-                                            />
-                                            <div className="input-password-container">
+                <div className="login-page-section">
+                    <Row className=" g-0">
+                        <LoginLeftSec />
+                        <Col xs={12} sm={12} md={12} lg={6}>
+                            <div className="auth-form-wrapper ">
+                                <div className="auth-form-data ">
+                                    {/* <img className="auth-logo" src={logoImg} alt="auth-logo" /> */}
+                                    <h1 className="auth-title ">Login</h1>
+                                    <h3 className="auth-form-title">Please enter your account details.</h3>
+                                    <Formik
+                                        initialValues={inititialValues}
+                                        validationSchema={validationSchema}
+                                        onSubmit={handleSubmit}
+                                    >
+                                        {({ isSubmitting }) => (
+                                            <FormikForm>
                                                 <Input
-                                                    name="password"
-                                                    placeholder="password"
-                                                    label="Password"
-                                                    type={showPassword ? 'text' : 'password'}
+                                                    name="email"
+                                                    placeholder="E.g kathrine1122@gmail.com"
+                                                    label="Email Address"
+                                                    type="text"
                                                 />
-                                                <img
-                                                    className={`eye-icon-password ${showPassword ? 'visible' : ''}`}
-                                                    src={eyeIcon}
-                                                    alt="eye-logo"
-                                                    onClick={togglePassword}
-                                                />
-                                            </div>
+                                                <div className="input-password-container">
+                                                    <Input
+                                                        name="password"
+                                                        placeholder="password"
+                                                        label="Password"
+                                                        type={showPassword ? 'text' : 'password'}
+                                                    />
+                                                    <img
+                                                        className={`eye-icon-password ${showPassword ? 'visible' : ''}`}
+                                                        src={eyeIcon}
+                                                        alt="eye-logo"
+                                                        onClick={togglePassword}
+                                                    />
+                                                </div>
 
-                                            <div className=" d-flex flex-column ">
-                                                <Link className="auth-link ms-auto" to="/forgot-password">
-                                                    Forgot password
-                                                </Link>
-                                                <Button className="auth-login-button" type="submit" disabled={loading}>
-                                                    {isSubmitting ? <Spinner animation="border" size="sm" /> : 'Login'}
-                                                </Button>
-                                            </div>
-                                        </FormikForm>
-                                    )}
-                                </Formik>
+                                                <div className=" d-flex flex-column ">
+                                                    <Link className="auth-link ms-auto" to="/forgot-password">
+                                                        Forgot password
+                                                    </Link>
+                                                    <Button
+                                                        className="auth-login-button"
+                                                        type="submit"
+                                                        disabled={loading}
+                                                    >
+                                                        {isSubmitting ? (
+                                                            <Spinner animation="border" size="sm" />
+                                                        ) : (
+                                                            'Login'
+                                                        )}
+                                                    </Button>
+                                                </div>
+                                            </FormikForm>
+                                        )}
+                                    </Formik>
+                                </div>
+                                <p className="footer-static">© 2024 dropship academy x. All Rights Reserved</p>
                             </div>
-                        </div>
-                    </Col>
-                </Row>
+                        </Col>
+                    </Row>
+                </div>
             </div>
         </React.Fragment>
     );

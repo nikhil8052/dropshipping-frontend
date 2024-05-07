@@ -95,18 +95,20 @@ const ResetPassword = () => {
                                                     onClick={togglePassword}
                                                 />
                                             </div>
-
-                                            <Button className="auth-login-button" type="submit" disabled={loading}>
-                                                {isSubmitting ? (
-                                                    <Spinner animation="border" size="sm" />
-                                                ) : (
-                                                    'Update Password'
-                                                )}
-                                            </Button>
+                                            <Link to="/login">
+                                                <Button className="auth-login-button" type="submit" disabled={loading}>
+                                                    {isSubmitting ? (
+                                                        <Spinner animation="border" size="sm" />
+                                                    ) : (
+                                                        'Update Password'
+                                                    )}
+                                                </Button>
+                                            </Link>
                                         </FormikForm>
                                     )}
                                 </Formik>
                             </div>
+                            <p className="footer-static ">© 2024 dropship academy x. All Rights Reserved</p>
                         </div>
                     </Col>
                 </Row>

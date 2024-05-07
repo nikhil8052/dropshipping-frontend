@@ -68,6 +68,7 @@ const ForgotPassword = () => {
                                     )}
                                 </Formik>
                             </div>
+                            <p className="footer-static mx-auto">© 2024 dropship academy x. All Rights Reserved</p>
                         </div>
                     </Col>
                 </Row>

@@ -6,34 +6,35 @@ import '../../../styles/Courses.scss';
 import Card from '@components/Card/Card';
 import CourseCard from '../../../components/CourseCard/CourseCard';
 import eventImg from '../../../assets/images/Event-Image.svg';
+import cardPic from '../../../assets/images/publish-card-pic.svg';
 
 const swiperBreakpoints = {
     320: {
         slidesPerView: 1
     },
     576: {
-        slidesPerView: 1
+        slidesPerView: 2
     },
     768: {
         slidesPerView: 2
     },
     992: {
-        slidesPerView: 2
+        slidesPerView: 3
     },
     1200: {
-        slidesPerView: 3
+        slidesPerView: 4
     },
     1440: {
-        slidesPerView: 3
+        slidesPerView: 4
     },
     1680: {
-        slidesPerView: 3
+        slidesPerView: 5
     },
     1920: {
-        slidesPerView: 3
+        slidesPerView: 6
     },
     2560: {
-        slidesPerView: 3
+        slidesPerView: 7
     }
 };
 const courseCards = [
@@ -41,59 +42,51 @@ const courseCards = [
         id: 1,
         title: 'Design Conference',
         detail: 'Coach: David Everson',
-        // lectureNo: 'Lectures: 28',
-        img: eventImg
+        img: cardPic
     },
     {
         id: 2,
         title: 'Design Conference',
         detail: 'Coach: David Everson',
-        // lectureNo: 'Lectures: 28',
-        img: eventImg
+        img: cardPic
     },
     {
         id: 3,
         title: 'Structured Query',
         detail: 'Dropship Academy X',
-        // lectureNo: 'Lectures: 28',
-        img: eventImg
+        img: cardPic
     },
     {
         id: 4,
         title: 'Advance programing',
         detail: 'Dropship Academy X',
-        // lectureNo: 'Lectures: 28',
 
-        img: eventImg
+        img: cardPic
     },
     {
         id: 5,
         title: 'Blogs creation',
         detail: 'Dropship Academy X',
-        // lectureNo: 'Lectures: 28',
-        img: eventImg
+        img: cardPic
     },
     {
         id: 6,
         title: 'Web Design',
         detail: 'Dropship Academy X',
-        // lectureNo: 'Lectures: 28',
-        img: eventImg
+        img: cardPic
     },
     {
         id: 7,
         title: 'Web Design',
         detail: 'Dropship Academy X',
-        // lectureNo: 'Lectures: 28',
-        img: eventImg
+        img: cardPic
     },
     {
         id: 8,
         title: 'Web Design',
         detail: 'Dropship Academy X',
-        // lectureNo: 'Lectures: 28',
 
-        img: eventImg
+        img: cardPic
     }
 ];
 const CourseSlider = () => {
@@ -105,11 +98,12 @@ const CourseSlider = () => {
                 navigation={true}
                 modules={[Keyboard, Scrollbar, Navigation, Pagination]}
             >
-                {courseCards.map((cousre) => (
-                    <SwiperSlide key={cousre.id}>
+                {courseCards.map((course, index) => (
+                    <SwiperSlide key={`${course.id}_${index + 1}`}>
                         <Card cardType="small">
-                            <CourseCard {...cousre} />
+                            <CourseCard {...course} simple={false} />
                         </Card>
+                        {/* <img src={cardPic} height={'100%'} width={'100%'} alt="" /> */}
                     </SwiperSlide>
                 ))}
             </Swiper>

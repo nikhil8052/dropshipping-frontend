@@ -6,6 +6,7 @@
     display: flex;
     justify-content: space-between;
     flex-wrap: wrap;
+    margin-top: 10px;
     .input-group-text {
         color: red;
     }
@@ -19,25 +20,46 @@
         border-radius: 59px;
     }
     .add-button {
-        @include pagination-gradient;
+        // @include pagination-gradient;
+        background-color: #f5f8f9;
         border-radius: 59px;
-        color: #ffff;
+        color: #8c8c8c;
         font-weight: 400;
         white-space: nowrap;
-        border: none;
+        border: 1px solid #000000;
         @include respond-to($small-screen) {
-            margin-top: 10px;
+            margin-top: 20px;
         }
     }
 }
 .custom-card-course {
+    .card-large {
+        height: auto;
+        width: auto;
+    }
+}
+.custom-card-course-new {
+    margin-block: 2.3rem;
+    margin-top: 37px;
+    margin-bottom: 25px;
+    .card-small {
+        height: auto;
+        width: auto;
+    }
+    .custom-card {
+        padding: 0px;
+    }
     .card-body {
         padding: 0px;
     }
-    .custom-card {
-        height: auto;
-        width: auto;
-        margin-block: 2.3rem;
+    .course-card {
+        padding: 10px;
+    }
+
+    @include respond-to($small-screen) {
+        .card-small {
+            height: 350px !important;
+        }
     }
 }
 
@@ -49,6 +71,7 @@
         color: #5f6c72;
         padding: 10px;
         border-radius: 12px;
+        display: flex;
     }
     .course-tabs {
         margin-top: 10px;
@@ -87,7 +110,17 @@
             background-color: transparent;
             width: 100%;
             height: auto;
+            border-radius: 50px;
+            border: 1px solid #e9eaf0;
+            padding-inline: 20px;
+            color: #8c94a3;
+            &::placeholder {
+                color: $input-placeholder-color;
+                padding: 20px;
+            }
         }
+
+        //
     }
 
     .input-field-container {
@@ -312,12 +345,16 @@
                 font-size: $font-size-small;
                 display: flex;
                 gap: 4px;
+                @include respond-to($small-screen) {
+                    margin-top: 15px;
+                }
                 .quizz-btn {
                     padding: 0px, 12.75px, 0px, 12.75px;
                     background-color: #f5e021;
                     border-radius: 50px;
                     color: #212121;
                     font-weight: $font-weight-bold;
+                    font-size: $font-size-small;
                 }
                 .quizz-lec-btn {
                     background-color: #61dd83;
@@ -334,9 +371,10 @@
     input[type='text'] {
         width: 100% !important;
         background-color: transparent !important;
-        border: 0.8px solid #e9eaf0;
-        padding: 10px, 24px, 24px, 14px;
+        border: 0.8px solid #e9eaf0 !important;
+        padding: 10px, 24px, 24px, 14px !important;
         height: 37px !important;
+        border-radius: 50px !important;
         &::placeholder {
             text-transform: capitalize;
             font-size: 14px;
@@ -357,7 +395,7 @@
     textarea {
         width: 100% !important;
         background-color: transparent !important;
-        border: 0.8px solid #e9eaf0;
+        border: 0.8px solid #e9eaf0 !important;
         height: 115px !important;
         border-radius: 10px !important;
         &::placeholder {
@@ -504,6 +542,7 @@
             padding: 16px;
         }
     }
+
     .custom-card {
         padding: 0px;
     }
@@ -522,7 +561,23 @@
         background-size: cover;
         border-top-left-radius: 5px;
         border-top-right-radius: 5px;
+
+        .text-heading {
+            padding-top: 27px;
+            margin-left: 49px;
+
+            h1 {
+                font-weight: $font-weight-bold;
+                color: #ffffff;
+            }
+            p {
+                color: #ffffff;
+                font-weight: 600px;
+                font-size: $font-size-medium;
+            }
+        }
     }
+
     .lecture-details {
         display: flex;
         justify-content: space-evenly;
@@ -563,29 +618,31 @@
         padding: 20px;
         .custom-card {
             width: 224px;
-            height: 200px;
+            height: 180px;
             padding: 10px;
         }
-        .swiper-button-next {
-            background-image: url('@icons/next.svg') !important;
-            background-repeat: no-repeat;
-            background-size: 100% auto;
-            background-position: center;
-        }
-        .swiper-button-prev {
-            background-image: url('@icons/previous.svg') !important;
-            background-repeat: no-repeat;
-            background-size: 100% auto;
-            background-position: center;
-        }
-        .swiper-button-next::after {
-            content: ''; /* Keep the content property, but make it empty */
-            visibility: hidden;
-        }
-        .swiper-button-prev:after {
-            content: ''; /* Keep the content property, but make it empty */
-            visibility: hidden;
-        }
+    }
+
+    //swiper card css
+    .swiper-button-next {
+        background-image: url('@icons/next.svg') !important;
+        background-repeat: no-repeat;
+        background-size: 100% auto;
+        background-position: center;
+    }
+    .swiper-button-prev {
+        background-image: url('@icons/previous.svg') !important;
+        background-repeat: no-repeat;
+        background-size: 100% auto;
+        background-position: center;
+    }
+    .swiper-button-next::after {
+        content: ''; /* Keep the content property, but make it empty */
+        visibility: hidden;
+    }
+    .swiper-button-prev:after {
+        content: ''; /* Keep the content property, but make it empty */
+        visibility: hidden;
     }
 
     .slider-section {

@@ -48,12 +48,15 @@ const VerificationCode = () => {
                                 >
                                     {({ isSubmitting }) => (
                                         <FormikForm>
-                                            <Input
-                                                name="Verification Code"
-                                                placeholder="E.g 225465822"
-                                                label="Verification Code"
-                                                type="text"
-                                            />
+                                            <div className="verification-input">
+                                                <Input
+                                                    name="Verification Code"
+                                                    placeholder="E.g 225465822"
+                                                    label="Verification Code"
+                                                    type="text"
+                                                />
+                                                <span className="resend-code">Resend code</span>
+                                            </div>
                                             <Link className="auth-link ms-auto" to="/reset-password">
                                                 <Button className="auth-login-button" type="submit" disabled={loading}>
                                                     {isSubmitting ? <Spinner animation="border" size="sm" /> : 'Veirfy'}
@@ -63,6 +66,7 @@ const VerificationCode = () => {
                                     )}
                                 </Formik>
                             </div>
+                            <p className="footer-static mx-auto">© 2024 dropship academy x. All Rights Reserved</p>
                         </div>
                     </Col>
                 </Row>
