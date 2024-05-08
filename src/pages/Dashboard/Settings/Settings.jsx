@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import { Container, Row, Col, Button, Image, InputGroup } from 'react-bootstrap';
@@ -19,6 +19,7 @@ const Settings = () => {
         new: false,
         confirm: false
     });
+
     const [profileData, setProfileData] = useState({
         name: '',
         email: '',
@@ -30,6 +31,20 @@ const Settings = () => {
         newPassword: '',
         confirmPassword: ''
     });
+
+    useEffect(() => {
+        // Dummy data for now
+        setProfileData({
+            name: 'John Doe',
+            email: ' John.Doe@example.com',
+            phoneNumber: '+31- 612 345 678'
+        });
+        setPasswordData({
+            currentPassword: '',
+            newPassword: '',
+            confirmPassword: ''
+        });
+    }, []);
 
     const profileValidationSchema = Yup.object({
         name: Yup.string().required('Name is required'),
@@ -153,7 +168,7 @@ const Settings = () => {
                                                             className="upload-image-btn"
                                                             variant="outline-primary"
                                                         >
-                                                            Upload New Image <img src={UploadSimple} alt="" srcset="" />
+                                                            Upload New Image <img src={UploadSimple} alt="" srcSet="" />
                                                         </Button>
                                                     </Col>
                                                 </Row>

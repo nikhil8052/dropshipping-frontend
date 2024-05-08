@@ -1,22 +1,19 @@
-import React, { useState } from 'react';
-import { Row, Col } from 'react-bootstrap';
+import { Row } from 'react-bootstrap';
 import PublishCourses from './PublishCourses';
 import BasicInformation from './BasicInformation';
 import UploadFiles from './UploadFiles';
 import ClipboardText from '@icons/ClipboardText.svg';
 import Stack from '@icons/Stack.svg';
-import task_alt from '@icons/task_alt.svg';
+import taskAlt from '@icons/task_alt.svg';
 import CaretRight from '@icons/CaretRight.svg';
 import '../../../styles/Courses.scss';
 import Tab from 'react-bootstrap/Tab';
 import Tabs from 'react-bootstrap/Tabs';
 import { useLocation, Link } from 'react-router-dom';
-import { useNavigate } from 'react-router-dom';
 
 const AddNewCourse = () => {
     const location = useLocation();
     const isNewCoursePage = location.pathname === '/admin/courses/new';
-    const navigate = useNavigate();
 
     return (
         <div className="addcourse-section">
@@ -63,7 +60,7 @@ const AddNewCourse = () => {
                             eventKey="publish-course"
                             title={
                                 <span>
-                                    <img src={task_alt} alt="course-icon" /> Publish Course
+                                    <img src={taskAlt} alt="course-icon" /> Publish Course
                                 </span>
                             }
                         >

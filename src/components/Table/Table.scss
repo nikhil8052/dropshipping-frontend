@@ -15,7 +15,7 @@
         // Add the text expandable id here
         .ag-row
             .ag-cell:not([col-id='coursesRoadmap']):not([col-id='email']):not([col-id='name']):not(
-                [col-id='join_link']
+                [col-id='joinLink']
             ) {
             display: flex;
             justify-content: start;
@@ -24,7 +24,7 @@
         .ag-row .ag-cell[col-id='coursesRoadmap'],
         .ag-row .ag-cell[col-id='name'],
         .ag-row .ag-cell[col-id='email'],
-        .ag-row .ag-cell[col-id='join_link'] {
+        .ag-row .ag-cell[col-id='joinLink'] {
             padding: 10px;
         }
     }

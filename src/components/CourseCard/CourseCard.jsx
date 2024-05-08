@@ -1,4 +1,3 @@
-import React, { useState } from 'react';
 import './CourseCard.scss';
 import Form from 'react-bootstrap/Form';
 const CourseCard = ({ img, title, detail, lectureNo, simple = 'true' }) => {

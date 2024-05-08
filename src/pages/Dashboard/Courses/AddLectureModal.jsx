@@ -8,16 +8,16 @@ import { toast } from 'react-toastify';
 import Card from '@components/Card/Card';
 import '../../../styles/Courses.scss';
 import bluePlus from '../../../assets/icons/blue-plus.svg';
-
+import { useNavigate } from 'react-router-dom';
 import { FileUploader } from 'react-drag-drop-files';
 
 const AddLectureModal = ({ productModal, resetModal }) => {
     const [product, setProduct] = useState({});
     const [loading, setLoading] = useState(false);
-    const [selectedFile, setSelectedFile] = useState(null);
     const [file, setFile] = useState(null);
     const [questionCount, setQuestionCount] = useState(1);
     const [optionalQuestion, setOptionalQuestion] = useState(1);
+    const navigate = useNavigate();
     const fileTypes = ['JPEG', 'PNG', 'GIF', 'pdf', 'docx'];
 
     const initialValues = {
@@ -95,12 +95,6 @@ const AddLectureModal = ({ productModal, resetModal }) => {
         return { method: 'POST', endpoint: '/products' };
     };
 
-    const sellerOptions = [
-        { value: 'paul smith', label: 'Paul Smith' },
-        { value: 'babar azam', label: 'Babar Azam' },
-        { value: 'virat kohli', label: 'Virat Kohli' }
-    ];
-
     //
     const handleChange = (file) => {
         setFile(file);
@@ -147,7 +141,7 @@ const AddLectureModal = ({ productModal, resetModal }) => {
                                             </span>
                                         </div>
                                         {[...Array(questionCount)].map((_, index) => (
-                                            <div className="add-quiz-question">
+                                            <div key={index + 1} className="add-quiz-question">
                                                 <Input
                                                     name="lecturename"
                                                     placeholder="What is the main feature of this course?"
@@ -172,7 +166,7 @@ const AddLectureModal = ({ productModal, resetModal }) => {
                                             </span>
                                         </div>
                                         {[...Array(optionalQuestion)].map((_, index) => (
-                                            <div className="add-quiz-question">
+                                            <div key={index + 1} className="add-quiz-question">
                                                 <div className="questions">
                                                     <Input
                                                         name="lecturename"

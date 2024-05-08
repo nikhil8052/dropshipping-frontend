@@ -13,10 +13,17 @@
     },
     "parser": "@babel/eslint-parser",
     "plugins": ["react", "prettier", "react-refresh", "import"],
-    "extends": ["eslint:recommended", "plugin:react/recommended", "plugin:react/jsx-runtime", "plugin:react-hooks/recommended", "plugin:import/warnings"],
+    "extends": [
+        "eslint:recommended",
+        "plugin:react/recommended",
+        "plugin:react/jsx-runtime",
+        "plugin:react-hooks/recommended",
+        "plugin:import/warnings"
+    ],
+
     "rules": {
         "prettier/prettier": "error",
-        "indent": ["error", 4, { "SwitchCase": 1 }],
+        "import/no-unresolved": "error",
         "linebreak-style": 0,
         "no-var": "error",
         "prefer-const": "error",
@@ -65,6 +72,21 @@
     "settings": {
         "react": {
             "version": "detect"
+        },
+        "import/resolver": {
+            "alias": {
+                "map": [
+                    ["@components", "./src/components"],
+                    ["@utils", "./src/utils"],
+                    ["@constants", "./src/constants"],
+                    ["@images", "./src/assets/images"],
+                    ["@icons", "./src/assets/icons"],
+                    ["@pages", "./src/pages"],
+                    ["@layout", "./src/layout"],
+                    ["@redux", "./src/redux"]
+                ],
+                "extensions": [".js", ".jsx"]
+            }
         }
     },
     "globals": {

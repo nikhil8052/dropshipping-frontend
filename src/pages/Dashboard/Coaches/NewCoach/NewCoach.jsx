@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import CaretRight from '@icons/CaretRight.svg';
 import imagePreview from '@icons/image-preview.svg';
 import { Formik, Form, Field, ErrorMessage, FieldArray } from 'formik';
@@ -9,8 +9,7 @@ import 'react-quill/dist/quill.snow.css';
 import CustomSelect from '../../../../components/Input/Select';
 import { coachDummyData, studentDummyData, countryList } from '../../../../data/data';
 import toast from 'react-hot-toast';
-import { useLocation } from 'react-router-dom';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 const NewCoach = () => {
     const inputRef = useRef();
@@ -257,7 +256,7 @@ const NewCoach = () => {
                                     <Col md={6} xs={12}>
                                         <label className="field-label">Assigned Students</label>
                                         <FieldArray name="assignedStudents">
-                                            {({ push, remove, form }) => (
+                                            {({ form }) => (
                                                 <CustomSelect
                                                     name="assignedStudents"
                                                     options={studentDummyData.map((student) => ({

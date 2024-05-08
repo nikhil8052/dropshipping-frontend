@@ -66,7 +66,7 @@ const Events = () => {
         navigate('/admin/events/new');
     };
 
-    const handleEditClick = (studentId) => {
+    const handleEditClick = () => {
         // Handle edit action here
         navigate('/admin/events/edit');
     };
@@ -183,7 +183,7 @@ const Events = () => {
         },
         {
             headerName: 'Join Link',
-            field: 'join_link',
+            field: 'joinLink',
             filter: 'agSetColumnFilter',
             sortable: true,
             unSortIcon: true,
@@ -206,7 +206,7 @@ const Events = () => {
         },
         {
             headerName: 'Date & Time',
-            field: 'date_time',
+            field: 'dateTime',
             filter: 'agSetColumnFilter',
             sortable: true,
             unSortIcon: true,

@@ -7,7 +7,7 @@ function Card(props) {
         return '';
     };
     return (
-        <BootsrapCard className={`${'custom-card'} ${getCardSize(props.cardType)}`}>
+        <BootsrapCard className={`${'custom-card'} ${props.customCardClass} ${getCardSize(props.cardType)}`}>
             {/* render card header only if header props is true */}
             {props.header ? (
                 <BootsrapCard.Header>

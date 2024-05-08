@@ -8,6 +8,7 @@ import 'react-quill/dist/quill.snow.css';
 import { ErrorBoundary } from 'react-error-boundary';
 import { ErrorBoundaryComponent } from './components/ErrorBoundary';
 import { Toaster } from 'react-hot-toast';
+import 'react-big-calendar/lib/css/react-big-calendar.css';
 
 function App() {
     return (

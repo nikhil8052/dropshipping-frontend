@@ -1,27 +1,23 @@
 @import '@constants/colors.scss';
 @import '@constants/typography.scss';
-.stat-card{
+.stat-card {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
-    .stat-icon{
-        width: 50px;
-        height: 50px;
-    }
-    .stat-summary{
-        text-align: right;
-        .stat-description{
+    .stat-summary {
+        text-align: left;
+        .stat-description {
             font-size: 14px;
             font-family: $font-secondary;
-            color: $secondary-color;
+            color: rgba(28, 28, 28, 1);
             font-weight: 400;
             text-transform: capitalize;
         }
-        .stat-value{
+        .stat-value {
             font-size: 26px;
             font-family: $font-primary;
-            color: $text-color;
+            color: rgba(0, 0, 0, 1);
         }
     }
 }

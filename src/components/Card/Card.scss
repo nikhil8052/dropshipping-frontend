@@ -2,48 +2,65 @@
 @import '@constants/typography.scss';
 @import '@constants/media.scss';
 
-
-.card-small{
-  
-  height: 117px;
+.card-small {
+    height: 117px;
 }
-.card-large{
+.card-large {
     height: 450px;
 }
-.custom-card{
-box-shadow: 0 6px 10px -4px rgba(0,0,0,.15);
-background-color: $body-bg-color;
-padding: 10px 20px;
-margin-bottom: 1.5rem;
-.card-header{
-    border-bottom: 0px;
-    background-color: inherit;
-    .flexed-card-header{
-        display: flex;
-        flex-direction: row;
-        justify-content: space-between;
-        align-items: center;
-        .card-title{
-            margin-top: 10px;
+.custom-card-colors {
+    border: none;
+    border-radius: 16px;
+    font-family: Inter;
+    font-size: 24px;
+    font-weight: 600;
+    text-align: left;
+    &.odd {
+        background: rgba(229, 236, 246, 1) !important;
+    }
+    &.even {
+        background: rgba(227, 245, 255, 1) !important;
+    }
+}
+// Events Card
+.events-card {
+    box-shadow: 0px 1px 5px 1px rgba(0, 0, 0, 0.1) !important;
+    border-radius: 1rem !important;
+    border: none !important;
+    margin: 0 8px;
+}
+.custom-card {
+    box-shadow: 0 6px 10px -4px rgba(0, 0, 0, 0.15);
+    background-color: $body-bg-color;
+    padding: 10px 20px;
+    margin-bottom: 1.5rem;
+    .card-header {
+        border-bottom: 0px;
+        background-color: inherit;
+        .flexed-card-header {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            align-items: center;
+            .card-title {
+                margin-top: 10px;
+                font-size: 18px;
+                font-family: $font-primary;
+                color: $heading-color;
+                text-transform: capitalize;
+            }
+            select {
+                width: auto !important;
+            }
+        }
+
+        .card-description {
+            font-family: $font-secondary;
             font-size: 18px;
-            font-family: $font-primary;
-            color: $heading-color;
-            text-transform: capitalize;
-        }
-        select{
-            width: auto !important;
+            color: $secondary-color;
         }
     }
-    
-    .card-description{
-        font-family: $font-secondary;
-        font-size: 18px;
-        color: $secondary-color;
+    .card-footer {
+        background-color: inherit;
     }
 }
-.card-footer{
-    background-color: inherit;
-}
-}
-
-
