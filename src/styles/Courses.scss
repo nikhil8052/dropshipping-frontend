@@ -6,6 +6,7 @@
     display: flex;
     justify-content: space-between;
     flex-wrap: wrap;
+    margin-top: 10px;
     .input-group-text {
         color: red;
     }
@@ -19,25 +20,46 @@
         border-radius: 59px;
     }
     .add-button {
-        @include pagination-gradient;
+        // @include pagination-gradient;
+        background-color: #f5f8f9;
         border-radius: 59px;
-        color: #ffff;
+        color: #8c8c8c;
         font-weight: 400;
         white-space: nowrap;
-        border: none;
+        border: 1px solid #000000;
         @include respond-to($small-screen) {
-            margin-top: 10px;
+            margin-top: 20px;
         }
     }
 }
 .custom-card-course {
+    .card-large {
+        height: auto;
+        width: auto;
+    }
+}
+.custom-card-course-new {
+    margin-block: 2.3rem;
+    margin-top: 37px;
+    margin-bottom: 25px;
+    .card-small {
+        height: auto;
+        width: auto;
+    }
+    .custom-card {
+        padding: 0px;
+    }
     .card-body {
         padding: 0px;
     }
-    .custom-card {
-        height: auto;
-        width: auto;
-        margin-block: 2.3rem;
+    .course-card {
+        padding: 10px;
+    }
+
+    @include respond-to($small-screen) {
+        .card-small {
+            height: 350px !important;
+        }
     }
 }
 
@@ -49,6 +71,11 @@
         color: #5f6c72;
         padding: 10px;
         border-radius: 12px;
+        display: flex;
+        a {
+            text-decoration: none;
+            color: #5f6c72;
+        }
     }
     .course-tabs {
         margin-top: 10px;
@@ -87,7 +114,17 @@
             background-color: transparent;
             width: 100%;
             height: auto;
+            border-radius: 50px;
+            border: 1px solid #e9eaf0;
+            padding-inline: 20px;
+            color: #8c94a3;
+            &::placeholder {
+                color: $input-placeholder-color;
+                padding: 20px;
+            }
         }
+
+        //
     }
 
     .input-field-container {
@@ -184,5 +221,434 @@
         }
     }
     .upload-course-form {
+        margin-top: 10px;
+
+        .coachPhoto {
+        }
+        .image-preview {
+            display: flex;
+            justify-content: start;
+            cursor: pointer;
+            align-items: center;
+            gap: 1.5rem;
+            border: 0.8px solid rgba(233, 234, 240, 1);
+            border-radius: 10px;
+            padding: 20px 10px;
+            color: rgba(110, 116, 133, 1);
+            .image-preview-text {
+                display: flex;
+                flex-direction: column;
+                font-size: $font-size-small;
+                gap: 10px;
+
+                .upload-btn {
+                    border-radius: 50px;
+                    padding: 0, 19.13px, 0px, 19.13px;
+                    background-color: #ccecf7;
+                    color: #019ed8;
+                    width: 150px;
+                    height: 39px;
+                    font-size: $font-size-small;
+                    border: transparent;
+                    font-weight: 600;
+                }
+            }
+        }
+        .image-renderer {
+            display: flex;
+            justify-content: start;
+            align-items: center;
+            gap: 1.5rem;
+            padding: 20px 10px;
+            border: 0.8px solid rgba(233, 234, 240, 1);
+            border-radius: 10px;
+            color: rgb(38, 54, 99);
+            text-wrap: wrap;
+            img {
+                width: 180px;
+                height: 127px;
+                // border-radius: 50%;
+                border-radius: 10px !important;
+
+                // object-fit: cover;
+            }
+            video {
+                width: 180px;
+                height: 127px;
+                // border-radius: 50%;
+                border-radius: 10px !important;
+            }
+        }
+        .field-quill-control {
+            .ql-toolbar {
+                border: 0.8px solid rgba(233, 234, 240, 1);
+                border-radius: 10px 10px 0 0;
+                order: -1;
+            }
+            .ql-container {
+                border: 0.8px solid rgba(233, 234, 240, 1);
+                border-radius: 0 0 10px 10px;
+                min-height: 200px;
+            }
+        }
+    }
+    .field-label {
+        font-family: $font-primary !important;
+        font-weight: $font-weight-bold !important;
+        font-size: 14px;
+        font-weight: 400;
+        line-height: 14px;
+        text-align: left;
+        text-transform: capitalize;
+        color: rgba(25, 28, 31, 1);
+    }
+    .submit-btn,
+    .cancel-btn {
+        border-radius: 59px;
+        font-weight: 400;
+        white-space: nowrap;
+        border: none;
+    }
+    .submit-btn {
+        color: #ffff;
+        padding: 10px 30px;
+        @include pagination-gradient;
+    }
+
+    .cancel-btn {
+        padding: 10px 40px;
+        background-color: transparent !important;
+        color: black;
+        border: 1px solid rgba(233, 234, 240, 1);
+    }
+
+    //css for add lecture box
+    .add-lecture-section {
+        background-color: #f5f7fa;
+        padding: 20px;
+        margin-top: 10px;
+        border-radius: 10px;
+        .add-lecture-nav {
+            display: flex;
+            justify-content: space-between;
+            padding-bottom: 10px;
+        }
+        .add-lecture-item {
+            background-color: white;
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            @include respond-to($large-screen) {
+                display: flex;
+                flex-direction: column;
+                justify-content: start;
+            }
+            .items-button {
+                font-family: $font-primary;
+                font-size: $font-size-small;
+                display: flex;
+                gap: 4px;
+                @include respond-to($small-screen) {
+                    margin-top: 15px;
+                }
+                .quiz-btn {
+                    padding: 0px, 12.75px, 0px, 12.75px;
+                    background-color: #f5e021;
+                    border-radius: 50px;
+                    color: #212121;
+                    font-weight: $font-weight-bold;
+                    font-size: $font-size-small;
+                }
+                .quiz-lec-btn {
+                    background-color: #61dd83;
+                    padding: 0px, 12.75px, 0px, 12.75px;
+                    border-radius: 50px;
+                    color: #ffffff;
+                }
+            }
+        }
+    }
+}
+// add lecture modal form css
+.add-lecture-form {
+    input[type='text'] {
+        width: 100% !important;
+        background-color: transparent !important;
+        border: 0.8px solid #e9eaf0 !important;
+        padding: 10px, 24px, 24px, 14px !important;
+        height: 37px !important;
+        border-radius: 50px !important;
+        &::placeholder {
+            text-transform: capitalize;
+            font-size: 14px;
+            color: #8c94a3;
+            padding-left: 10px;
+            @include respond-to($medium-screen) {
+                font-size: 10px !important;
+            }
+            @include respond-to($small-screen) {
+                font-size: 10px;
+            }
+        }
+        &:focus {
+            outline: 1.5px solid $info-color;
+        }
+    }
+
+    textarea {
+        width: 100% !important;
+        background-color: transparent !important;
+        border: 0.8px solid #e9eaf0 !important;
+        height: 115px !important;
+        border-radius: 10px !important;
+        &::placeholder {
+            text-transform: capitalize;
+            font-size: 14px;
+            color: #8c94a3;
+            padding-left: 10px;
+            @include respond-to($medium-screen) {
+                font-size: 10px !important;
+            }
+            @include respond-to($small-screen) {
+                font-size: 10px;
+            }
+        }
+        &:focus {
+            outline: 1.5px solid $info-color;
+        }
+    }
+
+    .custom-card {
+        padding: 0px;
+        width: auto;
+        height: auto;
+    }
+    .add-quiz-title {
+        color: #212121;
+        font-weight: $font-weight-bold;
+        font-family: $font-primary;
+        font-size: $font-size-large;
+    }
+    .add-quiz-fields {
+        .add-quiz-label {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-family: $font-primary;
+            font-size: $font-size-medium;
+            span {
+                color: #019ed8;
+                text-wrap: nowrap;
+                cursor: pointer;
+            }
+        }
+
+        .add-quiz-question {
+            .questions {
+                position: relative;
+            }
+            .limit {
+                position: absolute;
+                top: 50%;
+                right: 4%;
+                transform: translateY(-50%);
+                color: #4e5566;
+                font-size: $font-size-small;
+            }
+            .quiz-multiple-choice {
+                display: flex;
+                justify-content: space-between;
+                gap: 4px;
+                input[type='text'] {
+                    background-color: #f5f7fa !important;
+                    &::placeholder {
+                        color: #8c94a3;
+                        font-size: $font-size-medium;
+                        text-align: center;
+                    }
+                }
+                .correct-answer {
+                    width: 100%;
+                    input[type='text'] {
+                        background-color: #76ba81 !important;
+                        color: #ffffff !important;
+
+                        &::placeholder {
+                            color: #ffffff !important;
+                        }
+                    }
+                }
+            }
+        }
+    }
+    .add-quiz-file {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        border: 0.8px solid #e9eaf0;
+        border-radius: 10px;
+        margin-top: 15px;
+        padding: 15px;
+        color: #8c94a3;
+        font-size: $font-size-medium;
+
+        h4 {
+            font-size: $font-size-medium;
+
+            font-weight: $font-weight-bold;
+            color: #1d2026;
+        }
+    }
+    //Css for uplading file
+    .guZdik {
+        border: none;
+        width: 100%;
+        position: absolute;
+        svg {
+            display: none;
+        }
+    }
+    .jWkLDY {
+        display: none;
+    }
+    .submit-btn,
+    .cancel-btn {
+        border-radius: 59px;
+        font-weight: 400;
+        white-space: nowrap;
+        border: none;
+    }
+    .submit-btn {
+        color: #ffff;
+        padding: 10px 30px;
+        @include pagination-gradient;
+    }
+
+    .cancel-btn {
+        padding: 10px 40px;
+        background-color: transparent !important;
+        color: black;
+        border: 1px solid rgba(233, 234, 240, 1);
+    }
+}
+
+//Css for Publish Course tab
+.publish-form-section {
+    .section-title {
+        border-bottom: 1px solid #e9eaf0;
+        p {
+            font-size: $font-size-extra-large;
+            font-family: $font-primary;
+            font-weight: $font-weight-bold;
+            color: #1d2026;
+            padding: 16px;
+        }
+    }
+
+    .custom-card {
+        padding: 0px;
+    }
+    .card-body {
+        padding: 0px;
+    }
+    .card-large {
+        height: 787px;
+    }
+    .card-background {
+        background-image: url('@images/publish-background.svg');
+        width: 100%;
+        height: 50%;
+        background-position: center;
+        background-repeat: no-repeat;
+        background-size: cover;
+        border-top-left-radius: 5px;
+        border-top-right-radius: 5px;
+
+        .text-heading {
+            padding-top: 27px;
+            margin-left: 49px;
+
+            h1 {
+                font-weight: $font-weight-bold;
+                color: #ffffff;
+            }
+            p {
+                color: #ffffff;
+                font-weight: 600px;
+                font-size: $font-size-medium;
+            }
+        }
+    }
+
+    .lecture-details {
+        display: flex;
+        justify-content: space-evenly;
+        margin-inline: 40px;
+        align-items: center;
+        padding: 20px;
+        border: 1px solid transparent;
+        border-radius: 10px;
+        background-color: #ffffff;
+        box-shadow: 0 6px 10px -4px rgba(0, 0, 0, 0.15);
+        position: absolute;
+        width: 90%;
+        top: 44%;
+        @include respond-to($small-screen) {
+            width: 85%;
+        }
+        h1 {
+            color: #000000;
+            font-family: $font-primary;
+            font-weight: $font-weight-bold;
+            font-size: $font-size-medium;
+        }
+        p {
+            color: #9d9d9d;
+            font-size: $font-size-small;
+        }
+        .lecture-details-2 {
+            border-left: 0.3px solid #707070;
+            border-right: 0.3px solid #707070;
+            padding-inline: 66px;
+            @include respond-to($small-screen) {
+                padding-inline: 10px;
+            }
+        }
+    }
+    .carousel-lecture {
+        margin-top: 100px;
+        padding: 20px;
+        .custom-card {
+            width: 224px;
+            height: 180px;
+            padding: 10px;
+        }
+    }
+
+    //swiper card css
+    .swiper-button-next {
+        background-image: url('@icons/next.svg') !important;
+        background-repeat: no-repeat;
+        background-size: 100% auto;
+        background-position: center;
+    }
+    .swiper-button-prev {
+        background-image: url('@icons/previous.svg') !important;
+        background-repeat: no-repeat;
+        background-size: 100% auto;
+        background-position: center;
+    }
+    .swiper-button-next::after {
+        content: ''; /* Keep the content property, but make it empty */
+        visibility: hidden;
+    }
+    .swiper-button-prev:after {
+        content: ''; /* Keep the content property, but make it empty */
+        visibility: hidden;
+    }
+
+    .slider-section {
     }
 }

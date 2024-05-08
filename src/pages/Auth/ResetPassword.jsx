@@ -11,6 +11,8 @@ import { Helmet } from 'react-helmet';
 import { loginWithoutAPI } from '@redux/auth/auth_slice';
 import './auth.scss';
 import LoginLeftSec from './LoginLeftSec';
+import Footer from './Footer';
+
 const ResetPassword = () => {
     const dispatch = useDispatch();
     const { loading } = useSelector((state) => state?.auth);
@@ -95,17 +97,19 @@ const ResetPassword = () => {
                                                     onClick={togglePassword}
                                                 />
                                             </div>
-
-                                            <Button className="auth-login-button" type="submit" disabled={loading}>
-                                                {isSubmitting ? (
-                                                    <Spinner animation="border" size="sm" />
-                                                ) : (
-                                                    'Update Password'
-                                                )}
-                                            </Button>
+                                            <Link to="/login">
+                                                <Button className="auth-login-button" type="submit" disabled={loading}>
+                                                    {isSubmitting ? (
+                                                        <Spinner animation="border" size="sm" />
+                                                    ) : (
+                                                        'Update Password'
+                                                    )}
+                                                </Button>
+                                            </Link>
                                         </FormikForm>
                                     )}
                                 </Formik>
+                                <Footer />
                             </div>
                         </div>
                     </Col>

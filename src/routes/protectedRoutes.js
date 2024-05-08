@@ -11,6 +11,7 @@ const NewEvent = lazy(() => import('@pages/Dashboard/Events/NewEvent/NewEvent'))
 const Payment = lazy(() => import('@pages/Dashboard/Payments/Payments'));
 const VisualizeCSV = lazy(() => import('@pages/Dashboard/VisualizeCsv/VisualizeCsv'));
 const Settings = lazy(() => import('@pages/Dashboard/Settings/Settings'));
+const NewCourse = lazy(() => import('@pages/Dashboard/Courses/AddNewCourse'));
 
 export const adminRoutes = [
     {
@@ -69,6 +70,14 @@ export const adminRoutes = [
         Component: Courses,
         access: 'admin'
     },
+    {
+        path: 'courses/new',
+        exact: true,
+        name: 'Courses',
+        Component: NewCourse,
+        access: 'admin'
+    },
+
     {
         path: 'events',
         exact: true,
