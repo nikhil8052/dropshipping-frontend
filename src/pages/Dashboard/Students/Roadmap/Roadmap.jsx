@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import {
     DndContext,
     closestCenter,
@@ -11,7 +11,7 @@ import {
 import { arrayMove, SortableContext, verticalListSortingStrategy, useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import coursesPointer from '@icons/courses_pointer.svg';
-const Roadmap = ({ coursesModal, resetModal }) => {
+const Roadmap = ({ coursesModal }) => {
     // State to manage the courses array
     const [courses, setCourses] = useState(coursesModal.data);
     // Sensors to handle different input methods

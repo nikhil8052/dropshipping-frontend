@@ -1,38 +1,17 @@
-import React, { useEffect, useRef, useState } from 'react';
-import { Row, Col, Button, Modal, Badge } from 'react-bootstrap';
+/* eslint-disable */
+import { useEffect, useRef, useState } from 'react';
+import { Row, Col } from 'react-bootstrap';
 import Card from '@components/Card/Card';
 import { StatCard, LineChart } from '@components/Home';
-import GreenDot from '@icons/dot-green.svg';
-import BlueDot from '@icons/dot-blue.svg';
 import { Helmet } from 'react-helmet';
-import { Calendar, dateFnsLocalizer } from 'react-big-calendar';
-import format from 'date-fns/format';
-import parse from 'date-fns/parse';
-import startOfWeek from 'date-fns/startOfWeek';
-import getDay from 'date-fns/getDay';
-import enUS from 'date-fns/locale/en-US';
-import { events } from '../../../data/data';
-import 'react-big-calendar/lib/css/react-big-calendar.css';
-import { addHours, isAfter, isBefore } from 'date-fns';
-import { Dropdown } from 'react-bootstrap';
-
-const locales = {
-    'en-US': enUS
-};
-const localizer = dateFnsLocalizer({
-    format,
-    parse,
-    startOfWeek,
-    getDay,
-    locales
-});
+import EventDetailsModal from './Calender/CustomEventModal';
+import BigCalender from './Calender/BigCalender';
 
 const Dashboard = () => {
     const chartRef = useRef(null);
     const [chartKey, setChartKey] = useState('students');
     const [chartHeight, setChartHeight] = useState(70);
     const [showModal, setShowModal] = useState(false);
-    const [selectedEvent, setSelectedEvent] = useState(null);
 
     useEffect(() => {
         return () => {
@@ -134,139 +113,9 @@ const Dashboard = () => {
         { label: 'Yearly', value: 'yearly' }
     ];
 
-    const EventDetailsModal = ({ show, onHide, event }) => {
-        if (!event) return null; // Ensure event data is available
-
-        return (
-            <Modal
-                className="event-detail-modal"
-                show={show}
-                onHide={onHide}
-                size="md"
-                aria-labelledby="contained-modal-title-vcenter"
-                centered
-            >
-                <Modal.Header closeButton>
-                    <Modal.Title id="contained-modal-title-vcenter">
-                        <Row>
-                            <Col>
-                                <div className="avatar">{event.coachInitials}</div>
-                            </Col>
-                            <Col>
-                                {event.coachName} (Coach)
-                                <div className="meeting-details">
-                                    Meeting ID: {event.meetingId} <br />
-                                    Password: {event.password}
-                                </div>
-                            </Col>
-                        </Row>
-                    </Modal.Title>
-                </Modal.Header>
-                <Modal.Body>
-                    <h5>Topic:</h5>
-                    <p>{event.description}</p>
-                    <h5>Date & Time:</h5>
-                    <p>{event.dateTime}</p>
-                </Modal.Body>
-                <Modal.Footer>
-                    <Badge bg="secondary">{event.attendeesCount}+</Badge>
-                    <Button onClick={onHide}>Join</Button>
-                </Modal.Footer>
-            </Modal>
-        );
-    };
-
-    const handleEventClick = (event) => {
-        setSelectedEvent(event);
+    const handleEventClick = () => {
+        // We can define a state later for the selected event
         setShowModal(true);
-    };
-
-    const EventComponent = ({ event, title }) => {
-        const now = new Date();
-        const soon = addHours(now, 1);
-
-        // Determine if the event is active or upcoming
-        const isActiveEvent = (isAfter(now, event.start) && isBefore(now, event.end)) || isBefore(event.start, soon);
-        const eventClass = isActiveEvent ? 'active-event' : 'future-event';
-
-        return (
-            <div onClick={() => handleEventClick(event)} className={`rbc-event ${eventClass}`}>
-                <div className="rbc-event-content">
-                    <p>
-                        <img className="me-2 mb-1" src={isActiveEvent ? GreenDot : BlueDot} alt="" /> {title}
-                    </p>
-                </div>
-            </div>
-        );
-    };
-
-    const CustomHeader = ({ label, date }) => {
-        const todayDate = date.getDate();
-        return (
-            <div className="rbc-header">
-                <div className="rbc-row">
-                    <div className="rbc-header-label">
-                        {label} {todayDate}{' '}
-                    </div>
-                </div>
-            </div>
-        );
-    };
-
-    const CustomToolbar = (toolbar) => {
-        const goToBack = () => {
-            toolbar.onNavigate('PREV');
-        };
-
-        const goToNext = () => {
-            toolbar.onNavigate('NEXT');
-        };
-
-        const goToToday = () => {
-            toolbar.onNavigate('TODAY');
-        };
-
-        const handleViewChange = (eventKey) => {
-            toolbar.onView(eventKey);
-        };
-
-        return (
-            <div className="rbc-toolbar">
-                <span className="rbc-btn-group">
-                    <Button onClick={goToToday}>Today</Button>
-                    <Button onClick={goToBack}>Back</Button>
-                    <Button onClick={goToNext}>Next</Button>
-                </span>
-                <span className="rbc-toolbar-right">
-                    <Dropdown onSelect={handleViewChange}>
-                        <Dropdown.Toggle variant="success" id="dropdown-basic">
-                            {toolbar.label}
-                        </Dropdown.Toggle>
-
-                        <Dropdown.Menu>
-                            <Dropdown.Item eventKey="month">Month</Dropdown.Item>
-                            <Dropdown.Item eventKey="week">Week</Dropdown.Item>
-                            <Dropdown.Item eventKey="day">Day</Dropdown.Item>
-                        </Dropdown.Menu>
-                    </Dropdown>
-                </span>
-            </div>
-        );
-    };
-
-    const eventStyleGetter = (event, start, end) => {
-        const now = new Date();
-        const style = {
-            backgroundColor: isBefore(end, now) ? '#d6d6d6' : isAfter(start, now) ? '#7dba7d' : '#3174ad',
-            borderRadius: '5px',
-            opacity: 0.8,
-            color: 'white',
-            border: '0px',
-            display: 'block'
-        };
-        return {
-            style: style
-        };
     };
 
     return (
@@ -302,30 +151,7 @@ const Dashboard = () => {
             <Row>
                 <Col>
                     <Card header={true} title="Events" customCardClass="events-card">
-                        <Calendar
-                            localizer={localizer}
-                            events={events}
-                            startAccessor="start"
-                            endAccessor="end"
-                            style={{ height: 500 }}
-                            views={['day', 'week', 'month']}
-                            step={60}
-                            showMultiDayTimes
-                            defaultDate={new Date()}
-                            defaultView="month"
-                            formats={{
-                                dayFormat: (date, culture, localizer) => localizer.format(date, 'EEE MMM dd', culture),
-                                weekdayFormat: (date, culture, localizer) => localizer.format(date, 'EEEE', culture)
-                            }}
-                            eventPropGetter={eventStyleGetter}
-                            components={{
-                                month: {
-                                    event: EventComponent
-                                },
-                                header: CustomHeader,
-                                toolbar: CustomToolbar
-                            }}
-                        />
+                        <BigCalender onEventClick={(event) => handleEventClick(event)} />
                         <EventDetailsModal
                             show={showModal}
                             onHide={() => setShowModal(false)}

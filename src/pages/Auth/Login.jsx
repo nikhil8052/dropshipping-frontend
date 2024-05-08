@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { Button, Col, Row, Container, Spinner, Card } from 'react-bootstrap';
+import { Button, Col, Row, Spinner } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import eyeIcon from '../../assets/icons/Eye.svg';
 import Input from '@components/Input/Input';

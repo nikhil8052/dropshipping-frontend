@@ -24,7 +24,6 @@
     "rules": {
         "prettier/prettier": "error",
         "import/no-unresolved": "error",
-        "indent": ["error", 4, { "SwitchCase": 1 }],
         "linebreak-style": 0,
         "no-var": "error",
         "prefer-const": "error",

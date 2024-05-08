@@ -1,8 +1,5 @@
-import { useEffect, useRef, useState } from 'react';
 import '../../../styles/Courses.scss';
-import { Button, Col, Row, Container, Spinner } from 'react-bootstrap';
 import Card from '@components/Card/Card';
-import Carousel from 'react-bootstrap/Carousel';
 import CourseSlider from './CourseSlider';
 
 const PublishCourses = () => {

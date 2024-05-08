@@ -77,7 +77,7 @@
     },
     "lint-staged": {
         "*.{js,jsx}": [
-            "eslint --cache --fix",
+            "eslint src --ext js,jsx --fix",
             "npx prettier --write"
         ]
     }

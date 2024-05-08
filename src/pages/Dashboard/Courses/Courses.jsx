@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Row, Col, InputGroup, Button, Form } from 'react-bootstrap';
 import Card from '@components/Card/Card';
 import CourseCard from '../../../components/CourseCard/CourseCard';
@@ -10,17 +10,12 @@ import { useNavigate } from 'react-router-dom';
 
 const Courses = () => {
     const [search, setSearch] = useState('');
-    const [newStudent, setNewStudent] = useState(false);
     const navigate = useNavigate();
-
-    // Function to handle tab selection
-    const handleTabClick = (tabId) => {
-        setSelectedTab(tabId);
-    };
 
     const onFilterTextChange = (event) => {
         setSearch(event.target.value);
     };
+
     const courseCards = [
         {
             id: 1,
@@ -97,7 +92,7 @@ const Courses = () => {
                                 <Col xs={12} sm={12} md={6}>
                                     <InputGroup>
                                         <InputGroup.Text>
-                                            <img src={Search} alt="Search" />
+                                            <img src={Search} alt={search ? 'Search' : 'Search'} />
                                         </InputGroup.Text>
                                         <Form.Control
                                             className="search-input"
@@ -114,7 +109,7 @@ const Courses = () => {
                                         className="add-button ms-md-auto d-flex justify-content-even align-items-center"
                                         onClick={handleCreateClick}
                                     >
-                                        <img src={add} alt="" srcset="" /> <span className="ms-2">Add New Course</span>
+                                        <img src={add} alt="" srcSet="" /> <span className="ms-2">Add New Course</span>
                                     </Button>
                                 </Col>
                             </div>

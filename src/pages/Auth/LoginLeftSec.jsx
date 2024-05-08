@@ -1,5 +1,4 @@
-import React from 'react';
-import { Button, Col, Row, Container, Spinner, Card } from 'react-bootstrap';
+import { Col } from 'react-bootstrap';
 import fbIcon from '@icons/fb-logo.png';
 import twitterIconn from '@icons/twitter-logo.png';
 import instalogin from '@icons//insta-logo.png';

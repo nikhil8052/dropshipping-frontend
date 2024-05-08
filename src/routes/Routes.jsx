@@ -1,4 +1,4 @@
-import React, { lazy } from 'react';
+import { lazy } from 'react';
 import { Routes, Route } from 'react-router-dom';
 import CoachLayout from '@layout/CoachLayout/CoachLayout';
 import StudentLayout from '@layout/StudentLayout/StudentLayout';

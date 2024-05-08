@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import CaretRight from '@icons/CaretRight.svg';
 import imagePreview from '@icons/image-preview.svg';
 import { Formik, Form, Field, ErrorMessage, FieldArray } from 'formik';
@@ -256,7 +256,7 @@ const NewCoach = () => {
                                     <Col md={6} xs={12}>
                                         <label className="field-label">Assigned Students</label>
                                         <FieldArray name="assignedStudents">
-                                            {({ push, remove, form }) => (
+                                            {({ form }) => (
                                                 <CustomSelect
                                                     name="assignedStudents"
                                                     options={studentDummyData.map((student) => ({

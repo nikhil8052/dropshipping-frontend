@@ -1,4 +1,3 @@
-import React from 'react';
 import { Card, Form, Tab, Row, Col, Nav } from 'react-bootstrap';
 import { Line } from 'react-chartjs-2';
 import {

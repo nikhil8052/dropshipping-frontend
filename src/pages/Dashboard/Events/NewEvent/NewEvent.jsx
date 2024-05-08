@@ -1,16 +1,13 @@
-import React, { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import CaretRight from '@icons/CaretRight.svg';
 import imagePreview from '@icons/preview.svg';
 import UploadSimple from '@icons/UploadSimple.svg';
-import { Formik, Form, Field, ErrorMessage, FieldArray } from 'formik';
+import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import { Container, Row, Col, Button } from 'react-bootstrap';
-import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
-import CustomSelect from '../../../../components/Input/Select';
-import { coachDummyData, studentDummyData, countryList } from '../../../../data/data';
+import { coachDummyData } from '../../../../data/data';
 import toast from 'react-hot-toast';
-import Input from '@components/Input/Input';
 import { useLocation, useNavigate } from 'react-router-dom';
 
 const NewEvent = () => {
@@ -110,7 +107,7 @@ const NewEvent = () => {
                         }}
                         enableReinitialize
                     >
-                        {({ isSubmitting, handleSubmit, values }) => (
+                        {({ isSubmitting, handleSubmit }) => (
                             <Form onSubmit={handleSubmit}>
                                 <Row className="mb-3">
                                     <Col>

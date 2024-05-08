@@ -1,8 +1,8 @@
-import React, { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import '../../../styles/Courses.scss';
-import { Button, Col, Row, Container, Spinner, Card } from 'react-bootstrap';
-import thumbnail from '../../../assets/icons/thumbnail.svg';
-import { Formik, Form, Field, ErrorMessage, FieldArray } from 'formik';
+import { Button, Col, Row, Container } from 'react-bootstrap';
+import thumbnail from '../../../assets/icons/Thumbnail.svg';
+import { Formik, Form, Field, ErrorMessage } from 'formik';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import * as Yup from 'yup';
@@ -13,11 +13,12 @@ import trashIcon from '../../../assets/icons/Trash.svg';
 import plusIcon from '../../../assets/icons/Plus.svg';
 import trashIconRed from '../../../assets/icons/Trash-rename.svg';
 import PencilLine from '../../../assets/icons/PencilLine.svg';
-import ProductForm from '@components/Listings/ProductForm/ProductForm';
 import Modal from '@components/Modal/Modal';
 import AddLectureModal from './AddLectureModal';
+import { useNavigate } from 'react-router-dom';
 
 const UploadFiles = () => {
+    const navigate = useNavigate();
     const inputRef = useRef();
     const videoinputRef = useRef();
     const [coachPhoto, setCoachPhoto] = useState(null);
@@ -33,6 +34,13 @@ const UploadFiles = () => {
     const [coachData, setCoachData] = useState({
         courseDescription: ''
     });
+
+    useEffect(() => {
+        // Fetch data from API here for now just update the data
+        setCoachData({
+            courseDescription: ''
+        });
+    }, []);
 
     const handleFileChange = async (e) => {
         const file = e.target.files[0];
@@ -285,7 +293,7 @@ const UploadFiles = () => {
                                                 </div>
                                             </div>
                                             {Array.from({ length: 2 }).map((_, index) => (
-                                                <div className="add-lecture-item mb-3 ">
+                                                <div key={index + 1} className="add-lecture-item mb-3 ">
                                                     <div className="items-text d-flex gap-2">
                                                         <img src={menuIcon} alt="menu" />
                                                         <p>

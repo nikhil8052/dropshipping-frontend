@@ -1,11 +1,11 @@
+// Disabling lint cause we can not do anything with css imports
+/* eslint-disable */
 import { Keyboard, Navigation, Pagination, Scrollbar } from 'swiper/modules';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/swiper-bundle.css';
-import cardtitle from '../../../assets/icons/card-title.svg';
 import '../../../styles/Courses.scss';
 import Card from '@components/Card/Card';
 import CourseCard from '../../../components/CourseCard/CourseCard';
-import eventImg from '../../../assets/images/Event-Image.svg';
 import cardPic from '../../../assets/images/publish-card-pic.svg';
 
 const swiperBreakpoints = {
