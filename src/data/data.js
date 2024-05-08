@@ -848,3 +848,84 @@ export const coursesRoadmap = [
     { id: 4, label: 'Dropshiping For Beginners', progress: 'Not Started', value: 4 },
     { id: 5, label: 'Search Engine Optimization', progress: 'Not Started', value: 5 }
 ];
+
+const now = new Date();
+
+export const events = [
+    {
+        id: 1,
+        title: 'Long Event',
+        start: new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1),
+        end: new Date(now.getFullYear(), now.getMonth(), now.getDate() + 4)
+    },
+    {
+        id: 2,
+        title: 'Upcoming Event',
+        start: new Date(now.getFullYear(), now.getMonth(), now.getDate() + 5),
+        end: new Date(now.getFullYear(), now.getMonth(), now.getDate() + 5)
+    },
+    {
+        id: 3,
+        title: 'Another Long Event',
+        start: new Date(now.getFullYear(), now.getMonth(), now.getDate() + 7),
+        end: new Date(now.getFullYear(), now.getMonth(), now.getDate() + 10)
+    },
+    {
+        id: 4,
+        title: 'Conference',
+        start: new Date(now.getFullYear(), now.getMonth(), now.getDate() + 11),
+        end: new Date(now.getFullYear(), now.getMonth(), now.getDate() + 13),
+        desc: 'A major event for stakeholders.'
+    },
+    {
+        id: 5,
+        title: 'Meeting',
+        start: new Date(now.getFullYear(), now.getMonth(), now.getDate(), 10, 30),
+        end: new Date(now.getFullYear(), now.getMonth(), now.getDate(), 12, 0),
+        desc: 'Discussion on project milestones'
+    },
+    {
+        id: 6,
+        title: 'Lunch',
+        start: new Date(now.getFullYear(), now.getMonth(), now.getDate(), 13, 0),
+        end: new Date(now.getFullYear(), now.getMonth(), now.getDate(), 14, 0),
+        desc: 'Lunch with the team'
+    },
+    {
+        id: 7,
+        title: 'Design Review',
+        start: new Date(now.getFullYear(), now.getMonth(), now.getDate() + 2, 15, 0),
+        end: new Date(now.getFullYear(), now.getMonth(), now.getDate() + 2, 17, 0),
+        desc: 'Review of latest drafts with the design team'
+    },
+    {
+        id: 8,
+        title: 'Workshop',
+        start: new Date(now.getFullYear(), now.getMonth(), now.getDate() + 3, 11, 0),
+        end: new Date(now.getFullYear(), now.getMonth(), now.getDate() + 3, 14, 30),
+        desc: 'Interactive workshop on user experience fundamentals'
+    },
+    {
+        id: 9,
+        title: 'Team Outing',
+        start: new Date(now.getFullYear(), now.getMonth(), now.getDate() + 10),
+        end: new Date(now.getFullYear(), now.getMonth(), now.getDate() + 10),
+        desc: 'Team building activities'
+    },
+    {
+        id: 10,
+        title: "Today's Event",
+        start: new Date(now.getFullYear(), now.getMonth(), now.getDate(), now.getHours() + 1), // Event starting the next hour
+        end: new Date(now.getFullYear(), now.getMonth(), now.getDate(), now.getHours() + 3), // Lasts for 2 hours
+        desc: 'Important'
+    },
+    {
+        id: 11,
+        title: "Today's Event",
+        start: new Date(now.getFullYear(), now.getMonth(), now.getDate(), now.getHours() + 1), // Event starting the next hour
+        end: new Date(now.getFullYear(), now.getMonth(), now.getDate(), now.getHours() + 3), // Lasts for 2 hours
+        desc: 'Important'
+    }
+];
+
+// Export the updated events array to be used in your calendar component

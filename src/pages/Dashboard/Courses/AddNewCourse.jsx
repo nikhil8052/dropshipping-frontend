@@ -71,7 +71,7 @@ const AddNewCourse = () => {
                                                 <span className="ms-2">{selectedCourses}</span>
 
                                                 <p>
-                                                    <img src={downArrow} alt="Filter" srcset="" />
+                                                    <img src={downArrow} alt="Filter" srcSet="" />
                                                 </p>
                                             </div>
                                         }
@@ -100,7 +100,7 @@ const AddNewCourse = () => {
                                                 <span className="ms-2">{selectedCoach}</span>
 
                                                 <p>
-                                                    <img src={downArrow} alt="Filter" srcset="" />
+                                                    <img src={downArrow} alt="Filter" srcSet="" />
                                                 </p>
                                             </div>
                                         }

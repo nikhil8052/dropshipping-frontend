@@ -11,8 +11,7 @@ import CustomSelect from '../../../../components/Input/Select';
 import { coachDummyData, studentDummyData, countryList } from '../../../../data/data';
 import toast from 'react-hot-toast';
 import Input from '@components/Input/Input';
-import { useLocation } from 'react-router-dom';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 const NewEvent = () => {
     const inputRef = useRef();
@@ -163,7 +162,7 @@ const NewEvent = () => {
                                                                 <br />
                                                                 <Button className="upload-image-btn">
                                                                     Upload Image{' '}
-                                                                    <img src={UploadSimple} alt="" srcset="" />
+                                                                    <img src={UploadSimple} alt="" srcSet="" />
                                                                 </Button>
                                                             </span>
                                                         </div>

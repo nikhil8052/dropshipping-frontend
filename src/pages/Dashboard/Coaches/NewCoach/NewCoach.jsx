@@ -9,8 +9,7 @@ import 'react-quill/dist/quill.snow.css';
 import CustomSelect from '../../../../components/Input/Select';
 import { coachDummyData, studentDummyData, countryList } from '../../../../data/data';
 import toast from 'react-hot-toast';
-import { useLocation } from 'react-router-dom';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 const NewCoach = () => {
     const inputRef = useRef();

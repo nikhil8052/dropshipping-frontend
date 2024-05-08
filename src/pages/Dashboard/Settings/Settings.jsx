@@ -153,7 +153,7 @@ const Settings = () => {
                                                             className="upload-image-btn"
                                                             variant="outline-primary"
                                                         >
-                                                            Upload New Image <img src={UploadSimple} alt="" srcset="" />
+                                                            Upload New Image <img src={UploadSimple} alt="" srcSet="" />
                                                         </Button>
                                                     </Col>
                                                 </Row>

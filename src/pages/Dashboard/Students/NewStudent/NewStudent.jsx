@@ -10,8 +10,7 @@ import 'react-quill/dist/quill.snow.css';
 import CustomSelect from '../../../../components/Input/Select';
 import { countryList, coursesRoadmap, studentDummyData } from '../../../../data/data';
 import toast from 'react-hot-toast';
-import { useLocation } from 'react-router-dom';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { DndContext } from '@dnd-kit/core';
 // import SortableSelect from './SortedSelect';
 

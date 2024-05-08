@@ -219,13 +219,12 @@ const Students = () => {
             filter: 'agSetColumnFilter',
             sortable: true,
             unSortIcon: true,
-            cellRenderer: TextExpand,
             wrapText: true,
             autoHeight: true,
             resizable: false,
             cellRenderer: ({ data: rowData }) => {
                 const coursesRoadmap = rowData.coursesRoadmap;
-                const firstName = `Course 1 ${coursesRoadmap[0].title}`;
+                const firstName = `Course 1 ${coursesRoadmap[0]?.title}`;
 
                 return (
                     <div
