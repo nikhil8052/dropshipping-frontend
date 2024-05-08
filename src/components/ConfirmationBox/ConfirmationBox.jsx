@@ -13,6 +13,7 @@ const ConfirmationBox = ({
     loading,
     customFooterClass,
     nonActiveBtn,
+
     activeBtn,
     cancelButtonTitle = 'No',
     activeBtnTitle = 'Yes'
