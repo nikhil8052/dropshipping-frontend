@@ -1,27 +1,37 @@
-import React, { useState } from 'react';
-import { Row, Col } from 'react-bootstrap';
+import { useState, useEffect } from 'react';
+import { Row } from 'react-bootstrap';
 import PublishCourses from './PublishCourses';
 import BasicInformation from './BasicInformation';
 import UploadFiles from './UploadFiles';
 import ClipboardText from '@icons/ClipboardText.svg';
 import Stack from '@icons/Stack.svg';
-import task_alt from '@icons/task_alt.svg';
+import taskAlt from '../../../assets/icons/task_alt.svg';
 import CaretRight from '@icons/CaretRight.svg';
 import '../../../styles/Courses.scss';
 import Tab from 'react-bootstrap/Tab';
 import Tabs from 'react-bootstrap/Tabs';
 import { useLocation, Link } from 'react-router-dom';
-import { useNavigate } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 
 const AddNewCourse = () => {
+    const userInfo = useSelector((state) => state?.auth?.userInfo);
+    const [isAdmin, setIsAdmin] = useState(false);
+    const [isCoach, setIsCoach] = useState(false);
     const location = useLocation();
-    const isNewCoursePage = location.pathname === '/admin/courses/new';
-    const navigate = useNavigate();
+    const isNewCoursePage = location.pathname === '/admin/courses/new' || '/coach/courses/new';
 
+    useEffect(() => {
+        if (userInfo) {
+            const { role } = userInfo;
+            setIsAdmin(role === 'admin');
+            setIsCoach(role === 'coach');
+        }
+    }, [userInfo]);
     return (
         <div className="addcourse-section">
             <div className="addcourse-nav ">
-                <Link to="/admin/courses">Courses</Link>
+                {isAdmin ? <Link to="/admin/courses">Courses</Link> : <Link to="/coach/courses">Courses</Link>}
+
                 {isNewCoursePage ? (
                     <span>
                         <img src={CaretRight} alt=">" /> Add New Courses{' '}
@@ -42,7 +52,7 @@ const AddNewCourse = () => {
                         <Tab
                             eventKey="basic-information"
                             title={
-                                <span>
+                                <span className="tab-span">
                                     <img src={Stack} alt="course-icon" /> Basic Information
                                 </span>
                             }
@@ -52,7 +62,7 @@ const AddNewCourse = () => {
                         <Tab
                             eventKey="upload_files"
                             title={
-                                <span>
+                                <span className="tab-span">
                                     <img src={ClipboardText} alt="course-icon" /> Upload Files
                                 </span>
                             }
@@ -62,8 +72,8 @@ const AddNewCourse = () => {
                         <Tab
                             eventKey="publish-course"
                             title={
-                                <span>
-                                    <img src={task_alt} alt="course-icon" /> Publish Course
+                                <span className="tab-span">
+                                    <img src={taskAlt} alt="course-icon" /> Publish Course
                                 </span>
                             }
                         >

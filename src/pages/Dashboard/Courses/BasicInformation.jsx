@@ -1,13 +1,10 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Form as FormikForm, Formik } from 'formik';
 import * as Yup from 'yup';
-import { useSelector, useDispatch } from 'react-redux';
-import { Button, Col, Row, Container, Spinner, Card, Dropdown, DropdownButton } from 'react-bootstrap';
-import { Link } from 'react-router-dom';
-
+import { Button, Spinner, Dropdown, DropdownButton } from 'react-bootstrap';
 import Input from '@components/Input/Input';
 import downArrow from '@icons/down-arrow.svg';
-import { studentDummyData, coachDummyData } from '../../../data/data';
+import { coachDummyData } from '../../../data/data';
 import '../../../styles/Courses.scss';
 
 const BasicInformation = () => {
@@ -62,7 +59,7 @@ const BasicInformation = () => {
                                             <span className="ms-2">{selectedCourses}</span>
 
                                             <p>
-                                                <img src={downArrow} alt="Filter" srcset="" />
+                                                <img src={downArrow} alt="Filter" />
                                             </p>
                                         </div>
                                     }
@@ -91,7 +88,7 @@ const BasicInformation = () => {
                                             <span className="ms-2">{selectedCoach}</span>
 
                                             <p>
-                                                <img src={downArrow} alt="Filter" srcset="" />
+                                                <img src={downArrow} alt="Filter" />
                                             </p>
                                         </div>
                                     }

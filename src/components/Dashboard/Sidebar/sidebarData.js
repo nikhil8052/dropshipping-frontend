@@ -107,7 +107,8 @@ export const adminSidebarItems = [
         id: 4,
         name: 'Courses',
         iconLight: courses, // Replace with,
-        linkTo: '/admin/courses'
+        linkTo: '/admin/courses',
+        pathCombinations: ['/admin/courses', '/admin/courses/new', '/admin/courses/edit', '/admin/courses/details']
     },
     {
         id: 5,
@@ -151,7 +152,14 @@ export const coachSidebarItems = [
         id: 3,
         name: 'Courses',
         iconLight: courses, // Replace with
-        linkTo: '/coach/courses'
+        linkTo: '/coach/courses',
+        pathCombinations: [
+            '/coach/courses',
+            '/coach/courses/new',
+            '/coach/courses/edit',
+            '/coach/courses/details',
+            '/coach/courses/all-students'
+        ]
     },
     {
         id: 4,

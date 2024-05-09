@@ -1,8 +1,8 @@
-import React, { useEffect, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 import '../../../styles/Courses.scss';
-import { Button, Col, Row, Container, Spinner, Card } from 'react-bootstrap';
-import thumbnail from '../../../assets/icons/thumbnail.svg';
-import { Formik, Form, Field, ErrorMessage, FieldArray } from 'formik';
+import { Button, Col, Row, Container } from 'react-bootstrap';
+import thumbnail from '../../../assets/icons/Thumbnail.svg';
+import { Formik, Form, Field, ErrorMessage } from 'formik';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import * as Yup from 'yup';
@@ -13,10 +13,9 @@ import trashIcon from '../../../assets/icons/Trash.svg';
 import plusIcon from '../../../assets/icons/Plus.svg';
 import trashIconRed from '../../../assets/icons/Trash-rename.svg';
 import PencilLine from '../../../assets/icons/PencilLine.svg';
-import ProductForm from '@components/Listings/ProductForm/ProductForm';
 import Modal from '@components/Modal/Modal';
 import AddLectureModal from './AddLectureModal';
-
+import { trimLongText } from '../../../utils/common';
 const UploadFiles = () => {
     const inputRef = useRef();
     const videoinputRef = useRef();
@@ -168,7 +167,7 @@ const UploadFiles = () => {
                                                         </div>
                                                     ) : (
                                                         <div className="image-preview">
-                                                            <img src={thumbnail} alt="" />
+                                                            <img src={thumbnail} alt="thumbnail" />
                                                             <div className="image-preview-text">
                                                                 <span>
                                                                     Upload your course Thumbnail here.
@@ -288,11 +287,15 @@ const UploadFiles = () => {
                                                 <div className="add-lecture-item mb-3 ">
                                                     <div className="items-text d-flex gap-2">
                                                         <img src={menuIcon} alt="menu" />
-                                                        <p>
-                                                            Add Lectures
-                                                            <span>
-                                                                ( In this lecture basics of all the elements... ){' '}
+                                                        <p className="items-text-title">
+                                                            Add Lectures (
+                                                            <span className="">
+                                                                {trimLongText(
+                                                                    'In this lecture basics of all the elements',
+                                                                    20
+                                                                )}
                                                             </span>
+                                                            )
                                                         </p>
                                                     </div>
                                                     <div className="items-button">
@@ -314,12 +317,7 @@ const UploadFiles = () => {
                                 <Row>
                                     <Col>
                                         <div className="mt-3 d-flex justify-content-between gap-3">
-                                            <Button
-                                                type="button"
-                                                onClick={() => navigate(-1)}
-                                                className="cancel-btn"
-                                                disabled={isSubmitting}
-                                            >
+                                            <Button type="button" className="cancel-btn" disabled={isSubmitting}>
                                                 Cancel
                                             </Button>
                                             <Button type="submit" className="submit-btn" disabled={isSubmitting}>

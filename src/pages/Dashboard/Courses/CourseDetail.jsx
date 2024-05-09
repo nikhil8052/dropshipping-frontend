@@ -1,17 +1,19 @@
 import { useEffect, useState } from 'react';
 import '../../../styles/Courses.scss';
-import { Button, Row } from 'react-bootstrap';
+import { Button } from 'react-bootstrap';
 import Card from '@components/Card/Card';
 import CourseSlider from './CourseSlider';
 import { useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, Link } from 'react-router-dom';
+import CaretRight from '@icons/CaretRight.svg';
 
-const PublishCourses = () => {
+const CourseDetail = () => {
     const userInfo = useSelector((state) => state?.auth?.userInfo);
     const [isAdmin, setIsAdmin] = useState(false);
     const [isCoach, setIsCoach] = useState(false);
 
-    const navigate = useNavigate();
+    const location = useLocation();
+    const isDetailPage = location.pathname === '/admin/courses/details' || '/coach/courses/details';
 
     useEffect(() => {
         if (userInfo) {
@@ -21,20 +23,18 @@ const PublishCourses = () => {
         }
     }, [userInfo]);
 
-    const handleSubmit = () => {
-        if (isAdmin) {
-            navigate('/admin/courses/details');
-        } else {
-            // Handle create button click event here
-            navigate('/coach/courses/details');
-        }
-    };
-
     return (
         <>
             <div className="publish-form-section">
-                <div className="section-title">
-                    <p>Publish Course</p>
+                <div className="addcourse-nav mb-3">
+                    {isAdmin ? <Link to="/admin/courses">Courses</Link> : <Link to="/coach/courses">Courses</Link>}
+                    {isDetailPage ? (
+                        <span>
+                            <img src={CaretRight} alt=">" /> Course Details
+                        </span>
+                    ) : (
+                        ''
+                    )}
                 </div>
                 <Card cardType="large">
                     <div className="card-background">
@@ -60,21 +60,32 @@ const PublishCourses = () => {
                     <div className="carousel-lecture ">
                         <CourseSlider />
                     </div>
-                </Card>
+                    <div
+                        className="publish-added-button-footer "
+                        style={{ display: 'flex', justifyContent: isAdmin ? 'flex-end' : 'space-between' }}
+                    >
+                        {isCoach ? (
+                            <>
+                                <Link to="/coach/courses/all-students">
+                                    <Button type="button" className="publish-btn">
+                                        All Students
+                                    </Button>
+                                </Link>
 
-                <Row>
-                    <div className="mt-3 d-flex justify-content-between gap-3">
-                        <Button type="button" onClick={() => navigate(-1)} className="cancel-btn">
-                            Cancel
-                        </Button>
-                        <Button type="submit" className="submit-btn" onClick={handleSubmit}>
-                            Publish
-                        </Button>
+                                <Button type="button" className="edit-btn">
+                                    Edit
+                                </Button>
+                            </>
+                        ) : (
+                            <Button type="button" className="edit-btn">
+                                Edit
+                            </Button>
+                        )}
                     </div>
-                </Row>
+                </Card>
             </div>
         </>
     );
 };
 
-export default PublishCourses;
+export default CourseDetail;
