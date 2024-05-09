@@ -1,19 +1,14 @@
-import React, { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import CaretRight from '@icons/CaretRight.svg';
 import imagePreview from '@icons/image-preview.svg';
 import { Formik, Form, Field, ErrorMessage, FieldArray } from 'formik';
-import Select from 'react-select';
-import makeAnimated from 'react-select/animated';
 import * as Yup from 'yup';
 import { Container, Row, Col, Button } from 'react-bootstrap';
 import 'react-quill/dist/quill.snow.css';
 import CustomSelect from '../../../../components/Input/Select';
-import { countryList, coursesRoadmap, studentDummyData } from '../../../../data/data';
+import { countryList, studentDummyData } from '../../../../data/data';
 import toast from 'react-hot-toast';
-import { useLocation } from 'react-router-dom';
-import { useNavigate } from 'react-router-dom';
-import { DndContext } from '@dnd-kit/core';
-// import SortableSelect from './SortedSelect';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 const NewStudent = () => {
     const inputRef = useRef();
@@ -90,21 +85,6 @@ const NewStudent = () => {
         };
     };
     // Test Data
-
-    const animatedComponents = makeAnimated();
-
-    const customStyles = {
-        // Add custom styles here
-        control: (base, state) => ({
-            ...base
-            // styles for the control component
-        }),
-        option: (provided, state) => ({
-            ...provided
-            // styles for the option components
-        })
-        // ... more custom styling
-    };
 
     return (
         <div className="new-coach-page-wrapper">
@@ -340,7 +320,7 @@ const NewStudent = () => {
                                     <Col md={6} xs={12}>
                                         <label className="field-label">Courses Roadmap</label>
                                         <FieldArray name="assignedStudents">
-                                            {({ push, remove, form }) => (
+                                            {({ form }) => (
                                                 <CustomSelect
                                                     name="assignedStudents"
                                                     options={studentDummyData.map((student) => ({

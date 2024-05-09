@@ -1,11 +1,9 @@
 import './topbar.scss';
-import ProfileDropdown from '../DropDown/Profile/ProfileDropdown';
-import NotificationDropdown from '../DropDown/Notification/NotificationDropdown';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBarsStaggered } from '@fortawesome/free-solid-svg-icons';
 import { useDispatch, useSelector } from 'react-redux';
 import { toggleSidebar } from '@redux/theme/theme_slice.js';
-import { adminSidebarItems, coachSidebarItems, sideBarItems, studentSidebarItems } from '../Sidebar/sidebarData';
+import { adminSidebarItems, coachSidebarItems, studentSidebarItems } from '../Sidebar/sidebarData';
 import { useLocation } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 const Topbar = () => {
@@ -42,31 +40,6 @@ const Topbar = () => {
         const title = getTopTitle(location.pathname);
         setTitle(title);
     }, [location.pathname]);
-
-    const notifications = [
-        {
-            id: 1,
-            message: 'Alex sent a message',
-            seen: true
-        },
-        {
-            id: 2,
-            message: 'Bob subscribed',
-            seen: false
-        },
-        {
-            id: 3,
-            message: 'Alice joined chat',
-            seen: true
-        }
-    ];
-
-    const notificationHandler = () => {
-        // handle notification click
-    };
-    const logoutHandler = () => {
-        // handle logout
-    };
 
     return (
         <>

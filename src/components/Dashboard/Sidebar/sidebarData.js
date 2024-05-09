@@ -1,11 +1,3 @@
-import homeLight from '@icons/home-light.svg';
-import homeDark from '@icons/home-dark.svg';
-import groupLight from '@icons/group-light.svg';
-import groupDark from '@icons/group-dark.svg';
-import productLight from '@icons/product-light.svg';
-import productDark from '@icons/product-dark.svg';
-import logoutLight from '@icons/logout-light.svg';
-import logoutDark from '@icons/logout-dark.svg';
 // Sidebar Icons
 import dashboardLight from '@icons/home-white.svg';
 import coaches from '@icons/coaches.svg';

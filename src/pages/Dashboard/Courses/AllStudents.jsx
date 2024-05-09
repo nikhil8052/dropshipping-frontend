@@ -8,13 +8,12 @@ import { Helmet } from 'react-helmet';
 import axiosWrapper from '@utils/api';
 import { toast } from 'react-toastify';
 import TextExpand from '@components/TextExpand/TextExpand';
-import eyeIcon from '@icons/basil_eye-solid.svg';
 import trash2 from '@icons/trash-2.svg';
 
 import downArrow from '@icons/down-arrow.svg';
-import { paymentsDummyData, AllStudentsDummyData } from '../../../data/data';
+import { AllStudentsDummyData } from '../../../data/data';
 import '../../../styles/Courses.scss';
-import { useLocation, Link } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 const AllStudents = () => {
     const [showDeleteModal, setShowDeleteModal] = useState(false);
@@ -59,15 +58,15 @@ const AllStudents = () => {
         setSelectedRowId(event.data.id);
     };
 
-    const handleCreateClick = () => {
-        // Handle create button click event here
-        setStudentModal({
-            show: true,
-            title: 'Create Product',
-            isEditable: false,
-            studentId: null
-        });
-    };
+    // const handleCreateClick = () => {
+    //     // Handle create button click event here
+    //     setStudentModal({
+    //         show: true,
+    //         title: 'Create Product',
+    //         isEditable: false,
+    //         studentId: null
+    //     });
+    // };
 
     const handleEditClick = (studentId) => {
         // Handle edit action here
@@ -142,7 +141,7 @@ const AllStudents = () => {
     const columns = [
         {
             headerName: 'Name',
-            field: 'student_name',
+            field: 'studentName',
             filter: 'agSetColumnFilter',
             sortable: true,
             unSortIcon: true,
@@ -153,7 +152,7 @@ const AllStudents = () => {
         },
         {
             headerName: 'ID',
-            field: 'student_id',
+            field: 'studentId',
             filter: 'agSetColumnFilter',
             sortable: true,
             unSortIcon: true,

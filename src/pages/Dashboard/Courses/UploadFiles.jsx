@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import { useRef, useState, useEffect } from 'react';
 import '../../../styles/Courses.scss';
 import { Button, Col, Row, Container } from 'react-bootstrap';
 import thumbnail from '../../../assets/icons/Thumbnail.svg';
@@ -32,6 +32,13 @@ const UploadFiles = () => {
     const [coachData, setCoachData] = useState({
         courseDescription: ''
     });
+
+    useEffect(() => {
+        // Fetch data from API here for now just update the data
+        setCoachData({
+            courseDescription: ''
+        });
+    }, []);
 
     const handleFileChange = async (e) => {
         const file = e.target.files[0];
@@ -284,7 +291,7 @@ const UploadFiles = () => {
                                                 </div>
                                             </div>
                                             {Array.from({ length: 2 }).map((_, index) => (
-                                                <div className="add-lecture-item mb-3 ">
+                                                <div key={index + 1} className="add-lecture-item mb-3 ">
                                                     <div className="items-text d-flex gap-2">
                                                         <img src={menuIcon} alt="menu" />
                                                         <p className="items-text-title">

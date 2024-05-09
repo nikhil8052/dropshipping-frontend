@@ -1,3 +1,5 @@
+// Disabling lint cause we can not do anything with css imports
+/* eslint-disable */
 import { Keyboard, Navigation, Pagination, Scrollbar } from 'swiper/modules';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/swiper-bundle.css';

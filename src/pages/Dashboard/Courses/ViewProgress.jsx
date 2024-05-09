@@ -5,16 +5,14 @@ import { useSelector } from 'react-redux';
 import { useLocation, Link } from 'react-router-dom';
 import CaretRight from '@icons/CaretRight.svg';
 import viewProfile from '../../../assets/images/Ellipse 5.svg';
-import { InputGroup, Button, Form } from 'react-bootstrap';
+import { InputGroup, Button, Form, Col } from 'react-bootstrap';
 import Search from '../../../assets/icons/Search.svg';
 import ActiveIcon from '../../../assets/icons/IconLect.svg';
 import InactiveIcon from '../../../assets/icons/Icon-inactive-lec.svg';
-import { Col, Row } from 'react-bootstrap';
 
 const ViewProgress = () => {
     const userInfo = useSelector((state) => state?.auth?.userInfo);
     const [isAdmin, setIsAdmin] = useState(false);
-    const [isCoach, setIsCoach] = useState(false);
     const [search, setSearch] = useState('');
 
     const location = useLocation();
@@ -24,7 +22,6 @@ const ViewProgress = () => {
         if (userInfo) {
             const { role } = userInfo;
             setIsAdmin(role === 'admin');
-            setIsCoach(role === 'coach');
         }
     }, [userInfo]);
     const onFilterTextChange = (event) => {
@@ -71,6 +68,7 @@ const ViewProgress = () => {
                             type="text"
                             name="Search"
                             label="Search"
+                            value={search}
                             onChange={onFilterTextChange}
                             placeholder="Search"
                         />
@@ -82,12 +80,8 @@ const ViewProgress = () => {
 
                     <div className="d-flex lecture-btns">
                         {lectureData.map((lecture, index) => (
-                            <Col xs={12} sm={4} md={4} lg={3} xl={2} xxl={2}>
-                                <Button
-                                    type="button"
-                                    key={index}
-                                    className={`btn ${lecture.isActive ? 'active' : 'inactive'}`}
-                                >
+                            <Col xs={12} sm={4} md={4} lg={3} xl={2} xxl={2} key={index}>
+                                <Button type="button" className={`btn ${lecture.isActive ? 'active' : 'inactive'}`}>
                                     <img src={lecture.icon} alt="IconLect" />
                                     <p>Lecture No. {lecture.lectureNo}</p>
                                 </Button>

@@ -519,9 +519,9 @@ export const eventsDummyData = [
     {
         id: 1,
         topic: 'Team Meeting',
-        join_link: 'https://toom.us/123456asdsadasd213213213123123123213123123',
+        joinLink: 'https://toom.us/123456asdsadasd213213213123123123213123123',
         attendees: 20,
-        date_time: 'Apr 24, 2024 09:00',
+        dateTime: 'Apr 24, 2024 09:00',
         actions: '',
         description: 'Regular team meeting',
         status: 'Upcoming',
@@ -530,9 +530,9 @@ export const eventsDummyData = [
     {
         id: 2,
         topic: 'Project Kickoff',
-        join_link: 'https://toom.us/789012',
+        joinLink: 'https://toom.us/789012',
         attendees: 15,
-        date_time: 'Apr 25, 2024 10:30',
+        dateTime: 'Apr 25, 2024 10:30',
         actions: '',
         description: 'Kickoff meeting for Project X',
         status: 'Upcoming',
@@ -541,9 +541,9 @@ export const eventsDummyData = [
     {
         id: 3,
         topic: 'Training Session',
-        join_link: 'https://toom.us/345678',
+        joinLink: 'https://toom.us/345678',
         attendees: 25,
-        date_time: 'Apr 26, 2024 14:00',
+        dateTime: 'Apr 26, 2024 14:00',
         actions: '',
         description: 'Training session on new software',
         status: 'Upcoming',
@@ -552,9 +552,9 @@ export const eventsDummyData = [
     {
         id: 4,
         topic: 'Client Demo',
-        join_link: 'https://toom.us/901234',
+        joinLink: 'https://toom.us/901234',
         attendees: 10,
-        date_time: 'Apr 27, 2024 11:00',
+        dateTime: 'Apr 27, 2024 11:00',
         actions: '',
         description: 'Demo for ABC Corp.',
         status: 'Upcoming',
@@ -563,9 +563,9 @@ export const eventsDummyData = [
     {
         id: 5,
         topic: 'Review Meeting',
-        join_link: 'https://toom.us/567890',
+        joinLink: 'https://toom.us/567890',
         attendees: 30,
-        date_time: 'Apr 28, 2024 15:30',
+        dateTime: 'Apr 28, 2024 15:30',
         actions: '',
         description: 'Quarterly review meeting',
         status: 'Upcoming',
@@ -574,9 +574,9 @@ export const eventsDummyData = [
     {
         id: 6,
         topic: 'Product Launch',
-        join_link: 'https://toom.us/234567',
+        joinLink: 'https://toom.us/234567',
         attendees: 50,
-        date_time: 'Apr 29, 2024 13:00',
+        dateTime: 'Apr 29, 2024 13:00',
         actions: '',
         description: 'Launch event for new product',
         status: 'Upcoming',
@@ -585,9 +585,9 @@ export const eventsDummyData = [
     {
         id: 7,
         topic: 'Weekly Review',
-        join_link: 'https://toom.us/890123',
+        joinLink: 'https://toom.us/890123',
         attendees: 40,
-        date_time: 'Apr 30, 2024 09:30',
+        dateTime: 'Apr 30, 2024 09:30',
         actions: '',
         description: 'Weekly project review',
         status: 'Upcoming',
@@ -596,9 +596,9 @@ export const eventsDummyData = [
     {
         id: 8,
         topic: 'Board Meeting',
-        join_link: 'https://toom.us/456789',
+        joinLink: 'https://toom.us/456789',
         attendees: 12,
-        date_time: 'May 1, 2024 10:00',
+        dateTime: 'May 1, 2024 10:00',
         actions: '',
         description: 'Monthly board meeting',
         status: 'Upcoming',
@@ -607,9 +607,9 @@ export const eventsDummyData = [
     {
         id: 9,
         topic: 'Interviews',
-        join_link: 'https://toom.us/123456',
+        joinLink: 'https://toom.us/123456',
         attendees: 5,
-        date_time: 'May 2, 2024 11:30',
+        dateTime: 'May 2, 2024 11:30',
         actions: '',
         description: 'Interviews for new hires',
         status: 'Upcoming',
@@ -618,9 +618,9 @@ export const eventsDummyData = [
     {
         id: 10,
         topic: 'Training Workshop',
-        join_link: 'https://toom.us/789012',
+        joinLink: 'https://toom.us/789012',
         attendees: 20,
-        date_time: 'May 3, 2024 14:30',
+        dateTime: 'May 3, 2024 14:30',
         actions: '',
         description: 'Workshop on communication skills',
         status: 'Upcoming',
@@ -629,9 +629,9 @@ export const eventsDummyData = [
     {
         id: 11,
         topic: 'Product Demo',
-        join_link: 'https://toom.us/234567',
+        joinLink: 'https://toom.us/234567',
         attendees: 15,
-        date_time: 'May 4, 2024 10:00',
+        dateTime: 'May 4, 2024 10:00',
         actions: '',
         description: 'Demo of new features',
         status: 'Upcoming',
@@ -640,9 +640,9 @@ export const eventsDummyData = [
     {
         id: 12,
         topic: 'Client Meeting',
-        join_link: 'https://toom.us/890123',
+        joinLink: 'https://toom.us/890123',
         attendees: 8,
-        date_time: 'May 5, 2024 11:30',
+        dateTime: 'May 5, 2024 11:30',
         actions: '',
         description: 'Meeting with ABC Corp.',
         status: 'Upcoming',
@@ -651,9 +651,9 @@ export const eventsDummyData = [
     {
         id: 13,
         topic: 'Team Building',
-        join_link: 'https://toom.us/456789',
+        joinLink: 'https://toom.us/456789',
         attendees: 25,
-        date_time: 'May 6, 2024 14:00',
+        dateTime: 'May 6, 2024 14:00',
         actions: '',
         description: 'Team building activities',
         status: 'Upcoming',
@@ -662,9 +662,9 @@ export const eventsDummyData = [
     {
         id: 14,
         topic: 'Project Review',
-        join_link: 'https://toom.us/123456',
+        joinLink: 'https://toom.us/123456',
         attendees: 10,
-        date_time: 'May 7, 2024 09:30',
+        dateTime: 'May 7, 2024 09:30',
         actions: '',
         description: 'Review of Project Y',
         status: 'Upcoming',
@@ -673,9 +673,9 @@ export const eventsDummyData = [
     {
         id: 15,
         topic: 'Training Session',
-        join_link: 'https://toom.us/789012',
+        joinLink: 'https://toom.us/789012',
         attendees: 18,
-        date_time: 'May 8, 2024 13:00',
+        dateTime: 'May 8, 2024 13:00',
         actions: '',
         description: 'Training session on new tool',
         status: 'Upcoming',
@@ -686,244 +686,244 @@ export const eventsDummyData = [
 export const paymentsDummyData = [
     {
         id: 1,
-        student_name: 'Robert Fox',
+        studentName: 'Robert Fox',
         email: 'detira.holt@school.edu',
-        payment_id: '54351354154',
+        paymentId: '54351354154',
         avatarUrl: 'https://randomuser.me/api/portraits/men/1.jpg',
-        date_time: 'Feb 2, 2019 19:28'
+        dateTime: 'Feb 2, 2019 19:28'
     },
     {
         id: 2,
-        student_name: 'Ronald Richards',
+        studentName: 'Ronald Richards',
         email: 'kerizi.lawson@school.edu',
-        payment_id: '54351354154',
+        paymentId: '54351354154',
         avatarUrl: 'https://randomuser.me/api/portraits/women/2.jpg',
-        date_time: 'Dec 30, 2019 07:52'
+        dateTime: 'Dec 30, 2019 07:52'
     },
     {
         id: 3,
-        student_name: 'Esther Howard',
+        studentName: 'Esther Howard',
         email: 'tanya.hin@school.edu',
-        payment_id: '54351354154',
+        paymentId: '54351354154',
         avatarUrl: 'https://randomuser.me/api/portraits/men/3.jpg',
-        date_time: 'Mar 20, 2019 23:14'
+        dateTime: 'Mar 20, 2019 23:14'
     },
     {
         id: 4,
-        student_name: 'Theresa Webb',
+        studentName: 'Theresa Webb',
         email: 'michael.mitc@school.edu',
-        payment_id: '54351354154',
+        paymentId: '54351354154',
         avatarUrl: 'https://randomuser.me/api/portraits/women/4.jpg',
-        date_time: 'Feb 2, 2018 18:28'
+        dateTime: 'Feb 2, 2018 18:28'
     },
     {
         id: 5,
-        student_name: 'Guy Hawkins',
+        studentName: 'Guy Hawkins',
         email: 'jessica.hansong@school.edu',
-        payment_id: '54351354154',
+        paymentId: '54351354154',
         avatarUrl: 'https://randomuser.me/api/portraits/men/5.jpg',
-        date_time: 'Dec 30, 2019 07:52'
+        dateTime: 'Dec 30, 2019 07:52'
     },
     {
         id: 6,
-        student_name: 'Floyd Miles',
+        studentName: 'Floyd Miles',
         email: 'Floyd Mile@example.com', // Email might be missing
-        payment_id: '54351354154',
+        paymentId: '54351354154',
         avatarUrl: 'https://randomuser.me/api/portraits/women/6.jpg',
-        date_time: 'Mar 20, 2019 23:14'
+        dateTime: 'Mar 20, 2019 23:14'
     },
     {
         id: 7,
-        student_name: 'Savannah Nguyen',
+        studentName: 'Savannah Nguyen',
         email: 'jackson.graham@school.edu',
-        payment_id: '54351354154',
+        paymentId: '54351354154',
         avatarUrl: 'https://randomuser.me/api/portraits/men/7.jpg',
-        date_time: 'Feb 2, 2019 19:28'
+        dateTime: 'Feb 2, 2019 19:28'
     },
     {
         id: 8,
-        student_name: 'Eleanor Pera',
+        studentName: 'Eleanor Pera',
         email: 'michelle.rivera@school.edu',
-        payment_id: '54351354154',
+        paymentId: '54351354154',
         avatarUrl: 'https://randomuser.me/api/portraits/women/8.jpg',
-        date_time: 'Dec 30, 2019 07:52'
+        dateTime: 'Dec 30, 2019 07:52'
     },
     {
         id: 9,
-        student_name: 'Cody Fisher',
+        studentName: 'Cody Fisher',
         email: 'alma.lawson@school.edu',
-        payment_id: '54351354154',
+        paymentId: '54351354154',
         avatarUrl: 'https://randomuser.me/api/portraits/men/9.jpg',
-        date_time: 'Mar 20, 2019 23:14'
+        dateTime: 'Mar 20, 2019 23:14'
     },
     {
         id: 10,
-        student_name: 'Kathrine David',
+        studentName: 'Kathrine David',
         email: 'alma.lawson@school.edu',
-        payment_id: '54351354154',
+        paymentId: '54351354154',
         avatarUrl: 'https://randomuser.me/api/portraits/women/10.jpg',
-        date_time: 'Mar 20, 2019 23:14'
+        dateTime: 'Mar 20, 2019 23:14'
     },
     {
         id: 11,
-        student_name: 'Antonio Jimenez',
+        studentName: 'Antonio Jimenez',
         email: 'william.garcia@school.edu',
-        payment_id: '98765432101',
+        paymentId: '98765432101',
         avatarUrl: 'https://randomuser.me/api/portraits/men/11.jpg',
-        date_time: 'April 10, 2024 12:30'
+        dateTime: 'April 10, 2024 12:30'
     },
     {
         id: 12,
-        student_name: 'Maria Rodriguez',
+        studentName: 'Maria Rodriguez',
         email: 'olivia.perez@school.edu',
-        payment_id: '98765432101',
+        paymentId: '98765432101',
         avatarUrl: 'https://randomuser.me/api/portraits/women/12.jpg',
-        date_time: 'March 15, 2024 08:15'
+        dateTime: 'March 15, 2024 08:15'
     },
     {
         id: 13,
-        student_name: 'Daniel Lee',
+        studentName: 'Daniel Lee',
         email: 'kimberly.chen@school.edu',
-        payment_id: '98765432101',
+        paymentId: '98765432101',
         avatarUrl: 'https://randomuser.me/api/portraits/men/13.jpg',
-        date_time: 'February 05, 2024 17:40'
+        dateTime: 'February 05, 2024 17:40'
     },
     {
         id: 14,
-        student_name: 'Victoria Brown',
+        studentName: 'Victoria Brown',
         email: 'elizabeth.walker@school.edu',
-        payment_id: '98765432101',
+        paymentId: '98765432101',
         avatarUrl: 'https://randomuser.me/api/portraits/women/14.jpg',
-        date_time: 'January 20, 2024 10:50'
+        dateTime: 'January 20, 2024 10:50'
     },
     {
         id: 15,
-        student_name: 'Michael Wilson',
+        studentName: 'Michael Wilson',
         email: 'charles.young@school.edu',
-        payment_id: '98765432101',
+        paymentId: '98765432101',
         avatarUrl: 'https://randomuser.me/api/portraits/men/15.jpg',
-        date_time: 'December 01, 2023 15:25'
+        dateTime: 'December 01, 2023 15:25'
     }
 ];
 
 export const AllStudentsDummyData = [
     {
         id: 1,
-        student_name: 'Robert Fox',
+        studentName: 'Robert Fox',
         email: 'detira.holt@school.edu',
-        student_id: '54351354154',
+        studentId: '54351354154',
         avatarUrl: 'https://randomuser.me/api/portraits/men/1.jpg',
         progress: 'View Progress'
     },
     {
         id: 2,
-        student_name: 'Ronald Richards',
+        studentName: 'Ronald Richards',
         email: 'kerizi.lawson@school.edu',
-        student_id: '54351354154',
+        studentId: '54351354154',
         avatarUrl: 'https://randomuser.me/api/portraits/women/2.jpg',
         progress: 'View Progress'
     },
     {
         id: 3,
-        student_name: 'Esther Howard',
+        studentName: 'Esther Howard',
         email: 'tanya.hin@school.edu',
-        student_id: '54351354154',
+        studentId: '54351354154',
         avatarUrl: 'https://randomuser.me/api/portraits/men/3.jpg',
         progress: 'View Progress'
     },
     {
         id: 4,
-        student_name: 'Theresa Webb',
+        studentName: 'Theresa Webb',
         email: 'michael.mitc@school.edu',
-        student_id: '54351354154',
+        studentId: '54351354154',
         avatarUrl: 'https://randomuser.me/api/portraits/women/4.jpg',
         progress: 'View Progress'
     },
     {
         id: 5,
-        student_name: 'Guy Hawkins',
+        studentName: 'Guy Hawkins',
         email: 'jessica.hansong@school.edu',
-        student_id: '54351354154',
+        studentId: '54351354154',
         avatarUrl: 'https://randomuser.me/api/portraits/men/5.jpg',
         progress: 'View Progress'
     },
     {
         id: 6,
-        student_name: 'Floyd Miles',
+        studentName: 'Floyd Miles',
         email: 'Floyd Mile@example.com', // Email might be missing
-        student_id: '54351354154',
+        studentId: '54351354154',
         avatarUrl: 'https://randomuser.me/api/portraits/women/6.jpg',
         progress: 'View Progress'
     },
     {
         id: 7,
-        student_name: 'Savannah Nguyen',
+        studentName: 'Savannah Nguyen',
         email: 'jackson.graham@school.edu',
-        student_id: '54351354154',
+        studentId: '54351354154',
         avatarUrl: 'https://randomuser.me/api/portraits/men/7.jpg',
         progress: 'View Progress'
     },
     {
         id: 8,
-        student_name: 'Eleanor Pera',
+        studentName: 'Eleanor Pera',
         email: 'michelle.rivera@school.edu',
-        student_id: '54351354154',
+        studentId: '54351354154',
         avatarUrl: 'https://randomuser.me/api/portraits/women/8.jpg',
         progress: 'View Progress'
     },
     {
         id: 9,
-        student_name: 'Cody Fisher',
+        studentName: 'Cody Fisher',
         email: 'alma.lawson@school.edu',
-        student_id: '54351354154',
+        studentId: '54351354154',
         avatarUrl: 'https://randomuser.me/api/portraits/men/9.jpg',
         progress: 'View Progress'
     },
     {
         id: 10,
-        student_name: 'Kathrine David',
+        studentName: 'Kathrine David',
         email: 'alma.lawson@school.edu',
-        student_id: '54351354154',
+        studentId: '54351354154',
         avatarUrl: 'https://randomuser.me/api/portraits/women/10.jpg',
         progress: 'View Progress'
     },
     {
         id: 11,
-        student_name: 'Antonio Jimenez',
+        studentName: 'Antonio Jimenez',
         email: 'william.garcia@school.edu',
-        student_id: '98765432101',
+        studentId: '98765432101',
         avatarUrl: 'https://randomuser.me/api/portraits/men/11.jpg',
         progress: 'View Progress'
     },
     {
         id: 12,
-        student_name: 'Maria Rodriguez',
+        studentName: 'Maria Rodriguez',
         email: 'olivia.perez@school.edu',
-        student_id: '98765432101',
+        studentId: '98765432101',
         avatarUrl: 'https://randomuser.me/api/portraits/women/12.jpg',
         progress: 'View Progress'
     },
     {
         id: 13,
-        student_name: 'Daniel Lee',
+        studentName: 'Daniel Lee',
         email: 'kimberly.chen@school.edu',
-        student_id: '98765432101',
+        studentId: '98765432101',
         avatarUrl: 'https://randomuser.me/api/portraits/men/13.jpg',
         progress: 'View Progress'
     },
     {
         id: 14,
-        student_name: 'Victoria Brown',
+        studentName: 'Victoria Brown',
         email: 'elizabeth.walker@school.edu',
-        student_id: '98765432101',
+        studentId: '98765432101',
         avatarUrl: 'https://randomuser.me/api/portraits/women/14.jpg',
         progress: 'View Progress'
     },
     {
         id: 15,
-        student_name: 'Michael Wilson',
+        studentName: 'Michael Wilson',
         email: 'charles.young@school.edu',
-        payment_id: '98765432101',
+        studentId: '98765432101',
         avatarUrl: 'https://randomuser.me/api/portraits/men/15.jpg',
         progress: 'View Progress'
     }
@@ -971,3 +971,84 @@ export const coursesRoadmap = [
     { id: 4, label: 'Dropshiping For Beginners', progress: 'Not Started', value: 4 },
     { id: 5, label: 'Search Engine Optimization', progress: 'Not Started', value: 5 }
 ];
+
+const now = new Date();
+
+export const events = [
+    {
+        id: 1,
+        title: 'Long Event',
+        start: new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1),
+        end: new Date(now.getFullYear(), now.getMonth(), now.getDate() + 4)
+    },
+    {
+        id: 2,
+        title: 'Upcoming Event',
+        start: new Date(now.getFullYear(), now.getMonth(), now.getDate() + 5),
+        end: new Date(now.getFullYear(), now.getMonth(), now.getDate() + 5)
+    },
+    {
+        id: 3,
+        title: 'Another Long Event',
+        start: new Date(now.getFullYear(), now.getMonth(), now.getDate() + 7),
+        end: new Date(now.getFullYear(), now.getMonth(), now.getDate() + 10)
+    },
+    {
+        id: 4,
+        title: 'Conference',
+        start: new Date(now.getFullYear(), now.getMonth(), now.getDate() + 11),
+        end: new Date(now.getFullYear(), now.getMonth(), now.getDate() + 13),
+        desc: 'A major event for stakeholders.'
+    },
+    {
+        id: 5,
+        title: 'Meeting',
+        start: new Date(now.getFullYear(), now.getMonth(), now.getDate(), 10, 30),
+        end: new Date(now.getFullYear(), now.getMonth(), now.getDate(), 12, 0),
+        desc: 'Discussion on project milestones'
+    },
+    {
+        id: 6,
+        title: 'Lunch',
+        start: new Date(now.getFullYear(), now.getMonth(), now.getDate(), 13, 0),
+        end: new Date(now.getFullYear(), now.getMonth(), now.getDate(), 14, 0),
+        desc: 'Lunch with the team'
+    },
+    {
+        id: 7,
+        title: 'Design Review',
+        start: new Date(now.getFullYear(), now.getMonth(), now.getDate() + 2, 15, 0),
+        end: new Date(now.getFullYear(), now.getMonth(), now.getDate() + 2, 17, 0),
+        desc: 'Review of latest drafts with the design team'
+    },
+    {
+        id: 8,
+        title: 'Workshop',
+        start: new Date(now.getFullYear(), now.getMonth(), now.getDate() + 3, 11, 0),
+        end: new Date(now.getFullYear(), now.getMonth(), now.getDate() + 3, 14, 30),
+        desc: 'Interactive workshop on user experience fundamentals'
+    },
+    {
+        id: 9,
+        title: 'Team Outing',
+        start: new Date(now.getFullYear(), now.getMonth(), now.getDate() + 10),
+        end: new Date(now.getFullYear(), now.getMonth(), now.getDate() + 10),
+        desc: 'Team building activities'
+    },
+    {
+        id: 10,
+        title: "Today's Event",
+        start: new Date(now.getFullYear(), now.getMonth(), now.getDate(), now.getHours() + 1), // Event starting the next hour
+        end: new Date(now.getFullYear(), now.getMonth(), now.getDate(), now.getHours() + 3), // Lasts for 2 hours
+        desc: 'Important'
+    },
+    {
+        id: 11,
+        title: "Today's Event",
+        start: new Date(now.getFullYear(), now.getMonth(), now.getDate(), now.getHours() + 1), // Event starting the next hour
+        end: new Date(now.getFullYear(), now.getMonth(), now.getDate(), now.getHours() + 3), // Lasts for 2 hours
+        desc: 'Important'
+    }
+];
+
+// Export the updated events array to be used in your calendar component

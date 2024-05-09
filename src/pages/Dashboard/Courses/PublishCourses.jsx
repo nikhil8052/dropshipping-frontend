@@ -9,7 +9,6 @@ import { useNavigate } from 'react-router-dom';
 const PublishCourses = () => {
     const userInfo = useSelector((state) => state?.auth?.userInfo);
     const [isAdmin, setIsAdmin] = useState(false);
-    const [isCoach, setIsCoach] = useState(false);
 
     const navigate = useNavigate();
 
@@ -17,7 +16,6 @@ const PublishCourses = () => {
         if (userInfo) {
             const { role } = userInfo;
             setIsAdmin(role === 'admin');
-            setIsCoach(role === 'coach');
         }
     }, [userInfo]);
 

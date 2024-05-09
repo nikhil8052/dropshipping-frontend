@@ -55,16 +55,6 @@ const Payments = () => {
         setSelectedRowId(event.data.id);
     };
 
-    const handleCreateClick = () => {
-        // Handle create button click event here
-        setStudentModal({
-            show: true,
-            title: 'Create Product',
-            isEditable: false,
-            studentId: null
-        });
-    };
-
     const handleEditClick = (studentId) => {
         // Handle edit action here
         setStudentModal({
@@ -138,7 +128,7 @@ const Payments = () => {
     const columns = [
         {
             headerName: 'Student Name',
-            field: 'student_name',
+            field: 'studentName',
             filter: 'agSetColumnFilter',
             sortable: true,
             unSortIcon: true,
@@ -160,19 +150,19 @@ const Payments = () => {
         },
         {
             headerName: 'Payment ID',
-            field: 'payment_id',
+            field: 'paymentId',
             filter: 'agSetColumnFilter',
             sortable: true,
             unSortIcon: true,
             resizable: false,
             cellRenderer: ({ data: rowData }) => {
-                const payment_id = rowData.payment_id;
-                return <div key={rowData.id}>{payment_id}</div>;
+                const paymentId = rowData.paymentId;
+                return <div key={rowData.id}>{paymentId}</div>;
             }
         },
         {
             headerName: 'Date & Time',
-            field: 'date_time',
+            field: 'dateTime',
             filter: 'agSetColumnFilter',
             sortable: true,
             unSortIcon: true,

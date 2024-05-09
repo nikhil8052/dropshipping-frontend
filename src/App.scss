@@ -7,6 +7,7 @@
 @import './styles/Payments.scss';
 @import './styles/Settings.scss';
 @import './styles/VisualizeCsv.scss';
+@import './styles/Dashboard.scss';
 
 :root {
     font-family: $font-primary;
@@ -125,4 +126,14 @@ button:focus-visible {
 
 .ag-center-cols-container {
     min-width: 100%;
+}
+
+input,
+.form-select,
+.form-control {
+    &:focus {
+        box-shadow: none !important;
+        outline: none !important;
+        border: none !important;
+    }
 }

@@ -8,7 +8,7 @@ import { toast } from 'react-toastify';
 import Card from '@components/Card/Card';
 import '../../../styles/Courses.scss';
 import bluePlus from '../../../assets/icons/blue-plus.svg';
-
+import { useNavigate } from 'react-router-dom';
 import { FileUploader } from 'react-drag-drop-files';
 
 const AddLectureModal = ({ productModal, resetModal }) => {
@@ -17,6 +17,7 @@ const AddLectureModal = ({ productModal, resetModal }) => {
     const [file, setFile] = useState(null);
     const [questionCount, setQuestionCount] = useState(1);
     const [optionalQuestion, setOptionalQuestion] = useState(1);
+    const navigate = useNavigate();
     const fileTypes = ['JPEG', 'PNG', 'GIF', 'pdf', 'docx'];
 
     const initialValues = {
@@ -152,6 +153,7 @@ const AddLectureModal = ({ productModal, resetModal }) => {
                                                         name="lecturename"
                                                         placeholder="What is the scope of this course?"
                                                         type="text"
+                                                        key={index}
                                                     />
                                                 ))}
                                             </div>
@@ -166,8 +168,8 @@ const AddLectureModal = ({ productModal, resetModal }) => {
                                                     <img src={bluePlus} alt="bluePlus"></img> Add new
                                                 </span>
                                             </div>
-                                            {[...Array(optionalQuestion)].map(() => (
-                                                <div className="add-quiz-question">
+                                            {[...Array(optionalQuestion)].map((index) => (
+                                                <div className="add-quiz-question" key={index}>
                                                     <div className="questions">
                                                         <Input
                                                             name="lecturename"

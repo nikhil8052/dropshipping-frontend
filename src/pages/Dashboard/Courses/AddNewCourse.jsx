@@ -5,7 +5,7 @@ import BasicInformation from './BasicInformation';
 import UploadFiles from './UploadFiles';
 import ClipboardText from '@icons/ClipboardText.svg';
 import Stack from '@icons/Stack.svg';
-import taskAlt from '../../../assets/icons/task_alt.svg';
+import taskAlt from '@icons/task_alt.svg';
 import CaretRight from '@icons/CaretRight.svg';
 import '../../../styles/Courses.scss';
 import Tab from 'react-bootstrap/Tab';
@@ -16,7 +16,6 @@ import { useSelector } from 'react-redux';
 const AddNewCourse = () => {
     const userInfo = useSelector((state) => state?.auth?.userInfo);
     const [isAdmin, setIsAdmin] = useState(false);
-    const [isCoach, setIsCoach] = useState(false);
     const location = useLocation();
     const isNewCoursePage = location.pathname === '/admin/courses/new' || '/coach/courses/new';
 
@@ -24,7 +23,6 @@ const AddNewCourse = () => {
         if (userInfo) {
             const { role } = userInfo;
             setIsAdmin(role === 'admin');
-            setIsCoach(role === 'coach');
         }
     }, [userInfo]);
     return (

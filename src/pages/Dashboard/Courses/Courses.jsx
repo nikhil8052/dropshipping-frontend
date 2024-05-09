@@ -1,10 +1,9 @@
 import { useState } from 'react';
-import { Row, Col } from 'react-bootstrap';
+import { Row, Col, InputGroup, Form, Button } from 'react-bootstrap';
 import Card from '@components/Card/Card';
 import CourseCard from '../../../components/CourseCard/CourseCard';
 import eventImg from '../../../assets/images/Event-Image.svg';
 import '../../../styles/Courses.scss';
-import { InputGroup, Button, Form } from 'react-bootstrap';
 import Search from '../../../assets/icons/Search.svg';
 import add from '@icons/add.svg';
 import { useNavigate } from 'react-router-dom';
@@ -19,6 +18,7 @@ const Courses = () => {
     const onFilterTextChange = (event) => {
         setSearch(event.target.value);
     };
+
     const courseCards = [
         {
             id: 1,
@@ -99,7 +99,7 @@ const Courses = () => {
                                 <Col xs={12} sm={12} md={6}>
                                     <InputGroup>
                                         <InputGroup.Text>
-                                            <img src={Search} alt="Search" />
+                                            <img src={Search} alt={search ? 'Search' : 'Search'} />
                                         </InputGroup.Text>
                                         <Form.Control
                                             className="search-input"
