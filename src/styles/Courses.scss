@@ -32,6 +32,16 @@
         }
     }
 }
+
+.search-input {
+    border-radius: 59px;
+    background-color: rgba(245, 248, 249, 1);
+}
+.input-group-text {
+    background: rgb(245, 248, 249) !important;
+    border-radius: 59px;
+}
+
 .custom-card-course {
     .card-large {
         height: auto;
@@ -57,26 +67,29 @@
     }
 
     @include respond-to($small-screen) {
+        margin-bottom: 5px !important;
+        margin-top: 15px !important;
+
         .card-small {
-            height: 350px !important;
+            height: 340px !important;
         }
     }
 }
 
-.addcourse-section {
-    .addcourse-nav {
-        background-color: #f2f4f5;
-        font-size: $font-size-medium;
-        font-family: $font-primary;
+.addcourse-nav {
+    background-color: #f2f4f5;
+    font-size: $font-size-medium;
+    font-family: $font-primary;
+    color: #5f6c72;
+    padding: 10px;
+    border-radius: 12px;
+    display: flex;
+    a {
+        text-decoration: none;
         color: #5f6c72;
-        padding: 10px;
-        border-radius: 12px;
-        display: flex;
-        a {
-            text-decoration: none;
-            color: #5f6c72;
-        }
     }
+}
+.addcourse-section {
     .course-tabs {
         margin-top: 10px;
         .nav-link {
@@ -84,6 +97,8 @@
             font-size: $font-size-medium;
             font-family: $font-primary;
             color: #6e7484;
+            text-align: start;
+            padding-left: 10px;
         }
         .nav-underline .nav-link.active,
         .nav-underline .show > .nav-link {
@@ -92,6 +107,16 @@
             font-family: $font-primary;
             color: #1d2026;
             border-bottom-color: #019ed8;
+            text-align: start;
+            padding: 10px;
+        }
+    }
+    @include respond-to($small-screen) {
+        .tab-span {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
         }
     }
 }
@@ -106,10 +131,11 @@
             font-family: $font-primary;
             font-weight: $font-weight-bold;
             color: #1d2026;
-            padding: 16px;
+            padding-block: 16px;
         }
     }
     .add-course-form {
+        margin-top: 38px;
         .formgroup input[type='text'] {
             background-color: transparent;
             width: 100%;
@@ -133,16 +159,18 @@
 
     .input-count {
         position: absolute;
-        top: 64%;
-        right: 4%;
+        top: 70%;
+        right: 3%;
         transform: translateY(-50%);
         cursor: pointer;
+        font-size: $font-size-small;
+        color: #4e5566;
     }
     .course-DropdownButton {
         display: flex;
         flex-direction: column;
         gap: 10px;
-        margin-top: 10px;
+        margin-top: 28px;
         .dropdown-button {
             background-color: transparent;
             border-radius: 59px;
@@ -187,7 +215,8 @@
         position: absolute;
         bottom: 0;
         margin-bottom: 50px;
-        width: 90%;
+        width: 95%;
+
         .save-button {
             @include pagination-gradient;
             border-radius: 141px;
@@ -205,7 +234,30 @@
             color: #6e7485;
             padding: 0px, 25.61px, 0px, 25.61px;
         }
+        @include respond-to($small-screen) {
+            width: 90%;
+        }
     }
+}
+
+.submit-btn,
+.cancel-btn {
+    border-radius: 59px;
+    font-weight: 400;
+    white-space: nowrap;
+    border: none;
+}
+.submit-btn {
+    color: #ffff;
+    padding: 10px 30px;
+    @include pagination-gradient;
+}
+
+.cancel-btn {
+    padding: 10px 40px;
+    background-color: transparent !important;
+    color: black;
+    border: 1px solid rgba(233, 234, 240, 1);
 }
 
 //Css for UploadFiles
@@ -217,7 +269,7 @@
             font-family: $font-primary;
             font-weight: $font-weight-bold;
             color: #1d2026;
-            padding: 16px;
+            padding-block: 16px;
         }
     }
     .upload-course-form {
@@ -235,6 +287,14 @@
             border-radius: 10px;
             padding: 20px 10px;
             color: rgba(110, 116, 133, 1);
+            img {
+                max-width: 180px;
+            }
+            @include respond-to($small-screen) {
+                img {
+                    max-width: 140px;
+                }
+            }
             .image-preview-text {
                 display: flex;
                 flex-direction: column;
@@ -302,25 +362,6 @@
         text-transform: capitalize;
         color: rgba(25, 28, 31, 1);
     }
-    .submit-btn,
-    .cancel-btn {
-        border-radius: 59px;
-        font-weight: 400;
-        white-space: nowrap;
-        border: none;
-    }
-    .submit-btn {
-        color: #ffff;
-        padding: 10px 30px;
-        @include pagination-gradient;
-    }
-
-    .cancel-btn {
-        padding: 10px 40px;
-        background-color: transparent !important;
-        color: black;
-        border: 1px solid rgba(233, 234, 240, 1);
-    }
 
     //css for add lecture box
     .add-lecture-section {
@@ -333,16 +374,26 @@
             justify-content: space-between;
             padding-bottom: 10px;
         }
+
+        .items-text-title {
+            span {
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+        }
         .add-lecture-item {
             background-color: white;
             padding: 20px;
             display: flex;
             justify-content: space-between;
             align-items: center;
+
             @include respond-to($large-screen) {
                 display: flex;
                 flex-direction: column;
                 justify-content: start;
+                align-items: start;
             }
             .items-button {
                 font-family: $font-primary;
@@ -350,7 +401,10 @@
                 display: flex;
                 gap: 4px;
                 @include respond-to($small-screen) {
-                    margin-top: 15px;
+                    margin-top: 10px;
+                }
+                @include respond-to($large-screen) {
+                    margin-top: 10px;
                 }
                 .quiz-btn {
                     padding: 0px, 12.75px, 0px, 12.75px;
@@ -359,18 +413,31 @@
                     color: #212121;
                     font-weight: $font-weight-bold;
                     font-size: $font-size-small;
+                    border-color: transparent;
+                    @include respond-to($small-screen) {
+                        font-size: 10px;
+                        padding-inline: 9px;
+                        padding-block: 3px;
+                    }
                 }
                 .quiz-lec-btn {
                     background-color: #61dd83;
                     padding: 0px, 12.75px, 0px, 12.75px;
                     border-radius: 50px;
                     color: #ffffff;
+                    border-color: transparent;
+                    @include respond-to($small-screen) {
+                        font-size: 10px;
+                        padding-inline: 9px;
+                        padding-block: 3px;
+                    }
                 }
             }
         }
     }
 }
 // add lecture modal form css
+
 .add-lecture-form {
     input[type='text'] {
         width: 100% !important;
@@ -429,6 +496,15 @@
         font-weight: $font-weight-bold;
         font-family: $font-primary;
         font-size: $font-size-large;
+    }
+
+    .quiz-fields-container {
+        max-height: 400px;
+        overflow-y: auto;
+        @include respond-to($small-screen) {
+            max-height: 600px;
+            overflow-y: auto;
+        }
     }
     .add-quiz-fields {
         .add-quiz-label {
@@ -534,6 +610,32 @@
     }
 }
 
+.card-background {
+    background-image: url('@images/publish-background.svg');
+    width: 100%;
+    height: 50%;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+
+    .text-heading {
+        padding-top: 27px;
+        margin-left: 49px;
+
+        h1 {
+            font-weight: $font-weight-bold;
+            color: #ffffff;
+        }
+        p {
+            color: #ffffff;
+            font-weight: 600px;
+            font-size: $font-size-medium;
+        }
+    }
+}
+
 //Css for Publish Course tab
 .publish-form-section {
     .section-title {
@@ -543,7 +645,7 @@
             font-family: $font-primary;
             font-weight: $font-weight-bold;
             color: #1d2026;
-            padding: 16px;
+            padding-block: 16px;
         }
     }
 
@@ -554,32 +656,7 @@
         padding: 0px;
     }
     .card-large {
-        height: 787px;
-    }
-    .card-background {
-        background-image: url('@images/publish-background.svg');
-        width: 100%;
-        height: 50%;
-        background-position: center;
-        background-repeat: no-repeat;
-        background-size: cover;
-        border-top-left-radius: 5px;
-        border-top-right-radius: 5px;
-
-        .text-heading {
-            padding-top: 27px;
-            margin-left: 49px;
-
-            h1 {
-                font-weight: $font-weight-bold;
-                color: #ffffff;
-            }
-            p {
-                color: #ffffff;
-                font-weight: 600px;
-                font-size: $font-size-medium;
-            }
-        }
+        height: 850px;
     }
 
     .lecture-details {
@@ -597,6 +674,7 @@
         top: 44%;
         @include respond-to($small-screen) {
             width: 85%;
+            margin-inline: 20px;
         }
         h1 {
             color: #000000;
@@ -626,29 +704,162 @@
             padding: 10px;
         }
     }
-
-    //swiper card css
-    .swiper-button-next {
-        background-image: url('@icons/next.svg') !important;
-        background-repeat: no-repeat;
-        background-size: 100% auto;
-        background-position: center;
-    }
-    .swiper-button-prev {
-        background-image: url('@icons/previous.svg') !important;
-        background-repeat: no-repeat;
-        background-size: 100% auto;
-        background-position: center;
-    }
-    .swiper-button-next::after {
-        content: ''; /* Keep the content property, but make it empty */
-        visibility: hidden;
-    }
-    .swiper-button-prev:after {
-        content: ''; /* Keep the content property, but make it empty */
-        visibility: hidden;
-    }
-
     .slider-section {
+        .swiper-container {
+            width: 100%; // Ensure the Swiper container takes full width
+        }
+
+        .swiper-button-next,
+        .swiper-button-prev {
+            background-repeat: no-repeat;
+            background-size: 100% auto;
+            background-position: center;
+        }
+
+        .swiper-button-next {
+            background-image: url('@icons/next.svg') !important;
+        }
+
+        .swiper-button-prev {
+            background-image: url('@icons/previous.svg') !important;
+        }
+
+        .swiper-button-next::after,
+        .swiper-button-prev::after {
+            content: ''; /* Keep the content property, but make it empty */
+            visibility: hidden;
+        }
+    }
+    .publish-added-button-footer {
+        border-top: 0.3px solid #707070;
+        padding-top: 24px;
+        font-size: $font-size-large;
+        font-weight: $font-weight-medium;
+        margin-inline: 40px;
+
+        .publish-btn {
+            border-radius: 170px;
+            width: 174px;
+            height: 42px;
+            @include pagination-gradient;
+            @include respond-to($small-screen) {
+                width: 130px;
+            }
+        }
+        .edit-btn {
+            background-color: #000000;
+            color: #ffffff;
+            border-radius: 170px;
+            width: 174px;
+            height: 42px;
+            @include respond-to($small-screen) {
+                width: 130px;
+            }
+        }
+    }
+}
+// css for progress buttonn on Allstudent table
+.progress-btn-allstudent {
+    overflow: visible;
+    text-align: center;
+    padding-inline: 22px;
+    padding-block: 10px;
+    border-radius: 22px;
+    background-color: #ffffff;
+    border: 0.8px solid #f0f0f0;
+    color: #009cd8;
+    cursor: pointer;
+}
+
+//view progrss page css
+.view-progress-section {
+    .card-background {
+        height: 160px;
+    }
+    .custom-card {
+        padding: 0px;
+    }
+    .card-body {
+        padding: 0px;
+    }
+    .card-large {
+        height: auto;
+    }
+    .viewProfile-img {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        img {
+            width: 40px;
+            height: 40px;
+        }
+    }
+    .search-lectures {
+        padding-inline: 30px;
+        margin-top: 20px;
+        .title-lecture-btns {
+            margin: 20px;
+            display: flex;
+            align-items: center;
+
+            h1 {
+                font-size: $font-size-medium;
+                font-weight: $font-weight-regular;
+                color: #1c1c1c;
+                margin-bottom: 0px;
+            }
+            span {
+                font-size: $font-size-medium;
+                font-weight: $font-weight-regular;
+                color: #5f6c72;
+            }
+        }
+        .lecture-btns {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-evenly;
+            gap: 20px;
+            padding-block: 8px;
+            margin-bottom: 48px;
+            @include respond-to($small-screen) {
+                padding-inline: 0px;
+            }
+        }
+        .btn {
+            display: flex;
+            gap: 10px;
+            width: 180px;
+            height: 36px;
+            border-radius: 80px;
+            font-size: $font-size-medium;
+            @include respond-to($small-screen) {
+                justify-content: center;
+                width: 100%;
+            }
+        }
+        .active {
+            background-color: #00bb56;
+            color: #ffffff;
+        }
+
+        .inactive {
+            background-color: #f4f4f4;
+            color: #1c1c1c; /* Adjust text color as needed */
+            border: #f4f4f4;
+        }
+    }
+
+    .viewProgress-footer {
+        display: flex;
+        justify-content: end;
+        border-top: 0.3px solid #707070;
+        padding-top: 24px;
+        margin-bottom: 40px;
+        .done-btn {
+            background-color: #000000;
+            padding-inline: 70px;
+            padding-block: 8px;
+            text-align: center;
+        }
     }
 }

@@ -836,6 +836,129 @@ export const paymentsDummyData = [
     }
 ];
 
+export const AllStudentsDummyData = [
+    {
+        id: 1,
+        studentName: 'Robert Fox',
+        email: 'detira.holt@school.edu',
+        studentId: '54351354154',
+        avatarUrl: 'https://randomuser.me/api/portraits/men/1.jpg',
+        progress: 'View Progress'
+    },
+    {
+        id: 2,
+        studentName: 'Ronald Richards',
+        email: 'kerizi.lawson@school.edu',
+        studentId: '54351354154',
+        avatarUrl: 'https://randomuser.me/api/portraits/women/2.jpg',
+        progress: 'View Progress'
+    },
+    {
+        id: 3,
+        studentName: 'Esther Howard',
+        email: 'tanya.hin@school.edu',
+        studentId: '54351354154',
+        avatarUrl: 'https://randomuser.me/api/portraits/men/3.jpg',
+        progress: 'View Progress'
+    },
+    {
+        id: 4,
+        studentName: 'Theresa Webb',
+        email: 'michael.mitc@school.edu',
+        studentId: '54351354154',
+        avatarUrl: 'https://randomuser.me/api/portraits/women/4.jpg',
+        progress: 'View Progress'
+    },
+    {
+        id: 5,
+        studentName: 'Guy Hawkins',
+        email: 'jessica.hansong@school.edu',
+        studentId: '54351354154',
+        avatarUrl: 'https://randomuser.me/api/portraits/men/5.jpg',
+        progress: 'View Progress'
+    },
+    {
+        id: 6,
+        studentName: 'Floyd Miles',
+        email: 'Floyd Mile@example.com', // Email might be missing
+        studentId: '54351354154',
+        avatarUrl: 'https://randomuser.me/api/portraits/women/6.jpg',
+        progress: 'View Progress'
+    },
+    {
+        id: 7,
+        studentName: 'Savannah Nguyen',
+        email: 'jackson.graham@school.edu',
+        studentId: '54351354154',
+        avatarUrl: 'https://randomuser.me/api/portraits/men/7.jpg',
+        progress: 'View Progress'
+    },
+    {
+        id: 8,
+        studentName: 'Eleanor Pera',
+        email: 'michelle.rivera@school.edu',
+        studentId: '54351354154',
+        avatarUrl: 'https://randomuser.me/api/portraits/women/8.jpg',
+        progress: 'View Progress'
+    },
+    {
+        id: 9,
+        studentName: 'Cody Fisher',
+        email: 'alma.lawson@school.edu',
+        studentId: '54351354154',
+        avatarUrl: 'https://randomuser.me/api/portraits/men/9.jpg',
+        progress: 'View Progress'
+    },
+    {
+        id: 10,
+        studentName: 'Kathrine David',
+        email: 'alma.lawson@school.edu',
+        studentId: '54351354154',
+        avatarUrl: 'https://randomuser.me/api/portraits/women/10.jpg',
+        progress: 'View Progress'
+    },
+    {
+        id: 11,
+        studentName: 'Antonio Jimenez',
+        email: 'william.garcia@school.edu',
+        studentId: '98765432101',
+        avatarUrl: 'https://randomuser.me/api/portraits/men/11.jpg',
+        progress: 'View Progress'
+    },
+    {
+        id: 12,
+        studentName: 'Maria Rodriguez',
+        email: 'olivia.perez@school.edu',
+        studentId: '98765432101',
+        avatarUrl: 'https://randomuser.me/api/portraits/women/12.jpg',
+        progress: 'View Progress'
+    },
+    {
+        id: 13,
+        studentName: 'Daniel Lee',
+        email: 'kimberly.chen@school.edu',
+        studentId: '98765432101',
+        avatarUrl: 'https://randomuser.me/api/portraits/men/13.jpg',
+        progress: 'View Progress'
+    },
+    {
+        id: 14,
+        studentName: 'Victoria Brown',
+        email: 'elizabeth.walker@school.edu',
+        studentId: '98765432101',
+        avatarUrl: 'https://randomuser.me/api/portraits/women/14.jpg',
+        progress: 'View Progress'
+    },
+    {
+        id: 15,
+        studentName: 'Michael Wilson',
+        email: 'charles.young@school.edu',
+        studentId: '98765432101',
+        avatarUrl: 'https://randomuser.me/api/portraits/men/15.jpg',
+        progress: 'View Progress'
+    }
+];
+
 export const countryList = [
     {
         id: 1,

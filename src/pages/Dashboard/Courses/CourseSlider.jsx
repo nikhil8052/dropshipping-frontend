@@ -96,6 +96,7 @@ const CourseSlider = () => {
                 loop={true}
                 breakpoints={swiperBreakpoints}
                 navigation={true}
+                spaceBetween={10}
                 modules={[Keyboard, Scrollbar, Navigation, Pagination]}
             >
                 {courseCards.map((course, index) => (

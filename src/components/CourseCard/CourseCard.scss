@@ -5,14 +5,14 @@
     flex-direction: column;
     gap: 1px;
     .course-title {
-        margin-top: 2px;
+        margin-top: 12px;
         font-size: $font-size-large;
-        font-weight: $font-weight-medium;
+        font-weight: $font-weight-bold;
     }
     .course-des {
         font-size: $font-size-small;
         color: #646464;
-        font-weight: $font-weight-regular;
+        font-weight: $font-weight-large;
     }
     .lecture-No {
         font-size: $font-size-small;
@@ -25,6 +25,8 @@
     border-top: 1px solid #f4f4f4;
     padding: 10px;
     font-size: $font-size-medium;
+    color: #202224;
+    font-weight: $font-weight-medium;
 
     .form-switch {
         padding-left: 2.5em;

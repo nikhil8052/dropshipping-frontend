@@ -12,3 +12,12 @@ export function formatDate(value) {
     return null;
 }
 export const roles = ['admin', 'coach', 'student', 'public'];
+
+const longTextLimit = 10;
+export const trimLongText = (text, textLength = longTextLimit) => {
+    let finalText = text;
+    if (text?.length > textLength) {
+        finalText = `${text?.substr(0, textLength)}...`;
+    }
+    return finalText;
+};

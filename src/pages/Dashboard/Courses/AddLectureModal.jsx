@@ -130,82 +130,84 @@ const AddLectureModal = ({ productModal, resetModal }) => {
                                     <div className="add-quiz-title">
                                         <p> ADD quiz</p>
                                     </div>
-                                    <div className="add-quiz-fields">
-                                        <div className="add-quiz-label ">
-                                            <p>
-                                                Please Insert questions for Student’s personal assessments of this
-                                                course. (3/3)
-                                            </p>
-                                            <span onClick={addNewQuestion}>
-                                                <img src={bluePlus} alt="bluePlus"></img> Add new
-                                            </span>
-                                        </div>
-                                        {[...Array(questionCount)].map((_, index) => (
-                                            <div key={index + 1} className="add-quiz-question">
+                                    <div className="quiz-fields-container">
+                                        <div className="add-quiz-fields">
+                                            <div className="add-quiz-label ">
+                                                <p>
+                                                    Please Insert questions for Student’s personal assessments of this
+                                                    course. (3/3)
+                                                </p>
+                                                <span onClick={addNewQuestion}>
+                                                    <img src={bluePlus} alt="bluePlus"></img> Add new
+                                                </span>
+                                            </div>
+
+                                            <div className="add-quiz-question">
                                                 <Input
                                                     name="lecturename"
                                                     placeholder="What is the main feature of this course?"
                                                     type="text"
                                                 />
-                                                <Input
-                                                    name="lecturename"
-                                                    placeholder="What is the scope of this course?"
-                                                    type="text"
-                                                />
-                                            </div>
-                                        ))}
-                                    </div>
-                                    <div className="add-quiz-fields">
-                                        <div className="add-quiz-label ">
-                                            <p>
-                                                Please Insert MCQs for Student’s personal assessments of this course.
-                                                (3/3)
-                                            </p>
-                                            <span onClick={addNewOptionalQuestion}>
-                                                <img src={bluePlus} alt="bluePlus"></img> Add new
-                                            </span>
-                                        </div>
-                                        {[...Array(optionalQuestion)].map((_, index) => (
-                                            <div key={index + 1} className="add-quiz-question">
-                                                <div className="questions">
+                                                {[...Array(questionCount)].map((_, index) => (
                                                     <Input
                                                         name="lecturename"
-                                                        placeholder="Please Type Question Here..."
+                                                        placeholder="What is the scope of this course?"
                                                         type="text"
+                                                        key={index}
                                                     />
-                                                    <p className="limit">0/120</p>
-                                                </div>
-
-                                                <div className="quiz-multiple-choice">
-                                                    <Input name="option1" placeholder="Type option 1" type="text" />
-                                                    <Input name="option2" placeholder="Type option 3" type="text" />
-                                                    <Input name="option3" placeholder="Type option 3" type="text" />
-                                                    <div className="correct-answer">
+                                                ))}
+                                            </div>
+                                        </div>
+                                        <div className="add-quiz-fields">
+                                            <div className="add-quiz-label ">
+                                                <p>
+                                                    Please Insert MCQs for Student’s personal assessments of this
+                                                    course. (3/3)
+                                                </p>
+                                                <span onClick={addNewOptionalQuestion}>
+                                                    <img src={bluePlus} alt="bluePlus"></img> Add new
+                                                </span>
+                                            </div>
+                                            {[...Array(optionalQuestion)].map((index) => (
+                                                <div className="add-quiz-question" key={index}>
+                                                    <div className="questions">
                                                         <Input
-                                                            name="option4"
-                                                            placeholder="Type Correct Ans"
+                                                            name="lecturename"
+                                                            placeholder="Please Type Question Here..."
                                                             type="text"
-                                                            className="correct-answer"
                                                         />
+                                                        <p className="limit">0/120</p>
+                                                    </div>
+
+                                                    <div className="quiz-multiple-choice">
+                                                        <Input name="option1" placeholder="Type option 1" type="text" />
+                                                        <Input name="option2" placeholder="Type option 3" type="text" />
+                                                        <Input name="option3" placeholder="Type option 3" type="text" />
+                                                        <div className="correct-answer">
+                                                            <Input
+                                                                name="option4"
+                                                                placeholder="Type Correct Ans"
+                                                                type="text"
+                                                                className="correct-answer"
+                                                            />
+                                                        </div>
                                                     </div>
                                                 </div>
-                                            </div>
-                                        ))}
-                                    </div>
-                                    <div className="add-quiz-file">
-                                        <h4>Attach File</h4>
-                                        <FileUploader
-                                            multiple={true}
-                                            handleChange={handleChange}
-                                            name="file"
-                                            types={fileTypes}
-                                            label="hello"
-                                        />
-                                        <p>
-                                            {file ? `File name: ${file[0].name}` : 'Drag an drop a file or browse file'}
-                                        </p>
+                                            ))}
+                                        </div>
                                     </div>
                                 </Card>
+                                <div className="add-quiz-file">
+                                    <h4>Attach File</h4>
+                                    <FileUploader
+                                        multiple={true}
+                                        handleChange={handleChange}
+                                        name="file"
+                                        types={fileTypes}
+                                        label="hello"
+                                    />
+                                    <p>{file ? `File name: ${file[0].name}` : 'Drag an drop a file or browse file'}</p>
+                                </div>
                                 <Row>
                                     <Col>
                                         <div className="mt-3 d-flex justify-content-between gap-3">

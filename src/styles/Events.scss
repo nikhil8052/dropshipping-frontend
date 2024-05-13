@@ -47,8 +47,6 @@
     }
 
     .dropdown-button {
-        -webkit-appearance: none;
-        -moz-appearance: none;
         background-color: transparent !important;
         border-radius: 59px;
         .dropdown-toggle {
@@ -59,6 +57,8 @@
             background-color: transparent;
             border: none;
             width: 100%;
+            background-color: transparent;
+            border: none;
             & > div {
                 width: 100%;
             }
@@ -124,4 +124,183 @@
     }
 }
 
-// New Event
+// Event Details
+.event-details-section {
+    .card-body {
+        padding: 0px;
+    }
+    .custom-card {
+        padding: 0px;
+        border-radius: 20px;
+    }
+    .card-large {
+        height: auto;
+    }
+    .event-detail-top {
+        display: flex;
+        gap: 15px;
+        align-items: center;
+        padding-block: 24px;
+        padding-inline: 24px;
+        border-bottom: 0.2px solid #707070;
+        .card-profile-img {
+            width: 80px;
+            height: 80px;
+            border: 1px solid;
+        }
+        .meeting-details {
+            display: flex;
+            flex-direction: column;
+            gap: 1px;
+
+            h1 {
+                font-size: $font-size-extra-large;
+                font-weight: $font-weight-medium;
+                color: #000000;
+                margin: 0px;
+            }
+            h2 {
+                color: #a4a4a4;
+                font-weight: $font-size-medium;
+                font-size: $font-size-extra-large;
+                margin: 0px;
+            }
+            p {
+                font-weight: $font-size-medium;
+                font-size: $font-size-extra-large;
+                color: #212121;
+            }
+        }
+    }
+    .meeting-detail-body {
+        display: flex;
+        justify-content: center;
+        flex-direction: column;
+        padding-block: 10px;
+        padding-inline: 24px;
+
+        h1 {
+            font-size: $font-size-medium;
+            font-weight: $font-weight-large;
+        }
+        span {
+            font-size: $font-size-medium;
+            font-weight: $font-weight-regular;
+        }
+        .time-detail {
+            margin-top: 19px;
+            text-align: center;
+            background-color: #f2f8ff;
+            padding-block: 13px;
+            line-height: 14.71px;
+            border-radius: 10px;
+        }
+    }
+
+    .event-detail-footer {
+        display: flex;
+        justify-content: end;
+        gap: 10px;
+        padding-inline: 24px;
+        padding-block: 32px;
+        border-top: 0.2px solid #707070;
+
+        .edit {
+            background-color: transparent;
+            color: #212121;
+            border: 0.3px solid #2f80ed;
+            width: 224px;
+            height: 45px;
+            border-radius: 50px;
+        }
+
+        .join {
+            background-color: #2f80ed;
+            color: #ffffff;
+            border: 0.3px solid #2f80ed;
+            padding-inline: auto;
+            // padding-block: 12px;
+            border-radius: 50px;
+            width: 224px;
+            height: 45px;
+        }
+    }
+
+    .main-row-meeting-link {
+        display: flex;
+        justify-content: space-evenly;
+        padding-block: 38px;
+        flex-wrap: wrap;
+        .icon-stack {
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+            .profile-icon {
+                width: 30px; /* Set a fixed width for each avatar */
+                height: 30px;
+                border-radius: 30px;
+                margin-right: -50px; /* Overlap the next avatar by 50% */
+                transition: margin-right 0.3s ease;
+                background-color: #dfebff;
+                p {
+                    font-size: 8px;
+                    color: #0060ff;
+                    text-align: center;
+                    justify-content: center;
+                }
+            }
+            .profile-icon:last-child {
+                margin-right: 0; /* Remove margin from the last avatar */
+            }
+        }
+    }
+    .meeting-link {
+        display: flex;
+        font-size: $font-size-small;
+        justify-content: space-evenly;
+        align-items: center;
+        background-color: #dfebff;
+        padding-inline: 12px;
+        border-radius: 60.93px;
+        a {
+            padding-left: 10px;
+            margin-left: 10px;
+            border-left: 1px solid;
+            text-wrap: wrap;
+        }
+    }
+    .personal-meeting-btn {
+        align-items: center;
+        width: 201.52px;
+        height: 44.32px;
+        justify-content: space-between;
+        border-radius: 45px;
+        background-color: #f6f6f6;
+        align-items: center;
+        padding-inline: 15px;
+        padding-top: 18px;
+        padding-bottom: 12px;
+        .profile-icon {
+            display: flex;
+            gap: 10px;
+        }
+        img {
+            width: 30px;
+            height: 30px;
+        }
+        h1 {
+            font-size: $font-size-medium;
+            font-weight: $font-weight-regular;
+            margin-bottom: 0px;
+        }
+        p {
+            font-size: $font-size-medium;
+            font-weight: $font-weight-regular;
+            color: #9e9e9e;
+        }
+        .dotOptions {
+            height: 18px;
+            width: 10px;
+        }
+    }
+}

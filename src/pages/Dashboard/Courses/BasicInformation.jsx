@@ -2,7 +2,6 @@ import { useState } from 'react';
 import { Form as FormikForm, Formik } from 'formik';
 import * as Yup from 'yup';
 import { Button, Spinner, Dropdown, DropdownButton } from 'react-bootstrap';
-
 import Input from '@components/Input/Input';
 import downArrow from '@icons/down-arrow.svg';
 import { coachDummyData } from '../../../data/data';
@@ -10,16 +9,24 @@ import '../../../styles/Courses.scss';
 
 const BasicInformation = () => {
     const [selectedCoach, setSelectedCoach] = useState('Select.....');
-    const [selectedCourses, setSelectedCourses] = useState('Select.....');
+    const [selectedCourse, setSelectedCourse] = useState('Select.....');
 
     const inititialValues = {
         title: '',
         subTitle: '',
         courseCategory: '',
-        ModuleManager: ''
+        moduleManager: ''
     };
 
-    const validationSchema = Yup.object().shape({});
+    const validationSchema = Yup.object().shape({
+        title: Yup.string().required('Title is required'),
+
+        subTitle: Yup.string().required('Subtitle is required'),
+
+        courseCategory: Yup.string().required('Course category is required'),
+
+        moduleManager: Yup.string().required('Module manager is required')
+    });
 
     const handleSubmit = async (values, { setSubmitting }) => {
         try {
@@ -32,8 +39,8 @@ const BasicInformation = () => {
     const handleCoachSelect = (eventKey, coach) => {
         setSelectedCoach(coach.name);
     };
-    const handleCourseSelect = (eventKey, coach) => {
-        setSelectedCourses(coach.name);
+    const handleCourseSelect = (eventKey, course) => {
+        setSelectedCourse(course.name);
     };
     return (
         <div className="add-course-form-section">
@@ -57,26 +64,26 @@ const BasicInformation = () => {
                                 <DropdownButton
                                     title={
                                         <div className="d-flex justify-content-between  w-100">
-                                            <span className="ms-2">{selectedCourses}</span>
+                                            <span className="ms-2">{selectedCourse}</span>
 
                                             <p>
-                                                <img src={downArrow} alt="Filter" srcSet="" />
+                                                <img src={downArrow} alt="Filter" />
                                             </p>
                                         </div>
                                     }
-                                    defaultValue={selectedCourses}
+                                    defaultValue={selectedCourse}
                                     className="dropdown-button w-100 d-flex justify-content-even align-items-center"
                                 >
                                     <Dropdown.Header>All Courses ({coachDummyData.length})</Dropdown.Header>
-                                    {coachDummyData.map((coach) => (
+                                    {coachDummyData.map((course) => (
                                         <Dropdown.Item
-                                            onClick={(e) => handleCourseSelect(e, coach)}
-                                            key={coach.id}
-                                            eventKey={coach.id}
+                                            onClick={(e) => handleCourseSelect(e, course)}
+                                            key={course.id}
+                                            eventKey={course.id}
                                             className="my-1 ms-2"
                                         >
-                                            <img src={coach.avatarUrl} className="avatar" alt={coach.name} />
-                                            <span className="coach-name"> {coach.name}</span>
+                                            <img src={course.avatarUrl} className="avatar" alt={course.name} />
+                                            <span className="coach-name"> {course.name}</span>
                                         </Dropdown.Item>
                                     ))}
                                 </DropdownButton>
@@ -89,7 +96,7 @@ const BasicInformation = () => {
                                             <span className="ms-2">{selectedCoach}</span>
 
                                             <p>
-                                                <img src={downArrow} alt="Filter" srcSet="" />
+                                                <img src={downArrow} alt="Filter" />
                                             </p>
                                         </div>
                                     }
