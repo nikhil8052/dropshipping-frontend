@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import Table from '@components/Table/Table';
-import { Button, Col, Row, DropdownButton, Dropdown } from 'react-bootstrap';
+import { Button, Col, Row, DropdownButton, Dropdown, Form } from 'react-bootstrap';
 import Modal from '@components/Modal/Modal';
 import ConfirmationBox from '@components/ConfirmationBox/ConfirmationBox';
 import { Helmet } from 'react-helmet';
@@ -9,11 +9,11 @@ import { toast } from 'react-toastify';
 import TextExpand from '@components/TextExpand/TextExpand';
 import editIcon from '@icons/edit_square.svg';
 import deleteIcon from '@icons/trash-2.svg';
-import add from '@icons/add.svg';
-import downArrow from '@icons/down-arrow.svg';
+import add from '@icons/add_white.svg';
 import { studentDummyData, coachDummyData } from '../../../data/data';
 import { useNavigate } from 'react-router-dom';
 import Roadmap from './Roadmap/Roadmap';
+import { useSelector } from 'react-redux';
 
 const Students = () => {
     const [showDeleteModal, setShowDeleteModal] = useState(false);
@@ -27,7 +27,8 @@ const Students = () => {
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
     const [loadingCRUD, setLoadingCRUD] = useState(false);
-
+    const { userInfo } = useSelector((state) => state?.auth);
+    const role = userInfo?.role;
     const [studentsData, setStudentsData] = useState(null);
 
     const [selectedOption, setSelectedOption] = useState('All');
@@ -140,6 +141,15 @@ const Students = () => {
         setSelectedOption(option);
     };
 
+    const handleToggleClick = (id) => {
+        const copyOfStudentData = [...studentsData];
+        const student = copyOfStudentData.find((student) => student.id === id);
+        const index = copyOfStudentData.indexOf(student);
+
+        copyOfStudentData[index].isActive = !copyOfStudentData[index].isActive;
+        setStudentsData(copyOfStudentData);
+    };
+
     /*eslint-disable */
     const ActionsRenderer = (props) => (
         <React.Fragment>
@@ -156,6 +166,24 @@ const Students = () => {
                     >
                         <img src={deleteIcon} className="action-icon" alt="action-icon" />
                     </div>
+                </Col>
+            </Row>
+        </React.Fragment>
+    );
+    /*eslint-disable */
+
+    /*eslint-disable */
+    const ToggleRenderer = (props) => (
+        <React.Fragment>
+            <Row style={{ width: '100%' }}>
+                <Col className="d-flex justify-content-center align-items-center">
+                    <Form.Check // prettier-ignore
+                        type="switch"
+                        className="toggle-button"
+                        id={`custom-switch-${props.data.id}`}
+                        checked={props.data.isActive}
+                        onChange={() => props.onToggleClick(props.data.id)}
+                    />
                 </Col>
             </Row>
         </React.Fragment>
@@ -242,6 +270,18 @@ const Students = () => {
             }
         },
         {
+            headerName: 'Active/Deactive',
+            cellRenderer: ToggleRenderer,
+            field: 'isActive',
+            cellRendererParams: {
+                onToggleClick: handleToggleClick
+            },
+            sortable: false,
+            filter: false,
+            resizable: false,
+            cellClass: ['d-flex', 'align-items-center']
+        },
+        {
             headerName: 'Actions',
             cellRenderer: ActionsRenderer,
             cellRendererParams: {
@@ -262,7 +302,7 @@ const Students = () => {
                 <title>Coaches | Drop Ship Academy</title>
             </Helmet>
             {coursesModal.show && (
-                <Modal size="large" show={coursesModal.show} onClose={handleCloseModal} title={coursesModal.title}>
+                <Modal size="md" show={coursesModal.show} onClose={handleCloseModal} title={coursesModal.title}>
                     <Roadmap coursesModal={coursesModal} resetModal={resetCoursesModal} />
                 </Modal>
             )}
@@ -288,39 +328,40 @@ const Students = () => {
                 loading={loading}
                 children={
                     <Row className="mb-3">
-                        <Col
-                            xxl={5}
-                            xl={6}
-                            lg={8}
-                            md={4}
-                            sm={6}
-                            xs={12}
-                            className="mb-2 mb-md-0 mt-md-2 mt-sm-2 mt-xs-2"
-                        >
-                            <DropdownButton
-                                title={
-                                    <div className="d-flex justify-content-between align-items-center">
-                                        <span className="ms-2">{selectedCoach}</span>
-                                        <img src={downArrow} alt="Filter" />
-                                    </div>
-                                }
-                                defaultValue={selectedCoach}
-                                className="dropdown-button coach-btn w-100"
+                        {role === 'admin' && (
+                            <Col
+                                xxl={4}
+                                xl={6}
+                                lg={8}
+                                md={4}
+                                sm={6}
+                                xs={12}
+                                className="mb-2 mb-md-0 mt-md-2 mt-sm-2 mt-xs-2 ms-auto"
                             >
-                                <Dropdown.Header>All Coaches ({coachDummyData.length})</Dropdown.Header>
-                                {coachDummyData.map((coach) => (
-                                    <Dropdown.Item
-                                        onClick={(e) => handleCoachSelect(e, coach)}
-                                        key={coach.id}
-                                        eventKey={coach.id}
-                                        className="my-1 ms-2 w-100"
-                                    >
-                                        <img src={coach.avatarUrl} className="avatar" alt={coach.name} />
-                                        <span className="coach-name">{coach.name}</span>
-                                    </Dropdown.Item>
-                                ))}
-                            </DropdownButton>
-                        </Col>
+                                <DropdownButton
+                                    title={
+                                        <div className="d-flex justify-content-between align-items-center">
+                                            <span className="ms-2">{selectedCoach}</span>
+                                        </div>
+                                    }
+                                    defaultValue={selectedCoach}
+                                    className="dropdown-button coach-btn w-100"
+                                >
+                                    <Dropdown.Header>All Coaches ({coachDummyData.length})</Dropdown.Header>
+                                    {coachDummyData.map((coach) => (
+                                        <Dropdown.Item
+                                            onClick={(e) => handleCoachSelect(e, coach)}
+                                            key={coach.id}
+                                            eventKey={coach.id}
+                                            className="my-1 ms-2 w-100"
+                                        >
+                                            <img src={coach.avatarUrl} className="avatar" alt={coach.name} />
+                                            <span className="coach-name">{coach.name}</span>
+                                        </Dropdown.Item>
+                                    ))}
+                                </DropdownButton>
+                            </Col>
+                        )}
                         <Col
                             xxl={2}
                             xl={6}
@@ -328,13 +369,12 @@ const Students = () => {
                             md={4}
                             sm={6}
                             xs={12}
-                            className="mb-2 mb-md-0 mt-md-2 mt-sm-2 mt-xs-2"
+                            className="mb-2 mb-md-0 mt-md-2 mt-sm-2 mt-xs-2 ms-auto"
                         >
                             <DropdownButton
                                 title={
                                     <div className="d-flex justify-content-between align-items-center">
                                         <span className="ms-2">{selectedOption}</span>
-                                        <img src={downArrow} alt="Filter" />
                                     </div>
                                 }
                                 defaultValue={selectedOption}
@@ -352,7 +392,15 @@ const Students = () => {
                                 ))}
                             </DropdownButton>
                         </Col>
-                        <Col xxl={5} xl={6} lg={8} md={4} sm={12} xs={12} className="mt-xxl-2 mt-xl-2 mt-lg-2 mt-md-2">
+                        <Col
+                            xxl={4}
+                            xl={6}
+                            lg={8}
+                            md={4}
+                            sm={12}
+                            xs={12}
+                            className="mt-xxl-2 mt-xl-2 mt-lg-2 mt-md-2 ms-auto"
+                        >
                             <Button className="add-button w-100" onClick={handleCreateClick}>
                                 <img src={add} alt="" /> <span className="ms-2">Add New Student</span>
                             </Button>

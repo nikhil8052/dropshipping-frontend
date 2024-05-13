@@ -64,12 +64,13 @@ const NewCoach = () => {
         const image = new Image();
         image.src = window.URL.createObjectURL(file);
         image.onload = () => {
-            const { width, height } = image;
-            if (width > 1200 || height > 800) {
-                // Display an error or handle the invalid file dimensions
-                toast.error('Invalid image dimensions. Please upload an image with 1200x800 pixels.');
-                return;
-            }
+            // Commenting for now for future reference
+            // const { width, height } = image;
+            // if (width > 1200 || height > 800) {
+            //     // Display an error or handle the invalid file dimensions
+            //     toast.error('Invalid image dimensions. Please upload an image with 1200x800 pixels.');
+            //     return;
+            // }
 
             toast.success('Image uploaded successfully!', {
                 icon: '🎉',
@@ -171,7 +172,7 @@ const NewCoach = () => {
                                                                 Upload Coach Picture here
                                                                 <br />
                                                                 <strong>Important Guidelines:</strong> 1200x800 pixels
-                                                                or 12:8 Ratio
+                                                                or 3:2 Ratio
                                                                 <br />
                                                                 Supported formats: <strong>.jpg, .jpeg, or .png</strong>
                                                             </span>
@@ -297,6 +298,19 @@ const NewCoach = () => {
                                             placeholder="10"
                                         />
                                         <ErrorMessage name="lowTicketSpots" component="div" className="error" />
+                                    </Col>
+                                </Row>
+                                <Row>
+                                    <Col>
+                                        <div className="field-label my-2">List of students Taught</div>
+                                        <div className="student-taught-wrapper">
+                                            <span className="total">All Students ({studentDummyData.length})</span>
+                                            {studentDummyData.map((student) => (
+                                                <span key={student.id} className=" data-value">
+                                                    {student.name}
+                                                </span>
+                                            ))}
+                                        </div>
                                     </Col>
                                 </Row>
                                 <Row>

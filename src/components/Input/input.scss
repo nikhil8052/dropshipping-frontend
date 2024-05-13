@@ -8,7 +8,6 @@
 }
 .formgroup {
     position: relative;
-    margin: 10px 0px 22px 0px;
     width: 100%;
     label {
         display: block;
@@ -31,7 +30,6 @@
         border-radius: 5px;
         padding: 6px 7px;
         border: 1px solid $primary-color;
-        background-color: $light-color;
         color: $info-color;
         border-color: $info-color;
         &::placeholder {
@@ -54,6 +52,7 @@
             font-size: 14px;
         }
     }
+
     //use react select class prefix to select required elements within selector element
     .custom_select__control {
         padding: 0px;

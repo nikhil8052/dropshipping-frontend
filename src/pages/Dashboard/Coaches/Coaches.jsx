@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import Table from '@components/Table/Table';
-import { Button, Col, Row } from 'react-bootstrap';
+import { Button, Col, Form, Row } from 'react-bootstrap';
 import Modal from '@components/Modal/Modal';
 import ProductForm from '@components/Listings/ProductForm/ProductForm';
 import ConfirmationBox from '@components/ConfirmationBox/ConfirmationBox';
@@ -9,7 +9,7 @@ import { toast } from 'react-toastify';
 import TextExpand from '@components/TextExpand/TextExpand';
 import editIcon from '@icons/edit_square.svg';
 import deleteIcon from '@icons/trash-2.svg';
-import add from '@icons/add.svg';
+import add from '@icons/add_white.svg';
 import { coachDummyData } from '../../../data/data';
 import { useNavigate } from 'react-router-dom';
 
@@ -65,6 +65,15 @@ const Coaches = () => {
         navigate('/admin/coaches/edit', {
             state: { coachId }
         });
+    };
+    const handleToggleClick = (id) => {
+        // Handle edit action here
+        const copyOfCoachData = [...coachesData];
+
+        const coach = copyOfCoachData.find((coach) => coach.id === id);
+        const index = copyOfCoachData.indexOf(coach);
+        copyOfCoachData[index].isActive = !copyOfCoachData[index].isActive;
+        setCoachesData(copyOfCoachData);
     };
 
     const handleDeleteClick = (id) => {
@@ -132,6 +141,22 @@ const Coaches = () => {
                     >
                         <img src={deleteIcon} className="action-icon" alt="action-icon" />
                     </div>
+                </Col>
+            </Row>
+        </React.Fragment>
+    );
+
+    const ToggleRenderer = (props) => (
+        <React.Fragment>
+            <Row style={{ width: '100%' }}>
+                <Col className="d-flex justify-content-center align-items-center">
+                    <Form.Check // prettier-ignore
+                        type="switch"
+                        className="toggle-button"
+                        id={`custom-switch-${props.data.id}`}
+                        checked={props.data.isActive}
+                        onChange={() => props.onToggleClick(props.data.id)}
+                    />
                 </Col>
             </Row>
         </React.Fragment>
@@ -205,6 +230,18 @@ const Coaches = () => {
                 );
             },
             resizable: false
+        },
+        {
+            headerName: 'Active/Deactive',
+            field: 'isActive',
+            cellRenderer: ToggleRenderer,
+            cellRendererParams: {
+                onToggleClick: handleToggleClick
+            },
+            sortable: false,
+            filter: false,
+            resizable: false,
+            cellClass: ['d-flex', 'align-items-center']
         },
         {
             headerName: 'Actions',
