@@ -39,12 +39,10 @@ const ViewProgress = () => {
         <div className="view-progress-section">
             <div className="addcourse-nav mb-3">
                 {isAdmin ? <Link to="/admin/courses">Courses</Link> : <Link to="/coach/courses">Courses</Link>}
-                {isViewlPage ? (
+                {isViewlPage && (
                     <span>
                         <img src={CaretRight} alt=">" /> View Progress
                     </span>
-                ) : (
-                    ''
                 )}
             </div>
 

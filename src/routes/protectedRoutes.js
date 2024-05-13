@@ -8,6 +8,7 @@ const Students = lazy(() => import('@pages/Dashboard/Students/Students'));
 const Courses = lazy(() => import('@pages/Dashboard/Courses/Courses'));
 const Events = lazy(() => import('@pages/Dashboard/Events/Events'));
 const NewEvent = lazy(() => import('@pages/Dashboard/Events/NewEvent/NewEvent'));
+const EventDetails = lazy(() => import('@pages/Dashboard/Events/EventDetails'));
 const Payment = lazy(() => import('@pages/Dashboard/Payments/Payments'));
 const VisualizeCSV = lazy(() => import('@pages/Dashboard/VisualizeCsv/VisualizeCsv'));
 const Settings = lazy(() => import('@pages/Dashboard/Settings/Settings'));
@@ -106,6 +107,13 @@ export const adminRoutes = [
         exact: true,
         name: 'Events',
         Component: NewEvent,
+        access: 'admin'
+    },
+    {
+        path: 'events/details',
+        exact: true,
+        name: 'Events',
+        Component: EventDetails,
         access: 'admin'
     },
     {

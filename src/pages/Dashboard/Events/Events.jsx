@@ -11,8 +11,7 @@ import TextExpand from '@components/TextExpand/TextExpand';
 import editIcon from '@icons/edit_square.svg';
 import deleteIcon from '@icons/trash-2.svg';
 import eyeIcon from '@icons/basil_eye-solid.svg';
-import add from '@icons/add.svg';
-import downArrow from '@icons/down-arrow.svg';
+import add from '@icons/add_white.svg';
 import { eventsDummyData } from '../../../data/data';
 import { useNavigate } from 'react-router-dom';
 
@@ -77,6 +76,10 @@ const Events = () => {
         setShowDeleteModal(true);
     };
 
+    const handleViewClick = () => {
+        // Handle delete action here
+        navigate('/admin/events/details');
+    };
     const handleCloseModal = () => {
         resetProductModal();
     };
@@ -121,7 +124,7 @@ const Events = () => {
                 <Col lg={3} md={4} sm={4} xs={4} className="d-flex justify-content-center align-items-center">
                     <div
                         className="btn-light action-button delete-button"
-                        onClick={() => props.onDeleteClick(props.data.id)}
+                        onClick={() => props.onViewClick(props.data.id)}
                     >
                         <img src={eyeIcon} className="action-icon" alt="action-icon" />
                     </div>
@@ -150,8 +153,10 @@ const Events = () => {
     const LinkRenderer = (props) => (
         <div key={props.data.id}>
             <div className="d-flex align-items-center gap-2">
-                {/* Later we add click events*/}
-                <div
+                <a
+                    href={props.value}
+                    target="_blank" // Open link in a new tab
+                    rel="noopener noreferrer" // Recommended for security
                     style={{
                         overflow: 'hidden',
                         textOverflow: 'ellipsis',
@@ -160,10 +165,9 @@ const Events = () => {
                         textDecoration: 'underline',
                         color: 'rgba(72, 128, 255, 1)'
                     }}
-                    onClick={toggleExpand}
                 >
                     {props.value}
-                </div>
+                </a>
             </div>
         </div>
     );
@@ -220,7 +224,8 @@ const Events = () => {
             cellRenderer: ActionsRenderer,
             cellRendererParams: {
                 onEditClick: handleEditClick,
-                onDeleteClick: handleDeleteClick
+                onDeleteClick: handleDeleteClick,
+                onViewClick: handleViewClick
             },
             pinned: 'right',
             sortable: false,
@@ -268,7 +273,6 @@ const Events = () => {
                                     title={
                                         <div className="d-flex justify-content-between align-items-center">
                                             <span className="ms-2">{selectedEvent}</span>
-                                            <img src={downArrow} alt="Filter" />
                                         </div>
                                     }
                                     defaultValue={selectedEvent}

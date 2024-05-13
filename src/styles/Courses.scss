@@ -34,7 +34,6 @@
 }
 
 .search-input {
-    // max-width: 390px;
     border-radius: 59px;
     background-color: rgba(245, 248, 249, 1);
 }
@@ -132,7 +131,7 @@
             font-family: $font-primary;
             font-weight: $font-weight-bold;
             color: #1d2026;
-            padding: 16px;
+            padding-block: 16px;
         }
     }
     .add-course-form {
@@ -270,7 +269,7 @@
             font-family: $font-primary;
             font-weight: $font-weight-bold;
             color: #1d2026;
-            padding: 16px;
+            padding-block: 16px;
         }
     }
     .upload-course-form {
@@ -646,7 +645,7 @@
             font-family: $font-primary;
             font-weight: $font-weight-bold;
             color: #1d2026;
-            padding: 16px;
+            padding-block: 16px;
         }
     }
 
@@ -774,6 +773,9 @@
 
 //view progrss page css
 .view-progress-section {
+    .card-background {
+        height: 160px;
+    }
     .custom-card {
         padding: 0px;
     }
