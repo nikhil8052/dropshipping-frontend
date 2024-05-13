@@ -1,14 +1,16 @@
 import { useEffect, useRef, useState } from 'react';
 import CaretRight from '@icons/CaretRight.svg';
 import imagePreview from '@icons/image-preview.svg';
-import { Formik, Form, Field, ErrorMessage, FieldArray } from 'formik';
+import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import { Container, Row, Col, Button } from 'react-bootstrap';
 import 'react-quill/dist/quill.snow.css';
-import CustomSelect from '../../../../components/Input/Select';
 import { countryList, studentDummyData } from '../../../../data/data';
 import toast from 'react-hot-toast';
 import { useLocation, useNavigate } from 'react-router-dom';
+import Select from 'react-select';
+
+import RoadMapList from '../Roadmap/RoadmapList';
 
 const NewStudent = () => {
     const inputRef = useRef();
@@ -18,7 +20,7 @@ const NewStudent = () => {
     const navigate = useNavigate();
     const [studentData, setStudentData] = useState({
         studentName: '',
-        id: '',
+        studentId: '',
         studentEmail: '',
         phoneNumber: '',
         country: '',
@@ -27,6 +29,23 @@ const NewStudent = () => {
         highTicketSpots: '',
         lowTicketSpots: '',
         bio: ''
+    });
+
+    const schema = Yup.object({
+        studentName: Yup.string().required('Please enter the student name'),
+        studentId: Yup.string().required('Please enter the student id'),
+        studentEmail: Yup.string().email('Please enter a valid email address').required('Email address is required'),
+        phoneNumber: Yup.string().required('Please enter a phone number'),
+        country: Yup.string().required('Please select a country'),
+        region: Yup.string().required('Please select a region'),
+        assignedStudents: Yup.array().min(1, 'Please select at least one student'),
+        highTicketSpots: Yup.number()
+            .required('Number of high ticket spots is required')
+            .positive('Number must be greater than zero'),
+        lowTicketSpots: Yup.number()
+            .required('Number of low ticket spots is required')
+            .positive('Number must be greater than zero'),
+        bio: Yup.string()
     });
 
     useEffect(() => {
@@ -64,12 +83,14 @@ const NewStudent = () => {
         const image = new Image();
         image.src = window.URL.createObjectURL(file);
         image.onload = () => {
-            const { width, height } = image;
-            if (width > 1200 || height > 800) {
-                // Display an error or handle the invalid file dimensions
-                toast.error('Invalid image dimensions. Please upload an image with 1200x800 pixels.');
-                return;
-            }
+            // Commenting for now, will be used later
+
+            // const { width, height } = image;
+            // if (width > 1200 || height > 800) {
+            //     // Display an error or handle the invalid file dimensions
+            //     toast.error('Invalid image dimensions. Please upload an image with 1200x800 pixels.');
+            //     return;
+            // }
 
             toast.success('Image uploaded successfully!', {
                 icon: '🎉',
@@ -84,7 +105,6 @@ const NewStudent = () => {
             // Upload File through API
         };
     };
-    // Test Data
 
     return (
         <div className="new-coach-page-wrapper">
@@ -99,17 +119,7 @@ const NewStudent = () => {
                     <h4 className="mb-3 new-coach-title">{studentId ? 'Student Profile' : 'Add New Student'}</h4>
                     <Formik
                         initialValues={studentData}
-                        validationSchema={Yup.object({
-                            studentName: Yup.string().required('Required'),
-                            studentEmail: Yup.string().email('Invalid email address').required('Required'),
-                            phoneNumber: Yup.string().required('Required'),
-                            country: Yup.string().required('Required'),
-                            region: Yup.string().required('Required'),
-                            assignedStudents: Yup.array().min(1, 'Select at least one student'),
-                            highTicketSpots: Yup.number().required('Required').positive('Must be a positive number'),
-                            lowTicketSpots: Yup.number().required('Required').positive('Must be a positive number'),
-                            bio: Yup.string()
-                        })}
+                        validationSchema={schema}
                         onSubmit={(values, { resetForm, setSubmitting }) => {
                             setTimeout(() => {
                                 // Implement form submission logic here
@@ -192,12 +202,12 @@ const NewStudent = () => {
                                     <Col md={6} xs={12}>
                                         <label className="field-label">Student ID</label>
                                         <Field
-                                            name="id"
+                                            name="studentId"
                                             className="field-control"
                                             type="text"
                                             placeholder="E.g 65435"
                                         />
-                                        <ErrorMessage name="id" component="div" className="error" />
+                                        <ErrorMessage name="studentId" component="div" className="error" />
                                     </Col>
                                 </Row>
 
@@ -264,44 +274,6 @@ const NewStudent = () => {
                                 <Row>
                                     <Col md={6} xs={12}>
                                         <label className="field-label">Coaching Trajectory</label>
-                                        {/* <FieldArray name="assignedStudents">
-                                            {({ push, remove, form }) => (
-                                                // <CustomSelect
-                                                //     name="assignedStudents"
-                                                //     options={studentDummyData.map((student) => ({
-                                                //         value: student.id,
-                                                //         label: student.name
-                                                //     }))}
-                                                //     isMulti={true}
-                                                //     value={values.assignedStudents}
-                                                //     placeholder="Select or search students..."
-                                                //     onChange={(selectedOptions) => {
-                                                //         // Update the array with only the selected options
-                                                //         form.setFieldValue('assignedStudents', selectedOptions);
-                                                //     }}
-                                                //     onBlur={() => form.setFieldTouched('assignedStudents', true)}
-                                                // />
-                                                // <DndContext onDragEnd={handleDragEnd}>
-                                                //     <Select
-                                                //         components={animatedComponents}
-                                                //         isMulti
-                                                //         options={options}
-                                                //         styles={customStyles}
-                                                //         placeholder="Select courses..."
-                                                //         closeMenuOnSelect={false}
-                                                //         component={{ CustomOption }}
-                                                //     />
-                                                // </DndContext>
-                                                // <SortableSelect
-                                                //     options={coursesRoadmap}
-                                                //     value={form.values.assignedStudents}
-                                                //     onChange={(selectedOptions) => {
-                                                //         // Update the form value with the new array of selected options
-                                                //         form.setFieldValue('assignedStudents', selectedOptions || []);
-                                                //     }}
-                                                // />
-                                            )}
-                                        </FieldArray> */}
                                         <Field
                                             name="region"
                                             className="field-select-control"
@@ -319,26 +291,43 @@ const NewStudent = () => {
 
                                     <Col md={6} xs={12}>
                                         <label className="field-label">Courses Roadmap</label>
-                                        <FieldArray name="assignedStudents">
-                                            {({ form }) => (
-                                                <CustomSelect
-                                                    name="assignedStudents"
-                                                    options={studentDummyData.map((student) => ({
-                                                        value: student.id,
-                                                        label: student.name
-                                                    }))}
-                                                    isMulti={true}
+                                        {/* eslint-disable */}
+                                        <Field
+                                            name="assignedStudents"
+                                            component={({
+                                                field, // { name, value, onChange, onBlur }
+                                                form // also values, setXXXX, handleXXXX, dirty, isValid, status, etc.
+                                            }) => (
+                                                <Select
+                                                    {...field}
+                                                    isMulti
+                                                    options={[
+                                                        { value: 'metadata', label: 'Meta Data Course', id: 1 },
+                                                        { value: 'msoffice', label: 'Microsoft Office Expert', id: 2 }
+                                                    ]}
                                                     value={values.assignedStudents}
-                                                    placeholder="Select or search students..."
                                                     onChange={(selectedOptions) => {
                                                         // Update the array with only the selected options
                                                         form.setFieldValue('assignedStudents', selectedOptions);
                                                     }}
-                                                    onBlur={() => form.setFieldTouched('assignedStudents', true)}
+                                                    closeMenuOnSelect={false}
                                                 />
                                             )}
-                                        </FieldArray>
+                                        />
                                         <ErrorMessage name="assignedStudents" component="div" className="error" />
+                                    </Col>
+                                </Row>
+
+                                <Row>
+                                    <Col>
+                                        {values.assignedStudents?.length > 0 && (
+                                            <>
+                                                <div className="field-label my-2">Courses Roadmap List </div>
+                                                <div className="course-roadmap-wrapper">
+                                                    <RoadMapList coursesList={values.assignedStudents} />
+                                                </div>
+                                            </>
+                                        )}
                                     </Col>
                                 </Row>
                                 <Row>
