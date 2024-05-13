@@ -58,16 +58,6 @@ const AllStudents = () => {
         setSelectedRowId(event.data.id);
     };
 
-    // const handleCreateClick = () => {
-    //     // Handle create button click event here
-    //     setStudentModal({
-    //         show: true,
-    //         title: 'Create Product',
-    //         isEditable: false,
-    //         studentId: null
-    //     });
-    // };
-
     const handleEditClick = (studentId) => {
         // Handle edit action here
         setStudentModal({
