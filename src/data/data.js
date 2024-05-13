@@ -16,6 +16,7 @@ export const studentDummyData = [
             }
         ],
         feesStatus: 'Paid',
+        isActive: false,
         coursesRoadmap: [
             { id: 1, title: 'Meta Data Engineering', progress: 'Completed' },
             { id: 2, title: 'Python Engineering', progress: 'OnGoing' },
@@ -41,6 +42,7 @@ export const studentDummyData = [
             }
         ],
         feesStatus: 'Unpaid',
+        isActive: false,
         coursesRoadmap: [
             { id: 1, title: 'Meta Data Engineering', progress: 'Completed' },
             { id: 2, title: 'Python Engineering', progress: 'OnGoing' },
@@ -66,6 +68,7 @@ export const studentDummyData = [
             }
         ],
         feesStatus: 'Unpaid',
+        isActive: false,
         coursesRoadmap: [
             { id: 1, title: 'Meta Data Engineering', progress: 'Completed' },
             { id: 2, title: 'Python Engineering', progress: 'OnGoing' },
@@ -92,6 +95,7 @@ export const studentDummyData = [
             }
         ],
         feesStatus: 'Paid',
+        isActive: false,
         coursesRoadmap: [
             { id: 1, title: 'Meta Data Engineering', progress: 'Completed' },
             { id: 2, title: 'Python Engineering', progress: 'OnGoing' },
@@ -117,6 +121,7 @@ export const studentDummyData = [
             }
         ],
         feesStatus: 'Unpaid',
+        isActive: false,
         coursesRoadmap: [
             { id: 1, title: 'Meta Data Engineering', progress: 'Completed' },
             { id: 2, title: 'Python Engineering', progress: 'OnGoing' },
@@ -142,6 +147,7 @@ export const studentDummyData = [
             }
         ],
         feesStatus: 'Unpaid',
+        isActive: false,
         coursesRoadmap: [
             { id: 1, title: 'Meta Data Engineering', progress: 'Completed' },
             { id: 2, title: 'Python Engineering', progress: 'OnGoing' },
@@ -167,6 +173,7 @@ export const studentDummyData = [
             }
         ],
         feesStatus: 'Paid',
+        isActive: false,
         coursesRoadmap: [
             { id: 1, title: 'Meta Data Engineering', progress: 'Completed' },
             { id: 2, title: 'Python Engineering', progress: 'OnGoing' },
@@ -192,6 +199,7 @@ export const studentDummyData = [
             }
         ],
         feesStatus: 'Unpaid',
+        isActive: false,
         coursesRoadmap: [
             { id: 1, title: 'Meta Data Engineering', progress: 'Completed' },
             { id: 2, title: 'Python Engineering', progress: 'OnGoing' },
@@ -217,6 +225,7 @@ export const studentDummyData = [
             }
         ],
         feesStatus: 'Unpaid',
+        isActive: false,
         coursesRoadmap: [
             { id: 1, title: 'Meta Data Engineering', progress: 'Completed' },
             { id: 2, title: 'Python Engineering', progress: 'OnGoing' },
@@ -242,6 +251,7 @@ export const studentDummyData = [
             }
         ],
         feesStatus: 'Paid',
+        isActive: false,
         coursesRoadmap: [
             { id: 1, title: 'Meta Data Engineering', progress: 'Completed' },
             { id: 2, title: 'Python Engineering', progress: 'OnGoing' },
@@ -267,6 +277,7 @@ export const studentDummyData = [
             }
         ],
         feesStatus: 'Unpaid',
+        isActive: false,
         coursesRoadmap: [
             { id: 1, title: 'Meta Data Engineering', progress: 'Completed' },
             { id: 2, title: 'Python Engineering', progress: 'OnGoing' },
@@ -292,6 +303,7 @@ export const studentDummyData = [
             }
         ],
         feesStatus: 'Paid',
+        isActive: false,
         coursesRoadmap: [
             { id: 1, title: 'Meta Data Engineering', progress: 'Completed' },
             { id: 2, title: 'Python Engineering', progress: 'OnGoing' },
@@ -317,6 +329,7 @@ export const studentDummyData = [
             }
         ],
         feesStatus: 'Unpaid',
+        isActive: false,
         coursesRoadmap: [
             { id: 1, title: 'Meta Data Engineering', progress: 'Completed' },
             { id: 2, title: 'Python Engineering', progress: 'OnGoing' },
@@ -342,6 +355,7 @@ export const studentDummyData = [
             }
         ],
         feesStatus: 'Paid',
+        isActive: false,
         coursesRoadmap: [
             { id: 1, title: 'Meta Data Engineering', progress: 'Completed' },
             { id: 2, title: 'Python Engineering', progress: 'OnGoing' },
@@ -367,6 +381,7 @@ export const studentDummyData = [
             }
         ],
         feesStatus: 'Unpaid',
+        isActive: false,
         coursesRoadmap: [
             { id: 1, title: 'Meta Data Engineering', progress: 'Completed' },
             { id: 2, title: 'Python Engineering', progress: 'OnGoing' },
@@ -385,7 +400,8 @@ export const coachDummyData = [
         id: 1,
         avatarUrl: 'https://randomuser.me/api/portraits/men/1.jpg',
         occupied: 9,
-        capacity: 20
+        capacity: 20,
+        isActive: false
     },
     {
         name: 'Jane Smith',
@@ -394,7 +410,8 @@ export const coachDummyData = [
         id: 2,
         avatarUrl: 'https://randomuser.me/api/portraits/women/2.jpg',
         occupied: 15,
-        capacity: 20
+        capacity: 20,
+        isActive: false
     },
     {
         name: 'Michael Johnson',
@@ -403,7 +420,8 @@ export const coachDummyData = [
         id: 3,
         avatarUrl: 'https://randomuser.me/api/portraits/men/3.jpg',
         occupied: 10,
-        capacity: 20
+        capacity: 20,
+        isActive: false
     },
     {
         name: 'Emily Brown',
@@ -412,7 +430,8 @@ export const coachDummyData = [
         id: 4,
         avatarUrl: 'https://randomuser.me/api/portraits/women/4.jpg',
         occupied: 10,
-        capacity: 20
+        capacity: 20,
+        isActive: false
     },
     {
         name: 'David Wilson',
@@ -421,7 +440,8 @@ export const coachDummyData = [
         id: 5,
         avatarUrl: 'https://randomuser.me/api/portraits/men/5.jpg',
         occupied: 2,
-        capacity: 20
+        capacity: 20,
+        isActive: false
     },
     {
         name: 'Sarah Taylor',
@@ -430,7 +450,8 @@ export const coachDummyData = [
         id: 6,
         avatarUrl: 'https://randomuser.me/api/portraits/women/6.jpg',
         occupied: 4,
-        capacity: 20
+        capacity: 20,
+        isActive: false
     },
     {
         name: 'Robert Martinez',
@@ -439,7 +460,8 @@ export const coachDummyData = [
         id: 7,
         avatarUrl: 'https://randomuser.me/api/portraits/men/7.jpg',
         occupied: 10,
-        capacity: 20
+        capacity: 20,
+        isActive: false
     },
     {
         name: 'Olivia Jones',
@@ -448,7 +470,8 @@ export const coachDummyData = [
         id: 8,
         avatarUrl: 'https://randomuser.me/api/portraits/women/8.jpg',
         occupied: 10,
-        capacity: 20
+        capacity: 20,
+        isActive: false
     },
     {
         name: 'William Clark',
@@ -457,7 +480,8 @@ export const coachDummyData = [
         id: 9,
         avatarUrl: 'https://randomuser.me/api/portraits/men/9.jpg',
         occupied: 14,
-        capacity: 20
+        capacity: 20,
+        isActive: false
     },
     {
         name: 'Ava Walker',
@@ -466,7 +490,8 @@ export const coachDummyData = [
         id: 10,
         avatarUrl: 'https://randomuser.me/api/portraits/women/10.jpg',
         occupied: 17,
-        capacity: 20
+        capacity: 20,
+        isActive: false
     },
     {
         name: 'James Hernandez',
@@ -475,7 +500,8 @@ export const coachDummyData = [
         id: 11,
         avatarUrl: 'https://randomuser.me/api/portraits/men/11.jpg',
         occupied: 19,
-        capacity: 20
+        capacity: 20,
+        isActive: false
     },
     {
         name: 'Sophia Green',
@@ -484,7 +510,8 @@ export const coachDummyData = [
         id: 12,
         avatarUrl: 'https://randomuser.me/api/portraits/women/12.jpg',
         occupied: 1,
-        capacity: 20
+        capacity: 20,
+        isActive: false
     },
     {
         name: 'Ethan Adams',
@@ -493,7 +520,8 @@ export const coachDummyData = [
         id: 13,
         avatarUrl: 'https://randomuser.me/api/portraits/men/13.jpg',
         occupied: 8,
-        capacity: 20
+        capacity: 20,
+        isActive: false
     },
     {
         name: 'Isabella Martinez',
@@ -502,7 +530,8 @@ export const coachDummyData = [
         id: 14,
         avatarUrl: 'https://randomuser.me/api/portraits/women/14.jpg',
         occupied: 10,
-        capacity: 20
+        capacity: 20,
+        isActive: false
     },
     {
         name: 'Mason Wright',
@@ -511,7 +540,8 @@ export const coachDummyData = [
         id: 15,
         avatarUrl: 'https://randomuser.me/api/portraits/men/15.jpg',
         occupied: 7,
-        capacity: 20
+        capacity: 20,
+        isActive: false
     }
 ];
 

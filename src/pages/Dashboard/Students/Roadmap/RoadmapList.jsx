@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
     DndContext,
     closestCenter,
@@ -11,9 +11,10 @@ import {
 import { arrayMove, SortableContext, verticalListSortingStrategy, useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import coursesPointer from '@icons/courses_pointer.svg';
-const Roadmap = ({ coursesModal }) => {
+import { Col, Row } from 'react-bootstrap';
+const RoadMapList = ({ coursesList }) => {
     // State to manage the courses array
-    const [courses, setCourses] = useState(coursesModal.data || []);
+    const [courses, setCourses] = useState(coursesList || []);
     // Sensors to handle different input methods
     const sensors = useSensors(useSensor(PointerSensor), useSensor(MouseSensor), useSensor(KeyboardSensor));
     const handleDragEnd = (event) => {
@@ -25,6 +26,14 @@ const Roadmap = ({ coursesModal }) => {
             setCourses(newCourses); // Update the state with the new courses array
         }
     };
+
+    useEffect(() => {
+        if (coursesList?.length > 0) {
+            setCourses(coursesList);
+        } else {
+            setCourses([]);
+        }
+    }, [coursesList?.length]);
     return (
         <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
             <SortableContext items={courses} strategy={verticalListSortingStrategy}>
@@ -37,7 +46,7 @@ const Roadmap = ({ coursesModal }) => {
         </DndContext>
     );
 };
-const DraggableCourse = ({ id, course, keyIndex }) => {
+const DraggableCourse = ({ id, course }) => {
     const { attributes, listeners, setNodeRef, transform, transition } = useSortable({ id });
     // Style transformations and drag handle styling
     const style = {
@@ -52,45 +61,26 @@ const DraggableCourse = ({ id, course, keyIndex }) => {
         alignItems: 'center',
         cursor: 'grab' // cursor change when hovering
     };
-    // Define status color based on course progress
-    const statusColors = {
-        Completed: 'green',
-        OnGoing: 'orange',
-        NotStarted: 'grey'
-    };
+
     return (
         <div ref={setNodeRef} style={style} {...listeners} {...attributes}>
-            <div style={{ marginRight: '20px' }}>
-                <img src={coursesPointer} alt="" />
-            </div>{' '}
-            {/* Unicode characters as drag handle */}
-            <div style={{ flex: 1 }}>
-                <strong>Course {keyIndex + 1}</strong>
-                <div style={{ color: statusColors[course.progress.replace('Progress : ', '')] }}>
-                    {' '}
-                    <span
-                        style={{
-                            color: 'rgba(128, 128, 128, 1)'
-                        }}
-                    >
-                        {course.title}
-                    </span>{' '}
-                    <span
-                        style={{
-                            color:
-                                course.progress === 'Completed'
-                                    ? ' rgba(64, 197, 158, 1)'
-                                    : course.progress === 'OnGoing'
-                                      ? 'rgba(1, 158, 216, 1)'
-                                      : 'rgba(0, 0, 0, 1)'
-                        }}
-                    >
-                        {' '}
-                        (Progress: {course.progress})
-                    </span>
-                </div>
+            <div
+                style={{
+                    padding: '8px 16px'
+                }}
+            >
+                <Row className="align-items-center">
+                    <Col xs="auto">
+                        <div style={{ cursor: 'grab' }}>
+                            <img src={coursesPointer} alt="" />
+                        </div>
+                    </Col>
+                    <Col>
+                        <span>{`${course.id}. ${course.label}`}</span>
+                    </Col>
+                </Row>
             </div>
         </div>
     );
 };
-export default Roadmap;
+export default RoadMapList;

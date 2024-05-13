@@ -6,10 +6,9 @@ import ProductForm from '@components/Listings/ProductForm/ProductForm';
 import ConfirmationBox from '@components/ConfirmationBox/ConfirmationBox';
 import { Helmet } from 'react-helmet';
 import axiosWrapper from '@utils/api';
-import { toast } from 'react-toastify';
+import toast from 'react-hot-toast';
 import TextExpand from '@components/TextExpand/TextExpand';
 import eyeIcon from '@icons/basil_eye-solid.svg';
-import downArrow from '@icons/down-arrow.svg';
 import { paymentsDummyData } from '../../../data/data';
 
 const Payments = () => {
@@ -70,6 +69,10 @@ const Payments = () => {
         setSelectedRowId(id);
         setShowDeleteModal(true);
     };
+    const handleViewClick = () => {
+        // Later we implement stripe payment here
+        toast.success('Will Be Redirected to Stripe Payment Page later.');
+    };
 
     const handleCloseModal = () => {
         resetProductModal();
@@ -113,10 +116,7 @@ const Payments = () => {
         <React.Fragment>
             <Row style={{ width: '100%' }}>
                 <Col lg={6} md={6} sm={6} className="d-flex justify-content-center align-items-center">
-                    <div
-                        className="btn-light action-button delete-button"
-                        onClick={() => props.onDeleteClick(props.data.id)}
-                    >
+                    <div className="btn-light action-button delete-button" onClick={() => props.onViewClick()}>
                         <img src={eyeIcon} className="action-icon" alt="action-icon" />
                     </div>
                 </Col>
@@ -176,7 +176,8 @@ const Payments = () => {
             cellRenderer: ActionsRenderer,
             cellRendererParams: {
                 onEditClick: handleEditClick,
-                onDeleteClick: handleDeleteClick
+                onDeleteClick: handleDeleteClick,
+                onViewClick: handleViewClick
             },
             pinned: 'right',
             sortable: false,
@@ -219,9 +220,6 @@ const Payments = () => {
                                     title={
                                         <div className="d-flex justify-content-between w-100">
                                             <span className="ms-2">{selectedOption}</span>
-                                            <p>
-                                                <img src={downArrow} alt="Filter" />
-                                            </p>
                                         </div>
                                     }
                                     defaultValue={selectedOption}

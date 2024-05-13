@@ -45,6 +45,7 @@
         white-space: nowrap;
         border: rgba(148, 148, 148, 1) 1px solid !important;
     }
+
     .dropdown-button {
         background-color: transparent !important;
         border-radius: 59px;
@@ -53,6 +54,8 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
+            background-color: transparent;
+            border: none;
             width: 100%;
             background-color: transparent;
             border: none;

@@ -47,7 +47,7 @@
     }
     .dropdown-button,
     .dropdown-button-fix {
-        background-color: transparent;
+        background-color: transparent !important;
         border-radius: 59px;
         font-weight: 400;
         white-space: nowrap;
@@ -58,6 +58,8 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
+            background-color: transparent;
+            border: none;
             width: 100%;
 
             & > div {
@@ -124,5 +126,52 @@
         align-items: center;
         justify-content: start;
         background-color: red;
+    }
+
+    // Toggle button
+    .toggle-button {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: none;
+        cursor: pointer;
+        &:hover {
+            border: none !important;
+        }
+        .form-check-input {
+            width: 60px;
+            height: 30px;
+            &:checked {
+                background-color: $info-color;
+                border-color: $info-color;
+            }
+        }
+    }
+
+    // Fields
+    .field-control,
+    .field-select-control {
+        font-family: Inter;
+        font-size: 14px;
+        font-weight: 400;
+        line-height: 14px;
+        text-align: left;
+        color: rgba(25, 28, 31, 1);
+        border: 0.8px solid rgba(233, 234, 240, 1);
+        border-radius: 50px;
+        padding: 10px 20px;
+        width: 100%;
+        margin-bottom: 0.5rem;
+    }
+    // on active or focus the border and color should be bold
+    .field-control:focus-visible,
+    .field-select-control:focus-visible {
+        outline-color: rgba(146, 159, 165, 1) !important;
+        border: 0.8px solid rgba(233, 234, 240, 1) !important;
+        color: rgba(71, 81, 86, 1);
+    }
+    .field-control::placeholder,
+    .field-select-control::placeholder {
+        color: rgba(146, 159, 165, 1);
     }
 }
