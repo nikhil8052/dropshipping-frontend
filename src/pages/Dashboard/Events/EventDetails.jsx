@@ -13,6 +13,13 @@ const EventDetails = () => {
     const location = useLocation();
     const eventId = location.state?.eventId;
     const navigate = useNavigate();
+    const images = [
+        'https://randomuser.me/api/portraits/men/1.jpg',
+        'https://randomuser.me/api/portraits/men/1.jpg',
+        'https://randomuser.me/api/portraits/men/1.jpg',
+        'https://randomuser.me/api/portraits/men/1.jpg',
+        'https://randomuser.me/api/portraits/men/1.jpg'
+    ];
 
     return (
         <div className="event-details-section">
@@ -26,7 +33,8 @@ const EventDetails = () => {
                 <Card cardType="large">
                     <div className="event-detail-top">
                         <div className="card-profile-img">
-                            <img src={CaretRight} alt="" />
+                            {/* <img src={CaretRight} alt="" /> */}
+                            AG
                         </div>
                         <div className="meeting-details">
                             <h1>Ada Guyen(Coach)</h1>
@@ -34,7 +42,7 @@ const EventDetails = () => {
                             <p>Password : 4K22MJ7</p>
                         </div>
                     </div>
-                    <div className="meeting-detail-body">
+                    <div className="meeting-detail-body ">
                         <h1>
                             Topic: <span>Detailed meeting about the new course description, their time frame.</span>
                         </h1>
@@ -47,22 +55,19 @@ const EventDetails = () => {
                     </div>
                     <div className="main-row-meeting-link">
                         <div className="icon-stack d-dflex">
-                            <img
-                                src="https://randomuser.me/api/portraits/men/1.jpg"
-                                alt="Profile 1"
-                                className="profile-icon"
-                            />
-                            <img
-                                src="https://randomuser.me/api/portraits/men/1.jpg"
-                                alt="Profile 2"
-                                className="profile-icon"
-                            />
-
-                            <div className="profile-icon ">
-                                <p className="total mt-2"> +9</p>
+                            {images.slice(0, 4).map((image, index) => (
+                                <img
+                                    key={index}
+                                    src={'https://randomuser.me/api/portraits/men/1.jpg'}
+                                    alt={`Profile ${index + 1}`}
+                                    className="profile-icon"
+                                />
+                            ))}
+                            <div className="profile-icon">
+                                <p className="total mt-2"> +{Math.max(0, images.length - 4)}</p>
                             </div>
                         </div>
-                        <div className="meeting-link d-flex">
+                        <div className="meeting-link ">
                             <img src={LinkIcon} alt="pinn" />
                             <a href="_blank">
                                 {trimLongText(

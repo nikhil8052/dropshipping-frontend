@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Form as FormikForm, Formik } from 'formik';
-import { Container, Row, Col, Button } from 'react-bootstrap';
+import { Row, Col, Button } from 'react-bootstrap';
 import Input from '@components/Input/Input';
 import * as Yup from 'yup';
 import Loading from '@components/Loading/Loading';
@@ -107,7 +107,7 @@ const AddLectureModal = ({ productModal, resetModal }) => {
         setOptionalQuestion((prevCount) => prevCount + 1); // Increment question count
     };
     return (
-        <Container>
+        <>
             {loading ? (
                 <Loading />
             ) : (
@@ -144,13 +144,13 @@ const AddLectureModal = ({ productModal, resetModal }) => {
 
                                             <div className="add-quiz-question">
                                                 <Input
-                                                    name="lecturename"
+                                                    name="lecturename1"
                                                     placeholder="What is the main feature of this course?"
                                                     type="text"
                                                 />
                                                 {[...Array(questionCount)].map((_, index) => (
                                                     <Input
-                                                        name="lecturename"
+                                                        name={`lecturename${index}`}
                                                         placeholder="What is the scope of this course?"
                                                         type="text"
                                                         key={index}
@@ -172,7 +172,7 @@ const AddLectureModal = ({ productModal, resetModal }) => {
                                                 <div className="add-quiz-question" key={index}>
                                                     <div className="questions">
                                                         <Input
-                                                            name="lecturename"
+                                                            name={`lecturename_optional${index}`}
                                                             placeholder="Please Type Question Here..."
                                                             type="text"
                                                         />
@@ -236,7 +236,7 @@ const AddLectureModal = ({ productModal, resetModal }) => {
                     )}
                 </Formik>
             )}
-        </Container>
+        </>
     );
 };
 

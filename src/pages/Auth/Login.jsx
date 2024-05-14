@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { Button, Col, Row, Spinner } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
-import eyeIcon from '../../assets/icons/Eye.svg';
 import Input from '@components/Input/Input';
 import * as Yup from 'yup';
 import { Form as FormikForm, Formik } from 'formik';
@@ -12,6 +11,9 @@ import { loginWithoutAPI } from '@redux/auth/auth_slice';
 import './auth.scss';
 import LoginLeftSec from './LoginLeftSec';
 import Footer from './Footer';
+import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+
 const Login = () => {
     const dispatch = useDispatch();
     const { loading } = useSelector((state) => state?.auth);
@@ -59,7 +61,6 @@ const Login = () => {
                         <Col xs={12} sm={12} md={12} lg={6}>
                             <div className="auth-form-wrapper ">
                                 <div className="auth-form-data ">
-                                    {/* <img className="auth-logo" src={logoImg} alt="auth-logo" /> */}
                                     <h1 className="auth-title ">Login</h1>
                                     <h3 className="auth-form-title">Please enter your account details.</h3>
                                     <Formik
@@ -82,11 +83,12 @@ const Login = () => {
                                                         label="Password"
                                                         type={showPassword ? 'text' : 'password'}
                                                     />
-                                                    <img
-                                                        className={`eye-icon-password ${showPassword ? 'visible' : ''}`}
-                                                        src={eyeIcon}
-                                                        alt="eye-logo"
+
+                                                    <FontAwesomeIcon
+                                                        icon={showPassword ? faEyeSlash : faEye}
                                                         onClick={togglePassword}
+                                                        className={`eye-icon-password ${showPassword ? 'visible' : ''}`}
+                                                        color="rgba(200, 202, 216, 1)"
                                                     />
                                                 </div>
 
