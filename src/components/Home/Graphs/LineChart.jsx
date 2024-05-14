@@ -16,7 +16,19 @@ import './LineGraph.scss';
 // Register the necessary components for a line chart
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend);
 
-const LineChart = ({ data, options, chartKey, setChartKey, tabTitles, timePeriods, chartHeight, dataSet }) => {
+const LineChart = ({
+    data,
+    options,
+    chartKey,
+    setChartKey,
+    tabTitles,
+    timePeriods,
+    chartHeight,
+    dataSet,
+    role,
+    handleFilterChange,
+    currentFilter
+}) => {
     return (
         <Card className="graph-card">
             <Card.Body>
@@ -65,7 +77,7 @@ const LineChart = ({ data, options, chartKey, setChartKey, tabTitles, timePeriod
                                 </Col>
                             </Row>
                         </Tab.Container>
-                    ) : (
+                    ) : role === 'coach' ? (
                         <>
                             <Row className="d-flex justify-content-between">
                                 <Col className="flex-grow-1 ">
@@ -84,6 +96,36 @@ const LineChart = ({ data, options, chartKey, setChartKey, tabTitles, timePeriod
                                             </option>
                                         ))}
                                     </Form.Select>
+                                </Col>
+                            </Row>
+                            <Row>
+                                <Col>
+                                    <Line height={chartHeight} data={data} options={options} />
+                                </Col>
+                            </Row>
+                        </>
+                    ) : (
+                        <>
+                            <Row className="d-flex justify-content-between">
+                                <Col className="flex-grow-1 ">
+                                    <h5 className="graph-title">Revenue (Shopify)</h5>
+                                </Col>
+                                <Col className="flex-grow-0 ms-auto d-flex gap-2">
+                                    <Form.Check
+                                        type="checkbox"
+                                        id="prev-checkbox"
+                                        label="Previous"
+                                        checked={currentFilter === 'previous'}
+                                        onChange={() => handleFilterChange('previous')}
+                                        className="me-2"
+                                    />
+                                    <Form.Check
+                                        type="checkbox"
+                                        id="current-checkbox"
+                                        label="Current"
+                                        checked={currentFilter === 'current'}
+                                        onChange={() => handleFilterChange('current')}
+                                    />
                                 </Col>
                             </Row>
                             <Row>

@@ -21,3 +21,19 @@
         }
     }
 }
+.stacked-card-wrapper {
+    .stacked-card {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-evenly;
+        align-items: center;
+    }
+    .stat-value {
+        text-align: center;
+        font-size: 26px;
+        font-family: $font-primary;
+        color: rgba(0, 0, 0, 1);
+        padding-top: 50px;
+        margin-top: 50px;
+    }
+}
