@@ -5,8 +5,8 @@ import CourseCard from '../../../components/CourseCard/CourseCard';
 import eventImg from '../../../assets/images/Event-Image.svg';
 import '../../../styles/Courses.scss';
 import Search from '../../../assets/icons/Search.svg';
-import add from '@icons/add.svg';
-import { useNavigate, Link } from 'react-router-dom';
+import add from '@icons/add_white.svg';
+import { useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 
 const Courses = () => {
@@ -104,7 +104,7 @@ const Courses = () => {
                     <Card cardType="large">
                         <Row>
                             <div className="course-topbar">
-                                <Col xs={12} sm={12} md={6}>
+                                <Col md={6} xs={12} sm={12}>
                                     <InputGroup>
                                         <InputGroup.Text>
                                             <img src={Search} alt={search ? 'Search' : 'Search'} />
@@ -119,12 +119,12 @@ const Courses = () => {
                                         />
                                     </InputGroup>
                                 </Col>
-                                <Col xs={12} sm={12} md={6}>
+                                <Col md={6} xs={12} sm={12}>
                                     {role === 'student' ? (
-                                        <div className="ms-auto d-flex justify-content-end ">
+                                        <div className="ms-auto  d-flex justify-content-end ">
                                             <DropdownButton
                                                 title={
-                                                    <div className=" d-flex  justify-content-between align-items-center">
+                                                    <div className=" d-flex   justify-content-between align-items-center">
                                                         <span className="ms-2">{selectedEvent}</span>
                                                     </div>
                                                 }
@@ -145,7 +145,7 @@ const Courses = () => {
                                         </div>
                                     ) : (
                                         <Button
-                                            className="add-button ms-md-auto d-flex justify-content-even align-items-center"
+                                            className="add-button ms-sm-auto d-flex  justify-content-even  align-items-center"
                                             onClick={handleCreateClick}
                                         >
                                             <img src={add} alt="" /> <span className="ms-2">Add New Courses</span>
@@ -160,9 +160,7 @@ const Courses = () => {
                                 <Col key={cousre.id} xs={12} sm={12} md={6} lg={4} xl={3} xxl={3}>
                                     <div className="custom-card-course-new">
                                         {role === 'admin' || role === 'coach' ? (
-                                            <Link to={`/${role}/courses/all-students`}>
-                                                <CourseCard {...cousre} archive={true} />
-                                            </Link>
+                                            <CourseCard {...cousre} archive={true} role={role} />
                                         ) : (
                                             <CourseCard
                                                 {...cousre}

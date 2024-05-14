@@ -125,6 +125,7 @@ const UploadFiles = () => {
                     <AddLectureModal productModal={lectureModal} resetModal={resetProductModal} />
                 </Modal>
             )}
+
             <div className="upload-form-section">
                 <div className="section-title">
                     <p>Upload Files</p>

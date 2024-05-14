@@ -18,7 +18,6 @@
         color: red;
     }
     .search-input {
-        max-width: 390px;
         border-radius: 59px;
         background-color: rgba(245, 248, 249, 1);
     }
@@ -27,13 +26,12 @@
         border-radius: 59px;
     }
     .add-button {
-        // @include pagination-gradient;
-        background-color: #f5f8f9;
+        @include pagination-gradient;
         border-radius: 59px;
-        color: #8c8c8c;
+        color: #ffff;
         font-weight: 400;
         white-space: nowrap;
-        border: 1px solid #000000;
+        border-color: transparent;
         @include respond-to($small-screen) {
             margin-top: 10px;
             width: 100%;
@@ -54,6 +52,9 @@
     .card-large {
         height: auto;
         width: auto;
+    }
+    .card-body {
+        padding: 0px;
     }
 }
 .custom-card-course-new {
@@ -160,8 +161,6 @@
                 padding: 20px;
             }
         }
-
-        //
     }
 
     .input-field-container {
@@ -197,7 +196,6 @@
             }
             font-weight: 400;
             white-space: nowrap;
-            // border: rgba(148, 148, 148, 1) 1px solid !important;
             border: 1.34px solid #e9eaf0 !important;
 
             .dropdown-menu {
@@ -681,7 +679,7 @@
         padding: 0px;
     }
     .card-large {
-        height: 850px;
+        height: 900px;
     }
 
     .lecture-details {
@@ -761,11 +759,16 @@
         font-size: $font-size-large;
         font-weight: $font-weight-medium;
         margin-inline: 40px;
+        padding-bottom: 10px;
+        @include respond-to($small-screen) {
+            margin-inline: 10px;
+        }
 
         .publish-btn {
             border-radius: 170px;
             width: 174px;
             height: 42px;
+            border-color: transparent;
             @include pagination-gradient;
             @include respond-to($small-screen) {
                 width: 130px;
@@ -777,6 +780,7 @@
             border-radius: 170px;
             width: 174px;
             height: 42px;
+            border-color: transparent;
             @include respond-to($small-screen) {
                 width: 130px;
             }

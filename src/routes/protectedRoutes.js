@@ -97,6 +97,13 @@ export const adminRoutes = [
         access: 'admin'
     },
     {
+        path: 'courses/view-progress',
+        exact: true,
+        name: 'Courses',
+        Component: ViewProgress,
+        access: 'admin'
+    },
+    {
         path: 'events',
         exact: true,
         name: 'Events',

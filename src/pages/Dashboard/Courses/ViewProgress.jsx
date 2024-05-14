@@ -14,13 +14,13 @@ const ViewProgress = () => {
     const userInfo = useSelector((state) => state?.auth?.userInfo);
     const [isAdmin, setIsAdmin] = useState(false);
     const [search, setSearch] = useState('');
+    const { role } = userInfo;
 
     const location = useLocation();
     const isViewlPage = location.pathname === '/coach/courses/view-progress';
 
     useEffect(() => {
         if (userInfo) {
-            const { role } = userInfo;
             setIsAdmin(role === 'admin');
         }
     }, [userInfo]);
@@ -87,9 +87,11 @@ const ViewProgress = () => {
                         ))}
                     </div>
                     <div className="viewProgress-footer mx-auto">
-                        <Button className="done-btn" type="button">
-                            Done
-                        </Button>
+                        <Link to={`/${role}/courses`}>
+                            <Button className="done-btn" type="button">
+                                Done
+                            </Button>
+                        </Link>
                     </div>
                 </div>
             </Card>
