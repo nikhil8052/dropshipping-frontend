@@ -9,7 +9,7 @@ import './Table.scss';
 import 'ag-grid-community/styles/ag-grid.css';
 import 'ag-grid-community/styles/ag-theme-alpine.css';
 
-const Table = ({ columns, tableData, width, onRowClicked, loading, children }) => {
+const Table = ({ columns, tableData, width, onRowClicked, loading, children, inputLgSize = 6, childLgSize = 6 }) => {
     const [gridApi, setGridApi] = useState(null);
     const [gridColumnApi, setGridColumnApi] = useState(null);
     const [search, setSearch] = useState('');
@@ -56,7 +56,7 @@ const Table = ({ columns, tableData, width, onRowClicked, loading, children }) =
     return (
         <div className="ag-theme-alpine custom-table" style={{ height: '100%', width: '100%' }}>
             <Row className="mb-3">
-                <Col lg={6} md={12}>
+                <Col lg={inputLgSize || 6} md={12}>
                     <InputGroup>
                         <InputGroup.Text>
                             <img src={Search} alt="Search" />
@@ -71,7 +71,7 @@ const Table = ({ columns, tableData, width, onRowClicked, loading, children }) =
                         />
                     </InputGroup>
                 </Col>
-                <Col lg={6} md={12}>
+                <Col lg={childLgSize || 6} md={12}>
                     {children}
                 </Col>
             </Row>
