@@ -16,7 +16,7 @@
         .ag-row
             .ag-cell:not([col-id='coursesRoadmap']):not([col-id='email']):not([col-id='name']):not(
                 [col-id='joinLink']
-            ) {
+            ):not([col-id='notes']) {
             display: flex;
             justify-content: start;
             align-items: center;
