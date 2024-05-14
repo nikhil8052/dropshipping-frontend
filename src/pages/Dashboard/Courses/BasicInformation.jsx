@@ -3,7 +3,6 @@ import { Form as FormikForm, Formik } from 'formik';
 import * as Yup from 'yup';
 import { Button, Spinner, Dropdown, DropdownButton } from 'react-bootstrap';
 import Input from '@components/Input/Input';
-import downArrow from '@icons/down-arrow.svg';
 import { coachDummyData } from '../../../data/data';
 import '../../../styles/Courses.scss';
 
@@ -65,10 +64,6 @@ const BasicInformation = () => {
                                     title={
                                         <div className="d-flex justify-content-between  w-100">
                                             <span className="ms-2">{selectedCourse}</span>
-
-                                            <p>
-                                                <img src={downArrow} alt="Filter" />
-                                            </p>
                                         </div>
                                     }
                                     defaultValue={selectedCourse}
@@ -94,10 +89,6 @@ const BasicInformation = () => {
                                     title={
                                         <div className="d-flex justify-content-between w-100">
                                             <span className="ms-2">{selectedCoach}</span>
-
-                                            <p>
-                                                <img src={downArrow} alt="Filter" />
-                                            </p>
                                         </div>
                                     }
                                     defaultValue={selectedCoach}
@@ -118,10 +109,10 @@ const BasicInformation = () => {
                                 </DropdownButton>
                             </div>
                             <div className="course-btn-footer ">
-                                <Button className="cancel-button" type="submit">
+                                <Button className="cancel-btn" type="submit">
                                     {isSubmitting ? <Spinner animation="border" size="sm" /> : 'Cancel'}
                                 </Button>
-                                <Button className="save-button" type="submit">
+                                <Button className="submit-btn" type="submit">
                                     {isSubmitting ? <Spinner animation="border" size="sm" /> : 'Save & Next'}
                                 </Button>
                             </div>

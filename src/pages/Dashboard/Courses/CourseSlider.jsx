@@ -101,9 +101,7 @@ const CourseSlider = () => {
             >
                 {courseCards.map((course, index) => (
                     <SwiperSlide key={`${course.id}_${index + 1}`}>
-                        <Card cardType="small">
-                            <CourseCard {...course} simple={false} />
-                        </Card>
+                        <CourseCard {...course} archive={false} />
                     </SwiperSlide>
                 ))}
             </Swiper>

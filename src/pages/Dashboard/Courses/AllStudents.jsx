@@ -10,10 +10,11 @@ import { toast } from 'react-toastify';
 import TextExpand from '@components/TextExpand/TextExpand';
 import trash2 from '@icons/trash-2.svg';
 
-import downArrow from '@icons/down-arrow.svg';
 import { AllStudentsDummyData } from '../../../data/data';
 import '../../../styles/Courses.scss';
 import { Link } from 'react-router-dom';
+import { useSelector } from 'react-redux';
+import CaretRight from '@icons/CaretRight.svg';
 
 const AllStudents = () => {
     const [showDeleteModal, setShowDeleteModal] = useState(false);
@@ -30,6 +31,9 @@ const AllStudents = () => {
     const [allStudentData, setAllStudentData] = useState(null);
 
     const [selectedOption, setSelectedOption] = useState('All');
+    const userInfo = useSelector((state) => state?.auth?.userInfo);
+    const role = userInfo.role;
+    const isAllStudentPage = location.pathname === '/admin/courses/all-students' || '/coach/courses/all-students';
 
     useEffect(() => {
         // Fetch data from API here
@@ -148,7 +152,7 @@ const AllStudents = () => {
             unSortIcon: true,
             resizable: false,
             cellRenderer: ({ data: rowData }) => {
-                const student_id = rowData.student_id;
+                const student_id = rowData.studentId;
                 return <div key={rowData.id}>{student_id}</div>;
             }
         },
@@ -221,6 +225,14 @@ const AllStudents = () => {
                     onConfirm={handleDeleteSubmit}
                 />
             )}
+            <div className="addcourse-nav mb-3">
+                {role === 'admin' ? <Link to="/admin/courses">Courses</Link> : <Link to="/coach/courses">Courses</Link>}
+                {isAllStudentPage && (
+                    <span>
+                        <img src={CaretRight} alt=">" /> All Students
+                    </span>
+                )}
+            </div>
             <Table
                 columns={columns}
                 tableData={allStudentData}
@@ -229,14 +241,11 @@ const AllStudents = () => {
                 children={
                     <Row>
                         <Col>
-                            <div className="d-flex justify-content-end">
+                            <div className="events-page d-flex justify-content-end">
                                 <DropdownButton
                                     title={
                                         <div className="d-flex justify-content-between w-100">
                                             <span className="ms-2">{selectedOption}</span>
-                                            <p>
-                                                <img src={downArrow} alt="Filter" />
-                                            </p>
                                         </div>
                                     }
                                     defaultValue={selectedOption}
