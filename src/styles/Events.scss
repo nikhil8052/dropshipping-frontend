@@ -47,6 +47,8 @@
     }
 
     .dropdown-button {
+        -webkit-appearance: none;
+        -moz-appearance: none;
         background-color: transparent !important;
         border-radius: 59px;
         .dropdown-toggle {
@@ -144,9 +146,16 @@
         padding-inline: 24px;
         border-bottom: 0.2px solid #707070;
         .card-profile-img {
-            width: 80px;
-            height: 80px;
+            padding-block: 21px;
+            padding-inline: 21px;
             border: 1px solid;
+            font-size: 32px;
+            align-items: center;
+            text-align: center;
+            font-weight: $font-weight-medium;
+            color: #ffffff;
+            background-color: #019fd8;
+            border-radius: 15px;
         }
         .meeting-details {
             display: flex;
@@ -208,7 +217,7 @@
         .edit {
             background-color: transparent;
             color: #212121;
-            border: 0.3px solid #2f80ed;
+            border: 3.3px solid #2f80ed;
             width: 224px;
             height: 45px;
             border-radius: 50px;
@@ -230,20 +239,21 @@
         display: flex;
         justify-content: space-evenly;
         padding-block: 38px;
+        padding-inline: 24px;
         flex-wrap: wrap;
         .icon-stack {
             display: flex;
             justify-content: flex-start;
             align-items: center;
             .profile-icon {
-                width: 30px; /* Set a fixed width for each avatar */
-                height: 30px;
+                width: 35px; /* Set a fixed width for each avatar */
+                height: 35px;
                 border-radius: 30px;
-                margin-right: -50px; /* Overlap the next avatar by 50% */
+                margin-right: -11px; /* Overlap the next avatar by 50% */
                 transition: margin-right 0.3s ease;
                 background-color: #dfebff;
                 p {
-                    font-size: 8px;
+                    font-size: 12px;
                     color: #0060ff;
                     text-align: center;
                     justify-content: center;
@@ -267,6 +277,7 @@
             margin-left: 10px;
             border-left: 1px solid;
             text-wrap: wrap;
+            color: #0060ff;
         }
     }
     .personal-meeting-btn {
@@ -301,6 +312,14 @@
         .dotOptions {
             height: 18px;
             width: 10px;
+        }
+    }
+
+    @media (min-width: $x-small-screen) and (max-width: $x-large-screen) {
+        .main-row-meeting-link {
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
         }
     }
 }

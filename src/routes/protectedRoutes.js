@@ -90,6 +90,13 @@ export const adminRoutes = [
         access: 'admin'
     },
     {
+        path: 'courses/all-students',
+        exact: true,
+        name: 'Courses',
+        Component: AllStudents,
+        access: 'admin'
+    },
+    {
         path: 'events',
         exact: true,
         name: 'Events',
