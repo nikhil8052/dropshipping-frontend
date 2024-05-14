@@ -8,10 +8,14 @@ const Students = lazy(() => import('@pages/Dashboard/Students/Students'));
 const Courses = lazy(() => import('@pages/Dashboard/Courses/Courses'));
 const Events = lazy(() => import('@pages/Dashboard/Events/Events'));
 const NewEvent = lazy(() => import('@pages/Dashboard/Events/NewEvent/NewEvent'));
+const EventDetails = lazy(() => import('@pages/Dashboard/Events/EventDetails'));
 const Payment = lazy(() => import('@pages/Dashboard/Payments/Payments'));
 const VisualizeCSV = lazy(() => import('@pages/Dashboard/VisualizeCsv/VisualizeCsv'));
 const Settings = lazy(() => import('@pages/Dashboard/Settings/Settings'));
 const NewCourse = lazy(() => import('@pages/Dashboard/Courses/AddNewCourse'));
+const CourseDetail = lazy(() => import('@pages/Dashboard/Courses/CourseDetail'));
+const AllStudents = lazy(() => import('@pages/Dashboard/Courses/AllStudents'));
+const ViewProgress = lazy(() => import('@pages/Dashboard/Courses/ViewProgress'));
 
 export const adminRoutes = [
     {
@@ -77,7 +81,13 @@ export const adminRoutes = [
         Component: NewCourse,
         access: 'admin'
     },
-
+    {
+        path: 'courses/details',
+        exact: true,
+        name: 'Courses',
+        Component: CourseDetail,
+        access: 'admin'
+    },
     {
         path: 'events',
         exact: true,
@@ -97,6 +107,13 @@ export const adminRoutes = [
         exact: true,
         name: 'Events',
         Component: NewEvent,
+        access: 'admin'
+    },
+    {
+        path: 'events/details',
+        exact: true,
+        name: 'Events',
+        Component: EventDetails,
         access: 'admin'
     },
     {
@@ -134,6 +151,34 @@ export const coachesRoutes = [
         exact: true,
         name: 'Courses',
         Component: Courses,
+        access: 'coach'
+    },
+    {
+        path: 'courses/new',
+        exact: true,
+        name: 'Courses',
+        Component: NewCourse,
+        access: 'coach'
+    },
+    {
+        path: 'courses/details',
+        exact: true,
+        name: 'Courses',
+        Component: CourseDetail,
+        access: 'coach'
+    },
+    {
+        path: 'courses/all-students',
+        exact: true,
+        name: 'Courses',
+        Component: AllStudents,
+        access: 'coach'
+    },
+    {
+        path: 'courses/view-progress',
+        exact: true,
+        name: 'Courses',
+        Component: ViewProgress,
         access: 'coach'
     },
     {

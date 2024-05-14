@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Row, Col, InputGroup, Button, Form } from 'react-bootstrap';
+import { Row, Col, InputGroup, Form, Button } from 'react-bootstrap';
 import Card from '@components/Card/Card';
 import CourseCard from '../../../components/CourseCard/CourseCard';
 import eventImg from '../../../assets/images/Event-Image.svg';
@@ -7,10 +7,13 @@ import '../../../styles/Courses.scss';
 import Search from '../../../assets/icons/Search.svg';
 import add from '@icons/add.svg';
 import { useNavigate } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 
 const Courses = () => {
     const [search, setSearch] = useState('');
     const navigate = useNavigate();
+    const userInfo = useSelector((state) => state?.auth?.userInfo);
+    const role = userInfo.role;
 
     const onFilterTextChange = (event) => {
         setSearch(event.target.value);
@@ -78,8 +81,12 @@ const Courses = () => {
     ];
 
     const handleCreateClick = () => {
-        // Handle create button click event here
-        navigate('/admin/courses/new');
+        if (role === 'admin') {
+            navigate('/admin/courses/new');
+        } else {
+            // Handle create button click event here
+            navigate('/coach/courses/new');
+        }
     };
 
     return (
@@ -109,7 +116,7 @@ const Courses = () => {
                                         className="add-button ms-md-auto d-flex justify-content-even align-items-center"
                                         onClick={handleCreateClick}
                                     >
-                                        <img src={add} alt="" srcSet="" /> <span className="ms-2">Add New Course</span>
+                                        <img src={add} alt="" /> <span className="ms-2">Add New Course</span>
                                     </Button>
                                 </Col>
                             </div>
