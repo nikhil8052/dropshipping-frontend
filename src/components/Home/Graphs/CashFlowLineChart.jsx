@@ -26,7 +26,14 @@ const CashFlowLineChart = ({ data, options }) => {
             </Row>
             <Row>
                 <Col>
-                    <Line data={data} options={options} />
+                    <Line
+                        data={data}
+                        options={options}
+                        style={{
+                            minHeight: '280px'
+                        }}
+                        height={85}
+                    />
                 </Col>
             </Row>
         </div>

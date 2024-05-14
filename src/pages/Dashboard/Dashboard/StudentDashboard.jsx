@@ -15,7 +15,7 @@ const currentData = [5000, 22200, 6000, 20000, 7500, 28000, 8500, 20000, 7500, 2
 
 const StudentDashboard = () => {
     const chartRef = useRef(null);
-    const [chartHeight, setChartHeight] = useState(50);
+    const [chartHeight, setChartHeight] = useState(70);
     const [cardStats, setCardStats] = useState([]);
     const [lineGraphData, setLineGraphData] = useState({
         datasets: [
@@ -235,7 +235,7 @@ const StudentDashboard = () => {
         setLineGraphData(data);
         setCashFlowData(cashData);
         setDataSet(false);
-        setChartHeight(50);
+        setChartHeight(70);
     }, []);
 
     const timePeriods = [
@@ -304,7 +304,7 @@ const StudentDashboard = () => {
                 </Col>
             </Row>
             <Row>
-                <Col>
+                <Col lg={8}>
                     <Card header={true} customCardClass="events-card">
                         {cashFlowData && (
                             <CashFlowLineChart
@@ -315,18 +315,14 @@ const StudentDashboard = () => {
                         )}
                     </Card>
                 </Col>
-                <Col>
-                    <Row>
-                        {cashFlowCards.map((stat, index) => (
-                            <Col key={stat.id}>
-                                <Card
-                                    customCardClass={`custom-card-colors cash-flow-card ${index % 2 === 0 ? 'even' : 'odd'}`}
-                                >
-                                    <StatCard {...stat} />
-                                </Card>
-                            </Col>
-                        ))}
-                    </Row>
+                <Col lg={4}>
+                    {cashFlowCards.map((stat, index) => (
+                        <Col key={stat.id} className="w-100">
+                            <Card customCardClass={`custom-card-colors ${index % 2 === 0 ? 'even' : 'odd'}`}>
+                                <StatCard {...stat} />
+                            </Card>
+                        </Col>
+                    ))}
                 </Col>
             </Row>
         </div>
