@@ -181,7 +181,7 @@ const AllStudents = () => {
 
                 return (
                     <Link
-                        to="/coach/courses/view-progress"
+                        to={`/${role}/courses/view-progress`}
                         className={'progress-btn-allstudent mx-auto'}
                         key={rowData.id}
                     >

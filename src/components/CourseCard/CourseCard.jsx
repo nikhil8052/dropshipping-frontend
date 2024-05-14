@@ -2,16 +2,21 @@ import './CourseCard.scss';
 import Form from 'react-bootstrap/Form';
 import ProgressBar from 'react-bootstrap/ProgressBar';
 import enrollIcon from '../../assets/icons/enroll-icon.svg';
-const CourseCard = ({ img, title, detail, lectureNo, archive, enroll }) => {
+import { Link } from 'react-router-dom';
+
+const CourseCard = ({ img, title, detail, lectureNo, archive, enroll, role }) => {
     return (
         <>
             <div className="course-card">
-                <div className="mb-3 p-2">
-                    <img src={img} className="course-img " alt="course-icon" />
-                    <h1 className="course-title">{title}</h1>
-                    <p className="course-des">{detail}</p>
-                    <p className="lecture-No">{lectureNo}</p>
-                </div>
+                <Link to={`/${role}/courses/details`}>
+                    <div className="mb-3 p-2">
+                        <img src={img} className="course-img " alt="course-icon" />
+                        <h1 className="course-title">{title}</h1>
+                        <p className="course-des">{detail}</p>
+                        <p className="lecture-No">{lectureNo}</p>
+                    </div>
+                </Link>
+
                 {archive && (
                     <div className="toggle-archive">
                         <Form>

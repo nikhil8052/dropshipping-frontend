@@ -9,8 +9,9 @@ import CaretRight from '@icons/CaretRight.svg';
 
 const CourseDetail = () => {
     const userInfo = useSelector((state) => state?.auth?.userInfo);
+    const role = userInfo.role;
+
     const [isAdmin, setIsAdmin] = useState(false);
-    const [isCoach, setIsCoach] = useState(false);
 
     const location = useLocation();
     const isDetailPage = location.pathname === '/admin/courses/details' || '/coach/courses/details';
@@ -19,7 +20,6 @@ const CourseDetail = () => {
         if (userInfo) {
             const { role } = userInfo;
             setIsAdmin(role === 'admin');
-            setIsCoach(role === 'coach');
         }
     }, [userInfo]);
 
@@ -62,25 +62,19 @@ const CourseDetail = () => {
                     </div>
                     <div
                         className="publish-added-button-footer "
-                        style={{ display: 'flex', justifyContent: isAdmin ? 'flex-end' : 'space-between' }}
+                        style={{ display: 'flex', justifyContent: 'space-between' }}
                     >
-                        {isCoach ? (
-                            <>
-                                <Link to="/coach/courses/all-students">
-                                    <Button type="button" className="publish-btn">
-                                        All Students
-                                    </Button>
-                                </Link>
-
-                                <Button type="button" className="edit-btn">
-                                    Edit
+                        <>
+                            <Link to={`/${role}/courses/all-students`}>
+                                <Button type="button" className="publish-btn">
+                                    All Students
                                 </Button>
-                            </>
-                        ) : (
+                            </Link>
+
                             <Button type="button" className="edit-btn">
                                 Edit
                             </Button>
-                        )}
+                        </>
                     </div>
                 </Card>
             </div>
