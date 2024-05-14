@@ -1,6 +1,7 @@
 import { lazy } from 'react';
 // Component Imports
 const Dashboard = lazy(() => import('@pages/Dashboard/Dashboard/Dashboard'));
+const StudentDashboard = lazy(() => import('@pages/Dashboard/Dashboard/StudentDashboard'));
 const Coaches = lazy(() => import('@pages/Dashboard/Coaches/Coaches'));
 const NewCoach = lazy(() => import('@pages/Dashboard/Coaches/NewCoach/NewCoach'));
 const NewStudent = lazy(() => import('@pages/Dashboard/Students/NewStudent/NewStudent'));
@@ -202,7 +203,7 @@ export const studentRoutes = [
         index: true,
         exact: true,
         name: 'Dashboard',
-        Component: Dashboard,
+        Component: StudentDashboard,
         access: 'student'
     },
     {
