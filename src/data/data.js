@@ -15,7 +15,7 @@ export const studentDummyData = [
                 grade: 'B'
             }
         ],
-        feesStatus: 'Paid',
+        feesstatus: 'Paid',
         isActive: false,
         coursesRoadmap: [
             { id: 1, title: 'Meta Data Engineering', progress: 'Completed' },
@@ -41,7 +41,7 @@ export const studentDummyData = [
                 grade: 'B+'
             }
         ],
-        feesStatus: 'Unpaid',
+        feesstatus: 'Unpaid',
         isActive: false,
         coursesRoadmap: [
             { id: 1, title: 'Meta Data Engineering', progress: 'Completed' },
@@ -67,7 +67,7 @@ export const studentDummyData = [
                 grade: 'B-'
             }
         ],
-        feesStatus: 'Unpaid',
+        feesstatus: 'Unpaid',
         isActive: false,
         coursesRoadmap: [
             { id: 1, title: 'Meta Data Engineering', progress: 'Completed' },
@@ -94,7 +94,7 @@ export const studentDummyData = [
                 grade: 'A-'
             }
         ],
-        feesStatus: 'Paid',
+        feesstatus: 'Paid',
         isActive: false,
         coursesRoadmap: [
             { id: 1, title: 'Meta Data Engineering', progress: 'Completed' },
@@ -120,7 +120,7 @@ export const studentDummyData = [
                 grade: 'A'
             }
         ],
-        feesStatus: 'Unpaid',
+        feesstatus: 'Unpaid',
         isActive: false,
         coursesRoadmap: [
             { id: 1, title: 'Meta Data Engineering', progress: 'Completed' },
@@ -146,7 +146,7 @@ export const studentDummyData = [
                 grade: 'B'
             }
         ],
-        feesStatus: 'Unpaid',
+        feesstatus: 'Unpaid',
         isActive: false,
         coursesRoadmap: [
             { id: 1, title: 'Meta Data Engineering', progress: 'Completed' },
@@ -172,7 +172,7 @@ export const studentDummyData = [
                 grade: 'B+'
             }
         ],
-        feesStatus: 'Paid',
+        feesstatus: 'Paid',
         isActive: false,
         coursesRoadmap: [
             { id: 1, title: 'Meta Data Engineering', progress: 'Completed' },
@@ -198,7 +198,7 @@ export const studentDummyData = [
                 grade: 'A+'
             }
         ],
-        feesStatus: 'Unpaid',
+        feesstatus: 'Unpaid',
         isActive: false,
         coursesRoadmap: [
             { id: 1, title: 'Meta Data Engineering', progress: 'Completed' },
@@ -224,7 +224,7 @@ export const studentDummyData = [
                 grade: 'B-'
             }
         ],
-        feesStatus: 'Unpaid',
+        feesstatus: 'Unpaid',
         isActive: false,
         coursesRoadmap: [
             { id: 1, title: 'Meta Data Engineering', progress: 'Completed' },
@@ -250,7 +250,7 @@ export const studentDummyData = [
                 grade: 'A-'
             }
         ],
-        feesStatus: 'Paid',
+        feesstatus: 'Paid',
         isActive: false,
         coursesRoadmap: [
             { id: 1, title: 'Meta Data Engineering', progress: 'Completed' },
@@ -276,7 +276,7 @@ export const studentDummyData = [
                 grade: 'A-'
             }
         ],
-        feesStatus: 'Unpaid',
+        feesstatus: 'Unpaid',
         isActive: false,
         coursesRoadmap: [
             { id: 1, title: 'Meta Data Engineering', progress: 'Completed' },
@@ -302,7 +302,7 @@ export const studentDummyData = [
                 grade: 'A'
             }
         ],
-        feesStatus: 'Paid',
+        feesstatus: 'Paid',
         isActive: false,
         coursesRoadmap: [
             { id: 1, title: 'Meta Data Engineering', progress: 'Completed' },
@@ -328,7 +328,7 @@ export const studentDummyData = [
                 grade: 'B+'
             }
         ],
-        feesStatus: 'Unpaid',
+        feesstatus: 'Unpaid',
         isActive: false,
         coursesRoadmap: [
             { id: 1, title: 'Meta Data Engineering', progress: 'Completed' },
@@ -354,7 +354,7 @@ export const studentDummyData = [
                 grade: 'B'
             }
         ],
-        feesStatus: 'Paid',
+        feesstatus: 'Paid',
         isActive: false,
         coursesRoadmap: [
             { id: 1, title: 'Meta Data Engineering', progress: 'Completed' },
@@ -380,7 +380,7 @@ export const studentDummyData = [
                 grade: 'A'
             }
         ],
-        feesStatus: 'Unpaid',
+        feesstatus: 'Unpaid',
         isActive: false,
         coursesRoadmap: [
             { id: 1, title: 'Meta Data Engineering', progress: 'Completed' },
@@ -1078,6 +1078,414 @@ export const events = [
         start: new Date(now.getFullYear(), now.getMonth(), now.getDate(), now.getHours() + 1), // Event starting the next hour
         end: new Date(now.getFullYear(), now.getMonth(), now.getDate(), now.getHours() + 3), // Lasts for 2 hours
         desc: 'Important'
+    }
+];
+
+export const visualizeCsv = [
+    {
+        productName: 'Product1',
+        runDate: '3/9/2024',
+        ber: 1.55,
+        id: 1,
+        avatarUrl: 'https://randomuser.me/api/portraits/women/2.jpg',
+        status: 'Running',
+        createdBy: 'Edline Max',
+        researchMethod: 'Asparo',
+        category: 'Sporten',
+        salePrice: '€59.95',
+        link: 'https://example.com/product1',
+        price: '€59.95',
+        country: 'Worldwide',
+        videoLink: 'https://facebook.com/videos/product1',
+        btw: '€12.59',
+        mergeExBtw: '€40.47',
+        mergeInBtw: '€27.88'
+    },
+    {
+        productName: 'Product2',
+        runDate: '3/9/2024',
+        ber: 1.55,
+        id: 2,
+        avatarUrl: 'https://randomuser.me/api/portraits/men/3.jpg',
+        status: 'Running',
+        createdBy: 'Kathrine Joh',
+        researchMethod: 'Asparo',
+        category: 'Sporten',
+        salePrice: '€59.95',
+        link: 'https://example.com/product2',
+        price: '€59.95',
+        country: 'Worldwide',
+        videoLink: 'https://facebook.com/videos/product2',
+        btw: '€12.59',
+        mergeExBtw: '€40.47',
+        mergeInBtw: '€27.88'
+    },
+    {
+        productName: 'Product3',
+        runDate: '3/9/2024',
+        ber: 1.55,
+        id: 3,
+        avatarUrl: 'https://randomuser.me/api/portraits/women/4.jpg',
+        status: 'Ready',
+        createdBy: 'Lisa Ederson',
+        researchMethod: 'Asparo',
+        category: 'Sporten',
+        salePrice: '€59.95',
+        link: 'https://example.com/product3',
+        price: '€59.95',
+        country: 'Worldwide',
+        videoLink: 'https://facebook.com/videos/product3',
+        btw: '€12.59',
+        mergeExBtw: '€40.47',
+        mergeInBtw: '€27.88'
+    },
+    {
+        productName: 'Product4',
+        runDate: '3/9/2024',
+        ber: 1.55,
+        id: 4,
+        avatarUrl: 'https://randomuser.me/api/portraits/men/5.jpg',
+        status: 'Running',
+        createdBy: 'Tony Max',
+        researchMethod: 'Asparo',
+        category: 'Sporten',
+        salePrice: '€59.95',
+        link: 'https://example.com/product4',
+        price: '€59.95',
+        country: 'Worldwide',
+        videoLink: 'https://facebook.com/videos/product4',
+        btw: '€12.59',
+        mergeExBtw: '€40.47',
+        mergeInBtw: '€27.88'
+    },
+    {
+        productName: 'Product5',
+        runDate: '3/9/2024',
+        ber: 1.55,
+        id: 5,
+        avatarUrl: 'https://randomuser.me/api/portraits/women/6.jpg',
+        status: 'Ready',
+        createdBy: 'Carl Max',
+        researchMethod: 'Asparo',
+        category: 'Sporten',
+        salePrice: '€59.95',
+        link: 'https://example.com/product5',
+        price: '€59.95',
+        country: 'Worldwide',
+        videoLink: 'https://facebook.com/videos/product5',
+        btw: '€12.59',
+        mergeExBtw: '€40.47',
+        mergeInBtw: '€27.88'
+    },
+    {
+        productName: 'Product6',
+        runDate: '3/9/2024',
+        ber: 1.55,
+        id: 6,
+        avatarUrl: 'https://randomuser.me/api/portraits/men/7.jpg',
+        status: 'Ready',
+        createdBy: 'Carl Max',
+        researchMethod: 'Asparo',
+        category: 'Sporten',
+        salePrice: '€59.95',
+        link: 'https://example.com/product6',
+        price: '€59.95',
+        country: 'Worldwide',
+        videoLink: 'https://facebook.com/videos/product6',
+        btw: '€12.59',
+        mergeExBtw: '€40.47',
+        mergeInBtw: '€27.88'
+    },
+    {
+        productName: 'Product7',
+        runDate: '3/9/2024',
+        ber: 1.55,
+        id: 7,
+        avatarUrl: 'https://randomuser.me/api/portraits/women/8.jpg',
+        status: 'Running',
+        createdBy: 'Maxwell',
+        researchMethod: 'Asparo',
+        category: 'Sporten',
+        salePrice: '€59.95',
+        link: 'https://example.com/product7',
+        price: '€59.95',
+        country: 'Worldwide',
+        videoLink: 'https://facebook.com/videos/product7',
+        btw: '€12.59',
+        mergeExBtw: '€40.47',
+        mergeInBtw: '€27.88'
+    },
+    {
+        productName: 'Product8',
+        runDate: '3/9/2024',
+        ber: 1.55,
+        id: 8,
+        avatarUrl: 'https://randomuser.me/api/portraits/men/9.jpg',
+        status: 'Running',
+        createdBy: 'Elizabeth Olsen',
+        researchMethod: 'Asparo',
+        category: 'Sporten',
+        salePrice: '€59.95',
+        link: 'https://example.com/product8',
+        price: '€59.95',
+        country: 'Worldwide',
+        videoLink: 'https://facebook.com/videos/product8',
+        btw: '€12.59',
+        mergeExBtw: '€40.47',
+        mergeInBtw: '€27.88'
+    },
+    {
+        productName: 'Product9',
+        runDate: '3/9/2024',
+        ber: 1.55,
+        id: 9,
+        avatarUrl: 'https://randomuser.me/api/portraits/women/2.jpg',
+        status: 'To-Do',
+        createdBy: 'Alexandra Daddario',
+        researchMethod: 'Asparo',
+        category: 'Sporten',
+        salePrice: '€59.95',
+        link: 'https://example.com/product9',
+        price: '€59.95',
+        country: 'Worldwide',
+        videoLink: 'https://facebook.com/videos/product9',
+        btw: '€12.59',
+        mergeExBtw: '€40.47',
+        mergeInBtw: '€27.88'
+    },
+    {
+        productName: 'Product10',
+        runDate: '3/9/2024',
+        ber: 1.55,
+        id: 10,
+        avatarUrl: 'https://randomuser.me/api/portraits/men/9.jpg',
+        status: 'Running',
+        createdBy: 'Tony Max',
+        researchMethod: 'Asparo',
+        category: 'Sporten',
+        salePrice: '€59.95',
+        link: 'https://example.com/product10',
+        price: '€59.95',
+        country: 'Worldwide',
+        videoLink: 'https://facebook.com/videos/product10',
+        btw: '€12.59',
+        mergeExBtw: '€40.47',
+        mergeInBtw: '€27.88'
+    }
+];
+
+export const dailyFinances = [
+    {
+        id: 1,
+        date: '3/19/2024',
+        revenue: '$1225',
+        orders: 20,
+        adSpend: '$480',
+        roas: 2.5,
+        refunds: 0,
+        cog: 20,
+        profitLoss: '$490',
+        margin: '20.35%'
+    },
+    {
+        id: 2,
+        date: '3/19/2024',
+        revenue: '$1225',
+        orders: 21,
+        adSpend: '$490',
+        roas: 2.5,
+        refunds: 0,
+        cog: 22,
+        profitLoss: '$490',
+        margin: '20.35%'
+    },
+    {
+        id: 3,
+        date: '3/19/2024',
+        revenue: '$1225',
+        orders: 72,
+        adSpend: '$490',
+        roas: 2.5,
+        refunds: 0,
+        cog: 22,
+        profitLoss: '$490',
+        margin: '20.35%'
+    },
+    {
+        id: 4,
+        date: '3/19/2024',
+        revenue: '$1225',
+        orders: 77,
+        adSpend: '$490',
+        roas: 2.5,
+        refunds: 0,
+        cog: 22,
+        profitLoss: '$490',
+        margin: '20.35%'
+    },
+    {
+        id: 5,
+        date: '3/19/2024',
+        revenue: '$1225',
+        orders: 72,
+        adSpend: '$490',
+        roas: 2.5,
+        refunds: 0,
+        cog: 22,
+        profitLoss: '$490',
+        margin: '20.35%'
+    },
+    {
+        id: 6,
+        date: '3/19/2024',
+        revenue: '$1225',
+        orders: 32,
+        adSpend: '$480',
+        roas: 2.5,
+        refunds: 0,
+        cog: 32,
+        profitLoss: '$490',
+        margin: '20.35%'
+    },
+    {
+        id: 7,
+        date: '3/19/2024',
+        revenue: '$1225',
+        orders: 24,
+        adSpend: '$480',
+        roas: 98.3,
+        refunds: 0,
+        cog: 24,
+        profitLoss: '$490',
+        margin: '20.35%'
+    },
+    {
+        id: 8,
+        date: '3/19/2024',
+        revenue: '$1225',
+        orders: 96,
+        adSpend: '$480',
+        roas: 2.5,
+        refunds: 0,
+        cog: 24,
+        profitLoss: '$490',
+        margin: '20.35%'
+    },
+    {
+        id: 9,
+        date: '3/19/2024',
+        revenue: '$1225',
+        orders: 21,
+        adSpend: '$480',
+        roas: 36.4,
+        refunds: 0,
+        cog: 21,
+        profitLoss: '$490',
+        margin: '20.35%'
+    },
+    {
+        id: 10,
+        date: '3/19/2024',
+        revenue: '$1225',
+        orders: 12,
+        adSpend: '$480',
+        roas: 12.5,
+        refunds: 0,
+        cog: 12,
+        profitLoss: '$490',
+        margin: '20.35%'
+    }
+];
+export const invoicesData = [
+    {
+        id: 1,
+        date: '3/9/2024',
+        amount: '$1225',
+        category: 'Subscription',
+        business: 'DD Empire',
+        facture: '....',
+        notes: 'This invoice is capable of being paid online. Please click the link below to pay. Thank you.'
+    },
+    {
+        id: 2,
+        date: '3/9/2024',
+        amount: '$1225',
+        category: 'Subscription',
+        business: 'DD Empire',
+        facture: '....',
+        notes: 'This invoice is capable of being paid online. Please click the link below to pay. Thank you.'
+    },
+    {
+        id: 3,
+        date: '3/9/2024',
+        amount: '$1225',
+        category: 'Domain',
+        business: 'Stores',
+        facture: '....',
+        notes: 'This invoice is capable of being paid online. Please click the link below to pay. Thank you.'
+    },
+    {
+        id: 4,
+        date: '3/9/2024',
+        amount: '$1225',
+        category: 'Subscription',
+        business: 'DD Empire',
+        facture: '....',
+        notes: 'This invoice is capable of being paid online. Please click the link below to pay. Thank you.'
+    },
+    {
+        id: 5,
+        date: '3/9/2024',
+        amount: '$1225',
+        category: 'Overig',
+        business: 'Stores',
+        facture: '....',
+        notes: 'This invoice is capable of being paid online. Please click the link below to pay. Thank you.'
+    },
+    {
+        id: 6,
+        date: '3/9/2024',
+        amount: '$1225',
+        category: 'Subscription',
+        business: 'Stores',
+        facture: '....',
+        notes: 'This invoice is capable of being paid online. Please click the link below to pay. Thank you.'
+    },
+    {
+        id: 7,
+        date: '3/9/2024',
+        amount: '$1225',
+        category: 'Subscription',
+        business: 'Stores',
+        facture: '....',
+        notes: 'This invoice is capable of being paid online. Please click the link below to pay. Thank you.'
+    },
+    {
+        id: 8,
+        date: '3/9/2024',
+        amount: '$1225',
+        category: 'Domain',
+        business: 'DD Empire',
+        facture: '....',
+        notes: 'This invoice is capable of being paid online. Please click the link below to pay. Thank you.'
+    },
+    {
+        id: 9,
+        date: '3/9/2024',
+        amount: '$1225',
+        category: 'Subscription',
+        business: 'DD Empire',
+        facture: '....',
+        notes: 'This invoice is capable of being paid online. Please click the link below to pay. Thank you.'
+    },
+    {
+        id: 10,
+        date: '3/9/2024',
+        amount: '$1225',
+        category: 'Subscription',
+        business: 'Stores',
+        facture: '....',
+        notes: 'This invoice is capable of being paid online. Please click the link below to pay. Thank you.'
     }
 ];
 
