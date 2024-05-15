@@ -8,6 +8,7 @@ const NewStudent = lazy(() => import('@pages/Dashboard/Students/NewStudent/NewSt
 const Students = lazy(() => import('@pages/Dashboard/Students/Students'));
 const Courses = lazy(() => import('@pages/Dashboard/Courses/Courses'));
 const Events = lazy(() => import('@pages/Dashboard/Events/Events'));
+const EventsListing = lazy(() => import('@pages/Dashboard/Events/EventsListing/EventsListing'));
 const NewEvent = lazy(() => import('@pages/Dashboard/Events/NewEvent/NewEvent'));
 const EventDetails = lazy(() => import('@pages/Dashboard/Events/EventDetails'));
 const Payment = lazy(() => import('@pages/Dashboard/Payments/Payments'));
@@ -231,7 +232,7 @@ export const studentRoutes = [
         path: 'events',
         exact: true,
         name: 'Events',
-        Component: Events,
+        Component: EventsListing,
         access: 'student'
     },
     {

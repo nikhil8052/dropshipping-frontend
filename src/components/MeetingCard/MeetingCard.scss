@@ -1,0 +1,99 @@
+@import '@constants/colors.scss';
+
+.card-custom {
+    border-radius: 30px;
+    box-shadow: 0px 0px 14px 0px rgba(0, 0, 0, 0.07);
+    border: none;
+    padding: 20px 10px;
+
+    .card-header-custom {
+        display: flex;
+        align-items: center;
+        border-bottom: none;
+        background-color: transparent;
+        border-bottom: 0.2px solid rgba(112, 112, 112, 0.4);
+        padding: 15px 15px;
+
+        .image-custom {
+            width: 80px;
+            height: 80px;
+            margin-right: 0.625rem;
+            border-radius: 15px !important;
+        }
+        .meeting-title {
+            font-family: Inter;
+            font-weight: 500;
+            text-align: left;
+        }
+        .meeting-id {
+            font-family: Inter;
+            font-weight: 400;
+            color: rgba(164, 164, 164, 1);
+            font-size: 12px;
+            text-align: left;
+        }
+        .meeting-password {
+            font-family: Inter;
+            font-weight: 400;
+            color: rgba(33, 33, 33, 1);
+            font-size: 12px;
+            text-align: left;
+        }
+    }
+
+    // Body
+    .topic-detail {
+        font-family: Inter;
+        font-size: 12px;
+        font-weight: 400;
+        text-align: left;
+    }
+    .main-title {
+        font-family: Inter;
+        font-size: 12px;
+        font-weight: 700;
+        text-align: left;
+        color: rgba(0, 43, 91, 1);
+    }
+    .meeting-time {
+        background: rgba(242, 248, 255, 1);
+        border-radius: 7px;
+        padding: 5px 10px;
+
+        font-family: Inter;
+        font-size: 14px;
+        font-weight: 400;
+        text-align: left;
+        span {
+            color: rgba(85, 95, 126, 1);
+        }
+        p {
+            color: rgba(0, 0, 0, 1);
+        }
+    }
+
+    .footer-title {
+        font-family: Inter;
+        font-size: 17.82px;
+        font-weight: 500;
+        line-height: 21.56px;
+        text-align: left;
+        margin-top: 1rem;
+    }
+
+    .card-footer-custom {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background-color: transparent;
+        border-top: none !important;
+
+        button {
+            background-color: transparent !important;
+            color: black !important;
+            padding: 5px 30px;
+            border: 2px solid rgba(47, 128, 237, 1);
+            border-radius: 10px;
+        }
+    }
+}
