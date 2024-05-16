@@ -9,8 +9,11 @@ const Students = lazy(() => import('@pages/Dashboard/Students/Students'));
 const EnrolledCourseDetail = lazy(() => import('@pages/Dashboard/Courses/EnrolledCourseDetail'));
 const Courses = lazy(() => import('@pages/Dashboard/Courses/Courses'));
 const Events = lazy(() => import('@pages/Dashboard/Events/Events'));
+const EventsListing = lazy(() => import('@pages/Dashboard/Events/EventsListing/EventsListing'));
+const EventPage = lazy(() => import('@pages/Dashboard/Events/EventPage/EventPage'));
 const NewEvent = lazy(() => import('@pages/Dashboard/Events/NewEvent/NewEvent'));
 const EventDetails = lazy(() => import('@pages/Dashboard/Events/EventDetails'));
+const SingleEvent = lazy(() => import('@pages/Dashboard/Events/SingleEvent/SingleEvent'));
 const Payment = lazy(() => import('@pages/Dashboard/Payments/Payments'));
 const VisualizeCSV = lazy(() => import('@pages/Dashboard/VisualizeCsv/VisualizeCsv'));
 const Settings = lazy(() => import('@pages/Dashboard/Settings/Settings'));
@@ -246,7 +249,21 @@ export const studentRoutes = [
         path: 'events',
         exact: true,
         name: 'Events',
-        Component: Events,
+        Component: EventPage,
+        access: 'student'
+    },
+    {
+        path: 'events/listing',
+        exact: true,
+        name: 'Events',
+        Component: EventsListing,
+        access: 'student'
+    },
+    {
+        path: 'events/detail',
+        exact: true,
+        name: 'Events',
+        Component: SingleEvent,
         access: 'student'
     },
     {

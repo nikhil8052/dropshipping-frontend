@@ -7,6 +7,7 @@ import { Helmet } from 'react-helmet';
 import EventDetailsModal from './Calender/CustomEventModal';
 import BigCalender from './Calender/BigCalender';
 import { useSelector } from 'react-redux';
+import { events } from '../../../data/data';
 
 const Dashboard = () => {
     const chartRef = useRef(null);
@@ -240,7 +241,7 @@ const Dashboard = () => {
             <Row>
                 <Col>
                     <Card header={true} title="Events" customCardClass="events-card">
-                        <BigCalender onEventClick={(event) => handleEventClick(event)} />
+                        <BigCalender onEventClick={(event) => handleEventClick(event)} events={events} />
                         <EventDetailsModal
                             show={showModal}
                             onHide={() => setShowModal(false)}
