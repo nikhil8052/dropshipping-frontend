@@ -8,7 +8,9 @@ const CourseCard = ({ img, title, detail, lectureNo, archive, enroll, role }) =>
     return (
         <>
             <div className="course-card">
-                <Link to={`/${role}/courses/details`}>
+                <Link
+                    to={role !== 'student' || !enroll ? `/${role}/courses/details` : `/${role}/courses/enrolled-course`}
+                >
                     <div className="mb-3 p-2">
                         <img src={img} className="course-img " alt="course-icon" />
                         <h1 className="course-title">{title}</h1>
@@ -16,7 +18,6 @@ const CourseCard = ({ img, title, detail, lectureNo, archive, enroll, role }) =>
                         <p className="lecture-No">{lectureNo}</p>
                     </div>
                 </Link>
-
                 {archive && (
                     <div className="toggle-archive">
                         <Form>

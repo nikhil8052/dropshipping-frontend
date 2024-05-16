@@ -11,12 +11,15 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import Select from 'react-select';
 
 import RoadMapList from '../Roadmap/RoadmapList';
+import { useSelector } from 'react-redux';
 
 const NewStudent = () => {
     const inputRef = useRef();
     const [studentPhoto, setStudentPhoto] = useState(null);
     const location = useLocation();
     const studentId = location.state?.studentId;
+    const { userInfo } = useSelector((state) => state?.auth);
+    const role = userInfo?.role;
     const navigate = useNavigate();
     const [studentData, setStudentData] = useState({
         studentName: '',
@@ -109,7 +112,7 @@ const NewStudent = () => {
     return (
         <div className="new-coach-page-wrapper">
             <div className="title-top">
-                <span onClick={() => navigate('/admin/students')} style={{ cursor: 'pointer' }}>
+                <span onClick={() => navigate(`/${role}/students`)} style={{ cursor: 'pointer' }}>
                     Students <img src={CaretRight} alt=">" />
                 </span>{' '}
                 {studentId ? 'Student Profile' : 'Add New Student'}
@@ -335,7 +338,7 @@ const NewStudent = () => {
                                         <div className="mt-3 d-flex justify-content-end gap-3">
                                             <Button
                                                 type="button"
-                                                onClick={() => navigate('/admin/students')}
+                                                onClick={() => navigate(`/${role}/students`)}
                                                 className="cancel-btn"
                                                 disabled={isSubmitting}
                                             >

@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import '../../../styles/Courses.scss';
 import Card from '@components/Card/Card';
 import { useSelector } from 'react-redux';
@@ -12,18 +12,10 @@ import InactiveIcon from '../../../assets/icons/Icon-inactive-lec.svg';
 
 const ViewProgress = () => {
     const userInfo = useSelector((state) => state?.auth?.userInfo);
-    const [isAdmin, setIsAdmin] = useState(false);
     const [search, setSearch] = useState('');
     const { role } = userInfo;
-
     const location = useLocation();
-    const isViewlPage = location.pathname === '/coach/courses/view-progress';
-
-    useEffect(() => {
-        if (userInfo) {
-            setIsAdmin(role === 'admin');
-        }
-    }, [userInfo]);
+    const isViewlPage = location.pathname === `/${role}/courses/view-progress`;
     const onFilterTextChange = (event) => {
         setSearch(event.target.value);
     };
@@ -38,7 +30,7 @@ const ViewProgress = () => {
     return (
         <div className="view-progress-section">
             <div className="addcourse-nav mb-3">
-                {isAdmin ? <Link to="/admin/courses">Courses</Link> : <Link to="/coach/courses">Courses</Link>}
+                <Link to={`/${role}/courses`}> Courses</Link>
                 {isViewlPage && (
                     <span>
                         <img src={CaretRight} alt=">" /> View Progress

@@ -12,7 +12,7 @@ const DashboardLayout = () => {
 
     useEffect(() => {
         if (!isLoggedIn || role !== 'student') navigate('/login');
-    }, [navigate, isLoggedIn, role]);
+    }, [isLoggedIn, role]);
 
     return (
         <Container fluid className="p-0">

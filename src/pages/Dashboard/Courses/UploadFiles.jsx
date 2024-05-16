@@ -16,11 +16,17 @@ import PencilLine from '../../../assets/icons/PencilLine.svg';
 import Modal from '@components/Modal/Modal';
 import AddLectureModal from './AddLectureModal';
 import { trimLongText } from '../../../utils/common';
+import axiosWrapper from '@utils/api';
+import ConfirmationBox from '@components/ConfirmationBox/ConfirmationBox';
+
 const UploadFiles = () => {
     const inputRef = useRef();
     const videoinputRef = useRef();
     const [coachPhoto, setCoachPhoto] = useState(null);
     const [courseVideo, setCourseVideo] = useState(null);
+    const [showDeleteModal, setShowDeleteModal] = useState(false);
+    const [loadingCRUD, setLoadingCRUD] = useState(false);
+    const [selectedRowId, setSelectedRowId] = useState(null);
 
     const [lectureModal, setLectureModal] = useState({
         show: false,
@@ -118,6 +124,32 @@ const UploadFiles = () => {
         });
     };
 
+    const handleDeleteClick = (id) => {
+        // Handle delete action here
+        setSelectedRowId(id);
+        setShowDeleteModal(true);
+    };
+
+    const handleCloseDeleteModal = () => {
+        setShowDeleteModal(false);
+    };
+
+    const handleDeleteSubmit = async () => {
+        try {
+            setLoadingCRUD(true);
+            const data = await axiosWrapper(
+                'delete',
+                `${import.meta.env.VITE_JSONPLACEHOLDER}/posts/${selectedRowId}}`
+            );
+            toast.success(data?.message || 'Item deleted successfully');
+        } catch (error) {
+            return;
+        } finally {
+            setLoadingCRUD(false);
+            setShowDeleteModal(false);
+        }
+    };
+
     return (
         <>
             {lectureModal.show && (
@@ -125,7 +157,20 @@ const UploadFiles = () => {
                     <AddLectureModal productModal={lectureModal} resetModal={resetProductModal} />
                 </Modal>
             )}
-
+            {showDeleteModal && (
+                <ConfirmationBox
+                    show={showDeleteModal}
+                    onClose={handleCloseDeleteModal}
+                    loading={loadingCRUD}
+                    title="Delete Lecture"
+                    body="Are you sure you wants to delete this Lecture ?"
+                    onConfirm={handleDeleteSubmit}
+                    customFooterClass="custom-footer-class"
+                    nonActiveBtn="cancel-button"
+                    activeBtn="delete-button"
+                    activeBtnTitle="Delete"
+                />
+            )}
             <div className="upload-form-section">
                 <div className="section-title">
                     <p>Upload Files</p>
@@ -288,7 +333,7 @@ const UploadFiles = () => {
                                                 </div>
                                                 <div className="d-flex gap-2">
                                                     <img src={plusIcon} alt="menu" onClick={handleCreateClick} />
-                                                    <img src={trashIcon} alt="menu" />
+                                                    <img src={trashIcon} alt="menu" onClick={handleDeleteClick} />
                                                 </div>
                                             </div>
                                             {Array.from({ length: 2 }).map((_, index) => (
@@ -315,7 +360,11 @@ const UploadFiles = () => {
                                                         </Button>
                                                         <img src={PencilLine} alt="PencilLine" />
 
-                                                        <img src={trashIconRed} alt="trashIconRed" />
+                                                        <img
+                                                            src={trashIconRed}
+                                                            alt="trashIconRed"
+                                                            onClick={handleDeleteClick}
+                                                        />
                                                     </div>
                                                 </div>
                                             ))}

@@ -25,8 +25,9 @@
     .stacked-card {
         display: flex;
         flex-direction: row;
-        justify-content: space-evenly;
         align-items: center;
+        justify-content: center;
+        gap: 20px;
     }
     .stat-value {
         text-align: center;

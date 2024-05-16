@@ -1,4 +1,5 @@
 @import '@constants/typography.scss';
+@import '@constants/colors.scss';
 
 .course-card {
     display: flex;
@@ -52,7 +53,7 @@
         height: 28px;
     }
     .form-check-input:checked {
-        background-color: #34c759;
+        background-color: $info-color;
         border-color: transparent;
     }
     .form-check-input:focus {

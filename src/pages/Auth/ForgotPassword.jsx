@@ -1,7 +1,6 @@
 import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { Button, Col, Row, Spinner } from 'react-bootstrap';
-import { Link } from 'react-router-dom';
 import Input from '@components/Input/Input';
 import * as Yup from 'yup';
 import { Form as FormikForm, Formik } from 'formik';
@@ -9,8 +8,10 @@ import { loginWithoutAPI } from '@redux/auth/auth_slice';
 import './auth.scss';
 import LoginLeftSec from './LoginLeftSec';
 import Footer from './Footer';
+import { useNavigate } from 'react-router-dom';
 const ForgotPassword = () => {
     const dispatch = useDispatch();
+    const navigate = useNavigate();
     const { loading } = useSelector((state) => state?.auth);
     const inititialValues = {
         email: ''
@@ -23,6 +24,7 @@ const ForgotPassword = () => {
     const handleSubmit = async (values, { setSubmitting }) => {
         try {
             dispatch(loginWithoutAPI(values));
+            navigate('/verification-code');
             setSubmitting(false);
         } catch (error) {
             setSubmitting(false);
@@ -45,6 +47,7 @@ const ForgotPassword = () => {
                                     initialValues={inititialValues}
                                     validationSchema={validationSchema}
                                     onSubmit={handleSubmit}
+                                    enableReinitialize
                                 >
                                     {({ isSubmitting }) => (
                                         <FormikForm>
@@ -54,15 +57,9 @@ const ForgotPassword = () => {
                                                 label="Email Address"
                                                 type="text"
                                             />
-                                            <Link to="/verification-code">
-                                                <Button className="auth-login-button" type="submit" disabled={loading}>
-                                                    {isSubmitting ? (
-                                                        <Spinner animation="border" size="sm" />
-                                                    ) : (
-                                                        'Send Code'
-                                                    )}
-                                                </Button>
-                                            </Link>
+                                            <Button className="auth-login-button" type="submit" disabled={loading}>
+                                                {isSubmitting ? <Spinner animation="border" size="sm" /> : 'Send Code'}
+                                            </Button>
                                         </FormikForm>
                                     )}
                                 </Formik>

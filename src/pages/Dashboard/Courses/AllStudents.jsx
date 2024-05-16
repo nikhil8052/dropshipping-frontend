@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import Table from '@components/Table/Table';
 import { Col, Row, DropdownButton, Dropdown } from 'react-bootstrap';
 import Modal from '@components/Modal/Modal';
@@ -8,7 +8,6 @@ import { Helmet } from 'react-helmet';
 import axiosWrapper from '@utils/api';
 import { toast } from 'react-toastify';
 import TextExpand from '@components/TextExpand/TextExpand';
-import trash2 from '@icons/trash-2.svg';
 
 import { AllStudentsDummyData } from '../../../data/data';
 import '../../../styles/Courses.scss';
@@ -32,7 +31,7 @@ const AllStudents = () => {
 
     const [selectedOption, setSelectedOption] = useState('All');
     const userInfo = useSelector((state) => state?.auth?.userInfo);
-    const role = userInfo.role;
+    const role = userInfo?.role;
     const isAllStudentPage = location.pathname === '/admin/courses/all-students' || '/coach/courses/all-students';
 
     useEffect(() => {
@@ -60,22 +59,6 @@ const AllStudents = () => {
             return;
         }
         setSelectedRowId(event.data.id);
-    };
-
-    const handleEditClick = (studentId) => {
-        // Handle edit action here
-        setStudentModal({
-            show: true,
-            title: 'Edit Product',
-            isEditable: true,
-            studentId: studentId
-        });
-    };
-
-    const handleDeleteClick = (id) => {
-        // Handle delete action here
-        setSelectedRowId(id);
-        setShowDeleteModal(true);
     };
 
     const handleCloseModal = () => {
@@ -114,22 +97,6 @@ const AllStudents = () => {
     const handleEventSelect = (eventKey, coach) => {
         setSelectedOption(coach);
     };
-
-    /*eslint-disable */
-    const ActionsRenderer = (props) => (
-        <React.Fragment>
-            <Row style={{ width: '100%' }}>
-                <Col lg={6} md={6} sm={6} className="d-flex justify-content-center align-items-center">
-                    <div
-                        className="btn-light action-button delete-button"
-                        onClick={() => props.onDeleteClick(props.data.id)}
-                    >
-                        <img src={trash2} className="action-icon" alt="action-icon" />
-                    </div>
-                </Col>
-            </Row>
-        </React.Fragment>
-    );
     /*eslint-disable */
 
     const columns = [
@@ -189,19 +156,6 @@ const AllStudents = () => {
                     </Link>
                 );
             }
-        },
-        {
-            headerName: 'Actions',
-            cellRenderer: ActionsRenderer,
-            cellRendererParams: {
-                onEditClick: handleEditClick,
-                onDeleteClick: handleDeleteClick
-            },
-            pinned: 'right',
-            sortable: false,
-            filter: false,
-            resizable: false,
-            cellClass: ['d-flex', 'align-items-center']
         }
     ];
 
