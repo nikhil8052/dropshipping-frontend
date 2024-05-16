@@ -1,4 +1,3 @@
-import { useEffect, useState } from 'react';
 import '../../../styles/Courses.scss';
 import { Button } from 'react-bootstrap';
 import Card from '@components/Card/Card';
@@ -6,36 +5,36 @@ import CourseSlider from './CourseSlider';
 import { useSelector } from 'react-redux';
 import { useLocation, Link } from 'react-router-dom';
 import CaretRight from '@icons/CaretRight.svg';
+import CaretLeft from '@icons/CaretLeft.svg';
 
 const CourseDetail = () => {
     const userInfo = useSelector((state) => state?.auth?.userInfo);
     const role = userInfo.role;
 
-    const [isAdmin, setIsAdmin] = useState(false);
-
     const location = useLocation();
     const isDetailPage = location.pathname === '/admin/courses/details' || '/coach/courses/details';
-
-    useEffect(() => {
-        if (userInfo) {
-            const { role } = userInfo;
-            setIsAdmin(role === 'admin');
-        }
-    }, [userInfo]);
 
     return (
         <>
             <div className="publish-form-section">
-                <div className="addcourse-nav mb-3">
-                    {isAdmin ? <Link to="/admin/courses">Courses</Link> : <Link to="/coach/courses">Courses</Link>}
-                    {isDetailPage ? (
-                        <span>
-                            <img src={CaretRight} alt=">" /> Course Details
-                        </span>
-                    ) : (
-                        ''
-                    )}
-                </div>
+                {role === 'student' ? (
+                    <Link to={`/${role}/courses`}>
+                        <Button type="button" className="back-button">
+                            <img src={CaretLeft} />
+                            Back
+                        </Button>
+                    </Link>
+                ) : (
+                    <div className="addcourse-nav mb-3">
+                        <Link to={`/${role}/courses`}>Courses</Link>
+                        {isDetailPage && (
+                            <span>
+                                <img src={CaretRight} alt=">" /> Course Details
+                            </span>
+                        )}
+                    </div>
+                )}
+
                 <Card cardType="large">
                     <div className="card-background">
                         <div className="text-heading">
@@ -60,22 +59,25 @@ const CourseDetail = () => {
                     <div className="carousel-lecture ">
                         <CourseSlider />
                     </div>
-                    <div
-                        className="publish-added-button-footer "
-                        style={{ display: 'flex', justifyContent: 'space-between' }}
-                    >
-                        <>
-                            <Link to={`/${role}/courses/all-students`}>
-                                <Button type="button" className="publish-btn">
-                                    All Students
-                                </Button>
-                            </Link>
 
-                            <Button type="button" className="edit-btn">
-                                Edit
-                            </Button>
-                        </>
-                    </div>
+                    {role !== 'student' && (
+                        <div
+                            className="publish-added-button-footer "
+                            style={{ display: 'flex', justifyContent: 'space-between' }}
+                        >
+                            <>
+                                <Link to={`/${role}/courses/all-students`}>
+                                    <Button type="button" className="publish-btn">
+                                        All Students
+                                    </Button>
+                                </Link>
+
+                                <Button type="button" className="edit-btn">
+                                    Edit
+                                </Button>
+                            </>
+                        </div>
+                    )}
                 </Card>
             </div>
         </>
