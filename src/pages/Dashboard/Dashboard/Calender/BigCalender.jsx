@@ -5,7 +5,6 @@ import parse from 'date-fns/parse';
 import startOfWeek from 'date-fns/startOfWeek';
 import getDay from 'date-fns/getDay';
 import enUS from 'date-fns/locale/en-US';
-import { events } from '../../../../data/data';
 import EventComponent from './CustomEvent';
 import CustomHeader from './CustomHeader';
 import CustomToolbar from './CustomToolbar';
@@ -22,7 +21,13 @@ const localizer = dateFnsLocalizer({
     locales
 });
 
-const BigCalender = ({ onEventClick }) => {
+const BigCalender = ({
+    onEventClick,
+    events,
+    googleCalendar = false,
+    handleGoogleCalendarClick,
+    calendarHeight = 500
+}) => {
     const eventStyleGetter = (event, start, end) => {
         const now = new Date();
         const style = {
@@ -44,7 +49,7 @@ const BigCalender = ({ onEventClick }) => {
             events={events}
             startAccessor="start"
             endAccessor="end"
-            style={{ height: 500 }}
+            style={{ height: calendarHeight }}
             views={['day', 'week', 'month']}
             step={60}
             showMultiDayTimes
@@ -59,11 +64,17 @@ const BigCalender = ({ onEventClick }) => {
                 // eslint-disable-next-line
                 month: {
                     event: ({ event, title }) => {
-                        return <EventComponent event={event} title={title} onEventClick={onEventClick} />;
+                        return <EventComponent event={event} title={title} onEventClick={() => onEventClick(event)} />;
                     }
                 },
                 header: CustomHeader,
-                toolbar: CustomToolbar
+                toolbar: (props) => (
+                    <CustomToolbar
+                        {...props}
+                        googleCalendar={googleCalendar}
+                        handleGoogleCalendarClick={handleGoogleCalendarClick}
+                    />
+                )
             }}
         />
     );

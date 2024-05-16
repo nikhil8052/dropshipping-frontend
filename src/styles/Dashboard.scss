@@ -5,6 +5,7 @@
     height: calc(100vh - 12rem);
     overflow-y: scroll;
     overflow-x: hidden;
+
     .rbc-month-view {
         border: none;
     }
@@ -97,14 +98,6 @@
     .dropdown button {
         margin: 0 5px;
     }
-    // .event-detail-modal {
-    //     & > div {
-    //         & > div > div > div {
-    //             border: 4px solid red !important;
-    //         }
-    //     }
-    // }
-
     // Events Modal
     .event-detail-modal {
         background: red !important;

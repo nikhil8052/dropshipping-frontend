@@ -1615,4 +1615,258 @@ export const meetings = [
     // Add more objects to reach 10 items
 ];
 
+// Events and Meeting details array
+export const eventsAndMeetings = [
+    {
+        id: 1,
+        name: 'Ada Guyen',
+        role: 'Coach',
+        meetingId: '226326',
+        password: '4K22MJ7',
+        topic: 'Detailed meeting about the new course descriptions, their time frame.',
+        dateTime: 'Feb 2, 2024 19:28',
+        timeZone: 'Central Standard Time (GMT-6)',
+        attendees: [
+            'https://randomuser.me/api/portraits/men/5.jpg',
+            'https://randomuser.me/api/portraits/men/5.jpg',
+            'https://randomuser.me/api/portraits/men/5.jpg',
+            'https://randomuser.me/api/portraits/men/5.jpg',
+            'https://randomuser.me/api/portraits/men/5.jpg'
+        ],
+        attendeesCount: 15,
+        image: 'https://randomuser.me/api/portraits/men/1.jpg',
+        title: 'Long Event',
+        start: new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1),
+        end: new Date(now.getFullYear(), now.getMonth(), now.getDate() + 4)
+    },
+    {
+        id: 2,
+        name: 'Tony Serna',
+        role: 'Coach',
+        meetingId: '226326',
+        password: '4K22MJ7',
+        topic: 'Detailed meeting about the new course descriptions, their time frame.',
+        dateTime: 'Feb 2, 2024 19:28',
+        timeZone: 'Central Standard Time (GMT-6)',
+        attendees: [
+            'https://randomuser.me/api/portraits/men/5.jpg',
+            'https://randomuser.me/api/portraits/men/5.jpg',
+            'https://randomuser.me/api/portraits/men/5.jpg',
+            'https://randomuser.me/api/portraits/men/5.jpg',
+            'https://randomuser.me/api/portraits/men/5.jpg'
+        ],
+        attendeesCount: 15,
+        image: 'https://randomuser.me/api/portraits/men/1.jpg',
+        title: 'Upcoming Event',
+        start: new Date(now.getFullYear(), now.getMonth(), now.getDate() + 5),
+        end: new Date(now.getFullYear(), now.getMonth(), now.getDate() + 5)
+    },
+    {
+        id: 3,
+        name: 'Maxwell',
+        role: 'Coach',
+        meetingId: '226326',
+        password: '4K22MJ7',
+        topic: 'Detailed meeting about the new course descriptions, their time frame.',
+        dateTime: 'Feb 2, 2024 19:28',
+        timeZone: 'Central Standard Time (GMT-6)',
+        attendees: [
+            'https://randomuser.me/api/portraits/men/5.jpg',
+            'https://randomuser.me/api/portraits/men/5.jpg',
+            'https://randomuser.me/api/portraits/men/5.jpg',
+            'https://randomuser.me/api/portraits/men/5.jpg'
+        ],
+        attendeesCount: 15,
+        image: 'https://randomuser.me/api/portraits/men/1.jpg',
+        title: 'Another Long Event',
+        start: new Date(now.getFullYear(), now.getMonth(), now.getDate() + 7),
+        end: new Date(now.getFullYear(), now.getMonth(), now.getDate() + 10)
+    },
+    {
+        id: 4,
+        name: 'John Doe',
+        role: 'Coach',
+        meetingId: '226326',
+        password: '4K22MJ7',
+        topic: 'Detailed meeting about the new course descriptions, their time frame.',
+        dateTime: 'Feb 2, 2024 19:28',
+        timeZone: 'Central Standard Time (GMT-6)',
+        attendees: [
+            'https://randomuser.me/api/portraits/men/5.jpg',
+            'https://randomuser.me/api/portraits/men/5.jpg',
+            'https://randomuser.me/api/portraits/men/5.jpg',
+            'https://randomuser.me/api/portraits/men/5.jpg'
+        ],
+        attendeesCount: 15,
+        image: 'https://randomuser.me/api/portraits/men/1.jpg',
+        title: 'Conference',
+        start: new Date(now.getFullYear(), now.getMonth(), now.getDate() + 11),
+        end: new Date(now.getFullYear(), now.getMonth(), now.getDate() + 13),
+        desc: 'A major event for stakeholders.'
+    },
+    {
+        id: 5,
+        name: 'David',
+        role: 'Coach',
+        meetingId: '226326',
+        password: '4K22MJ7',
+        topic: 'Detailed meeting about the new course descriptions, their time frame.',
+        dateTime: 'Feb 2, 2024 19:28',
+        timeZone: 'Central Standard Time (GMT-6)',
+        attendees: [
+            'https://randomuser.me/api/portraits/men/5.jpg',
+            'https://randomuser.me/api/portraits/men/5.jpg',
+            'https://randomuser.me/api/portraits/men/5.jpg',
+            'https://randomuser.me/api/portraits/men/5.jpg',
+            'https://randomuser.me/api/portraits/men/5.jpg',
+            'https://randomuser.me/api/portraits/men/5.jpg',
+            'https://randomuser.me/api/portraits/men/5.jpg',
+            'https://randomuser.me/api/portraits/men/5.jpg',
+            'https://randomuser.me/api/portraits/men/5.jpg',
+            'https://randomuser.me/api/portraits/men/5.jpg'
+        ],
+        attendeesCount: 15,
+        image: 'https://randomuser.me/api/portraits/men/1.jpg',
+        title: 'Meeting',
+        start: new Date(now.getFullYear(), now.getMonth(), now.getDate(), 10, 30),
+        end: new Date(now.getFullYear(), now.getMonth(), now.getDate(), 12, 0),
+        desc: 'Discussion on project milestones'
+    },
+    {
+        id: 6,
+        name: 'Kathrine',
+        role: 'Coach',
+        meetingId: '226326',
+        password: '4K22MJ7',
+        topic: 'Detailed meeting about the new course descriptions, their time frame.',
+        dateTime: 'Feb 2, 2024 19:28',
+        timeZone: 'Central Standard Time (GMT-6)',
+        attendees: [
+            'https://randomuser.me/api/portraits/men/5.jpg',
+            'https://randomuser.me/api/portraits/men/5.jpg',
+            'https://randomuser.me/api/portraits/men/5.jpg',
+            'https://randomuser.me/api/portraits/men/5.jpg',
+            'https://randomuser.me/api/portraits/men/5.jpg',
+            'https://randomuser.me/api/portraits/men/5.jpg',
+            'https://randomuser.me/api/portraits/men/5.jpg',
+            'https://randomuser.me/api/portraits/men/5.jpg'
+        ],
+        attendeesCount: 15,
+        image: 'https://randomuser.me/api/portraits/men/1.jpg',
+        title: 'Lunch',
+        start: new Date(now.getFullYear(), now.getMonth(), now.getDate(), 13, 0),
+        end: new Date(now.getFullYear(), now.getMonth(), now.getDate(), 14, 0),
+        desc: 'Lunch with the team'
+    },
+    {
+        id: 7,
+        name: 'Eleanor',
+        role: 'Coach',
+        meetingId: '226327',
+        password: '5L33MK8',
+        topic: 'Review of new project initiatives and deadlines.',
+        dateTime: 'Mar 3, 2024 14:30',
+        timeZone: 'Central Standard Time (GMT-6)',
+        attendees: [
+            'https://randomuser.me/api/portraits/women/10.jpg',
+            'https://randomuser.me/api/portraits/women/11.jpg',
+            'https://randomuser.me/api/portraits/women/12.jpg',
+            'https://randomuser.me/api/portraits/women/13.jpg'
+        ],
+        attendeesCount: 12,
+        image: 'https://randomuser.me/api/portraits/women/1.jpg',
+        title: 'Design Review',
+        start: new Date(now.getFullYear(), now.getMonth(), now.getDate() + 2, 15, 0),
+        end: new Date(now.getFullYear(), now.getMonth(), now.getDate() + 2, 17, 0),
+        desc: 'Review of latest drafts with the design team'
+    },
+    {
+        id: 8,
+        name: 'Leonard',
+        role: 'Coach',
+        meetingId: '226328',
+        password: '6N44NP9',
+        topic: 'Discussion on quarterly targets and performance metrics.',
+        dateTime: 'Apr 4, 2024 11:00',
+        timeZone: 'Central Standard Time (GMT-6)',
+        attendees: [
+            'https://randomuser.me/api/portraits/men/15.jpg',
+            'https://randomuser.me/api/portraits/men/16.jpg',
+            'https://randomuser.me/api/portraits/men/17.jpg',
+            'https://randomuser.me/api/portraits/men/18.jpg',
+            'https://randomuser.me/api/portraits/men/19.jpg'
+        ],
+        attendeesCount: 18,
+        image: 'https://randomuser.me/api/portraits/men/2.jpg',
+        title: 'Workshop',
+        start: new Date(now.getFullYear(), now.getMonth(), now.getDate() + 3, 11, 0),
+        end: new Date(now.getFullYear(), now.getMonth(), now.getDate() + 3, 14, 30),
+        desc: 'Interactive workshop on user experience fundamentals'
+    },
+    {
+        id: 9,
+        name: 'Bianca',
+        role: 'Coach',
+        meetingId: '226329',
+        password: '7O55OQ0',
+        topic: 'Strategies for improving team collaboration and communication.',
+        dateTime: 'May 5, 2024 09:15',
+        timeZone: 'Central Standard Time (GMT-6)',
+        attendees: [
+            'https://randomuser.me/api/portraits/women/20.jpg',
+            'https://randomuser.me/api/portraits/women/21.jpg',
+            'https://randomuser.me/api/portraits/women/22.jpg'
+        ],
+        attendeesCount: 10,
+        image: 'https://randomuser.me/api/portraits/women/2.jpg',
+        title: 'Team Outing',
+        start: new Date(now.getFullYear(), now.getMonth(), now.getDate() + 10),
+        end: new Date(now.getFullYear(), now.getMonth(), now.getDate() + 10),
+        desc: 'Team building activities'
+    },
+    {
+        id: 10,
+        name: 'Jacob',
+        role: 'Coach',
+        meetingId: '226330',
+        password: '8P66PR1',
+        topic: 'Overview of new company policies and updates.',
+        dateTime: 'Jun 6, 2024 13:45',
+        timeZone: 'Central Standard Time (GMT-6)',
+        attendees: [
+            'https://randomuser.me/api/portraits/men/25.jpg',
+            'https://randomuser.me/api/portraits/men/26.jpg',
+            'https://randomuser.me/api/portraits/men/27.jpg'
+        ],
+        attendeesCount: 20,
+        image: 'https://randomuser.me/api/portraits/men/3.jpg',
+        title: "Today's Event",
+        start: new Date(now.getFullYear(), now.getMonth(), now.getDate(), now.getHours() + 1),
+        end: new Date(now.getFullYear(), now.getMonth(), now.getDate(), now.getHours() + 3),
+        desc: 'Important'
+    },
+    {
+        id: 11,
+        name: 'Sophia',
+        role: 'Coach',
+        meetingId: '226331',
+        password: '9Q77QS2',
+        topic: 'Review of marketing strategies for the upcoming quarter.',
+        dateTime: 'Jul 7, 2024 15:00',
+        timeZone: 'Central Standard Time (GMT-6)',
+        attendees: [
+            'https://randomuser.me/api/portraits/women/30.jpg',
+            'https://randomuser.me/api/portraits/women/31.jpg',
+            'https://randomuser.me/api/portraits/women/32.jpg',
+            'https://randomuser.me/api/portraits/women/33.jpg'
+        ],
+        attendeesCount: 25,
+        image: 'https://randomuser.me/api/portraits/women/3.jpg',
+        title: "Today's Event",
+        start: new Date(now.getFullYear(), now.getMonth(), now.getDate(), now.getHours() + 1),
+        end: new Date(now.getFullYear(), now.getMonth(), now.getDate(), now.getHours() + 3),
+        desc: 'Important'
+    }
+];
+
 // Export the updated events array to be used in your calendar component

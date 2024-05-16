@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import './AvatarGroup.scss';
 
-const AvatarGroup = ({ count, attendees }) => {
+const AvatarGroup = ({ count, attendees, handleCountClick }) => {
     return (
         <div className="avatarGroup">
             <div className="avatarGroup_wrapper">
@@ -12,7 +12,7 @@ const AvatarGroup = ({ count, attendees }) => {
                         </div>
                     );
                 })}
-                <div className="avatarGroup_wrapper-avatar">
+                <div className="avatarGroup_wrapper-avatar" onClick={handleCountClick}>
                     <span>{count}</span>
                 </div>
             </div>
@@ -22,7 +22,8 @@ const AvatarGroup = ({ count, attendees }) => {
 
 AvatarGroup.propTypes = {
     count: PropTypes.string.isRequired,
-    attendees: PropTypes.array.isRequired
+    attendees: PropTypes.array.isRequired,
+    handleCountClick: PropTypes.func
 };
 
 export default AvatarGroup;

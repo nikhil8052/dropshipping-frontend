@@ -294,6 +294,12 @@
         .profile-icon {
             display: flex;
             gap: 10px;
+            img {
+                width: 30px;
+                height: 30px;
+                border-radius: 50%;
+                object-fit: cover;
+            }
         }
         img {
             width: 30px;
@@ -392,4 +398,120 @@
         padding: 0px 20px;
         text-align: left;
     }
+
+    // Calender Styles
+    .rbc-month-view {
+        border: none;
+    }
+
+    /* Custom Calendar Styles */
+    .rbc-calendar {
+        font-family: Inter;
+        border: none !important;
+    }
+
+    .rbc-header {
+        border: none;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0.5rem 0rem 1rem 0;
+        font-family: Inter;
+        font-size: 14px;
+        font-weight: 500;
+        line-height: 20px;
+        text-align: center;
+        color: rgba(32, 32, 32, 1);
+        .rbc-header {
+            border-bottom: 3px solid rgba(245, 246, 247, 1);
+            border-right: none !important;
+        }
+    }
+
+    .rbc-today {
+        background-color: inherit !important;
+    }
+
+    // Two divs with same classes
+
+    .rbc-row-segment > div.rbc-event {
+        color: rgba(32, 32, 32, 1) !important;
+        border-radius: 59px !important;
+        text-align: start !important;
+        background: transparent !important;
+    }
+    .rbc-row-segment .rbc-event {
+        color: rgba(32, 32, 32, 1) !important;
+        border-radius: 59px !important;
+        text-align: center !important;
+    }
+
+    .active-event {
+        background-color: rgba(157, 236, 175, 1) !important;
+        color: rgba(32, 32, 32, 1) !important;
+        border: 1px solid rgb(93, 219, 122) !important;
+        border-radius: 59px !important;
+        text-align: center;
+    }
+    .future-event {
+        background: rgba(240, 248, 255, 1) !important;
+        color: rgba(32, 32, 32, 1) !important;
+        border: 1px solid rgb(99, 167, 231);
+        border-radius: 59px !important;
+        text-align: center;
+    }
+
+    .rbc-event-content {
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+    }
+
+    // date cell
+    .rbc-date-cell {
+        display: none;
+    }
+
+    // ToolBar o calendar
+    .rbc-toolbar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 10px;
+    }
+
+    .rbc-btn-group button,
+    .dropdown button {
+        margin: 0 5px;
+    }
+
+    // Events Modal
+    .event-listing-modal {
+        .avatar {
+            background-color: #007bff !important;
+            color: white;
+            font-weight: bold;
+            padding: 10px;
+            border-radius: 50%;
+            font-size: 20px;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .meeting-details {
+            font-size: 0.8rem;
+            text-align: right;
+            color: #666;
+        }
+    }
+}
+.avatar {
+    width: 40px;
+    height: 40px;
+    margin-right: 0.625rem;
+    border-radius: 50% !important;
+    object-fit: cover;
 }
