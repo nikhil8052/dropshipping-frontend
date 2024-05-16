@@ -6,6 +6,7 @@ const Coaches = lazy(() => import('@pages/Dashboard/Coaches/Coaches'));
 const NewCoach = lazy(() => import('@pages/Dashboard/Coaches/NewCoach/NewCoach'));
 const NewStudent = lazy(() => import('@pages/Dashboard/Students/NewStudent/NewStudent'));
 const Students = lazy(() => import('@pages/Dashboard/Students/Students'));
+const EnrolledCourseDetail = lazy(() => import('@pages/Dashboard/Courses/EnrolledCourseDetail'));
 const Courses = lazy(() => import('@pages/Dashboard/Courses/Courses'));
 const Events = lazy(() => import('@pages/Dashboard/Events/Events'));
 const EventsListing = lazy(() => import('@pages/Dashboard/Events/EventsListing/EventsListing'));
@@ -263,6 +264,20 @@ export const studentRoutes = [
         exact: true,
         name: 'Courses',
         Component: Courses,
+        access: 'student'
+    },
+    {
+        path: 'courses/details',
+        exact: true,
+        name: 'Courses',
+        Component: CourseDetail,
+        access: 'student'
+    },
+    {
+        path: 'courses/enrolled-course',
+        exact: true,
+        name: 'Courses',
+        Component: EnrolledCourseDetail,
         access: 'student'
     },
     {

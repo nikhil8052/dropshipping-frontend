@@ -183,7 +183,8 @@ export const studentSidebarItems = [
         id: 2,
         name: 'Courses',
         iconLight: courses, // Replace with your icon
-        linkTo: '/student/courses'
+        linkTo: '/student/courses',
+        pathCombinations: ['/student/courses', '/student/courses/details']
     },
     {
         id: 3,

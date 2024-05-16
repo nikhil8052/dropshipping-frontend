@@ -11,7 +11,7 @@ import { useSelector } from 'react-redux';
 
 const Courses = () => {
     const [search, setSearch] = useState('');
-    const [selectedEvent, setSelectedEvent] = useState('All courses');
+    const [selectedEvent, setSelectedEvent] = useState('Your Courses');
     const [yourCourses, setYourCourses] = useState(false);
     const navigate = useNavigate();
     const userInfo = useSelector((state) => state?.auth?.userInfo);
@@ -91,9 +91,9 @@ const Courses = () => {
     const handleEventSelect = (eventKey, course) => {
         setSelectedEvent(course);
         if (course === 'Your Courses') {
-            setYourCourses(true);
-        } else {
             setYourCourses(false);
+        } else {
+            setYourCourses(true);
         }
     };
 
@@ -165,7 +165,8 @@ const Courses = () => {
                                             <CourseCard
                                                 {...cousre}
                                                 archive={false}
-                                                enroll={yourCourses ? true : false}
+                                                enroll={yourCourses ? false : true}
+                                                role={role}
                                             />
                                         )}
                                     </div>
