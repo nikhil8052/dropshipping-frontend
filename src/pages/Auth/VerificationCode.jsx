@@ -1,6 +1,6 @@
 import { useSelector, useDispatch } from 'react-redux';
 import { Button, Col, Row, Spinner } from 'react-bootstrap';
-import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import Input from '@components/Input/Input';
 import * as Yup from 'yup';
 import { Form as FormikForm, Formik } from 'formik';
@@ -10,18 +10,20 @@ import LoginLeftSec from './LoginLeftSec';
 import Footer from './Footer';
 const VerificationCode = () => {
     const dispatch = useDispatch();
+    const navigate = useNavigate();
     const { loading } = useSelector((state) => state?.auth);
     const inititialValues = {
-        email: ''
+        otp: ''
     };
 
     const validationSchema = Yup.object().shape({
-        email: Yup.string().email('Please enter a valid email').required('Email is required')
+        otp: Yup.number().min(0).required('Please enter a valid OTP')
     });
 
     const handleSubmit = async (values, { setSubmitting }) => {
         try {
             dispatch(loginWithoutAPI(values));
+            navigate('/reset-password');
             setSubmitting(false);
         } catch (error) {
             setSubmitting(false);
@@ -44,23 +46,22 @@ const VerificationCode = () => {
                                     initialValues={inititialValues}
                                     validationSchema={validationSchema}
                                     onSubmit={handleSubmit}
+                                    enableReinitialize
                                 >
                                     {({ isSubmitting }) => (
                                         <FormikForm>
                                             <div className="verification-input">
                                                 <Input
-                                                    name="Verification Code"
+                                                    name="otp"
                                                     placeholder="E.g 225465822"
                                                     label="Verification Code"
                                                     type="text"
                                                 />
                                                 <span className="resend-code">Resend code</span>
                                             </div>
-                                            <Link className="auth-link ms-auto" to="/reset-password">
-                                                <Button className="auth-login-button" type="submit" disabled={loading}>
-                                                    {isSubmitting ? <Spinner animation="border" size="sm" /> : 'Veirfy'}
-                                                </Button>
-                                            </Link>
+                                            <Button className="auth-login-button" type="submit" disabled={loading}>
+                                                {isSubmitting ? <Spinner animation="border" size="sm" /> : 'Veirfy'}
+                                            </Button>
                                         </FormikForm>
                                     )}
                                 </Formik>

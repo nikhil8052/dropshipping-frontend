@@ -31,7 +31,7 @@ const AllStudents = () => {
 
     const [selectedOption, setSelectedOption] = useState('All');
     const userInfo = useSelector((state) => state?.auth?.userInfo);
-    const role = userInfo.role;
+    const role = userInfo?.role;
     const isAllStudentPage = location.pathname === '/admin/courses/all-students' || '/coach/courses/all-students';
 
     useEffect(() => {

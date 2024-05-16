@@ -9,7 +9,7 @@ import CaretLeft from '@icons/CaretLeft.svg';
 
 const CourseDetail = () => {
     const userInfo = useSelector((state) => state?.auth?.userInfo);
-    const role = userInfo.role;
+    const role = userInfo?.role;
 
     const location = useLocation();
     const isDetailPage = location.pathname === '/admin/courses/details' || '/coach/courses/details';

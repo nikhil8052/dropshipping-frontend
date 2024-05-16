@@ -1,41 +1,34 @@
-import { useSelector, useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { Button, Col, Row, Spinner } from 'react-bootstrap';
-import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import eyeIcon from '../../assets/icons/Eye.svg';
 import Input from '@components/Input/Input';
 import * as Yup from 'yup';
 import { Form as FormikForm, Formik } from 'formik';
 import { Helmet } from 'react-helmet';
-import { loginWithoutAPI } from '@redux/auth/auth_slice';
 import './auth.scss';
 import LoginLeftSec from './LoginLeftSec';
 import Footer from './Footer';
 import { useState } from 'react';
 
 const ResetPassword = () => {
-    const dispatch = useDispatch();
+    const navigate = useNavigate();
     const { loading } = useSelector((state) => state?.auth);
     const [showPassword, setShowPassword] = useState(false); // State for password visibility
     const inititialValues = {
-        password: ''
+        newPassword: '',
+        confirmPassword: ''
     };
-
     const validationSchema = Yup.object().shape({
-        password: Yup.string().required('Password is required')
+        newPassword: Yup.string().required('New Password is required'),
+        confirmPassword: Yup.string()
+            .required('Confirm Password is required')
+            .oneOf([Yup.ref('newPassword'), null], 'Passwords must match')
     });
 
-    const handleSubmit = async (values, { setSubmitting }) => {
+    const handleSubmit = async ({ setSubmitting }) => {
         try {
-            dispatch(
-                loginWithoutAPI({
-                    ...values,
-                    role: values.email?.toLowerCase().includes('admin')
-                        ? 'admin'
-                        : values.email?.toLowerCase().includes('coach')
-                          ? 'coach'
-                          : 'student'
-                })
-            );
+            navigate('/login');
             setSubmitting(false);
         } catch (error) {
             setSubmitting(false);
@@ -65,12 +58,13 @@ const ResetPassword = () => {
                                     initialValues={inititialValues}
                                     validationSchema={validationSchema}
                                     onSubmit={handleSubmit}
+                                    enableReinitialize
                                 >
                                     {({ isSubmitting }) => (
                                         <FormikForm>
                                             <div className="input-password-container">
                                                 <Input
-                                                    name="Newpassword"
+                                                    name="newPassword"
                                                     placeholder="8+  character"
                                                     label="New Password"
                                                     type={showPassword ? 'text' : 'password'}
@@ -84,7 +78,7 @@ const ResetPassword = () => {
                                             </div>
                                             <div className="input-password-container">
                                                 <Input
-                                                    name="ConfirmPassword"
+                                                    name="confirmPassword"
                                                     placeholder="password"
                                                     label="Confirm Password"
                                                     type={showPassword ? 'text' : 'password'}
@@ -96,15 +90,14 @@ const ResetPassword = () => {
                                                     onClick={togglePassword}
                                                 />
                                             </div>
-                                            <Link to="/login">
-                                                <Button className="auth-login-button" type="submit" disabled={loading}>
-                                                    {isSubmitting ? (
-                                                        <Spinner animation="border" size="sm" />
-                                                    ) : (
-                                                        'Update Password'
-                                                    )}
-                                                </Button>
-                                            </Link>
+
+                                            <Button className="auth-login-button" type="submit" disabled={loading}>
+                                                {isSubmitting ? (
+                                                    <Spinner animation="border" size="sm" />
+                                                ) : (
+                                                    'Update Password'
+                                                )}
+                                            </Button>
                                         </FormikForm>
                                     )}
                                 </Formik>

@@ -15,7 +15,7 @@ const Courses = () => {
     const [yourCourses, setYourCourses] = useState(false);
     const navigate = useNavigate();
     const userInfo = useSelector((state) => state?.auth?.userInfo);
-    const role = userInfo.role;
+    const role = userInfo?.role;
     const onFilterTextChange = (event) => {
         setSearch(event.target.value);
     };
