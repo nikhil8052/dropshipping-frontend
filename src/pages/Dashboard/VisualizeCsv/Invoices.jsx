@@ -293,7 +293,7 @@ const Invoices = () => {
                                 </div>
                             </Col>
                             <Col md={12} lg={6} xl={6} xxl={3}>
-                                <Button className="add-button w-100" onClick={handleUploadClick}>
+                                <Button className="add-button w-100">
                                     <span className="me-2">Export</span>
                                     <img src={pdfExport} alt="" />
                                 </Button>

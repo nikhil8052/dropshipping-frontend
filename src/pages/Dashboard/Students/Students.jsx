@@ -63,11 +63,11 @@ const Students = () => {
 
     const handleCreateClick = () => {
         // Handle create button click event here
-        navigate('/admin/students/new');
+        navigate(`/${role}/students/new`);
     };
     const handleEditClick = (studentId) => {
         // Handle edit action here
-        navigate('/admin/students/edit', {
+        navigate(`/${role}/students/edit`, {
             state: { studentId }
         });
     };
@@ -355,7 +355,7 @@ const Students = () => {
                                             eventKey={coach.id}
                                             className="my-1 ms-2 w-100"
                                         >
-                                            <img src={coach.avatarUrl} className="avatar" alt={coach.name} />
+                                            <img src={coach.avatarUrl} className="avatar-student" alt={coach.name} />
                                             <span className="coach-name">{coach.name}</span>
                                         </Dropdown.Item>
                                     ))}

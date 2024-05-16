@@ -14,10 +14,13 @@ import eyeIcon from '@icons/basil_eye-solid.svg';
 import add from '@icons/add_white.svg';
 import { eventsDummyData } from '../../../data/data';
 import { useNavigate } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 
 const Events = () => {
     const [showDeleteModal, setShowDeleteModal] = useState(false);
     const [selectedRowId, setSelectedRowId] = useState(null);
+    const { userInfo } = useSelector((state) => state?.auth);
+    const role = userInfo?.role;
     const [expanded, setExpanded] = useState(false);
     const [studentModal, setStudentModal] = useState({
         show: false,
@@ -62,15 +65,12 @@ const Events = () => {
 
     const handleCreateClick = () => {
         // Handle create button click event here
-        navigate('/admin/events/new');
+        navigate(`/${role}/events/new`);
     };
 
-    const handleEditClick = () => {
+    const handleEditClick = (id) => {
         // Handle edit action here
-        navigate('/admin/events/edit');
-    };
-
-    const handleDeleteClick = (id) => {
+        navigate(`/${role}/events/edit`);
         // Handle delete action here
         setSelectedRowId(id);
         setShowDeleteModal(true);
@@ -78,7 +78,7 @@ const Events = () => {
 
     const handleViewClick = () => {
         // Handle delete action here
-        navigate('/admin/events/details');
+        navigate(`/${role}/events/details`);
     };
     const handleCloseModal = () => {
         resetProductModal();
@@ -115,6 +115,12 @@ const Events = () => {
 
     const handleEventSelect = (eventKey, coach) => {
         setSelectedEvent(coach);
+    };
+
+    const handleDeleteClick = (id) => {
+        // Handle delete action here
+        setSelectedRowId(id);
+        setShowDeleteModal(true);
     };
 
     /*eslint-disable */
@@ -234,7 +240,6 @@ const Events = () => {
             cellClass: ['d-flex', 'align-items-center']
         }
     ];
-
     return (
         <div className="events-page">
             <Helmet>

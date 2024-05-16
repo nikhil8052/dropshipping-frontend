@@ -8,8 +8,11 @@ import dotOptions from '@icons/dot-options.svg';
 import { trimLongText } from '../../../utils/common';
 
 import { useLocation, useNavigate } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 
 const EventDetails = () => {
+    const { userInfo } = useSelector((state) => state?.auth);
+    const role = userInfo?.role;
     const location = useLocation();
     const eventId = location.state?.eventId;
     const navigate = useNavigate();
@@ -25,7 +28,7 @@ const EventDetails = () => {
         <div className="event-details-section">
             <div className="new-coach-page-wrapper">
                 <div className="title-top">
-                    <span onClick={() => navigate('/admin/events')} style={{ cursor: 'pointer' }}>
+                    <span onClick={() => navigate(`/${role}/events`)} style={{ cursor: 'pointer' }}>
                         Events <img src={CaretRight} alt=">" />
                     </span>{' '}
                     {eventId ? 'Event Details' : 'Create New Event'}
@@ -89,7 +92,7 @@ const EventDetails = () => {
                         </div>
                     </div>
                     <div className="event-detail-footer">
-                        <button type="button" className="edit">
+                        <button type="button" className="edit" onClick={() => navigate(`/${role}/events/edit`)}>
                             Edit
                         </button>
                         <button type="button" className="join">

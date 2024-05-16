@@ -193,6 +193,20 @@ export const coachesRoutes = [
         access: 'coach'
     },
     {
+        path: 'students/edit',
+        exact: true,
+        name: 'Students',
+        Component: NewStudent,
+        access: 'coach'
+    },
+    {
+        path: 'students/new',
+        exact: true,
+        name: 'Students',
+        Component: NewStudent,
+        access: 'coach'
+    },
+    {
         path: 'courses/view-progress',
         exact: true,
         name: 'Courses',
@@ -211,6 +225,27 @@ export const coachesRoutes = [
         exact: true,
         name: 'Settings',
         Component: Settings,
+        access: 'coach'
+    },
+    {
+        path: 'events/new',
+        exact: true,
+        name: 'Events',
+        Component: NewEvent,
+        access: 'coach'
+    },
+    {
+        path: 'events/edit',
+        exact: true,
+        name: 'Events',
+        Component: NewEvent,
+        access: 'coach'
+    },
+    {
+        path: 'events/details',
+        exact: true,
+        name: 'Events',
+        Component: EventDetails,
         access: 'coach'
     }
 ];

@@ -16,7 +16,6 @@ const CourseCard = ({ img, title, detail, lectureNo, archive, enroll, role }) =>
                         <p className="lecture-No">{lectureNo}</p>
                     </div>
                 </Link>
-
                 {archive && (
                     <div className="toggle-archive">
                         <Form>

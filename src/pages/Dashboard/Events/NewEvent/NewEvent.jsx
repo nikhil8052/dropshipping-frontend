@@ -9,12 +9,15 @@ import 'react-quill/dist/quill.snow.css';
 import { coachDummyData } from '../../../../data/data';
 import toast from 'react-hot-toast';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 
 const NewEvent = () => {
     const inputRef = useRef();
     const [eventThumbnail, setEventThumbnail] = useState(null);
     const location = useLocation();
     const eventId = location.state?.eventId;
+    const { userInfo } = useSelector((state) => state?.auth);
+    const role = userInfo?.role;
     const navigate = useNavigate();
     const [eventData, setEventData] = useState({
         topic: '',
@@ -241,7 +244,7 @@ const NewEvent = () => {
                                         <div className="mt-3 d-flex justify-content-end gap-3">
                                             <Button
                                                 type="button"
-                                                onClick={() => navigate('/admin/events')}
+                                                onClick={() => navigate(`/${role}/events`)}
                                                 className="cancel-btn"
                                                 disabled={isSubmitting}
                                             >
