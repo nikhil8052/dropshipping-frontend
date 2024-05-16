@@ -3,9 +3,9 @@ import './MeetingCard.scss';
 import ethereum from '@icons/icons8-ethereum 1.svg';
 import AvatarGroup from '../AvatarGroup/AvatarGroup';
 
-const MeetingCard = ({ meeting }) => {
+const MeetingCard = ({ meeting, handleCardClick }) => {
     return (
-        <Card className="card-custom">
+        <Card className="card-custom" onClick={() => handleCardClick(meeting)}>
             <Card.Header className="card-header-custom">
                 <Image src={meeting.image} rounded className="image-custom" />
                 <div>

@@ -1,6 +1,9 @@
 import { Button, Dropdown } from 'react-bootstrap';
-
+import calendar from '@icons/calendar.svg';
+import { useNavigate } from 'react-router-dom';
 const CustomToolbar = (toolbar) => {
+    const navigate = useNavigate();
+
     const goToBack = () => {
         toolbar.onNavigate('PREV');
     };
@@ -26,10 +29,17 @@ const CustomToolbar = (toolbar) => {
             </span>
             <span className="rbc-toolbar-right">
                 <Dropdown onSelect={handleViewChange}>
+                    {toolbar.googleCalendar && (
+                        <>
+                            <Button onClick={() => navigate('/student/events/listing')}>See All Events</Button>
+                            <Button onClick={toolbar.handleGoogleCalendarClick}>
+                                <img src={calendar} alt="calendar" className="me-2" /> Google Calendar
+                            </Button>
+                        </>
+                    )}
                     <Dropdown.Toggle variant="success" id="dropdown-basic">
                         {toolbar.label}
                     </Dropdown.Toggle>
-
                     <Dropdown.Menu>
                         <Dropdown.Item eventKey="month">Month</Dropdown.Item>
                         <Dropdown.Item eventKey="week">Week</Dropdown.Item>

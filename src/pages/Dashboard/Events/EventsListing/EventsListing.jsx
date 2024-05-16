@@ -5,12 +5,15 @@ import calendar from '@icons/calendar.svg';
 import { meetings } from '../../../../data/data';
 import MeetingCard from '@components/MeetingCard/MeetingCard';
 import Pagination from '@components/Pagination/Pagination';
+import { useNavigate } from 'react-router-dom';
 
 const EventsListing = () => {
     const [selectedOption, setSelectedOption] = useState('All Events');
     const options = ['All Events', 'Upcoming Events', 'Previous Events'];
     const [currentPage, setCurrentPage] = useState(1);
     const [eventsData, setEventData] = useState([]);
+    const [selectedEvent, setSelectedEvent] = useState(null);
+    const navigate = useNavigate();
 
     const handleOptionChange = (option) => {
         setSelectedOption(option);
@@ -33,6 +36,17 @@ const EventsListing = () => {
     const indexOfFirstItem = indexOfLastItem - itemsPerPage;
     const currentItems = eventsData.slice(indexOfFirstItem, indexOfLastItem);
 
+    const handleCardClick = (data) => {
+        setSelectedEvent(data);
+    };
+
+    useEffect(() => {
+        if (selectedEvent?.id) {
+            // Redirect to event details page
+            navigate('/student/events/detail', { state: { event: selectedEvent } });
+        }
+    }, [selectedEvent?.id]);
+
     return (
         <div className="events-listing-wrapper">
             <Row className="mb-3 justify-content-between">
@@ -46,7 +60,6 @@ const EventsListing = () => {
                             type="text"
                             name="Search"
                             label="Search"
-                            // onChange={onFilterTextChange}
                             placeholder="Search"
                         />
                     </InputGroup>
@@ -80,7 +93,7 @@ const EventsListing = () => {
             <Row>
                 {currentItems.map((meeting) => (
                     <Col key={meeting.id} xs={12} sm={6} md={12} lg={6} xl={4} className="mb-4">
-                        <MeetingCard meeting={meeting} />
+                        <MeetingCard meeting={meeting} handleCardClick={handleCardClick} />
                     </Col>
                 ))}
             </Row>
