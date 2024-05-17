@@ -70,15 +70,44 @@ const Events = () => {
 
     const handleEditClick = (id) => {
         // Handle edit action here
-        navigate(`/${role}/events/edit`);
+        navigate(`/${role}/events/edit`, {
+            state: {
+                eventId: id
+            }
+        });
         // Handle delete action here
         setSelectedRowId(id);
         setShowDeleteModal(true);
     };
 
-    const handleViewClick = () => {
+    const handleViewClick = (id) => {
         // Handle delete action here
-        navigate(`/${role}/events/details`);
+        // navigate(`/${role}/events/details`);
+        navigate(`/${role}/events/detail`, {
+            state: {
+                event: {
+                    id,
+                    name: 'Tony Serna',
+                    title: 'Coach',
+                    meetingId: '226326',
+                    password: '4K22MJ7',
+                    topic: 'Detailed meeting about the new course descriptions, their time frame.',
+                    dateTime: 'Feb 2, 2024 19:28',
+                    timeZone: 'Central Standard Time (GMT-6)',
+                    attendees: [
+                        'https://randomuser.me/api/portraits/men/5.jpg',
+                        'https://randomuser.me/api/portraits/men/5.jpg',
+                        'https://randomuser.me/api/portraits/men/5.jpg',
+                        'https://randomuser.me/api/portraits/men/5.jpg',
+                        'https://randomuser.me/api/portraits/men/5.jpg'
+                    ],
+                    attendeesCount: 15,
+                    image: 'https://randomuser.me/api/portraits/men/1.jpg'
+                },
+                role
+            }
+        });
+        // navigate(`/student/events/detail`);
     };
     const handleCloseModal = () => {
         resetProductModal();
@@ -217,6 +246,17 @@ const Events = () => {
         {
             headerName: 'Date & Time',
             field: 'dateTime',
+            filter: 'agSetColumnFilter',
+            sortable: true,
+            unSortIcon: true,
+            cellRenderer: TextExpand,
+            wrapText: true,
+            autoHeight: true,
+            resizable: false
+        },
+        {
+            headerName: 'Event Host',
+            field: 'eventHost',
             filter: 'agSetColumnFilter',
             sortable: true,
             unSortIcon: true,

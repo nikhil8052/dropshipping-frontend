@@ -13,7 +13,7 @@ import ProductDetail from './ProductDetail';
 import { FileUploader } from 'react-drag-drop-files';
 const fileTypes = ['csv'];
 
-const StudentsTrainingProduct = () => {
+const StudentsTrainingProduct = ({ studentId }) => {
     const [showDeleteModal, setShowDeleteModal] = useState(false);
     const [selectedRowId, setSelectedRowId] = useState(null);
     const [loading, setLoading] = useState(false);
@@ -277,7 +277,7 @@ const StudentsTrainingProduct = () => {
                         onRowClicked={handleRowClick}
                         loading={loading}
                         children={
-                            <Row className="mb-3 g-2">
+                            <Row className={`mb-3 g-2 ${studentId ? 'justify-content-end' : ''}`}>
                                 <Col md={12} lg={6} xl={6} xxl={3}>
                                     <div className=" d-flex justify-content-even align-items-center from-filter ">
                                         <span className="me-2"> From: </span>
@@ -290,18 +290,22 @@ const StudentsTrainingProduct = () => {
                                         <input className="field-control" type="date" name="" id="" />
                                     </div>
                                 </Col>
-                                <Col md={12} lg={6} xl={6} xxl={3}>
-                                    <Button className="add-button w-100">
-                                        <span className="me-2">Export</span>
-                                        <img src={pdfExport} alt="" />
-                                    </Button>
-                                </Col>
-                                <Col md={12} lg={6} xl={6} xxl={3}>
-                                    <Button className="add-button w-100" onClick={handleUploadClick}>
-                                        <span className="me-2">Upload File</span>
-                                        <img src={uploadSimple} alt="" />
-                                    </Button>
-                                </Col>
+                                {!studentId && (
+                                    <>
+                                        <Col md={12} lg={6} xl={6} xxl={3}>
+                                            <Button className="add-button w-100">
+                                                <span className="me-2">Export</span>
+                                                <img src={pdfExport} alt="" />
+                                            </Button>
+                                        </Col>
+                                        <Col md={12} lg={6} xl={6} xxl={3}>
+                                            <Button className="add-button w-100" onClick={handleUploadClick}>
+                                                <span className="me-2">Upload File</span>
+                                                <img src={uploadSimple} alt="" />
+                                            </Button>
+                                        </Col>
+                                    </>
+                                )}
                             </Row>
                         }
                     />

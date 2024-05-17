@@ -1,8 +1,11 @@
+import eventImg from '../assets/images/Event-Image.svg';
+
 export const studentDummyData = [
     {
         id: 1,
         name: 'John Doe',
         email: 'john.doe@example.com',
+        avatarUrl: 'https://randomuser.me/api/portraits/men/1.jpg',
         courses: [
             {
                 id: 101,
@@ -15,7 +18,7 @@ export const studentDummyData = [
                 grade: 'B'
             }
         ],
-        feesstatus: 'Paid',
+        feeStatus: 'Paid',
         isActive: false,
         coursesRoadmap: [
             { id: 1, title: 'Meta Data Engineering', progress: 'Completed' },
@@ -29,6 +32,7 @@ export const studentDummyData = [
         id: 2,
         name: 'Jane Smith',
         email: 'jane.smith@example.com',
+        avatarUrl: 'https://randomuser.me/api/portraits/women/2.jpg',
         courses: [
             {
                 id: 103,
@@ -41,7 +45,7 @@ export const studentDummyData = [
                 grade: 'B+'
             }
         ],
-        feesstatus: 'Unpaid',
+        feeStatus: 'Unpaid',
         isActive: false,
         coursesRoadmap: [
             { id: 1, title: 'Meta Data Engineering', progress: 'Completed' },
@@ -55,6 +59,7 @@ export const studentDummyData = [
         id: 3,
         name: 'Alice Johnson',
         email: 'alice.johnson@example.com',
+        avatarUrl: 'https://randomuser.me/api/portraits/men/3.jpg',
         courses: [
             {
                 id: 105,
@@ -67,7 +72,7 @@ export const studentDummyData = [
                 grade: 'B-'
             }
         ],
-        feesstatus: 'Unpaid',
+        feeStatus: 'Unpaid',
         isActive: false,
         coursesRoadmap: [
             { id: 1, title: 'Meta Data Engineering', progress: 'Completed' },
@@ -82,6 +87,7 @@ export const studentDummyData = [
         id: 4,
         name: 'Michael Brown',
         email: 'michael.brown@example.com',
+        avatarUrl: 'https://randomuser.me/api/portraits/women/4.jpg',
         courses: [
             {
                 id: 107,
@@ -94,7 +100,7 @@ export const studentDummyData = [
                 grade: 'A-'
             }
         ],
-        feesstatus: 'Paid',
+        feeStatus: 'Paid',
         isActive: false,
         coursesRoadmap: [
             { id: 1, title: 'Meta Data Engineering', progress: 'Completed' },
@@ -108,6 +114,7 @@ export const studentDummyData = [
         id: 5,
         name: 'Emily Davis',
         email: 'emily.davis@example.com',
+        avatarUrl: 'https://randomuser.me/api/portraits/men/5.jpg',
         courses: [
             {
                 id: 109,
@@ -120,7 +127,7 @@ export const studentDummyData = [
                 grade: 'A'
             }
         ],
-        feesstatus: 'Unpaid',
+        feeStatus: 'Unpaid',
         isActive: false,
         coursesRoadmap: [
             { id: 1, title: 'Meta Data Engineering', progress: 'Completed' },
@@ -134,6 +141,7 @@ export const studentDummyData = [
         id: 6,
         name: 'David Wilson',
         email: 'david.wilson@example.com',
+        avatarUrl: 'https://randomuser.me/api/portraits/women/6.jpg',
         courses: [
             {
                 id: 111,
@@ -146,7 +154,7 @@ export const studentDummyData = [
                 grade: 'B'
             }
         ],
-        feesstatus: 'Unpaid',
+        feeStatus: 'Unpaid',
         isActive: false,
         coursesRoadmap: [
             { id: 1, title: 'Meta Data Engineering', progress: 'Completed' },
@@ -160,6 +168,7 @@ export const studentDummyData = [
         id: 7,
         name: 'Sophia Martinez',
         email: 'sophia.martinez@example.com',
+        avatarUrl: 'https://randomuser.me/api/portraits/men/7.jpg',
         courses: [
             {
                 id: 113,
@@ -172,7 +181,7 @@ export const studentDummyData = [
                 grade: 'B+'
             }
         ],
-        feesstatus: 'Paid',
+        feeStatus: 'Paid',
         isActive: false,
         coursesRoadmap: [
             { id: 1, title: 'Meta Data Engineering', progress: 'Completed' },
@@ -186,6 +195,7 @@ export const studentDummyData = [
         id: 8,
         name: 'James Taylor',
         email: 'james.taylor@example.com',
+        avatarUrl: 'https://randomuser.me/api/portraits/women/8.jpg',
         courses: [
             {
                 id: 115,
@@ -198,7 +208,7 @@ export const studentDummyData = [
                 grade: 'A+'
             }
         ],
-        feesstatus: 'Unpaid',
+        feeStatus: 'Unpaid',
         isActive: false,
         coursesRoadmap: [
             { id: 1, title: 'Meta Data Engineering', progress: 'Completed' },
@@ -212,6 +222,7 @@ export const studentDummyData = [
         id: 9,
         name: 'Olivia Anderson',
         email: 'olivia.anderson@example.com',
+        avatarUrl: 'https://randomuser.me/api/portraits/men/9.jpg',
         courses: [
             {
                 id: 117,
@@ -224,7 +235,7 @@ export const studentDummyData = [
                 grade: 'B-'
             }
         ],
-        feesstatus: 'Unpaid',
+        feeStatus: 'Unpaid',
         isActive: false,
         coursesRoadmap: [
             { id: 1, title: 'Meta Data Engineering', progress: 'Completed' },
@@ -238,6 +249,8 @@ export const studentDummyData = [
         id: 10,
         name: 'William Garcia',
         email: 'william.garcia@example.com',
+        avatarUrl: 'https://randomuser.me/api/portraits/women/10.jpg',
+
         courses: [
             {
                 id: 119,
@@ -250,7 +263,7 @@ export const studentDummyData = [
                 grade: 'A-'
             }
         ],
-        feesstatus: 'Paid',
+        feeStatus: 'Paid',
         isActive: false,
         coursesRoadmap: [
             { id: 1, title: 'Meta Data Engineering', progress: 'Completed' },
@@ -264,6 +277,8 @@ export const studentDummyData = [
         id: 11,
         name: 'Isabella Hernandez',
         email: 'isabella.hernandez@example.com',
+        avatarUrl: 'https://randomuser.me/api/portraits/men/11.jpg',
+
         courses: [
             {
                 id: 121,
@@ -276,7 +291,7 @@ export const studentDummyData = [
                 grade: 'A-'
             }
         ],
-        feesstatus: 'Unpaid',
+        feeStatus: 'Unpaid',
         isActive: false,
         coursesRoadmap: [
             { id: 1, title: 'Meta Data Engineering', progress: 'Completed' },
@@ -290,6 +305,8 @@ export const studentDummyData = [
         id: 12,
         name: 'Ethan Wilson',
         email: 'ethan.wilson@example.com',
+        avatarUrl: 'https://randomuser.me/api/portraits/women/12.jpg',
+
         courses: [
             {
                 id: 123,
@@ -302,7 +319,7 @@ export const studentDummyData = [
                 grade: 'A'
             }
         ],
-        feesstatus: 'Paid',
+        feeStatus: 'Paid',
         isActive: false,
         coursesRoadmap: [
             { id: 1, title: 'Meta Data Engineering', progress: 'Completed' },
@@ -316,6 +333,7 @@ export const studentDummyData = [
         id: 13,
         name: 'Mia Lopez',
         email: 'mia.lopez@example.com',
+        avatarUrl: 'https://randomuser.me/api/portraits/men/13.jpg',
         courses: [
             {
                 id: 125,
@@ -328,7 +346,7 @@ export const studentDummyData = [
                 grade: 'B+'
             }
         ],
-        feesstatus: 'Unpaid',
+        feeStatus: 'Unpaid',
         isActive: false,
         coursesRoadmap: [
             { id: 1, title: 'Meta Data Engineering', progress: 'Completed' },
@@ -342,6 +360,7 @@ export const studentDummyData = [
         id: 14,
         name: 'Aiden Lee',
         email: 'aiden.lee@example.com',
+        avatarUrl: 'https://randomuser.me/api/portraits/women/14.jpg',
         courses: [
             {
                 id: 127,
@@ -354,7 +373,7 @@ export const studentDummyData = [
                 grade: 'B'
             }
         ],
-        feesstatus: 'Paid',
+        feeStatus: 'Paid',
         isActive: false,
         coursesRoadmap: [
             { id: 1, title: 'Meta Data Engineering', progress: 'Completed' },
@@ -368,6 +387,7 @@ export const studentDummyData = [
         id: 15,
         name: 'Charlotte Martinez',
         email: 'charlotte.martinez@example.com',
+        avatarUrl: 'https://randomuser.me/api/portraits/men/15.jpg',
         courses: [
             {
                 id: 129,
@@ -380,7 +400,7 @@ export const studentDummyData = [
                 grade: 'A'
             }
         ],
-        feesstatus: 'Unpaid',
+        feeStatus: 'Unpaid',
         isActive: false,
         coursesRoadmap: [
             { id: 1, title: 'Meta Data Engineering', progress: 'Completed' },
@@ -1038,7 +1058,7 @@ export const eventsDummyData = [
         actions: '',
         description: 'Regular team meeting',
         status: 'Upcoming',
-        organizer: 'John Doe'
+        eventHost: 'John Doe'
     },
     {
         id: 2,
@@ -1049,7 +1069,7 @@ export const eventsDummyData = [
         actions: '',
         description: 'Kickoff meeting for Project X',
         status: 'Upcoming',
-        organizer: 'Jane Smith'
+        eventHost: 'Jane Smith'
     },
     {
         id: 3,
@@ -1060,7 +1080,7 @@ export const eventsDummyData = [
         actions: '',
         description: 'Training session on new software',
         status: 'Upcoming',
-        organizer: 'Michael Johnson'
+        eventHost: 'Michael Johnson'
     },
     {
         id: 4,
@@ -1071,7 +1091,7 @@ export const eventsDummyData = [
         actions: '',
         description: 'Demo for ABC Corp.',
         status: 'Upcoming',
-        organizer: 'Emily Brown'
+        eventHost: 'Emily Brown'
     },
     {
         id: 5,
@@ -1082,7 +1102,7 @@ export const eventsDummyData = [
         actions: '',
         description: 'Quarterly review meeting',
         status: 'Upcoming',
-        organizer: 'David Wilson'
+        eventHost: 'David Wilson'
     },
     {
         id: 6,
@@ -1093,7 +1113,7 @@ export const eventsDummyData = [
         actions: '',
         description: 'Launch event for new product',
         status: 'Upcoming',
-        organizer: 'Sarah Taylor'
+        eventHost: 'Sarah Taylor'
     },
     {
         id: 7,
@@ -1104,7 +1124,7 @@ export const eventsDummyData = [
         actions: '',
         description: 'Weekly project review',
         status: 'Upcoming',
-        organizer: 'Robert Martinez'
+        eventHost: 'Robert Martinez'
     },
     {
         id: 8,
@@ -1115,7 +1135,7 @@ export const eventsDummyData = [
         actions: '',
         description: 'Monthly board meeting',
         status: 'Upcoming',
-        organizer: 'Olivia Jones'
+        eventHost: 'Olivia Jones'
     },
     {
         id: 9,
@@ -1126,7 +1146,7 @@ export const eventsDummyData = [
         actions: '',
         description: 'Interviews for new hires',
         status: 'Upcoming',
-        organizer: 'William Clark'
+        eventHost: 'William Clark'
     },
     {
         id: 10,
@@ -1137,7 +1157,7 @@ export const eventsDummyData = [
         actions: '',
         description: 'Workshop on communication skills',
         status: 'Upcoming',
-        organizer: 'Ava Walker'
+        eventHost: 'Ava Walker'
     },
     {
         id: 11,
@@ -1148,7 +1168,7 @@ export const eventsDummyData = [
         actions: '',
         description: 'Demo of new features',
         status: 'Upcoming',
-        organizer: 'James Hernandez'
+        eventHost: 'James Hernandez'
     },
     {
         id: 12,
@@ -1159,7 +1179,7 @@ export const eventsDummyData = [
         actions: '',
         description: 'Meeting with ABC Corp.',
         status: 'Upcoming',
-        organizer: 'Sophia Green'
+        eventHost: 'Sophia Green'
     },
     {
         id: 13,
@@ -1170,7 +1190,7 @@ export const eventsDummyData = [
         actions: '',
         description: 'Team building activities',
         status: 'Upcoming',
-        organizer: 'Ethan Adams'
+        eventHost: 'Ethan Adams'
     },
     {
         id: 14,
@@ -1181,7 +1201,7 @@ export const eventsDummyData = [
         actions: '',
         description: 'Review of Project Y',
         status: 'Upcoming',
-        organizer: 'Isabella Martinez'
+        eventHost: 'Isabella Martinez'
     },
     {
         id: 15,
@@ -1192,7 +1212,7 @@ export const eventsDummyData = [
         actions: '',
         description: 'Training session on new tool',
         status: 'Upcoming',
-        organizer: 'Mason Wright'
+        eventHost: 'Mason Wright'
     }
 ];
 
@@ -2353,3 +2373,75 @@ export const eventsAndMeetings = [
 ];
 
 // Export the updated events array to be used in your calendar component
+export const studentProducts = [
+    {
+        image: eventImg,
+        title: 'Product 1',
+        creator: 'John Max',
+        runDate: '13/02/2024',
+        status: 'Running'
+    },
+    {
+        image: eventImg,
+        title: 'Product 2',
+        creator: 'John Max',
+        runDate: '13/02/2024',
+        status: 'Running'
+    },
+    {
+        image: eventImg,
+        title: 'Product 3',
+        creator: 'John Max',
+        runDate: '13/02/2024',
+        status: 'Running'
+    },
+    {
+        image: eventImg,
+        title: 'Product 4',
+        creator: 'John Max',
+        runDate: '13/02/2024',
+        status: 'Running'
+    },
+    {
+        image: eventImg,
+        title: 'Product 5',
+        creator: 'John Max',
+        runDate: '13/02/2024',
+        status: 'Running'
+    },
+    {
+        image: eventImg,
+        title: 'Product 6',
+        creator: 'John Max',
+        runDate: '13/02/2024',
+        status: 'Running'
+    },
+    {
+        image: eventImg,
+        title: 'Product 7',
+        creator: 'John Max',
+        runDate: '13/02/2024',
+        status: 'Running'
+    },
+    {
+        image: eventImg,
+        title: 'Product 8',
+        creator: 'John Max',
+        runDate: '13/02/2024',
+        status: 'Running'
+    },
+    {
+        image: eventImg,
+        title: 'Product 9',
+        creator: 'John Max',
+        runDate: '13/02/2024',
+        status: 'Running'
+    },
+    {
+        image: eventImg,
+        title: 'Product 10',
+        creator: 'John Max',
+        runDate: '13/02/2024',
+        status: 'Running'
+    }
+];

@@ -18,6 +18,7 @@ import { useSelector } from 'react-redux';
 const Students = () => {
     const [showDeleteModal, setShowDeleteModal] = useState(false);
     const [selectedRowId, setSelectedRowId] = useState(null);
+    const [expanded, setExpanded] = useState(false);
     const [coursesModal, setCoursesModal] = useState({
         show: false,
         title: '',
@@ -159,18 +160,28 @@ const Students = () => {
                         <img src={editIcon} className="action-icon" alt="action-icon" />
                     </div>
                 </Col>
-                <Col lg={1} md={6} sm={6} xs={4} className="d-flex justify-content-center align-items-center">
-                    <div
-                        className="btn-light action-button delete-button"
-                        onClick={() => props.onDeleteClick(props.data.id)}
-                    >
-                        <img src={deleteIcon} className="action-icon" alt="action-icon" />
-                    </div>
-                </Col>
+                {role === 'coach' ? (
+                    <></>
+                ) : (
+                    <Col lg={1} md={6} sm={6} xs={4} className="d-flex justify-content-center align-items-center">
+                        <div
+                            className="btn-light action-button delete-button"
+                            onClick={() => props.onDeleteClick(props.data.id)}
+                        >
+                            <img src={deleteIcon} className="action-icon" alt="action-icon" />
+                        </div>
+                    </Col>
+                )}
             </Row>
         </React.Fragment>
     );
     /*eslint-disable */
+
+    const toggleExpand = (event) => {
+        // Specifically in this component, we need to prevent the event from propagating to the parent element
+        event.stopPropagation();
+        setExpanded(!expanded);
+    };
 
     /*eslint-disable */
     const ToggleRenderer = (props) => (
@@ -188,6 +199,25 @@ const Students = () => {
             </Row>
         </React.Fragment>
     );
+
+    const NameRenderer = (props) => (
+        <div key={props.data.id}>
+            <div className="d-flex align-items-center gap-2">
+                <img src={props.data.avatarUrl} alt={props.data.name} className="avatar" />
+                <div
+                    style={{
+                        overflow: 'hidden',
+                        textOverflow: 'ellipsis',
+                        whiteSpace: expanded ? 'normal' : 'nowrap',
+                        cursor: 'pointer'
+                    }}
+                    onClick={toggleExpand}
+                >
+                    {props.value}
+                </div>
+            </div>
+        </div>
+    );
     /*eslint-disable */
 
     const columns = [
@@ -199,7 +229,7 @@ const Students = () => {
             unSortIcon: true,
             wrapText: true,
             autoHeight: true,
-            cellRenderer: TextExpand,
+            cellRenderer: NameRenderer,
             resizable: false
         },
         {
@@ -226,14 +256,14 @@ const Students = () => {
             }
         },
         {
-            headerName: 'Fees Status',
-            field: 'feesStatus',
+            headerName: 'Fee Status',
+            field: 'feeStatus',
             filter: 'agSetColumnFilter',
             sortable: true,
             unSortIcon: true,
             resizable: false,
             cellRenderer: ({ data: rowData }) => {
-                const status = rowData.feesStatus;
+                const status = rowData.feeStatus;
                 return (
                     <div className={`${status} fee-status`} key={rowData.id}>
                         {status}
@@ -270,7 +300,7 @@ const Students = () => {
             }
         },
         {
-            headerName: 'Active/Deactive',
+            headerName: 'Active/Deactivate',
             cellRenderer: ToggleRenderer,
             field: 'isActive',
             cellRendererParams: {

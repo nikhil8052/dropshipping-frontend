@@ -5,13 +5,14 @@ import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import { Container, Row, Col, Button } from 'react-bootstrap';
 import 'react-quill/dist/quill.snow.css';
-import { countryList, studentDummyData } from '../../../../data/data';
+import { countryList, studentDummyData, studentProducts } from '../../../../data/data';
 import toast from 'react-hot-toast';
 import { useLocation, useNavigate } from 'react-router-dom';
 import Select from 'react-select';
 
 import RoadMapList from '../Roadmap/RoadmapList';
 import { useSelector } from 'react-redux';
+import ProductCarousel from '../../../../components/ProductCarousel/ProductCarousel';
 
 const NewStudent = () => {
     const inputRef = useRef();
@@ -62,6 +63,7 @@ const NewStudent = () => {
                 setStudentPhoto(student.avatarUrl);
                 setStudentData({
                     studentName: student.name,
+                    studentId: student.id,
                     studentEmail: student.email,
                     phoneNumber: student.phoneNumber,
                     country: student.country,
@@ -114,7 +116,7 @@ const NewStudent = () => {
             <div className="title-top">
                 <span onClick={() => navigate(`/${role}/students`)} style={{ cursor: 'pointer' }}>
                     Students <img src={CaretRight} alt=">" />
-                </span>{' '}
+                </span>
                 {studentId ? 'Student Profile' : 'Add New Student'}
             </div>
             <div className="new-coach-page">
@@ -292,33 +294,39 @@ const NewStudent = () => {
                                         <ErrorMessage name="assignedStudents" component="div" className="error" />
                                     </Col>
 
-                                    <Col md={6} xs={12}>
-                                        <label className="field-label">Courses Roadmap</label>
-                                        {/* eslint-disable */}
-                                        <Field
-                                            name="assignedStudents"
-                                            component={({
-                                                field, // { name, value, onChange, onBlur }
-                                                form // also values, setXXXX, handleXXXX, dirty, isValid, status, etc.
-                                            }) => (
-                                                <Select
-                                                    {...field}
-                                                    isMulti
-                                                    options={[
-                                                        { value: 'metadata', label: 'Meta Data Course', id: 1 },
-                                                        { value: 'msoffice', label: 'Microsoft Office Expert', id: 2 }
-                                                    ]}
-                                                    value={values.assignedStudents}
-                                                    onChange={(selectedOptions) => {
-                                                        // Update the array with only the selected options
-                                                        form.setFieldValue('assignedStudents', selectedOptions);
-                                                    }}
-                                                    closeMenuOnSelect={false}
-                                                />
-                                            )}
-                                        />
-                                        <ErrorMessage name="assignedStudents" component="div" className="error" />
-                                    </Col>
+                                    {!studentId && (
+                                        <Col md={6} xs={12}>
+                                            <label className="field-label">Courses Roadmap</label>
+                                            {/* eslint-disable */}
+                                            <Field
+                                                name="assignedStudents"
+                                                component={({
+                                                    field, // { name, value, onChange, onBlur }
+                                                    form // also values, setXXXX, handleXXXX, dirty, isValid, status, etc.
+                                                }) => (
+                                                    <Select
+                                                        {...field}
+                                                        isMulti
+                                                        options={[
+                                                            { value: 'metadata', label: 'Meta Data Course', id: 1 },
+                                                            {
+                                                                value: 'msoffice',
+                                                                label: 'Microsoft Office Expert',
+                                                                id: 2
+                                                            }
+                                                        ]}
+                                                        value={values.assignedStudents}
+                                                        onChange={(selectedOptions) => {
+                                                            // Update the array with only the selected options
+                                                            form.setFieldValue('assignedStudents', selectedOptions);
+                                                        }}
+                                                        closeMenuOnSelect={false}
+                                                    />
+                                                )}
+                                            />
+                                            <ErrorMessage name="assignedStudents" component="div" className="error" />
+                                        </Col>
+                                    )}
                                 </Row>
 
                                 <Row>
@@ -333,6 +341,28 @@ const NewStudent = () => {
                                         )}
                                     </Col>
                                 </Row>
+
+                                {studentId && (
+                                    <>
+                                        <Row>
+                                            <Col>
+                                                <Button
+                                                    type="button"
+                                                    onClick={() =>
+                                                        navigate(`/${role}/visualize-csv`, {
+                                                            state: { studentId }
+                                                        })
+                                                    }
+                                                    className="submit-btn my-2"
+                                                >
+                                                    View Test Products
+                                                </Button>
+                                            </Col>
+                                        </Row>
+
+                                        <ProductCarousel products={studentProducts} />
+                                    </>
+                                )}
                                 <Row>
                                     <Col>
                                         <div className="mt-3 d-flex justify-content-end gap-3">
