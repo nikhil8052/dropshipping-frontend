@@ -148,6 +148,20 @@ export const adminRoutes = [
         name: 'Settings',
         Component: Settings,
         access: 'admin'
+    },
+    {
+        path: 'visualize-csv',
+        exact: true,
+        name: 'Data',
+        Component: VisualizeCSV,
+        access: 'admin'
+    },
+    {
+        path: 'events/detail',
+        exact: true,
+        name: 'Events',
+        Component: SingleEvent,
+        access: 'admin'
     }
 ];
 export const coachesRoutes = [
@@ -248,6 +262,20 @@ export const coachesRoutes = [
         name: 'Events',
         Component: EventDetails,
         access: 'coach'
+    },
+    {
+        path: 'visualize-csv',
+        exact: true,
+        name: 'Data',
+        Component: VisualizeCSV,
+        access: 'coach'
+    },
+    {
+        path: 'events/detail',
+        exact: true,
+        name: 'Events',
+        Component: SingleEvent,
+        access: 'coach'
     }
 ];
 
@@ -304,7 +332,7 @@ export const studentRoutes = [
     {
         path: 'visualize-csv',
         exact: true,
-        name: 'Visualize CSV',
+        name: 'Data',
         Component: VisualizeCSV,
         access: 'student'
     },

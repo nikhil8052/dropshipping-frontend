@@ -74,7 +74,7 @@ const Dashboard = () => {
         },
         {
             id: 4,
-            title: 'Total Coaching in Hours',
+            title: 'Revenue',
             value: '2,318'
         }
     ];

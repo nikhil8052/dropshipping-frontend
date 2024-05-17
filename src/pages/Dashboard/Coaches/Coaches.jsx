@@ -232,7 +232,7 @@ const Coaches = () => {
             resizable: false
         },
         {
-            headerName: 'Active/Deactive',
+            headerName: 'Active/Deactivate',
             field: 'isActive',
             cellRenderer: ToggleRenderer,
             cellRendererParams: {

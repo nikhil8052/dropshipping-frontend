@@ -55,7 +55,7 @@ export const sideBarItems = [
     },
     {
         id: 7,
-        name: 'Visualize CSV',
+        name: 'Data',
         iconLight: csv,
         access: [roles[2]],
         linkTo: '/visualize-csv'
@@ -93,7 +93,8 @@ export const adminSidebarItems = [
         id: 3,
         name: 'Students',
         iconLight: student, // Replace with your icon
-        linkTo: '/admin/students'
+        linkTo: '/admin/students',
+        pathCombinations: ['/admin/visualize-csv']
     },
     {
         id: 4,
@@ -138,7 +139,8 @@ export const coachSidebarItems = [
         id: 2,
         name: 'Students',
         iconLight: student, // Replace with your icon
-        linkTo: '/coach/students'
+        linkTo: '/coach/students',
+        pathCombinations: ['/coach/visualize-csv']
     },
     {
         id: 3,
@@ -194,7 +196,7 @@ export const studentSidebarItems = [
     },
     {
         id: 4,
-        name: 'Visualize CSV',
+        name: 'Data',
         iconLight: csv, // Replace with your icon (optional)
         linkTo: '/student/visualize-csv'
     },
