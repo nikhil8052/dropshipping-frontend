@@ -1222,6 +1222,7 @@ export const paymentsDummyData = [
         studentName: 'Robert Fox',
         email: 'detira.holt@school.edu',
         paymentId: '54351354154',
+        amountPaid: '5468',
         avatarUrl: 'https://randomuser.me/api/portraits/men/1.jpg',
         dateTime: 'Feb 2, 2019 19:28'
     },
@@ -1230,6 +1231,7 @@ export const paymentsDummyData = [
         studentName: 'Ronald Richards',
         email: 'kerizi.lawson@school.edu',
         paymentId: '54351354154',
+        amountPaid: '5468',
         avatarUrl: 'https://randomuser.me/api/portraits/women/2.jpg',
         dateTime: 'Dec 30, 2019 07:52'
     },
@@ -1238,6 +1240,7 @@ export const paymentsDummyData = [
         studentName: 'Esther Howard',
         email: 'tanya.hin@school.edu',
         paymentId: '54351354154',
+        amountPaid: '5468',
         avatarUrl: 'https://randomuser.me/api/portraits/men/3.jpg',
         dateTime: 'Mar 20, 2019 23:14'
     },
@@ -1246,6 +1249,7 @@ export const paymentsDummyData = [
         studentName: 'Theresa Webb',
         email: 'michael.mitc@school.edu',
         paymentId: '54351354154',
+        amountPaid: '5468',
         avatarUrl: 'https://randomuser.me/api/portraits/women/4.jpg',
         dateTime: 'Feb 2, 2018 18:28'
     },
@@ -1254,6 +1258,7 @@ export const paymentsDummyData = [
         studentName: 'Guy Hawkins',
         email: 'jessica.hansong@school.edu',
         paymentId: '54351354154',
+        amountPaid: '5468',
         avatarUrl: 'https://randomuser.me/api/portraits/men/5.jpg',
         dateTime: 'Dec 30, 2019 07:52'
     },
@@ -1262,6 +1267,7 @@ export const paymentsDummyData = [
         studentName: 'Floyd Miles',
         email: 'Floyd Mile@example.com', // Email might be missing
         paymentId: '54351354154',
+        amountPaid: '5468',
         avatarUrl: 'https://randomuser.me/api/portraits/women/6.jpg',
         dateTime: 'Mar 20, 2019 23:14'
     },
@@ -1270,6 +1276,7 @@ export const paymentsDummyData = [
         studentName: 'Savannah Nguyen',
         email: 'jackson.graham@school.edu',
         paymentId: '54351354154',
+        amountPaid: '5468',
         avatarUrl: 'https://randomuser.me/api/portraits/men/7.jpg',
         dateTime: 'Feb 2, 2019 19:28'
     },
@@ -1278,6 +1285,7 @@ export const paymentsDummyData = [
         studentName: 'Eleanor Pera',
         email: 'michelle.rivera@school.edu',
         paymentId: '54351354154',
+        amountPaid: '5468',
         avatarUrl: 'https://randomuser.me/api/portraits/women/8.jpg',
         dateTime: 'Dec 30, 2019 07:52'
     },
@@ -1286,6 +1294,7 @@ export const paymentsDummyData = [
         studentName: 'Cody Fisher',
         email: 'alma.lawson@school.edu',
         paymentId: '54351354154',
+        amountPaid: '5468',
         avatarUrl: 'https://randomuser.me/api/portraits/men/9.jpg',
         dateTime: 'Mar 20, 2019 23:14'
     },
@@ -1294,6 +1303,7 @@ export const paymentsDummyData = [
         studentName: 'Kathrine David',
         email: 'alma.lawson@school.edu',
         paymentId: '54351354154',
+        amountPaid: '5468',
         avatarUrl: 'https://randomuser.me/api/portraits/women/10.jpg',
         dateTime: 'Mar 20, 2019 23:14'
     },
@@ -1302,6 +1312,7 @@ export const paymentsDummyData = [
         studentName: 'Antonio Jimenez',
         email: 'william.garcia@school.edu',
         paymentId: '98765432101',
+        amountPaid: '5468',
         avatarUrl: 'https://randomuser.me/api/portraits/men/11.jpg',
         dateTime: 'April 10, 2024 12:30'
     },
@@ -1310,6 +1321,7 @@ export const paymentsDummyData = [
         studentName: 'Maria Rodriguez',
         email: 'olivia.perez@school.edu',
         paymentId: '98765432101',
+        amountPaid: '5468',
         avatarUrl: 'https://randomuser.me/api/portraits/women/12.jpg',
         dateTime: 'March 15, 2024 08:15'
     },
@@ -1318,6 +1330,7 @@ export const paymentsDummyData = [
         studentName: 'Daniel Lee',
         email: 'kimberly.chen@school.edu',
         paymentId: '98765432101',
+        amountPaid: '5468',
         avatarUrl: 'https://randomuser.me/api/portraits/men/13.jpg',
         dateTime: 'February 05, 2024 17:40'
     },
@@ -1326,6 +1339,7 @@ export const paymentsDummyData = [
         studentName: 'Victoria Brown',
         email: 'elizabeth.walker@school.edu',
         paymentId: '98765432101',
+        amountPaid: '5468',
         avatarUrl: 'https://randomuser.me/api/portraits/women/14.jpg',
         dateTime: 'January 20, 2024 10:50'
     },
@@ -1334,6 +1348,7 @@ export const paymentsDummyData = [
         studentName: 'Michael Wilson',
         email: 'charles.young@school.edu',
         paymentId: '98765432101',
+        amountPaid: '5468',
         avatarUrl: 'https://randomuser.me/api/portraits/men/15.jpg',
         dateTime: 'December 01, 2023 15:25'
     }

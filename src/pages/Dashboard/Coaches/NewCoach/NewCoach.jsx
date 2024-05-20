@@ -300,7 +300,8 @@ const NewCoach = () => {
                                         <ErrorMessage name="lowTicketSpots" component="div" className="error" />
                                     </Col>
                                 </Row>
-                                <Row>
+                                {/* Commenting for future use */}
+                                {/* <Row>
                                     <Col>
                                         <div className="field-label my-2">List of students Taught</div>
                                         <div className="student-taught-wrapper">
@@ -312,7 +313,7 @@ const NewCoach = () => {
                                             ))}
                                         </div>
                                     </Col>
-                                </Row>
+                                </Row> */}
                                 <Row>
                                     <Col>
                                         <label className="field-label">

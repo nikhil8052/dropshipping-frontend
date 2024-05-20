@@ -161,6 +161,18 @@ const Payments = () => {
             }
         },
         {
+            headerName: 'Amount Paid',
+            field: 'amountPaid',
+            filter: 'agSetColumnFilter',
+            sortable: true,
+            unSortIcon: true,
+            resizable: false,
+            cellRenderer: ({ data: rowData }) => {
+                const amountPaid = rowData.amountPaid;
+                return <div key={rowData.id}>{amountPaid}</div>;
+            }
+        },
+        {
             headerName: 'Date & Time',
             field: 'dateTime',
             filter: 'agSetColumnFilter',

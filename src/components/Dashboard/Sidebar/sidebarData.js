@@ -179,7 +179,8 @@ export const studentSidebarItems = [
         id: 1,
         name: 'Dashboard',
         iconLight: dashboardLight, // Replace with your icon
-        linkTo: '/student'
+        linkTo: '/student',
+        pathCombinations: ['/student/request-meeting']
     },
     {
         id: 2,
