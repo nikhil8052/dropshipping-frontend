@@ -163,6 +163,9 @@
         justify-content: center;
         gap: 10px;
         margin-top: auto;
+        &.remove-auto {
+            margin-top: unset !important;
+        }
         .profile-wrapper {
             margin-top: 0.5rem;
             border-radius: 50%;
@@ -186,6 +189,104 @@
             span {
                 color: $sidebar-profile-color;
             }
+        }
+    }
+    .side-bar-event {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-top: auto;
+        .custom-card {
+            border-radius: 15px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            padding: 10px 0px;
+            margin: 10px;
+            text-align: center;
+        }
+
+        .card-header {
+            border-top-left-radius: 15px;
+            border-top-right-radius: 15px;
+            background-color: white;
+            padding: 1rem;
+            border-bottom: 0.5px solid rgba(197, 197, 197, 0.5);
+            width: 100%;
+        }
+
+        .dot {
+            height: 10px;
+            width: 10px;
+            background: rgba(78, 187, 255, 1);
+            border-radius: 50%;
+            display: inline-block;
+            margin-right: 8px;
+        }
+
+        .event-time {
+            color: rgba(32, 32, 32, 1);
+            font-family: Inter;
+            font-size: 20px;
+            font-weight: 500;
+            line-height: 28px;
+        }
+        .zoom-btn {
+            border: 1px solid rgba(197, 197, 197, 0.5) !important;
+            background-color: transparent !important;
+            border-radius: 12px;
+            color: rgba(95, 95, 95, 1);
+            display: flex;
+            align-items: center;
+        }
+
+        .calendar-icon,
+        .exchange-icon {
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            background-size: cover;
+        }
+
+        .calendar-icon {
+            background-image: url('../../../assets/icons/calendor-2.svg');
+            width: 40px;
+            height: 40px;
+        }
+
+        .exchange-icon {
+            background-image: url('../../../assets/icons/arrow-swap.svg');
+            width: 24px;
+            height: 24px;
+        }
+
+        .zoom-icon {
+            width: 26px;
+            height: 26px;
+            background-image: url('../../../assets/icons/zoom-2.svg');
+        }
+    }
+    .side-bar-progress {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-top: auto;
+
+        .custom-card {
+            border-radius: 15px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            padding: 10px 0px;
+            margin: 10px;
+            text-align: center;
+        }
+        .bar-title {
+            font-family: Inter;
+            font-size: 16px;
+            font-weight: 600;
+            line-height: 21.78px;
+            text-align: center;
+            color: rgba(19, 19, 19, 1);
+        }
+        .see-course-link {
+            color: rgba(166, 166, 166, 1);
         }
     }
 }
