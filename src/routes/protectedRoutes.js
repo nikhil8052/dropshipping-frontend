@@ -2,6 +2,7 @@ import { lazy } from 'react';
 // Component Imports
 const Dashboard = lazy(() => import('@pages/Dashboard/Dashboard/Dashboard'));
 const StudentDashboard = lazy(() => import('@pages/Dashboard/Dashboard/StudentDashboard'));
+const MeetingRequest = lazy(() => import('@pages/Dashboard/Dashboard/Meeting/MeetingRequest'));
 const Coaches = lazy(() => import('@pages/Dashboard/Coaches/Coaches'));
 const NewCoach = lazy(() => import('@pages/Dashboard/Coaches/NewCoach/NewCoach'));
 const NewStudent = lazy(() => import('@pages/Dashboard/Students/NewStudent/NewStudent'));
@@ -292,6 +293,13 @@ export const studentRoutes = [
         exact: true,
         name: 'Courses',
         Component: Courses,
+        access: 'student'
+    },
+    {
+        path: 'request-meeting',
+        exact: true,
+        name: 'Dashboard',
+        Component: MeetingRequest,
         access: 'student'
     },
     {

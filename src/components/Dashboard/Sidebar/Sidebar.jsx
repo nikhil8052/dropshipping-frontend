@@ -38,7 +38,7 @@ const Sidebar = () => {
         const items = role === 'admin' ? adminSidebarItems : role === 'coach' ? coachSidebarItems : studentSidebarItems;
         setUpdatedItems(items);
 
-        const activeKey = items.find((item) => item.id === activeSidebarItem).name;
+        const activeKey = items.find((item) => item?.id === activeSidebarItem)?.name;
         setSideBarActiveKey(activeKey);
     }, [role, activeSidebarItem]);
 

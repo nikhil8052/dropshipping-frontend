@@ -1,12 +1,13 @@
 /* eslint-disable */
 import { useEffect, useRef, useState } from 'react';
-import { Row, Col } from 'react-bootstrap';
+import { Row, Col, Button } from 'react-bootstrap';
 import Card from '@components/Card/Card';
 import { StatCard, CashFlowLineChart, LineChart } from '@components/Home';
 import { Helmet } from 'react-helmet';
 import { useSelector } from 'react-redux';
 import Profit from '@icons/Profit.svg';
 import Costs from '@icons/Costs.svg';
+import { useNavigate } from 'react-router';
 
 const sampleData = [5000, 22200, 6000, 20000, 7500, 28000, 8500, 20000, 7500, 28000, 8500, 20000, 7500, 28000, 8500];
 const previousData = [3000, 12000, 4000, 16000, 5000, 24000, 6000, 18000, 5500, 26000, 7500, 22000];
@@ -14,6 +15,7 @@ const previousData = [3000, 12000, 4000, 16000, 5000, 24000, 6000, 18000, 5500, 
 const currentData = [5000, 22200, 6000, 20000, 7500, 28000, 8500, 20000, 7500, 28000, 8500, 20000];
 
 const StudentDashboard = () => {
+    const navigate = useNavigate();
     const chartRef = useRef(null);
     const [chartHeight, setChartHeight] = useState(70);
     const [cardStats, setCardStats] = useState([]);
@@ -274,6 +276,19 @@ const StudentDashboard = () => {
             <Helmet>
                 <title>Dashboard | Drop Ship Academy</title>
             </Helmet>
+            <Row>
+                <Col>
+                    <div className="d-flex justify-content-end">
+                        <Button
+                            variant="primary"
+                            className="meeting-btn"
+                            onClick={() => navigate('/student/request-meeting')}
+                        >
+                            Request for meeting
+                        </Button>
+                    </div>
+                </Col>
+            </Row>
             <Row>
                 {cardStats.map((stat, index) => (
                     <Col key={stat.id} xs={12} sm={12} md={6} lg={4} xl={3}>

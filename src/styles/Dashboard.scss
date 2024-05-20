@@ -129,4 +129,15 @@
             color: #666;
         }
     }
+
+    .meeting-btn {
+        @include pagination-gradient;
+        border-radius: 59px;
+        color: #ffff;
+        font-weight: 500;
+        white-space: nowrap;
+        padding: 10px 25px;
+        margin-bottom: 1rem;
+        border: none;
+    }
 }
