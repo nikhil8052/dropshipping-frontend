@@ -9,17 +9,17 @@ import * as Yup from 'yup';
 import toast from 'react-hot-toast';
 import VideoIcon from '../../../assets/icons/VideoIcon.svg';
 import menuIcon from '../../../assets/icons/Menu.svg';
-import trashIcon from '../../../assets/icons/Trash.svg';
 import plusIcon from '../../../assets/icons/Plus.svg';
 import trashIconRed from '../../../assets/icons/Trash-rename.svg';
 import PencilLine from '../../../assets/icons/PencilLine.svg';
-import Modal from '@components/Modal/Modal';
+import CoursesModal from './CoursesModal/CoursesModal';
 import AddLectureModal from './AddLectureModal';
 import { trimLongText } from '../../../utils/common';
-import axiosWrapper from '@utils/api';
+import UploadSimple from '@icons/UploadSimple.svg';
+// import axiosWrapper from '@utils/api';
 import ConfirmationBox from '@components/ConfirmationBox/ConfirmationBox';
 
-const UploadFiles = () => {
+const UploadFiles = ({ onNext, onBack }) => {
     const inputRef = useRef();
     const videoinputRef = useRef();
     const [coachPhoto, setCoachPhoto] = useState(null);
@@ -32,8 +32,11 @@ const UploadFiles = () => {
         show: false,
         title: '',
         isEditable: false,
-        studentId: null
+        lectureId: null,
+        initialValues: null
     });
+
+    const [lectures, setLectures] = useState([]);
 
     const [coachData, setCoachData] = useState({
         courseDescription: ''
@@ -99,33 +102,34 @@ const UploadFiles = () => {
         // Upload File through API
     };
 
-    //modal functions
-
     const handleCreateClick = () => {
-        // Handle create button click event here
         setLectureModal({
             show: true,
-            title: 'Add lecture',
+            title: 'Add Lecture',
             isEditable: false,
-            studentId: null
+            lectureId: null,
+            initialValues: {
+                lectureName: '',
+                lectureDescription: '',
+                questions: [''],
+                optionalQuestions: [{ question: '', option1: '', option2: '', option3: '', option4: '' }],
+                file: null
+            }
         });
     };
 
-    const handleCloseModal = () => {
-        resetProductModal();
-    };
-
-    const resetProductModal = () => {
+    const handleEditClick = (id) => {
+        const lecture = lectures.find((lec) => lec.id === id);
         setLectureModal({
-            show: false,
-            title: '',
-            isEditable: false,
-            studentId: null
+            show: true,
+            title: 'Edit Lecture',
+            isEditable: true,
+            lectureId: id,
+            initialValues: lecture
         });
     };
 
     const handleDeleteClick = (id) => {
-        // Handle delete action here
         setSelectedRowId(id);
         setShowDeleteModal(true);
     };
@@ -137,11 +141,13 @@ const UploadFiles = () => {
     const handleDeleteSubmit = async () => {
         try {
             setLoadingCRUD(true);
-            const data = await axiosWrapper(
-                'delete',
-                `${import.meta.env.VITE_JSONPLACEHOLDER}/posts/${selectedRowId}}`
-            );
-            toast.success(data?.message || 'Item deleted successfully');
+            // Commenting for future use
+            // const data = await axiosWrapper(
+            //     'delete',
+            //     `${import.meta.env.VITE_JSONPLACEHOLDER}/posts/${selectedRowId}}`
+            // );
+            setLectures(lectures.filter((lec) => lec.id !== selectedRowId));
+            toast.success('Lecture deleted successfully');
         } catch (error) {
             return;
         } finally {
@@ -150,12 +156,52 @@ const UploadFiles = () => {
         }
     };
 
+    const handleSaveLecture = (values) => {
+        if (lectureModal.isEditable) {
+            setLectures((prevLectures) =>
+                prevLectures.map((lec) => (lec.id === lectureModal.lectureId ? { ...lec, ...values } : lec))
+            );
+        } else {
+            const newLecture = { ...values, id: Date.now() };
+            setLectures((prevLectures) => [...prevLectures, newLecture]);
+        }
+        resetLectureModal();
+    };
+
+    const resetLectureModal = () => {
+        setLectureModal({
+            show: false,
+            title: '',
+            isEditable: false,
+            lectureId: null,
+            initialValues: null
+        });
+    };
+
+    const handleUploadFilesSubmit = (values, { resetForm, setSubmitting }) => {
+        setTimeout(() => {
+            // Implement form submission logic here
+            onNext();
+            resetForm();
+            setSubmitting(false);
+        }, 1000);
+    };
+
     return (
         <>
             {lectureModal.show && (
-                <Modal size="large" show={lectureModal.show} onClose={handleCloseModal} title={lectureModal.title}>
-                    <AddLectureModal productModal={lectureModal} resetModal={resetProductModal} />
-                </Modal>
+                <CoursesModal
+                    size="large"
+                    show={lectureModal.show}
+                    onClose={resetLectureModal}
+                    title={lectureModal.title}
+                >
+                    <AddLectureModal
+                        lectureModal={lectureModal}
+                        resetModal={resetLectureModal}
+                        onSave={handleSaveLecture}
+                    />
+                </CoursesModal>
             )}
             {showDeleteModal && (
                 <ConfirmationBox
@@ -163,7 +209,7 @@ const UploadFiles = () => {
                     onClose={handleCloseDeleteModal}
                     loading={loadingCRUD}
                     title="Delete Lecture"
-                    body="Are you sure you wants to delete this Lecture ?"
+                    body="Are you sure you want to delete this Lecture?"
                     onConfirm={handleDeleteSubmit}
                     customFooterClass="custom-footer-class"
                     nonActiveBtn="cancel-button"
@@ -181,19 +227,18 @@ const UploadFiles = () => {
                         validationSchema={Yup.object({
                             courseDescription: Yup.string()
                         })}
-                        onSubmit={(values, { resetForm, setSubmitting }) => {
-                            setTimeout(() => {
-                                // Implement form submission logic here
-                                resetForm();
-                                setSubmitting(false);
-                            }, 1000);
-                        }}
+                        onSubmit={handleUploadFilesSubmit}
                         enableReinitialize
                     >
                         {({ isSubmitting, handleSubmit, values }) => (
                             <Form onSubmit={handleSubmit}>
                                 <Row className="mb-3">
                                     <Col xs={12} sm={12} md={12} lg={6}>
+                                        {coachPhoto ? (
+                                            <></>
+                                        ) : (
+                                            <label className="title-thumbnail">Course Thumbnail</label>
+                                        )}
                                         <Field name="coursePhoto">
                                             {({ field }) => (
                                                 <>
@@ -224,8 +269,11 @@ const UploadFiles = () => {
                                                             <div className="image-preview-text">
                                                                 <span>
                                                                     Upload your course Thumbnail here.
+                                                                    <br />
                                                                     <strong>Important guidelines:</strong>
-                                                                    1200x800 pixels or 12:8 Ratio. Supported format:
+                                                                    1200x800 pixels or 12:8 Ratio.
+                                                                    <br />
+                                                                    Supported format:
                                                                     <strong>.jpg, .jpeg, or .png</strong>
                                                                 </span>
 
@@ -238,7 +286,12 @@ const UploadFiles = () => {
                                                                         inputRef.current.click();
                                                                     }}
                                                                 >
-                                                                    Upload
+                                                                    Upload{' '}
+                                                                    <img
+                                                                        className="mb-1"
+                                                                        src={UploadSimple}
+                                                                        alt="Upload Btn"
+                                                                    />
                                                                 </Button>
                                                             </div>
                                                         </div>
@@ -248,6 +301,7 @@ const UploadFiles = () => {
                                         </Field>
                                     </Col>
                                     <Col xs={12} sm={12} md={12} lg={6}>
+                                        {courseVideo ? <></> : <label className="field-label">Course Trailer</label>}
                                         <Field name="coursePhoto">
                                             {({ field }) => (
                                                 <>
@@ -277,7 +331,10 @@ const UploadFiles = () => {
                                                             <div className="image-preview-text">
                                                                 <span>
                                                                     Upload your course video here.
-                                                                    <strong>Supported formats:</strong> MP4, WebM, Ogg,
+                                                                    <br />
+                                                                    Supported formats: <strong>
+                                                                        MP4, WebM, Ogg,
+                                                                    </strong>{' '}
                                                                     etc.
                                                                 </span>
                                                                 <Button
@@ -289,7 +346,12 @@ const UploadFiles = () => {
                                                                         videoinputRef.current.click();
                                                                     }}
                                                                 >
-                                                                    Upload
+                                                                    Upload{' '}
+                                                                    <img
+                                                                        className="mb-1"
+                                                                        src={UploadSimple}
+                                                                        alt="Upload Btn"
+                                                                    />
                                                                 </Button>
                                                             </div>
                                                         </div>
@@ -332,38 +394,44 @@ const UploadFiles = () => {
                                                     <p>Add Lectures</p>
                                                 </div>
                                                 <div className="d-flex gap-2">
-                                                    <img src={plusIcon} alt="menu" onClick={handleCreateClick} />
-                                                    <img src={trashIcon} alt="menu" onClick={handleDeleteClick} />
+                                                    <img
+                                                        className="cursor-pointer"
+                                                        src={plusIcon}
+                                                        alt="menu"
+                                                        onClick={handleCreateClick}
+                                                    />
                                                 </div>
                                             </div>
-                                            {Array.from({ length: 2 }).map((_, index) => (
-                                                <div key={index + 1} className="add-lecture-item mb-3 ">
+                                            {lectures.map((lecture) => (
+                                                <div key={lecture.id} className="add-lecture-item mb-3">
                                                     <div className="items-text d-flex gap-2">
                                                         <img src={menuIcon} alt="menu" />
                                                         <p className="items-text-title">
-                                                            Add Lectures (
+                                                            {lecture.lectureName} (
                                                             <span className="">
-                                                                {trimLongText(
-                                                                    'In this lecture basics of all the elements',
-                                                                    20
-                                                                )}
+                                                                {trimLongText(lecture.lectureDescription, 20)}
                                                             </span>
                                                             )
                                                         </p>
                                                     </div>
                                                     <div className="items-button">
                                                         <Button type="button" className="quiz-btn">
-                                                            Quizes Added Successfully
+                                                            {lecture.questions.length} Questions Added
                                                         </Button>
                                                         <Button type="button" className="quiz-lec-btn">
-                                                            Lecture 1.mp4
+                                                            Lecture Video
                                                         </Button>
-                                                        <img src={PencilLine} alt="PencilLine" />
-
                                                         <img
+                                                            className="cursor-pointer"
+                                                            src={PencilLine}
+                                                            alt="Edit"
+                                                            onClick={() => handleEditClick(lecture.id)}
+                                                        />
+                                                        <img
+                                                            className="cursor-pointer"
                                                             src={trashIconRed}
-                                                            alt="trashIconRed"
-                                                            onClick={handleDeleteClick}
+                                                            alt="Delete"
+                                                            onClick={() => handleDeleteClick(lecture.id)}
                                                         />
                                                     </div>
                                                 </div>
@@ -374,8 +442,13 @@ const UploadFiles = () => {
                                 <Row>
                                     <Col>
                                         <div className="mt-3 d-flex justify-content-between gap-3">
-                                            <Button type="button" className="cancel-btn" disabled={isSubmitting}>
-                                                Cancel
+                                            <Button
+                                                type="button"
+                                                className="cancel-btn"
+                                                disabled={isSubmitting}
+                                                onClick={onBack}
+                                            >
+                                                Back
                                             </Button>
                                             <Button type="submit" className="submit-btn" disabled={isSubmitting}>
                                                 {isSubmitting ? 'saving...' : 'Save & Next'}

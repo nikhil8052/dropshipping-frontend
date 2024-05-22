@@ -162,7 +162,7 @@ const NewEvent = () => {
                                                                 <br />
                                                                 <Button className="upload-image-btn">
                                                                     Upload Image{' '}
-                                                                    <img src={UploadSimple} alt="" srcSet="" />
+                                                                    <img src={UploadSimple} alt="Upload Btn" />
                                                                 </Button>
                                                             </span>
                                                         </div>

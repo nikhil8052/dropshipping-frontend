@@ -1,55 +1,58 @@
 import { useEffect, useState } from 'react';
-import { Form as FormikForm, Formik } from 'formik';
+import { Form as FormikForm, Formik, Field, ErrorMessage, FieldArray } from 'formik';
 import { Row, Col, Button } from 'react-bootstrap';
-import Input from '@components/Input/Input';
 import * as Yup from 'yup';
 import Loading from '@components/Loading/Loading';
-import { toast } from 'react-toastify';
-import Card from '@components/Card/Card';
-import '../../../styles/Courses.scss';
-import bluePlus from '../../../assets/icons/blue-plus.svg';
+import { toast } from 'react-hot-toast';
+import bluePlus from '@icons/blue-plus.svg';
 import { useNavigate } from 'react-router-dom';
 import { FileUploader } from 'react-drag-drop-files';
+import { faMinus } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
-const AddLectureModal = ({ productModal, resetModal }) => {
-    const [product, setProduct] = useState({});
+const AddLectureModal = ({ lectureModal, resetModal, onSave }) => {
     const [loading, setLoading] = useState(false);
     const [file, setFile] = useState(null);
-    const [questionCount, setQuestionCount] = useState(1);
-    const [optionalQuestion, setOptionalQuestion] = useState(1);
     const navigate = useNavigate();
     const fileTypes = ['JPEG', 'PNG', 'GIF', 'pdf', 'docx'];
 
-    const initialValues = {
-        title: product.title || '',
-        briefSummary: product.briefSummary || '',
-        price: product.price || '',
-        seller: product.seller || '',
-        description: product.description || ''
-    };
+    const [initialValues, setInitialValues] = useState(
+        lectureModal.initialValues || {
+            lectureName: '',
+            lectureDescription: '',
+            questions: [''],
+            optionalQuestions: [{ question: '', option1: '', option2: '', option3: '', option4: '' }],
+            file: null
+        }
+    );
 
     const validationSchema = Yup.object().shape({
-        title: Yup.string().required('Title is required'),
-        briefSummary: Yup.string().required('Brief summary is required'),
-        price: Yup.number().typeError('Price must be a number').required('Price is required'),
-        seller: Yup.string().required('Please select a user'),
-        description: Yup.string().required('Description is required')
+        lectureName: Yup.string().required('Lecture name is required'),
+        lectureDescription: Yup.string().required('Lecture description is required'),
+        questions: Yup.array(),
+        optionalQuestions: Yup.array().of(
+            Yup.object().shape({
+                question: Yup.string(),
+                option1: Yup.string(),
+                option2: Yup.string(),
+                option3: Yup.string(),
+                option4: Yup.string()
+            })
+        ),
+        file: Yup.mixed()
     });
 
     useEffect(() => {
-        if (productModal.isEditable) fetchProductDetail(productModal.productId);
-    }, [productModal.productId, productModal.isEditable]);
+        if (lectureModal.isEditable) fetchLectureDetail(lectureModal.lectureId);
+    }, [lectureModal.lectureId, lectureModal.isEditable]);
 
-    const fetchProductDetail = async (productId) => {
+    const fetchLectureDetail = async () => {
         try {
             setLoading(true);
-            // just a dummy API call
-            // const data = await axiosWrapper('get', `some-base-url/product/${productId}`);
-
-            //imitating a get request
-
-            await delayedSetProduct();
-            return productId;
+            // Dummy API call
+            await delayedSetLecture();
+            setInitialValues(lectureModal.initialValues);
+            // return lectureId;
         } catch (error) {
             toast.error('Something went wrong');
         } finally {
@@ -57,30 +60,24 @@ const AddLectureModal = ({ productModal, resetModal }) => {
         }
     };
 
-    //just a dummy function to set product state
-    const delayedSetProduct = async () => {
+    const delayedSetLecture = async () => {
         await new Promise((resolve) => {
             setTimeout(() => {
-                setProduct({
-                    title: 'Scotch tape',
-                    briefSummary: 'A fine binding tape',
-                    price: '123',
-                    seller: 'babar azam',
-                    description: 'Here is brief description about the product'
-                });
+                setInitialValues(lectureModal.initialValues);
                 resolve();
-            }, 1000); // Wait for 2000 milliseconds (2 seconds)
+            }, 1000);
         });
     };
 
     const handleSubmit = async (values, { setSubmitting }) => {
         try {
             setSubmitting(true);
-            const { method, endpoint } = getRequestMeta(productModal.isEditable);
-            // submit request here
+            // Commenting for future use
+            // const { method, endpoint } = getRequestMeta(lectureModal.isEditable);
+            // Submit request here
             // const data = await axiosWrapper(method, endpoint, values);
-            toast.success(productModal.isEditable ? 'Item updated successfully' : 'Item created successfully');
-            return { method, endpoint };
+            toast.success(lectureModal.isEditable ? 'Lecture updated successfully' : 'Lecture created successfully');
+            onSave(values);
         } catch (error) {
             setSubmitting(false);
         } finally {
@@ -88,24 +85,17 @@ const AddLectureModal = ({ productModal, resetModal }) => {
         }
     };
 
-    const getRequestMeta = (isEditable) => {
-        if (isEditable) {
-            return { method: 'PUT', endpoint: '/products/some-id' };
-        }
-        return { method: 'POST', endpoint: '/products' };
-    };
+    // const getRequestMeta = (isEditable) => {
+    //     if (isEditable) {
+    //         return { method: 'PUT', endpoint: '/lectures/some-id' };
+    //     }
+    //     return { method: 'POST', endpoint: '/lectures' };
+    // };
 
-    //
-    const handleChange = (file) => {
+    const handleFileChange = (file) => {
         setFile(file);
     };
 
-    const addNewQuestion = () => {
-        setQuestionCount((prevCount) => prevCount + 1); // Increment question count
-    };
-    const addNewOptionalQuestion = () => {
-        setOptionalQuestion((prevCount) => prevCount + 1); // Increment question count
-    };
     return (
         <>
             {loading ? (
@@ -117,121 +107,200 @@ const AddLectureModal = ({ productModal, resetModal }) => {
                     validationSchema={validationSchema}
                     onSubmit={handleSubmit}
                 >
-                    {({ isSubmitting }) => (
+                    {({ isSubmitting, values, setFieldValue }) => (
                         <FormikForm>
-                            <div className="add-lecture-form">
-                                <Input name="lecturename" placeholder="Type lecture name..." type="text" />
-                                <Input
-                                    name="description"
-                                    placeholder="Type lecture description here..."
-                                    type="textarea"
-                                />
-                                <Card cardType="large">
-                                    <div className="add-quiz-title">
-                                        <p> ADD quiz</p>
-                                    </div>
-                                    <div className="quiz-fields-container">
-                                        <div className="add-quiz-fields">
-                                            <div className="add-quiz-label ">
-                                                <p>
-                                                    Please Insert questions for Student’s personal assessments of this
-                                                    course. (3/3)
-                                                </p>
-                                                <span onClick={addNewQuestion}>
-                                                    <img src={bluePlus} alt="bluePlus"></img> Add new
-                                                </span>
-                                            </div>
+                            <Row>
+                                <Col md={12} xs={12}>
+                                    <Field
+                                        name="lectureName"
+                                        className="field-control"
+                                        type="text"
+                                        placeholder="Type lecture name..."
+                                    />
+                                    <ErrorMessage name="lectureName" component="div" className="error" />
+                                </Col>
+                            </Row>
 
-                                            <div className="add-quiz-question">
-                                                <Input
-                                                    name="lecturename1"
-                                                    placeholder="What is the main feature of this course?"
-                                                    type="text"
-                                                />
-                                                {[...Array(questionCount)].map((_, index) => (
-                                                    <Input
-                                                        name={`lecturename${index}`}
-                                                        placeholder="What is the scope of this course?"
-                                                        type="text"
-                                                        key={index}
-                                                    />
+                            <Row>
+                                <Col md={12} xs={12}>
+                                    <Field
+                                        name="lectureDescription"
+                                        className="field-text-area-control"
+                                        as="textarea"
+                                        placeholder="Type lecture description here..."
+                                        rows="6"
+                                    />
+                                    <ErrorMessage name="lectureDescription" component="div" className="error" />
+                                </Col>
+                            </Row>
+
+                            <div className="quiz-wrapper">
+                                <div className="add-quiz-title">
+                                    <p> ADD Quizzes</p>
+                                </div>
+                                <div className="quiz-fields-container">
+                                    <FieldArray name="questions">
+                                        {({ push, remove }) => (
+                                            <div className="add-quiz-fields">
+                                                <div className="add-quiz-label">
+                                                    <p>
+                                                        Please Insert questions for Student’s personal assessments of
+                                                        this course.
+                                                    </p>
+                                                    <span onClick={() => push('')}>
+                                                        <img src={bluePlus} alt="bluePlus" /> Add new
+                                                    </span>
+                                                </div>
+                                                <div className="add-quiz-question">
+                                                    {values.questions.map((_, index) => (
+                                                        <div key={index} className="d-flex align-items-center mb-3">
+                                                            <Field
+                                                                name={`questions[${index}]`}
+                                                                className="field-control"
+                                                                type="text"
+                                                                placeholder="Please Type Question Here..."
+                                                            />
+                                                            <ErrorMessage
+                                                                name={`questions[${index}]`}
+                                                                component="div"
+                                                                className="error"
+                                                            />
+                                                            <Button
+                                                                type="button"
+                                                                className="btn btn-link minus-btn"
+                                                                onClick={() => remove(index)}
+                                                            >
+                                                                <FontAwesomeIcon icon={faMinus} color="black" />
+                                                            </Button>
+                                                        </div>
+                                                    ))}
+                                                </div>
+                                            </div>
+                                        )}
+                                    </FieldArray>
+
+                                    <FieldArray name="optionalQuestions">
+                                        {({ push, remove }) => (
+                                            <div className="add-quiz-fields">
+                                                <div className="add-quiz-label">
+                                                    <p>
+                                                        Please Insert MCQs for Student’s personal assessments of this
+                                                        course.
+                                                    </p>
+                                                    <span
+                                                        onClick={() =>
+                                                            push({
+                                                                question: '',
+                                                                option1: '',
+                                                                option2: '',
+                                                                option3: '',
+                                                                option4: ''
+                                                            })
+                                                        }
+                                                    >
+                                                        <img src={bluePlus} alt="bluePlus" /> Add new
+                                                    </span>
+                                                </div>
+                                                {values.optionalQuestions.map((_, index) => (
+                                                    <div key={index} className="add-quiz-question mb-3">
+                                                        <div className="d-flex align-items-center mb-3">
+                                                            <Field
+                                                                name={`optionalQuestions[${index}].question`}
+                                                                className="field-control"
+                                                                type="text"
+                                                                placeholder="Please Type Question Here..."
+                                                            />
+                                                            <ErrorMessage
+                                                                name={`optionalQuestions[${index}].question`}
+                                                                component="div"
+                                                                className="error"
+                                                            />
+                                                            <Button
+                                                                type="button"
+                                                                className="btn btn-link minus-btn"
+                                                                onClick={() => remove(index)}
+                                                            >
+                                                                <FontAwesomeIcon icon={faMinus} color="black" />
+                                                            </Button>
+                                                        </div>
+                                                        <div className="quiz-multiple-choice">
+                                                            <Field
+                                                                name={`optionalQuestions[${index}].option1`}
+                                                                className="field-control"
+                                                                type="text"
+                                                                placeholder="Type option 1"
+                                                            />
+                                                            <Field
+                                                                name={`optionalQuestions[${index}].option2`}
+                                                                className="field-control"
+                                                                type="text"
+                                                                placeholder="Type option 2"
+                                                            />
+                                                            <Field
+                                                                name={`optionalQuestions[${index}].option3`}
+                                                                className="field-control"
+                                                                type="text"
+                                                                placeholder="Type option 3"
+                                                            />
+                                                            <div className="correct-answer">
+                                                                <Field
+                                                                    name={`optionalQuestions[${index}].option4`}
+                                                                    className="field-control"
+                                                                    type="text"
+                                                                    placeholder="Type Correct Answer"
+                                                                />
+                                                            </div>
+                                                        </div>
+                                                        <ErrorMessage
+                                                            name={`optionalQuestions[${index}].option4`}
+                                                            component="div"
+                                                            className="error"
+                                                        />
+                                                    </div>
                                                 ))}
                                             </div>
-                                        </div>
-                                        <div className="add-quiz-fields">
-                                            <div className="add-quiz-label ">
-                                                <p>
-                                                    Please Insert MCQs for Student’s personal assessments of this
-                                                    course. (3/3)
-                                                </p>
-                                                <span onClick={addNewOptionalQuestion}>
-                                                    <img src={bluePlus} alt="bluePlus"></img> Add new
-                                                </span>
-                                            </div>
-                                            {[...Array(optionalQuestion)].map((index) => (
-                                                <div className="add-quiz-question" key={index}>
-                                                    <div className="questions">
-                                                        <Input
-                                                            name={`lecturename_optional${index}`}
-                                                            placeholder="Please Type Question Here..."
-                                                            type="text"
-                                                        />
-                                                        <p className="limit">0/120</p>
-                                                    </div>
-
-                                                    <div className="quiz-multiple-choice">
-                                                        <Input name="option1" placeholder="Type option 1" type="text" />
-                                                        <Input name="option2" placeholder="Type option 3" type="text" />
-                                                        <Input name="option3" placeholder="Type option 3" type="text" />
-                                                        <div className="correct-answer">
-                                                            <Input
-                                                                name="option4"
-                                                                placeholder="Type Correct Ans"
-                                                                type="text"
-                                                                className="correct-answer"
-                                                            />
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            ))}
-                                        </div>
-                                    </div>
-                                </Card>
-                                <div className="add-quiz-file">
-                                    <h4>Attach File</h4>
-                                    <FileUploader
-                                        multiple={true}
-                                        handleChange={handleChange}
-                                        name="file"
-                                        types={fileTypes}
-                                        label="hello"
-                                    />
-                                    <p>{file ? `File name: ${file[0].name}` : 'Drag an drop a file or browse file'}</p>
+                                        )}
+                                    </FieldArray>
                                 </div>
-                                <Row>
-                                    <Col>
-                                        <div className="mt-3 d-flex justify-content-between gap-3">
-                                            <Button
-                                                type="button"
-                                                onClick={() => navigate(-1)}
-                                                className="cancel-btn"
-                                                disabled={isSubmitting}
-                                            >
-                                                Cancel
-                                            </Button>
-                                            <Button type="submit" className="submit-btn" disabled={isSubmitting}>
-                                                {isSubmitting ? (
-                                                    <Loading centered size="sm" />
-                                                ) : productModal.isEditable ? (
-                                                    'Update'
-                                                ) : (
-                                                    'Save'
-                                                )}
-                                            </Button>
-                                        </div>
-                                    </Col>
-                                </Row>
                             </div>
+
+                            <div className="add-quiz-file">
+                                <h4>Attach File</h4>
+                                <FileUploader
+                                    multiple={true}
+                                    handleChange={(file) => {
+                                        setFieldValue('file', file);
+                                        handleFileChange(file);
+                                    }}
+                                    name="file"
+                                    types={fileTypes}
+                                />
+                                <p>{file ? `File name: ${file[0].name}` : 'Drag and drop a file or browse file'}</p>
+                            </div>
+
+                            <Row>
+                                <Col>
+                                    <div className="mt-3 d-flex justify-content-between gap-3">
+                                        <Button
+                                            type="button"
+                                            onClick={() => navigate(-1)}
+                                            className="cancel-btn"
+                                            disabled={isSubmitting}
+                                        >
+                                            Cancel
+                                        </Button>
+                                        <Button type="submit" className="submit-btn" disabled={isSubmitting}>
+                                            {isSubmitting ? (
+                                                <Loading centered size="sm" />
+                                            ) : lectureModal.isEditable ? (
+                                                'Update'
+                                            ) : (
+                                                'Save'
+                                            )}
+                                        </Button>
+                                    </div>
+                                </Col>
+                            </Row>
                         </FormikForm>
                     )}
                 </Formik>

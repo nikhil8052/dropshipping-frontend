@@ -6,29 +6,31 @@
     flex-direction: column;
     gap: 1px;
     width: 100%;
-    max-width: 280px;
+    // max-width: 280px;
     height: auto;
-    padding: 0px !important;
-    box-shadow: 5.66px 8.09px 32.34px 0px #0000001a;
+    min-height: 270px;
+    padding: 10px !important;
+
     img {
-        max-width: 270px;
+        // max-width: 270px;
         width: 100%;
         height: auto;
+        object-fit: cover;
     }
     .course-title {
         margin-top: 12px;
         font-size: $font-size-large;
+        color: rgba(32, 34, 36, 1);
         font-weight: $font-weight-bold;
     }
     .course-des {
         font-size: $font-size-small;
-        color: #646464;
+        color: rgba(100, 100, 100, 1);
         font-weight: $font-weight-large;
     }
     .lecture-No {
         font-size: $font-size-small;
-
-        color: #969696;
+        color: rgba(150, 150, 150, 1);
     }
 }
 
