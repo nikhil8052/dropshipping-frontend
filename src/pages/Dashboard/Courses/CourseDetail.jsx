@@ -1,15 +1,16 @@
 import '../../../styles/Courses.scss';
 import { Button } from 'react-bootstrap';
-import Card from '@components/Card/Card';
-import CourseSlider from './CourseSlider';
 import { useSelector } from 'react-redux';
-import { useLocation, Link } from 'react-router-dom';
+import { useLocation, Link, useNavigate } from 'react-router-dom';
 import CaretRight from '@icons/CaretRight.svg';
 import CaretLeft from '@icons/CaretLeft.svg';
+import { studentProducts } from '../../../data/data';
+import ProductCarousel from '../../../components/ProductCarousel/ProductCarousel';
 
 const CourseDetail = () => {
     const userInfo = useSelector((state) => state?.auth?.userInfo);
     const role = userInfo?.role;
+    const navigate = useNavigate();
 
     const location = useLocation();
     const isDetailPage = location.pathname === '/admin/courses/details' || '/coach/courses/details';
@@ -25,60 +26,63 @@ const CourseDetail = () => {
                         </Button>
                     </Link>
                 ) : (
-                    <div className="addcourse-nav mb-3">
-                        <Link to={`/${role}/courses`}>Courses</Link>
+                    <div className="title-top mb-3">
                         {isDetailPage && (
-                            <span>
-                                <img src={CaretRight} alt=">" /> Course Details
+                            <span onClick={() => navigate(`/${role}/courses`)} style={{ cursor: 'pointer' }}>
+                                Courses <img src={CaretRight} alt=">" />{' '}
                             </span>
                         )}
+                        Course Details
                     </div>
                 )}
 
-                <Card cardType="large">
+                <div className="publish-course-wrapper">
                     <div className="card-background">
                         <div className="text-heading">
                             <h1>Design Conference</h1>
                             <p>Dropship Academy X</p>
                         </div>
                     </div>
-                    <div className="lecture-details">
-                        <div className="p-2">
-                            <h1>Duration</h1>
-                            <p>3 Weeks, 120 Hr</p>
+                    <div className="lecture-details-wrapper">
+                        <div className="lecture-details">
+                            <div className="lecture-details-item">
+                                <h1>Duration</h1>
+                                <p>3 Weeks, 120 Hr</p>
+                            </div>
+                            <div className="lecture-details-item lecture-details-2">
+                                <h1>Lectures</h1>
+                                <p>28 Video Lectures, 5 Assesments</p>
+                            </div>
+                            <div className="lecture-details-item">
+                                <h1>Coach Name</h1>
+                                <p>David Richerson</p>
+                            </div>
                         </div>
-                        <div className="lecture-details-2">
-                            <h1>Lectures</h1>
-                            <p>28 Video Lectures, 5 Assesments</p>
+                        <div className="carousel-lecture">
+                            {/* Commenting for future use */}
+                            {/* <CourseSlider /> */}
+                            <ProductCarousel products={studentProducts} />
                         </div>
-                        <div className="p-2">
-                            <h1>Coach Name</h1>
-                            <p>David Richerson</p>
-                        </div>
-                    </div>
-                    <div className="carousel-lecture ">
-                        <CourseSlider />
-                    </div>
+                        {role !== 'student' && (
+                            <div
+                                className="publish-added-button-footer "
+                                style={{ display: 'flex', justifyContent: 'space-between' }}
+                            >
+                                <>
+                                    <Link to={`/${role}/courses/all-students`}>
+                                        <Button type="button" className="publish-btn">
+                                            All Students
+                                        </Button>
+                                    </Link>
 
-                    {role !== 'student' && (
-                        <div
-                            className="publish-added-button-footer "
-                            style={{ display: 'flex', justifyContent: 'space-between' }}
-                        >
-                            <>
-                                <Link to={`/${role}/courses/all-students`}>
-                                    <Button type="button" className="publish-btn">
-                                        All Students
+                                    <Button type="button" className="edit-btn">
+                                        Edit
                                     </Button>
-                                </Link>
-
-                                <Button type="button" className="edit-btn">
-                                    Edit
-                                </Button>
-                            </>
-                        </div>
-                    )}
-                </Card>
+                                </>
+                            </div>
+                        )}
+                    </div>
+                </div>
             </div>
         </>
     );
