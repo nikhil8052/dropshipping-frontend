@@ -321,7 +321,7 @@ const Events = () => {
                                         </div>
                                     }
                                     defaultValue={selectedEvent}
-                                    className="dropdown-button coach-btn w-100"
+                                    className="dropdown-button-fix w-100"
                                 >
                                     {['All Events', 'Upcoming Events', 'Past Events'].map((event) => (
                                         <Dropdown.Item

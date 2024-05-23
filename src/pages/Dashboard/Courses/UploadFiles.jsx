@@ -259,7 +259,7 @@ const UploadFiles = ({ onNext, onBack }) => {
                                                                         : URL.createObjectURL(coachPhoto)
                                                                 }
                                                                 alt=""
-                                                                style={{ borderRadius: '50%' }}
+                                                                style={{ borderRadius: '50%', objectFit: 'cover' }}
                                                             />
                                                             <span>{coachPhoto.name}</span>
                                                         </div>
