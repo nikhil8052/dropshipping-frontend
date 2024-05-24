@@ -1,12 +1,13 @@
-import ProductCard from '../ProductCard/ProductCard';
 import { Keyboard, Navigation, Pagination, Scrollbar } from 'swiper/modules';
-import './ProductCarousel.scss';
+import './CarouselWrapper.scss';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Col, Row } from 'react-bootstrap';
 import 'swiper/swiper-bundle.css';
 import 'swiper/css';
+import ProductCard from '../ProductCard/ProductCard';
+import LectureCard from '../LectureCard/LectureCard';
 
-const ProductCarousel = ({ products }) => {
+const CarouselWrapper = ({ items, type = 'product' }) => {
     const swiperBreakpoints = {
         320: {
             slidesPerView: 1,
@@ -51,10 +52,16 @@ const ProductCarousel = ({ products }) => {
             modules={[Keyboard, Scrollbar, Navigation, Pagination]}
         >
             <Row>
-                {products.map((product, index) => (
+                {items.map((item, index) => (
                     <Col key={index}>
                         <SwiperSlide className="slide-item" key={index}>
-                            <ProductCard product={product} />
+                            {type === 'product' ? (
+                                <ProductCard item={item} />
+                            ) : type === 'lecture' ? (
+                                <LectureCard item={item} />
+                            ) : (
+                                <></>
+                            )}
                         </SwiperSlide>
                     </Col>
                 ))}
@@ -63,4 +70,4 @@ const ProductCarousel = ({ products }) => {
     );
 };
 
-export default ProductCarousel;
+export default CarouselWrapper;

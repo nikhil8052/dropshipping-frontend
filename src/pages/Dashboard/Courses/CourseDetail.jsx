@@ -4,8 +4,8 @@ import { useSelector } from 'react-redux';
 import { useLocation, Link, useNavigate } from 'react-router-dom';
 import CaretRight from '@icons/CaretRight.svg';
 import CaretLeft from '@icons/CaretLeft.svg';
-import { studentProducts } from '../../../data/data';
-import ProductCarousel from '../../../components/ProductCarousel/ProductCarousel';
+import { lessons } from '../../../data/data';
+import CarouselWrapper from '../../../components/Carousel/CarouselWrapper';
 
 const CourseDetail = () => {
     const userInfo = useSelector((state) => state?.auth?.userInfo);
@@ -59,9 +59,7 @@ const CourseDetail = () => {
                             </div>
                         </div>
                         <div className="carousel-lecture">
-                            {/* Commenting for future use */}
-                            {/* <CourseSlider /> */}
-                            <ProductCarousel products={studentProducts} />
+                            <CarouselWrapper items={lessons} type="lecture" />
                         </div>
                         {role !== 'student' && (
                             <div

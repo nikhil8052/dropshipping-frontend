@@ -10,6 +10,7 @@ import CustomSelect from '../../../../components/Input/Select';
 import { coachDummyData, studentDummyData, countryList } from '../../../../data/data';
 import toast from 'react-hot-toast';
 import { useLocation, useNavigate } from 'react-router-dom';
+import ImageCropper from '../../../../components/ImageMask/ImageCropper';
 
 const NewCoach = () => {
     const inputRef = useRef();
@@ -17,6 +18,8 @@ const NewCoach = () => {
     const location = useLocation();
     const coachId = location.state?.coachId;
     const navigate = useNavigate();
+    const [cropping, setCropping] = useState(false);
+    const [imageSrc, setImageSrc] = useState(null);
     const [coachData, setCoachData] = useState({
         coachName: '',
         coachEmail: '',
@@ -56,34 +59,26 @@ const NewCoach = () => {
     const handleFileChange = async (e) => {
         const file = e.target.files[0];
         if (!file || !file.type.startsWith('image/')) {
-            // Display an error or handle the invalid file selection
             toast.error('Invalid file selected. Please choose an image file.');
             return;
         }
 
-        const image = new Image();
-        image.src = window.URL.createObjectURL(file);
-        image.onload = () => {
-            // Commenting for now for future reference
-            // const { width, height } = image;
-            // if (width > 1200 || height > 800) {
-            //     // Display an error or handle the invalid file dimensions
-            //     toast.error('Invalid image dimensions. Please upload an image with 1200x800 pixels.');
-            //     return;
-            // }
+        const image = URL.createObjectURL(file);
+        setImageSrc(image);
+        setCropping(true);
+    };
 
-            toast.success('Image uploaded successfully!', {
-                icon: '🎉',
-                style: {
-                    borderRadius: '10px',
-                    background: '#333',
-                    color: '#fff'
-                }
-            });
-
-            setCoachPhoto(file);
-            // Upload File through API
-        };
+    const handleCropComplete = (croppedImage) => {
+        setCoachPhoto(croppedImage);
+        setCropping(false);
+        toast.success('Image uploaded successfully!', {
+            icon: '🎉',
+            style: {
+                borderRadius: '10px',
+                background: '#333',
+                color: '#fff'
+            }
+        });
     };
 
     return (
@@ -135,52 +130,63 @@ const NewCoach = () => {
                                                 UPLOAD PHOTO <span className="label-light">(Mandatory)</span>
                                             </label>
                                         )}
-                                        <Field name="coachPhoto">
-                                            {({ field }) => (
-                                                <>
-                                                    <input
-                                                        ref={inputRef}
-                                                        accept=".jpg,.jpeg,.png"
-                                                        {...field}
-                                                        type="file"
-                                                        style={{ display: 'none' }}
-                                                        onChange={handleFileChange}
-                                                    />
-                                                    {coachPhoto ? (
-                                                        <div className="image-renderer">
-                                                            <img
-                                                                src={
-                                                                    typeof coachPhoto === 'string'
-                                                                        ? coachPhoto
-                                                                        : URL.createObjectURL(coachPhoto)
-                                                                }
-                                                                alt=""
-                                                                style={{ borderRadius: '50%' }}
-                                                            />
-                                                            <span>{coachPhoto.name}</span>
-                                                        </div>
-                                                    ) : (
-                                                        <div
-                                                            className="image-preview"
-                                                            onClick={(e) => {
-                                                                e.preventDefault();
-                                                                inputRef.current.click();
-                                                            }}
-                                                        >
-                                                            <img src={imagePreview} alt="" />
-                                                            <span>
-                                                                Upload Coach Picture here
-                                                                <br />
-                                                                <strong>Important Guidelines:</strong> 1200x800 pixels
-                                                                or 3:2 Ratio
-                                                                <br />
-                                                                Supported formats: <strong>.jpg, .jpeg, or .png</strong>
-                                                            </span>
-                                                        </div>
-                                                    )}
-                                                </>
-                                            )}
-                                        </Field>
+                                        <div className="image_wrapper">
+                                            <Field name="coachPhoto">
+                                                {({ field }) => (
+                                                    <>
+                                                        <input
+                                                            ref={inputRef}
+                                                            accept=".jpg,.jpeg,.png"
+                                                            {...field}
+                                                            type="file"
+                                                            style={{ display: 'none' }}
+                                                            onChange={handleFileChange}
+                                                        />
+                                                        {coachPhoto ? (
+                                                            <div className="image-renderer">
+                                                                <div className="img-wrapper">
+                                                                    <img
+                                                                        src={
+                                                                            typeof coachPhoto === 'string'
+                                                                                ? coachPhoto
+                                                                                : URL.createObjectURL(coachPhoto)
+                                                                        }
+                                                                        alt=""
+                                                                        style={{ borderRadius: '50%' }}
+                                                                    />
+                                                                    <div
+                                                                        className="overlay-image"
+                                                                        onClick={(e) => {
+                                                                            e.preventDefault();
+                                                                            inputRef.current.click();
+                                                                        }}
+                                                                    >
+                                                                        Edit
+                                                                    </div>
+                                                                </div>
+                                                                <span>{coachPhoto.name}</span>
+                                                            </div>
+                                                        ) : (
+                                                            <div
+                                                                className="image-preview"
+                                                                onClick={(e) => {
+                                                                    e.preventDefault();
+                                                                    inputRef.current.click();
+                                                                }}
+                                                            >
+                                                                <img src={imagePreview} alt="" />
+                                                                <span>
+                                                                    Upload Coach Picture here
+                                                                    <br />
+                                                                    Supported formats:{' '}
+                                                                    <strong>.jpg, .jpeg, or .png</strong>
+                                                                </span>
+                                                            </div>
+                                                        )}
+                                                    </>
+                                                )}
+                                            </Field>
+                                        </div>
                                     </Col>
                                 </Row>
                                 <Row>
@@ -364,6 +370,13 @@ const NewCoach = () => {
                             </Form>
                         )}
                     </Formik>
+                    {cropping && (
+                        <ImageCropper
+                            imageSrc={imageSrc}
+                            onCropComplete={handleCropComplete}
+                            onCancel={() => setCropping(false)}
+                        />
+                    )}
                 </Container>
             </div>
         </div>

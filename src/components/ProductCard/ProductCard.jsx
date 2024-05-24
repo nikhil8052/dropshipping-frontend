@@ -1,16 +1,16 @@
 import PropTypes from 'prop-types';
 import './ProductCard.scss';
 
-const ProductCard = ({ product }) => {
+const ProductCard = ({ item }) => {
     return (
         <div className="product-card">
-            <img src={product.image} alt={product.title} className="product-image" />
+            <img src={item.image} alt={item.title} className="product-image" />
             <div className="product-details">
-                <h5>{product.title}</h5>
-                <p>Created by: {product.creator}</p>
-                <p>Run Date: {product.runDate}</p>
-                <button type="button" className={`status-btn ${product.status === 'Running' ? 'running' : ''}`}>
-                    Status: {product.status}
+                <h5>{item.title}</h5>
+                <p>Created by: {item.creator}</p>
+                <p>Run Date: {item.runDate}</p>
+                <button type="button" className={`status-btn ${item.status === 'Running' ? 'running' : ''}`}>
+                    Status: {item.status}
                 </button>
             </div>
         </div>
@@ -18,7 +18,7 @@ const ProductCard = ({ product }) => {
 };
 
 ProductCard.propTypes = {
-    product: PropTypes.shape({
+    item: PropTypes.shape({
         image: PropTypes.string.isRequired,
         title: PropTypes.string.isRequired,
         creator: PropTypes.string.isRequired,

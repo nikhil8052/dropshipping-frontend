@@ -3,8 +3,8 @@ import '../../../styles/Courses.scss';
 import { Button, Row } from 'react-bootstrap';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import ProductCarousel from '../../../components/ProductCarousel/ProductCarousel';
-import { studentProducts } from '../../../data/data';
+import CarouselWrapper from '../../../components/Carousel/CarouselWrapper';
+import { lessons } from '../../../data/data';
 
 const PublishCourses = ({ onBack }) => {
     const userInfo = useSelector((state) => state?.auth?.userInfo);
@@ -57,9 +57,7 @@ const PublishCourses = ({ onBack }) => {
                             </div>
                         </div>
                         <div className="carousel-lecture">
-                            {/* Commenting for future use */}
-                            {/* <CourseSlider /> */}
-                            <ProductCarousel products={studentProducts} />
+                            <CarouselWrapper items={lessons} type="lecture" />
                         </div>
                         <Row>
                             <div className="mt-3 d-flex justify-content-between gap-3">

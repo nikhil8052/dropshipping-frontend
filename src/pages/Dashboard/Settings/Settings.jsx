@@ -2,17 +2,19 @@ import { useEffect, useRef, useState } from 'react';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import { Container, Row, Col, Button, Image, InputGroup } from 'react-bootstrap';
-import 'react-quill/dist/quill.snow.css';
 import toast from 'react-hot-toast';
 import { useNavigate } from 'react-router-dom';
 import profile from '@images/user-img.jpg';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
 import UploadSimple from '@icons/UploadSimple.svg';
+import ImageCropper from '../../../components/ImageMask/ImageCropper';
 
 const Settings = () => {
     const inputRef = useRef();
     const [profilePhoto, setProfilePhoto] = useState(profile || null);
+    const [cropping, setCropping] = useState(false);
+    const [imageSrc, setImageSrc] = useState(null);
     const navigate = useNavigate();
     const [showPasswords, setShowPasswords] = useState({
         current: false,
@@ -33,7 +35,6 @@ const Settings = () => {
     });
 
     useEffect(() => {
-        // Dummy data for now
         setProfileData({
             name: 'John Doe',
             email: ' John.Doe@example.com',
@@ -63,38 +64,30 @@ const Settings = () => {
     const handleFileChange = async (e) => {
         const file = e.target.files[0];
         if (!file || !file.type.startsWith('image/')) {
-            // Display an error or handle the invalid file selection
             toast.error('Invalid file selected. Please choose an image file.');
             return;
         }
 
-        const image = new Image();
-        image.src = window.URL.createObjectURL(file);
-        image.onload = () => {
-            const { width, height } = image;
-            if (width > 1200 || height > 800) {
-                // Display an error or handle the invalid file dimensions
-                toast.error('Invalid image dimensions. Please upload an image with 1200x800 pixels.');
-                return;
+        const image = URL.createObjectURL(file);
+        setImageSrc(image);
+        setCropping(true);
+    };
+
+    const handleCropComplete = (croppedImage) => {
+        setProfilePhoto(croppedImage);
+        setCropping(false);
+        toast.success('Image updated successfully!', {
+            icon: '🎉',
+            style: {
+                borderRadius: '10px',
+                background: '#333',
+                color: '#fff'
             }
-
-            toast.success('Image uploaded successfully!', {
-                icon: '🎉',
-                style: {
-                    borderRadius: '10px',
-                    background: '#333',
-                    color: '#fff'
-                }
-            });
-
-            setProfilePhoto(file);
-            // Upload File through API
-        };
+        });
     };
 
     const handleProfileSubmit = (values, { resetForm, setSubmitting }) => {
         setTimeout(() => {
-            // Implement form submission logic here
             resetForm();
             setSubmitting(false);
             navigate('/admin');
@@ -103,20 +96,19 @@ const Settings = () => {
 
     const handlePasswordSubmit = (values, { resetForm, setSubmitting }) => {
         setTimeout(() => {
-            // Implement form submission logic here
             resetForm();
             setSubmitting(false);
             navigate('/admin');
         }, 1000);
     };
 
-    // Function to toggle password visibility
     const togglePasswordVisibility = (field) => {
         setShowPasswords((prevState) => ({
             ...prevState,
             [field]: !prevState[field]
         }));
     };
+
     return (
         <div className="settings-page">
             <Container fluid className="p-3">
@@ -168,15 +160,11 @@ const Settings = () => {
                                                             className="upload-image-btn"
                                                             variant="outline-primary"
                                                         >
-                                                            Upload New Image <img src={UploadSimple} alt="" srcSet="" />
+                                                            Upload New Image <img src={UploadSimple} alt="" />
                                                         </Button>
                                                     </Col>
                                                 </Row>
-                                                <hr
-                                                    style={{
-                                                        color: 'rgba(233, 233, 233, 1)'
-                                                    }}
-                                                />
+                                                <hr style={{ color: 'rgba(233, 233, 233, 1)' }} />
                                             </>
                                         )}
                                     </Field>
@@ -199,7 +187,6 @@ const Settings = () => {
                                     <ErrorMessage name="email" component="div" className="error" />
                                 </Col>
                             </Row>
-
                             <Row>
                                 <Col md={6} xs={12}>
                                     <label className="field-label">Phone No</label>
@@ -212,7 +199,6 @@ const Settings = () => {
                                     <ErrorMessage name="phoneNumber" component="div" className="error" />
                                 </Col>
                             </Row>
-
                             <Row>
                                 <Col>
                                     <div className="mt-3 d-flex justify-content-start gap-3">
@@ -225,13 +211,7 @@ const Settings = () => {
                         </Form>
                     )}
                 </Formik>
-                <hr
-                    style={{
-                        color: 'rgba(233, 233, 233, 1)'
-                    }}
-                />
-                {/* Password section */}
-
+                <hr style={{ color: 'rgba(233, 233, 233, 1)' }} />
                 <Formik
                     initialValues={passwordData}
                     validationSchema={passwordValidationSchema}
@@ -241,7 +221,6 @@ const Settings = () => {
                     {({ isSubmitting, handleSubmit }) => (
                         <Form onSubmit={handleSubmit}>
                             <label className="profile-title mb-3">Password</label>
-
                             <Row>
                                 <Col md={6} xs={12}>
                                     <label className="field-label">Current Password</label>
@@ -280,7 +259,6 @@ const Settings = () => {
                                     <ErrorMessage name="newPassword" component="div" className="error" />
                                 </Col>
                             </Row>
-
                             <Row>
                                 <Col md={6} xs={12}>
                                     <label className="field-label">Confirm Password</label>
@@ -301,7 +279,6 @@ const Settings = () => {
                                     <ErrorMessage name="confirmPassword" component="div" className="error" />
                                 </Col>
                             </Row>
-
                             <Row>
                                 <Col>
                                     <div className="mt-3 d-flex justify-content-start gap-3">
@@ -314,6 +291,13 @@ const Settings = () => {
                         </Form>
                     )}
                 </Formik>
+                {cropping && (
+                    <ImageCropper
+                        imageSrc={imageSrc}
+                        onCropComplete={handleCropComplete}
+                        onCancel={() => setCropping(false)}
+                    />
+                )}
             </Container>
         </div>
     );

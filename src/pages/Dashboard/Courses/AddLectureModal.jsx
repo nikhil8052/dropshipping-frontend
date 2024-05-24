@@ -136,7 +136,7 @@ const AddLectureModal = ({ lectureModal, resetModal, onSave }) => {
 
                             <div className="quiz-wrapper">
                                 <div className="add-quiz-title">
-                                    <p> ADD Quizzes</p>
+                                    <p> Add Quiz</p>
                                 </div>
                                 <div className="quiz-fields-container">
                                     <FieldArray name="questions">

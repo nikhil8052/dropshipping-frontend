@@ -218,6 +218,28 @@ const Students = () => {
             </div>
         </div>
     );
+    const LinkRenderer = (props) => (
+        <div key={props.data.id}>
+            <div className="d-flex align-items-center">
+                <div
+                    style={{
+                        overflow: 'hidden',
+                        textOverflow: 'ellipsis',
+                        whiteSpace: expanded ? 'normal' : 'nowrap',
+                        cursor: 'pointer',
+                        textDecoration: 'underline',
+                        color: 'rgba(72, 128, 255, 1)'
+                    }}
+                    onClick={() => {
+                        console.log(props, 'clicked');
+                        props.onRoadMapClick(props.data.coursesRoadmap || []);
+                    }}
+                >
+                    View Roadmap
+                </div>
+            </div>
+        </div>
+    );
     /*eslint-disable */
 
     const columns = [
@@ -280,24 +302,29 @@ const Students = () => {
             wrapText: true,
             autoHeight: true,
             resizable: false,
-            cellRenderer: ({ data: rowData }) => {
-                const coursesRoadmap = rowData.coursesRoadmap;
-                const firstName = `Course 1 ${coursesRoadmap[0]?.title}`;
-
-                return (
-                    <div
-                        style={{
-                            overflow: 'hidden',
-                            textOverflow: 'ellipsis',
-                            whiteSpace: 'nowrap',
-                            cursor: 'pointer'
-                        }}
-                        onClick={() => handleCoursesRoadMapClick(coursesRoadmap)}
-                    >
-                        {firstName}
-                    </div>
-                );
+            cellRenderer: LinkRenderer,
+            cellRendererParams: {
+                onRoadMapClick: handleCoursesRoadMapClick
             }
+
+            // cellRenderer: ({ data: rowData }) => {
+            //     const coursesRoadmap = rowData.coursesRoadmap;
+            //     const firstName = `Course 1 ${coursesRoadmap[0]?.title}`;
+
+            //     return (
+            //         <div
+            //             style={{
+            //                 overflow: 'hidden',
+            //                 textOverflow: 'ellipsis',
+            //                 whiteSpace: 'nowrap',
+            //                 cursor: 'pointer'
+            //             }}
+            //             onClick={() => handleCoursesRoadMapClick(coursesRoadmap)}
+            //         >
+            //             View Roadmap
+            //         </div>
+            //     );
+            // }
         },
         {
             headerName: 'Active/Deactivate',

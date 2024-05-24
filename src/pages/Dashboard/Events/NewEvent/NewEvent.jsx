@@ -10,6 +10,7 @@ import { coachDummyData } from '../../../../data/data';
 import toast from 'react-hot-toast';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
+import ImageCropper from '../../../../components/ImageMask/ImageCropper';
 
 const NewEvent = () => {
     const inputRef = useRef();
@@ -19,6 +20,8 @@ const NewEvent = () => {
     const { userInfo } = useSelector((state) => state?.auth);
     const role = userInfo?.role;
     const navigate = useNavigate();
+    const [cropping, setCropping] = useState(false);
+    const [imageSrc, setImageSrc] = useState(null);
     const [eventData, setEventData] = useState({
         topic: '',
         dateAndTime: '',
@@ -62,28 +65,23 @@ const NewEvent = () => {
             return;
         }
 
-        const image = new Image();
-        image.src = window.URL.createObjectURL(file);
-        image.onload = () => {
-            const { width, height } = image;
-            if (width > 1200 || height > 800) {
-                // Display an error or handle the invalid file dimensions
-                toast.error('Invalid image dimensions. Please upload an image with 1200x800 pixels.');
-                return;
+        const image = URL.createObjectURL(file);
+        setImageSrc(image);
+        setCropping(true);
+    };
+
+    const handleCropComplete = (croppedImage) => {
+        setEventThumbnail(croppedImage);
+        // Upload File through API
+        setCropping(false);
+        toast.success('Image uploaded successfully!', {
+            icon: '🎉',
+            style: {
+                borderRadius: '10px',
+                background: '#333',
+                color: '#fff'
             }
-
-            toast.success('Image uploaded successfully!', {
-                icon: '🎉',
-                style: {
-                    borderRadius: '10px',
-                    background: '#333',
-                    color: '#fff'
-                }
-            });
-
-            setEventThumbnail(file);
-            // Upload File through API
-        };
+        });
     };
 
     return (
@@ -115,61 +113,72 @@ const NewEvent = () => {
                                 <Row className="mb-3">
                                     <Col>
                                         {eventThumbnail ? (
-                                            <label className="field-label fw-bold">Profile image</label>
+                                            <label className="field-label fw-bold">Event image</label>
                                         ) : (
                                             <label className="field-label">Upload Event Thumbnail</label>
                                         )}
-                                        <Field name="eventThumbnail">
-                                            {({ field }) => (
-                                                <>
-                                                    <input
-                                                        ref={inputRef}
-                                                        accept=".jpg,.jpeg,.png"
-                                                        {...field}
-                                                        type="file"
-                                                        style={{ display: 'none' }}
-                                                        onChange={handleFileChange}
-                                                    />
-                                                    {eventThumbnail ? (
-                                                        <div className="image-renderer">
-                                                            <img
-                                                                src={
-                                                                    typeof eventThumbnail === 'string'
-                                                                        ? eventThumbnail
-                                                                        : URL.createObjectURL(eventThumbnail)
-                                                                }
-                                                                alt=""
-                                                                style={{ borderRadius: '50%' }}
-                                                            />
-                                                            <span>{eventThumbnail.name}</span>
-                                                        </div>
-                                                    ) : (
-                                                        <div
-                                                            className="image-preview"
-                                                            onClick={(e) => {
-                                                                e.preventDefault();
-                                                                inputRef.current.click();
-                                                            }}
-                                                        >
-                                                            <img src={imagePreview} alt="" />
-                                                            <span className="ms-2">
-                                                                Upload your event Thumbnail here.
-                                                                <br />
-                                                                <strong>Important Guidelines:</strong> 1200x800 pixels
-                                                                or 12:8 Ratio
-                                                                <br />
-                                                                Supported formats: <strong>.jpg, .jpeg, or .png</strong>
-                                                                <br />
-                                                                <Button className="upload-image-btn">
-                                                                    Upload Image{' '}
-                                                                    <img src={UploadSimple} alt="Upload Btn" />
-                                                                </Button>
-                                                            </span>
-                                                        </div>
-                                                    )}
-                                                </>
-                                            )}
-                                        </Field>
+                                        <div className="image_wrapper">
+                                            <Field name="eventThumbnail">
+                                                {({ field }) => (
+                                                    <>
+                                                        <input
+                                                            ref={inputRef}
+                                                            accept=".jpg,.jpeg,.png"
+                                                            {...field}
+                                                            type="file"
+                                                            style={{ display: 'none' }}
+                                                            onChange={handleFileChange}
+                                                        />
+                                                        {eventThumbnail ? (
+                                                            <div className="image-renderer">
+                                                                <div className="img-wrapper">
+                                                                    <img
+                                                                        src={
+                                                                            typeof eventThumbnail === 'string'
+                                                                                ? eventThumbnail
+                                                                                : URL.createObjectURL(eventThumbnail)
+                                                                        }
+                                                                        alt=""
+                                                                        style={{ borderRadius: '50%' }}
+                                                                    />
+                                                                    <div
+                                                                        className="overlay-image"
+                                                                        onClick={(e) => {
+                                                                            e.preventDefault();
+                                                                            inputRef.current.click();
+                                                                        }}
+                                                                    >
+                                                                        Edit
+                                                                    </div>
+                                                                </div>
+                                                                <span>{eventThumbnail.name}</span>
+                                                            </div>
+                                                        ) : (
+                                                            <div
+                                                                className="image-preview"
+                                                                onClick={(e) => {
+                                                                    e.preventDefault();
+                                                                    inputRef.current.click();
+                                                                }}
+                                                            >
+                                                                <img src={imagePreview} alt="" />
+                                                                <span className="ms-2">
+                                                                    Upload your event Thumbnail here.
+                                                                    <br />
+                                                                    Supported formats:{' '}
+                                                                    <strong>.jpg, .jpeg, or .png</strong>
+                                                                    <br />
+                                                                    <Button className="upload-image-btn">
+                                                                        Upload Image{' '}
+                                                                        <img src={UploadSimple} alt="Upload Btn" />
+                                                                    </Button>
+                                                                </span>
+                                                            </div>
+                                                        )}
+                                                    </>
+                                                )}
+                                            </Field>
+                                        </div>
                                     </Col>
                                 </Row>
                                 <Row>
@@ -269,6 +278,13 @@ const NewEvent = () => {
                             </Form>
                         )}
                     </Formik>
+                    {cropping && (
+                        <ImageCropper
+                            imageSrc={imageSrc}
+                            onCropComplete={handleCropComplete}
+                            onCancel={() => setCropping(false)}
+                        />
+                    )}
                 </Container>
             </div>
         </div>

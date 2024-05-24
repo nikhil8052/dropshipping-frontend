@@ -9,10 +9,10 @@ import { countryList, studentDummyData, studentProducts } from '../../../../data
 import toast from 'react-hot-toast';
 import { useLocation, useNavigate } from 'react-router-dom';
 import Select from 'react-select';
-
 import RoadMapList from '../Roadmap/RoadmapList';
 import { useSelector } from 'react-redux';
-import ProductCarousel from '../../../../components/ProductCarousel/ProductCarousel';
+import CarouselWrapper from '@components/Carousel/CarouselWrapper';
+import ImageCropper from '@components/ImageMask/ImageCropper';
 
 const NewStudent = () => {
     const inputRef = useRef();
@@ -22,6 +22,8 @@ const NewStudent = () => {
     const { userInfo } = useSelector((state) => state?.auth);
     const role = userInfo?.role;
     const navigate = useNavigate();
+    const [cropping, setCropping] = useState(false);
+    const [imageSrc, setImageSrc] = useState(null);
     const [studentData, setStudentData] = useState({
         studentName: '',
         studentId: '',
@@ -85,30 +87,23 @@ const NewStudent = () => {
             return;
         }
 
-        const image = new Image();
-        image.src = window.URL.createObjectURL(file);
-        image.onload = () => {
-            // Commenting for now, will be used later
+        const image = URL.createObjectURL(file);
+        setImageSrc(image);
+        setCropping(true);
+    };
 
-            // const { width, height } = image;
-            // if (width > 1200 || height > 800) {
-            //     // Display an error or handle the invalid file dimensions
-            //     toast.error('Invalid image dimensions. Please upload an image with 1200x800 pixels.');
-            //     return;
-            // }
-
-            toast.success('Image uploaded successfully!', {
-                icon: '🎉',
-                style: {
-                    borderRadius: '10px',
-                    background: '#333',
-                    color: '#fff'
-                }
-            });
-
-            setStudentPhoto(file);
-            // Upload File through API
-        };
+    const handleCropComplete = (croppedImage) => {
+        setStudentPhoto(croppedImage);
+        // Upload File through API
+        setCropping(false);
+        toast.success('Image uploaded successfully!', {
+            icon: '🎉',
+            style: {
+                borderRadius: '10px',
+                background: '#333',
+                color: '#fff'
+            }
+        });
     };
 
     return (
@@ -145,52 +140,63 @@ const NewStudent = () => {
                                                 UPLOAD PHOTO <span className="label-light">(Mandatory)</span>
                                             </label>
                                         )}
-                                        <Field name="coachPhoto">
-                                            {({ field }) => (
-                                                <>
-                                                    <input
-                                                        ref={inputRef}
-                                                        accept=".jpg,.jpeg,.png"
-                                                        {...field}
-                                                        type="file"
-                                                        style={{ display: 'none' }}
-                                                        onChange={handleFileChange}
-                                                    />
-                                                    {studentPhoto ? (
-                                                        <div className="image-renderer">
-                                                            <img
-                                                                src={
-                                                                    typeof studentPhoto === 'string'
-                                                                        ? studentPhoto
-                                                                        : URL.createObjectURL(studentPhoto)
-                                                                }
-                                                                alt=""
-                                                                style={{ borderRadius: '50%' }}
-                                                            />
-                                                            <span>{studentPhoto.name}</span>
-                                                        </div>
-                                                    ) : (
-                                                        <div
-                                                            className="image-preview"
-                                                            onClick={(e) => {
-                                                                e.preventDefault();
-                                                                inputRef.current.click();
-                                                            }}
-                                                        >
-                                                            <img src={imagePreview} alt="" />
-                                                            <span>
-                                                                Upload Student Picture here
-                                                                <br />
-                                                                <strong>Important Guidelines:</strong> 1200x800 pixels
-                                                                or 12:8 Ratio
-                                                                <br />
-                                                                Supported formats: <strong>.jpg, .jpeg, or .png</strong>
-                                                            </span>
-                                                        </div>
-                                                    )}
-                                                </>
-                                            )}
-                                        </Field>
+                                        <div className="image_wrapper">
+                                            <Field name="coachPhoto">
+                                                {({ field }) => (
+                                                    <>
+                                                        <input
+                                                            ref={inputRef}
+                                                            accept=".jpg,.jpeg,.png"
+                                                            {...field}
+                                                            type="file"
+                                                            style={{ display: 'none' }}
+                                                            onChange={handleFileChange}
+                                                        />
+                                                        {studentPhoto ? (
+                                                            <div className="image-renderer">
+                                                                <div className="img-wrapper">
+                                                                    <img
+                                                                        src={
+                                                                            typeof studentPhoto === 'string'
+                                                                                ? studentPhoto
+                                                                                : URL.createObjectURL(studentPhoto)
+                                                                        }
+                                                                        alt=""
+                                                                        style={{ borderRadius: '50%' }}
+                                                                    />
+                                                                    <div
+                                                                        className="overlay-image"
+                                                                        onClick={(e) => {
+                                                                            e.preventDefault();
+                                                                            inputRef.current.click();
+                                                                        }}
+                                                                    >
+                                                                        Edit
+                                                                    </div>
+                                                                    <span>{studentPhoto.name}</span>
+                                                                </div>
+                                                            </div>
+                                                        ) : (
+                                                            <div
+                                                                className="image-preview"
+                                                                onClick={(e) => {
+                                                                    e.preventDefault();
+                                                                    inputRef.current.click();
+                                                                }}
+                                                            >
+                                                                <img src={imagePreview} alt="" />
+                                                                <span>
+                                                                    Upload Student Picture here
+                                                                    <br />
+                                                                    Supported formats:{' '}
+                                                                    <strong>.jpg, .jpeg, or .png</strong>
+                                                                </span>
+                                                            </div>
+                                                        )}
+                                                    </>
+                                                )}
+                                            </Field>
+                                        </div>
                                     </Col>
                                 </Row>
                                 <Row>
@@ -360,7 +366,7 @@ const NewStudent = () => {
                                             </Col>
                                         </Row>
 
-                                        <ProductCarousel products={studentProducts} />
+                                        <CarouselWrapper items={studentProducts} type="product" />
                                     </>
                                 )}
                                 <Row>
@@ -389,6 +395,13 @@ const NewStudent = () => {
                             </Form>
                         )}
                     </Formik>
+                    {cropping && (
+                        <ImageCropper
+                            imageSrc={imageSrc}
+                            onCropComplete={handleCropComplete}
+                            onCancel={() => setCropping(false)}
+                        />
+                    )}
                 </Container>
             </div>
         </div>

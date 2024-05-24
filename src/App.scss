@@ -142,3 +142,49 @@ input,
 .cursor-pointer {
     cursor: pointer;
 }
+
+// Fix the globally all dropdowns on Click colors
+.dropdown-item:active {
+    background-color: unset !important;
+}
+// Fix edit button on hover on image change
+
+.image_wrapper {
+    position: relative;
+}
+
+.image-renderer {
+    position: relative;
+}
+
+.img-wrapper {
+    position: relative;
+}
+
+.img-wrapper img {
+    display: block;
+    border-radius: 50%;
+    width: 100%; /* Adjust width as needed */
+    height: auto; /* Adjust height as needed */
+}
+
+.overlay-image {
+    height: 0;
+    width: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+    color: transparent;
+    position: absolute;
+    bottom: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition:
+        height 300ms ease-in-out,
+        color 300ms ease-in-out;
+    cursor: pointer;
+}
+
+.img-wrapper:hover .overlay-image {
+    height: 50%; /* Adjust height as needed */
+    color: white;
+}
