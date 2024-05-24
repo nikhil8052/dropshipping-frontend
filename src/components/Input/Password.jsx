@@ -1,6 +1,5 @@
 import { Form } from 'react-bootstrap';
 import { Field } from 'formik';
-
 function Password(props) {
     return (
         <Field name={props.name} type={props.type}>

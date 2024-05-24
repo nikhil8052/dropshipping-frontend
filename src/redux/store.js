@@ -10,7 +10,7 @@ import sidebarReducer from '../redux/sidebar/sidebarSlice';
 const rootReducer = combineReducers({
     auth,
     theme: themeReducer,
-    activeSidebarItem: sidebarReducer,
+    activeSidebarItem: sidebarReducer
 });
 
 const persistConfig = {

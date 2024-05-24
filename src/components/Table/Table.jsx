@@ -1,16 +1,15 @@
 import { useEffect, useState, useDeferredValue } from 'react';
 import { AgGridReact } from 'ag-grid-react';
 import 'ag-grid-community';
-import { InputGroup, Button, Form } from 'react-bootstrap';
+import { InputGroup, Form, Row, Col } from 'react-bootstrap';
 import Loading from '../Loading/Loading';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faSearch } from '@fortawesome/free-solid-svg-icons';
+import Search from '../../assets/icons/Search.svg';
 
 import './Table.scss';
 import 'ag-grid-community/styles/ag-grid.css';
 import 'ag-grid-community/styles/ag-theme-alpine.css';
 
-const Table = ({ columns, tableData, width, onRowClicked, createEntry, showCreatebtn, loading }) => {
+const Table = ({ columns, tableData, width, onRowClicked, loading, children, inputLgSize = 6, childLgSize = 6 }) => {
     const [gridApi, setGridApi] = useState(null);
     const [gridColumnApi, setGridColumnApi] = useState(null);
     const [search, setSearch] = useState('');
@@ -56,22 +55,26 @@ const Table = ({ columns, tableData, width, onRowClicked, createEntry, showCreat
 
     return (
         <div className="ag-theme-alpine custom-table" style={{ height: '100%', width: '100%' }}>
-            <div style={{ marginBottom: '10px' }} className="d-flex justify-content-between">
-                <InputGroup>
-                    <Form.Control
-                        className="search-input"
-                        type="text"
-                        name="Search"
-                        label="Search"
-                        onChange={onFilterTextChange}
-                        placeholder="Search..."
-                    />
-                    <InputGroup.Text>
-                        <FontAwesomeIcon icon={faSearch} />
-                    </InputGroup.Text>
-                </InputGroup>
-                {showCreatebtn && <Button onClick={createEntry}>Create</Button>}
-            </div>
+            <Row className="mb-3">
+                <Col lg={inputLgSize || 6} md={12}>
+                    <InputGroup>
+                        <InputGroup.Text>
+                            <img src={Search} alt="Search" />
+                        </InputGroup.Text>
+                        <Form.Control
+                            className="search-input"
+                            type="text"
+                            name="Search"
+                            label="Search"
+                            onChange={onFilterTextChange}
+                            placeholder="Search"
+                        />
+                    </InputGroup>
+                </Col>
+                <Col lg={childLgSize || 6} md={12}>
+                    {children}
+                </Col>
+            </Row>
             <div className="ag-theme-alpine" style={{ width: width ? width : '100%' }}>
                 {loading ? (
                     <Loading />
@@ -96,6 +99,8 @@ const Table = ({ columns, tableData, width, onRowClicked, createEntry, showCreat
                         suppressSizeToFit={true}
                         groupSelectsChildren={true}
                         suppressAggFuncInHeader={true}
+                        rowHeight={57}
+                        suppressMovableColumns={true}
                     />
                 )}
             </div>

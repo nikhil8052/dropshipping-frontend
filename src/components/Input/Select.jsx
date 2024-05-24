@@ -10,6 +10,7 @@ function Select(props) {
                 name={field.name}
                 value={props.options.find((option) => option.value === field.value)}
                 classNamePrefix="custom_select" // class prefix for customization
+                isMulti={props.isMulti}
                 onChange={({ value }) => {
                     field.onChange({
                         target: {
@@ -18,6 +19,7 @@ function Select(props) {
                         }
                     });
                 }}
+                components={props.components}
             />
         </div>
     );

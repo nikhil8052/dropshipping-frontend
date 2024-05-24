@@ -1,0 +1,100 @@
+@import '@constants/typography.scss';
+@import '@constants/colors.scss';
+
+.course-card {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+    width: 100%;
+    // max-width: 280px;
+    height: auto;
+    min-height: 270px;
+    padding: 10px !important;
+
+    img {
+        // max-width: 270px;
+        width: 100%;
+        height: auto;
+        object-fit: cover;
+    }
+    .course-title {
+        margin-top: 12px;
+        font-size: $font-size-large;
+        color: rgba(32, 34, 36, 1);
+        font-weight: $font-weight-bold;
+    }
+    .course-des {
+        font-size: $font-size-small;
+        color: rgba(100, 100, 100, 1);
+        font-weight: $font-weight-large;
+    }
+    .lecture-No {
+        font-size: $font-size-small;
+        color: rgba(150, 150, 150, 1);
+    }
+}
+
+.toggle-archive {
+    border-top: 1px solid #f4f4f4;
+    padding: 10px;
+    font-size: $font-size-medium;
+    color: #202224;
+    font-weight: $font-weight-medium;
+
+    .form-switch {
+        padding-left: 2.5em;
+        display: flex;
+        flex-direction: row-reverse;
+        width: 100%;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0px;
+    }
+    .form-switch .form-check-input {
+        width: 55px;
+        height: 28px;
+    }
+    .form-check-input:checked {
+        background-color: $info-color;
+        border-color: transparent;
+    }
+    .form-check-input:focus {
+        box-shadow: none;
+        border-color: none;
+    }
+}
+.progress-section {
+    display: flex;
+    flex-direction: column;
+    p {
+        color: #209957;
+        font-size: $font-size-mini;
+        margin-top: 2px;
+        font-weight: $font-weight-large;
+    }
+    .progress-bar {
+        background-color: #00bb56;
+    }
+    .progress,
+    .progress-stacked {
+        height: 6px;
+        border-radius: 0px;
+    }
+}
+.enroll-icon {
+    position: absolute;
+    img {
+        width: 88px;
+        height: 38px;
+    }
+    p {
+        position: absolute;
+        top: 7px;
+        font-size: $font-size-medium;
+        font-weight: $font-weight-medium;
+        color: #ffffff;
+        left: 8px;
+    }
+}
+//
+/* Include necessary styles from your provided CSS */

@@ -1,0 +1,56 @@
+.carousel-item {
+    display: flex;
+    justify-content: center;
+}
+
+.carousel-control-prev,
+.carousel-control-next {
+    width: 5%;
+}
+
+.carousel-indicators {
+    display: none;
+}
+
+.carousel-container {
+    padding: 20px 0;
+}
+
+.carousel-item {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.swiper-button-next {
+    background-image: url(../../assets/icons/Group12.svg) !important;
+    width: 50px !important;
+    height: 50px !important;
+    background-repeat: no-repeat;
+    background-size: 100% auto;
+    background-position: center;
+}
+
+.swiper-button-next::after {
+    content: ''; /* Keep the content property, but make it empty */
+    visibility: hidden;
+}
+
+.swiper-button-prev {
+    background-image: url(../../assets/icons/Group13.svg) !important;
+    width: 50px !important;
+    height: 50px !important;
+    background-repeat: no-repeat;
+    background-size: 100% auto !important;
+    background-position: center;
+}
+
+.swiper-button-prev::after {
+    content: ''; /* Keep the content property, but make it empty */
+    visibility: hidden;
+}
+.slide-item {
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+}

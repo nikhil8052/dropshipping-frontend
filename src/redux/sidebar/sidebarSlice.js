@@ -2,7 +2,7 @@ import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
     activeLink: {
-        name: 'Home', 
+        name: 'Home',
         linkTo: '/'
     }
 };

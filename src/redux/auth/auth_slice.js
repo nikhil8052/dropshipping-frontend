@@ -24,7 +24,7 @@ const authSlice = createSlice({
         },
         loginWithoutAPI: (state, { payload }) => {
             state.isLoggedIn = true;
-            state.userInfo = { email: payload.email };
+            state.userInfo = { email: payload.email, role: payload.role };
         }
     },
     extraReducers(builder) {

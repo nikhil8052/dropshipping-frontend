@@ -1,18 +1,15 @@
 @import '@constants/colors.scss';
 @import '@constants/typography.scss';
 @import '@constants/media.scss';
-
-
-.form-inline{
-    label{
+.form-inline {
+    label {
         display: inline-block !important;
     }
 }
-.formgroup{
-    position:relative;
-    margin: 10px 0px 22px 0px;
+.formgroup {
+    position: relative;
     width: 100%;
-    label{
+    label {
         display: block;
         font-family: $font-primary;
         margin-bottom: 2px;
@@ -24,23 +21,25 @@
         }
     }
     // input type text and password default styles. Please feel free to customize as required
-    input[type="text"],input[type="password"],textarea,.custom_select__control{
+    input[type='text'],
+    input[type='password'],
+    textarea,
+    .custom_select__control {
         font-size: 16px;
         font-family: $font-secondary;
         border-radius: 5px;
         padding: 6px 7px;
         border: 1px solid $primary-color;
-        background-color: $light-color;
         color: $info-color;
         border-color: $info-color;
-        &::placeholder{
+        &::placeholder {
             text-transform: capitalize;
             font-size: 14px;
         }
-        &:focus{
+        &:focus {
             outline: 1.5px solid $info-color;
         }
-        
+
         //handle responsive
         @include respond-to($small-screen) {
             width: 270px;
@@ -52,27 +51,27 @@
             padding: 4px 5px;
             font-size: 14px;
         }
-    
     }
+
     //use react select class prefix to select required elements within selector element
-    .custom_select__control{
+    .custom_select__control {
         padding: 0px;
         font-size: 16px;
         color: $info-color !important;
-        &:hover{
+        &:hover {
             border-color: $info-color;
         }
     }
     // form control radio default styles
-    .check-control{
+    .check-control {
         display: inline-block !important;
         margin-right: 10px;
-        input{
+        input {
             margin-right: 5px;
         }
-    } 
+    }
     // validation error message style
-    .validation-error{
+    .validation-error {
         font-family: $font-secondary;
         color: $danger-color;
         font-size: 12px;

@@ -1,0 +1,79 @@
+.graph-card {
+    border: none; // Remove the default border
+    margin-bottom: 1rem;
+
+    .card-header {
+        background-color: #f9f9f9; // Light grey background for the header
+        padding: 16px 24px; // Adequate padding for a balanced look
+        font-size: 16px; // Suitable font size for the header title
+        color: #333333; // Darker text for better readability
+
+        .form-select {
+            width: auto; // Auto width based on content
+            border-color: #cccccc; // Light border for the select box
+            &:focus {
+                box-shadow: none; // Remove the default focus shadow
+                border-color: #999999; // Darker border on focus
+            }
+        }
+    }
+
+    .card-body {
+        padding: 24px; // Consistent padding with the header
+        background-color: rgba(247, 249, 251, 1);
+        border-radius: 16px;
+    }
+
+    .chart-container {
+        padding: 0; // Remove padding if any
+    }
+
+    .nav-tabs {
+        border-bottom: unset !important;
+        .nav-item {
+            .nav-link {
+                margin-right: 5px; // Space between tabs
+                padding: 12px 16px; // Comfortable padding for easy clicking
+                background: unset !important;
+                border: unset !important;
+                color: rgba(28, 28, 28, 0.4);
+
+                &:hover {
+                    color: #333333; // Darker text on hover for better interaction
+                    background-color: #f5f5f5; // Light background on hover
+                }
+
+                &.active {
+                    color: rgba(0, 0, 0, 1); // White text for active tab
+                    background-color: unset !important;
+                    border-color: unset !important;
+                }
+            }
+        }
+    }
+
+    // Select
+    .custom-form-select {
+        background: rgba(229, 236, 246, 1);
+        color: rgba(0, 0, 0, 1);
+    }
+    .custom-form-select {
+        appearance: none;
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        background: url('../../../assets/icons/down-arrow.svg') no-repeat;
+        background-color: rgba(229, 236, 246, 1);
+        background-position: right 20px top 50%;
+        background-size: 20px;
+        padding: 12px 20px;
+
+        cursor: pointer;
+        min-width: 150px !important;
+        font-family: Inter;
+        border-radius: 1rem;
+    }
+
+    .form-check-input:checked {
+        background: rgba(1, 159, 216, 1);
+    }
+}

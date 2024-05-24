@@ -1,29 +1,39 @@
 import { lazy } from 'react';
 import { Routes, Route } from 'react-router-dom';
-import DashboardLayout from '@layout/DashboardLayout/DashboardLayout';
+import CoachLayout from '@layout/CoachLayout/CoachLayout';
+import StudentLayout from '@layout/StudentLayout/StudentLayout';
+import AdminLayout from '@layout/AdminLayout/AdminLayout';
 import PublicLayout from '@layout/PublicLayout/PublicLayout';
-
-const Home = lazy(() => import('@pages/Home/Home'));
-const Login = lazy(() => import('@pages/Auth/Login'));
-const SignUp = lazy(() => import('@pages/Auth/SignUp'));
-const Listing = lazy(() => import('@pages/Listing/Listing'));
-const ListingDetails = lazy(() => import('@pages/ListingDetails/ListingDetails'));
 const NotFound = lazy(() => import('@pages/NotFound/NotFound'));
+import { adminRoutes, coachesRoutes, studentRoutes } from './protectedRoutes.js';
+import publicRoutes from './public/index.js';
 
 const MainRoutes = () => {
     return (
         <Routes>
             <Route path="/" element={<PublicLayout />}>
-                <Route path="login" exact element={<Login />} />
-                <Route path="signup" exact element={<SignUp />} />
+                {publicRoutes.map(({ Component, exact, path, index }, keyIndex) => (
+                    <Route key={keyIndex} path={path} index={index} exact={exact} element={<Component />} />
+                ))}
             </Route>
             {/* protected layout */}
-            <Route path="/" element={<DashboardLayout />}>
-                <Route index exact element={<Home />} />
-                <Route path="products" exact element={<Listing />} />
-                <Route path="product/:id" exact element={<ListingDetails />} />
-                <Route path="groups/:id" exact element={<Listing />} />
+
+            <Route path="/admin" element={<AdminLayout />}>
+                {adminRoutes.map(({ Component, exact, path, index }, keyIndex) => (
+                    <Route key={keyIndex} path={path} index={index} exact={exact} element={<Component />} />
+                ))}
             </Route>
+            <Route path="/coach" element={<CoachLayout />}>
+                {coachesRoutes.map(({ Component, exact, path, index }, keyIndex) => (
+                    <Route key={keyIndex} path={path} index={index} exact={exact} element={<Component />} />
+                ))}
+            </Route>
+            <Route path="/student" element={<StudentLayout />}>
+                {studentRoutes.map(({ Component, exact, path, index }, keyIndex) => (
+                    <Route key={keyIndex} path={path} index={index} exact={exact} element={<Component />} />
+                ))}
+            </Route>
+
             <Route path="*" element={<NotFound />} />
         </Routes>
     );

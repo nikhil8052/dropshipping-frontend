@@ -1,3 +1,6 @@
+@import '@constants/colors.scss';
+@import '@constants/typography.scss';
+
 .confirmation-modal {
     .custom-button {
         min-width: 100px;
@@ -5,5 +8,68 @@
         display: flex;
         justify-content: center;
         align-items: center;
+    }
+    .modal-body {
+        color: rgba(140, 148, 163, 1);
+        text-align: center;
+    }
+    // Custom footer classes
+    .custom-footer-class {
+        border: none !important;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 1rem;
+        .custom-button {
+            border-radius: 59px;
+            font-weight: 400;
+            padding: 20px 24px;
+            white-space: nowrap;
+            border: none;
+            font-family: Inter;
+            font-size: 14px;
+            font-weight: 600;
+            line-height: 48px;
+            letter-spacing: -0.008em;
+            text-align: center;
+        }
+        .delete-button {
+            color: white !important;
+            background: $danger-extra-light-color;
+        }
+        .yes-button {
+            color: rgba(1, 158, 216, 1);
+            background: rgba(204, 236, 247, 1);
+        }
+        .cancel-button {
+            padding: 20px 24px;
+            background: rgba(245, 247, 250, 1) !important;
+            color: black;
+        }
+    }
+    .add-quiz-file {
+        border: 0.8px solid #e9eaf0;
+        border-radius: 10px;
+        margin-top: 15px;
+        color: #8c94a3;
+        font-size: $font-size-medium;
+        padding: 15px 20px;
+
+        .guZdik {
+            // display: none !important;
+            border: none !important;
+            .jWkLDY {
+                display: none !important;
+            }
+            svg {
+                display: none !important;
+            }
+        }
+
+        h4 {
+            font-size: $font-size-medium;
+            font-weight: $font-weight-bold;
+            color: #1d2026;
+        }
     }
 }

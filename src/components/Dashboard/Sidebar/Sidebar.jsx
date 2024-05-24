@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { Container, Nav } from 'react-bootstrap';
+import { Container, Nav, Card, Button } from 'react-bootstrap';
 import './sidebar.scss';
 import { useNavigate } from 'react-router-dom';
-import logoImg from '@images/ropstam.svg';
+import logoImg from '@icons/dropship-logo.svg';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCircleXmark } from '@fortawesome/free-solid-svg-icons';
 import { useSelector, useDispatch } from 'react-redux';
@@ -12,15 +12,32 @@ import { collapseSidebar } from '@redux/theme/theme_slice.js';
 import ConfirmationBox from '../../ConfirmationBox/ConfirmationBox';
 import { logoutUser } from '@redux/auth/auth_slice';
 import { changeLink } from '@redux/sidebar/sidebarSlice';
+import profile from '@images/user-img.jpg';
+import dotBlue from '@icons/dot-blue-2.svg';
+
 // import all static icons
-import sideBarItems from './sidebarData';
+import { adminSidebarItems, coachSidebarItems, studentSidebarItems } from './sidebarData';
 
 const Sidebar = () => {
     const dispatch = useDispatch();
     const collapsed = useSelector((state) => state.theme.collapsed);
     const autoCollapsed = useSelector((state) => state.theme.autoCollapsed);
+    const { userInfo } = useSelector((state) => state?.auth);
+    const [updatedItems, setUpdatedItems] = useState([]);
+
+    // Later we change this to actual role
+
+    const role = userInfo?.role;
+
     const [modalShow, setModalShow] = useState(false);
     const { activeSidebarItem } = useSelector((state) => state.activeSidebarItem);
+
+    useEffect(() => {
+        const items = role === 'admin' ? adminSidebarItems : role === 'coach' ? coachSidebarItems : studentSidebarItems;
+        setUpdatedItems(items);
+    }, [role, activeSidebarItem]);
+
+    const sideBarEventModal = role === 'student';
 
     const navigate = useNavigate();
 
@@ -38,27 +55,26 @@ const Sidebar = () => {
             return null;
         };
 
-        const activeItem = findActiveItem(sideBarItems);
+        const activeItem = findActiveItem(updatedItems);
         if (activeItem) {
             dispatch(changeLink(activeItem.id));
         }
     };
 
     const handleSideBarClick = (item) => {
-        console.log(item);
         dispatch(changeLink(item.id)); // Dispatch the selected item to update the activeLink
-    
-        if (item.id === 7) {
+
+        if (item.name === 'Logout') {
             handleLogoutClick();
         } else if (item.linkTo) {
             navigate(item.linkTo);
         }
-    };    
+    };
 
     useEffect(() => {
         selectActiveItem();
         // This effect should ideally depend on the pathname to update active items on route change
-    }, [location.pathname]);
+    }, [location.pathname, updatedItems]);
 
     const handleLogoutClick = () => {
         setModalShow(!modalShow);
@@ -72,8 +88,11 @@ const Sidebar = () => {
                     onClose={handleLogoutClick}
                     loading={false}
                     title="Logout"
-                    body="Are you sure you want to logout?"
+                    body="Are you sure you wants to Logout ?"
                     onConfirm={() => dispatch(logoutUser())}
+                    customFooterClass="custom-footer-class"
+                    nonActiveBtn="cancel-button"
+                    activeBtn="yes-button"
                 />
             )}
             <div className={`sidebar ${collapsed ? 'hide-sidebar' : ''}`}>
@@ -95,7 +114,7 @@ const Sidebar = () => {
                     </div>
                     <div className="side-nav-wrapper">
                         <Nav defaultActiveKey="/" className="sidebar-nav-items">
-                            {sideBarItems.map((item) =>
+                            {updatedItems.map((item) =>
                                 item.child ? (
                                     <SidebarItemCollapse
                                         key={item.id}
@@ -112,7 +131,49 @@ const Sidebar = () => {
                                     />
                                 )
                             )}
+                            {/* Last child should be an image and role */}
                         </Nav>
+
+                        {sideBarEventModal && (
+                            <div className="side-bar-event">
+                                <Card className="custom-card">
+                                    <Card.Header className="d-flex flex-column align-items-start">
+                                        <div className="d-flex align-items-center mb-2 w-100">
+                                            <div className="calendar-icon me-2"></div>
+                                            <Card.Text className="mb-0 text-start text-nowrap">
+                                                Upcoming Event
+                                            </Card.Text>
+                                        </div>
+                                        <div className="d-flex align-items-center justify-content-center w-100">
+                                            <Card.Text className="mb-0 text-nowrap">
+                                                <img src={dotBlue} alt="Dot" /> Meeting with Prashant...
+                                            </Card.Text>
+                                        </div>
+                                    </Card.Header>
+                                    <Card.Body>
+                                        <div className="d-flex align-items-center justify-content-between mb-2 px-2">
+                                            <Card.Text className="mb-0 event-time">8:45 AM</Card.Text>
+                                            <div className="exchange-icon"></div>
+                                            <Card.Text className="mb-0 event-time">10:45 AM</Card.Text>
+                                        </div>
+                                        <Button variant="primary" className="w-100 mt-3  zoom-btn">
+                                            <div className="zoom-icon me-2"></div>
+                                            Go to Zoom link
+                                        </Button>
+                                    </Card.Body>
+                                </Card>
+                            </div>
+                        )}
+
+                        <div className={`side-bar-profile ${sideBarEventModal ? 'remove-auto' : ''}`}>
+                            <div className="profile-wrapper">
+                                <img src={profile} className="profile-pic" alt="nav-icon" />
+                            </div>
+                            <div className="profile-name">
+                                <p>{userInfo?.email}</p>
+                                <span>{userInfo?.role}</span>
+                            </div>
+                        </div>
                     </div>
                 </Container>
             </div>
