@@ -2,7 +2,7 @@ import { useState } from 'react';
 import '../../../styles/Courses.scss';
 import Card from '@components/Card/Card';
 import { useSelector } from 'react-redux';
-import { useLocation, Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import CaretRight from '@icons/CaretRight.svg';
 import viewProfile from '../../../assets/images/Ellipse 5.svg';
 import { InputGroup, Button, Form, Col } from 'react-bootstrap';
@@ -14,8 +14,7 @@ const ViewProgress = () => {
     const userInfo = useSelector((state) => state?.auth?.userInfo);
     const [search, setSearch] = useState('');
     const { role } = userInfo;
-    const location = useLocation();
-    const isViewlPage = location.pathname === `/${role}/courses/view-progress`;
+    const navigate = useNavigate();
     const onFilterTextChange = (event) => {
         setSearch(event.target.value);
     };
@@ -29,13 +28,11 @@ const ViewProgress = () => {
 
     return (
         <div className="view-progress-section">
-            <div className="addcourse-nav mb-3">
-                <Link to={`/${role}/courses`}> Courses</Link>
-                {isViewlPage && (
-                    <span>
-                        <img src={CaretRight} alt=">" /> View Progress
-                    </span>
-                )}
+            <div className="title-top mb-3">
+                <span onClick={() => navigate(`/${role}/courses`)} style={{ cursor: 'pointer' }}>
+                    Courses <img src={CaretRight} alt=">" />
+                </span>{' '}
+                View Progress
             </div>
 
             <Card cardType="large">

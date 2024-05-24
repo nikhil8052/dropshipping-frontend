@@ -137,7 +137,7 @@ const MeetingRequest = () => {
                                         <div className="mt-3 d-flex justify-content-end gap-3">
                                             <Button
                                                 type="button"
-                                                onClick={() => navigate('/meeting-requests')}
+                                                onClick={() => navigate('/student')}
                                                 className="cancel-btn"
                                                 disabled={isSubmitting}
                                             >

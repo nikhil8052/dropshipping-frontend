@@ -416,6 +416,7 @@ export const lessons = [
     {
         id: 1,
         lectureNo: 1,
+        image: eventImg,
         title: 'Lecture No. 1',
         description:
             'Students who will get a well-made high quality lecture video are more likely to understand the course. Students who will get a well-made high quality lecture video are more likely to understand the course.',
@@ -440,6 +441,7 @@ export const lessons = [
     {
         id: 2,
         lectureNo: 2,
+        image: eventImg,
         title: 'Lecture No. 2',
         description: 'This lecture covers advanced topics and builds on the foundation set in the first lecture.',
 
@@ -460,6 +462,7 @@ export const lessons = [
     {
         id: 3,
         lectureNo: 3,
+        image: eventImg,
         title: 'Lecture No. 3',
         description: 'A deep dive into specific case studies and examples from the industry.',
         video: {
@@ -485,6 +488,7 @@ export const lessons = [
     {
         id: 4,
         lectureNo: 4,
+        image: eventImg,
         title: 'Lecture No. 4',
         description: 'An exploration of the latest trends and technologies in the field.',
 
@@ -506,6 +510,7 @@ export const lessons = [
     {
         id: 5,
         lectureNo: 5,
+        image: eventImg,
         title: 'Lecture No. 5',
         description: 'A comprehensive guide to implementing the learned concepts in real-world scenarios.',
         video: {
@@ -530,6 +535,7 @@ export const lessons = [
     {
         id: 6,
         lectureNo: 6,
+        image: eventImg,
         title: 'Lecture No. 6',
         description: 'Exploring the pros and cons of different methodologies and approaches.',
         video: {
@@ -556,6 +562,7 @@ export const lessons = [
     {
         id: 7,
         lectureNo: 7,
+        image: eventImg,
         title: 'Lecture No. 7',
         description: 'Understanding the inspirations behind successful products and solutions.',
         video: {
@@ -581,6 +588,7 @@ export const lessons = [
     {
         id: 8,
         lectureNo: 8,
+        image: eventImg,
         title: 'Lecture No. 8',
         description: 'An in-depth look at currently existing products and their market positions.',
         video: {
@@ -598,6 +606,7 @@ export const lessons = [
     {
         id: 9,
         lectureNo: 9,
+        image: eventImg,
         title: 'Lecture No. 9',
         description: 'Discussing the future outlook and potential developments in the industry.',
         video: {
@@ -622,6 +631,7 @@ export const lessons = [
     {
         id: 10,
         lectureNo: 10,
+        image: eventImg,
         title: 'Lecture No. 10',
         description: 'A summary and wrap-up of the entire course, with key takeaways and final thoughts.',
         video: {

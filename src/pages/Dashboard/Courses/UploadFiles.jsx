@@ -18,11 +18,12 @@ import { trimLongText } from '../../../utils/common';
 import UploadSimple from '@icons/UploadSimple.svg';
 // import axiosWrapper from '@utils/api';
 import ConfirmationBox from '@components/ConfirmationBox/ConfirmationBox';
+import ImageCropper from '../../../components/ImageMask/ImageCropper';
 
 const UploadFiles = ({ onNext, onBack }) => {
     const inputRef = useRef();
     const videoinputRef = useRef();
-    const [coachPhoto, setCoachPhoto] = useState(null);
+    const [coursePhoto, setCoursePhoto] = useState(null);
     const [courseVideo, setCourseVideo] = useState(null);
     const [showDeleteModal, setShowDeleteModal] = useState(false);
     const [loadingCRUD, setLoadingCRUD] = useState(false);
@@ -37,7 +38,8 @@ const UploadFiles = ({ onNext, onBack }) => {
     });
 
     const [lectures, setLectures] = useState([]);
-
+    const [cropping, setCropping] = useState(false);
+    const [imageSrc, setImageSrc] = useState(null);
     const [coachData, setCoachData] = useState({
         courseDescription: ''
     });
@@ -57,28 +59,23 @@ const UploadFiles = ({ onNext, onBack }) => {
             return;
         }
 
-        const image = new Image();
-        image.src = window.URL.createObjectURL(file);
-        image.onload = () => {
-            const { width, height } = image;
-            if (width > 1200 || height > 800) {
-                // Display an error or handle the invalid file dimensions
-                toast.error('Invalid image dimensions. Please upload an image with 1200x800 pixels.');
-                return;
+        const image = URL.createObjectURL(file);
+        setImageSrc(image);
+        setCropping(true);
+    };
+
+    const handleCropComplete = (croppedImage) => {
+        setCoursePhoto(croppedImage);
+        // Upload File through API
+        setCropping(false);
+        toast.success('Image uploaded successfully!', {
+            icon: '🎉',
+            style: {
+                borderRadius: '10px',
+                background: '#333',
+                color: '#fff'
             }
-
-            toast.success('Image uploaded successfully!', {
-                icon: '🎉',
-                style: {
-                    borderRadius: '10px',
-                    background: '#333',
-                    color: '#fff'
-                }
-            });
-
-            setCoachPhoto(file);
-            // Upload File through API
-        };
+        });
     };
 
     const handleVideoChange = async (e) => {
@@ -234,7 +231,7 @@ const UploadFiles = ({ onNext, onBack }) => {
                             <Form onSubmit={handleSubmit}>
                                 <Row className="mb-3">
                                     <Col xs={12} sm={12} md={12} lg={6}>
-                                        {coachPhoto ? (
+                                        {coursePhoto ? (
                                             <></>
                                         ) : (
                                             <label className="title-thumbnail">Course Thumbnail</label>
@@ -250,18 +247,18 @@ const UploadFiles = ({ onNext, onBack }) => {
                                                         style={{ display: 'none' }}
                                                         onChange={handleFileChange}
                                                     />
-                                                    {coachPhoto ? (
+                                                    {coursePhoto ? (
                                                         <div className="image-renderer">
                                                             <img
                                                                 src={
-                                                                    typeof coachPhoto === 'string'
-                                                                        ? coachPhoto
-                                                                        : URL.createObjectURL(coachPhoto)
+                                                                    typeof coursePhoto === 'string'
+                                                                        ? coursePhoto
+                                                                        : URL.createObjectURL(coursePhoto)
                                                                 }
                                                                 alt=""
                                                                 style={{ borderRadius: '50%', objectFit: 'cover' }}
                                                             />
-                                                            <span>{coachPhoto.name}</span>
+                                                            <span>{coursePhoto.name}</span>
                                                         </div>
                                                     ) : (
                                                         <div className="image-preview">
@@ -451,7 +448,7 @@ const UploadFiles = ({ onNext, onBack }) => {
                                                 Back
                                             </Button>
                                             <Button type="submit" className="submit-btn" disabled={isSubmitting}>
-                                                {isSubmitting ? 'saving...' : 'Save & Next'}
+                                                Save & Next
                                             </Button>
                                         </div>
                                     </Col>
@@ -459,6 +456,13 @@ const UploadFiles = ({ onNext, onBack }) => {
                             </Form>
                         )}
                     </Formik>
+                    {cropping && (
+                        <ImageCropper
+                            imageSrc={imageSrc}
+                            onCropComplete={handleCropComplete}
+                            onCancel={() => setCropping(false)}
+                        />
+                    )}
                 </div>
             </div>
         </>

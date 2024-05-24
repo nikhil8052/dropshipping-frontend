@@ -74,6 +74,7 @@
             overflow: hidden;
             border: none;
             border-radius: 10px;
+            background-color: white !important;
             box-shadow: 0px 0px 54px 0px rgba(0, 0, 0, 0.37);
             .avatar {
                 width: 20px;
@@ -358,7 +359,7 @@
         overflow: hidden;
         border: none;
         border-radius: 10px;
-        background-color: transparent !important;
+        background-color: white !important;
         transform: translate(0px, 38px) !important;
         box-shadow: 0px 0px 54px 0px rgba(0, 0, 0, 0.37);
         .event-name {
@@ -424,7 +425,7 @@
             overflow: hidden;
             border: none;
             border-radius: 10px;
-            background-color: transparent !important;
+            background-color: white !important;
             transform: translate(0px, 38px) !important;
             box-shadow: 0px 0px 54px 0px rgba(0, 0, 0, 0.37);
             .event-name {

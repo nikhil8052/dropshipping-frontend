@@ -17,7 +17,6 @@ import dotBlue from '@icons/dot-blue-2.svg';
 
 // import all static icons
 import { adminSidebarItems, coachSidebarItems, studentSidebarItems } from './sidebarData';
-import SemiCircularProgressBar from '../../SemiProgressBar/SemiCircularProgressBar';
 
 const Sidebar = () => {
     const dispatch = useDispatch();
@@ -25,7 +24,6 @@ const Sidebar = () => {
     const autoCollapsed = useSelector((state) => state.theme.autoCollapsed);
     const { userInfo } = useSelector((state) => state?.auth);
     const [updatedItems, setUpdatedItems] = useState([]);
-    const [sideBarActiveKey, setSideBarActiveKey] = useState('');
 
     // Later we change this to actual role
 
@@ -37,13 +35,9 @@ const Sidebar = () => {
     useEffect(() => {
         const items = role === 'admin' ? adminSidebarItems : role === 'coach' ? coachSidebarItems : studentSidebarItems;
         setUpdatedItems(items);
-
-        const activeKey = items.find((item) => item?.id === activeSidebarItem)?.name;
-        setSideBarActiveKey(activeKey);
     }, [role, activeSidebarItem]);
 
-    const sideBarEventModal = role === 'student' && sideBarActiveKey === 'Events';
-    const sideBarDashboardModal = role === 'student' && sideBarActiveKey === 'Dashboard';
+    const sideBarEventModal = role === 'student';
 
     const navigate = useNavigate();
 
@@ -139,15 +133,18 @@ const Sidebar = () => {
                             )}
                             {/* Last child should be an image and role */}
                         </Nav>
+
                         {sideBarEventModal && (
                             <div className="side-bar-event">
                                 <Card className="custom-card">
                                     <Card.Header className="d-flex flex-column align-items-start">
                                         <div className="d-flex align-items-center mb-2 w-100">
                                             <div className="calendar-icon me-2"></div>
-                                            <Card.Text className="mb-0">Upcoming Event</Card.Text>
+                                            <Card.Text className="mb-0 text-start text-nowrap">
+                                                Upcoming Event
+                                            </Card.Text>
                                         </div>
-                                        <div className="d-flex align-items-center w-100">
+                                        <div className="d-flex align-items-center justify-content-center w-100">
                                             <Card.Text className="mb-0 text-nowrap">
                                                 <img src={dotBlue} alt="Dot" /> Meeting with Prashant...
                                             </Card.Text>
@@ -167,24 +164,8 @@ const Sidebar = () => {
                                 </Card>
                             </div>
                         )}
-                        {sideBarDashboardModal && (
-                            <div className="side-bar-progress">
-                                <Card className="custom-card">
-                                    <Card.Header>
-                                        <div className="bar-title">Your Overall Progress</div>
-                                    </Card.Header>
-                                    <Card.Body className="d-flex flex-column align-items-center">
-                                        <SemiCircularProgressBar value={84} />
-                                        <Card.Link href="#" className="see-course-link">
-                                            See Course &rarr;
-                                        </Card.Link>
-                                    </Card.Body>
-                                </Card>
-                            </div>
-                        )}
-                        <div
-                            className={`side-bar-profile ${sideBarDashboardModal || sideBarEventModal ? 'remove-auto' : ''}`}
-                        >
+
+                        <div className={`side-bar-profile ${sideBarEventModal ? 'remove-auto' : ''}`}>
                             <div className="profile-wrapper">
                                 <img src={profile} className="profile-pic" alt="nav-icon" />
                             </div>

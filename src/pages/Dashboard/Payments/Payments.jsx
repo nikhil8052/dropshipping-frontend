@@ -161,7 +161,7 @@ const Payments = () => {
             }
         },
         {
-            headerName: 'Amount Paid',
+            headerName: 'Amount Paid ($)',
             field: 'amountPaid',
             filter: 'agSetColumnFilter',
             sortable: true,
@@ -235,7 +235,7 @@ const Payments = () => {
                                         </div>
                                     }
                                     defaultValue={selectedOption}
-                                    className="dropdown-button w-25 d-flex justify-content-even align-items-center"
+                                    className="dropdown-button-fix w-25 d-flex justify-content-even align-items-center"
                                 >
                                     {['Paid', 'Overdue', 'HT', 'LT'].map((events) => (
                                         <Dropdown.Item
