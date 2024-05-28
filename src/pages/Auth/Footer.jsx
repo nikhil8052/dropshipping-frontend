@@ -5,7 +5,7 @@ const Footer = () => {
 
     return (
         <div>
-            <p className="footer-static">© {currentYear} dropship academy x. All Rights Reserved</p>
+            <p className="footer-static">© {currentYear} Dropship Academy x. All Rights Reserved</p>
         </div>
     );
 };

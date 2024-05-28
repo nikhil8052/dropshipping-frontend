@@ -233,18 +233,6 @@ const Events = () => {
             resizable: false
         },
         {
-            headerName: 'Attendees',
-            field: 'attendees',
-            filter: 'agSetColumnFilter',
-            sortable: true,
-            unSortIcon: true,
-            resizable: false,
-            cellRenderer: ({ data: rowData }) => {
-                const attendees = rowData.attendees;
-                return <div key={rowData.id}>{attendees} students</div>;
-            }
-        },
-        {
             headerName: 'Date & Time',
             field: 'dateTime',
             filter: 'agSetColumnFilter',

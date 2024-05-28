@@ -79,7 +79,7 @@ const Login = () => {
                                                 <div className="input-password-container">
                                                     <Input
                                                         name="password"
-                                                        placeholder="password"
+                                                        placeholder="Password"
                                                         label="Password"
                                                         type={showPassword ? 'text' : 'password'}
                                                     />

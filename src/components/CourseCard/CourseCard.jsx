@@ -18,7 +18,7 @@ const CourseCard = ({ img, title, detail, lectureNo, archive, enroll, role }) =>
                         <p className="lecture-No">{lectureNo}</p>
                     </div>
                 </Link>
-                {archive && (
+                {archive && role === 'admin' && (
                     <div className="toggle-archive">
                         <Form>
                             <Form.Check type="switch" id="custom-switch" label="Archive" />
