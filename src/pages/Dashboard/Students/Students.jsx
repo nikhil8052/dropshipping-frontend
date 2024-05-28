@@ -14,6 +14,7 @@ import { studentDummyData, coachDummyData } from '../../../data/data';
 import { useNavigate } from 'react-router-dom';
 import Roadmap from './Roadmap/Roadmap';
 import { useSelector } from 'react-redux';
+import '../../../styles/Students.scss';
 
 const Students = () => {
     const [showDeleteModal, setShowDeleteModal] = useState(false);

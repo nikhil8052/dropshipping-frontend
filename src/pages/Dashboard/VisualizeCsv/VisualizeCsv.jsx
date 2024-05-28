@@ -6,6 +6,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import CaretRight from '@icons/CaretRight.svg';
 import { studentDummyData } from '../../../data/data';
 import { useSelector } from 'react-redux';
+import '../../../styles/VisualizeCsv.scss';
 
 function VisualizeCsv() {
     const location = useLocation();

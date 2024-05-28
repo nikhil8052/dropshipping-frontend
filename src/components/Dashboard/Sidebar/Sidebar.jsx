@@ -136,7 +136,7 @@ const Sidebar = () => {
 
                         {sideBarEventModal && (
                             <div className="side-bar-event">
-                                <Card className="custom-card">
+                                <Card className="custom-event-card">
                                     <Card.Header className="d-flex flex-column align-items-start">
                                         <div className="d-flex align-items-center mb-2 w-100">
                                             <div className="calendar-icon me-2"></div>

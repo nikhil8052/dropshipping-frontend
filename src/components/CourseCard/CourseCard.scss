@@ -4,6 +4,7 @@
 .course-card {
     display: flex;
     flex-direction: column;
+    position: relative;
     gap: 1px;
     width: 100%;
     // max-width: 280px;

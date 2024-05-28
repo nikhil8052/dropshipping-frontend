@@ -8,6 +8,7 @@ import EventDetailsModal from './Calender/CustomEventModal';
 import BigCalender from './Calender/BigCalender';
 import { useSelector } from 'react-redux';
 import { events } from '../../../data/data';
+import '../../../styles/Dashboard.scss';
 
 const Dashboard = () => {
     const chartRef = useRef(null);

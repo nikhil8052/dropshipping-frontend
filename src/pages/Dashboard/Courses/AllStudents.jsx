@@ -10,10 +10,10 @@ import { toast } from 'react-toastify';
 import TextExpand from '@components/TextExpand/TextExpand';
 
 import { AllStudentsDummyData } from '../../../data/data';
-import '../../../styles/Courses.scss';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import CaretRight from '@icons/CaretRight.svg';
+import '../../../styles/Courses.scss';
 
 const AllStudents = () => {
     const [showDeleteModal, setShowDeleteModal] = useState(false);
@@ -26,13 +26,13 @@ const AllStudents = () => {
     });
     const [loading, setLoading] = useState(false);
     const [loadingCRUD, setLoadingCRUD] = useState(false);
+    const navigate = useNavigate();
 
     const [allStudentData, setAllStudentData] = useState(null);
 
     const [selectedOption, setSelectedOption] = useState('All');
     const userInfo = useSelector((state) => state?.auth?.userInfo);
     const role = userInfo?.role;
-    const isAllStudentPage = location.pathname === '/admin/courses/all-students' || '/coach/courses/all-students';
 
     useEffect(() => {
         // Fetch data from API here
@@ -179,13 +179,14 @@ const AllStudents = () => {
                     onConfirm={handleDeleteSubmit}
                 />
             )}
-            <div className="addcourse-nav mb-3">
-                {role === 'admin' ? <Link to="/admin/courses">Courses</Link> : <Link to="/coach/courses">Courses</Link>}
-                {isAllStudentPage && (
-                    <span>
-                        <img src={CaretRight} alt=">" /> All Students
-                    </span>
-                )}
+            <div className="title-top">
+                <span onClick={() => navigate(`/${role}/courses`)} style={{ cursor: 'pointer' }}>
+                    Courses <img src={CaretRight} alt=">" />
+                </span>{' '}
+                <span onClick={() => navigate(`/${role}/courses/details`)} style={{ cursor: 'pointer' }}>
+                    Course Details <img src={CaretRight} alt=">" />{' '}
+                </span>
+                All Students
             </div>
             <Table
                 columns={columns}
@@ -203,7 +204,7 @@ const AllStudents = () => {
                                         </div>
                                     }
                                     defaultValue={selectedOption}
-                                    className="dropdown-button w-25 d-flex justify-content-even align-items-center"
+                                    className="dropdown-button-fix w-25 d-flex justify-content-even align-items-center"
                                 >
                                     {['Paid', 'Overdue', 'HT', 'LT'].map((events) => (
                                         <Dropdown.Item
