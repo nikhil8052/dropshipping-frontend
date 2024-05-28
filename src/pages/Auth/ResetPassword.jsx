@@ -1,7 +1,6 @@
 import { useSelector } from 'react-redux';
 import { Button, Col, Row, Spinner } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
-import eyeIcon from '../../assets/icons/Eye.svg';
 import Input from '@components/Input/Input';
 import * as Yup from 'yup';
 import { Form as FormikForm, Formik } from 'formik';
@@ -10,17 +9,26 @@ import './auth.scss';
 import LoginLeftSec from './LoginLeftSec';
 import Footer from './Footer';
 import { useState } from 'react';
+import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 const ResetPassword = () => {
     const navigate = useNavigate();
     const { loading } = useSelector((state) => state?.auth);
-    const [showPassword, setShowPassword] = useState(false); // State for password visibility
+    const [showPassword, setShowPassword] = useState({
+        newPassword: false,
+        confirmPassword: false
+    }); // State for password visibility
     const inititialValues = {
         newPassword: '',
         confirmPassword: ''
     };
     const validationSchema = Yup.object().shape({
-        newPassword: Yup.string().required('New Password is required'),
+        newPassword: Yup.string()
+            .required('New Password is required')
+            .min(4, 'Password must be at least 4 characters long')
+            .max(20, 'Password must be at most 20 characters long')
+            .matches(/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{4,20}$/, 'Password must contain both letters and numbers'),
         confirmPassword: Yup.string()
             .required('Confirm Password is required')
             .oneOf([Yup.ref('newPassword'), null], 'Passwords must match')
@@ -34,8 +42,8 @@ const ResetPassword = () => {
             setSubmitting(false);
         }
     };
-    const togglePassword = () => {
-        setShowPassword(!showPassword);
+    const togglePassword = (field) => {
+        setShowPassword((prevState) => ({ ...prevState, [field]: !prevState[field] }));
     };
 
     return (
@@ -67,27 +75,27 @@ const ResetPassword = () => {
                                                     name="newPassword"
                                                     placeholder="8+  character"
                                                     label="New Password"
-                                                    type={showPassword ? 'text' : 'password'}
+                                                    type={showPassword.newPassword ? 'text' : 'password'}
                                                 />
-                                                <img
-                                                    className={`eye-icon-password ${showPassword ? 'visible' : ''}`}
-                                                    src={eyeIcon}
-                                                    alt="eye-logo"
-                                                    onClick={togglePassword}
+                                                <FontAwesomeIcon
+                                                    icon={showPassword.newPassword ? faEyeSlash : faEye}
+                                                    onClick={() => togglePassword('newPassword')}
+                                                    className={`eye-icon-password ${showPassword.newPassword ? 'visible' : ''}`}
+                                                    color="rgba(200, 202, 216, 1)"
                                                 />
                                             </div>
                                             <div className="input-password-container">
                                                 <Input
                                                     name="confirmPassword"
-                                                    placeholder="password"
+                                                    placeholder="Confirm password"
                                                     label="Confirm Password"
-                                                    type={showPassword ? 'text' : 'password'}
+                                                    type={showPassword.confirmPassword ? 'text' : 'password'}
                                                 />
-                                                <img
-                                                    className={`eye-icon-password ${showPassword ? 'visible' : ''}`}
-                                                    src={eyeIcon}
-                                                    alt="eye-logo"
-                                                    onClick={togglePassword}
+                                                <FontAwesomeIcon
+                                                    icon={showPassword.confirmPassword ? faEyeSlash : faEye}
+                                                    onClick={() => togglePassword('confirmPassword')}
+                                                    className={`eye-icon-password ${showPassword.confirmPassword ? 'visible' : ''}`}
+                                                    color="rgba(200, 202, 216, 1)"
                                                 />
                                             </div>
 

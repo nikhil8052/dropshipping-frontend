@@ -8,6 +8,7 @@ import { loginWithoutAPI } from '@redux/auth/auth_slice';
 import './auth.scss';
 import LoginLeftSec from './LoginLeftSec';
 import Footer from './Footer';
+import toast from 'react-hot-toast';
 const VerificationCode = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
@@ -56,11 +57,19 @@ const VerificationCode = () => {
                                                     placeholder="E.g 225465822"
                                                     label="Verification Code"
                                                     type="text"
+                                                    inputType="number"
                                                 />
-                                                <span className="resend-code">Resend code</span>
+                                                <span
+                                                    className="resend-code cursor-pointer"
+                                                    onClick={() =>
+                                                        toast.success('Otp sent to your email successfully.')
+                                                    }
+                                                >
+                                                    Resend code
+                                                </span>
                                             </div>
                                             <Button className="auth-login-button" type="submit" disabled={loading}>
-                                                {isSubmitting ? <Spinner animation="border" size="sm" /> : 'Veirfy'}
+                                                {isSubmitting ? <Spinner animation="border" size="sm" /> : 'Verify'}
                                             </Button>
                                         </FormikForm>
                                     )}

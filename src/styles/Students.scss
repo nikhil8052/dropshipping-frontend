@@ -2,6 +2,11 @@
 @import '@constants/media.scss';
 
 .students-page {
+    .avatar {
+        width: 40px;
+        border-radius: 50%;
+        object-fit: cover;
+    }
     .action-button {
         width: 30px;
         height: 30px;
