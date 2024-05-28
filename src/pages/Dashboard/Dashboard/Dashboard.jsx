@@ -235,6 +235,7 @@ const Dashboard = () => {
                             timePeriods={timePeriods}
                             chartHeight={chartHeight}
                             dataSet={dataSet}
+                            role={role}
                         />
                     )}
                 </Col>
