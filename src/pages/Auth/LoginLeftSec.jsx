@@ -12,8 +12,8 @@ const LoginLeftSec = () => {
                 <img className="auth-logo " src={logoImg} alt="auth-logo" />
             </div>
             <div className="auth-left-bg-column">
-                <img className="auth-logo" src={logoImg} alt="auth-logo" />
-                <div className="auth-left-footer mx-auto">
+                <div className="auth-logo" alt="auth-logo" />
+                <div className="auth-left-footer w-25 mx-auto">
                     <img className="auth-social-logo" src={fbIcon} alt="fb-logo" />
                     <img className="auth-social-logo" src={twitterIconn} alt="twitter-logo" />
                     <img className="auth-social-logo" src={instalogin} alt="insta-logo" />
