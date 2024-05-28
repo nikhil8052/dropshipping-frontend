@@ -6,6 +6,7 @@ import Search from '../../../assets/icons/Search.svg';
 import add from '@icons/add_white.svg';
 import { useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
+import '../../../styles/Courses.scss';
 
 const Courses = () => {
     const [search, setSearch] = useState('');
@@ -117,22 +118,22 @@ const Courses = () => {
                         </Col>
                         <Col md={6} xs={12} sm={12}>
                             {role === 'student' ? (
-                                <div className="ms-auto  d-flex justify-content-end ">
+                                <div className="d-flex justify-content-end ">
                                     <DropdownButton
                                         title={
-                                            <div className=" d-flex   justify-content-between align-items-center">
+                                            <div className=" d-flex justify-content-between w-100">
                                                 <span className="ms-2">{selectedEvent}</span>
                                             </div>
                                         }
                                         defaultValue={selectedEvent}
-                                        className="dropdown-button-fix"
+                                        className="dropdown-button-fix w-25 d-flex justify-content-even align-items-center"
                                     >
                                         {['All Courses', 'Your Courses'].map((event) => (
                                             <Dropdown.Item
                                                 onClick={(e) => handleEventSelect(e, event)}
                                                 key={event}
                                                 eventKey={event}
-                                                className="my-1 ms-2 w-100"
+                                                className="my-1 ms-2"
                                             >
                                                 <span className="coach-name"> {event}</span>
                                             </Dropdown.Item>

@@ -13,6 +13,7 @@ import RoadMapList from '../Roadmap/RoadmapList';
 import { useSelector } from 'react-redux';
 import CarouselWrapper from '@components/Carousel/CarouselWrapper';
 import ImageCropper from '@components/ImageMask/ImageCropper';
+import '../../../../styles/Students.scss';
 
 const NewStudent = () => {
     const inputRef = useRef();
@@ -107,16 +108,16 @@ const NewStudent = () => {
     };
 
     return (
-        <div className="new-coach-page-wrapper">
+        <div className="new-student-page-wrapper">
             <div className="title-top">
                 <span onClick={() => navigate(`/${role}/students`)} style={{ cursor: 'pointer' }}>
                     Students <img src={CaretRight} alt=">" />
                 </span>
                 {studentId ? 'Student Profile' : 'Add New Student'}
             </div>
-            <div className="new-coach-page">
+            <div className="new-student-page">
                 <Container fluid className="p-3">
-                    <h4 className="mb-3 new-coach-title">{studentId ? 'Student Profile' : 'Add New Student'}</h4>
+                    <h4 className="mb-3 new-student-title">{studentId ? 'Student Profile' : 'Add New Student'}</h4>
                     <Formik
                         initialValues={studentData}
                         validationSchema={schema}
@@ -141,7 +142,7 @@ const NewStudent = () => {
                                             </label>
                                         )}
                                         <div className="image_wrapper">
-                                            <Field name="coachPhoto">
+                                            <Field name="studentPhoto">
                                                 {({ field }) => (
                                                     <>
                                                         <input
@@ -284,7 +285,7 @@ const NewStudent = () => {
                                 </Row>
                                 <Row>
                                     <Col md={6} xs={12}>
-                                        <label className="field-label">Coaching Trajectory</label>
+                                        <label className="field-label">studenting Trajectory</label>
                                         <Field
                                             name="region"
                                             className="field-select-control"
@@ -312,6 +313,7 @@ const NewStudent = () => {
                                                 }) => (
                                                     <Select
                                                         {...field}
+                                                        className="custom-multi-select"
                                                         isMulti
                                                         options={[
                                                             { value: 'metadata', label: 'Meta Data Course', id: 1 },

@@ -14,6 +14,7 @@ import { studentDummyData, coachDummyData } from '../../../data/data';
 import { useNavigate } from 'react-router-dom';
 import Roadmap from './Roadmap/Roadmap';
 import { useSelector } from 'react-redux';
+import '../../../styles/Students.scss';
 
 const Students = () => {
     const [showDeleteModal, setShowDeleteModal] = useState(false);
@@ -168,7 +169,7 @@ const Students = () => {
                             className="btn-light action-button delete-button"
                             onClick={() => props.onDeleteClick(props.data.id)}
                         >
-                            <img src={deleteIcon} className="action-icon" alt="action-icon" />
+                            <img src={deleteIcon} className="action-icon ms-3" alt="action-icon" />
                         </div>
                     </Col>
                 )}
@@ -340,6 +341,7 @@ const Students = () => {
         },
         {
             headerName: 'Actions',
+            maxWidth: 100,
             cellRenderer: ActionsRenderer,
             cellRendererParams: {
                 onEditClick: handleEditClick,
@@ -349,7 +351,7 @@ const Students = () => {
             sortable: false,
             filter: false,
             resizable: false,
-            cellClass: ['d-flex', 'align-items-center']
+            cellClass: ['d-flex', 'align-items-center', 'justify-content-center']
         }
     ];
 

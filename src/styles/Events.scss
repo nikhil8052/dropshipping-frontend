@@ -1,4 +1,6 @@
 @import '@constants/colors.scss';
+@import '@constants/media.scss';
+@import '@constants/typography.scss';
 
 .events-page {
     .action-button {
@@ -129,16 +131,6 @@
 
 // Event Details
 .event-details-section {
-    .card-body {
-        padding: 0px;
-    }
-    .custom-card {
-        padding: 0px;
-        border-radius: 20px;
-    }
-    .card-large {
-        height: auto;
-    }
     .event-detail-top {
         display: flex;
         gap: 15px;
@@ -375,6 +367,16 @@
         max-width: 390px;
         border-radius: 59px;
         background-color: rgba(245, 248, 249, 1);
+        border: 1px solid rgba(233, 234, 240, 1) !important;
+    }
+    .input-group-text {
+        background: rgb(245, 248, 249) !important;
+        border-radius: 59px;
+    }
+    .search-input:focus-visible {
+        outline-color: rgba(146, 159, 165, 1) !important;
+        border: 1px solid rgba(233, 234, 240, 1) !important;
+        color: rgba(71, 81, 86, 1);
     }
     // Adjust the children responsive width
     @media (max-width: $medium-screen) {
@@ -557,4 +559,233 @@
     margin-right: 0.625rem;
     border-radius: 50% !important;
     object-fit: cover;
+}
+
+.new-event-page-wrapper {
+    .title-top {
+        text-align: left;
+        color: rgba(95, 108, 114, 1);
+        font-family: Inter;
+        font-size: 14px;
+        font-weight: 400;
+        line-height: 20px;
+        text-align: left;
+        background: rgba(242, 244, 245, 1);
+        padding: 10px 20px;
+        border-radius: 12px;
+        margin-bottom: 0.5rem;
+        opacity: 0px;
+    }
+    .new-event-page {
+        height: calc(100vh - 14rem);
+        overflow-y: scroll;
+        box-shadow: 0px 0px 14.83px 0px rgba(0, 0, 0, 0.06);
+        border-radius: 9px;
+        .submit-btn,
+        .cancel-btn {
+            border-radius: 59px;
+            font-weight: 400;
+            white-space: nowrap;
+            border: none;
+        }
+        .submit-btn {
+            color: #ffff;
+            padding: 10px 30px;
+            @include pagination-gradient;
+        }
+
+        .cancel-btn {
+            padding: 10px 40px;
+            background-color: transparent !important;
+            color: black;
+            border: 1px solid rgba(233, 234, 240, 1);
+        }
+
+        .new-event-title {
+            font-family: Inter;
+            font-size: 18px;
+            font-weight: 600;
+            line-height: 21.78px;
+            text-align: left;
+            color: rgba(0, 43, 91, 1);
+        }
+
+        .field-label {
+            font-family: Inter;
+            font-size: 14px;
+            font-weight: 400;
+            line-height: 14px;
+            text-align: left;
+            text-transform: capitalize;
+            color: rgba(25, 28, 31, 1);
+        }
+        // Fields
+        .field-control,
+        .field-select-control {
+            font-family: Inter;
+            font-size: 14px;
+            font-weight: 400;
+            line-height: 14px;
+            text-align: left;
+            color: rgba(25, 28, 31, 1);
+            border: 0.8px solid rgba(233, 234, 240, 1);
+            border-radius: 50px;
+            padding: 10px 20px;
+            width: 100%;
+            margin-bottom: 0.5rem;
+        }
+        // on active or focus the border and color should be bold
+        .field-control:focus-visible,
+        .field-select-control:focus-visible {
+            outline-color: rgba(146, 159, 165, 1) !important;
+            border: 0.8px solid rgba(233, 234, 240, 1) !important;
+            color: rgba(71, 81, 86, 1);
+        }
+        .field-control::placeholder,
+        .field-select-control::placeholder {
+            color: rgba(146, 159, 165, 1);
+        }
+        // Select
+        .field-select-control {
+            appearance: none;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            background: url('data:image/svg+xml;utf8,<svg fill="rgba(146, 159, 165, 1)" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path d="M7 10l5 5 5-5z"/></svg>')
+                no-repeat;
+            background-position: right 20px top 50%;
+            background-size: 20px;
+            padding: 12px 20px;
+            cursor: pointer;
+            width: 100%;
+        }
+
+        .custom_select__control {
+            border: 0.8px solid rgba(233, 234, 240, 1);
+            border-radius: 59px;
+        }
+        .custom_select__control:focus-visible {
+            outline-color: rgba(146, 159, 165, 1) !important;
+            color: rgba(71, 81, 86, 1);
+        }
+
+        .label-light {
+            font-size: 14px;
+            font-weight: 600;
+            line-height: 13.8px;
+            text-align: left;
+            color: rgba(95, 108, 114, 1);
+        }
+
+        .image-preview {
+            display: flex;
+            justify-content: start;
+            cursor: pointer;
+            align-items: center;
+            gap: 0.5rem;
+            border: 0.8px solid rgba(233, 234, 240, 1);
+            border-radius: 10px;
+            padding: 20px 10px;
+            color: rgba(110, 116, 133, 1);
+            // Events screen btn
+            .upload-image-btn {
+                border-radius: 59px;
+                font-weight: 400;
+                white-space: nowrap;
+                border: none;
+                padding: 10px 30px;
+                background: rgba(204, 236, 247, 1);
+                color: rgba(1, 158, 216, 1);
+                margin-top: 1rem;
+            }
+        }
+
+        .image-renderer {
+            display: flex;
+            justify-content: start;
+            align-items: center;
+            gap: 1.5rem;
+            padding: 20px 10px;
+            border: 0.8px solid rgba(233, 234, 240, 1);
+            border-radius: 10px;
+            color: rgb(38, 54, 99);
+            img {
+                width: 85px;
+                height: 85px;
+                border-radius: 50%;
+                object-fit: cover;
+            }
+        }
+
+        .error {
+            color: $danger-color;
+            font-size: 12px;
+            font-weight: 400;
+            line-height: 14px;
+            text-align: left;
+        }
+    }
+
+    // student-taught-wrapper
+    .student-taught-wrapper {
+        font-family: Inter;
+        color: rgba(25, 28, 31, 1);
+        border: 0.8px solid rgba(233, 234, 240, 1);
+        border-radius: 16px;
+        padding: 20px;
+        min-height: 116px;
+        margin-bottom: 1rem;
+        .total {
+            color: rgba(28, 28, 28, 0.4);
+            margin-right: 0.5rem;
+        }
+        .data-value {
+            color: rgba(28, 28, 28, 1);
+            //styleName: 14 Regular;
+            font-family: Inter;
+            font-size: 14px;
+            font-weight: 400;
+            line-height: 20px;
+            text-align: center;
+            display: inline-block;
+            background: rgba(248, 248, 248, 1);
+            border-radius: 59px;
+            padding: 10px 20px;
+            margin: 0rem 1rem 1rem 0rem;
+        }
+        .field-label {
+            font-family: Inter;
+            font-size: 14px;
+            font-weight: 400;
+            line-height: 14px;
+            text-align: left;
+            text-transform: capitalize;
+            color: rgba(25, 28, 31, 1);
+        }
+        // Fields
+        .field-control,
+        .field-select-control {
+            font-family: Inter;
+            font-size: 14px;
+            font-weight: 400;
+            line-height: 14px;
+            text-align: left;
+            color: rgba(25, 28, 31, 1);
+            border: 0.8px solid rgba(233, 234, 240, 1);
+            border-radius: 50px;
+            padding: 10px 20px;
+            width: 100%;
+            margin-bottom: 0.5rem;
+        }
+    }
+
+    // Roadmap mapping
+    .course-roadmap-wrapper {
+        font-family: Inter;
+        color: rgba(25, 28, 31, 1);
+        border: 0.8px solid rgba(233, 234, 240, 1);
+        border-radius: 16px;
+        padding: 20px;
+        min-height: 116px;
+        margin-bottom: 1rem;
+    }
 }

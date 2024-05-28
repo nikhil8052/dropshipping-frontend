@@ -1,0 +1,51 @@
+@import '@constants/colors.scss';
+@import '@constants/media.scss';
+@import '@constants/typography.scss';
+
+.payments-page {
+    .dropdown-button,
+    .dropdown-button-fix {
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        background-color: transparent !important;
+        border-radius: 59px;
+        .dropdown-toggle {
+            color: rgba(148, 148, 148, 1);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background-color: transparent;
+            border: none;
+            width: 100%;
+            background-color: transparent;
+            border: none;
+            & > div {
+                width: 100%;
+            }
+        }
+        font-weight: 400;
+        white-space: nowrap;
+        border: rgba(148, 148, 148, 1) 1px solid !important;
+
+        .dropdown-menu {
+            width: 100%;
+            overflow: hidden;
+            border: none;
+            border-radius: 10px;
+            background-color: white !important;
+            box-shadow: 0px 0px 54px 0px rgba(0, 0, 0, 0.37);
+            .avatar {
+                width: 20px;
+                border-radius: 50%;
+                object-fit: cover;
+                margin-right: 0.5rem;
+            }
+            .payment-name {
+                font-size: small;
+                color: rgba(85, 95, 126, 1);
+            }
+        }
+    }
+
+    // Fee status colors
+}

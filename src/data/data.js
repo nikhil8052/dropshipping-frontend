@@ -904,6 +904,262 @@ export const quizzesData = [
         ]
     }
 ];
+export const lectures = [
+    {
+        id: 1,
+        lectureName: 'Introduction to Dropshipping',
+        lectureDescription:
+            'This lecture provides an overview of dropshipping, including how it works and its benefits.',
+        questions: [
+            { id: 1, question: 'What is dropshipping?', answer: '' },
+            { id: 2, question: 'What are the benefits of dropshipping?', answer: '' }
+        ],
+        optionalQuestions: [
+            {
+                id: 1,
+                question: 'Which of the following is a key advantage of dropshipping?',
+                option1: 'Low startup costs',
+                option2: 'High inventory costs',
+                option3: 'Complex logistics',
+                option4: 'Limited scalability',
+                answer: ''
+            }
+        ],
+        file: 'https://www.youtube.com/embed/rqGNDT_utao?si=csdz_JBfXbtbf-0x',
+        lectureType: 'video'
+    },
+    {
+        id: 2,
+        lectureName: 'Finding Profitable Products',
+        lectureDescription: 'Learn how to find and select profitable products for your dropshipping business.',
+        questions: [
+            { id: 1, question: 'What criteria should you use to select products?', answer: '' },
+            { id: 2, question: 'How can you analyze product demand?', answer: '' }
+        ],
+        optionalQuestions: [
+            {
+                id: 1,
+                question: 'Which tool is commonly used for product research?',
+                option1: 'Google Analytics',
+                option2: 'Shopify',
+                option3: 'Amazon FBA',
+                option4: 'Google Trends',
+                answer: ''
+            }
+        ],
+        file: 'https://www.youtube.com/embed/rqGNDT_utao?si=csdz_JBfXbtbf-0x',
+        lectureType: 'video'
+    },
+    {
+        id: 3,
+        lectureName: 'Setting Up Your Store',
+        lectureDescription: 'A step-by-step guide to setting up your dropshipping store.',
+        questions: [
+            { id: 1, question: 'What platform can you use to set up a dropshipping store?', answer: '' },
+            { id: 2, question: 'What are the essential components of an online store?', answer: '' }
+        ],
+        optionalQuestions: [
+            {
+                id: 1,
+                question: 'Which platform is popular for creating dropshipping stores?',
+                option1: 'Magento',
+                option2: 'WordPress',
+                option3: 'Shopify',
+                option4: 'BigCommerce',
+                answer: ''
+            }
+        ],
+        file: 'https://www.youtube.com/embed/rqGNDT_utao?si=csdz_JBfXbtbf-0x',
+        lectureType: 'video'
+    },
+    {
+        id: 4,
+        lectureName: 'Marketing Your Dropshipping Store',
+        lectureDescription: 'Effective marketing strategies to drive traffic and sales to your store.',
+        questions: [
+            { id: 1, question: 'What is a common marketing strategy for dropshipping?', answer: '' },
+            { id: 2, question: 'How can you use social media to promote your store?', answer: '' }
+        ],
+        optionalQuestions: [
+            {
+                id: 1,
+                question: 'Which platform is effective for paid advertising?',
+                option1: 'Facebook Ads',
+                option2: 'Bing Ads',
+                option3: 'Yahoo Ads',
+                option4: 'Amazon Ads',
+                answer: ''
+            }
+        ],
+        file: 'https://www.youtube.com/embed/rqGNDT_utao?si=csdz_JBfXbtbf-0x',
+        lectureType: 'video'
+    },
+    {
+        id: 5,
+        lectureName: 'Managing Orders and Suppliers',
+        lectureDescription: 'How to effectively manage orders and maintain good relationships with suppliers.',
+        questions: [
+            { id: 1, question: 'What is the best way to handle order fulfillment?', answer: '' },
+            { id: 2, question: 'Why is it important to maintain good relationships with suppliers?', answer: '' }
+        ],
+        optionalQuestions: [
+            {
+                id: 1,
+                question: 'Which tool can help manage orders efficiently?',
+                option1: 'Excel',
+                option2: 'Shopify',
+                option3: 'ERP system',
+                option4: 'Manual tracking',
+                answer: ''
+            }
+        ],
+        lectureType: 'text',
+        lectureContent: `
+            Lecture details of students who will get a well-made high quality lecture video are more likely to understand the course. Students who will more reading time likely to understand the lecture more.
+            Outlines:
+            - Introduction
+            - Scope of the course
+            - Implementative analysis
+            - Pros & cons
+            - Inspirations
+            - Currently existing products
+            
+            Reviewing a body of work presents unique opportunities for making a theoretical contribution. Review articles can make readers think theoretically differently about a given field or phenomenon. Yet, review articles that advance theory have been historically under-represented in Journal of Management Studies. Accordingly, the purpose of this editorial is to propose a multi-faceted approach for fashioning theoretical contributions in review articles, which we hope will inspire more authors to develop and submit innovative, original, and high-quality
+        `
+    },
+    {
+        id: 6,
+        lectureName: 'Customer Service in Dropshipping',
+        lectureDescription: 'Providing excellent customer service to build a loyal customer base.',
+        questions: [
+            { id: 1, question: 'What are common customer service challenges in dropshipping?', answer: '' },
+            { id: 2, question: 'How can you handle customer complaints effectively?', answer: '' }
+        ],
+        optionalQuestions: [
+            {
+                id: 1,
+                question: 'What is a key aspect of good customer service?',
+                option1: 'Fast response times',
+                option2: 'Ignoring complaints',
+                option3: 'Delaying refunds',
+                option4: 'Lack of communication',
+                answer: ''
+            }
+        ],
+        file: 'https://www.youtube.com/embed/rqGNDT_utao?si=csdz_JBfXbtbf-0x',
+        lectureType: 'video'
+    },
+    {
+        id: 7,
+        lectureName: 'Scaling Your Dropshipping Business',
+        lectureDescription: 'Strategies to grow and scale your dropshipping business.',
+        questions: [
+            { id: 1, question: 'What are some signs that it’s time to scale your business?', answer: '' },
+            { id: 2, question: 'How can you effectively scale your dropshipping operations?', answer: '' }
+        ],
+        optionalQuestions: [
+            {
+                id: 1,
+                question: 'What is a common method to increase sales?',
+                option1: 'Lowering prices',
+                option2: 'Expanding product range',
+                option3: 'Reducing marketing',
+                option4: 'Limiting inventory',
+                answer: ''
+            }
+        ],
+        lectureType: 'text',
+        lectureContent: `
+            Lecture details of students who will get a well-made high quality lecture video are more likely to understand the course. Students who will more reading time likely to understand the lecture more.
+            Outlines:
+            - Introduction
+            - Scope of the course
+            - Implementative analysis
+            - Pros & cons
+            - Inspirations
+            - Currently existing products
+            
+            Reviewing a body of work presents unique opportunities for making a theoretical contribution. Review articles can make readers think theoretically differently about a given field or phenomenon. Yet, review articles that advance theory have been historically under-represented in Journal of Management Studies. Accordingly, the purpose of this editorial is to propose a multi-faceted approach for fashioning theoretical contributions in review articles, which we hope will inspire more authors to develop and submit innovative, original, and high-quality
+        `
+    },
+    {
+        id: 8,
+        lectureName: 'Legal Considerations in Dropshipping',
+        lectureDescription: 'Important legal aspects to consider when starting a dropshipping business.',
+        questions: [
+            { id: 1, question: 'What are some common legal issues in dropshipping?', answer: '' },
+            { id: 2, question: 'How can you protect your business legally?', answer: '' }
+        ],
+        optionalQuestions: [
+            {
+                id: 1,
+                question: 'Which of the following is a crucial legal document for dropshipping?',
+                option1: 'Terms of Service',
+                option2: 'Privacy Policy',
+                option3: 'Both',
+                option4: 'None',
+                answer: ''
+            }
+        ],
+        file: 'https://www.youtube.com/embed/rqGNDT_utao?si=csdz_JBfXbtbf-0x',
+        lectureType: 'video'
+    },
+    {
+        id: 9,
+        lectureName: 'Dropshipping Automation Tools',
+        lectureDescription: 'Using automation tools to streamline your dropshipping business.',
+        questions: [
+            { id: 1, question: 'What are the benefits of using automation tools?', answer: '' },
+            { id: 2, question: 'Name a popular dropshipping automation tool.', answer: '' }
+        ],
+        optionalQuestions: [
+            {
+                id: 1,
+                question: 'Which of the following tasks can be automated in dropshipping?',
+                option1: 'Order fulfillment',
+                option2: 'Customer service',
+                option3: 'Marketing',
+                option4: 'All of the above',
+                answer: ''
+            }
+        ],
+        file: 'https://www.youtube.com/embed/rqGNDT_utao?si=csdz_JBfXbtbf-0x',
+        lectureType: 'video'
+    },
+    {
+        id: 10,
+        lectureName: 'Advanced Dropshipping Strategies',
+        lectureDescription: 'Exploring advanced strategies to optimize and grow your dropshipping business.',
+        questions: [
+            { id: 1, question: 'What are some advanced marketing techniques?', answer: '' },
+            { id: 2, question: 'How can you use data analytics to improve your business?', answer: '' }
+        ],
+        optionalQuestions: [
+            {
+                id: 1,
+                question: 'Which advanced strategy can help increase conversions?',
+                option1: 'Personalization',
+                option2: 'Generalization',
+                option3: 'Reducing product range',
+                option4: 'Increasing prices',
+                answer: ''
+            }
+        ],
+        lectureType: 'text',
+        lectureContent: `
+            Lecture details of students who will get a well-made high quality lecture video are more likely to understand the course. Students who will more reading time likely to understand the lecture more.
+            Outlines:
+            - Introduction
+            - Scope of the course
+            - Implementative analysis
+            - Pros & cons
+            - Inspirations
+            - Currently existing products
+            
+            Reviewing a body of work presents unique opportunities for making a theoretical contribution. Review articles can make readers think theoretically differently about a given field or phenomenon. Yet, review articles that advance theory have been historically under-represented in Journal of Management Studies. Accordingly, the purpose of this editorial is to propose a multi-faceted approach for fashioning theoretical contributions in review articles, which we hope will inspire more authors to develop and submit innovative, original, and high-quality
+        `
+    }
+];
 
 export const coachDummyData = [
     {

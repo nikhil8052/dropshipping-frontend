@@ -11,6 +11,7 @@ import { coachDummyData, studentDummyData, countryList } from '../../../../data/
 import toast from 'react-hot-toast';
 import { useLocation, useNavigate } from 'react-router-dom';
 import ImageCropper from '../../../../components/ImageMask/ImageCropper';
+import '../../../../styles/Coaches.scss';
 
 const NewCoach = () => {
     const inputRef = useRef();

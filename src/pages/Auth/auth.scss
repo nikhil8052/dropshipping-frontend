@@ -26,11 +26,12 @@
 
     input[type='text'],
     input[type='password'],
+    input[type='number'],
     textarea,
     .custom_select__control {
         border-radius: 50px;
 
-        border: 1.34px solid $input-border-color;
+        border: 1.34px solid $input-border-color !important;
 
         color: $secondary-color;
 
@@ -47,6 +48,19 @@
         &::placeholder {
             color: $input-placeholder-color;
         }
+        &:focus {
+            outline: 1.5px solid $info-color;
+        }
+    }
+    /* Chrome, Safari, Edge, Opera */
+    input[type='number']::-webkit-outer-spin-button,
+    input[type='number']::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
+    /* Firefox */
+    input[type='number'] {
+        -moz-appearance: textfield;
     }
 }
 //old wrapper code
@@ -157,7 +171,8 @@
     margin-block: 28px;
     font-size: 18px;
     border-radius: 80px;
-    background: linear-gradient(90.19deg, #00c7cc -0.27%, #009cd8 99.11%);
+    border: none;
+    @include pagination-gradient;
     @include respond-to($large-screen) {
         font-size: 16px;
     }
@@ -170,7 +185,7 @@
     }
 }
 .auth-left-bg-column {
-    background-image: url('@images/login_img.png');
+    background-image: url('@images/coaching-dashboard-transparent.png');
     background-size: cover;
     background-position: center;
     height: 100vh;

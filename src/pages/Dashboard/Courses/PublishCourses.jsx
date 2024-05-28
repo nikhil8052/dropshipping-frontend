@@ -14,7 +14,7 @@ const PublishCourses = ({ onBack }) => {
 
     useEffect(() => {
         if (userInfo) {
-            const { role } = userInfo;
+            const role = userInfo?.role;
             setIsAdmin(role === 'admin');
         }
     }, [userInfo]);
@@ -60,7 +60,7 @@ const PublishCourses = ({ onBack }) => {
                             <CarouselWrapper items={lessons} type="lecture" />
                         </div>
                         <Row>
-                            <div className="mt-3 d-flex justify-content-between gap-3">
+                            <div className="mt-3 pb-3 d-flex justify-content-between gap-3">
                                 <Button type="button" onClick={onBack} className="cancel-btn">
                                     Back
                                 </Button>

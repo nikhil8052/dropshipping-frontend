@@ -1,45 +1,36 @@
 import { useState } from 'react';
 import '../../../styles/Courses.scss';
-import { Link, useLocation } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import CaretRight from '@icons/CaretRight.svg';
-import { InputGroup, Button, Form, Col, Row, Spinner } from 'react-bootstrap';
+import { InputGroup, Button, Form, Col, Row } from 'react-bootstrap';
 import Search from '../../../assets/icons/Search.svg';
-import ActiveIcon from '../../../assets/icons/IconLect.svg';
 import InactiveIcon from '../../../assets/icons/Icon-inactive-lec.svg';
-import Card from '@components/Card/Card';
 import Input from '@components/Input/Input';
 import { Form as FormikForm, Formik } from 'formik';
 import * as Yup from 'yup';
-import { lessons, quizzesData } from '../../../data/data';
+import { lectures } from '../../../data/data';
 
 const EnrolledCourseDetail = () => {
     const userInfo = useSelector((state) => state?.auth?.userInfo);
-    const { role } = userInfo;
-    const location = useLocation();
-    const isenrolledCourse = location.pathname === `/${role}/courses/enrolled-course`;
+    const role = userInfo?.role;
+    const navigate = useNavigate();
     const [search, setSearch] = useState('');
     const onFilterTextChange = (event) => {
         setSearch(event.target.value);
     };
 
-    // Create state to manage the active state of each button
-    const [activeIndex, setActiveIndex] = useState(1);
-    const [selectedLesson, setSelectedLesson] = useState(lessons[1]);
-    const [selectedQuiz, setSelectedQuiz] = useState(quizzesData[1]);
+    const [activeIndex, setActiveIndex] = useState(0);
+    const [selectedLecture, setSelectedLecture] = useState(lectures[0]);
 
-    const [continueQuiz, setContinueQuiz] = useState('');
+    const [continueQuiz, setContinueQuiz] = useState(false);
     const handleButtonClick = (index) => {
-        // Set the clicked button to active
         setActiveIndex(index);
-        // Add the lesson object with its lecture ID
-        setSelectedLesson(lessons[index]);
-        //
-        setSelectedQuiz(quizzesData[index]);
+        setSelectedLecture(lectures[index]);
+        setContinueQuiz(false);
     };
     const continueHandler = () => {
         setContinueQuiz(true);
-        setSelectedLesson(lessons[null]);
     };
 
     const initialValues = {
@@ -47,7 +38,7 @@ const EnrolledCourseDetail = () => {
     };
 
     const validationSchema = Yup.object().shape({
-        title: ''
+        title: Yup.string().required('Title is required')
     });
 
     const handleSubmit = async (values, { setSubmitting }) => {
@@ -61,13 +52,11 @@ const EnrolledCourseDetail = () => {
     return (
         <>
             <div className="EnrolledCourseDetail">
-                <div className="addcourse-nav mb-3">
-                    <Link to={`/${role}/courses`}> Courses</Link>
-                    {isenrolledCourse && (
-                        <span>
-                            <img src={CaretRight} alt=">" /> Enrolled Course Details
-                        </span>
-                    )}
+                <div className="title-top">
+                    <span onClick={() => navigate(`/${role}/courses`)} style={{ cursor: 'pointer' }}>
+                        Courses <img src={CaretRight} alt=">" />
+                    </span>{' '}
+                    Enrolled Course Details
                 </div>
                 <Formik
                     enableReinitialize
@@ -77,152 +66,169 @@ const EnrolledCourseDetail = () => {
                 >
                     {({ isSubmitting }) => (
                         <FormikForm>
-                            <Card cardType="large">
-                                <div className="card-background">
-                                    <div className="text-heading">
-                                        <h1>Design Conference</h1>
-                                        <div className="viewProfile-img">
-                                            {/* <img src={viewProfile} alt="" /> */}
-                                            <p>Dropship Academy X</p>
-                                        </div>
+                            <div className="card-background">
+                                <div className="text-heading">
+                                    <h1>Design Conference</h1>
+                                    <div className="viewProfile-img">
+                                        <p>Dropship Academy X</p>
                                     </div>
                                 </div>
+                            </div>
 
-                                <Row className="section-border">
-                                    <Col sm={3} md={4} lg={4} xl={3}>
-                                        <div className="search-lectures">
-                                            <InputGroup>
-                                                <InputGroup.Text>
-                                                    <img src={Search} alt="Search" />
-                                                </InputGroup.Text>
-                                                <Form.Control
-                                                    className="search-input"
-                                                    type="text"
-                                                    name="Search"
-                                                    label="Search"
-                                                    value={search}
-                                                    onChange={onFilterTextChange}
-                                                    placeholder="Search"
-                                                />
-                                            </InputGroup>
-                                            <div className="title-lecture-btns">
-                                                <h1> All Lectures</h1>
-                                            </div>
+                            <Row className="section-border">
+                                <Col sm={3} md={4} lg={4} xl={3}>
+                                    <div className="search-lectures">
+                                        <InputGroup>
+                                            <InputGroup.Text>
+                                                <img src={Search} alt="Search" />
+                                            </InputGroup.Text>
+                                            <Form.Control
+                                                className="search-input"
+                                                type="text"
+                                                name="Search"
+                                                label="Search"
+                                                value={search}
+                                                onChange={onFilterTextChange}
+                                                placeholder="Search"
+                                            />
+                                        </InputGroup>
+                                        <div className="title-lecture-btns">
+                                            <h1> All Lectures</h1>
+                                        </div>
 
-                                            <div>
-                                                <div className="lecture-btns">
-                                                    {lessons.map((lesson, index) => (
-                                                        <Button
-                                                            type="button"
-                                                            key={index}
-                                                            className={`btn ${index === activeIndex ? 'active' : 'inactive'}`}
-                                                            onClick={() => handleButtonClick(index)}
-                                                        >
-                                                            <img
-                                                                src={index === activeIndex ? ActiveIcon : InactiveIcon}
-                                                                alt="IconLect"
-                                                            />
-                                                            <p>Lecture No. {lesson.lectureNo}</p>
-                                                        </Button>
-                                                    ))}
-                                                </div>
+                                        <div>
+                                            <div className="lecture-btns">
+                                                {lectures.map((lecture, index) => (
+                                                    <Button
+                                                        type="button"
+                                                        key={index}
+                                                        className={`btn ${index === activeIndex ? 'active' : 'inactive'}`}
+                                                        onClick={() => handleButtonClick(index)}
+                                                    >
+                                                        <img src={InactiveIcon} alt="IconLect" />
+                                                        <p>Lecture No. {lecture.id}</p>
+                                                    </Button>
+                                                ))}
                                             </div>
                                         </div>
-                                    </Col>
-                                    <Col sm={8} md={8} lg={8} xl={9}>
-                                        {selectedLesson ? (
+                                    </div>
+                                </Col>
+                                <Col sm={8} md={8} lg={8} xl={9}>
+                                    {!continueQuiz &&
+                                        selectedLecture &&
+                                        (selectedLecture.lectureType === 'video' ? (
                                             <div className="lecture-curriculum">
-                                                <h2 className="title">{selectedLesson?.title}</h2>
-                                                {selectedLesson?.video ? (
-                                                    <>
-                                                        <h1 className="description">{selectedLesson?.description}</h1>
-                                                        <div className="video">
-                                                            <div className="outline">
-                                                                <p className="outline-heading"> Outline :</p>
-                                                                {selectedLesson?.outlines.map((outlines, index) => (
-                                                                    <li key={index}>{outlines}</li>
-                                                                ))}
-                                                                <p className="outline-detail">
-                                                                    {selectedLesson?.detail}
-                                                                </p>
-                                                            </div>
-                                                        </div>
-                                                    </>
-                                                ) : (
-                                                    <>
-                                                        <iframe
-                                                            src="https://www.youtube.com/embed/rqGNDT_utao"
-                                                            title="YouTube video player"
-                                                            frameBorder="0"
-                                                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                                                            allowFullScreen
-                                                            className="video-iframe w-100"
-                                                            height={400}
-                                                        ></iframe>
-                                                    </>
-                                                )}
+                                                <h2 className="title">Lecture No. {selectedLecture.id}:</h2>
+                                                <div className="video">
+                                                    <iframe
+                                                        src={selectedLecture.file}
+                                                        title="YouTube video player"
+                                                        frameBorder="0"
+                                                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                                        allowFullScreen
+                                                        className="video-iframe w-100"
+                                                    ></iframe>
+                                                </div>
                                             </div>
                                         ) : (
-                                            <>
-                                                {continueQuiz && (
-                                                    <div className="quiz-curriculum">
-                                                        <h1 className="title">{selectedQuiz?.title} :</h1>
-                                                        <h2 className="description">
-                                                            {selectedQuiz?.description} ({' '}
-                                                            {selectedQuiz?.questions.length}/
-                                                            {selectedQuiz?.questions.length} )
-                                                        </h2>
-                                                        {selectedQuiz?.questions.map((ques, index) => (
-                                                            <div className="add-quiz-question" key={index}>
-                                                                <div className="questions">
-                                                                    <div className="question">
-                                                                        <p>{ques?.questionText}</p>
-                                                                    </div>
-                                                                    {index < 2 ? (
-                                                                        <>
-                                                                            <Input
-                                                                                name={`lecturename_optional_${index}`}
-                                                                                placeholder="Please Type Question Here..."
-                                                                                type="text"
-                                                                            />
-                                                                            <p className="limit">0/120</p>
-                                                                        </>
-                                                                    ) : (
-                                                                        <Form>
-                                                                            <div key={`inline-radio-${index} d-flex `}>
-                                                                                {[1, 2, 3, 4].map((option, key) => (
-                                                                                    <Form.Check
-                                                                                        key={`inline-radio-${index}-${option}`}
-                                                                                        inline
-                                                                                        label={`Option ${key}`}
-                                                                                        name={`option_${index}`}
-                                                                                        type={'radio'}
-                                                                                        id={`inline-radio-${index}-${option}`}
-                                                                                    />
-                                                                                ))}
-                                                                            </div>
-                                                                        </Form>
-                                                                    )}
+                                            // Render the pdf file here
+                                            <div className="lecture-curriculum">
+                                                <h2 className="title">Lecture No. {selectedLecture.id}:</h2>
+                                                <h1 className="description">{selectedLecture.lectureDescription}</h1>
+                                                <p className="text-justify text-wrap">
+                                                    {selectedLecture.lectureContent}
+                                                </p>
+                                            </div>
+                                        ))}
+
+                                    {continueQuiz && (
+                                        <div className="quiz-curriculum">
+                                            <h1 className="title">Quiz No {selectedLecture.id}:</h1>
+                                            {selectedLecture.questions.length > 0 && (
+                                                <>
+                                                    <p className="title fw-bold">
+                                                        Please Answer these questions for personal assessments of this
+                                                        course. ({selectedLecture?.questions.length}/
+                                                        {selectedLecture?.questions.length}) :
+                                                    </p>
+                                                    {selectedLecture?.questions.map(({ question, answer }, index) => (
+                                                        <div className="add-quiz-question" key={index}>
+                                                            <div className="questions">
+                                                                <div className="question">
+                                                                    <p>
+                                                                        Q 0{index + 1}: {question}
+                                                                    </p>
                                                                 </div>
+
+                                                                <>
+                                                                    <Input
+                                                                        name={`lecturename_optional_${index}`}
+                                                                        placeholder="Please type answer here..."
+                                                                        type="text"
+                                                                        value={answer}
+                                                                    />
+                                                                    <p className="limit">0/120</p>
+                                                                </>
                                                             </div>
-                                                        ))}
-                                                    </div>
-                                                )}
-                                            </>
-                                        )}
-                                    </Col>
-                                </Row>
-                                <div className="viewProgress-footer mx-auto">
-                                    <Link to={`/${role}/courses`}>
-                                        <Button className="skip-btn" type="button">
-                                            {isSubmitting ? <Spinner animation="border" size="sm" /> : ' Skip'}
-                                        </Button>
-                                    </Link>
-                                    <Button className="done-btn" type="button" onClick={continueHandler}>
-                                        Continue To Quiz
-                                    </Button>
-                                </div>
-                            </Card>
+                                                        </div>
+                                                    ))}
+                                                </>
+                                            )}
+
+                                            {selectedLecture.optionalQuestions.length > 0 && (
+                                                <>
+                                                    <p className="title mb-0 mt-2 fw-bold">
+                                                        Multiple Choice Questions (
+                                                        {selectedLecture?.optionalQuestions.length}/
+                                                        {selectedLecture?.optionalQuestions.length}) :
+                                                    </p>
+                                                    {selectedLecture?.optionalQuestions.map((multipleChoice, index) => (
+                                                        <div className="add-quiz-question" key={index}>
+                                                            <div className="questions">
+                                                                <Form>
+                                                                    <Form.Label>{`Q 0${index + 1}: ${multipleChoice.question}`}</Form.Label>
+                                                                    <div className="d-flex flex-wrap">
+                                                                        {[
+                                                                            'option1',
+                                                                            'option2',
+                                                                            'option3',
+                                                                            'option4'
+                                                                        ].map((option, idx) => (
+                                                                            <div
+                                                                                key={`inline-radio-${index}-${idx}`}
+                                                                                className="d-flex"
+                                                                            >
+                                                                                <Form.Check
+                                                                                    inline
+                                                                                    label={multipleChoice[option]}
+                                                                                    name={`option-${index}`}
+                                                                                    type="radio"
+                                                                                    id={`inline-radio-${index}-${idx}`}
+                                                                                    value={multipleChoice[option]}
+                                                                                />
+                                                                            </div>
+                                                                        ))}
+                                                                    </div>
+                                                                </Form>
+                                                            </div>
+                                                        </div>
+                                                    ))}
+                                                </>
+                                            )}
+                                        </div>
+                                    )}
+                                </Col>
+                            </Row>
+                            <div className="viewProgress-footer mx-auto">
+                                <Button
+                                    className="done-btn"
+                                    type="button"
+                                    onClick={continueHandler}
+                                    disabled={isSubmitting}
+                                >
+                                    {continueQuiz ? 'Done' : 'Continue To Quiz'}
+                                </Button>
+                            </div>
                         </FormikForm>
                     )}
                 </Formik>
