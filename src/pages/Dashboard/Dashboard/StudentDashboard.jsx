@@ -8,6 +8,7 @@ import { useSelector } from 'react-redux';
 import Profit from '@icons/Profit.svg';
 import Costs from '@icons/Costs.svg';
 import { useNavigate } from 'react-router';
+import '../../../styles/Dashboard.scss';
 
 const sampleData = [5000, 22200, 6000, 20000, 7500, 28000, 8500, 20000, 7500, 28000, 8500, 20000, 7500, 28000, 8500];
 const previousData = [3000, 12000, 4000, 16000, 5000, 24000, 6000, 18000, 5500, 26000, 7500, 22000];

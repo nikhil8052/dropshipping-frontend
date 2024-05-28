@@ -6,6 +6,7 @@ import { meetings } from '../../../../data/data';
 import MeetingCard from '@components/MeetingCard/MeetingCard';
 import Pagination from '@components/Pagination/Pagination';
 import { useNavigate } from 'react-router-dom';
+import '../../../../styles/Events.scss';
 
 const EventsListing = () => {
     const [selectedOption, setSelectedOption] = useState('All Events');

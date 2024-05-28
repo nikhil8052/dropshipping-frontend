@@ -12,6 +12,7 @@ import deleteIcon from '@icons/trash-2.svg';
 import add from '@icons/add_white.svg';
 import { coachDummyData } from '../../../data/data';
 import { useNavigate } from 'react-router-dom';
+import '../../../styles/Coaches.scss';
 
 const Coaches = () => {
     const [showDeleteModal, setShowDeleteModal] = useState(false);

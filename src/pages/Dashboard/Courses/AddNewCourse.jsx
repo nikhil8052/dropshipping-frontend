@@ -6,16 +6,16 @@ import ClipboardText from '@icons/ClipboardText.svg';
 import Stack from '@icons/Stack.svg';
 import taskAlt from '@icons/task_alt.svg';
 import CaretRight from '@icons/CaretRight.svg';
-import '../../../styles/Courses.scss';
 import Tab from 'react-bootstrap/Tab';
 import Tabs from 'react-bootstrap/Tabs';
 import { useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
+import '../../../styles/Courses.scss';
 
 const AddNewCourse = () => {
     const userInfo = useSelector((state) => state?.auth?.userInfo);
     const navigate = useNavigate();
-    const { role } = userInfo;
+    const role = userInfo?.role;
 
     const [activeKey, setActiveKey] = useState('basic-information');
 

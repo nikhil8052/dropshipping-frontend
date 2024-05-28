@@ -10,6 +10,7 @@ import toast from 'react-hot-toast';
 import TextExpand from '@components/TextExpand/TextExpand';
 import eyeIcon from '@icons/basil_eye-solid.svg';
 import { paymentsDummyData } from '../../../data/data';
+import '../../../styles/Payments.scss';
 
 const Payments = () => {
     const [showDeleteModal, setShowDeleteModal] = useState(false);
@@ -200,7 +201,7 @@ const Payments = () => {
     ];
 
     return (
-        <div className="events-page">
+        <div className="payments-page">
             <Helmet>
                 <title>Coaches | Drop Ship Academy</title>
             </Helmet>
@@ -244,7 +245,7 @@ const Payments = () => {
                                             eventKey={events}
                                             className="my-1 ms-2"
                                         >
-                                            <span className="coach-name"> {events}</span>
+                                            <span className="payment-name"> {events}</span>
                                         </Dropdown.Item>
                                     ))}
                                 </DropdownButton>

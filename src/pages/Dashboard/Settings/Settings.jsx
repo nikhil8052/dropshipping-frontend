@@ -9,6 +9,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
 import UploadSimple from '@icons/UploadSimple.svg';
 import ImageCropper from '../../../components/ImageMask/ImageCropper';
+import '../../../styles/Settings.scss';
 
 const Settings = () => {
     const inputRef = useRef();

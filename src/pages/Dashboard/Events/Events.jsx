@@ -15,6 +15,7 @@ import add from '@icons/add_white.svg';
 import { eventsDummyData } from '../../../data/data';
 import { useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
+import '../../../styles/Events.scss';
 
 const Events = () => {
     const [showDeleteModal, setShowDeleteModal] = useState(false);
@@ -330,7 +331,7 @@ const Events = () => {
                                             eventKey={event}
                                             className="my-1 ms-2 w-100"
                                         >
-                                            <span className="coach-name"> {event}</span>
+                                            <span className="event-name"> {event}</span>
                                         </Dropdown.Item>
                                     ))}
                                 </DropdownButton>

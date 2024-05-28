@@ -3,6 +3,7 @@ import { Col, Modal, Row } from 'react-bootstrap';
 import BigCalender from '../../Dashboard/Calender/BigCalender';
 import { eventsAndMeetings } from '../../../../data/data';
 import MeetingCard from '../../../../components/MeetingCard/MeetingCard';
+import '../../../../styles/Events.scss';
 
 function EventPage() {
     const [showModal, setShowModal] = useState(false);

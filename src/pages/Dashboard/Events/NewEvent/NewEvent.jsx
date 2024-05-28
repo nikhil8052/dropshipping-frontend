@@ -11,6 +11,7 @@ import toast from 'react-hot-toast';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import ImageCropper from '../../../../components/ImageMask/ImageCropper';
+import '../../../../styles/Events.scss';
 
 const NewEvent = () => {
     const inputRef = useRef();
@@ -85,16 +86,16 @@ const NewEvent = () => {
     };
 
     return (
-        <div className="new-coach-page-wrapper">
+        <div className="new-event-page-wrapper">
             <div className="title-top">
-                <span onClick={() => navigate('/admin/events')} style={{ cursor: 'pointer' }}>
+                <span onClick={() => navigate(`/${role}/events`)} style={{ cursor: 'pointer' }}>
                     Events <img src={CaretRight} alt=">" />
                 </span>{' '}
                 {eventId ? 'Event Details' : 'Create New Event'}
             </div>
-            <div className="new-coach-page">
+            <div className="new-event-page">
                 <Container fluid className="p-3">
-                    <h4 className="mb-3 new-coach-title">{eventId ? 'Coach Profile' : 'Schedule Event'}</h4>
+                    <h4 className="mb-3 new-event-title">{eventId ? 'Coach Profile' : 'Schedule Event'}</h4>
                     <Formik
                         initialValues={eventData}
                         validationSchema={schema}
