@@ -32,6 +32,7 @@ const NewStudent = () => {
         phoneNumber: '',
         country: '',
         region: '',
+        coachingTrajectory: '',
         assignedStudents: [],
         highTicketSpots: '',
         lowTicketSpots: '',
@@ -45,7 +46,8 @@ const NewStudent = () => {
         phoneNumber: Yup.string().required('Please enter a phone number'),
         country: Yup.string().required('Please select a country'),
         region: Yup.string().required('Please select a region'),
-        assignedStudents: Yup.array().min(1, 'Please select at least one student'),
+        coachingTrajectory: Yup.string().required('Please select a coaching trajectory'),
+        assignedStudents: Yup.array().min(1, 'Please select at least one course'),
         highTicketSpots: Yup.number()
             .required('Number of high ticket spots is required')
             .positive('Number must be greater than zero'),
@@ -285,9 +287,9 @@ const NewStudent = () => {
                                 </Row>
                                 <Row>
                                     <Col md={6} xs={12}>
-                                        <label className="field-label">studenting Trajectory</label>
+                                        <label className="field-label">Coaching Trajectory</label>
                                         <Field
-                                            name="region"
+                                            name="coachingTrajectory"
                                             className="field-select-control"
                                             as="select"
                                             placeholder="Select..."
@@ -298,7 +300,7 @@ const NewStudent = () => {
                                                 </option>
                                             ))}
                                         </Field>
-                                        <ErrorMessage name="assignedStudents" component="div" className="error" />
+                                        <ErrorMessage name="coachingTrajectory" component="div" className="error" />
                                     </Col>
 
                                     {!studentId && (
@@ -332,7 +334,11 @@ const NewStudent = () => {
                                                     />
                                                 )}
                                             />
-                                            <ErrorMessage name="assignedStudents" component="div" className="error" />
+                                            <ErrorMessage
+                                                name="assignedStudents"
+                                                component="div"
+                                                className="error mt-2"
+                                            />
                                         </Col>
                                     )}
                                 </Row>

@@ -28,6 +28,11 @@
     border-radius: 1rem !important;
     border: none !important;
     margin: 0 8px;
+    @media (max-width: $large-screen) {
+        & {
+            padding: 0px !important;
+        }
+    }
 }
 .custom-card {
     box-shadow: 0 6px 10px -4px rgba(0, 0, 0, 0.15);

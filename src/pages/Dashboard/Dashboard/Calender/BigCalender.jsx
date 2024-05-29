@@ -26,7 +26,7 @@ const BigCalender = ({
     events,
     googleCalendar = false,
     handleGoogleCalendarClick,
-    calendarHeight = 500
+    calendarHeight = 700
 }) => {
     const eventStyleGetter = (event, start, end) => {
         const now = new Date();
@@ -62,10 +62,13 @@ const BigCalender = ({
             eventPropGetter={eventStyleGetter}
             components={{
                 // eslint-disable-next-line
-                month: {
-                    event: ({ event, title }) => {
-                        return <EventComponent event={event} title={title} onEventClick={() => onEventClick(event)} />;
-                    }
+                // month: {
+                //     event: ({ event, title }) => {
+                //         return <EventComponent event={event} title={title} onEventClick={() => onEventClick(event)} />;
+                //     }
+                // },
+                event: ({ event, title }) => {
+                    return <EventComponent event={event} title={title} onEventClick={() => onEventClick(event)} />;
                 },
                 header: CustomHeader,
                 toolbar: (props) => (

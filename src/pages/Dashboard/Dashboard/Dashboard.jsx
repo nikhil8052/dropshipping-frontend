@@ -9,6 +9,7 @@ import BigCalender from './Calender/BigCalender';
 import { useSelector } from 'react-redux';
 import { events } from '../../../data/data';
 import '../../../styles/Dashboard.scss';
+import { useIsSmallScreen } from '../../../utils/mediaQueries';
 
 const Dashboard = () => {
     const chartRef = useRef(null);
@@ -20,6 +21,7 @@ const Dashboard = () => {
     const [cardStats, setCardStats] = useState([]);
     const [lineGraphData, setLineGraphData] = useState([{ datasets: [] }]);
     const [dataSet, setDataSet] = useState(false);
+    const isSmallScreen = useIsSmallScreen();
 
     useEffect(() => {
         return () => {
@@ -31,7 +33,7 @@ const Dashboard = () => {
     // Set the height of the chart on tab change
     useEffect(() => {
         if (chartKey) {
-            setChartHeight(100);
+            isSmallScreen ? setChartHeight(200) : setChartHeight(80);
         }
     }, [chartKey]);
 
