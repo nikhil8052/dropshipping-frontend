@@ -6,6 +6,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { Button, Card, Col, Row } from 'react-bootstrap';
 import { useSelector } from 'react-redux';
 import CaretLeft from '@icons/CaretLeft.svg';
+import calendar from '@icons/calendar.svg';
 
 const SingleEvent = () => {
     const location = useLocation();
@@ -15,7 +16,7 @@ const SingleEvent = () => {
     const role = userInfo?.role;
 
     return (
-        <>
+        <div className="single-event-wrapper">
             {meeting && (
                 <Row>
                     <Col>
@@ -25,6 +26,13 @@ const SingleEvent = () => {
                         >
                             <img src={CaretLeft} alt="CaretLeft" className="me-2" /> Back
                         </Button>
+                    </Col>
+                    <Col>
+                        <div className="d-flex justify-content-end">
+                            <Button className="google-calendar-btn">
+                                <img src={calendar} alt="calendar" className="me-2" /> Google Calendar
+                            </Button>
+                        </div>
                     </Col>
                 </Row>
             )}
@@ -125,7 +133,7 @@ const SingleEvent = () => {
                     )}
                 </Card.Body>
             </Card>
-        </>
+        </div>
     );
 };
 export default SingleEvent;

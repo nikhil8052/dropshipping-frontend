@@ -277,7 +277,7 @@ const Coaches = () => {
                     onClose={handleCloseDeleteModal}
                     loading={loadingCRUD}
                     title="Delete Coach"
-                    body="Are you sure you wants to delete this Coach ?"
+                    body="Are you sure you want to delete this Coach ?"
                     onConfirm={handleDeleteSubmit}
                     customFooterClass="custom-footer-class"
                     nonActiveBtn="cancel-button"
