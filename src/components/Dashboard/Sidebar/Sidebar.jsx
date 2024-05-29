@@ -88,7 +88,7 @@ const Sidebar = () => {
                     onClose={handleLogoutClick}
                     loading={false}
                     title="Logout"
-                    body="Are you sure you wants to Logout ?"
+                    body="Are you sure you want to Logout?"
                     onConfirm={() => dispatch(logoutUser())}
                     customFooterClass="custom-footer-class"
                     nonActiveBtn="cancel-button"

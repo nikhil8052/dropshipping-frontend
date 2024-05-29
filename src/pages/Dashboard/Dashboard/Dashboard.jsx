@@ -1,15 +1,16 @@
 /* eslint-disable */
 import { useEffect, useRef, useState } from 'react';
-import { Row, Col } from 'react-bootstrap';
+import { Row, Col, Modal } from 'react-bootstrap';
 import Card from '@components/Card/Card';
 import { StatCard, LineChart } from '@components/Home';
 import { Helmet } from 'react-helmet';
 import EventDetailsModal from './Calender/CustomEventModal';
 import BigCalender from './Calender/BigCalender';
 import { useSelector } from 'react-redux';
-import { events } from '../../../data/data';
+import { events, meetings } from '../../../data/data';
 import '../../../styles/Dashboard.scss';
 import { useIsSmallScreen } from '../../../utils/mediaQueries';
+import MeetingCard from '../../../components/MeetingCard/MeetingCard';
 
 const Dashboard = () => {
     const chartRef = useRef(null);
@@ -22,6 +23,7 @@ const Dashboard = () => {
     const [lineGraphData, setLineGraphData] = useState([{ datasets: [] }]);
     const [dataSet, setDataSet] = useState(false);
     const isSmallScreen = useIsSmallScreen();
+    const [selectedEvent, setSelectedEvent] = useState(null);
 
     useEffect(() => {
         return () => {
@@ -203,7 +205,9 @@ const Dashboard = () => {
         { label: 'Yearly', value: 'yearly' }
     ];
 
-    const handleEventClick = () => {
+    const handleEventClick = (event) => {
+        const meeting = meetings.find((meeting) => meeting.id === event.id);
+        setSelectedEvent(meeting);
         // We can define a state later for the selected event
         setShowModal(true);
     };
@@ -246,7 +250,7 @@ const Dashboard = () => {
                 <Col>
                     <Card header={true} title="Events" customCardClass="events-card">
                         <BigCalender onEventClick={(event) => handleEventClick(event)} events={events} />
-                        <EventDetailsModal
+                        {/* <EventDetailsModal
                             show={showModal}
                             onHide={() => setShowModal(false)}
                             event={{
@@ -258,7 +262,17 @@ const Dashboard = () => {
                                 dateTime: 'Feb 2, 2024 19:28 Central Standard Time (GMT-6)',
                                 attendeesCount: '15'
                             }}
-                        />
+                        /> */}
+                        <Modal
+                            show={showModal}
+                            onHide={() => setShowModal(false)}
+                            size="md"
+                            aria-labelledby="contained-modal-title-vcenter"
+                            centered
+                        >
+                            <Modal.Header style={{ borderBottom: 'none' }} closeButton></Modal.Header>
+                            <MeetingCard meeting={selectedEvent} />
+                        </Modal>
                     </Card>
                 </Col>
             </Row>

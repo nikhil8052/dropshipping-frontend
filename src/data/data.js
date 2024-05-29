@@ -2395,7 +2395,118 @@ export const meetings = [
         ],
         attendeesCount: 15,
         image: 'https://randomuser.me/api/portraits/men/1.jpg'
+    },
+    {
+        id: 7,
+        name: 'Kathrine',
+        title: 'Coach',
+        meetingId: '226326',
+        password: '4K22MJ7',
+        topic: 'Detailed meeting about the new course descriptions, their time frame.',
+        dateTime: 'Feb 2, 2024 19:28',
+        timeZone: 'Central Standard Time (GMT-6)',
+        attendees: [
+            'https://randomuser.me/api/portraits/men/5.jpg',
+            'https://randomuser.me/api/portraits/men/5.jpg',
+            'https://randomuser.me/api/portraits/men/5.jpg',
+            'https://randomuser.me/api/portraits/men/5.jpg',
+            'https://randomuser.me/api/portraits/men/5.jpg',
+            'https://randomuser.me/api/portraits/men/5.jpg',
+            'https://randomuser.me/api/portraits/men/5.jpg',
+            'https://randomuser.me/api/portraits/men/5.jpg'
+        ],
+        attendeesCount: 15,
+        image: 'https://randomuser.me/api/portraits/men/1.jpg'
+    },
+    {
+        id: 8,
+        name: 'Kathrine',
+        title: 'Coach',
+        meetingId: '226326',
+        password: '4K22MJ7',
+        topic: 'Detailed meeting about the new course descriptions, their time frame.',
+        dateTime: 'Feb 2, 2024 19:28',
+        timeZone: 'Central Standard Time (GMT-6)',
+        attendees: [
+            'https://randomuser.me/api/portraits/men/5.jpg',
+            'https://randomuser.me/api/portraits/men/5.jpg',
+            'https://randomuser.me/api/portraits/men/5.jpg',
+            'https://randomuser.me/api/portraits/men/5.jpg',
+            'https://randomuser.me/api/portraits/men/5.jpg',
+            'https://randomuser.me/api/portraits/men/5.jpg',
+            'https://randomuser.me/api/portraits/men/5.jpg',
+            'https://randomuser.me/api/portraits/men/5.jpg'
+        ],
+        attendeesCount: 15,
+        image: 'https://randomuser.me/api/portraits/men/1.jpg'
+    },
+    {
+        id: 9,
+        name: 'Kathrine',
+        title: 'Coach',
+        meetingId: '226326',
+        password: '4K22MJ7',
+        topic: 'Detailed meeting about the new course descriptions, their time frame.',
+        dateTime: 'Feb 2, 2024 19:28',
+        timeZone: 'Central Standard Time (GMT-6)',
+        attendees: [
+            'https://randomuser.me/api/portraits/men/5.jpg',
+            'https://randomuser.me/api/portraits/men/5.jpg',
+            'https://randomuser.me/api/portraits/men/5.jpg',
+            'https://randomuser.me/api/portraits/men/5.jpg',
+            'https://randomuser.me/api/portraits/men/5.jpg',
+            'https://randomuser.me/api/portraits/men/5.jpg',
+            'https://randomuser.me/api/portraits/men/5.jpg',
+            'https://randomuser.me/api/portraits/men/5.jpg'
+        ],
+        attendeesCount: 15,
+        image: 'https://randomuser.me/api/portraits/men/1.jpg'
+    },
+    {
+        id: 10,
+        name: 'Kathrine',
+        title: 'Coach',
+        meetingId: '226326',
+        password: '4K22MJ7',
+        topic: 'Detailed meeting about the new course descriptions, their time frame.',
+        dateTime: 'Feb 2, 2024 19:28',
+        timeZone: 'Central Standard Time (GMT-6)',
+        attendees: [
+            'https://randomuser.me/api/portraits/men/5.jpg',
+            'https://randomuser.me/api/portraits/men/5.jpg',
+            'https://randomuser.me/api/portraits/men/5.jpg',
+            'https://randomuser.me/api/portraits/men/5.jpg',
+            'https://randomuser.me/api/portraits/men/5.jpg',
+            'https://randomuser.me/api/portraits/men/5.jpg',
+            'https://randomuser.me/api/portraits/men/5.jpg',
+            'https://randomuser.me/api/portraits/men/5.jpg'
+        ],
+        attendeesCount: 15,
+        image: 'https://randomuser.me/api/portraits/men/1.jpg'
+    },
+    {
+        id: 11,
+        name: 'Kathrine',
+        title: 'Coach',
+        meetingId: '226326',
+        password: '4K22MJ7',
+        topic: 'Detailed meeting about the new course descriptions, their time frame.',
+        dateTime: 'Feb 2, 2024 19:28',
+        timeZone: 'Central Standard Time (GMT-6)',
+        attendees: [
+            'https://randomuser.me/api/portraits/men/5.jpg',
+            'https://randomuser.me/api/portraits/men/5.jpg',
+            'https://randomuser.me/api/portraits/men/5.jpg',
+            'https://randomuser.me/api/portraits/men/5.jpg',
+            'https://randomuser.me/api/portraits/men/5.jpg',
+            'https://randomuser.me/api/portraits/men/5.jpg',
+            'https://randomuser.me/api/portraits/men/5.jpg',
+            'https://randomuser.me/api/portraits/men/5.jpg'
+        ],
+        attendeesCount: 15,
+        image: 'https://randomuser.me/api/portraits/men/1.jpg'
     }
+
     // Add more objects to reach 10 items
 ];
 

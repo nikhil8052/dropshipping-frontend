@@ -285,7 +285,7 @@ const Events = () => {
                     onClose={handleCloseDeleteModal}
                     loading={loadingCRUD}
                     title="Delete Event"
-                    body="Are you sure you wants to delete this Event ?"
+                    body="Are you sure you want to delete this Event ?"
                     onConfirm={handleDeleteSubmit}
                     customFooterClass="custom-footer-class"
                     nonActiveBtn="cancel-button"

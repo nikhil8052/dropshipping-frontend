@@ -372,7 +372,7 @@ const Students = () => {
                     onClose={handleCloseDeleteModal}
                     loading={loadingCRUD}
                     title="Delete Student"
-                    body="Are you sure you wants to delete this Student ?"
+                    body="Are you sure you want to delete this Student ?"
                     onConfirm={handleDeleteSubmit}
                     customFooterClass="custom-footer-class"
                     nonActiveBtn="cancel-button"
