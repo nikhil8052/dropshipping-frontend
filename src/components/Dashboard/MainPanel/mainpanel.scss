@@ -1,5 +1,7 @@
 @import '@constants/colors.scss';
 @import '@constants/typography.scss';
+@import '@constants/media.scss';
+
 .main-panel {
     position: relative;
     float: right;
@@ -12,6 +14,12 @@
         max-width: 2560px;
         margin-left: auto;
         margin-right: auto;
+
+        @media (max-width: $medium-screen) {
+            & {
+                padding: 15px 5px !important;
+            }
+        }
     }
 }
 .full-width-panel {

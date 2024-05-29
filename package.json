@@ -43,6 +43,7 @@
         "react-hot-toast": "^2.4.1",
         "react-quill": "^2.0.0",
         "react-redux": "^9.0.4",
+        "react-responsive": "^10.0.0",
         "react-router-dom": "^6.21.1",
         "react-select": "^5.8.0",
         "react-table": "^7.8.0",

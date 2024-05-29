@@ -236,7 +236,7 @@ const Payments = () => {
                                         </div>
                                     }
                                     defaultValue={selectedOption}
-                                    className="dropdown-button-fix w-25 d-flex justify-content-even align-items-center"
+                                    className="dropdown-button-fix w-50 d-flex justify-content-even align-items-center"
                                 >
                                     {['Paid', 'Overdue', 'HT', 'LT'].map((events) => (
                                         <Dropdown.Item

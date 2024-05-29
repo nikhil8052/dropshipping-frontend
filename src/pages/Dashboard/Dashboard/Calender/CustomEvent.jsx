@@ -13,7 +13,7 @@ const EventComponent = ({ event, title, onEventClick }) => {
         <div onClick={onEventClick} className={`rbc-event ${eventClass}`}>
             <div className="rbc-event-content">
                 <p>
-                    <img className="me-2 mb-1" src={isActiveEvent ? GreenDot : BlueDot} alt="" /> {title}
+                    <img className="me-2 mb-1" src={isActiveEvent ? GreenDot : BlueDot} alt="" /> <span>{title}</span>
                 </p>
             </div>
         </div>

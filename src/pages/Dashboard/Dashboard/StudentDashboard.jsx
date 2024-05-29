@@ -9,6 +9,7 @@ import Profit from '@icons/Profit.svg';
 import Costs from '@icons/Costs.svg';
 import { useNavigate } from 'react-router';
 import '../../../styles/Dashboard.scss';
+import { useIsSmallScreen } from '../../../utils/mediaQueries';
 
 const sampleData = [5000, 22200, 6000, 20000, 7500, 28000, 8500, 20000, 7500, 28000, 8500, 20000, 7500, 28000, 8500];
 const previousData = [3000, 12000, 4000, 16000, 5000, 24000, 6000, 18000, 5500, 26000, 7500, 22000];
@@ -18,7 +19,8 @@ const currentData = [5000, 22200, 6000, 20000, 7500, 28000, 8500, 20000, 7500, 2
 const StudentDashboard = () => {
     const navigate = useNavigate();
     const chartRef = useRef(null);
-    const [chartHeight, setChartHeight] = useState(70);
+    const [chartHeight, setChartHeight] = useState(100);
+    const isSmallScreen = useIsSmallScreen();
     const [cardStats, setCardStats] = useState([]);
     const [lineGraphData, setLineGraphData] = useState({
         datasets: [
@@ -238,7 +240,6 @@ const StudentDashboard = () => {
         setLineGraphData(data);
         setCashFlowData(cashData);
         setDataSet(false);
-        setChartHeight(70);
     }, []);
 
     const timePeriods = [
@@ -308,7 +309,7 @@ const StudentDashboard = () => {
                         data={lineGraphData}
                         options={graphOptions}
                         timePeriods={timePeriods}
-                        chartHeight={chartHeight}
+                        chartHeight={isSmallScreen ? 200 : chartHeight}
                         dataSet={dataSet}
                         role={role}
                         handleFilterChange={handleFilterChange}
@@ -326,7 +327,7 @@ const StudentDashboard = () => {
                             <CashFlowLineChart
                                 data={cashFlowData}
                                 options={cashFlowOptions}
-                                chartHeight={chartHeight}
+                                chartHeight={isSmallScreen ? 200 : chartHeight}
                             />
                         )}
                     </Card>
