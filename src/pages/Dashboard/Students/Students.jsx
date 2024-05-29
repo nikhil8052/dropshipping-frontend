@@ -87,7 +87,7 @@ const Students = () => {
                             fontSize: '14px'
                         }}
                     >
-                        (Drag Courses for change their numbers)
+                        (Drag Courses to change their numbers)
                     </p>
                 </div>
             ),
