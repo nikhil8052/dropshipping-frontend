@@ -8,6 +8,7 @@ import { Helmet } from 'react-helmet';
 import axiosWrapper from '@utils/api';
 import { toast } from 'react-toastify';
 import TextExpand from '@components/TextExpand/TextExpand';
+import DateRenderer from '@components/DateFormatter/DateFormatter';
 import editIcon from '@icons/edit_square.svg';
 import deleteIcon from '@icons/trash-2.svg';
 import eyeIcon from '@icons/basil_eye-solid.svg';
@@ -162,12 +163,12 @@ const Events = () => {
                         className="btn-light action-button delete-button"
                         onClick={() => props.onViewClick(props.data.id)}
                     >
-                        <img src={eyeIcon} className="action-icon" alt="action-icon" />
+                        <img src={eyeIcon} className="action-icon ms-0" alt="action-icon" />
                     </div>
                 </Col>
                 <Col lg={3} md={4} sm={4} xs={4} className="d-flex justify-content-center align-items-center">
                     <div className="action-button edit-button" onClick={() => props.onEditClick(props.data.id)}>
-                        <img src={editIcon} className="action-icon" alt="action-icon" />
+                        <img src={editIcon} className="action-icon ms-0" alt="action-icon" />
                     </div>
                 </Col>
                 <Col lg={3} md={4} sm={4} xs={4} className="d-flex justify-content-center align-items-center">
@@ -238,7 +239,7 @@ const Events = () => {
             filter: 'agSetColumnFilter',
             sortable: true,
             unSortIcon: true,
-            cellRenderer: TextExpand,
+            cellRenderer: DateRenderer,
             wrapText: true,
             autoHeight: true,
             resizable: false
@@ -263,16 +264,17 @@ const Events = () => {
                 onViewClick: handleViewClick
             },
             pinned: 'right',
+            maxWidth: 140,
             sortable: false,
             filter: false,
             resizable: false,
-            cellClass: ['d-flex', 'align-items-center']
+            cellClass: ['d-flex', 'align-items-center', 'justify-content-center']
         }
     ];
     return (
         <div className="events-page">
             <Helmet>
-                <title>Coaches | Drop Ship Academy</title>
+                <title>Coaches | Dropship Academy</title>
             </Helmet>
             {studentModal.show && (
                 <Modal size="large" show={studentModal.show} onClose={handleCloseModal} title={studentModal.title}>

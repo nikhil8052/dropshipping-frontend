@@ -4,13 +4,15 @@ import imagePreview from '@icons/image-preview.svg';
 import { Formik, Form, Field, ErrorMessage, FieldArray } from 'formik';
 import * as Yup from 'yup';
 import { Container, Row, Col, Button } from 'react-bootstrap';
-import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import CustomSelect from '../../../../components/Input/Select';
 import { coachDummyData, studentDummyData, countryList } from '../../../../data/data';
 import toast from 'react-hot-toast';
 import { useLocation, useNavigate } from 'react-router-dom';
 import ImageCropper from '../../../../components/ImageMask/ImageCropper';
+import RichTextEditor from '@components/RichTextEditor/RichTextEditor';
+import Input from '@components/Input/Input';
+
 import '../../../../styles/Coaches.scss';
 
 const NewCoach = () => {
@@ -30,16 +32,13 @@ const NewCoach = () => {
         assignedStudents: [],
         highTicketSpots: '',
         lowTicketSpots: '',
-        bio: ''
+        bio: '',
+        coachType: ''
     });
 
     useEffect(() => {
         if (coachId) {
-            // For now it is a dummy data, later we will replace it with actual API call
-
-            // Fetch data from API here
             const coach = coachDummyData.find((coach) => coach.id === coachId);
-            // later we add the details to the form
             if (coach) {
                 setCoachPhoto(coach.avatarUrl);
                 setCoachData({
@@ -82,6 +81,60 @@ const NewCoach = () => {
         });
     };
 
+    const validationSchema = Yup.object({
+        coachName: Yup.string().required('Coach name is required'),
+        coachEmail: Yup.string().email('Invalid email address').required('Coach email is required'),
+        phoneNumber: Yup.string().required('Phone number is required'),
+        country: Yup.string().required('Country is required'),
+        region: Yup.string().required('Region is required'),
+        assignedStudents: Yup.array().min(1, 'Select at least one student'),
+        highTicketSpots: Yup.number().when('coachType', {
+            is: 'high',
+            then: () => Yup.number().required('High ticket spots are required').positive('Must be a positive number'),
+            otherwise: () => Yup.number()
+        }),
+        lowTicketSpots: Yup.number().when('coachType', {
+            is: 'low',
+            then: () => Yup.number().required('Low ticket spots are required').positive('Must be a positive number'),
+            otherwise: () => Yup.number()
+        }),
+        bio: Yup.string(),
+        coachType: Yup.string().required('Please select the coach type')
+    });
+
+    const handleFormSubmit = (values, { resetForm, setSubmitting }) => {
+        setTimeout(() => {
+            if (coachId) {
+                const updatedCoaches = coachDummyData.map((coach) =>
+                    coach.id === coachId ? { ...coach, ...values, avatarUrl: coachPhoto } : coach
+                );
+                toast.success(`New coach:${updatedCoaches.coachName || updatedCoaches.name} Updated successfully!`);
+            } else {
+                const newCoach = {
+                    id: coachDummyData.length + 1,
+                    ...values,
+                    avatarUrl: coachPhoto
+                };
+                toast.success(`New coach:${newCoach.coachName} added successfully!`);
+            }
+            resetForm();
+            setSubmitting(false);
+            navigate('/admin/coaches');
+        }, 1000);
+    };
+
+    const ticketRender = (ticket) => {
+        return (
+            <Col md={6} xs={12}>
+                <label className="field-label">
+                    {ticket.slice(0, 1).toUpperCase() + ticket.slice(1)} Ticket Student Spots
+                </label>
+                <Field name={`${ticket}TicketSpots`} className="field-control" type="number" placeholder="5" min={1} />
+                <ErrorMessage name={`${ticket}TicketSpots`} component="div" className="error" />
+            </Col>
+        );
+    };
+
     return (
         <div className="new-coach-page-wrapper">
             <div className="title-top">
@@ -95,29 +148,8 @@ const NewCoach = () => {
                     <h4 className="mb-3 new-coach-title">{coachId ? 'Coach Profile' : 'Add New Coach'}</h4>
                     <Formik
                         initialValues={coachData}
-                        validationSchema={Yup.object({
-                            coachName: Yup.string().required('Coach name is required'),
-                            coachEmail: Yup.string().email('Invalid email address').required('Coach email is required'),
-                            phoneNumber: Yup.string().required('Phone number is required'),
-                            country: Yup.string().required('Country is required'),
-                            region: Yup.string().required('Region is required'),
-                            assignedStudents: Yup.array().min(1, 'Select at least one student'),
-                            highTicketSpots: Yup.number()
-                                .required('High ticket spots are required')
-                                .positive('Must be a positive number'),
-                            lowTicketSpots: Yup.number()
-                                .required('Low ticket spots are required')
-                                .positive('Must be a positive number'),
-                            bio: Yup.string()
-                        })}
-                        onSubmit={(values, { resetForm, setSubmitting }) => {
-                            setTimeout(() => {
-                                // Implement form submission logic here
-                                resetForm();
-                                setSubmitting(false);
-                                navigate('/admin/coaches');
-                            }, 1000);
-                        }}
+                        validationSchema={validationSchema}
+                        onSubmit={handleFormSubmit}
                         enableReinitialize
                     >
                         {({ isSubmitting, handleSubmit, values }) => (
@@ -219,7 +251,7 @@ const NewCoach = () => {
                                         <Field
                                             name="phoneNumber"
                                             className="field-control"
-                                            type="number"
+                                            type="text"
                                             placeholder="+1-202-555-0118"
                                         />
                                         <ErrorMessage name="phoneNumber" component="div" className="error" />
@@ -232,9 +264,7 @@ const NewCoach = () => {
                                             as="select"
                                             placeholder="United States"
                                         >
-                                            <option defaultChecked value="">
-                                                Select a country...
-                                            </option>
+                                            <option value="">Select a country...</option>
                                             {countryList.map((country) => (
                                                 <option key={country.id} value={country.name}>
                                                     {country.name}
@@ -253,9 +283,23 @@ const NewCoach = () => {
                                             as="select"
                                             placeholder="Select..."
                                         >
-                                            {studentDummyData.map((student) => (
-                                                <option key={student.id} value={student.name}>
-                                                    {student.name}
+                                            <option value="">Select a region...</option>
+                                            {[
+                                                {
+                                                    label: 'Region 1',
+                                                    value: 'Region 1'
+                                                },
+                                                {
+                                                    label: 'Region 2',
+                                                    value: 'Region 2'
+                                                },
+                                                {
+                                                    label: 'Region 3',
+                                                    value: 'Region 3'
+                                                }
+                                            ].map((region) => (
+                                                <option key={region.label} value={region.value}>
+                                                    {region.label}
                                                 </option>
                                             ))}
                                         </Field>
@@ -275,7 +319,6 @@ const NewCoach = () => {
                                                     value={values.assignedStudents}
                                                     placeholder="Select or search students..."
                                                     onChange={(selectedOptions) => {
-                                                        // Update the array with only the selected options
                                                         form.setFieldValue('assignedStudents', selectedOptions);
                                                     }}
                                                     onBlur={() => form.setFieldTouched('assignedStudents', true)}
@@ -285,63 +328,42 @@ const NewCoach = () => {
                                         <ErrorMessage name="assignedStudents" component="div" className="error" />
                                     </Col>
                                 </Row>
-                                <Row>
+
+                                <Row className="mb-3">
                                     <Col md={6} xs={12}>
-                                        <label className="field-label">High Ticket student spots</label>
-                                        <Field
-                                            name="highTicketSpots"
-                                            className="field-control"
-                                            type="number"
-                                            placeholder="5"
+                                        <Input
+                                            name="coachType"
+                                            placeholder="Please Select the Coach Type"
+                                            label="Coach Type"
+                                            type="radio"
+                                            options={[
+                                                {
+                                                    label: 'High Ticket',
+                                                    value: 'high'
+                                                },
+                                                {
+                                                    label: 'Low Ticket',
+                                                    value: 'low'
+                                                }
+                                            ]}
                                         />
-                                        <ErrorMessage name="highTicketSpots" component="div" className="error" />
                                     </Col>
-                                    <Col md={6} xs={12}>
-                                        <label className="field-label">Low Ticket Student Spots</label>
-                                        <Field
-                                            name="lowTicketSpots"
-                                            className="field-control"
-                                            type="number"
-                                            placeholder="10"
-                                        />
-                                        <ErrorMessage name="lowTicketSpots" component="div" className="error" />
-                                    </Col>
+                                    {values.coachType && ticketRender(values.coachType)}
                                 </Row>
-                                {/* Commenting for future use */}
-                                {/* <Row>
-                                    <Col>
-                                        <div className="field-label my-2">List of students Taught</div>
-                                        <div className="student-taught-wrapper">
-                                            <span className="total">All Students ({studentDummyData.length})</span>
-                                            {studentDummyData.map((student) => (
-                                                <span key={student.id} className=" data-value">
-                                                    {student.name}
-                                                </span>
-                                            ))}
-                                        </div>
-                                    </Col>
-                                </Row> */}
                                 <Row>
                                     <Col>
                                         <label className="field-label">
                                             Bio <span className="label-light">(Optional)</span>
                                         </label>
+                                        {/* eslint-disable */}
                                         <Field
                                             name="bio"
-                                            value={values.bio}
-                                            as="textarea"
-                                            placeholder="Enter Bio"
-                                            render={({ field }) => (
-                                                <ReactQuill
-                                                    {...field}
-                                                    value={field.value || ''}
-                                                    name={field.name}
-                                                    onChange={(value) => field.onChange(field.name)(value)} // Update the form value
-                                                    className="field-quill-control"
-                                                    modules={{ toolbar: true }}
-                                                />
+                                            type="text"
+                                            component={({ field }) => (
+                                                <RichTextEditor field={field} className="field-quill-control" />
                                             )}
                                         />
+
                                         <ErrorMessage name="bio" component="div" className="error" />
                                     </Col>
                                 </Row>

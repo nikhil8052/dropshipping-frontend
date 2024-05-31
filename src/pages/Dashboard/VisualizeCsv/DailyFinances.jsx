@@ -199,7 +199,7 @@ const DailyFinances = ({ studentId }) => {
         <div className="students-product-page">
             <>
                 <Helmet>
-                    <title>Visualize Csv | Drop Ship Academy</title>
+                    <title>Visualize Csv | Dropship Academy</title>
                 </Helmet>
                 {uploadFileModal && (
                     <ConfirmationBox
