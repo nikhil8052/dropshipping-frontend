@@ -49,7 +49,7 @@ const ResetPassword = () => {
     return (
         <>
             <Helmet>
-                <title>Login | Drop Ship Academy</title>
+                <title>Login | Dropship Academy</title>
             </Helmet>
             <div className="auth-main-wrapper">
                 <Row className=" g-0">

@@ -118,7 +118,7 @@ const Payments = () => {
             <Row style={{ width: '100%' }}>
                 <Col lg={6} md={6} sm={6} className="d-flex justify-content-center align-items-center">
                     <div className="btn-light action-button delete-button" onClick={() => props.onViewClick()}>
-                        <img src={eyeIcon} className="action-icon" alt="action-icon" />
+                        <img src={eyeIcon} className="action-icon ms-3" alt="action-icon" />
                     </div>
                 </Col>
             </Row>
@@ -186,6 +186,7 @@ const Payments = () => {
         },
         {
             headerName: 'Actions',
+            maxWidth: 100,
             cellRenderer: ActionsRenderer,
             cellRendererParams: {
                 onEditClick: handleEditClick,
@@ -196,14 +197,14 @@ const Payments = () => {
             sortable: false,
             filter: false,
             resizable: false,
-            cellClass: ['d-flex', 'align-items-center']
+            cellClass: ['d-flex', 'align-items-center', 'justify-content-center']
         }
     ];
 
     return (
         <div className="payments-page">
             <Helmet>
-                <title>Coaches | Drop Ship Academy</title>
+                <title>Coaches | Dropship Academy</title>
             </Helmet>
             {studentModal.show && (
                 <Modal size="large" show={studentModal.show} onClose={handleCloseModal} title={studentModal.title}>

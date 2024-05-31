@@ -276,7 +276,7 @@ const StudentDashboard = () => {
     return (
         <div className="dashboard-page">
             <Helmet>
-                <title>Dashboard | Drop Ship Academy</title>
+                <title>Dashboard | Dropship Academy</title>
             </Helmet>
             <Row>
                 <Col>

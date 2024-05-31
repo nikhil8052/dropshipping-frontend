@@ -211,7 +211,7 @@ const StudentsTrainingProduct = ({ studentId }) => {
             ) : (
                 <>
                     <Helmet>
-                        <title>Visualize Csv | Drop Ship Academy</title>
+                        <title>Visualize Csv | Dropship Academy</title>
                     </Helmet>
 
                     {showDeleteModal && (

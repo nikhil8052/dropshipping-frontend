@@ -140,7 +140,7 @@ const Coaches = () => {
                         className="btn-light action-button delete-button"
                         onClick={() => props.onDeleteClick(props.data.id)}
                     >
-                        <img src={deleteIcon} className="action-icon" alt="action-icon" />
+                        <img src={deleteIcon} className="action-icon ms-3" alt="action-icon" />
                     </div>
                 </Col>
             </Row>
@@ -247,6 +247,7 @@ const Coaches = () => {
         {
             headerName: 'Actions',
             cellRenderer: ActionsRenderer,
+            maxWidth: 100,
             cellRendererParams: {
                 onEditClick: handleEditClick,
                 onDeleteClick: handleDeleteClick
@@ -257,14 +258,14 @@ const Coaches = () => {
             sortable: false,
             filter: false,
             resizable: false,
-            cellClass: ['d-flex', 'align-items-center']
+            cellClass: ['d-flex', 'align-items-center', 'justify-content-center']
         }
     ];
 
     return (
         <div className="coaches-page">
             <Helmet>
-                <title>Coaches | Drop Ship Academy</title>
+                <title>Coaches | Dropship Academy</title>
             </Helmet>
             {productModal.show && (
                 <Modal size="large" show={productModal.show} onClose={handleCloseModal} title={productModal.title}>

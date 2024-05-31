@@ -52,7 +52,7 @@ const Login = () => {
     return (
         <React.Fragment>
             <Helmet>
-                <title>Login | Drop Ship Academy</title>
+                <title>Login | Dropship Academy</title>
             </Helmet>
             <div className="auth-main-wrapper">
                 <div className="login-page-section">

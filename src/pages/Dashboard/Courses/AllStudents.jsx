@@ -162,7 +162,7 @@ const AllStudents = () => {
     return (
         <div className="all-student-page">
             <Helmet>
-                <title>Coaches | Drop Ship Academy</title>
+                <title>Coaches | Dropship Academy</title>
             </Helmet>
             {studentModal.show && (
                 <Modal size="large" show={studentModal.show} onClose={handleCloseModal} title={studentModal.title}>

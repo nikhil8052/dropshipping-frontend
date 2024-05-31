@@ -188,7 +188,7 @@ const Listing = () => {
     return (
         <div className="listing-page">
             <Helmet>
-                <title>Products | Drop Ship Academy</title>
+                <title>Products | Dropship Academy</title>
             </Helmet>
             {productModal.show && (
                 <Modal size="large" show={productModal.show} onClose={handleCloseModal} title={productModal.title}>
