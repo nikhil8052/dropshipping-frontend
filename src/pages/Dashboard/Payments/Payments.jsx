@@ -10,6 +10,8 @@ import toast from 'react-hot-toast';
 import TextExpand from '@components/TextExpand/TextExpand';
 import eyeIcon from '@icons/basil_eye-solid.svg';
 import { paymentsDummyData } from '../../../data/data';
+import downArrow from '@icons/down-arrow.svg';
+import '../../../styles/Common.scss';
 import '../../../styles/Payments.scss';
 
 const Payments = () => {
@@ -227,32 +229,29 @@ const Payments = () => {
                 onRowClicked={handleRowClick}
                 loading={loading}
                 children={
-                    <Row>
-                        <Col>
-                            <div className="d-flex justify-content-end">
-                                <DropdownButton
-                                    title={
-                                        <div className="d-flex justify-content-between w-100">
-                                            <span className="ms-2">{selectedOption}</span>
-                                        </div>
-                                    }
-                                    defaultValue={selectedOption}
-                                    className="dropdown-button-fix w-50 d-flex justify-content-even align-items-center"
+                    <div className="payments-button-wrapper">
+                        <DropdownButton
+                            title={
+                                <div className="d-flex justify-content-between align-items-center gap-2">
+                                    <span>{selectedOption}</span>
+                                    <img className="ms-5" src={downArrow} alt="Down arrow" />
+                                </div>
+                            }
+                            defaultValue={selectedOption}
+                            className="dropdown-button"
+                        >
+                            {['Paid', 'Overdue', 'HT', 'LT'].map((events) => (
+                                <Dropdown.Item
+                                    onClick={(e) => handleEventSelect(e, events)}
+                                    key={events}
+                                    eventKey={events}
+                                    className="my-1 ms-2"
                                 >
-                                    {['Paid', 'Overdue', 'HT', 'LT'].map((events) => (
-                                        <Dropdown.Item
-                                            onClick={(e) => handleEventSelect(e, events)}
-                                            key={events}
-                                            eventKey={events}
-                                            className="my-1 ms-2"
-                                        >
-                                            <span className="payment-name"> {events}</span>
-                                        </Dropdown.Item>
-                                    ))}
-                                </DropdownButton>
-                            </div>
-                        </Col>
-                    </Row>
+                                    <span className="payment-name"> {events}</span>
+                                </Dropdown.Item>
+                            ))}
+                        </DropdownButton>
+                    </div>
                 }
             />
         </div>

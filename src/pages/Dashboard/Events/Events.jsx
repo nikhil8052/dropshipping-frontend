@@ -13,10 +13,13 @@ import editIcon from '@icons/edit_square.svg';
 import deleteIcon from '@icons/trash-2.svg';
 import eyeIcon from '@icons/basil_eye-solid.svg';
 import add from '@icons/add_white.svg';
+import downArrow from '@icons/down-arrow.svg';
+
 import { eventsDummyData } from '../../../data/data';
 import { useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import '../../../styles/Events.scss';
+import '../../../styles/Common.scss';
 
 const Events = () => {
     const [showDeleteModal, setShowDeleteModal] = useState(false);
@@ -287,7 +290,7 @@ const Events = () => {
                     onClose={handleCloseDeleteModal}
                     loading={loadingCRUD}
                     title="Delete Event"
-                    body="Are you sure you want to delete this Event ?"
+                    body="Are you sure you want to delete this Event?"
                     onConfirm={handleDeleteSubmit}
                     customFooterClass="custom-footer-class"
                     nonActiveBtn="cancel-button"
@@ -301,39 +304,36 @@ const Events = () => {
                 onRowClicked={handleRowClick}
                 loading={loading}
                 children={
-                    <Row className="mb-3 d-flex justify-content-between align-items-center me-1">
-                        <Col xxl={6} xl={7} lg={12} md={6} sm={6} xs={12} className="">
-                            <div className="text-nowrap filter-by-text d-flex justify-content-even align-items-center">
-                                <span className="me-2"> Filter By:</span>
-                                <DropdownButton
-                                    title={
-                                        <div className="d-flex justify-content-between align-items-center">
-                                            <span className="ms-2">{selectedEvent}</span>
-                                        </div>
-                                    }
-                                    defaultValue={selectedEvent}
-                                    className="dropdown-button-fix w-100"
-                                >
-                                    {['All Events', 'Upcoming Events', 'Past Events'].map((event) => (
-                                        <Dropdown.Item
-                                            onClick={(e) => handleEventSelect(e, event)}
-                                            key={event}
-                                            eventKey={event}
-                                            className="my-1 ms-2 w-100"
-                                        >
-                                            <span className="event-name"> {event}</span>
-                                        </Dropdown.Item>
-                                    ))}
-                                </DropdownButton>
-                            </div>
-                        </Col>
+                    <div className="btn-wrapper">
+                        <div className="text-nowrap filter-by-text d-flex justify-content-even align-items-center">
+                            <span className="me-2"> Filter By:</span>
+                            <DropdownButton
+                                title={
+                                    <div className="d-flex justify-content-between align-items-center gap-2">
+                                        <span>{selectedEvent}</span>
+                                        <img src={downArrow} alt="Down arrow" />
+                                    </div>
+                                }
+                                defaultValue={selectedEvent}
+                                className="dropdown-button"
+                            >
+                                {['All Events', 'Upcoming Events', 'Past Events'].map((event) => (
+                                    <Dropdown.Item
+                                        onClick={(e) => handleEventSelect(e, event)}
+                                        key={event}
+                                        eventKey={event}
+                                        className="my-1 ms-2"
+                                    >
+                                        <span className="event-name"> {event}</span>
+                                    </Dropdown.Item>
+                                ))}
+                            </DropdownButton>
+                        </div>
 
-                        <Col xxl={4} xl={5} lg={12} md={6} sm={12} xs={12}>
-                            <Button className="add-button w-100" onClick={handleCreateClick}>
-                                <img src={add} alt="" /> <span className="ms-2">Create New Event</span>
-                            </Button>
-                        </Col>
-                    </Row>
+                        <Button className="add-button" onClick={handleCreateClick}>
+                            <img src={add} alt="" /> <span className="ms-1">Create New Event</span>
+                        </Button>
+                    </div>
                 }
             />
         </div>

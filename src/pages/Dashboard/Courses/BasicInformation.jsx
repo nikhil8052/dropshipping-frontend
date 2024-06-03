@@ -3,7 +3,10 @@ import * as Yup from 'yup';
 import { Button, Dropdown, DropdownButton, Row, Col } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
-import { coachDummyData } from '../../../data/data';
+import dropDownArrow from '@icons/drop-down-black.svg';
+import { coachDummyData, courseCategory } from '../../../data/data';
+import '../../../styles/Common.scss';
+import '../../../styles/Courses.scss';
 
 const BasicInformation = ({ onNext }) => {
     const { userInfo } = useSelector((state) => state?.auth);
@@ -66,36 +69,49 @@ const BasicInformation = ({ onNext }) => {
                             <Row>
                                 <Col md={12} xs={12}>
                                     <label className="field-label">Course Category</label>
+                                    {/* eslint-disable */}
                                     <Field
                                         name="courseCategory"
                                         className="field-select-control"
                                         type="text"
-                                        placeholder="Select..."
-                                        as="select"
-                                    >
-                                        <option value="" disabled>
-                                            Select...
-                                        </option>
-                                        {[
-                                            {
-                                                name: 'Category 1',
-                                                id: 1
-                                            },
-                                            {
-                                                name: 'Category 2',
-                                                id: 2
-                                            },
-                                            {
-                                                name: 'Category 3',
-                                                id: 3
-                                            }
-                                        ].map((student) => (
-                                            <option key={student.id} value={student.name}>
-                                                {student.name}
-                                            </option>
-                                        ))}
-                                    </Field>
-                                    <ErrorMessage name="courseCategory" component="div" className="error" />
+                                        component={({ field, form }) => {
+                                            const handleSelect = (eventKey) => {
+                                                const selectedField = courseCategory.find(
+                                                    (category) => category.id.toString() === eventKey
+                                                );
+                                                form.setFieldValue(field.name, selectedField.label);
+                                            };
+
+                                            return (
+                                                <>
+                                                    <DropdownButton
+                                                        title={
+                                                            <div className="d-flex justify-content-between align-items-center">
+                                                                <span>{field.value || 'Select a category ...'}</span>
+                                                                <img src={dropDownArrow} alt="arrow" />
+                                                            </div>
+                                                        }
+                                                        id={field.name}
+                                                        onSelect={handleSelect}
+                                                        className="dropdown-button w-100"
+                                                    >
+                                                        {courseCategory.map((category) => (
+                                                            <Dropdown.Item
+                                                                key={category.id}
+                                                                eventKey={category.id}
+                                                                className="my-1 ms-2 w-100"
+                                                            >
+                                                                <span className="category-name">{category.label}</span>
+                                                            </Dropdown.Item>
+                                                        ))}
+                                                    </DropdownButton>
+                                                    {form.touched[field.name] && form.errors[field.name] && (
+                                                        <div className="error mt-2">{form.errors[field.name]}</div>
+                                                    )}
+                                                </>
+                                            );
+                                        }}
+                                    />
                                     <label className="field-label">Module Manager</label>
                                     {/* eslint-disable */}
                                     <Field
@@ -115,9 +131,8 @@ const BasicInformation = ({ onNext }) => {
                                                     <DropdownButton
                                                         title={
                                                             <div className="d-flex justify-content-between align-items-center">
-                                                                <span className="ms-2">
-                                                                    {field.value || 'Select...'}
-                                                                </span>
+                                                                <span>{field.value || 'Select...'}</span>
+                                                                <img src={dropDownArrow} alt="arrow" />
                                                             </div>
                                                         }
                                                         id={field.name}
@@ -131,7 +146,7 @@ const BasicInformation = ({ onNext }) => {
                                                             <Dropdown.Item
                                                                 key={coach.id}
                                                                 eventKey={coach.id}
-                                                                className="my-1 ms-2 w-100"
+                                                                className="my-1 ms-2"
                                                             >
                                                                 <img
                                                                     src={coach.avatarUrl}

@@ -13,6 +13,7 @@ import add from '@icons/add_white.svg';
 import { coachDummyData } from '../../../data/data';
 import { useNavigate } from 'react-router-dom';
 import '../../../styles/Coaches.scss';
+import '../../../styles/Common.scss';
 
 const Coaches = () => {
     const [showDeleteModal, setShowDeleteModal] = useState(false);
@@ -278,7 +279,7 @@ const Coaches = () => {
                     onClose={handleCloseDeleteModal}
                     loading={loadingCRUD}
                     title="Delete Coach"
-                    body="Are you sure you want to delete this Coach ?"
+                    body="Are you sure you want to delete this Coach?"
                     onConfirm={handleDeleteSubmit}
                     customFooterClass="custom-footer-class"
                     nonActiveBtn="cancel-button"

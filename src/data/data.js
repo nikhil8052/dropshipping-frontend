@@ -1778,6 +1778,58 @@ export const countryList = [
     }
 ];
 
+export const regions = [
+    {
+        label: 'Region 1',
+        value: 'Region 1',
+        id: 1
+    },
+    {
+        label: 'Region 2',
+        value: 'Region 2',
+        id: 2
+    },
+    {
+        label: 'Region 3',
+        value: 'Region 3',
+        id: 3
+    }
+];
+export const courseCategory = [
+    {
+        label: 'Category 1',
+        value: 'Category 1',
+        id: 1
+    },
+    {
+        label: 'Category 2',
+        value: 'Category 2',
+        id: 2
+    },
+    {
+        label: 'Category 3',
+        value: 'Category 3',
+        id: 3
+    }
+];
+export const coachingTrajectory = [
+    {
+        label: 'Coaching Trajectory 1',
+        value: 'Coaching Trajectory 1',
+        id: 1
+    },
+    {
+        label: 'Coaching Trajectory 2',
+        value: 'Coaching Trajectory 2',
+        id: 2
+    },
+    {
+        label: 'Coaching Trajectory 3',
+        value: 'Coaching Trajectory 3',
+        id: 3
+    }
+];
+
 export const coursesRoadmap = [
     { id: 1, label: 'Meta Data Engineering', progress: 'Completed', value: 1 },
     { id: 2, label: 'Python Engineering', progress: 'OnGoing', value: 2 },

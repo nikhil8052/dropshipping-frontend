@@ -1,11 +1,12 @@
 import { useEffect, useRef, useState } from 'react';
 import CaretRight from '@icons/CaretRight.svg';
 import imagePreview from '@icons/image-preview.svg';
+import dropDownArrow from '@icons/drop-down-black.svg';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
-import { Container, Row, Col, Button } from 'react-bootstrap';
+import { Container, Row, Col, Button, DropdownButton, Dropdown } from 'react-bootstrap';
 import 'react-quill/dist/quill.snow.css';
-import { countryList, studentDummyData, studentProducts } from '../../../../data/data';
+import { coachingTrajectory, countryList, regions, studentDummyData, studentProducts } from '../../../../data/data';
 import toast from 'react-hot-toast';
 import { useLocation, useNavigate } from 'react-router-dom';
 import Select from 'react-select';
@@ -14,6 +15,7 @@ import { useSelector } from 'react-redux';
 import CarouselWrapper from '@components/Carousel/CarouselWrapper';
 import ImageCropper from '@components/ImageMask/ImageCropper';
 import '../../../../styles/Students.scss';
+import '../../../../styles/Common.scss';
 
 const NewStudent = () => {
     const inputRef = useRef();
@@ -33,10 +35,7 @@ const NewStudent = () => {
         country: '',
         region: '',
         coachingTrajectory: '',
-        assignedStudents: [],
-        highTicketSpots: '',
-        lowTicketSpots: '',
-        bio: ''
+        coursesRoadmap: []
     });
 
     const schema = Yup.object({
@@ -47,14 +46,7 @@ const NewStudent = () => {
         country: Yup.string().required('Please select a country'),
         region: Yup.string().required('Please select a region'),
         coachingTrajectory: Yup.string().required('Please select a coaching trajectory'),
-        assignedStudents: Yup.array().min(1, 'Please select at least one course'),
-        highTicketSpots: Yup.number()
-            .required('Number of high ticket spots is required')
-            .positive('Number must be greater than zero'),
-        lowTicketSpots: Yup.number()
-            .required('Number of low ticket spots is required')
-            .positive('Number must be greater than zero'),
-        bio: Yup.string()
+        coursesRoadmap: Yup.array().min(1, 'Please select at least one course')
     });
 
     useEffect(() => {
@@ -73,10 +65,8 @@ const NewStudent = () => {
                     phoneNumber: student.phoneNumber,
                     country: student.country,
                     region: student.region,
-                    assignedStudents: student.assignedStudents,
-                    highTicketSpots: student.highTicketSpots,
-                    lowTicketSpots: student.lowTicketSpots,
-                    bio: student.bio
+                    coursesRoadmap: student.coursesRoadmap,
+                    coachingTrajectory: student.coachingTrajectory
                 });
             }
         }
@@ -109,6 +99,29 @@ const NewStudent = () => {
         });
     };
 
+    const handleFormSubmit = (values, { resetForm, setSubmitting }) => {
+        setTimeout(() => {
+            if (studentId) {
+                const updatedStudents = studentDummyData.map((student) =>
+                    student.id === studentId ? { ...student, ...values, avatarUrl: studentPhoto } : student
+                );
+                toast.success(
+                    `New Student:${updatedStudents.studentName || updatedStudents.name} Updated successfully!`
+                );
+            } else {
+                const newStudent = {
+                    id: studentDummyData.length + 1,
+                    ...values,
+                    avatarUrl: studentPhoto
+                };
+                toast.success(`New Student:${newStudent.studentName || newStudent.name} added successfully!`);
+            }
+            resetForm();
+            setSubmitting(false);
+            navigate(`/${role}/students`);
+        }, 1000);
+    };
+
     return (
         <div className="new-student-page-wrapper">
             <div className="title-top">
@@ -123,13 +136,7 @@ const NewStudent = () => {
                     <Formik
                         initialValues={studentData}
                         validationSchema={schema}
-                        onSubmit={(values, { resetForm, setSubmitting }) => {
-                            setTimeout(() => {
-                                // Implement form submission logic here
-                                resetForm();
-                                setSubmitting(false);
-                            }, 1000);
-                        }}
+                        onSubmit={handleFormSubmit}
                         enableReinitialize
                     >
                         {({ isSubmitting, handleSubmit, values }) => (
@@ -250,57 +257,157 @@ const NewStudent = () => {
                                 <Row>
                                     <Col md={6} xs={12}>
                                         <label className="field-label">Country</label>
+                                        {/* eslint-disable */}
                                         <Field
                                             name="country"
                                             className="field-select-control"
-                                            as="select"
-                                            placeholder="United States"
-                                        >
-                                            <option defaultChecked value="">
-                                                Select a country...
-                                            </option>
-                                            {countryList.map((country) => (
-                                                <option key={country.id} value={country.name}>
-                                                    {country.name}
-                                                </option>
-                                            ))}
-                                        </Field>
+                                            type="text"
+                                            component={({ field, form }) => {
+                                                const handleSelect = (eventKey) => {
+                                                    const selectedCountry = countryList.find(
+                                                        (country) => country.id.toString() === eventKey
+                                                    );
+                                                    form.setFieldValue(field.name, selectedCountry.name);
+                                                };
 
-                                        <ErrorMessage name="country" component="div" className="error" />
+                                                return (
+                                                    <>
+                                                        <DropdownButton
+                                                            title={
+                                                                <div className="d-flex justify-content-between align-items-center">
+                                                                    <span>{field.value || 'Select a country ...'}</span>
+                                                                    <img src={dropDownArrow} alt="arrow" />
+                                                                </div>
+                                                            }
+                                                            id={field.name}
+                                                            onSelect={handleSelect}
+                                                            className="dropdown-button w-100"
+                                                        >
+                                                            {countryList.map((country) => (
+                                                                <Dropdown.Item
+                                                                    key={country.id}
+                                                                    eventKey={country.id}
+                                                                    className="my-1 ms-2 w-100"
+                                                                >
+                                                                    <span className="country-name">{country.name}</span>
+                                                                </Dropdown.Item>
+                                                            ))}
+                                                        </DropdownButton>
+                                                        {form.touched[field.name] && form.errors[field.name] && (
+                                                            <div className="error mt-2">{form.errors[field.name]}</div>
+                                                        )}
+                                                    </>
+                                                );
+                                            }}
+                                        />
                                     </Col>
                                     <Col md={6} xs={12}>
                                         <label className="field-label">Region/State</label>
+                                        {/* eslint-disable */}
                                         <Field
                                             name="region"
                                             className="field-select-control"
-                                            as="select"
-                                            placeholder="Select..."
+                                            type="text"
+                                            component={({ field, form }) => {
+                                                const handleSelect = (eventKey) => {
+                                                    const selectedRegion = regions.find(
+                                                        (country) => country.id.toString() === eventKey
+                                                    );
+                                                    form.setFieldValue(field.name, selectedRegion.label);
+                                                };
+
+                                                return (
+                                                    <>
+                                                        <DropdownButton
+                                                            title={
+                                                                <div className="d-flex justify-content-between align-items-center">
+                                                                    <span>{field.value || 'Select a region ...'}</span>
+                                                                    <img src={dropDownArrow} alt="arrow" />
+                                                                </div>
+                                                            }
+                                                            id={field.name}
+                                                            onSelect={handleSelect}
+                                                            className="dropdown-button w-100"
+                                                        >
+                                                            {regions.map((country) => (
+                                                                <Dropdown.Item
+                                                                    key={country.id}
+                                                                    eventKey={country.id}
+                                                                    className="my-1 ms-2 w-100"
+                                                                >
+                                                                    <span className="country-name">
+                                                                        {country.label}
+                                                                    </span>
+                                                                </Dropdown.Item>
+                                                            ))}
+                                                        </DropdownButton>
+                                                        {form.touched[field.name] && form.errors[field.name] && (
+                                                            <div className="error mt-2">{form.errors[field.name]}</div>
+                                                        )}
+                                                    </>
+                                                );
+                                            }}
                                         >
-                                            {studentDummyData.map((student) => (
-                                                <option key={student.id} value={student.name}>
-                                                    {student.name}
+                                            {regions.map((region) => (
+                                                <option key={region.label} value={region.value}>
+                                                    {region.label}
                                                 </option>
                                             ))}
                                         </Field>
-                                        <ErrorMessage name="region" component="div" className="error" />
                                     </Col>
                                 </Row>
                                 <Row>
                                     <Col md={6} xs={12}>
                                         <label className="field-label">Coaching Trajectory</label>
+                                        {/* eslint-disable */}
                                         <Field
                                             name="coachingTrajectory"
                                             className="field-select-control"
-                                            as="select"
-                                            placeholder="Select..."
+                                            type="text"
+                                            component={({ field, form }) => {
+                                                const handleSelect = (eventKey) => {
+                                                    const selectedField = coachingTrajectory.find(
+                                                        (coach) => coach.id.toString() === eventKey
+                                                    );
+                                                    form.setFieldValue(field.name, selectedField.label);
+                                                };
+
+                                                return (
+                                                    <>
+                                                        <DropdownButton
+                                                            title={
+                                                                <div className="d-flex justify-content-between align-items-center">
+                                                                    <span>{field.value || 'Select ...'}</span>
+                                                                    <img src={dropDownArrow} alt="arrow" />
+                                                                </div>
+                                                            }
+                                                            id={field.name}
+                                                            onSelect={handleSelect}
+                                                            className="dropdown-button w-100"
+                                                        >
+                                                            {coachingTrajectory.map((coach) => (
+                                                                <Dropdown.Item
+                                                                    key={coach.id}
+                                                                    eventKey={coach.id}
+                                                                    className="my-1 ms-2 w-100"
+                                                                >
+                                                                    <span className="coach-name">{coach.label}</span>
+                                                                </Dropdown.Item>
+                                                            ))}
+                                                        </DropdownButton>
+                                                        {form.touched[field.name] && form.errors[field.name] && (
+                                                            <div className="error mt-2">{form.errors[field.name]}</div>
+                                                        )}
+                                                    </>
+                                                );
+                                            }}
                                         >
-                                            {studentDummyData.map((student) => (
-                                                <option key={student.id} value={student.name}>
-                                                    {student.name}
+                                            {coachingTrajectory.map((region) => (
+                                                <option key={region.label} value={region.value}>
+                                                    {region.label}
                                                 </option>
                                             ))}
                                         </Field>
-                                        <ErrorMessage name="coachingTrajectory" component="div" className="error" />
                                     </Col>
 
                                     {!studentId && (
@@ -308,7 +415,7 @@ const NewStudent = () => {
                                             <label className="field-label">Courses Roadmap</label>
                                             {/* eslint-disable */}
                                             <Field
-                                                name="assignedStudents"
+                                                name="coursesRoadmap"
                                                 component={({
                                                     field, // { name, value, onChange, onBlur }
                                                     form // also values, setXXXX, handleXXXX, dirty, isValid, status, etc.
@@ -325,17 +432,17 @@ const NewStudent = () => {
                                                                 id: 2
                                                             }
                                                         ]}
-                                                        value={values.assignedStudents}
+                                                        value={values.coursesRoadmap}
                                                         onChange={(selectedOptions) => {
                                                             // Update the array with only the selected options
-                                                            form.setFieldValue('assignedStudents', selectedOptions);
+                                                            form.setFieldValue('coursesRoadmap', selectedOptions);
                                                         }}
                                                         closeMenuOnSelect={false}
                                                     />
                                                 )}
                                             />
                                             <ErrorMessage
-                                                name="assignedStudents"
+                                                name="coursesRoadmap"
                                                 component="div"
                                                 className="error mt-2"
                                             />
@@ -345,11 +452,11 @@ const NewStudent = () => {
 
                                 <Row>
                                     <Col>
-                                        {values.assignedStudents?.length > 0 && (
+                                        {values.coursesRoadmap?.length > 0 && (
                                             <>
                                                 <div className="field-label my-2">Courses Roadmap List </div>
                                                 <div className="course-roadmap-wrapper">
-                                                    <RoadMapList coursesList={values.assignedStudents} />
+                                                    <RoadMapList coursesList={values.coursesRoadmap} />
                                                 </div>
                                             </>
                                         )}

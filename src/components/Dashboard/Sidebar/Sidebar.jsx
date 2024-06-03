@@ -113,57 +113,59 @@ const Sidebar = () => {
                         <img src={logoImg} alt="brand-logo" />
                     </div>
                     <div className="side-nav-wrapper">
-                        <Nav defaultActiveKey="/" className="sidebar-nav-items">
-                            {updatedItems.map((item) =>
-                                item.child ? (
-                                    <SidebarItemCollapse
-                                        key={item.id}
-                                        item={item}
-                                        selectedItemId={activeSidebarItem}
-                                        handleSideBarClick={handleSideBarClick}
-                                    />
-                                ) : (
-                                    <SidebarItem
-                                        key={item.id}
-                                        item={item}
-                                        selectedItemId={activeSidebarItem}
-                                        handleSideBarClick={handleSideBarClick}
-                                    />
-                                )
-                            )}
-                            {/* Last child should be an image and role */}
-                        </Nav>
+                        <div className="side-nav-scroll">
+                            <Nav defaultActiveKey="/" className="sidebar-nav-items">
+                                {updatedItems.map((item) =>
+                                    item.child ? (
+                                        <SidebarItemCollapse
+                                            key={item.id}
+                                            item={item}
+                                            selectedItemId={activeSidebarItem}
+                                            handleSideBarClick={handleSideBarClick}
+                                        />
+                                    ) : (
+                                        <SidebarItem
+                                            key={item.id}
+                                            item={item}
+                                            selectedItemId={activeSidebarItem}
+                                            handleSideBarClick={handleSideBarClick}
+                                        />
+                                    )
+                                )}
+                                {/* Last child should be an image and role */}
+                            </Nav>
 
-                        {sideBarEventModal && (
-                            <div className="side-bar-event">
-                                <Card className="custom-event-card">
-                                    <Card.Header className="d-flex flex-column align-items-start">
-                                        <div className="d-flex align-items-center mb-2 w-100">
-                                            <div className="calendar-icon me-2"></div>
-                                            <Card.Text className="mb-0 text-start text-nowrap">
-                                                Upcoming Event
-                                            </Card.Text>
-                                        </div>
-                                        <div className="d-flex align-items-center justify-content-center w-100">
-                                            <Card.Text className="mb-0 text-nowrap">
-                                                <img src={dotBlue} alt="Dot" /> Meeting with Prashant...
-                                            </Card.Text>
-                                        </div>
-                                    </Card.Header>
-                                    <Card.Body>
-                                        <div className="d-flex align-items-center justify-content-between mb-2 px-2">
-                                            <Card.Text className="mb-0 event-time">8:45 AM</Card.Text>
-                                            <div className="exchange-icon"></div>
-                                            <Card.Text className="mb-0 event-time">10:45 AM</Card.Text>
-                                        </div>
-                                        <Button variant="primary" className="w-100 mt-3  zoom-btn">
-                                            <div className="zoom-icon me-2"></div>
-                                            Go to Zoom link
-                                        </Button>
-                                    </Card.Body>
-                                </Card>
-                            </div>
-                        )}
+                            {sideBarEventModal && (
+                                <div className="side-bar-event">
+                                    <Card className="custom-event-card">
+                                        <Card.Header className="d-flex flex-column align-items-start">
+                                            <div className="d-flex align-items-center mb-2 w-100">
+                                                <div className="calendar-icon me-2"></div>
+                                                <Card.Text className="mb-0 text-start text-nowrap">
+                                                    Upcoming Event
+                                                </Card.Text>
+                                            </div>
+                                            <div className="d-flex align-items-center justify-content-center w-100">
+                                                <Card.Text className="mb-0 text-nowrap">
+                                                    <img src={dotBlue} alt="Dot" /> Meeting with Prashant...
+                                                </Card.Text>
+                                            </div>
+                                        </Card.Header>
+                                        <Card.Body>
+                                            <div className="d-flex align-items-center justify-content-between mb-2 px-2">
+                                                <Card.Text className="mb-0 event-time">8:45 AM</Card.Text>
+                                                <div className="exchange-icon"></div>
+                                                <Card.Text className="mb-0 event-time">10:45 AM</Card.Text>
+                                            </div>
+                                            <Button variant="primary" className="w-100 mt-3  zoom-btn">
+                                                <div className="zoom-icon me-2"></div>
+                                                Go to Zoom link
+                                            </Button>
+                                        </Card.Body>
+                                    </Card>
+                                </div>
+                            )}
+                        </div>
 
                         <div className={`side-bar-profile ${sideBarEventModal ? 'remove-auto' : ''}`}>
                             <div className="profile-wrapper">
