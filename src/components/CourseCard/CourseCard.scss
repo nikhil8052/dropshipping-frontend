@@ -56,7 +56,7 @@
         height: 28px;
     }
     .form-check-input:checked {
-        background-color: $info-color;
+        background-color: $info-color !important;
         border-color: transparent;
     }
     .form-check-input:focus {

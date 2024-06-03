@@ -4,9 +4,11 @@ import CourseCard from '../../../components/CourseCard/CourseCard';
 import eventImg from '../../../assets/images/Event-Image.svg';
 import Search from '../../../assets/icons/Search.svg';
 import add from '@icons/add_white.svg';
+import downArrow from '@icons/down-arrow.svg';
 import { useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import '../../../styles/Courses.scss';
+import '../../../styles/Common.scss';
 
 const Courses = () => {
     const [search, setSearch] = useState('');
@@ -99,58 +101,48 @@ const Courses = () => {
     return (
         <>
             <div className="course-section">
-                <Row>
-                    <div className="course-topbar">
-                        <Col lg={4} md={12} xs={12} sm={12}>
-                            <InputGroup>
-                                <InputGroup.Text>
-                                    <img src={Search} alt={search ? 'Search' : 'Search'} />
-                                </InputGroup.Text>
-                                <Form.Control
-                                    className="search-input"
-                                    type="text"
-                                    name="Search"
-                                    label="Search"
-                                    onChange={onFilterTextChange}
-                                    placeholder="Search"
-                                />
-                            </InputGroup>
-                        </Col>
-                        <Col md={6} xs={12} sm={12}>
-                            {role === 'student' ? (
-                                <div className="d-flex justify-content-end ">
-                                    <DropdownButton
-                                        title={
-                                            <div className=" d-flex justify-content-between w-100">
-                                                <span className="ms-2">{selectedEvent}</span>
-                                            </div>
-                                        }
-                                        defaultValue={selectedEvent}
-                                        className="dropdown-button-fix w-25 d-flex justify-content-even align-items-center"
-                                    >
-                                        {['All Courses', 'Your Courses'].map((event) => (
-                                            <Dropdown.Item
-                                                onClick={(e) => handleEventSelect(e, event)}
-                                                key={event}
-                                                eventKey={event}
-                                                className="my-1 ms-2"
-                                            >
-                                                <span className="coach-name"> {event}</span>
-                                            </Dropdown.Item>
-                                        ))}
-                                    </DropdownButton>
+                <div className="courses-button-wrapper">
+                    <InputGroup>
+                        <InputGroup.Text>
+                            <img src={Search} alt={search ? 'Search' : 'Search'} />
+                        </InputGroup.Text>
+                        <Form.Control
+                            className="search-input"
+                            type="text"
+                            name="Search"
+                            label="Search"
+                            onChange={onFilterTextChange}
+                            placeholder="Search"
+                        />
+                    </InputGroup>
+                    {role === 'student' ? (
+                        <DropdownButton
+                            title={
+                                <div className=" d-flex justify-content-between align-items-center gap-2">
+                                    <span>{selectedEvent}</span>
+                                    <img src={downArrow} alt="Down arrow" />
                                 </div>
-                            ) : (
-                                <Button
-                                    className="add-button ms-sm-auto d-flex  justify-content-even  align-items-center"
-                                    onClick={handleCreateClick}
+                            }
+                            defaultValue={selectedEvent}
+                            className="dropdown-button"
+                        >
+                            {['All Courses', 'Your Courses'].map((event) => (
+                                <Dropdown.Item
+                                    onClick={(e) => handleEventSelect(e, event)}
+                                    key={event}
+                                    eventKey={event}
+                                    className="my-1 ms-2"
                                 >
-                                    <img src={add} alt="" /> <span className="ms-2">Add New Courses</span>
-                                </Button>
-                            )}
-                        </Col>
-                    </div>
-                </Row>
+                                    <span className="coach-name"> {event}</span>
+                                </Dropdown.Item>
+                            ))}
+                        </DropdownButton>
+                    ) : (
+                        <Button className="add-button" onClick={handleCreateClick}>
+                            <img src={add} alt="" /> <span className="ms-1">Add New Courses</span>
+                        </Button>
+                    )}
+                </div>
                 <div className="custom-card-course">
                     <Row>
                         {courseCards.map((cousre) => (

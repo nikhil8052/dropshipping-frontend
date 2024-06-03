@@ -12,6 +12,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import ImageCropper from '../../../../components/ImageMask/ImageCropper';
 import '../../../../styles/Events.scss';
+import '../../../../styles/Common.scss';
 
 const NewEvent = () => {
     const inputRef = useRef();

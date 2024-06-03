@@ -76,7 +76,7 @@ const DraggableCourse = ({ id, course }) => {
                         </div>
                     </Col>
                     <Col>
-                        <span>{`${course.id}. ${course.label}`}</span>
+                        <span>{`${course.id}. ${course.label || course.title}`}</span>
                     </Col>
                 </Row>
             </div>
