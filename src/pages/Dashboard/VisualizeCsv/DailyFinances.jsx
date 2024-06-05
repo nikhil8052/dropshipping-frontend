@@ -175,8 +175,11 @@ const DailyFinances = ({ studentId }) => {
             unSortIcon: true,
             wrapText: true,
             autoHeight: true,
-            resizable: false,
-            cellRenderer: TextExpand
+            resizable: true,
+            cellRenderer: ({ data }) => {
+                const profitLoss = data.profitLoss;
+                return <span className={profitLoss < 400 ? 'text-danger' : 'text-success'}>${profitLoss}</span>;
+            }
         },
         {
             headerName: '% Margin',

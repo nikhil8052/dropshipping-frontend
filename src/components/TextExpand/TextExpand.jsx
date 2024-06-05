@@ -1,24 +1,20 @@
-import { useState } from 'react';
-
+import { OverlayTrigger, Tooltip } from 'react-bootstrap';
 const TextExpand = ({ value }) => {
-    const [expanded, setExpanded] = useState(false);
-
-    const toggleExpand = () => {
-        setExpanded(!expanded);
-    };
-
     return (
-        <div
-            style={{
-                overflow: 'hidden',
-                textOverflow: 'ellipsis',
-                whiteSpace: expanded ? 'normal' : 'nowrap',
-                cursor: 'pointer'
-            }}
-            onClick={toggleExpand}
-        >
-            {value}
-        </div>
+        <OverlayTrigger placement="top" overlay={<Tooltip id="tooltip-top">{value}</Tooltip>}>
+            <div
+                style={{
+                    overflow: 'hidden',
+                    textOverflow: 'ellipsis',
+                    whiteSpace: 'nowrap',
+                    cursor: 'pointer',
+                    display: 'inline-block',
+                    maxWidth: '150px' // Adjust as necessary
+                }}
+            >
+                {value}
+            </div>
+        </OverlayTrigger>
     );
 };
 

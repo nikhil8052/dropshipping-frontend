@@ -412,6 +412,19 @@ export const studentDummyData = [
     }
 ];
 
+export const attendeeDummyData = [
+    { id: 1, name: 'John Doe' },
+    { id: 2, name: 'Jane Smith' },
+    { id: 3, name: 'Michael Johnson' },
+    { id: 4, name: 'Emily Davis' },
+    { id: 5, name: 'David Wilson' },
+    { id: 6, name: 'Sarah Brown' },
+    { id: 7, name: 'Chris Lee' },
+    { id: 8, name: 'Laura Martinez' },
+    { id: 9, name: 'James Anderson' },
+    { id: 10, name: 'Olivia Jackson' }
+];
+
 export const lessons = [
     {
         id: 1,
@@ -2120,7 +2133,7 @@ export const dailyFinances = [
         roas: 2.5,
         refunds: 0,
         cog: 20,
-        profitLoss: '$490',
+        profitLoss: 490,
         margin: '20.35%'
     },
     {
@@ -2128,11 +2141,11 @@ export const dailyFinances = [
         date: '3/19/2024',
         revenue: '$1225',
         orders: 21,
-        adSpend: '$490',
+        adSpend: '$290',
         roas: 2.5,
         refunds: 0,
         cog: 22,
-        profitLoss: '$490',
+        profitLoss: 250,
         margin: '20.35%'
     },
     {
@@ -2140,11 +2153,11 @@ export const dailyFinances = [
         date: '3/19/2024',
         revenue: '$1225',
         orders: 72,
-        adSpend: '$490',
+        adSpend: '$590',
         roas: 2.5,
         refunds: 0,
         cog: 22,
-        profitLoss: '$490',
+        profitLoss: 100,
         margin: '20.35%'
     },
     {
@@ -2152,11 +2165,11 @@ export const dailyFinances = [
         date: '3/19/2024',
         revenue: '$1225',
         orders: 77,
-        adSpend: '$490',
+        adSpend: '$440',
         roas: 2.5,
         refunds: 0,
         cog: 22,
-        profitLoss: '$490',
+        profitLoss: 490,
         margin: '20.35%'
     },
     {
@@ -2164,11 +2177,11 @@ export const dailyFinances = [
         date: '3/19/2024',
         revenue: '$1225',
         orders: 72,
-        adSpend: '$490',
+        adSpend: '$600',
         roas: 2.5,
         refunds: 0,
         cog: 22,
-        profitLoss: '$490',
+        profitLoss: 490,
         margin: '20.35%'
     },
     {
@@ -2176,11 +2189,11 @@ export const dailyFinances = [
         date: '3/19/2024',
         revenue: '$1225',
         orders: 32,
-        adSpend: '$480',
+        adSpend: '$200',
         roas: 2.5,
         refunds: 0,
         cog: 32,
-        profitLoss: '$490',
+        profitLoss: 450,
         margin: '20.35%'
     },
     {
@@ -2192,7 +2205,7 @@ export const dailyFinances = [
         roas: 98.3,
         refunds: 0,
         cog: 24,
-        profitLoss: '$490',
+        profitLoss: 460,
         margin: '20.35%'
     },
     {
@@ -2204,7 +2217,7 @@ export const dailyFinances = [
         roas: 2.5,
         refunds: 0,
         cog: 24,
-        profitLoss: '$490',
+        profitLoss: 260,
         margin: '20.35%'
     },
     {
@@ -2216,7 +2229,7 @@ export const dailyFinances = [
         roas: 36.4,
         refunds: 0,
         cog: 21,
-        profitLoss: '$490',
+        profitLoss: 490,
         margin: '20.35%'
     },
     {
@@ -2224,14 +2237,15 @@ export const dailyFinances = [
         date: '3/19/2024',
         revenue: '$1225',
         orders: 12,
-        adSpend: '$480',
+        adSpend: '$150',
         roas: 12.5,
         refunds: 0,
         cog: 12,
-        profitLoss: '$490',
+        profitLoss: 490,
         margin: '20.35%'
     }
 ];
+
 export const invoicesData = [
     {
         id: 1,

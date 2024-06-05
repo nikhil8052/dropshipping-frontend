@@ -69,11 +69,17 @@
         .custom-multi-select {
             .css-13cymwt-control {
                 border: 0.8px solid rgba(233, 234, 240, 1) !important;
-                border-radius: 50px !important;
+                // border-radius: 50px !important;
 
                 .css-1jqq78o-placeholder {
                     color: rgba(146, 159, 165, 1);
                     padding-left: 10px !important;
+                }
+
+                .css-1p3m7a8-multiValue {
+                    border-radius: 60px;
+                    padding: 0px 10px;
+                    background: rgba(242, 248, 255, 1);
                 }
             }
         }
@@ -120,6 +126,7 @@
             display: flex;
             justify-content: start;
             cursor: pointer;
+            flex-wrap: wrap;
             align-items: center;
             gap: 0.5rem;
             border: 0.8px solid rgba(233, 234, 240, 1);

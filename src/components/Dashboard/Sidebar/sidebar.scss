@@ -48,6 +48,8 @@
         padding-bottom: 100px;
 
         .side-nav-scroll {
+            display: flex;
+            flex-direction: column;
             height: 100%;
             overflow-y: auto;
             padding-right: 10px;
@@ -205,6 +207,7 @@
         align-items: center;
         justify-content: center;
         margin-top: auto;
+        margin-bottom: 0.5rem;
         .custom-event-card {
             border-radius: 15px;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);

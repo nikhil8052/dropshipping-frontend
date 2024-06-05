@@ -17,6 +17,8 @@ import '../../../styles/Payments.scss';
 const Payments = () => {
     const [showDeleteModal, setShowDeleteModal] = useState(false);
     const [selectedRowId, setSelectedRowId] = useState(null);
+    const [expanded, setExpanded] = useState(false);
+
     const [studentModal, setStudentModal] = useState({
         show: false,
         title: '',
@@ -113,6 +115,11 @@ const Payments = () => {
     const handleEventSelect = (eventKey, coach) => {
         setSelectedOption(coach);
     };
+    const toggleExpand = (event) => {
+        // Specifically in this component, we need to prevent the event from propagating to the parent element
+        event.stopPropagation();
+        setExpanded(!expanded);
+    };
 
     /*eslint-disable */
     const ActionsRenderer = (props) => (
@@ -126,6 +133,24 @@ const Payments = () => {
             </Row>
         </React.Fragment>
     );
+    const NameRenderer = (props) => (
+        <div key={props.data.id}>
+            <div className="d-flex align-items-center gap-2">
+                <img src={props.data.avatarUrl} alt={props.data.name} className="avatar" />
+                <div
+                    style={{
+                        overflow: 'hidden',
+                        textOverflow: 'ellipsis',
+                        whiteSpace: expanded ? 'normal' : 'nowrap',
+                        cursor: 'pointer'
+                    }}
+                    onClick={toggleExpand}
+                >
+                    {props.value}
+                </div>
+            </div>
+        </div>
+    );
     /*eslint-disable */
 
     const columns = [
@@ -137,7 +162,7 @@ const Payments = () => {
             unSortIcon: true,
             wrapText: true,
             autoHeight: true,
-            cellRenderer: TextExpand,
+            cellRenderer: NameRenderer,
             resizable: false
         },
         {
@@ -234,7 +259,7 @@ const Payments = () => {
                             title={
                                 <div className="d-flex justify-content-between align-items-center gap-2">
                                     <span>{selectedOption}</span>
-                                    <img className="ms-5" src={downArrow} alt="Down arrow" />
+                                    <img className="ms-3" src={downArrow} alt="Down arrow" />
                                 </div>
                             }
                             defaultValue={selectedOption}

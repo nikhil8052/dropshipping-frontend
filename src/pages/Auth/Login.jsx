@@ -24,8 +24,21 @@ const Login = () => {
     };
 
     const validationSchema = Yup.object().shape({
-        email: Yup.string().email('Please enter a valid email').required('Email is required'),
-        password: Yup.string().required('Password is required')
+        email: Yup.string()
+            .email('Please enter a valid email')
+            .trim()
+            .required('Email is required')
+            .test('not-only-spaces', 'Email cannot be only spaces', (value) => /\S/.test(value)),
+        password: Yup.string()
+            .required('Password is required')
+            .trim()
+            .min(4, 'Password must be at least 4 characters long')
+            .max(20, 'Password must be at most 20 characters long')
+            .matches(
+                /^(?=.*[A-Za-z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{4,20}$/,
+                'Password must contain letters, numbers, and special characters'
+            )
+            .test('not-only-spaces', 'Password cannot be only spaces', (value) => /\S/.test(value))
     });
 
     const handleSubmit = async (values, { setSubmitting }) => {

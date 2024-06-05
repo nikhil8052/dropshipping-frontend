@@ -23,6 +23,7 @@
             max-width: 490px !important;
         }
     }
+
     .search-input {
         max-width: 390px;
         border-radius: 59px;
@@ -73,6 +74,23 @@
             text-decoration: none;
             color: #5f6c72;
         }
+    }
+}
+
+.students-button-wrapper {
+    display: flex;
+    justify-content: end;
+    margin-bottom: 1rem;
+    flex-wrap: wrap;
+    gap: 1rem;
+
+    @media (max-width: $large-screen) {
+        justify-content: start;
+        margin-top: 0.5rem;
+    }
+    .input-group {
+        width: 490px !important;
+        max-width: 490px !important;
     }
 }
 
@@ -185,6 +203,7 @@
     .image-preview {
         display: flex;
         justify-content: start;
+        flex-wrap: wrap;
         cursor: pointer;
         align-items: center;
         gap: 1.5rem;

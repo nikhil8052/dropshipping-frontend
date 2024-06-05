@@ -532,6 +532,11 @@
             border: 0.8px solid rgba(233, 234, 240, 1);
             border-radius: 59px;
         }
+        .custom_select__placeholder {
+            color: rgba(148, 148, 148, 1) !important;
+            padding: 0px 10px;
+        }
+
         .custom_select__control:focus-visible {
             outline-color: rgba(146, 159, 165, 1) !important;
             color: rgba(71, 81, 86, 1);
@@ -550,6 +555,7 @@
             justify-content: start;
             cursor: pointer;
             align-items: center;
+            flex-wrap: wrap;
             gap: 0.5rem;
             border: 0.8px solid rgba(233, 234, 240, 1);
             border-radius: 10px;

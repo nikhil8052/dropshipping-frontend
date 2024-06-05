@@ -59,12 +59,18 @@ const Settings = () => {
             .required('Current password is required')
             .min(4, 'Password must be at least 4 characters long')
             .max(20, 'Password must be at most 20 characters long')
-            .matches(/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{4,20}$/, 'Password must contain both letters and numbers'),
+            .matches(
+                /^(?=.*[A-Za-z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{4,20}$/,
+                'Password must contain letters, numbers, and special characters'
+            ),
         newPassword: Yup.string()
             .required('New password is required')
             .min(4, 'Password must be at least 4 characters long')
             .max(20, 'Password must be at most 20 characters long')
-            .matches(/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{4,20}$/, 'Password must contain both letters and numbers'),
+            .matches(
+                /^(?=.*[A-Za-z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{4,20}$/,
+                'Password must contain letters, numbers, and special characters'
+            ),
         confirmPassword: Yup.string()
             .oneOf([Yup.ref('newPassword'), null], 'Passwords must match')
             .required('Confirmation of the new password is required')

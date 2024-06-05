@@ -39,13 +39,35 @@ const NewStudent = () => {
     });
 
     const schema = Yup.object({
-        studentName: Yup.string().required('Please enter the student name'),
-        studentId: Yup.string().required('Please enter the student id'),
-        studentEmail: Yup.string().email('Please enter a valid email address').required('Email address is required'),
-        phoneNumber: Yup.string().required('Please enter a phone number'),
-        country: Yup.string().required('Please select a country'),
-        region: Yup.string().required('Please select a region'),
-        coachingTrajectory: Yup.string().required('Please select a coaching trajectory'),
+        studentName: Yup.string()
+            .trim()
+            .required('Please enter the student name')
+            .matches(/\S/, 'Student name cannot be empty or spaces only'),
+        studentId: Yup.string()
+            .trim()
+            .required('Please enter the student id')
+            .matches(/\S/, 'Student ID cannot be empty or spaces only'),
+        studentEmail: Yup.string()
+            .trim()
+            .email('Please enter a valid email address')
+            .required('Email address is required')
+            .matches(/\S/, 'Email cannot be empty or spaces only'),
+        phoneNumber: Yup.string()
+            .trim()
+            .required('Please enter a phone number')
+            .matches(/\S/, 'Phone number cannot be empty or spaces only'),
+        country: Yup.string()
+            .trim()
+            .required('Please select a country')
+            .matches(/\S/, 'Country cannot be empty or spaces only'),
+        region: Yup.string()
+            .trim()
+            .required('Please select a region')
+            .matches(/\S/, 'Region cannot be empty or spaces only'),
+        coachingTrajectory: Yup.string()
+            .trim()
+            .required('Please select a coaching trajectory')
+            .matches(/\S/, 'Coaching trajectory cannot be empty or spaces only'),
         coursesRoadmap: Yup.array().min(1, 'Please select at least one course')
     });
 
@@ -254,7 +276,7 @@ const NewStudent = () => {
                                         <ErrorMessage name="phoneNumber" component="div" className="error" />
                                     </Col>
                                 </Row>
-                                <Row>
+                                <Row className="mb-2">
                                     <Col md={6} xs={12}>
                                         <label className="field-label">Country</label>
                                         {/* eslint-disable */}
