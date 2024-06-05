@@ -29,7 +29,7 @@ const AddNewCourse = () => {
                 <span onClick={() => navigate(`/${role}/courses`)} style={{ cursor: 'pointer' }}>
                     Courses <img src={CaretRight} alt=">" />{' '}
                 </span>
-                Add New Courses
+                Add New Course
             </div>
             <Tabs
                 fill

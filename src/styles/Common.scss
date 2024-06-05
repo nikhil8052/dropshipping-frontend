@@ -14,7 +14,7 @@
         white-space: nowrap;
         background-color: transparent !important;
         border: rgba(233, 234, 240, 1) 1px solid !important;
-        color: rgba(148, 148, 148, 1);
+        color: rgba(25, 28, 31, 1) !important;
         display: flex;
         align-items: center;
         justify-content: space-between;
@@ -70,6 +70,15 @@
             color: rgba(85, 95, 126, 1);
         }
     }
+
+    .custom_select__multi-value {
+        border-radius: 60px;
+        padding: 0px 10px;
+        background: rgba(242, 248, 255, 1);
+    }
+}
+.custom_select__control {
+    border-radius: unset !important;
 }
 // Action Buttons
 .action-button {
@@ -269,6 +278,7 @@
     justify-content: start;
     cursor: pointer;
     align-items: center;
+    flex-wrap: wrap;
     gap: 0.5rem;
     border: 0.8px solid rgba(233, 234, 240, 1);
     border-radius: 10px;

@@ -11,6 +11,7 @@ import Footer from './Footer';
 import { useState } from 'react';
 import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import CaretLeft from '@icons/CaretLeft.svg';
 
 const ResetPassword = () => {
     const navigate = useNavigate();
@@ -26,12 +27,19 @@ const ResetPassword = () => {
     const validationSchema = Yup.object().shape({
         newPassword: Yup.string()
             .required('New Password is required')
+            .trim()
             .min(4, 'Password must be at least 4 characters long')
             .max(20, 'Password must be at most 20 characters long')
-            .matches(/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{4,20}$/, 'Password must contain both letters and numbers'),
+            .matches(
+                /^(?=.*[A-Za-z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{4,20}$/,
+                'Password must contain letters, numbers, and special characters'
+            )
+            .test('not-only-spaces', 'Password cannot be only spaces', (value) => /\S/.test(value)),
         confirmPassword: Yup.string()
             .required('Confirm Password is required')
+            .trim()
             .oneOf([Yup.ref('newPassword'), null], 'Passwords must match')
+            .test('not-only-spaces', 'Confirm Password cannot be only spaces', (value) => /\S/.test(value))
     });
 
     const handleSubmit = async ({ setSubmitting }) => {
@@ -57,6 +65,16 @@ const ResetPassword = () => {
                     <Col xs={12} sm={12} md={12} lg={6}>
                         <div className="auth-form-wrapper ">
                             <div className="auth-form-data ">
+                                <Row>
+                                    <Col>
+                                        <Button
+                                            className="submit-btn d-flex align-items-center mb-2"
+                                            onClick={() => navigate('/login')}
+                                        >
+                                            <img src={CaretLeft} alt="CaretLeft" className="me-2" /> Back
+                                        </Button>
+                                    </Col>
+                                </Row>
                                 <h1 className="auth-title ">Reset Password</h1>
                                 <h3 className="auth-form-title">
                                     You new password must be different from your previous <br />

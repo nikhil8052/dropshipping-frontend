@@ -234,6 +234,18 @@
     cursor: pointer;
 }
 
+.submit-btn,
+.cancel-btn {
+    border-radius: 59px;
+    font-weight: 400;
+    white-space: nowrap;
+    border: none;
+}
+.submit-btn {
+    color: #ffff;
+    padding: 10px 20px;
+    @include pagination-gradient;
+}
 //login page additioal css
 // .auth-input-custom-updation {
 //     .formgroup {

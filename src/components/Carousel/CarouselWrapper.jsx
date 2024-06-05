@@ -14,7 +14,8 @@ const CarouselWrapper = ({ items, type = 'product' }) => {
             spaceBetween: -30
         },
         576: {
-            slidesPerView: 1
+            slidesPerView: 2,
+            spaceBetween: -30
         },
         768: {
             slidesPerView: 2,
@@ -41,7 +42,12 @@ const CarouselWrapper = ({ items, type = 'product' }) => {
             spaceBetween: -30
         },
         2560: {
-            slidesPerView: 3
+            slidesPerView: 5,
+            spaceBetween: -30
+        },
+        3600: {
+            slidesPerView: 5,
+            spaceBetween: -30
         }
     };
     return (

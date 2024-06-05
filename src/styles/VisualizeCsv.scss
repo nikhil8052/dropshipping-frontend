@@ -186,6 +186,7 @@
         .image-preview {
             display: flex;
             justify-content: start;
+            flex-wrap: wrap;
             cursor: pointer;
             align-items: center;
             gap: 0.5rem;

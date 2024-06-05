@@ -9,16 +9,23 @@ import { useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import '../../../styles/Courses.scss';
 import '../../../styles/Common.scss';
+import Pagination from '../../../components/Pagination/Pagination';
 
 const Courses = () => {
     const [search, setSearch] = useState('');
     const [selectedEvent, setSelectedEvent] = useState('Your Courses');
     const [yourCourses, setYourCourses] = useState(false);
+    const [currentPage, setCurrentPage] = useState(1);
+
     const navigate = useNavigate();
     const userInfo = useSelector((state) => state?.auth?.userInfo);
     const role = userInfo?.role;
+    const itemsPerPage = 8;
     const onFilterTextChange = (event) => {
         setSearch(event.target.value);
+    };
+    const handlePageChange = (page) => {
+        setCurrentPage(page);
     };
 
     const courseCards = [
@@ -78,8 +85,29 @@ const Courses = () => {
             detail: 'Dropship Academy X',
             lectureNo: 'Lectures: 28',
             img: eventImg
+        },
+        {
+            id: 9,
+            title: 'Web Design',
+            detail: 'Dropship Academy X',
+            lectureNo: 'Lectures: 28',
+            img: eventImg
+        },
+        {
+            id: 10,
+            title: 'Web Design',
+            detail: 'Dropship Academy X',
+            lectureNo: 'Lectures: 28',
+            img: eventImg
         }
     ];
+
+    const totalPages = Math.ceil(courseCards.length / itemsPerPage);
+
+    // Get current items for the current page
+    const indexOfLastItem = currentPage * itemsPerPage;
+    const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+    const currentItems = courseCards.slice(indexOfFirstItem, indexOfLastItem);
 
     const handleCreateClick = () => {
         if (role === 'admin') {
@@ -139,13 +167,13 @@ const Courses = () => {
                         </DropdownButton>
                     ) : (
                         <Button className="add-button" onClick={handleCreateClick}>
-                            <img src={add} alt="" /> <span className="ms-1">Add New Courses</span>
+                            <img src={add} alt="" /> <span className="ms-1">Add New Course</span>
                         </Button>
                     )}
                 </div>
                 <div className="custom-card-course">
                     <Row>
-                        {courseCards.map((cousre) => (
+                        {currentItems.map((cousre) => (
                             <Col key={cousre.id} xs={12} sm={12} md={6} lg={4} xl={3} xxl={3}>
                                 <div className="custom-card-course-new">
                                     {role === 'admin' || role === 'coach' ? (
@@ -161,6 +189,7 @@ const Courses = () => {
                                 </div>
                             </Col>
                         ))}
+                        <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={handlePageChange} />
                     </Row>
                 </div>
             </div>
