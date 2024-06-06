@@ -112,7 +112,7 @@ const BasicInformation = ({ onNext }) => {
                                             );
                                         }}
                                     />
-                                    <label className="field-label">Module Manager</label>
+                                    <label className="field-label mt-3">Module Manager</label>
                                     {/* eslint-disable */}
                                     <Field
                                         name="moduleManager"

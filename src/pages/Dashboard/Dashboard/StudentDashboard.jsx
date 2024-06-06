@@ -283,7 +283,7 @@ const StudentDashboard = () => {
                     <div className="d-flex justify-content-end">
                         <Button
                             variant="primary"
-                            className="meeting-btn"
+                            className="meeting-btn me-2"
                             onClick={() => navigate('/student/request-meeting')}
                         >
                             Request for meeting

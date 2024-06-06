@@ -400,7 +400,7 @@ const NewCoach = () => {
                                     </Col>
                                 </Row>
 
-                                <Row className="mb-3">
+                                <Row className="mb-3 mt-2">
                                     <Col md={6} xs={12}>
                                         <Input
                                             name="coachType"
