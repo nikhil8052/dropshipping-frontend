@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import Table from '@components/Table/Table';
-import { Button, Col, Row, DropdownButton, Dropdown } from 'react-bootstrap';
+import { Button, Col, Row, DropdownButton, Dropdown, OverlayTrigger, Tooltip } from 'react-bootstrap';
 import Modal from '@components/Modal/Modal';
 import ProductForm from '@components/Listings/ProductForm/ProductForm';
 import ConfirmationBox from '@components/ConfirmationBox/ConfirmationBox';
 import { Helmet } from 'react-helmet';
 import axiosWrapper from '@utils/api';
-import { toast } from 'react-toastify';
+import toast from 'react-hot-toast';
 import TextExpand from '@components/TextExpand/TextExpand';
 import DateRenderer from '@components/DateFormatter/DateFormatter';
 import editIcon from '@icons/edit_square.svg';
@@ -14,7 +14,6 @@ import deleteIcon from '@icons/trash-2.svg';
 import eyeIcon from '@icons/basil_eye-solid.svg';
 import add from '@icons/add_white.svg';
 import downArrow from '@icons/down-arrow.svg';
-
 import { eventsDummyData } from '../../../data/data';
 import { useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
@@ -138,7 +137,7 @@ const Events = () => {
                 'delete',
                 `${import.meta.env.VITE_JSONPLACEHOLDER}/posts/${selectedRowId}}`
             );
-            toast.success(data?.message || 'Item deleted successfully');
+            toast.success(data?.message || 'Event deleted successfully');
         } catch (error) {
             return;
         } finally {
@@ -192,23 +191,27 @@ const Events = () => {
     };
     const LinkRenderer = (props) => (
         <div key={props.data.id}>
-            <div className="d-flex align-items-center gap-2">
-                <a
-                    href={props.value}
-                    target="_blank" // Open link in a new tab
-                    rel="noopener noreferrer" // Recommended for security
-                    style={{
-                        overflow: 'hidden',
-                        textOverflow: 'ellipsis',
-                        whiteSpace: expanded ? 'normal' : 'nowrap',
-                        cursor: 'pointer',
-                        textDecoration: 'underline',
-                        color: 'rgba(72, 128, 255, 1)'
-                    }}
-                >
-                    {props.value}
-                </a>
-            </div>
+            <OverlayTrigger placement="top" overlay={<Tooltip id="tooltip-top">{props.value}</Tooltip>}>
+                <div className="d-flex align-items-center gap-2">
+                    <a
+                        href={props.value}
+                        target="_blank" // Open link in a new tab
+                        rel="noopener noreferrer" // Recommended for security
+                        style={{
+                            overflow: 'hidden',
+                            textOverflow: 'ellipsis',
+                            whiteSpace: 'nowrap',
+                            cursor: 'pointer',
+                            display: 'inline-block',
+                            textDecoration: 'underline',
+                            maxWidth: '150px', // Adjust as necessary
+                            color: 'rgba(72, 128, 255, 1)'
+                        }}
+                    >
+                        {props.value}
+                    </a>
+                </div>
+            </OverlayTrigger>
         </div>
     );
     /*eslint-disable */

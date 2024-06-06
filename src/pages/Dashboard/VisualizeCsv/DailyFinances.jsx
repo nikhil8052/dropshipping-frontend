@@ -8,6 +8,7 @@ import TextExpand from '@components/TextExpand/TextExpand';
 import uploadSimple from '@icons/UploadSimpleBack.svg';
 import pdfExport from '@icons/picture_as_pdf.svg';
 import { dailyFinances } from '../../../data/data';
+import DateRenderer from '@components/DateFormatter/DateFormatter';
 import { FileUploader } from 'react-drag-drop-files';
 const fileTypes = ['csv'];
 
@@ -99,7 +100,7 @@ const DailyFinances = ({ studentId }) => {
             wrapText: true,
             autoHeight: true,
             resizable: false,
-            cellRenderer: TextExpand
+            cellRenderer: DateRenderer
         },
         {
             headerName: 'Revenue',

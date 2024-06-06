@@ -11,23 +11,31 @@
     .ag-theme-alpine {
         height: calc(100vh - 14rem);
         overflow-y: scroll;
+
         // Make the cells padding and alignment w.r.t height
         // Add the text expandable id here
-        .ag-row
-            .ag-cell:not([col-id='coursesRoadmap']):not([col-id='email']):not([col-id='name']):not(
-                [col-id='joinLink']
-            ):not([col-id='notes']) {
+        // .ag-row
+        //     .ag-cell:not([col-id='coursesRoadmap']):not([col-id='email']):not([col-id='name']):not(
+        //         [col-id='joinLink']
+        //     ):not([col-id='notes']) {
+        //     display: flex;
+        //     justify-content: start;
+        //     align-items: center;
+        // }
+        // .ag-row .ag-cell[col-id='coursesRoadmap'],
+        // .ag-row .ag-cell[col-id='name'],
+        // .ag-row .ag-cell[col-id='email'],
+        // .ag-row .ag-cell[col-id='joinLink'] {
+        //     padding: 10px;
+        // }
+        .ag-row .ag-cell {
+            // padding: 10px;
             display: flex;
             justify-content: start;
             align-items: center;
         }
-        .ag-row .ag-cell[col-id='coursesRoadmap'],
-        .ag-row .ag-cell[col-id='name'],
-        .ag-row .ag-cell[col-id='email'],
-        .ag-row .ag-cell[col-id='joinLink'] {
-            padding: 10px;
-        }
     }
+
     .search-input {
         max-width: 390px;
         border-radius: 59px;

@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import CaretRight from '@icons/CaretRight.svg';
 import imagePreview from '@icons/preview.svg';
 import dropDownArrow from '@icons/drop-down-black.svg';
+import UploadSimple from '@icons/UploadSimple.svg';
 import { Formik, Form, Field, ErrorMessage, FieldArray } from 'formik';
 import * as Yup from 'yup';
 import { Container, Row, Col, Button, DropdownButton, Dropdown } from 'react-bootstrap';
@@ -193,6 +194,17 @@ const NewEvent = () => {
                                                                     <br />
                                                                     Supported formats:{' '}
                                                                     <strong>.jpg, .jpeg, or .png</strong>
+                                                                    <br />
+                                                                    <Button
+                                                                        onClick={(e) => {
+                                                                            e.preventDefault();
+                                                                            inputRef.current.click();
+                                                                        }}
+                                                                        className="upload-image-btn"
+                                                                    >
+                                                                        Upload Image{' '}
+                                                                        <img src={UploadSimple} alt="Upload Btn" />
+                                                                    </Button>
                                                                 </span>
                                                             </div>
                                                         )}

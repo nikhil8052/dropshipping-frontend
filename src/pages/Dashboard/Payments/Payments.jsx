@@ -8,6 +8,7 @@ import { Helmet } from 'react-helmet';
 import axiosWrapper from '@utils/api';
 import toast from 'react-hot-toast';
 import TextExpand from '@components/TextExpand/TextExpand';
+import DateRenderer from '@components/DateFormatter/DateFormatter';
 import eyeIcon from '@icons/basil_eye-solid.svg';
 import { paymentsDummyData } from '../../../data/data';
 import downArrow from '@icons/down-arrow.svg';
@@ -206,7 +207,7 @@ const Payments = () => {
             filter: 'agSetColumnFilter',
             sortable: true,
             unSortIcon: true,
-            cellRenderer: TextExpand,
+            cellRenderer: DateRenderer,
             wrapText: true,
             autoHeight: true,
             resizable: false

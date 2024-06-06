@@ -1,11 +1,11 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import Table from '@components/Table/Table';
 import { Button, Col, Form, Row } from 'react-bootstrap';
 import Modal from '@components/Modal/Modal';
 import ProductForm from '@components/Listings/ProductForm/ProductForm';
 import ConfirmationBox from '@components/ConfirmationBox/ConfirmationBox';
 import { Helmet } from 'react-helmet';
-import { toast } from 'react-toastify';
+import toast from 'react-hot-toast';
 import TextExpand from '@components/TextExpand/TextExpand';
 import editIcon from '@icons/edit_square.svg';
 import deleteIcon from '@icons/trash-2.svg';
@@ -110,9 +110,9 @@ const Coaches = () => {
             const index = copyOfCoachData.indexOf(coach);
             copyOfCoachData.splice(index, 1);
             setCoachesData(copyOfCoachData);
+            toast.success('Coach deleted successfully');
             // Call the get API
             fetchData();
-            toast.success('Coach deleted successfully');
         } catch (error) {
             return;
         } finally {
@@ -121,14 +121,14 @@ const Coaches = () => {
         }
     };
 
-    const toggleExpand = (event) => {
+    const toggleExpand = useCallback((event) => {
         // Specifically in this component, we need to prevent the event from propagating to the parent element
         event.stopPropagation();
         setExpanded(!expanded);
-    };
+    }, []);
 
     /*eslint-disable */
-    const ActionsRenderer = (props) => (
+    const ActionsRenderer = React.memo((props) => (
         <React.Fragment>
             <Row style={{ width: '100%' }}>
                 <Col lg={4} md={4} sm={6} xs={4} className="d-flex justify-content-center align-items-center">
@@ -146,7 +146,7 @@ const Coaches = () => {
                 </Col>
             </Row>
         </React.Fragment>
-    );
+    ));
 
     const ToggleRenderer = (props) => (
         <React.Fragment>
@@ -205,6 +205,7 @@ const Coaches = () => {
             autoHeight: true,
             cellRenderer: TextExpand,
             resizable: false
+            // cellClass: ['d-flex', 'align-items-center', 'justify-content-center']
         },
         {
             headerName: 'HT / LT',
@@ -295,7 +296,10 @@ const Coaches = () => {
                 loading={loading}
                 children={
                     <div className="d-flex justify-content-end">
-                        <Button className="add-button btn btn-light btn-block" onClick={handleCreateClick}>
+                        <Button
+                            className="add-button  responsive-btn btn btn-light btn-block"
+                            onClick={handleCreateClick}
+                        >
                             <img src={add} alt="" /> <span className="ms-2">Add New Coach</span>
                         </Button>
                     </div>
