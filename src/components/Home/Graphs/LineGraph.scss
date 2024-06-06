@@ -1,3 +1,6 @@
+@import '@constants/colors.scss';
+@import '@constants/typography.scss';
+@import '@constants/media.scss';
 .graph-card {
     border: none; // Remove the default border
     margin-bottom: 1rem;
@@ -75,5 +78,19 @@
 
     .form-check-input:checked {
         background: rgba(1, 159, 216, 1);
+    }
+    input[type='checkbox'] {
+    }
+
+    /* Styling for the unchecked state */
+    input[type='checkbox']:not(:checked) {
+        background-color: white !important;
+        border-color: $info-color !important;
+    }
+
+    /* Styling for the checked state */
+    input[type='checkbox']:checked {
+        background-color: $info-color !important;
+        border-color: white !important;
     }
 }

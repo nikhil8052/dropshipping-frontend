@@ -109,7 +109,7 @@ const Login = () => {
 
                                                 <div className=" d-flex flex-column ">
                                                     <Link className="auth-link ms-auto" to="/forgot-password">
-                                                        Forgot password
+                                                        Forgot password?
                                                     </Link>
                                                     <Button
                                                         className="auth-login-button"

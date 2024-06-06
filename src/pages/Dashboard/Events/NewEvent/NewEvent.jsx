@@ -127,7 +127,7 @@ const NewEvent = () => {
             </div>
             <div className="new-event-page">
                 <Container fluid className="p-3">
-                    <h4 className="mb-3 new-event-title">{eventId ? 'Event Details' : 'Schedule Event'}</h4>
+                    <h4 className="mb-3 new-event-title">Schedule Event</h4>
                     <Formik
                         initialValues={eventData}
                         validationSchema={validationSchema}

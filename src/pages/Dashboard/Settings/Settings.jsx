@@ -198,6 +198,7 @@ const Settings = () => {
                                         className="field-control"
                                         type="email"
                                         placeholder="john.doe@gmail.com"
+                                        readOnly
                                     />
                                     <ErrorMessage name="email" component="div" className="error" />
                                 </Col>
@@ -208,7 +209,7 @@ const Settings = () => {
                                     <Field
                                         name="phoneNumber"
                                         className="field-control"
-                                        type="text"
+                                        type="number"
                                         placeholder="+31- 612 345 678"
                                     />
                                     <ErrorMessage name="phoneNumber" component="div" className="error" />

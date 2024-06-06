@@ -1,9 +1,12 @@
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
-import { Container, Row, Col, Button } from 'react-bootstrap';
+import { Container, Row, Col, Button, DropdownButton, Dropdown } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import CaretLeft from '@icons/CaretLeft.svg';
+import dropDownArrow from '@icons/drop-down-black.svg';
 import './MeetingRequest.scss';
+import '../../../../styles/Common.scss';
+import toast from 'react-hot-toast';
 
 const MeetingRequest = () => {
     const navigate = useNavigate();
@@ -16,10 +19,10 @@ const MeetingRequest = () => {
         reason: ''
     };
     const timeZoneOptions = [
-        { value: 'CST', label: 'Central Standard Time Chicago (GMT-6)' },
-        { value: 'EST', label: 'Eastern Standard Time (GMT-5)' },
-        { value: 'PST', label: 'Pacific Standard Time (GMT-8)' },
-        { value: 'MST', label: 'Mountain Standard Time (GMT-7)' }
+        { value: 'CST', label: 'Central Standard Time Chicago (GMT-6)', id: 1 },
+        { value: 'EST', label: 'Eastern Standard Time (GMT-5)', id: 2 },
+        { value: 'PST', label: 'Pacific Standard Time (GMT-8)', id: 3 },
+        { value: 'MST', label: 'Mountain Standard Time (GMT-7)', id: 4 }
         // Add more time zones as needed
     ];
 
@@ -32,11 +35,12 @@ const MeetingRequest = () => {
         reason: Yup.string().required('Reason is required')
     });
 
-    const handleSubmit = ({ resetForm, setSubmitting }) => {
+    const handleFormSubmit = (values, { resetForm, setSubmitting }) => {
         setTimeout(() => {
             // Implement form submission logic here
             resetForm();
             setSubmitting(false);
+            toast.success('Meeting request submitted successfully');
             navigate('/student');
         }, 1000);
     };
@@ -56,7 +60,7 @@ const MeetingRequest = () => {
                     <Formik
                         initialValues={initialValues}
                         validationSchema={validationSchema}
-                        onSubmit={handleSubmit}
+                        onSubmit={handleFormSubmit}
                         enableReinitialize
                     >
                         {({ isSubmitting, handleSubmit }) => (
@@ -88,12 +92,50 @@ const MeetingRequest = () => {
                                 <Row>
                                     <Col>
                                         <label className="field-label">Time Zone</label>
+                                        {/* eslint-disable */}
                                         <Field
                                             name="timeZone"
                                             className="field-select-control"
                                             type="text"
-                                            as="select"
-                                            placeholder="Central Standard Time Chicago (GMT-6)"
+                                            component={({ field, form }) => {
+                                                const handleSelect = (eventKey) => {
+                                                    const selectedZone = timeZoneOptions.find(
+                                                        (zone) => zone.id.toString() === eventKey
+                                                    );
+                                                    form.setFieldValue(field.name, selectedZone.label);
+                                                };
+
+                                                return (
+                                                    <>
+                                                        <DropdownButton
+                                                            title={
+                                                                <div className="d-flex justify-content-between align-items-center">
+                                                                    <span>
+                                                                        {field.value || 'Select a time zone...'}
+                                                                    </span>
+                                                                    <img src={dropDownArrow} alt="arrow" />
+                                                                </div>
+                                                            }
+                                                            id={field.name}
+                                                            onSelect={handleSelect}
+                                                            className="dropdown-button w-100"
+                                                        >
+                                                            {timeZoneOptions.map((zone) => (
+                                                                <Dropdown.Item
+                                                                    key={zone.id}
+                                                                    eventKey={zone.id}
+                                                                    className="my-1 ms-2 w-100"
+                                                                >
+                                                                    <span className="country-name">{zone.label}</span>
+                                                                </Dropdown.Item>
+                                                            ))}
+                                                        </DropdownButton>
+                                                        {form.touched[field.name] && form.errors[field.name] && (
+                                                            <div className="error mt-2">{form.errors[field.name]}</div>
+                                                        )}
+                                                    </>
+                                                );
+                                            }}
                                         >
                                             <option value="" disabled>
                                                 Select a time zone...
@@ -104,7 +146,6 @@ const MeetingRequest = () => {
                                                 </option>
                                             ))}
                                         </Field>
-                                        <ErrorMessage name="timeZone" component="div" className="error" />
                                     </Col>
                                 </Row>
                                 <Row>
@@ -132,23 +173,19 @@ const MeetingRequest = () => {
                                         <ErrorMessage name="reason" component="div" className="error" />
                                     </Col>
                                 </Row>
-                                <Row>
-                                    <Col>
-                                        <div className="mt-3 d-flex justify-content-end gap-3">
-                                            <Button
-                                                type="button"
-                                                onClick={() => navigate('/student')}
-                                                className="cancel-btn"
-                                                disabled={isSubmitting}
-                                            >
-                                                Cancel
-                                            </Button>
-                                            <Button type="submit" className="submit-btn" disabled={isSubmitting}>
-                                                {isSubmitting ? 'Save Changes...' : 'Save'}
-                                            </Button>
-                                        </div>
-                                    </Col>
-                                </Row>
+                                <div className="mt-3 d-flex justify-content-end gap-3 flex-wrap">
+                                    <Button
+                                        type="button"
+                                        onClick={() => navigate('/student')}
+                                        className="cancel-btn"
+                                        disabled={isSubmitting}
+                                    >
+                                        Cancel
+                                    </Button>
+                                    <Button type="submit" className="submit-btn custom-width" disabled={isSubmitting}>
+                                        {isSubmitting ? 'Save Changes...' : 'Save'}
+                                    </Button>
+                                </div>
                             </Form>
                         )}
                     </Formik>
