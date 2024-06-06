@@ -10,6 +10,7 @@ import uploadSimple from '@icons/UploadSimpleBack.svg';
 import pdfExport from '@icons/picture_as_pdf.svg';
 import { invoicesData } from '../../../data/data';
 import { FileUploader } from 'react-drag-drop-files';
+import DateRenderer from '@components/DateFormatter/DateFormatter';
 const fileTypes = ['csv'];
 
 const Invoices = ({ studentId }) => {
@@ -21,6 +22,10 @@ const Invoices = ({ studentId }) => {
     const [expanded, setExpanded] = useState(false);
     const [uploadFileModal, setUploadFileModal] = useState(false);
     const [file, setFile] = useState(null);
+    const [dateFilters, setDateFilters] = useState({
+        from: '',
+        to: ''
+    });
 
     useEffect(() => {
         // Fetch data from API here
@@ -106,7 +111,7 @@ const Invoices = ({ studentId }) => {
             wrapText: true,
             autoHeight: true,
             resizable: false,
-            cellRenderer: TextExpand
+            cellRenderer: DateRenderer
         },
         {
             headerName: 'Amount',
@@ -208,11 +213,18 @@ const Invoices = ({ studentId }) => {
         setFile(file);
     };
 
+    const handleDateChange = ({ target: input }) => {
+        setDateFilters((pre) => ({
+            ...pre,
+            [input.name]: input.value
+        }));
+    };
+
     return (
         <div className="students-product-page">
             <>
                 <Helmet>
-                    <title>Visualize Csv | Drop Ship Academy</title>
+                    <title>Visualize Csv | Dropship Academy</title>
                 </Helmet>
 
                 {showDeleteModal && (
@@ -221,7 +233,7 @@ const Invoices = ({ studentId }) => {
                         onClose={handleCloseDeleteModal}
                         loading={loadingCRUD}
                         title="Delete Student"
-                        body="Are you sure you want to delete this Student ?"
+                        body="Are you sure you want to delete this Student?"
                         onConfirm={handleDeleteSubmit}
                         customFooterClass="custom-footer-class"
                         nonActiveBtn="cancel-button"
@@ -283,13 +295,29 @@ const Invoices = ({ studentId }) => {
                             <Col md={12} lg={6} xl={6} xxl={3}>
                                 <div className=" d-flex justify-content-even align-items-center from-filter ">
                                     <span className="me-2"> From: </span>
-                                    <input className="field-control" type="date" name="" id="" />
+                                    <input
+                                        value={dateFilters.from}
+                                        onChange={handleDateChange}
+                                        className="field-control"
+                                        type="date"
+                                        max={dateFilters.to}
+                                        name="from"
+                                        id=""
+                                    />
                                 </div>
                             </Col>
                             <Col md={12} lg={6} xl={6} xxl={3}>
                                 <div className=" d-flex justify-content-even align-items-center">
                                     <span className="me-2"> To: </span>
-                                    <input className="field-control" type="date" name="" id="" />
+                                    <input
+                                        value={dateFilters.to}
+                                        onChange={handleDateChange}
+                                        className="field-control"
+                                        type="date"
+                                        name="to"
+                                        min={dateFilters.from}
+                                        id=""
+                                    />
                                 </div>
                             </Col>
                             {!studentId && (

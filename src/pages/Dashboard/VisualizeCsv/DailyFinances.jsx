@@ -8,6 +8,7 @@ import TextExpand from '@components/TextExpand/TextExpand';
 import uploadSimple from '@icons/UploadSimpleBack.svg';
 import pdfExport from '@icons/picture_as_pdf.svg';
 import { dailyFinances } from '../../../data/data';
+import DateRenderer from '@components/DateFormatter/DateFormatter';
 import { FileUploader } from 'react-drag-drop-files';
 const fileTypes = ['csv'];
 
@@ -18,6 +19,10 @@ const DailyFinances = ({ studentId }) => {
     const [loadingCRUD, setLoadingCRUD] = useState(false);
     const [studentsData, setStudentsData] = useState(null);
     const [file, setFile] = useState(null);
+    const [dateFilters, setDateFilters] = useState({
+        from: '',
+        to: ''
+    });
 
     useEffect(() => {
         // Fetch data from API here
@@ -99,7 +104,7 @@ const DailyFinances = ({ studentId }) => {
             wrapText: true,
             autoHeight: true,
             resizable: false,
-            cellRenderer: TextExpand
+            cellRenderer: DateRenderer
         },
         {
             headerName: 'Revenue',
@@ -175,8 +180,11 @@ const DailyFinances = ({ studentId }) => {
             unSortIcon: true,
             wrapText: true,
             autoHeight: true,
-            resizable: false,
-            cellRenderer: TextExpand
+            resizable: true,
+            cellRenderer: ({ data }) => {
+                const profitLoss = data.profitLoss;
+                return <span className={profitLoss < 400 ? 'text-danger' : 'text-success'}>${profitLoss}</span>;
+            }
         },
         {
             headerName: '% Margin',
@@ -195,11 +203,17 @@ const DailyFinances = ({ studentId }) => {
         setFile(file);
     };
 
+    const handleDateChange = ({ target: input }) => {
+        setDateFilters((pre) => ({
+            ...pre,
+            [input.name]: input.value
+        }));
+    };
     return (
         <div className="students-product-page">
             <>
                 <Helmet>
-                    <title>Visualize Csv | Drop Ship Academy</title>
+                    <title>Visualize Csv | Dropship Academy</title>
                 </Helmet>
                 {uploadFileModal && (
                     <ConfirmationBox
@@ -256,13 +270,29 @@ const DailyFinances = ({ studentId }) => {
                             <Col md={12} lg={6} xl={6} xxl={3}>
                                 <div className=" d-flex justify-content-even align-items-center from-filter ">
                                     <span className="me-2"> From: </span>
-                                    <input className="field-control" type="date" name="" id="" />
+                                    <input
+                                        value={dateFilters.from}
+                                        onChange={handleDateChange}
+                                        className="field-control"
+                                        type="date"
+                                        max={dateFilters.to}
+                                        name="from"
+                                        id=""
+                                    />
                                 </div>
                             </Col>
                             <Col md={12} lg={6} xl={6} xxl={3}>
                                 <div className=" d-flex justify-content-even align-items-center">
                                     <span className="me-2"> To: </span>
-                                    <input className="field-control" type="date" name="" id="" />
+                                    <input
+                                        value={dateFilters.to}
+                                        onChange={handleDateChange}
+                                        className="field-control"
+                                        type="date"
+                                        name="to"
+                                        min={dateFilters.from}
+                                        id=""
+                                    />
                                 </div>
                             </Col>
                             {!studentId && (

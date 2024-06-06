@@ -8,12 +8,13 @@ import { Helmet } from 'react-helmet';
 import axiosWrapper from '@utils/api';
 import { toast } from 'react-toastify';
 import TextExpand from '@components/TextExpand/TextExpand';
-
+import downArrow from '@icons/down-arrow.svg';
 import { AllStudentsDummyData } from '../../../data/data';
 import { Link, useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import CaretRight from '@icons/CaretRight.svg';
 import '../../../styles/Courses.scss';
+import '../../../styles/Common.scss';
 
 const AllStudents = () => {
     const [showDeleteModal, setShowDeleteModal] = useState(false);
@@ -162,7 +163,7 @@ const AllStudents = () => {
     return (
         <div className="all-student-page">
             <Helmet>
-                <title>Coaches | Drop Ship Academy</title>
+                <title>Coaches | Dropship Academy</title>
             </Helmet>
             {studentModal.show && (
                 <Modal size="large" show={studentModal.show} onClose={handleCloseModal} title={studentModal.title}>
@@ -196,15 +197,16 @@ const AllStudents = () => {
                 children={
                     <Row>
                         <Col>
-                            <div className="events-page d-flex justify-content-end">
+                            <div className="students-button-wrapper">
                                 <DropdownButton
                                     title={
-                                        <div className="d-flex justify-content-between w-100">
-                                            <span className="ms-2">{selectedOption}</span>
+                                        <div className="d-flex justify-content-between align-items-center gap-2">
+                                            <span>{selectedOption}</span>
+                                            <img className="ms-3" src={downArrow} alt="Down arrow" />
                                         </div>
                                     }
                                     defaultValue={selectedOption}
-                                    className="dropdown-button-fix w-25 d-flex justify-content-even align-items-center"
+                                    className="dropdown-button"
                                 >
                                     {['Paid', 'Overdue', 'HT', 'LT'].map((events) => (
                                         <Dropdown.Item

@@ -59,12 +59,18 @@ const Settings = () => {
             .required('Current password is required')
             .min(4, 'Password must be at least 4 characters long')
             .max(20, 'Password must be at most 20 characters long')
-            .matches(/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{4,20}$/, 'Password must contain both letters and numbers'),
+            .matches(
+                /^(?=.*[A-Za-z])(?=.*\d)(?=.*[ !"#$%&'()*+,-./:;<=>?@[\\\]^_`{|}~¡¢£¤¥¦§¨©ª«¬®ˉ°±²³´µ¶¸¹º»¼½¾¿ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖ×ØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõö÷øùúûüýþÿ])[A-Za-z\d !"#$%&'()*+,-./:;<=>?@[\\\]^_`{|}~¡¢£¤¥¦§¨©ª«¬®ˉ°±²³´µ¶¸¹º»¼½¾¿ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖ×ØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõö÷øùúûüýþÿ]{4,20}$/,
+                'Password must contain letters, numbers, and special characters'
+            ),
         newPassword: Yup.string()
             .required('New password is required')
             .min(4, 'Password must be at least 4 characters long')
             .max(20, 'Password must be at most 20 characters long')
-            .matches(/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{4,20}$/, 'Password must contain both letters and numbers'),
+            .matches(
+                /^(?=.*[A-Za-z])(?=.*\d)(?=.*[ !"#$%&'()*+,-./:;<=>?@[\\\]^_`{|}~¡¢£¤¥¦§¨©ª«¬®ˉ°±²³´µ¶¸¹º»¼½¾¿ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖ×ØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõö÷øùúûüýþÿ])[A-Za-z\d !"#$%&'()*+,-./:;<=>?@[\\\]^_`{|}~¡¢£¤¥¦§¨©ª«¬®ˉ°±²³´µ¶¸¹º»¼½¾¿ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖ×ØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõö÷øùúûüýþÿ]{4,20}$/,
+                'Password must contain letters, numbers, and special characters'
+            ),
         confirmPassword: Yup.string()
             .oneOf([Yup.ref('newPassword'), null], 'Passwords must match')
             .required('Confirmation of the new password is required')
@@ -192,6 +198,7 @@ const Settings = () => {
                                         className="field-control"
                                         type="email"
                                         placeholder="john.doe@gmail.com"
+                                        readOnly
                                     />
                                     <ErrorMessage name="email" component="div" className="error" />
                                 </Col>
@@ -202,7 +209,7 @@ const Settings = () => {
                                     <Field
                                         name="phoneNumber"
                                         className="field-control"
-                                        type="text"
+                                        type="number"
                                         placeholder="+31- 612 345 678"
                                     />
                                     <ErrorMessage name="phoneNumber" component="div" className="error" />

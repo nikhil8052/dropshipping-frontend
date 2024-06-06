@@ -1,25 +1,33 @@
 import { useEffect, useRef, useState } from 'react';
 import CaretRight from '@icons/CaretRight.svg';
 import imagePreview from '@icons/image-preview.svg';
+import dropDownArrow from '@icons/drop-down-black.svg';
 import { Formik, Form, Field, ErrorMessage, FieldArray } from 'formik';
 import * as Yup from 'yup';
-import { Container, Row, Col, Button } from 'react-bootstrap';
-import ReactQuill from 'react-quill';
+import { Container, Row, Col, Button, DropdownButton, Dropdown } from 'react-bootstrap';
 import 'react-quill/dist/quill.snow.css';
 import CustomSelect from '../../../../components/Input/Select';
-import { coachDummyData, studentDummyData, countryList } from '../../../../data/data';
+import { coachDummyData, studentDummyData, countryList, regions } from '../../../../data/data';
 import toast from 'react-hot-toast';
 import { useLocation, useNavigate } from 'react-router-dom';
 import ImageCropper from '../../../../components/ImageMask/ImageCropper';
+import UploadSimple from '@icons/UploadSimple.svg';
+import RichTextEditor from '@components/RichTextEditor/RichTextEditor';
+import Input from '@components/Input/Input';
 import '../../../../styles/Coaches.scss';
+import '../../../../styles/Common.scss';
+import { useSelector } from 'react-redux';
 
 const NewCoach = () => {
     const inputRef = useRef();
     const [coachPhoto, setCoachPhoto] = useState(null);
     const location = useLocation();
     const coachId = location.state?.coachId;
+    const { userInfo } = useSelector((state) => state?.auth);
+    const role = userInfo?.role;
     const navigate = useNavigate();
     const [cropping, setCropping] = useState(false);
+
     const [imageSrc, setImageSrc] = useState(null);
     const [coachData, setCoachData] = useState({
         coachName: '',
@@ -30,16 +38,13 @@ const NewCoach = () => {
         assignedStudents: [],
         highTicketSpots: '',
         lowTicketSpots: '',
-        bio: ''
+        bio: '',
+        coachType: ''
     });
 
     useEffect(() => {
         if (coachId) {
-            // For now it is a dummy data, later we will replace it with actual API call
-
-            // Fetch data from API here
             const coach = coachDummyData.find((coach) => coach.id === coachId);
-            // later we add the details to the form
             if (coach) {
                 setCoachPhoto(coach.avatarUrl);
                 setCoachData({
@@ -82,10 +87,64 @@ const NewCoach = () => {
         });
     };
 
+    const validationSchema = Yup.object({
+        coachName: Yup.string().required('Coach name is required'),
+        coachEmail: Yup.string().email('Invalid email address').required('Coach email is required'),
+        phoneNumber: Yup.string().required('Phone number is required'),
+        country: Yup.string().required('Country is required'),
+        region: Yup.string().required('Region is required'),
+        assignedStudents: Yup.array().min(1, 'Select at least one student'),
+        highTicketSpots: Yup.number().when('coachType', {
+            is: 'high',
+            then: () => Yup.number().required('High ticket spots are required').positive('Must be a positive number'),
+            otherwise: () => Yup.number()
+        }),
+        lowTicketSpots: Yup.number().when('coachType', {
+            is: 'low',
+            then: () => Yup.number().required('Low ticket spots are required').positive('Must be a positive number'),
+            otherwise: () => Yup.number()
+        }),
+        bio: Yup.string(),
+        coachType: Yup.string().required('Please select the coach type')
+    });
+
+    const handleFormSubmit = (values, { resetForm, setSubmitting }) => {
+        setTimeout(() => {
+            if (coachId) {
+                const updatedCoaches = coachDummyData.map((coach) =>
+                    coach.id === coachId ? { ...coach, ...values, avatarUrl: coachPhoto } : coach
+                );
+                toast.success(`New coach:${updatedCoaches.coachName || updatedCoaches.name} Updated successfully!`);
+            } else {
+                const newCoach = {
+                    id: coachDummyData.length + 1,
+                    ...values,
+                    avatarUrl: coachPhoto
+                };
+                toast.success(`New coach:${newCoach.coachName || newCoach.name} added successfully!`);
+            }
+            resetForm();
+            setSubmitting(false);
+            navigate(`/${role}/coaches`);
+        }, 1000);
+    };
+
+    const ticketRender = (ticket) => {
+        return (
+            <Col md={6} xs={12}>
+                <label className="field-label">
+                    {ticket.slice(0, 1).toUpperCase() + ticket.slice(1)} Ticket Student Spots
+                </label>
+                <Field name={`${ticket}TicketSpots`} className="field-control" type="number" placeholder="5" min={1} />
+                <ErrorMessage name={`${ticket}TicketSpots`} component="div" className="error" />
+            </Col>
+        );
+    };
+
     return (
         <div className="new-coach-page-wrapper">
             <div className="title-top">
-                <span onClick={() => navigate('/admin/coaches')} style={{ cursor: 'pointer' }}>
+                <span onClick={() => navigate(`/${role}/coaches`)} style={{ cursor: 'pointer' }}>
                     Coaches <img src={CaretRight} alt=">" />
                 </span>{' '}
                 {coachId ? 'Coach Profile' : 'Add New Coach'}
@@ -95,29 +154,8 @@ const NewCoach = () => {
                     <h4 className="mb-3 new-coach-title">{coachId ? 'Coach Profile' : 'Add New Coach'}</h4>
                     <Formik
                         initialValues={coachData}
-                        validationSchema={Yup.object({
-                            coachName: Yup.string().required('Coach name is required'),
-                            coachEmail: Yup.string().email('Invalid email address').required('Coach email is required'),
-                            phoneNumber: Yup.string().required('Phone number is required'),
-                            country: Yup.string().required('Country is required'),
-                            region: Yup.string().required('Region is required'),
-                            assignedStudents: Yup.array().min(1, 'Select at least one student'),
-                            highTicketSpots: Yup.number()
-                                .required('High ticket spots are required')
-                                .positive('Must be a positive number'),
-                            lowTicketSpots: Yup.number()
-                                .required('Low ticket spots are required')
-                                .positive('Must be a positive number'),
-                            bio: Yup.string()
-                        })}
-                        onSubmit={(values, { resetForm, setSubmitting }) => {
-                            setTimeout(() => {
-                                // Implement form submission logic here
-                                resetForm();
-                                setSubmitting(false);
-                                navigate('/admin/coaches');
-                            }, 1000);
-                        }}
+                        validationSchema={validationSchema}
+                        onSubmit={handleFormSubmit}
                         enableReinitialize
                     >
                         {({ isSubmitting, handleSubmit, values }) => (
@@ -168,19 +206,31 @@ const NewCoach = () => {
                                                                 <span>{coachPhoto.name}</span>
                                                             </div>
                                                         ) : (
-                                                            <div
-                                                                className="image-preview"
-                                                                onClick={(e) => {
-                                                                    e.preventDefault();
-                                                                    inputRef.current.click();
-                                                                }}
-                                                            >
-                                                                <img src={imagePreview} alt="" />
+                                                            <div className="image-preview">
+                                                                <img
+                                                                    onClick={(e) => {
+                                                                        e.preventDefault();
+                                                                        inputRef.current.click();
+                                                                    }}
+                                                                    src={imagePreview}
+                                                                    alt=""
+                                                                />
                                                                 <span>
                                                                     Upload Coach Picture here
                                                                     <br />
                                                                     Supported formats:{' '}
                                                                     <strong>.jpg, .jpeg, or .png</strong>
+                                                                    <br />
+                                                                    <Button
+                                                                        onClick={(e) => {
+                                                                            e.preventDefault();
+                                                                            inputRef.current.click();
+                                                                        }}
+                                                                        className="upload-image-btn"
+                                                                    >
+                                                                        Upload Image{' '}
+                                                                        <img src={UploadSimple} alt="Upload Btn" />
+                                                                    </Button>
                                                                 </span>
                                                             </div>
                                                         )}
@@ -219,47 +269,112 @@ const NewCoach = () => {
                                         <Field
                                             name="phoneNumber"
                                             className="field-control"
-                                            type="number"
+                                            type="text"
                                             placeholder="+1-202-555-0118"
                                         />
                                         <ErrorMessage name="phoneNumber" component="div" className="error" />
                                     </Col>
                                     <Col md={6} xs={12}>
                                         <label className="field-label">Country</label>
+                                        {/* eslint-disable */}
                                         <Field
                                             name="country"
                                             className="field-select-control"
-                                            as="select"
-                                            placeholder="United States"
-                                        >
-                                            <option defaultChecked value="">
-                                                Select a country...
-                                            </option>
-                                            {countryList.map((country) => (
-                                                <option key={country.id} value={country.name}>
-                                                    {country.name}
-                                                </option>
-                                            ))}
-                                        </Field>
-                                        <ErrorMessage name="country" component="div" className="error" />
+                                            type="text"
+                                            component={({ field, form }) => {
+                                                const handleSelect = (eventKey) => {
+                                                    const selectedCountry = countryList.find(
+                                                        (country) => country.id.toString() === eventKey
+                                                    );
+                                                    form.setFieldValue(field.name, selectedCountry.name);
+                                                };
+
+                                                return (
+                                                    <>
+                                                        <DropdownButton
+                                                            title={
+                                                                <div className="d-flex justify-content-between align-items-center">
+                                                                    <span>{field.value || 'Select a country ...'}</span>
+                                                                    <img src={dropDownArrow} alt="arrow" />
+                                                                </div>
+                                                            }
+                                                            id={field.name}
+                                                            onSelect={handleSelect}
+                                                            className="dropdown-button w-100"
+                                                        >
+                                                            {countryList.map((country) => (
+                                                                <Dropdown.Item
+                                                                    key={country.id}
+                                                                    eventKey={country.id}
+                                                                    className="my-1 ms-2 w-100"
+                                                                >
+                                                                    <span className="country-name">{country.name}</span>
+                                                                </Dropdown.Item>
+                                                            ))}
+                                                        </DropdownButton>
+                                                        {form.touched[field.name] && form.errors[field.name] && (
+                                                            <div className="error mt-2">{form.errors[field.name]}</div>
+                                                        )}
+                                                    </>
+                                                );
+                                            }}
+                                        />
                                     </Col>
                                 </Row>
                                 <Row>
                                     <Col md={6} xs={12}>
                                         <label className="field-label">Region/State</label>
+                                        {/* eslint-disable */}
                                         <Field
                                             name="region"
                                             className="field-select-control"
-                                            as="select"
-                                            placeholder="Select..."
+                                            type="text"
+                                            component={({ field, form }) => {
+                                                const handleSelect = (eventKey) => {
+                                                    const selectedCountry = regions.find(
+                                                        (country) => country.id.toString() === eventKey
+                                                    );
+                                                    form.setFieldValue(field.name, selectedCountry.label);
+                                                };
+
+                                                return (
+                                                    <>
+                                                        <DropdownButton
+                                                            title={
+                                                                <div className="d-flex justify-content-between align-items-center">
+                                                                    <span>{field.value || 'Select a region ...'}</span>
+                                                                    <img src={dropDownArrow} alt="arrow" />
+                                                                </div>
+                                                            }
+                                                            id={field.name}
+                                                            onSelect={handleSelect}
+                                                            className="dropdown-button w-100"
+                                                        >
+                                                            {regions.map((country) => (
+                                                                <Dropdown.Item
+                                                                    key={country.id}
+                                                                    eventKey={country.id}
+                                                                    className="my-1 ms-2 w-100"
+                                                                >
+                                                                    <span className="country-name">
+                                                                        {country.label}
+                                                                    </span>
+                                                                </Dropdown.Item>
+                                                            ))}
+                                                        </DropdownButton>
+                                                        {form.touched[field.name] && form.errors[field.name] && (
+                                                            <div className="error mt-2">{form.errors[field.name]}</div>
+                                                        )}
+                                                    </>
+                                                );
+                                            }}
                                         >
-                                            {studentDummyData.map((student) => (
-                                                <option key={student.id} value={student.name}>
-                                                    {student.name}
+                                            {regions.map((region) => (
+                                                <option key={region.label} value={region.value}>
+                                                    {region.label}
                                                 </option>
                                             ))}
                                         </Field>
-                                        <ErrorMessage name="region" component="div" className="error" />
                                     </Col>
                                     <Col md={6} xs={12}>
                                         <label className="field-label">Assigned Students</label>
@@ -275,7 +390,6 @@ const NewCoach = () => {
                                                     value={values.assignedStudents}
                                                     placeholder="Select or search students..."
                                                     onChange={(selectedOptions) => {
-                                                        // Update the array with only the selected options
                                                         form.setFieldValue('assignedStudents', selectedOptions);
                                                     }}
                                                     onBlur={() => form.setFieldTouched('assignedStudents', true)}
@@ -285,63 +399,42 @@ const NewCoach = () => {
                                         <ErrorMessage name="assignedStudents" component="div" className="error" />
                                     </Col>
                                 </Row>
-                                <Row>
+
+                                <Row className="mb-3 mt-2">
                                     <Col md={6} xs={12}>
-                                        <label className="field-label">High Ticket student spots</label>
-                                        <Field
-                                            name="highTicketSpots"
-                                            className="field-control"
-                                            type="number"
-                                            placeholder="5"
+                                        <Input
+                                            name="coachType"
+                                            placeholder="Please Select the Coach Type"
+                                            label="Coach Type"
+                                            type="radio"
+                                            options={[
+                                                {
+                                                    label: 'High Ticket',
+                                                    value: 'high'
+                                                },
+                                                {
+                                                    label: 'Low Ticket',
+                                                    value: 'low'
+                                                }
+                                            ]}
                                         />
-                                        <ErrorMessage name="highTicketSpots" component="div" className="error" />
                                     </Col>
-                                    <Col md={6} xs={12}>
-                                        <label className="field-label">Low Ticket Student Spots</label>
-                                        <Field
-                                            name="lowTicketSpots"
-                                            className="field-control"
-                                            type="number"
-                                            placeholder="10"
-                                        />
-                                        <ErrorMessage name="lowTicketSpots" component="div" className="error" />
-                                    </Col>
+                                    {values.coachType && ticketRender(values.coachType)}
                                 </Row>
-                                {/* Commenting for future use */}
-                                {/* <Row>
-                                    <Col>
-                                        <div className="field-label my-2">List of students Taught</div>
-                                        <div className="student-taught-wrapper">
-                                            <span className="total">All Students ({studentDummyData.length})</span>
-                                            {studentDummyData.map((student) => (
-                                                <span key={student.id} className=" data-value">
-                                                    {student.name}
-                                                </span>
-                                            ))}
-                                        </div>
-                                    </Col>
-                                </Row> */}
                                 <Row>
                                     <Col>
                                         <label className="field-label">
                                             Bio <span className="label-light">(Optional)</span>
                                         </label>
+                                        {/* eslint-disable */}
                                         <Field
                                             name="bio"
-                                            value={values.bio}
-                                            as="textarea"
-                                            placeholder="Enter Bio"
-                                            render={({ field }) => (
-                                                <ReactQuill
-                                                    {...field}
-                                                    value={field.value || ''}
-                                                    name={field.name}
-                                                    onChange={(value) => field.onChange(field.name)(value)} // Update the form value
-                                                    className="field-quill-control"
-                                                    modules={{ toolbar: true }}
-                                                />
+                                            type="text"
+                                            component={({ field }) => (
+                                                <RichTextEditor field={field} className="field-quill-control" />
                                             )}
                                         />
+
                                         <ErrorMessage name="bio" component="div" className="error" />
                                     </Col>
                                 </Row>
@@ -350,7 +443,7 @@ const NewCoach = () => {
                                         <div className="mt-3 d-flex justify-content-end gap-3">
                                             <Button
                                                 type="button"
-                                                onClick={() => navigate('/admin/coaches')}
+                                                onClick={() => navigate(`/${role}/coaches`)}
                                                 className="cancel-btn"
                                                 disabled={isSubmitting}
                                             >

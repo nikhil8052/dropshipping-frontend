@@ -1,6 +1,5 @@
 @import './constants/colors.scss';
 @import './constants/typography.scss';
-@import './components/MeetingCard/MeetingCard.scss';
 
 :root {
     font-family: $font-primary;
@@ -8,8 +7,7 @@
 
     color-scheme: light dark;
     color: $light-color;
-    background-color: $dark-color;
-
+    background-color: white;
     font-synthesis: none;
     text-rendering: optimizeLegibility;
     -webkit-font-smoothing: antialiased;
@@ -70,6 +68,7 @@ body {
 /* Track */
 ::-webkit-scrollbar-track {
     background-color: $body-bg-color;
+    border-radius: 10px;
 }
 
 /* Handle */
@@ -124,6 +123,7 @@ button:focus-visible {
 input,
 .form-select,
 .form-control {
+    background-color: white !important;
     &:focus {
         box-shadow: none !important;
         outline: none !important;
@@ -179,4 +179,15 @@ input,
 .img-wrapper:hover .overlay-image {
     height: 50%; /* Adjust height as needed */
     color: white;
+}
+
+/* Chrome, Safari, Edge, Opera */
+input[type='number']::-webkit-outer-spin-button,
+input[type='number']::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+/* Firefox */
+input[type='number'] {
+    -moz-appearance: textfield;
 }

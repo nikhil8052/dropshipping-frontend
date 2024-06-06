@@ -68,7 +68,7 @@ const Home = () => {
     return (
         <React.Fragment>
             <Helmet>
-                <title>Dashboard | Drop Ship Academy</title>
+                <title>Dashboard | Dropship Academy</title>
             </Helmet>
             <Row>
                 {statCards.map((stat) => (

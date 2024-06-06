@@ -18,7 +18,11 @@ const ForgotPassword = () => {
     };
 
     const validationSchema = Yup.object().shape({
-        email: Yup.string().email('Please enter a valid email').required('Email is required')
+        email: Yup.string()
+            .email('Please enter a valid email')
+            .trim()
+            .required('Email is required')
+            .test('not-only-spaces', 'Email cannot be only spaces', (value) => /\S/.test(value))
     });
 
     const handleSubmit = async (values, { setSubmitting }) => {

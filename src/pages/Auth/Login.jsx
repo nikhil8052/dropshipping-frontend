@@ -13,6 +13,7 @@ import LoginLeftSec from './LoginLeftSec';
 import Footer from './Footer';
 import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import toast from 'react-hot-toast';
 
 const Login = () => {
     const dispatch = useDispatch();
@@ -24,8 +25,21 @@ const Login = () => {
     };
 
     const validationSchema = Yup.object().shape({
-        email: Yup.string().email('Please enter a valid email').required('Email is required'),
-        password: Yup.string().required('Password is required')
+        email: Yup.string()
+            .email('Please enter a valid email')
+            .trim()
+            .required('Email is required')
+            .test('not-only-spaces', 'Email cannot be only spaces', (value) => /\S/.test(value)),
+        password: Yup.string()
+            .required('Password is required')
+            .trim()
+            .min(4, 'Password must be at least 4 characters long')
+            .max(20, 'Password must be at most 20 characters long')
+            .matches(
+                /^(?=.*[A-Za-z])(?=.*\d)(?=.*[ !"#$%&'()*+,-./:;<=>?@[\\\]^_`{|}~¡¢£¤¥¦§¨©ª«¬®ˉ°±²³´µ¶¸¹º»¼½¾¿ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖ×ØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõö÷øùúûüýþÿ])[A-Za-z\d !"#$%&'()*+,-./:;<=>?@[\\\]^_`{|}~¡¢£¤¥¦§¨©ª«¬®ˉ°±²³´µ¶¸¹º»¼½¾¿ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖ×ØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõö÷øùúûüýþÿ]{4,20}$/,
+                'Password must contain letters, numbers, and special characters'
+            )
+            .test('not-only-spaces', 'Password cannot be only spaces', (value) => /\S/.test(value))
     });
 
     const handleSubmit = async (values, { setSubmitting }) => {
@@ -40,6 +54,7 @@ const Login = () => {
                           : 'student'
                 })
             );
+            toast.success('Logged in Successfully');
             setSubmitting(false);
         } catch (error) {
             setSubmitting(false);
@@ -52,7 +67,7 @@ const Login = () => {
     return (
         <React.Fragment>
             <Helmet>
-                <title>Login | Drop Ship Academy</title>
+                <title>Login | Dropship Academy</title>
             </Helmet>
             <div className="auth-main-wrapper">
                 <div className="login-page-section">
@@ -94,7 +109,7 @@ const Login = () => {
 
                                                 <div className=" d-flex flex-column ">
                                                     <Link className="auth-link ms-auto" to="/forgot-password">
-                                                        Forgot password
+                                                        Forgot password?
                                                     </Link>
                                                     <Button
                                                         className="auth-login-button"

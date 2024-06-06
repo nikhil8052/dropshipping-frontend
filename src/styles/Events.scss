@@ -3,91 +3,16 @@
 @import '@constants/typography.scss';
 
 .events-page {
-    .action-button {
-        width: 30px;
-        height: 30px;
-        cursor: pointer;
-        &:hover {
-            border: none !important;
-        }
+    .btn-wrapper {
         display: flex;
-        justify-content: center;
-        align-items: center;
-        border: none;
-        .action-icon {
-            width: 20px;
-            height: 20px;
-        }
-    }
-    .edit-button {
-        transition: all 0.5s ease-in-out;
-        &:hover {
-            border: 1px solid $info-color;
-        }
-    }
-    .delete-button {
-        transition: all 0.5s ease-in-out;
-        &:hover {
-            border: 1px solid $danger-color;
-        }
-    }
-    .add-button {
-        @include pagination-gradient;
-        border-radius: 59px;
-        color: #ffff;
-        font-weight: 400;
-        white-space: nowrap;
-        border: none;
-    }
-    .filter-button {
-        background-color: transparent;
-        border-radius: 59px;
-        color: rgba(148, 148, 148, 1);
-        font-weight: 400;
-        white-space: nowrap;
-        border: rgba(148, 148, 148, 1) 1px solid !important;
-    }
+        justify-content: end;
+        margin-bottom: 1rem;
+        flex-wrap: wrap;
+        gap: 1rem;
 
-    .dropdown-button {
-        -webkit-appearance: none;
-        -moz-appearance: none;
-        background-color: transparent !important;
-        border-radius: 59px;
-        .dropdown-toggle {
-            color: rgba(148, 148, 148, 1);
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            background-color: transparent;
-            border: none;
-            width: 100%;
-            background-color: transparent;
-            border: none;
-            & > div {
-                width: 100%;
-            }
-        }
-        font-weight: 400;
-        white-space: nowrap;
-        border: rgba(148, 148, 148, 1) 1px solid !important;
-
-        .dropdown-menu {
-            width: 100%;
-            overflow: hidden;
-            border: none;
-            border-radius: 10px;
-            background-color: white !important;
-            box-shadow: 0px 0px 54px 0px rgba(0, 0, 0, 0.37);
-            .avatar {
-                width: 20px;
-                border-radius: 50%;
-                object-fit: cover;
-                margin-right: 0.5rem;
-            }
-            .event-name {
-                font-size: small;
-                color: rgba(85, 95, 126, 1);
-            }
+        @media (max-width: $large-screen) {
+            justify-content: start;
+            margin-top: 0.5rem;
         }
     }
 
@@ -114,17 +39,6 @@
         }
         &.partial {
             background-color: $warning-color;
-        }
-    }
-    @media (max-width: $medium-screen) {
-        .add-button,
-        .dropdown-button {
-            margin-top: 0.5rem;
-        }
-    }
-    @media (min-width: $medium-screen) and (max-width: $x-large-screen) {
-        .add-button {
-            margin-top: 0.5rem;
         }
     }
 }
@@ -323,44 +237,6 @@
     }
 }
 
-// Buttons
-.dropdown-button,
-.dropdown-button-fix {
-    background-color: transparent !important;
-    border-radius: 59px;
-    font-weight: 400;
-    white-space: nowrap;
-    border: rgba(148, 148, 148, 1) 1px solid !important;
-
-    .dropdown-toggle {
-        color: rgba(148, 148, 148, 1);
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        background-color: transparent !important;
-        border: none;
-        width: 100%;
-
-        & > div {
-            width: 100%;
-        }
-    }
-
-    .dropdown-menu {
-        width: 100%;
-        overflow: hidden;
-        border: none;
-        border-radius: 10px;
-        background-color: white !important;
-        transform: translate(0px, 38px) !important;
-        box-shadow: 0px 0px 54px 0px rgba(0, 0, 0, 0.37);
-        .event-name {
-            font-size: small;
-            color: rgba(85, 95, 126, 1);
-        }
-    }
-}
-
 .single-event-wrapper {
     .google-calendar-btn {
         background: rgba(33, 33, 33, 1) !important;
@@ -425,51 +301,6 @@
         line-height: 24px;
         padding: 0px 20px;
         text-align: left;
-    }
-
-    // Buttons
-    .dropdown-button,
-    .dropdown-button-fix {
-        background-color: transparent !important;
-        border-radius: 59px;
-        font-weight: 400;
-        white-space: nowrap;
-        border: rgba(148, 148, 148, 1) 1px solid !important;
-
-        .dropdown-toggle {
-            color: rgba(148, 148, 148, 1);
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            background-color: transparent !important;
-            border: none;
-            width: 100%;
-
-            & > div {
-                width: 100%;
-            }
-        }
-
-        .dropdown-menu {
-            width: 100%;
-            overflow: hidden;
-            border: none;
-            border-radius: 10px;
-            background-color: white !important;
-            transform: translate(0px, 38px) !important;
-            box-shadow: 0px 0px 54px 0px rgba(0, 0, 0, 0.37);
-            .event-name {
-                font-size: small;
-                color: rgba(85, 95, 126, 1);
-            }
-        }
-    }
-
-    .dropdown-button {
-        .dropdown-menu {
-            height: 254px;
-            overflow-y: auto;
-        }
     }
 
     // Calender Styles
@@ -701,6 +532,11 @@
             border: 0.8px solid rgba(233, 234, 240, 1);
             border-radius: 59px;
         }
+        .custom_select__placeholder {
+            color: rgba(148, 148, 148, 1) !important;
+            padding: 0px 10px;
+        }
+
         .custom_select__control:focus-visible {
             outline-color: rgba(146, 159, 165, 1) !important;
             color: rgba(71, 81, 86, 1);
@@ -719,6 +555,7 @@
             justify-content: start;
             cursor: pointer;
             align-items: center;
+            flex-wrap: wrap;
             gap: 0.5rem;
             border: 0.8px solid rgba(233, 234, 240, 1);
             border-radius: 10px;

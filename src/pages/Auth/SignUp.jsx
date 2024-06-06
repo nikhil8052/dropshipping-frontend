@@ -59,7 +59,7 @@ const Signup = () => {
     return (
         <React.Fragment>
             <Helmet>
-                <title>Sign Up | Drop Ship Academy</title>
+                <title>Sign Up | Dropship Academy</title>
             </Helmet>
             <div className="auth-main-wrapper">
                 <Container>

@@ -2,111 +2,16 @@
 @import '@constants/media.scss';
 
 .students-page {
-    .avatar {
-        width: 40px;
-        border-radius: 50%;
-        object-fit: cover;
-    }
-    .action-button {
-        width: 30px;
-        height: 30px;
-        cursor: pointer;
-        &:hover {
-            border: none !important;
-        }
+    .button-wrapper {
         display: flex;
-        justify-content: center;
-        align-items: center;
-        border: none;
-        .action-icon {
-            width: 20px;
-            height: 20px;
-        }
-    }
-    .edit-button {
-        transition: all 0.5s ease-in-out;
-        &:hover {
-            border: 1px solid $info-color;
-        }
-    }
-    .delete-button {
-        transition: all 0.5s ease-in-out;
-        &:hover {
-            border: 1px solid $danger-color;
-        }
-    }
-    .add-button {
-        @include pagination-gradient;
-        border-radius: 59px;
-        color: #ffff;
-        font-weight: 400;
-        white-space: nowrap;
-        border: none;
-    }
-    .filter-button {
-        background-color: transparent;
-        border-radius: 59px;
-        color: rgba(148, 148, 148, 1);
-        font-weight: 400;
-        white-space: nowrap;
-        border: rgba(148, 148, 148, 1) 1px solid !important;
-    }
-    .dropdown-button,
-    .dropdown-button-fix {
-        background-color: transparent !important;
-        border-radius: 59px;
-        font-weight: 400;
-        white-space: nowrap;
-        border: rgba(148, 148, 148, 1) 1px solid !important;
+        justify-content: end;
+        margin-bottom: 1rem;
+        flex-wrap: wrap;
+        gap: 1rem;
 
-        .dropdown-toggle {
-            color: rgba(148, 148, 148, 1);
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            background-color: transparent !important;
-            border: none;
-            width: 100%;
-
-            & > div {
-                width: 100%;
-            }
-        }
-
-        .dropdown-menu {
-            width: 100%;
-            overflow: hidden;
-            border: none;
-            border-radius: 10px;
-            box-shadow: 0px 0px 54px 0px rgba(0, 0, 0, 0.37);
-            background-color: white !important;
-
-            .avatar {
-                width: 20px;
-                border-radius: 50%;
-                object-fit: cover;
-                margin-right: 0.5rem;
-            }
-
-            .avatar-student {
-                width: 20px;
-                height: 20px;
-                border-radius: 50%;
-                object-fit: cover;
-                margin-right: 0.5rem;
-            }
-
-            .coach-name {
-                font-size: small;
-                color: rgba(85, 95, 126, 1);
-            }
-        }
-    }
-
-    .dropdown-button {
-        .dropdown-menu {
-            height: 254px;
-            overflow-y: auto;
+        @media (max-width: $large-screen) {
+            justify-content: start;
+            margin-top: 0.5rem;
         }
     }
 
@@ -142,99 +47,15 @@
         justify-content: start;
         background-color: red;
     }
-
-    // Toggle button
-    .toggle-button {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        border: none;
-        cursor: pointer;
-        &:hover {
-            border: none !important;
-        }
-        .form-check-input {
-            width: 60px;
-            height: 30px;
-            &:checked {
-                background-color: $info-color;
-                border-color: $info-color;
-            }
-        }
-    }
-
-    // Fields
-    .field-control,
-    .field-select-control {
-        font-family: Inter;
-        font-size: 14px;
-        font-weight: 400;
-        line-height: 14px;
-        text-align: left;
-        color: rgba(25, 28, 31, 1);
-        border: 0.8px solid rgba(233, 234, 240, 1);
-        border-radius: 50px;
-        padding: 10px 20px;
-        width: 100%;
-        margin-bottom: 0.5rem;
-    }
-    // on active or focus the border and color should be bold
-    .field-control:focus-visible,
-    .field-select-control:focus-visible {
-        outline-color: rgba(146, 159, 165, 1) !important;
-        border: 0.8px solid rgba(233, 234, 240, 1) !important;
-        color: rgba(71, 81, 86, 1);
-    }
-    .field-control::placeholder,
-    .field-select-control::placeholder {
-        color: rgba(146, 159, 165, 1);
-    }
 }
 
 .new-student-page-wrapper {
-    .title-top {
-        text-align: left;
-        color: rgba(95, 108, 114, 1);
-        font-family: Inter;
-        font-size: 14px;
-        font-weight: 400;
-        line-height: 20px;
-        text-align: left;
-        background: rgba(242, 244, 245, 1);
-        padding: 10px 20px;
-        border-radius: 12px;
-        margin-bottom: 0.5rem;
-        opacity: 0px;
-    }
     .new-student-page {
         height: calc(100vh - 14rem);
         overflow-y: scroll;
         box-shadow: 0px 0px 14.83px 0px rgba(0, 0, 0, 0.06);
         border-radius: 9px;
         // Fix the table height
-        .avatar {
-            width: 40px;
-            border-radius: 50%;
-            object-fit: cover;
-        }
-        .submit-btn,
-        .cancel-btn {
-            border-radius: 59px;
-            font-weight: 400;
-            white-space: nowrap;
-            border: none;
-        }
-        .submit-btn {
-            color: #ffff;
-            padding: 10px 30px;
-            @include pagination-gradient;
-        }
-        .cancel-btn {
-            padding: 10px 40px;
-            background-color: transparent !important;
-            color: black;
-            border: 1px solid rgba(233, 234, 240, 1);
-        }
 
         .new-student-title {
             font-family: Inter;
@@ -245,62 +66,20 @@
             color: rgba(0, 43, 91, 1);
         }
 
-        .field-label {
-            font-family: Inter;
-            font-size: 14px;
-            font-weight: 400;
-            line-height: 14px;
-            text-align: left;
-            text-transform: capitalize;
-            color: rgba(25, 28, 31, 1);
-        }
-        // Fields
-        .field-control,
-        .field-select-control {
-            font-family: Inter;
-            font-size: 14px;
-            font-weight: 400;
-            line-height: 14px;
-            text-align: left;
-            color: rgba(25, 28, 31, 1);
-            border: 0.8px solid rgba(233, 234, 240, 1);
-            border-radius: 50px;
-            padding: 10px 20px;
-            width: 100%;
-            margin-bottom: 0.5rem;
-        }
-        // on active or focus the border and color should be bold
-        .field-control:focus-visible,
-        .field-select-control:focus-visible {
-            outline-color: rgba(146, 159, 165, 1) !important;
-            border: 0.8px solid rgba(233, 234, 240, 1) !important;
-            color: rgba(71, 81, 86, 1);
-        }
-        .field-control::placeholder,
-        .field-select-control::placeholder {
-            color: rgba(146, 159, 165, 1);
-        }
-        // Select
-        .field-select-control {
-            appearance: none;
-            -webkit-appearance: none;
-            -moz-appearance: none;
-            background: url('data:image/svg+xml;utf8,<svg fill="rgba(146, 159, 165, 1)" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path d="M7 10l5 5 5-5z"/></svg>')
-                no-repeat;
-            background-position: right 20px top 50%;
-            background-size: 20px;
-            padding: 12px 20px;
-            cursor: pointer;
-            width: 100%;
-        }
         .custom-multi-select {
             .css-13cymwt-control {
                 border: 0.8px solid rgba(233, 234, 240, 1) !important;
-                border-radius: 50px !important;
+                // border-radius: 50px !important;
 
                 .css-1jqq78o-placeholder {
                     color: rgba(146, 159, 165, 1);
                     padding-left: 10px !important;
+                }
+
+                .css-1p3m7a8-multiValue {
+                    border-radius: 60px;
+                    padding: 0px 10px;
+                    background: rgba(242, 248, 255, 1);
                 }
             }
         }
@@ -322,10 +101,17 @@
         .custom_select__control {
             border: 0.8px solid rgba(233, 234, 240, 1);
             border-radius: 59px;
+            .custom_select__indicators {
+                display: none;
+            }
         }
         .custom_select__control:focus-visible {
             outline-color: rgba(146, 159, 165, 1) !important;
             color: rgba(71, 81, 86, 1);
+        }
+        .custom_select__placeholder {
+            color: rgba(148, 148, 148, 1) !important;
+            padding: 0px 10px;
         }
 
         .label-light {
@@ -340,6 +126,7 @@
             display: flex;
             justify-content: start;
             cursor: pointer;
+            flex-wrap: wrap;
             align-items: center;
             gap: 0.5rem;
             border: 0.8px solid rgba(233, 234, 240, 1);
@@ -374,14 +161,6 @@
                 border-radius: 50%;
                 object-fit: cover;
             }
-        }
-
-        .error {
-            color: $danger-color;
-            font-size: 12px;
-            font-weight: 400;
-            line-height: 14px;
-            text-align: left;
         }
     }
 

@@ -8,13 +8,18 @@ import { Helmet } from 'react-helmet';
 import axiosWrapper from '@utils/api';
 import toast from 'react-hot-toast';
 import TextExpand from '@components/TextExpand/TextExpand';
+import DateRenderer from '@components/DateFormatter/DateFormatter';
 import eyeIcon from '@icons/basil_eye-solid.svg';
 import { paymentsDummyData } from '../../../data/data';
+import downArrow from '@icons/down-arrow.svg';
+import '../../../styles/Common.scss';
 import '../../../styles/Payments.scss';
 
 const Payments = () => {
     const [showDeleteModal, setShowDeleteModal] = useState(false);
     const [selectedRowId, setSelectedRowId] = useState(null);
+    const [expanded, setExpanded] = useState(false);
+
     const [studentModal, setStudentModal] = useState({
         show: false,
         title: '',
@@ -111,6 +116,11 @@ const Payments = () => {
     const handleEventSelect = (eventKey, coach) => {
         setSelectedOption(coach);
     };
+    const toggleExpand = (event) => {
+        // Specifically in this component, we need to prevent the event from propagating to the parent element
+        event.stopPropagation();
+        setExpanded(!expanded);
+    };
 
     /*eslint-disable */
     const ActionsRenderer = (props) => (
@@ -118,11 +128,29 @@ const Payments = () => {
             <Row style={{ width: '100%' }}>
                 <Col lg={6} md={6} sm={6} className="d-flex justify-content-center align-items-center">
                     <div className="btn-light action-button delete-button" onClick={() => props.onViewClick()}>
-                        <img src={eyeIcon} className="action-icon" alt="action-icon" />
+                        <img src={eyeIcon} className="action-icon ms-3" alt="action-icon" />
                     </div>
                 </Col>
             </Row>
         </React.Fragment>
+    );
+    const NameRenderer = (props) => (
+        <div key={props.data.id}>
+            <div className="d-flex align-items-center gap-2">
+                <img src={props.data.avatarUrl} alt={props.data.name} className="avatar" />
+                <div
+                    style={{
+                        overflow: 'hidden',
+                        textOverflow: 'ellipsis',
+                        whiteSpace: expanded ? 'normal' : 'nowrap',
+                        cursor: 'pointer'
+                    }}
+                    onClick={toggleExpand}
+                >
+                    {props.value}
+                </div>
+            </div>
+        </div>
     );
     /*eslint-disable */
 
@@ -135,7 +163,7 @@ const Payments = () => {
             unSortIcon: true,
             wrapText: true,
             autoHeight: true,
-            cellRenderer: TextExpand,
+            cellRenderer: NameRenderer,
             resizable: false
         },
         {
@@ -179,13 +207,14 @@ const Payments = () => {
             filter: 'agSetColumnFilter',
             sortable: true,
             unSortIcon: true,
-            cellRenderer: TextExpand,
+            cellRenderer: DateRenderer,
             wrapText: true,
             autoHeight: true,
             resizable: false
         },
         {
             headerName: 'Actions',
+            maxWidth: 100,
             cellRenderer: ActionsRenderer,
             cellRendererParams: {
                 onEditClick: handleEditClick,
@@ -196,14 +225,14 @@ const Payments = () => {
             sortable: false,
             filter: false,
             resizable: false,
-            cellClass: ['d-flex', 'align-items-center']
+            cellClass: ['d-flex', 'align-items-center', 'justify-content-center']
         }
     ];
 
     return (
         <div className="payments-page">
             <Helmet>
-                <title>Coaches | Drop Ship Academy</title>
+                <title>Coaches | Dropship Academy</title>
             </Helmet>
             {studentModal.show && (
                 <Modal size="large" show={studentModal.show} onClose={handleCloseModal} title={studentModal.title}>
@@ -226,32 +255,29 @@ const Payments = () => {
                 onRowClicked={handleRowClick}
                 loading={loading}
                 children={
-                    <Row>
-                        <Col>
-                            <div className="d-flex justify-content-end">
-                                <DropdownButton
-                                    title={
-                                        <div className="d-flex justify-content-between w-100">
-                                            <span className="ms-2">{selectedOption}</span>
-                                        </div>
-                                    }
-                                    defaultValue={selectedOption}
-                                    className="dropdown-button-fix w-50 d-flex justify-content-even align-items-center"
+                    <div className="payments-button-wrapper">
+                        <DropdownButton
+                            title={
+                                <div className="d-flex justify-content-between align-items-center gap-2">
+                                    <span>{selectedOption}</span>
+                                    <img className="ms-3" src={downArrow} alt="Down arrow" />
+                                </div>
+                            }
+                            defaultValue={selectedOption}
+                            className="dropdown-button"
+                        >
+                            {['Paid', 'Overdue', 'HT', 'LT'].map((events) => (
+                                <Dropdown.Item
+                                    onClick={(e) => handleEventSelect(e, events)}
+                                    key={events}
+                                    eventKey={events}
+                                    className="my-1 ms-2"
                                 >
-                                    {['Paid', 'Overdue', 'HT', 'LT'].map((events) => (
-                                        <Dropdown.Item
-                                            onClick={(e) => handleEventSelect(e, events)}
-                                            key={events}
-                                            eventKey={events}
-                                            className="my-1 ms-2"
-                                        >
-                                            <span className="payment-name"> {events}</span>
-                                        </Dropdown.Item>
-                                    ))}
-                                </DropdownButton>
-                            </div>
-                        </Col>
-                    </Row>
+                                    <span className="payment-name"> {events}</span>
+                                </Dropdown.Item>
+                            ))}
+                        </DropdownButton>
+                    </div>
                 }
             />
         </div>

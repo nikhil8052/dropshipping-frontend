@@ -276,14 +276,14 @@ const StudentDashboard = () => {
     return (
         <div className="dashboard-page">
             <Helmet>
-                <title>Dashboard | Drop Ship Academy</title>
+                <title>Dashboard | Dropship Academy</title>
             </Helmet>
             <Row>
                 <Col>
                     <div className="d-flex justify-content-end">
                         <Button
                             variant="primary"
-                            className="meeting-btn"
+                            className="meeting-btn me-2"
                             onClick={() => navigate('/student/request-meeting')}
                         >
                             Request for meeting

@@ -5,16 +5,18 @@ import Modal from '@components/Modal/Modal';
 import ConfirmationBox from '@components/ConfirmationBox/ConfirmationBox';
 import { Helmet } from 'react-helmet';
 import axiosWrapper from '@utils/api';
-import { toast } from 'react-toastify';
+import toast from 'react-hot-toast';
 import TextExpand from '@components/TextExpand/TextExpand';
 import editIcon from '@icons/edit_square.svg';
 import deleteIcon from '@icons/trash-2.svg';
+import downArrow from '@icons/down-arrow.svg';
 import add from '@icons/add_white.svg';
 import { studentDummyData, coachDummyData } from '../../../data/data';
 import { useNavigate } from 'react-router-dom';
 import Roadmap from './Roadmap/Roadmap';
 import { useSelector } from 'react-redux';
 import '../../../styles/Students.scss';
+import '../../../styles/Common.scss';
 
 const Students = () => {
     const [showDeleteModal, setShowDeleteModal] = useState(false);
@@ -126,7 +128,7 @@ const Students = () => {
                 'delete',
                 `${import.meta.env.VITE_JSONPLACEHOLDER}/posts/${selectedRowId}}`
             );
-            toast.success(data?.message || 'Item deleted successfully');
+            toast.success(data?.message || 'Student deleted successfully');
         } catch (error) {
             return;
         } finally {
@@ -358,7 +360,7 @@ const Students = () => {
     return (
         <div className="students-page">
             <Helmet>
-                <title>Coaches | Drop Ship Academy</title>
+                <title>Coaches | Dropship Academy</title>
             </Helmet>
             {coursesModal.show && (
                 <Modal size="md" show={coursesModal.show} onClose={handleCloseModal} title={coursesModal.title}>
@@ -372,7 +374,7 @@ const Students = () => {
                     onClose={handleCloseDeleteModal}
                     loading={loadingCRUD}
                     title="Delete Student"
-                    body="Are you sure you want to delete this Student ?"
+                    body="Are you sure you want to delete this Student?"
                     onConfirm={handleDeleteSubmit}
                     customFooterClass="custom-footer-class"
                     nonActiveBtn="cancel-button"
@@ -386,85 +388,60 @@ const Students = () => {
                 onRowClicked={handleRowClick}
                 loading={loading}
                 children={
-                    <Row className="mb-3">
+                    <div className="button-wrapper">
                         {role === 'admin' && (
-                            <Col
-                                xxl={4}
-                                xl={6}
-                                lg={8}
-                                md={4}
-                                sm={6}
-                                xs={12}
-                                className="mb-2 mb-md-0 mt-md-2 mt-sm-2 mt-xs-2 ms-auto"
-                            >
-                                <DropdownButton
-                                    title={
-                                        <div className="d-flex justify-content-between align-items-center">
-                                            <span className="ms-2">{selectedCoach}</span>
-                                        </div>
-                                    }
-                                    defaultValue={selectedCoach}
-                                    className="dropdown-button coach-btn w-100"
-                                >
-                                    <Dropdown.Header>All Coaches ({coachDummyData.length})</Dropdown.Header>
-                                    {coachDummyData.map((coach) => (
-                                        <Dropdown.Item
-                                            onClick={(e) => handleCoachSelect(e, coach)}
-                                            key={coach.id}
-                                            eventKey={coach.id}
-                                            className="my-1 ms-2 w-100"
-                                        >
-                                            <img src={coach.avatarUrl} className="avatar-student" alt={coach.name} />
-                                            <span className="coach-name">{coach.name}</span>
-                                        </Dropdown.Item>
-                                    ))}
-                                </DropdownButton>
-                            </Col>
-                        )}
-                        <Col
-                            xxl={2}
-                            xl={6}
-                            lg={4}
-                            md={4}
-                            sm={6}
-                            xs={12}
-                            className="mb-2 mb-md-0 mt-md-2 mt-sm-2 mt-xs-2 ms-auto"
-                        >
                             <DropdownButton
                                 title={
-                                    <div className="d-flex justify-content-between align-items-center">
-                                        <span className="ms-2">{selectedOption}</span>
+                                    <div className="d-flex justify-content-between align-items-center gap-2">
+                                        <span>{selectedCoach}</span>
+                                        <img src={downArrow} alt="Down arrow" />
                                     </div>
                                 }
-                                defaultValue={selectedOption}
-                                className="dropdown-button-fix w-100"
+                                defaultValue={selectedCoach}
+                                className="dropdown-button"
                             >
-                                {['All', 'HT', 'LT'].map((option) => (
+                                <Dropdown.Header>All Coaches ({coachDummyData.length})</Dropdown.Header>
+                                {coachDummyData.map((coach) => (
                                     <Dropdown.Item
-                                        key={option}
-                                        onClick={() => handleOptionChange(option)}
-                                        eventKey={option}
+                                        onClick={(e) => handleCoachSelect(e, coach)}
+                                        key={coach.id}
+                                        eventKey={coach.id}
                                         className="my-1 ms-2"
                                     >
-                                        <span className="coach-name">{option}</span>
+                                        <img src={coach.avatarUrl} className="avatar-student" alt={coach.name} />
+                                        <span className="coach-name">{coach.name}</span>
                                     </Dropdown.Item>
                                 ))}
                             </DropdownButton>
-                        </Col>
-                        <Col
-                            xxl={4}
-                            xl={6}
-                            lg={8}
-                            md={4}
-                            sm={12}
-                            xs={12}
-                            className="mt-xxl-2 mt-xl-2 mt-lg-2 mt-md-2 ms-auto"
+                        )}
+
+                        <DropdownButton
+                            title={
+                                <div className="d-flex justify-content-between align-items-center gap-2">
+                                    <span>{selectedOption}</span>
+                                    <img src={downArrow} alt="Down arrow" />
+                                </div>
+                            }
+                            defaultValue={selectedOption}
+                            className="dropdown-button-fix"
                         >
-                            <Button className="add-button w-100" onClick={handleCreateClick}>
-                                <img src={add} alt="" /> <span className="ms-2">Add New Student</span>
-                            </Button>
-                        </Col>
-                    </Row>
+                            {['All', 'HT', 'LT'].map((option) => (
+                                <Dropdown.Item
+                                    key={option}
+                                    onClick={() => handleOptionChange(option)}
+                                    eventKey={option}
+                                    className="my-1 ms-2"
+                                >
+                                    <span className="coach-name">{option}</span>
+                                </Dropdown.Item>
+                            ))}
+                        </DropdownButton>
+
+                        <Button className="add-button" onClick={handleCreateClick}>
+                            <img className="mb-1" src={add} alt="add button" />
+                            <span className="ms-1">Add New Student</span>
+                        </Button>
+                    </div>
                 }
             />
         </div>
