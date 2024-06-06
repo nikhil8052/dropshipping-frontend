@@ -48,7 +48,6 @@ const LineChart = ({
                                             <Form.Select
                                                 className="custom-form-select"
                                                 aria-label="Select Time Period"
-                                                onChange={(e) => setChartKey(e.target.value)}
                                                 style={{ width: 'auto', display: 'inline-block' }}
                                             >
                                                 {timePeriods.map((period) => (

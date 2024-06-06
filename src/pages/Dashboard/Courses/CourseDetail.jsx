@@ -72,8 +72,15 @@ const CourseDetail = () => {
                                             All Students
                                         </Button>
                                     </Link>
-
-                                    <Button type="button" className="edit-btn">
+                                    <Button
+                                        onClick={() =>
+                                            navigate(`/${role}/courses/new`, {
+                                                state: { isEdit: true }
+                                            })
+                                        }
+                                        type="button"
+                                        className="edit-btn"
+                                    >
                                         Edit
                                     </Button>
                                 </>
