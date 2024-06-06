@@ -1,16 +1,14 @@
-import { useSelector, useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { Button, Col, Row, Spinner } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import Input from '@components/Input/Input';
 import * as Yup from 'yup';
 import { Form as FormikForm, Formik } from 'formik';
-import { loginWithoutAPI } from '@redux/auth/auth_slice';
 import './auth.scss';
 import LoginLeftSec from './LoginLeftSec';
 import Footer from './Footer';
 import toast from 'react-hot-toast';
 const VerificationCode = () => {
-    const dispatch = useDispatch();
     const navigate = useNavigate();
     const { loading } = useSelector((state) => state?.auth);
     const inititialValues = {
@@ -23,7 +21,6 @@ const VerificationCode = () => {
 
     const handleSubmit = async (values, { setSubmitting }) => {
         try {
-            dispatch(loginWithoutAPI(values));
             navigate('/reset-password');
             setSubmitting(false);
         } catch (error) {
