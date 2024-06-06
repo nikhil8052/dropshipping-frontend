@@ -8,7 +8,7 @@ import taskAlt from '@icons/task_alt.svg';
 import CaretRight from '@icons/CaretRight.svg';
 import Tab from 'react-bootstrap/Tab';
 import Tabs from 'react-bootstrap/Tabs';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import '../../../styles/Courses.scss';
 
@@ -16,7 +16,8 @@ const AddNewCourse = () => {
     const userInfo = useSelector((state) => state?.auth?.userInfo);
     const navigate = useNavigate();
     const role = userInfo?.role;
-
+    const location = useLocation();
+    const editMode = location.state?.isEdit || false;
     const [activeKey, setActiveKey] = useState('basic-information');
 
     const handleTabChange = (key) => {
@@ -29,7 +30,7 @@ const AddNewCourse = () => {
                 <span onClick={() => navigate(`/${role}/courses`)} style={{ cursor: 'pointer' }}>
                     Courses <img src={CaretRight} alt=">" />{' '}
                 </span>
-                Add New Course
+                {editMode ? 'Edit New Course' : 'Add New Course'}
             </div>
             <Tabs
                 fill
