@@ -11,6 +11,8 @@ import pdfExport from '@icons/picture_as_pdf.svg';
 import { visualizeCsv } from '../../../../data/data';
 import ProductDetail from './ProductDetail';
 import { FileUploader } from 'react-drag-drop-files';
+import DateRenderer from '@components/DateFormatter/DateFormatter';
+
 const fileTypes = ['csv'];
 
 const StudentsTrainingProduct = ({ studentId }) => {
@@ -124,7 +126,7 @@ const StudentsTrainingProduct = ({ studentId }) => {
             unSortIcon: true,
             wrapText: true,
             autoHeight: true,
-            cellRenderer: TextExpand,
+            cellRenderer: DateRenderer,
             resizable: false
         },
         {

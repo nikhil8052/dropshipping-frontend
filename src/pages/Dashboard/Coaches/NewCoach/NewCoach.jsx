@@ -11,6 +11,7 @@ import { coachDummyData, studentDummyData, countryList, regions } from '../../..
 import toast from 'react-hot-toast';
 import { useLocation, useNavigate } from 'react-router-dom';
 import ImageCropper from '../../../../components/ImageMask/ImageCropper';
+import UploadSimple from '@icons/UploadSimple.svg';
 import RichTextEditor from '@components/RichTextEditor/RichTextEditor';
 import Input from '@components/Input/Input';
 import '../../../../styles/Coaches.scss';
@@ -205,19 +206,31 @@ const NewCoach = () => {
                                                                 <span>{coachPhoto.name}</span>
                                                             </div>
                                                         ) : (
-                                                            <div
-                                                                className="image-preview"
-                                                                onClick={(e) => {
-                                                                    e.preventDefault();
-                                                                    inputRef.current.click();
-                                                                }}
-                                                            >
-                                                                <img src={imagePreview} alt="" />
+                                                            <div className="image-preview">
+                                                                <img
+                                                                    onClick={(e) => {
+                                                                        e.preventDefault();
+                                                                        inputRef.current.click();
+                                                                    }}
+                                                                    src={imagePreview}
+                                                                    alt=""
+                                                                />
                                                                 <span>
                                                                     Upload Coach Picture here
                                                                     <br />
                                                                     Supported formats:{' '}
                                                                     <strong>.jpg, .jpeg, or .png</strong>
+                                                                    <br />
+                                                                    <Button
+                                                                        onClick={(e) => {
+                                                                            e.preventDefault();
+                                                                            inputRef.current.click();
+                                                                        }}
+                                                                        className="upload-image-btn"
+                                                                    >
+                                                                        Upload Image{' '}
+                                                                        <img src={UploadSimple} alt="Upload Btn" />
+                                                                    </Button>
                                                                 </span>
                                                             </div>
                                                         )}

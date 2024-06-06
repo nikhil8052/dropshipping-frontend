@@ -141,7 +141,6 @@
     color: black !important;
     border: 1px solid rgba(233, 234, 240, 1) !important;
 }
-
 .filter-button {
     background-color: transparent;
     border-radius: 59px;
@@ -316,6 +315,7 @@
 
 // Media styles
 @media (max-width: $medium-screen) {
-    .add-button {
+    .responsive-btn {
+        margin-top: 0.5rem !important;
     }
 }

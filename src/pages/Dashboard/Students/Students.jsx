@@ -5,7 +5,7 @@ import Modal from '@components/Modal/Modal';
 import ConfirmationBox from '@components/ConfirmationBox/ConfirmationBox';
 import { Helmet } from 'react-helmet';
 import axiosWrapper from '@utils/api';
-import { toast } from 'react-toastify';
+import toast from 'react-hot-toast';
 import TextExpand from '@components/TextExpand/TextExpand';
 import editIcon from '@icons/edit_square.svg';
 import deleteIcon from '@icons/trash-2.svg';
@@ -128,7 +128,7 @@ const Students = () => {
                 'delete',
                 `${import.meta.env.VITE_JSONPLACEHOLDER}/posts/${selectedRowId}}`
             );
-            toast.success(data?.message || 'Item deleted successfully');
+            toast.success(data?.message || 'Student deleted successfully');
         } catch (error) {
             return;
         } finally {

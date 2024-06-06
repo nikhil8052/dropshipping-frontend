@@ -10,6 +10,7 @@ import uploadSimple from '@icons/UploadSimpleBack.svg';
 import pdfExport from '@icons/picture_as_pdf.svg';
 import { invoicesData } from '../../../data/data';
 import { FileUploader } from 'react-drag-drop-files';
+import DateRenderer from '@components/DateFormatter/DateFormatter';
 const fileTypes = ['csv'];
 
 const Invoices = ({ studentId }) => {
@@ -106,7 +107,7 @@ const Invoices = ({ studentId }) => {
             wrapText: true,
             autoHeight: true,
             resizable: false,
-            cellRenderer: TextExpand
+            cellRenderer: DateRenderer
         },
         {
             headerName: 'Amount',

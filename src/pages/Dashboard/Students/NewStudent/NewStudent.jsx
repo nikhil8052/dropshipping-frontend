@@ -8,6 +8,7 @@ import { Container, Row, Col, Button, DropdownButton, Dropdown } from 'react-boo
 import 'react-quill/dist/quill.snow.css';
 import { coachingTrajectory, countryList, regions, studentDummyData, studentProducts } from '../../../../data/data';
 import toast from 'react-hot-toast';
+import UploadSimple from '@icons/UploadSimple.svg';
 import { useLocation, useNavigate } from 'react-router-dom';
 import Select from 'react-select';
 import RoadMapList from '../Roadmap/RoadmapList';
@@ -209,19 +210,31 @@ const NewStudent = () => {
                                                                 </div>
                                                             </div>
                                                         ) : (
-                                                            <div
-                                                                className="image-preview"
-                                                                onClick={(e) => {
-                                                                    e.preventDefault();
-                                                                    inputRef.current.click();
-                                                                }}
-                                                            >
-                                                                <img src={imagePreview} alt="" />
+                                                            <div className="image-preview">
+                                                                <img
+                                                                    onClick={(e) => {
+                                                                        e.preventDefault();
+                                                                        inputRef.current.click();
+                                                                    }}
+                                                                    src={imagePreview}
+                                                                    alt=""
+                                                                />
                                                                 <span>
                                                                     Upload Student Picture here
                                                                     <br />
                                                                     Supported formats:{' '}
                                                                     <strong>.jpg, .jpeg, or .png</strong>
+                                                                    <br />
+                                                                    <Button
+                                                                        onClick={(e) => {
+                                                                            e.preventDefault();
+                                                                            inputRef.current.click();
+                                                                        }}
+                                                                        className="upload-image-btn"
+                                                                    >
+                                                                        Upload Image{' '}
+                                                                        <img src={UploadSimple} alt="Upload Btn" />
+                                                                    </Button>
                                                                 </span>
                                                             </div>
                                                         )}

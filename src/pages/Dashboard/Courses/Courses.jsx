@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Row, Col, InputGroup, Form, Button, DropdownButton, Dropdown } from 'react-bootstrap';
 import CourseCard from '../../../components/CourseCard/CourseCard';
 import eventImg from '../../../assets/images/Event-Image.svg';
@@ -16,6 +16,7 @@ const Courses = () => {
     const [selectedEvent, setSelectedEvent] = useState('Your Courses');
     const [yourCourses, setYourCourses] = useState(false);
     const [currentPage, setCurrentPage] = useState(1);
+    const [filteredCourses, setFilteredCourses] = useState([]);
 
     const navigate = useNavigate();
     const userInfo = useSelector((state) => state?.auth?.userInfo);
@@ -107,7 +108,7 @@ const Courses = () => {
     // Get current items for the current page
     const indexOfLastItem = currentPage * itemsPerPage;
     const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-    const currentItems = courseCards.slice(indexOfFirstItem, indexOfLastItem);
+    const currentItems = filteredCourses.slice(indexOfFirstItem, indexOfLastItem);
 
     const handleCreateClick = () => {
         if (role === 'admin') {
@@ -125,6 +126,22 @@ const Courses = () => {
             setYourCourses(true);
         }
     };
+
+    useEffect(() => {
+        setFilteredCourses(courseCards);
+    }, []);
+
+    useEffect(() => {
+        const handleSearch = setTimeout(() => {
+            const filtered = courseCards.filter((course) => course.title.toLowerCase().includes(search.toLowerCase()));
+            setFilteredCourses(filtered);
+            setCurrentPage(1);
+        }, 300);
+
+        return () => {
+            clearTimeout(handleSearch);
+        };
+    }, [search]);
 
     return (
         <>
