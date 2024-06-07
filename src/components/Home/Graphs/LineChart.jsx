@@ -49,6 +49,7 @@ const LineChart = ({
                                                 className="custom-form-select"
                                                 aria-label="Select Time Period"
                                                 style={{ width: 'auto', display: 'inline-block' }}
+                                                onChange={(e) => handleFilterChange(e.target.value)}
                                             >
                                                 {timePeriods.map((period) => (
                                                     <option key={period.value} value={period.value}>
