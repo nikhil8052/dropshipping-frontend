@@ -24,6 +24,7 @@ const Dashboard = () => {
     const [dataSet, setDataSet] = useState(false);
     const isSmallScreen = useIsSmallScreen();
     const [selectedEvent, setSelectedEvent] = useState(null);
+    const [currentFilter, setCurrentFilter] = useState('monthly');
 
     useEffect(() => {
         return () => {
@@ -32,7 +33,7 @@ const Dashboard = () => {
             }
         };
     }, []);
-    // Set the height of the chart on tab change
+
     useEffect(() => {
         if (chartKey) {
             isSmallScreen ? setChartHeight(200) : setChartHeight(80);
@@ -83,17 +84,21 @@ const Dashboard = () => {
             value: '2,318'
         }
     ];
-    const sampleData = [5000, 22200, 6000, 20000, 7500, 28000, 8500];
+
+    // Sample data for different time periods
+    const monthlyData = [5000, 22200, 6000, 20000, 7500, 28000, 8500];
+    const weeklyData = [1000, 5000, 3000, 4000, 2000, 7000, 3500];
+    const yearlyData = [12000, 15000, 13000, 19000, 14000, 27000, 15500];
 
     // Line Chart data
-    const data = {
+    const generateChartData = (data) => ({
         datasets: {
             students: {
                 labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul'],
                 datasets: [
                     {
                         label: 'Total Students',
-                        data: sampleData,
+                        data: data,
                         fill: true,
                         backgroundColor: 'rgba(133, 193, 233, 0.5)',
                         borderColor: 'rgba(0, 0, 0, 0.4)',
@@ -106,7 +111,7 @@ const Dashboard = () => {
                 datasets: [
                     {
                         label: 'Total Coaches',
-                        data: sampleData,
+                        data: data,
                         fill: true,
                         backgroundColor: 'rgba(233, 193, 133, 0.5)', // Different color
                         borderColor: 'rgba(0, 0, 0, 0.4)', // Another color
@@ -115,7 +120,9 @@ const Dashboard = () => {
                 ]
             }
         }
-    };
+    });
+
+    const data = generateChartData(monthlyData);
 
     const coachData = {
         datasets: [
@@ -126,11 +133,12 @@ const Dashboard = () => {
                 fill: true,
                 backgroundColor: 'yellow',
                 lineTension: 0.4,
-                data: sampleData,
+                data: monthlyData,
                 borderWidth: 1
             }
         ]
     };
+
     const graphOptions = {
         scales: {
             x: {
@@ -208,8 +216,22 @@ const Dashboard = () => {
     const handleEventClick = (event) => {
         const meeting = meetings.find((meeting) => meeting.id === event.id);
         setSelectedEvent(meeting);
-        // We can define a state later for the selected event
         setShowModal(true);
+    };
+
+    const handleFilterChange = (filter) => {
+        setCurrentFilter(filter);
+
+        let newData;
+        if (filter === 'monthly') {
+            newData = generateChartData(monthlyData);
+        } else if (filter === 'weekly') {
+            newData = generateChartData(weeklyData);
+        } else if (filter === 'yearly') {
+            newData = generateChartData(yearlyData);
+        }
+
+        setLineGraphData(newData);
     };
 
     return (
@@ -242,6 +264,8 @@ const Dashboard = () => {
                             chartHeight={chartHeight}
                             dataSet={dataSet}
                             role={role}
+                            handleFilterChange={handleFilterChange}
+                            currentFilter={currentFilter}
                         />
                     )}
                 </Col>
@@ -250,19 +274,6 @@ const Dashboard = () => {
                 <Col>
                     <Card header={true} title="Events" customCardClass="events-card">
                         <BigCalender onEventClick={(event) => handleEventClick(event)} events={events} />
-                        {/* <EventDetailsModal
-                            show={showModal}
-                            onHide={() => setShowModal(false)}
-                            event={{
-                                coachName: 'Ada Guyen',
-                                coachInitials: 'AG',
-                                meetingId: '226326',
-                                password: '4K22MJ7',
-                                description: 'Detailed meeting about the new course descriptions, their time frame.',
-                                dateTime: 'Feb 2, 2024 19:28 Central Standard Time (GMT-6)',
-                                attendeesCount: '15'
-                            }}
-                        /> */}
                         <Modal
                             show={showModal}
                             onHide={() => setShowModal(false)}
