@@ -297,7 +297,7 @@ const Coaches = () => {
                 children={
                     <div className="d-flex justify-content-end">
                         <Button
-                            className="add-button  responsive-btn btn btn-light btn-block"
+                            className="add-button responsive-btn btn btn-light btn-block"
                             onClick={handleCreateClick}
                         >
                             <img src={add} alt="" /> <span className="ms-2">Add New Coach</span>

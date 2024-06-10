@@ -184,6 +184,13 @@
         width: 270px;
     }
 }
+.back-btn {
+    background-color: transparent !important;
+    border: none !important;
+    color: #000907 !important;
+    width: 473px;
+    height: 55px;
+}
 .auth-left-bg-column {
     background-image: url('@images/coaching-dashboard-transparent.png');
     background-size: cover;

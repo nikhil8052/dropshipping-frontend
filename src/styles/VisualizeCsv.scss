@@ -220,3 +220,16 @@
         }
     }
 }
+
+.sample-file-btn {
+    background-color: transparent !important;
+    border: none !important;
+    color: #495057 !important;
+    display: flex;
+    justify-content: end;
+    align-items: center;
+    &:hover {
+        color: $primary-color !important;
+        text-decoration: underline !important;
+    }
+}

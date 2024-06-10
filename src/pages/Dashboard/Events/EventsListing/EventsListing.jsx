@@ -6,7 +6,9 @@ import { meetings } from '../../../../data/data';
 import MeetingCard from '@components/MeetingCard/MeetingCard';
 import Pagination from '@components/Pagination/Pagination';
 import { useNavigate } from 'react-router-dom';
+import downArrow from '@icons/down-arrow.svg';
 import '../../../../styles/Events.scss';
+import '../../../../styles/Common.scss';
 
 const EventsListing = () => {
     const [selectedOption, setSelectedOption] = useState('All Events');
@@ -67,12 +69,13 @@ const EventsListing = () => {
                 </Col>
                 <Col lg={4}>
                     <div className="d-flex justify-content-end">
-                        <Button className="google-calendar-btn">
+                        <Button className="google-calendar-btn responsive-btn">
                             <img src={calendar} alt="calendar" className="me-2" /> Google Calendar
                         </Button>
-                        <Dropdown className="dropdown-button-fix ms-3">
+                        <Dropdown className="dropdown-button-fix ms-3 responsive-btn">
                             <Dropdown.Toggle variant="success" id="dropdown-basic">
                                 <span className="me-2">{selectedOption}</span>
+                                <img src={downArrow} alt="Down arrow" />
                             </Dropdown.Toggle>
 
                             <Dropdown.Menu>

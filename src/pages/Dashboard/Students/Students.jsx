@@ -212,7 +212,8 @@ const Students = () => {
                         overflow: 'hidden',
                         textOverflow: 'ellipsis',
                         whiteSpace: expanded ? 'normal' : 'nowrap',
-                        cursor: 'pointer'
+                        cursor: 'pointer',
+                        maxWidth: '120px'
                     }}
                     onClick={toggleExpand}
                 >

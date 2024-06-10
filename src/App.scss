@@ -191,3 +191,21 @@ input[type='number']::-webkit-inner-spin-button {
 input[type='number'] {
     -moz-appearance: textfield;
 }
+
+/* General styling for the radio input */
+input[type='radio'] {
+    background-color: $info-color !important;
+    border-color: $info-color !important;
+}
+
+/* Styling for the unchecked state */
+input[type='radio']:not(:checked) {
+    background-color: white !important;
+    border-color: $info-color !important;
+}
+
+/* Styling for the checked state */
+input[type='radio']:checked {
+    background-color: $info-color !important;
+    border-color: white !important;
+}

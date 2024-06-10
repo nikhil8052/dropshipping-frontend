@@ -68,6 +68,11 @@
         .event-name {
             font-size: small;
             color: rgba(85, 95, 126, 1);
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            display: inline-block;
+            max-width: 80px;
         }
     }
 
@@ -271,50 +276,8 @@
     text-align: left;
 }
 
-// Image Preview Styles
-.image-preview {
-    display: flex;
-    justify-content: start;
-    cursor: pointer;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: 0.5rem;
-    border: 0.8px solid rgba(233, 234, 240, 1);
-    border-radius: 10px;
-    padding: 20px 10px;
-    color: rgba(110, 116, 133, 1);
-    // Events screen btn
-    .upload-image-btn {
-        border-radius: 59px;
-        font-weight: 400;
-        white-space: nowrap;
-        border: none;
-        padding: 10px 30px;
-        background: rgba(204, 236, 247, 1);
-        color: rgba(1, 158, 216, 1);
-        margin-top: 1rem;
-    }
-}
-
-.image-renderer {
-    display: flex;
-    justify-content: start;
-    align-items: center;
-    gap: 1.5rem;
-    padding: 20px 10px;
-    border: 0.8px solid rgba(233, 234, 240, 1);
-    border-radius: 10px;
-    color: rgb(38, 54, 99);
-    img {
-        width: 85px;
-        height: 85px;
-        border-radius: 50%;
-        object-fit: cover;
-    }
-}
-
 // Media styles
-@media (max-width: $medium-screen) {
+@media (max-width: $large-screen) {
     .responsive-btn {
         margin-top: 0.5rem !important;
     }

@@ -203,7 +203,7 @@
     .image-preview {
         display: flex;
         justify-content: start;
-        flex-wrap: wrap;
+        height: 180px;
         cursor: pointer;
         align-items: center;
         gap: 1.5rem;
@@ -216,6 +216,15 @@
             img {
                 max-width: 140px;
             }
+        }
+        @media (max-width: $x-large-screen) {
+            flex-wrap: wrap;
+            height: auto;
+        }
+        @media (max-width: $small-screen) {
+            flex-wrap: wrap;
+            height: auto;
+            justify-content: center;
         }
         .image-preview-text {
             display: flex;
@@ -432,6 +441,7 @@
         display: flex;
         justify-content: space-between;
         align-items: center;
+        flex-wrap: wrap;
         font-family: $font-primary;
         font-size: $font-size-medium;
         span {

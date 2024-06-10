@@ -33,12 +33,6 @@ const Login = () => {
         password: Yup.string()
             .required('Password is required')
             .trim()
-            .min(4, 'Password must be at least 4 characters long')
-            .max(20, 'Password must be at most 20 characters long')
-            .matches(
-                /^(?=.*[A-Za-z])(?=.*\d)(?=.*[ !"#$%&'()*+,-./:;<=>?@[\\\]^_`{|}~¡¢£¤¥¦§¨©ª«¬®ˉ°±²³´µ¶¸¹º»¼½¾¿ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖ×ØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõö÷øùúûüýþÿ])[A-Za-z\d !"#$%&'()*+,-./:;<=>?@[\\\]^_`{|}~¡¢£¤¥¦§¨©ª«¬®ˉ°±²³´µ¶¸¹º»¼½¾¿ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖ×ØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõö÷øùúûüýþÿ]{4,20}$/,
-                'Password must contain letters, numbers, and special characters'
-            )
             .test('not-only-spaces', 'Password cannot be only spaces', (value) => /\S/.test(value))
     });
 
