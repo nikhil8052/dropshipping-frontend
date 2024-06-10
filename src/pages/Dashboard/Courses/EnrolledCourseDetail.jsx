@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import '../../../styles/Courses.scss';
 import { useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
@@ -16,6 +16,8 @@ const EnrolledCourseDetail = () => {
     const role = userInfo?.role;
     const navigate = useNavigate();
     const [search, setSearch] = useState('');
+    const [filteredLectures, setFilteredLectures] = useState([]);
+
     const onFilterTextChange = (event) => {
         setSearch(event.target.value);
     };
@@ -48,6 +50,24 @@ const EnrolledCourseDetail = () => {
             setSubmitting(false);
         }
     };
+
+    useEffect(() => {
+        setFilteredLectures(lectures);
+    }, []);
+
+    useEffect(() => {
+        const handleSearch = setTimeout(() => {
+            const filtered = lectures.filter((lecture) => {
+                const searchCriteria = lecture.lectureName.toLowerCase() || lecture.lectureDescription.toLowerCase();
+                return searchCriteria.includes(search.toLowerCase());
+            });
+            setFilteredLectures(filtered);
+        }, 300);
+
+        return () => {
+            clearTimeout(handleSearch);
+        };
+    }, [search]);
 
     return (
         <>
@@ -98,7 +118,7 @@ const EnrolledCourseDetail = () => {
 
                                         <div>
                                             <div className="lecture-btns">
-                                                {lectures.map((lecture, index) => (
+                                                {filteredLectures.map((lecture, index) => (
                                                     <Button
                                                         type="button"
                                                         key={index}

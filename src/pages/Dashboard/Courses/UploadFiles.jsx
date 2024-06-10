@@ -264,15 +264,13 @@ const UploadFiles = ({ onNext, onBack }) => {
                                                         <div className="image-preview">
                                                             <img src={thumbnail} alt="thumbnail" />
                                                             <div className="image-preview-text">
-                                                                <span>
-                                                                    Upload your course Thumbnail here.
-                                                                    <br />
-                                                                    <strong>Important guidelines:</strong>
-                                                                    1200x800 pixels or 12:8 Ratio.
-                                                                    <br />
-                                                                    Supported format:
-                                                                    <strong>.jpg, .jpeg, or .png</strong>
-                                                                </span>
+                                                                <div>
+                                                                    <p>Upload your course Thumbnail here.</p>
+                                                                    <p>
+                                                                        Supported format:
+                                                                        <strong>.jpg, .jpeg, or .png</strong>
+                                                                    </p>
+                                                                </div>
 
                                                                 <Button
                                                                     type="submit"
@@ -438,7 +436,7 @@ const UploadFiles = ({ onNext, onBack }) => {
                                 </Row>
                                 <Row>
                                     <Col>
-                                        <div className="mt-3 d-flex justify-content-between gap-3">
+                                        <div className="mt-3 d-flex justify-content-between gap-3 flex-wrap">
                                             <Button
                                                 type="button"
                                                 className="cancel-btn"

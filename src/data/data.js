@@ -1331,7 +1331,7 @@ export const eventsDummyData = [
     {
         id: 1,
         topic: 'Team Meeting',
-        joinLink: 'https://toom.us/123456asdsadasd213213213123123123213123123',
+        joinLink: 'https://zoom.us/123456asdsadasd213213213123123123213123123',
         attendees: 20,
         dateTime: 'Apr 24, 2024 09:00',
         actions: '',
@@ -1342,7 +1342,7 @@ export const eventsDummyData = [
     {
         id: 2,
         topic: 'Project Kickoff',
-        joinLink: 'https://toom.us/789012',
+        joinLink: 'https://zoom.us/789012',
         attendees: 15,
         dateTime: 'Apr 25, 2024 10:30',
         actions: '',
@@ -1353,7 +1353,7 @@ export const eventsDummyData = [
     {
         id: 3,
         topic: 'Training Session',
-        joinLink: 'https://toom.us/345678',
+        joinLink: 'https://zoom.us/345678',
         attendees: 25,
         dateTime: 'Apr 26, 2024 14:00',
         actions: '',
@@ -1364,7 +1364,7 @@ export const eventsDummyData = [
     {
         id: 4,
         topic: 'Client Demo',
-        joinLink: 'https://toom.us/901234',
+        joinLink: 'https://zoom.us/901234',
         attendees: 10,
         dateTime: 'Apr 27, 2024 11:00',
         actions: '',
@@ -1375,7 +1375,7 @@ export const eventsDummyData = [
     {
         id: 5,
         topic: 'Review Meeting',
-        joinLink: 'https://toom.us/567890',
+        joinLink: 'https://zoom.us/567890',
         attendees: 30,
         dateTime: 'Apr 28, 2024 15:30',
         actions: '',
@@ -1386,7 +1386,7 @@ export const eventsDummyData = [
     {
         id: 6,
         topic: 'Product Launch',
-        joinLink: 'https://toom.us/234567',
+        joinLink: 'https://zoom.us/234567',
         attendees: 50,
         dateTime: 'Apr 29, 2024 13:00',
         actions: '',
@@ -1397,7 +1397,7 @@ export const eventsDummyData = [
     {
         id: 7,
         topic: 'Weekly Review',
-        joinLink: 'https://toom.us/890123',
+        joinLink: 'https://zoom.us/890123',
         attendees: 40,
         dateTime: 'Apr 30, 2024 09:30',
         actions: '',
@@ -1408,7 +1408,7 @@ export const eventsDummyData = [
     {
         id: 8,
         topic: 'Board Meeting',
-        joinLink: 'https://toom.us/456789',
+        joinLink: 'https://zoom.us/456789',
         attendees: 12,
         dateTime: 'May 1, 2024 10:00',
         actions: '',
@@ -1419,7 +1419,7 @@ export const eventsDummyData = [
     {
         id: 9,
         topic: 'Interviews',
-        joinLink: 'https://toom.us/123456',
+        joinLink: 'https://zoom.us/123456',
         attendees: 5,
         dateTime: 'May 2, 2024 11:30',
         actions: '',
@@ -1430,7 +1430,7 @@ export const eventsDummyData = [
     {
         id: 10,
         topic: 'Training Workshop',
-        joinLink: 'https://toom.us/789012',
+        joinLink: 'https://zoom.us/789012',
         attendees: 20,
         dateTime: 'May 3, 2024 14:30',
         actions: '',
@@ -1441,7 +1441,7 @@ export const eventsDummyData = [
     {
         id: 11,
         topic: 'Product Demo',
-        joinLink: 'https://toom.us/234567',
+        joinLink: 'https://zoom.us/234567',
         attendees: 15,
         dateTime: 'May 4, 2024 10:00',
         actions: '',
@@ -1452,7 +1452,7 @@ export const eventsDummyData = [
     {
         id: 12,
         topic: 'Client Meeting',
-        joinLink: 'https://toom.us/890123',
+        joinLink: 'https://zoom.us/890123',
         attendees: 8,
         dateTime: 'May 5, 2024 11:30',
         actions: '',
@@ -1463,7 +1463,7 @@ export const eventsDummyData = [
     {
         id: 13,
         topic: 'Team Building',
-        joinLink: 'https://toom.us/456789',
+        joinLink: 'https://zoom.us/456789',
         attendees: 25,
         dateTime: 'May 6, 2024 14:00',
         actions: '',
@@ -1474,7 +1474,7 @@ export const eventsDummyData = [
     {
         id: 14,
         topic: 'Project Review',
-        joinLink: 'https://toom.us/123456',
+        joinLink: 'https://zoom.us/123456',
         attendees: 10,
         dateTime: 'May 7, 2024 09:30',
         actions: '',
@@ -1485,7 +1485,7 @@ export const eventsDummyData = [
     {
         id: 15,
         topic: 'Training Session',
-        joinLink: 'https://toom.us/789012',
+        joinLink: 'https://zoom.us/789012',
         attendees: 18,
         dateTime: 'May 8, 2024 13:00',
         actions: '',

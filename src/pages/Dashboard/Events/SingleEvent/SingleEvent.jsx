@@ -7,6 +7,8 @@ import { Button, Card, Col, Row } from 'react-bootstrap';
 import { useSelector } from 'react-redux';
 import CaretLeft from '@icons/CaretLeft.svg';
 import calendar from '@icons/calendar.svg';
+import '../../../../styles/Events.scss';
+import '../../../../styles/Common.scss';
 
 const SingleEvent = () => {
     const location = useLocation();

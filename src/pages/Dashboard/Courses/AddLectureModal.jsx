@@ -39,7 +39,7 @@ const AddLectureModal = ({ lectureModal, resetModal, onSave }) => {
                 option4: Yup.string()
             })
         ),
-        file: Yup.mixed()
+        file: Yup.mixed().required('File is required')
     });
 
     useEffect(() => {
@@ -168,7 +168,13 @@ const AddLectureModal = ({ lectureModal, resetModal, onSave }) => {
                                                             <Button
                                                                 type="button"
                                                                 className="btn btn-link minus-btn"
-                                                                onClick={() => remove(index)}
+                                                                onClick={() => {
+                                                                    const lastIndex = values.questions.length - 1;
+                                                                    if (!lastIndex) {
+                                                                        toast.error('No questions are added.');
+                                                                    }
+                                                                    remove(index);
+                                                                }}
                                                             >
                                                                 <FontAwesomeIcon icon={faMinus} color="black" />
                                                             </Button>
@@ -218,7 +224,14 @@ const AddLectureModal = ({ lectureModal, resetModal, onSave }) => {
                                                             <Button
                                                                 type="button"
                                                                 className="btn btn-link minus-btn"
-                                                                onClick={() => remove(index)}
+                                                                onClick={() => {
+                                                                    const lastIndex =
+                                                                        values.optionalQuestions.length - 1;
+                                                                    if (!lastIndex) {
+                                                                        toast.error('No MCQs are added.');
+                                                                    }
+                                                                    remove(index);
+                                                                }}
                                                             >
                                                                 <FontAwesomeIcon icon={faMinus} color="black" />
                                                             </Button>
@@ -263,19 +276,21 @@ const AddLectureModal = ({ lectureModal, resetModal, onSave }) => {
                                     </FieldArray>
                                 </div>
                             </div>
-
-                            <div className="add-quiz-file">
-                                <h4>Attach File</h4>
-                                <FileUploader
-                                    multiple={true}
-                                    handleChange={(file) => {
-                                        setFieldValue('file', file);
-                                        handleFileChange(file);
-                                    }}
-                                    name="file"
-                                    types={fileTypes}
-                                />
-                                <p>{file ? `File name: ${file[0].name}` : 'Drag and drop a file or browse file'}</p>
+                            <div>
+                                <div className="add-quiz-file">
+                                    <h4>Attach File</h4>
+                                    <FileUploader
+                                        multiple={true}
+                                        handleChange={(file) => {
+                                            setFieldValue('file', file);
+                                            handleFileChange(file);
+                                        }}
+                                        name="file"
+                                        types={fileTypes}
+                                    />
+                                    <p>{file ? `File name: ${file[0].name}` : 'Drag and drop a file or browse file'}</p>
+                                </div>
+                                <ErrorMessage name="file" component="div" className="error mt-2" />
                             </div>
 
                             <Row>

@@ -161,6 +161,11 @@ const StudentDashboard = () => {
             },
             title: {
                 display: false // Set to true if you want a title, and provide a title text
+            },
+            tooltip: {
+                mode: 'nearest',
+                displayColors: false,
+                intersect: false
             }
         },
         elements: {
@@ -226,6 +231,11 @@ const StudentDashboard = () => {
             },
             title: {
                 display: false // Set to true if you want a title, and provide a title text
+            },
+            tooltip: {
+                mode: 'nearest',
+                displayColors: false,
+                intersect: false
             }
         },
         elements: {
@@ -334,8 +344,8 @@ const StudentDashboard = () => {
                 </Col>
                 <Col lg={4}>
                     {cashFlowCards.map((stat, index) => (
-                        <Col key={stat.id} className="w-100">
-                            <Card customCardClass={`custom-card-colors ${index % 2 === 0 ? 'even' : 'odd'}`}>
+                        <Col key={stat.id} className="w-100 d-flex flex-column h-50">
+                            <Card customCardClass={`custom-card-colors h-100 ${index % 2 === 0 ? 'even' : 'odd'}`}>
                                 <StatCard {...stat} />
                             </Card>
                         </Col>
