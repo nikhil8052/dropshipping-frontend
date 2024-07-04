@@ -30,9 +30,10 @@ const NewEvent = () => {
     const [eventData, setEventData] = useState({
         topic: '',
         dateAndTime: '',
-        eventType: '',
+        eventType: 'Online',
         meetingLink: '',
-        attendees: []
+        attendees: [],
+        location: ''
     });
 
     useEffect(() => {
@@ -94,6 +95,16 @@ const NewEvent = () => {
                     Yup.string()
                         .required('Meeting link is required for online events')
                         .test('not-only-spaces', 'Meeting link cannot be only spaces', (value) => /\S/.test(value)),
+                otherwise: () => Yup.string().trim()
+            }),
+        location: Yup.string()
+            .trim()
+            .when('eventType', {
+                is: 'Onsite',
+                then: () =>
+                    Yup.string()
+                        .required('Location is required for Onsite events')
+                        .test('not-only-spaces', 'location cannot be only spaces', (value) => /\S/.test(value)),
                 otherwise: () => Yup.string().trim()
             }),
         attendees: Yup.array().min(1, 'Select at least one attendee')
@@ -243,7 +254,7 @@ const NewEvent = () => {
                                             component={({ field, form }) => {
                                                 const handleSelect = (eventKey) => {
                                                     const selectedEvent = [
-                                                        { value: 'Physical', label: 'Physical', id: 1 },
+                                                        { value: 'Onsite', label: 'Onsite', id: 1 },
                                                         { value: 'Online', label: 'Online', id: 2 }
                                                     ].find((event) => event.id.toString() === eventKey);
                                                     form.setFieldValue(field.name, selectedEvent.label);
@@ -263,7 +274,7 @@ const NewEvent = () => {
                                                             className="dropdown-button w-100"
                                                         >
                                                             {[
-                                                                { value: 'Physical', label: 'Physical', id: 1 },
+                                                                { value: 'Onsite', label: 'Onsite', id: 1 },
                                                                 { value: 'Online', label: 'Online', id: 2 }
                                                             ].map((event) => (
                                                                 <Dropdown.Item
@@ -283,7 +294,7 @@ const NewEvent = () => {
                                             }}
                                         >
                                             {[
-                                                { value: 'Physical', label: 'Physical', id: 1 },
+                                                { value: 'Onsite', label: 'Onsite', id: 1 },
                                                 { value: 'Online', label: 'Online', id: 2 }
                                             ].map((event) => (
                                                 <option key={event.id} value={event.value}>
@@ -292,16 +303,29 @@ const NewEvent = () => {
                                             ))}
                                         </Field>
                                     </Col>
-                                    <Col md={6} xs={12}>
-                                        <label className="field-label">Meeting Link</label>
-                                        <Field
-                                            name="meetingLink"
-                                            className="field-control"
-                                            type="text"
-                                            placeholder="https://zoom.us/j/97697547647?pwd=UytOUjFlUTlPRjYvbmJnQ0pvZ2RDUT09"
-                                        />
-                                        <ErrorMessage name="meetingLink" component="div" className="error" />
-                                    </Col>
+                                    {values.eventType === 'Onsite' ? (
+                                        <Col md={6} xs={12}>
+                                            <label className="field-label">Map Location</label>
+                                            <Field
+                                                name="location"
+                                                className="field-control"
+                                                type="text"
+                                                placeholder="https://www.google.com/maps/place/Netherlands/"
+                                            />
+                                            <ErrorMessage name="location" component="div" className="error" />
+                                        </Col>
+                                    ) : (
+                                        <Col md={6} xs={12}>
+                                            <label className="field-label">Meeting Link</label>
+                                            <Field
+                                                name="meetingLink"
+                                                className="field-control"
+                                                type="text"
+                                                placeholder="https://zoom.us/j/97697547647?pwd=UytOUjFlUTlPRjYvbmJnQ0pvZ2RDUT09"
+                                            />
+                                            <ErrorMessage name="meetingLink" component="div" className="error" />
+                                        </Col>
+                                    )}
                                 </Row>
                                 <Row>
                                     <Col md={6} xs={12}>

@@ -8,6 +8,9 @@ import './auth.scss';
 import LoginLeftSec from './LoginLeftSec';
 import Footer from './Footer';
 import toast from 'react-hot-toast';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
+
 const VerificationCode = () => {
     const navigate = useNavigate();
     const { loading } = useSelector((state) => state?.auth);
@@ -47,28 +50,39 @@ const VerificationCode = () => {
                                     enableReinitialize
                                 >
                                     {({ isSubmitting }) => (
-                                        <FormikForm>
-                                            <div className="verification-input">
-                                                <Input
-                                                    name="otp"
-                                                    placeholder="E.g 225465822"
-                                                    label="Verification Code"
-                                                    type="text"
-                                                    inputType="number"
-                                                />
-                                                <span
-                                                    className="resend-code cursor-pointer"
-                                                    onClick={() =>
-                                                        toast.success('Otp sent to your email successfully.')
-                                                    }
-                                                >
-                                                    Resend code
-                                                </span>
-                                            </div>
-                                            <Button className="auth-login-button" type="submit" disabled={loading}>
-                                                {isSubmitting ? <Spinner animation="border" size="sm" /> : 'Verify'}
+                                        <>
+                                            <FormikForm>
+                                                <div className="verification-input">
+                                                    <Input
+                                                        name="otp"
+                                                        placeholder="E.g 225465822"
+                                                        label="Verification Code"
+                                                        type="text"
+                                                        inputType="number"
+                                                    />
+                                                    <span
+                                                        className="resend-code cursor-pointer"
+                                                        onClick={() =>
+                                                            toast.success('Otp sent to your email successfully.')
+                                                        }
+                                                    >
+                                                        Resend code
+                                                    </span>
+                                                </div>
+                                                <Button className="auth-login-button" type="submit" disabled={loading}>
+                                                    {isSubmitting ? <Spinner animation="border" size="sm" /> : 'Verify'}
+                                                </Button>
+                                            </FormikForm>
+                                            <Button
+                                                className="back-btn"
+                                                type="button"
+                                                onClick={() => navigate('/login')}
+                                                disabled={isSubmitting || loading}
+                                            >
+                                                <FontAwesomeIcon className="me-2" icon={faArrowLeft} />
+                                                Back to Login
                                             </Button>
-                                        </FormikForm>
+                                        </>
                                     )}
                                 </Formik>
                                 <Footer />

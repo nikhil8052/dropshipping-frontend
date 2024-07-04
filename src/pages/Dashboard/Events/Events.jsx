@@ -208,7 +208,7 @@ const Events = () => {
                             color: 'rgba(72, 128, 255, 1)'
                         }}
                     >
-                        {props.value}
+                        Meeting Link
                     </a>
                 </div>
             </OverlayTrigger>

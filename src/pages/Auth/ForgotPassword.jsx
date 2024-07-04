@@ -8,6 +8,9 @@ import './auth.scss';
 import LoginLeftSec from './LoginLeftSec';
 import Footer from './Footer';
 import { useNavigate } from 'react-router-dom';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
+
 const ForgotPassword = () => {
     const navigate = useNavigate();
     const { loading } = useSelector((state) => state?.auth);
@@ -51,17 +54,32 @@ const ForgotPassword = () => {
                                     enableReinitialize
                                 >
                                     {({ isSubmitting }) => (
-                                        <FormikForm>
-                                            <Input
-                                                name="email"
-                                                placeholder="E.g kathrine1122@gmail.com"
-                                                label="Email Address"
-                                                type="text"
-                                            />
-                                            <Button className="auth-login-button" type="submit" disabled={loading}>
-                                                {isSubmitting ? <Spinner animation="border" size="sm" /> : 'Send Code'}
+                                        <>
+                                            <FormikForm>
+                                                <Input
+                                                    name="email"
+                                                    placeholder="E.g kathrine1122@gmail.com"
+                                                    label="Email Address"
+                                                    type="text"
+                                                />
+                                                <Button className="auth-login-button" type="submit" disabled={loading}>
+                                                    {isSubmitting ? (
+                                                        <Spinner animation="border" size="sm" />
+                                                    ) : (
+                                                        'Send Code'
+                                                    )}
+                                                </Button>
+                                            </FormikForm>
+                                            <Button
+                                                className="back-btn"
+                                                type="button"
+                                                onClick={() => navigate('/login')}
+                                                disabled={isSubmitting || loading}
+                                            >
+                                                <FontAwesomeIcon className="me-2" icon={faArrowLeft} />
+                                                Back to Login
                                             </Button>
-                                        </FormikForm>
+                                        </>
                                     )}
                                 </Formik>
                                 <Footer />
