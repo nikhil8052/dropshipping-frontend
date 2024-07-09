@@ -1,4 +1,3 @@
-import './topbar.scss';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBarsStaggered } from '@fortawesome/free-solid-svg-icons';
 import { useDispatch, useSelector } from 'react-redux';
@@ -6,6 +5,8 @@ import { toggleSidebar } from '@redux/theme/theme_slice.js';
 import { adminSidebarItems, coachSidebarItems, studentSidebarItems } from '../Sidebar/sidebarData';
 import { useLocation } from 'react-router-dom';
 import { useEffect, useState } from 'react';
+import './topbar.scss';
+
 const Topbar = () => {
     const dispatch = useDispatch();
     const location = useLocation();
@@ -13,8 +14,8 @@ const Topbar = () => {
     const [title, setTitle] = useState('');
 
     const role = userInfo?.role;
-    const email = userInfo?.email;
-    const items = role === 'admin' ? adminSidebarItems : role === 'coach' ? coachSidebarItems : studentSidebarItems;
+    const name = userInfo?.name.split(' ')[0];
+    const items = role === 'ADMIN' ? adminSidebarItems : role === 'COACH' ? coachSidebarItems : studentSidebarItems;
 
     const getTopTitle = (path) => {
         const findTitle = (items) => {
@@ -54,7 +55,7 @@ const Topbar = () => {
                         <h3>{title}</h3>
                         {/* Later we add name here */}
                         <p className="sub-title">
-                            Welcome <strong>"{email}"</strong>
+                            Welcome <strong>"{name}"</strong>
                         </p>
                     </div>
                 ) : (

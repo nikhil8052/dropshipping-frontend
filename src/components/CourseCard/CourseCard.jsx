@@ -9,7 +9,7 @@ const CourseCard = ({ img, title, detail, lectureNo, archive, enroll, role }) =>
         <>
             <div className="course-card">
                 <Link
-                    to={role !== 'student' || !enroll ? `/${role}/courses/details` : `/${role}/courses/enrolled-course`}
+                    to={role !== 'STUDENT' || !enroll ? `/${role}/courses/details` : `/${role}/courses/enrolled-course`}
                 >
                     <div className="mb-3 p-2">
                         <img src={img} className="course-img " alt="course-icon" />
@@ -18,7 +18,7 @@ const CourseCard = ({ img, title, detail, lectureNo, archive, enroll, role }) =>
                         <p className="lecture-No">{lectureNo}</p>
                     </div>
                 </Link>
-                {archive && role === 'admin' && (
+                {archive && role === 'ADMIN' && (
                     <div className="toggle-archive">
                         <Form>
                             <Form.Check type="switch" id="custom-switch" label="Archive" />

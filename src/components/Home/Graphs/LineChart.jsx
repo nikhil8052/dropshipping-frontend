@@ -77,7 +77,7 @@ const LineChart = ({
                                 </Col>
                             </Row>
                         </Tab.Container>
-                    ) : role === 'coach' ? (
+                    ) : role === 'COACH' ? (
                         <>
                             <Row className="d-flex justify-content-between">
                                 <Col className="flex-grow-1 ">

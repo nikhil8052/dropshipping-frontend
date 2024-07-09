@@ -10,9 +10,9 @@ const PublicLayout = () => {
 
     useEffect(() => {
         if (isLoggedIn) {
-            if (role === 'admin') navigate('/admin');
-            else if (role === 'coach') navigate('/coach');
-            else if (role === 'student') navigate('/student');
+            if (role === 'ADMIN') navigate('/admin');
+            else if (role === 'COACH') navigate('/coach');
+            else if (role === 'STUDENT') navigate('/student');
         } else navigate('/login');
     }, [isLoggedIn, role]);
 

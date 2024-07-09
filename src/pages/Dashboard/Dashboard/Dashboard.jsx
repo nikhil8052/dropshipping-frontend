@@ -191,11 +191,11 @@ const Dashboard = () => {
     };
 
     useEffect(() => {
-        if (role === 'admin') {
+        if (role === 'ADMIN') {
             setCardStats(statCards);
             setLineGraphData(data);
             setDataSet(true);
-        } else if (role === 'coach') {
+        } else if (role === 'COACH') {
             setCardStats(coachStatCards);
             setDataSet(false);
             setLineGraphData(coachData);

@@ -64,7 +64,7 @@ const SingleEvent = () => {
                         <p>{meeting?.timeZone}</p>
                     </Card.Text>
                     <Row className="my-3">
-                        {role === 'student' && (
+                        {role === 'STUDENT' && (
                             <Col>
                                 <Row className="justify-content-start">
                                     <Col lg={2}>
@@ -78,7 +78,7 @@ const SingleEvent = () => {
                             </Col>
                         )}
                         <Col>
-                            <Button variant="primary" className={`zoom-btn ${role !== 'student' ? 'w-100' : ''}`}>
+                            <Button variant="primary" className={`zoom-btn ${role !== 'STUDENT' ? 'w-100' : ''}`}>
                                 <img src={blueLink} alt="" /> | https://zoom.us/j/
                             </Button>
                         </Col>
@@ -99,7 +99,7 @@ const SingleEvent = () => {
                         </Col>
                     </Row>
 
-                    {role === 'student' ? (
+                    {role === 'STUDENT' ? (
                         <Row>
                             <Col>
                                 <iframe

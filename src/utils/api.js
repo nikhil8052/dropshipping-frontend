@@ -1,30 +1,37 @@
 import axios from 'axios';
-import { toast } from 'react-toastify';
+import toast from 'react-hot-toast';
 
 // Add request interceptor
 
 // Add response interceptor
 axios.interceptors.response.use(
     (response) => {
+        const { config } = response;
+        const { method } = config;
         // You can handle and modify the response data here if needed
+        if (method === 'post' || method === 'delete' || method === 'put' || method === 'patch') {
+            const successMessage = response?.data?.message || response?.data?.desc || 'Operation successful';
+            toast.success(successMessage);
+        }
+
         return response;
     },
     (error) => {
         // You can handle errors here, e.g., show a toast message, logout on certain errors, etc.
-        const errorMessage = error?.response?.data?.message || error?.message;
+        const errorMessage = error?.response?.data?.message || error?.response?.data?.desc || error?.message;
         toast.error(errorMessage);
         return Promise.reject(error);
     }
 );
 
-const axiosConfig = {
-    headers: {
-        'Content-Type': 'application/json'
-    }
-};
-
 const axiosWrapper = async (method, url, data, token, isFormData = false) => {
     try {
+        const axiosConfig = {
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        };
+
         const config = {
             method,
             url,

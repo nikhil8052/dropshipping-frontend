@@ -33,11 +33,11 @@ const Sidebar = () => {
     const { activeSidebarItem } = useSelector((state) => state.activeSidebarItem);
 
     useEffect(() => {
-        const items = role === 'admin' ? adminSidebarItems : role === 'coach' ? coachSidebarItems : studentSidebarItems;
+        const items = role === 'ADMIN' ? adminSidebarItems : role === 'COACH' ? coachSidebarItems : studentSidebarItems;
         setUpdatedItems(items);
     }, [role, activeSidebarItem]);
 
-    const sideBarEventModal = role === 'student';
+    const sideBarEventModal = role === 'STUDENT';
 
     const navigate = useNavigate();
 
@@ -172,7 +172,7 @@ const Sidebar = () => {
                                 <img src={profile} className="profile-pic" alt="nav-icon" />
                             </div>
                             <div className="profile-name">
-                                <p>{userInfo?.email}</p>
+                                <p>{userInfo?.name.split(' ')[0]}</p>
                                 <span>{userInfo?.role}</span>
                             </div>
                         </div>

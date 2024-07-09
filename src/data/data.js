@@ -1827,28 +1827,23 @@ export const courseCategory = [
 ];
 export const coachingTrajectory = [
     {
-        label: 'Coaching Trajectory 1',
-        value: 'Coaching Trajectory 1',
+        label: 'High Ticket',
+        value: 'HIGH_TICKET',
         id: 1
     },
     {
-        label: 'Coaching Trajectory 2',
-        value: 'Coaching Trajectory 2',
+        label: 'Low Ticket',
+        value: 'LOW_TICKET',
         id: 2
-    },
-    {
-        label: 'Coaching Trajectory 3',
-        value: 'Coaching Trajectory 3',
-        id: 3
     }
 ];
 
 export const coursesRoadmap = [
-    { id: 1, label: 'Meta Data Engineering', progress: 'Completed', value: 1 },
-    { id: 2, label: 'Python Engineering', progress: 'OnGoing', value: 2 },
-    { id: 3, label: 'Microsoft Office Expert', progress: 'Not Started', value: 3 },
-    { id: 4, label: 'Dropshiping For Beginners', progress: 'Not Started', value: 4 },
-    { id: 5, label: 'Search Engine Optimization', progress: 'Not Started', value: 5 }
+    { id: '6683cffd269cf6979cb4c28b', label: 'Meta Data Engineering', progress: 'Completed', value: 1 },
+    { id: '6683cffd269cf6979cb4c28b', label: 'Python Engineering', progress: 'OnGoing', value: 2 },
+    { id: '6683cffd269cf6979cb4c28b', label: 'Microsoft Office Expert', progress: 'Not Started', value: 3 },
+    { id: '6683cffd269cf6979cb4c28b', label: 'Dropshiping For Beginners', progress: 'Not Started', value: 4 },
+    { id: '6683cffd269cf6979cb4c28b', label: 'Search Engine Optimization', progress: 'Not Started', value: 5 }
 ];
 
 const now = new Date();
@@ -2903,3 +2898,10 @@ export const studentProducts = [
         status: 'Running'
     }
 ];
+
+export const COACH = {
+    COACH_TYPE: {
+        HIGH_TICKET: 'HIGH_TICKET',
+        LOW_TICKET: 'LOW_TICKET'
+    }
+};

@@ -29,140 +29,140 @@ export const adminRoutes = [
         exact: true,
         name: 'Dashboard',
         Component: Dashboard,
-        access: 'admin'
+        access: 'ADMIN'
     },
     {
         path: 'coaches',
         exact: true,
         name: 'Coaches',
         Component: Coaches,
-        access: 'admin'
+        access: 'ADMIN'
     },
     {
         path: 'coaches/new',
         exact: true,
         name: 'Coaches',
         Component: NewCoach,
-        access: 'admin'
+        access: 'ADMIN'
     },
     {
         path: 'coaches/edit',
         exact: true,
         name: 'Coaches',
         Component: NewCoach,
-        access: 'admin'
+        access: 'ADMIN'
     },
     {
         path: 'students',
         exact: true,
         name: 'Students',
         Component: Students,
-        access: 'admin'
+        access: 'ADMIN'
     },
     {
         path: 'students/new',
         exact: true,
         name: 'Students',
         Component: NewStudent,
-        access: 'admin'
+        access: 'ADMIN'
     },
     {
         path: 'students/edit',
         exact: true,
         name: 'Students',
         Component: NewStudent,
-        access: 'admin'
+        access: 'ADMIN'
     },
     {
         path: 'courses',
         exact: true,
         name: 'Courses',
         Component: Courses,
-        access: 'admin'
+        access: 'ADMIN'
     },
     {
         path: 'courses/new',
         exact: true,
         name: 'Courses',
         Component: NewCourse,
-        access: 'admin'
+        access: 'ADMIN'
     },
     {
         path: 'courses/details',
         exact: true,
         name: 'Courses',
         Component: CourseDetail,
-        access: 'admin'
+        access: 'ADMIN'
     },
     {
         path: 'courses/all-students',
         exact: true,
         name: 'Courses',
         Component: AllStudents,
-        access: 'admin'
+        access: 'ADMIN'
     },
     {
         path: 'courses/view-progress',
         exact: true,
         name: 'Courses',
         Component: ViewProgress,
-        access: 'admin'
+        access: 'ADMIN'
     },
     {
         path: 'events',
         exact: true,
         name: 'Events',
         Component: Events,
-        access: 'admin'
+        access: 'ADMIN'
     },
     {
         path: 'events/new',
         exact: true,
         name: 'Events',
         Component: NewEvent,
-        access: 'admin'
+        access: 'ADMIN'
     },
     {
         path: 'events/edit',
         exact: true,
         name: 'Events',
         Component: NewEvent,
-        access: 'admin'
+        access: 'ADMIN'
     },
     {
         path: 'events/details',
         exact: true,
         name: 'Events',
         Component: EventDetails,
-        access: 'admin'
+        access: 'ADMIN'
     },
     {
         path: 'payment',
         exact: true,
         name: 'Payment Management',
         Component: Payment,
-        access: 'admin'
+        access: 'ADMIN'
     },
     {
         path: 'settings',
         exact: true,
         name: 'Settings',
         Component: Settings,
-        access: 'admin'
+        access: 'ADMIN'
     },
     {
         path: 'visualize-csv',
         exact: true,
         name: 'Data',
         Component: VisualizeCSV,
-        access: 'admin'
+        access: 'ADMIN'
     },
     {
         path: 'events/detail',
         exact: true,
         name: 'Events',
         Component: SingleEvent,
-        access: 'admin'
+        access: 'ADMIN'
     }
 ];
 export const coachesRoutes = [
@@ -171,112 +171,112 @@ export const coachesRoutes = [
         exact: true,
         name: 'Dashboard',
         Component: Dashboard,
-        access: 'coach'
+        access: 'COACH'
     },
     {
         path: 'students',
         exact: true,
         name: 'Students',
         Component: Students,
-        access: 'coach'
+        access: 'COACH'
     },
     {
         path: 'courses',
         exact: true,
         name: 'Courses',
         Component: Courses,
-        access: 'coach'
+        access: 'COACH'
     },
     {
         path: 'courses/new',
         exact: true,
         name: 'Courses',
         Component: NewCourse,
-        access: 'coach'
+        access: 'COACH'
     },
     {
         path: 'courses/details',
         exact: true,
         name: 'Courses',
         Component: CourseDetail,
-        access: 'coach'
+        access: 'COACH'
     },
     {
         path: 'courses/all-students',
         exact: true,
         name: 'Courses',
         Component: AllStudents,
-        access: 'coach'
+        access: 'COACH'
     },
     {
         path: 'students/edit',
         exact: true,
         name: 'Students',
         Component: NewStudent,
-        access: 'coach'
+        access: 'COACH'
     },
     {
         path: 'students/new',
         exact: true,
         name: 'Students',
         Component: NewStudent,
-        access: 'coach'
+        access: 'COACH'
     },
     {
         path: 'courses/view-progress',
         exact: true,
         name: 'Courses',
         Component: ViewProgress,
-        access: 'coach'
+        access: 'COACH'
     },
     {
         path: 'events',
         exact: true,
         name: 'Events',
         Component: Events,
-        access: 'coach'
+        access: 'COACH'
     },
     {
         path: 'settings',
         exact: true,
         name: 'Settings',
         Component: Settings,
-        access: 'coach'
+        access: 'COACH'
     },
     {
         path: 'events/new',
         exact: true,
         name: 'Events',
         Component: NewEvent,
-        access: 'coach'
+        access: 'COACH'
     },
     {
         path: 'events/edit',
         exact: true,
         name: 'Events',
         Component: NewEvent,
-        access: 'coach'
+        access: 'COACH'
     },
     {
         path: 'events/details',
         exact: true,
         name: 'Events',
         Component: EventDetails,
-        access: 'coach'
+        access: 'COACH'
     },
     {
         path: 'visualize-csv',
         exact: true,
         name: 'Data',
         Component: VisualizeCSV,
-        access: 'coach'
+        access: 'COACH'
     },
     {
         path: 'events/detail',
         exact: true,
         name: 'Events',
         Component: SingleEvent,
-        access: 'coach'
+        access: 'COACH'
     }
 ];
 
@@ -286,69 +286,69 @@ export const studentRoutes = [
         exact: true,
         name: 'Dashboard',
         Component: StudentDashboard,
-        access: 'student'
+        access: 'STUDENT'
     },
     {
         path: 'courses',
         exact: true,
         name: 'Courses',
         Component: Courses,
-        access: 'student'
+        access: 'STUDENT'
     },
     {
         path: 'request-meeting',
         exact: true,
         name: 'Dashboard',
         Component: MeetingRequest,
-        access: 'student'
+        access: 'STUDENT'
     },
     {
         path: 'courses/details',
         exact: true,
         name: 'Courses',
         Component: CourseDetail,
-        access: 'student'
+        access: 'STUDENT'
     },
     {
         path: 'courses/enrolled-course',
         exact: true,
         name: 'Courses',
         Component: EnrolledCourseDetail,
-        access: 'student'
+        access: 'STUDENT'
     },
     {
         path: 'events',
         exact: true,
         name: 'Events',
         Component: EventPage,
-        access: 'student'
+        access: 'STUDENT'
     },
     {
         path: 'events/listing',
         exact: true,
         name: 'Events',
         Component: EventsListing,
-        access: 'student'
+        access: 'STUDENT'
     },
     {
         path: 'events/detail',
         exact: true,
         name: 'Events',
         Component: SingleEvent,
-        access: 'student'
+        access: 'STUDENT'
     },
     {
         path: 'visualize-csv',
         exact: true,
         name: 'Data',
         Component: VisualizeCSV,
-        access: 'student'
+        access: 'STUDENT'
     },
     {
         path: 'settings',
         exact: true,
         name: 'Settings',
         Component: Settings,
-        access: 'student'
+        access: 'STUDENT'
     }
 ];

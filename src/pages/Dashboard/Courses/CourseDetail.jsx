@@ -18,7 +18,7 @@ const CourseDetail = () => {
     return (
         <>
             <div className="publish-form-section">
-                {role === 'student' ? (
+                {role === 'STUDENT' ? (
                     <Link to={`/${role}/courses`}>
                         <Button type="button" className="back-button">
                             <img src={CaretLeft} />
@@ -61,7 +61,7 @@ const CourseDetail = () => {
                         <div className="carousel-lecture">
                             <CarouselWrapper items={lessons} type="lecture" />
                         </div>
-                        {role !== 'student' && (
+                        {role !== 'STUDENT' && (
                             <div
                                 className="publish-added-button-footer "
                                 style={{ display: 'flex', justifyContent: 'space-between' }}

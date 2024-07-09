@@ -19,16 +19,13 @@ const formats = [
     'video'
 ];
 
-const RichTextEditor = ({ field, className = 'field-quill-control' }) => {
+const RichTextEditor = ({ field, form, className = 'field-quill-control' }) => {
+    const handleChange = (html) => {
+        form.setFieldValue(field.name, html);
+    };
+
     return (
-        <ReactQuill
-            // theme="snow"
-            formats={formats}
-            className={className}
-            modules={modules}
-            onChange={field.onChange(field.name)}
-            value={field.value}
-        />
+        <ReactQuill formats={formats} className={className} modules={modules} onChange={handleChange} theme="snow" />
     );
 };
 
