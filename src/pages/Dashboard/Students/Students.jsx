@@ -11,12 +11,13 @@ import editIcon from '@icons/edit_square.svg';
 import deleteIcon from '@icons/trash-2.svg';
 import downArrow from '@icons/down-arrow.svg';
 import add from '@icons/add_white.svg';
-import { studentDummyData, coachDummyData } from '../../../data/data';
+import { coachDummyData } from '../../../data/data';
 import { useNavigate } from 'react-router-dom';
 import Roadmap from './Roadmap/Roadmap';
 import { useSelector } from 'react-redux';
 import '../../../styles/Students.scss';
 import '../../../styles/Common.scss';
+import { API_URL } from '../../../utils/apiUrl';
 
 const Students = () => {
     const [showDeleteModal, setShowDeleteModal] = useState(false);
@@ -32,7 +33,8 @@ const Students = () => {
     const navigate = useNavigate();
     const [loadingCRUD, setLoadingCRUD] = useState(false);
     const { userInfo } = useSelector((state) => state?.auth);
-    const role = userInfo?.role;
+    const token = useSelector((state) => state?.auth?.userToken);
+    const role = userInfo?.role?.toLowerCase();
     const [studentsData, setStudentsData] = useState(null);
 
     const [selectedOption, setSelectedOption] = useState('All');
@@ -47,8 +49,8 @@ const Students = () => {
         // Later we will replace this with actual API call
         try {
             setLoading(true);
-
-            setStudentsData(studentDummyData);
+            const coaches = await axiosWrapper('GET', API_URL.GET_ALL_COACHES, {}, token);
+            setStudentsData(coaches.data);
         } catch (error) {
             return;
         } finally {
@@ -163,7 +165,7 @@ const Students = () => {
                         <img src={editIcon} className="action-icon" alt="action-icon" />
                     </div>
                 </Col>
-                {role === 'coach' ? (
+                {role === 'COACH' ? (
                     <></>
                 ) : (
                     <Col lg={1} md={6} sm={6} xs={4} className="d-flex justify-content-center align-items-center">
@@ -235,7 +237,6 @@ const Students = () => {
                         color: 'rgba(72, 128, 255, 1)'
                     }}
                     onClick={() => {
-                        console.log(props, 'clicked');
                         props.onRoadMapClick(props.data.coursesRoadmap || []);
                     }}
                 >
@@ -390,7 +391,7 @@ const Students = () => {
                 loading={loading}
                 children={
                     <div className="button-wrapper">
-                        {role === 'admin' && (
+                        {role === 'ADMIN' && (
                             <DropdownButton
                                 title={
                                     <div className="d-flex justify-content-between align-items-center gap-2">

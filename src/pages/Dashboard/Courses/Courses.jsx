@@ -111,7 +111,7 @@ const Courses = () => {
     const currentItems = filteredCourses.slice(indexOfFirstItem, indexOfLastItem);
 
     const handleCreateClick = () => {
-        if (role === 'admin') {
+        if (role === 'ADMIN') {
             navigate('/admin/courses/new');
         } else {
             // Handle create button click event here
@@ -160,7 +160,7 @@ const Courses = () => {
                             placeholder="Search"
                         />
                     </InputGroup>
-                    {role === 'student' ? (
+                    {role === 'STUDENT' ? (
                         <DropdownButton
                             title={
                                 <div className=" d-flex justify-content-between align-items-center gap-2">
@@ -193,7 +193,7 @@ const Courses = () => {
                         {currentItems.map((cousre) => (
                             <Col key={cousre.id} xs={12} sm={12} md={6} lg={4} xl={3} xxl={3}>
                                 <div className="custom-card-course-new">
-                                    {role === 'admin' || role === 'coach' ? (
+                                    {role === 'ADMIN' || role === 'COACH' ? (
                                         <CourseCard {...cousre} archive={true} role={role} />
                                     ) : (
                                         <CourseCard

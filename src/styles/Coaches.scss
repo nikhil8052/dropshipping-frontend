@@ -21,11 +21,14 @@
             height: 20px;
         }
     }
-    .avatar {
-        width: 40px;
+
+    .avatar-image {
+        width: 28px;
+        height: 28px;
         border-radius: 50%;
         object-fit: cover;
     }
+
     .edit-button {
         transition: all 0.5s ease-in-out;
         &:hover {

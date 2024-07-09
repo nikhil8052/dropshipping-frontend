@@ -7,16 +7,19 @@ import * as Yup from 'yup';
 import { Container, Row, Col, Button, DropdownButton, Dropdown } from 'react-bootstrap';
 import 'react-quill/dist/quill.snow.css';
 import CustomSelect from '../../../../components/Input/Select';
-import { coachDummyData, studentDummyData, countryList, regions } from '../../../../data/data';
+import { studentDummyData, countryList, regions, COACH } from '../../../../data/data';
 import toast from 'react-hot-toast';
 import { useLocation, useNavigate } from 'react-router-dom';
 import ImageCropper from '../../../../components/ImageMask/ImageCropper';
 import UploadSimple from '@icons/UploadSimple.svg';
 import RichTextEditor from '@components/RichTextEditor/RichTextEditor';
 import Input from '@components/Input/Input';
+import { useSelector } from 'react-redux';
+import { API_URL } from '../../../../utils/apiUrl';
+import { getFileObjectFromBlobUrl } from '../../../../utils/utils';
+import axiosWrapper from '../../../../utils/api';
 import '../../../../styles/Coaches.scss';
 import '../../../../styles/Common.scss';
-import { useSelector } from 'react-redux';
 
 const NewCoach = () => {
     const inputRef = useRef();
@@ -24,43 +27,49 @@ const NewCoach = () => {
     const location = useLocation();
     const coachId = location.state?.coachId;
     const { userInfo } = useSelector((state) => state?.auth);
-    const role = userInfo?.role;
+    const token = useSelector((state) => state?.auth?.userToken);
+    const role = userInfo?.role?.toLowerCase();
     const navigate = useNavigate();
     const [cropping, setCropping] = useState(false);
 
     const [imageSrc, setImageSrc] = useState(null);
     const [coachData, setCoachData] = useState({
-        coachName: '',
-        coachEmail: '',
+        name: '',
+        email: '',
         phoneNumber: '',
         country: '',
         region: '',
         assignedStudents: [],
-        highTicketSpots: '',
-        lowTicketSpots: '',
+        highTicketStudentSpots: '',
+        lowTicketStudentSpots: '',
         bio: '',
-        coachType: ''
+        coachType: COACH.COACH_TYPE.LOW_TICKET
     });
 
     useEffect(() => {
         if (coachId) {
-            const coach = coachDummyData.find((coach) => coach.id === coachId);
-            if (coach) {
-                setCoachPhoto(coach.avatarUrl);
-                setCoachData({
-                    coachName: coach.name,
-                    coachEmail: coach.email,
-                    phoneNumber: coach.phoneNumber,
-                    country: coach.country,
-                    region: coach.region,
-                    assignedStudents: coach.assignedStudents,
-                    highTicketSpots: coach.highTicketSpots,
-                    lowTicketSpots: coach.lowTicketSpots,
-                    bio: coach.bio
-                });
-            }
+            getSingleCoachById(coachId);
         }
     }, [coachId]);
+
+    const getSingleCoachById = async (id) => {
+        const response = await axiosWrapper('GET', API_URL.GET_COACH.replace(':id', id), {}, token);
+        const coach = response.data;
+        setCoachData((prev) => ({
+            ...prev,
+            name: coach.name,
+            email: coach.email,
+            phoneNumber: coach.phoneNumber,
+            country: coach.country,
+            region: coach.region,
+            assignedStudents: coach.assignedStudents,
+            highTicketStudentSpots: coach.highTicketStudentSpots,
+            lowTicketStudentSpots: coach.lowTicketStudentSpots,
+            bio: coach.bio,
+            coachType: coach.coachType
+        }));
+        setCoachPhoto(coach.avatar);
+    };
 
     const handleFileChange = async (e) => {
         const file = e.target.files[0];
@@ -74,69 +83,75 @@ const NewCoach = () => {
         setCropping(true);
     };
 
-    const handleCropComplete = (croppedImage) => {
-        setCoachPhoto(croppedImage);
+    const handleCropComplete = async (croppedImage) => {
+        const file = await getFileObjectFromBlobUrl(croppedImage, 'coachAvatar.jpg');
+        const formData = new FormData();
+        formData.append('files', file);
+        formData.append('name', file.name);
+
+        const mediaFile = await axiosWrapper('POST', API_URL.UPLOAD_MEDIA, formData, '', true);
+        setCoachPhoto(mediaFile.data[0].path);
         setCropping(false);
-        toast.success('Image uploaded successfully!', {
-            icon: '🎉',
-            style: {
-                borderRadius: '10px',
-                background: '#333',
-                color: '#fff'
-            }
-        });
     };
 
     const validationSchema = Yup.object({
-        coachName: Yup.string().required('Coach name is required'),
-        coachEmail: Yup.string().email('Invalid email address').required('Coach email is required'),
+        name: Yup.string().required('Coach name is required'),
+        email: Yup.string().email('Invalid email address').required('Coach email is required'),
         phoneNumber: Yup.string().required('Phone number is required'),
         country: Yup.string().required('Country is required'),
         region: Yup.string().required('Region is required'),
-        assignedStudents: Yup.array().min(1, 'Select at least one student'),
-        highTicketSpots: Yup.number().when('coachType', {
-            is: 'high',
+        assignedStudents: Yup.array().optional(),
+        highTicketStudentSpots: Yup.number().when('coachType', {
+            is: COACH.COACH_TYPE.HIGH_TICKET,
             then: () => Yup.number().required('High ticket spots are required').positive('Must be a positive number'),
             otherwise: () => Yup.number()
         }),
-        lowTicketSpots: Yup.number().when('coachType', {
-            is: 'low',
+        lowTicketStudentSpots: Yup.number().when('coachType', {
+            is: COACH.COACH_TYPE.LOW_TICKET,
             then: () => Yup.number().required('Low ticket spots are required').positive('Must be a positive number'),
             otherwise: () => Yup.number()
         }),
         bio: Yup.string(),
-        coachType: Yup.string().required('Please select the coach type')
+        coachType: Yup.string()
+            .oneOf([COACH.COACH_TYPE.HIGH_TICKET, COACH.COACH_TYPE.LOW_TICKET])
+            .required('Please select the coach type')
     });
 
-    const handleFormSubmit = (values, { resetForm, setSubmitting }) => {
-        setTimeout(() => {
-            if (coachId) {
-                const updatedCoaches = coachDummyData.map((coach) =>
-                    coach.id === coachId ? { ...coach, ...values, avatarUrl: coachPhoto } : coach
-                );
-                toast.success(`New coach:${updatedCoaches.coachName || updatedCoaches.name} Updated successfully!`);
-            } else {
-                const newCoach = {
-                    id: coachDummyData.length + 1,
-                    ...values,
-                    avatarUrl: coachPhoto
-                };
-                toast.success(`New coach:${newCoach.coachName || newCoach.name} added successfully!`);
-            }
-            resetForm();
-            setSubmitting(false);
-            navigate(`/${role}/coaches`);
-        }, 1000);
+    const handleFormSubmit = async (values, { resetForm, setSubmitting }) => {
+        if (values.coachType === COACH.COACH_TYPE.HIGH_TICKET) {
+            delete values.lowTicketStudentSpots;
+        } else {
+            delete values.highTicketStudentSpots;
+        }
+        if (coachId) delete values.email;
+
+        const formData = { ...values, avatar: coachPhoto };
+        const url = coachId ? `${API_URL.UPDATE_COACH.replace(':id', coachId)}` : API_URL.CREATE_COACH;
+        const method = coachId ? 'PUT' : 'POST';
+
+        await axiosWrapper(method, url, formData, token);
+        resetForm();
+        setSubmitting(false);
+        navigate(`/${role}/coaches`);
     };
 
     const ticketRender = (ticket) => {
+        const ticketType = ticket === COACH.COACH_TYPE.HIGH_TICKET ? 'High' : 'Low';
         return (
             <Col md={6} xs={12}>
-                <label className="field-label">
-                    {ticket.slice(0, 1).toUpperCase() + ticket.slice(1)} Ticket Student Spots
-                </label>
-                <Field name={`${ticket}TicketSpots`} className="field-control" type="number" placeholder="5" min={1} />
-                <ErrorMessage name={`${ticket}TicketSpots`} component="div" className="error" />
+                <label className="field-label">{ticketType} Ticket Student Spots</label>
+                <Field
+                    name={`${ticketType.toLowerCase()}TicketStudentSpots`}
+                    className="field-control"
+                    type="number"
+                    placeholder="5"
+                    min={1}
+                />
+                <ErrorMessage
+                    name={`${ticketType.toLowerCase()}TicketStudentSpots`}
+                    component="div"
+                    className="error"
+                />
             </Col>
         );
     };
@@ -244,22 +259,23 @@ const NewCoach = () => {
                                     <Col md={6} xs={12}>
                                         <label className="field-label">Coach Name</label>
                                         <Field
-                                            name="coachName"
+                                            name="name"
                                             className="field-control"
                                             type="text"
                                             placeholder="E.g David Henderson"
                                         />
-                                        <ErrorMessage name="coachName" component="div" className="error" />
+                                        <ErrorMessage name="name" component="div" className="error" />
                                     </Col>
                                     <Col md={6} xs={12}>
                                         <label className="field-label">Coach Email</label>
                                         <Field
-                                            name="coachEmail"
+                                            name="email"
                                             className="field-control"
                                             type="email"
+                                            readOnly={coachId}
                                             placeholder="kevin12345@gmail.com"
                                         />
-                                        <ErrorMessage name="coachEmail" component="div" className="error" />
+                                        <ErrorMessage name="email" component="div" className="error" />
                                     </Col>
                                 </Row>
 
@@ -410,11 +426,11 @@ const NewCoach = () => {
                                             options={[
                                                 {
                                                     label: 'High Ticket',
-                                                    value: 'high'
+                                                    value: COACH.COACH_TYPE.HIGH_TICKET
                                                 },
                                                 {
                                                     label: 'Low Ticket',
-                                                    value: 'low'
+                                                    value: COACH.COACH_TYPE.LOW_TICKET
                                                 }
                                             ]}
                                         />
@@ -430,8 +446,12 @@ const NewCoach = () => {
                                         <Field
                                             name="bio"
                                             type="text"
-                                            component={({ field }) => (
-                                                <RichTextEditor field={field} className="field-quill-control" />
+                                            component={({ field, form }) => (
+                                                <RichTextEditor
+                                                    form={form}
+                                                    field={field}
+                                                    className="field-quill-control"
+                                                />
                                             )}
                                         />
 

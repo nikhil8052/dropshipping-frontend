@@ -68,9 +68,6 @@
         .event-name {
             font-size: small;
             color: rgba(85, 95, 126, 1);
-            overflow: hidden;
-            white-space: nowrap;
-            text-overflow: ellipsis;
             display: inline-block;
             max-width: 80px;
         }

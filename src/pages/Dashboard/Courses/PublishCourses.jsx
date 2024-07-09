@@ -15,7 +15,7 @@ const PublishCourses = ({ onBack }) => {
     useEffect(() => {
         if (userInfo) {
             const role = userInfo?.role;
-            setIsAdmin(role === 'admin');
+            setIsAdmin(role === 'ADMIN');
         }
     }, [userInfo]);
 

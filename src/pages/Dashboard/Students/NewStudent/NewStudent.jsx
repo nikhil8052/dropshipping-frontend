@@ -15,6 +15,8 @@ import RoadMapList from '../Roadmap/RoadmapList';
 import { useSelector } from 'react-redux';
 import CarouselWrapper from '@components/Carousel/CarouselWrapper';
 import ImageCropper from '@components/ImageMask/ImageCropper';
+import { API_URL } from '../../../../utils/apiUrl';
+import axiosWrapper from '../../../../utils/api';
 import '../../../../styles/Students.scss';
 import '../../../../styles/Common.scss';
 
@@ -24,14 +26,14 @@ const NewStudent = () => {
     const location = useLocation();
     const studentId = location.state?.studentId;
     const { userInfo } = useSelector((state) => state?.auth);
-    const role = userInfo?.role;
+    const token = useSelector((state) => state?.auth?.userToken);
+    const role = userInfo?.role?.toLowerCase();
     const navigate = useNavigate();
     const [cropping, setCropping] = useState(false);
     const [imageSrc, setImageSrc] = useState(null);
     const [studentData, setStudentData] = useState({
-        studentName: '',
-        studentId: '',
-        studentEmail: '',
+        name: '',
+        email: '',
         phoneNumber: '',
         country: '',
         region: '',
@@ -40,15 +42,11 @@ const NewStudent = () => {
     });
 
     const schema = Yup.object({
-        studentName: Yup.string()
+        name: Yup.string()
             .trim()
             .required('Please enter the student name')
             .matches(/\S/, 'Student name cannot be empty or spaces only'),
-        studentId: Yup.string()
-            .trim()
-            .required('Please enter the student id')
-            .matches(/\S/, 'Student ID cannot be empty or spaces only'),
-        studentEmail: Yup.string()
+        email: Yup.string()
             .trim()
             .email('Please enter a valid email address')
             .required('Email address is required')
@@ -67,6 +65,7 @@ const NewStudent = () => {
             .matches(/\S/, 'Region cannot be empty or spaces only'),
         coachingTrajectory: Yup.string()
             .trim()
+            .oneOf(['HIGH_TICKET', 'LOW_TICKET'])
             .required('Please select a coaching trajectory')
             .matches(/\S/, 'Coaching trajectory cannot be empty or spaces only'),
         coursesRoadmap: Yup.array().min(1, 'Please select at least one course')
@@ -82,9 +81,8 @@ const NewStudent = () => {
             if (student) {
                 setStudentPhoto(student.avatarUrl);
                 setStudentData({
-                    studentName: student.name,
-                    studentId: student.id,
-                    studentEmail: student.email,
+                    name: student.name,
+                    email: student.email,
                     phoneNumber: student.phoneNumber,
                     country: student.country,
                     region: student.region,
@@ -122,27 +120,25 @@ const NewStudent = () => {
         });
     };
 
-    const handleFormSubmit = (values, { resetForm, setSubmitting }) => {
-        setTimeout(() => {
-            if (studentId) {
-                const updatedStudents = studentDummyData.map((student) =>
-                    student.id === studentId ? { ...student, ...values, avatarUrl: studentPhoto } : student
-                );
-                toast.success(
-                    `New Student:${updatedStudents.studentName || updatedStudents.name} Updated successfully!`
-                );
-            } else {
-                const newStudent = {
-                    id: studentDummyData.length + 1,
-                    ...values,
-                    avatarUrl: studentPhoto
-                };
-                toast.success(`New Student:${newStudent.studentName || newStudent.name} added successfully!`);
-            }
+    const handleFormSubmit = async (values, { resetForm, setSubmitting }) => {
+        // Dummy ids for now
+        const courseIds = [];
+        if (values.coursesRoadmap) {
+            values.coursesRoadmap.forEach(() => {
+                courseIds.push('6683cffd269cf6979cb4c28b');
+            });
+        }
+        const formData = { ...values, avatar: studentPhoto, coursesRoadmap: courseIds };
+        const url = studentId ? `${API_URL.UPDATE_STUDENT.replace(':id', studentId)}` : API_URL.CREATE_STUDENT;
+        const method = studentId ? 'PUT' : 'POST';
+
+        try {
+            await axiosWrapper(method, url, formData, token);
             resetForm();
-            setSubmitting(false);
             navigate(`/${role}/students`);
-        }, 1000);
+        } catch (error) {
+            setSubmitting(false);
+        }
     };
 
     return (
@@ -248,48 +244,34 @@ const NewStudent = () => {
                                     <Col md={6} xs={12}>
                                         <label className="field-label">Student Name</label>
                                         <Field
-                                            name="studentName"
+                                            name="name"
                                             className="field-control"
                                             type="text"
                                             placeholder="E.g David Henderson"
                                         />
-                                        <ErrorMessage name="studentName" component="div" className="error" />
+                                        <ErrorMessage name="name" component="div" className="error" />
                                     </Col>
-                                    <Col md={6} xs={12}>
-                                        <label className="field-label">Student ID</label>
-                                        <Field
-                                            name="studentId"
-                                            className="field-control"
-                                            type="text"
-                                            placeholder="E.g 65435"
-                                        />
-                                        <ErrorMessage name="studentId" component="div" className="error" />
-                                    </Col>
-                                </Row>
-
-                                <Row>
                                     <Col md={6} xs={12}>
                                         <label className="field-label">Email</label>
                                         <Field
-                                            name="studentEmail"
+                                            name="email"
                                             className="field-control"
                                             type="email"
                                             placeholder="kevin12345@gmail.com"
                                         />
-                                        <ErrorMessage name="studentEmail" component="div" className="error" />
+                                        <ErrorMessage name="email" component="div" className="error" />
                                     </Col>
                                     <Col md={6} xs={12}>
                                         <label className="field-label">Phone Number</label>
                                         <Field
                                             name="phoneNumber"
                                             className="field-control"
-                                            type="number"
+                                            type="text"
                                             placeholder="+1-202-555-0118"
                                         />
                                         <ErrorMessage name="phoneNumber" component="div" className="error" />
                                     </Col>
-                                </Row>
-                                <Row className="mb-2">
+
                                     <Col md={6} xs={12}>
                                         <label className="field-label">Country</label>
                                         {/* eslint-disable */}
@@ -390,8 +372,7 @@ const NewStudent = () => {
                                             ))}
                                         </Field>
                                     </Col>
-                                </Row>
-                                <Row>
+
                                     <Col md={6} xs={12}>
                                         <label className="field-label">Coaching Trajectory</label>
                                         {/* eslint-disable */}
@@ -404,7 +385,7 @@ const NewStudent = () => {
                                                     const selectedField = coachingTrajectory.find(
                                                         (coach) => coach.id.toString() === eventKey
                                                     );
-                                                    form.setFieldValue(field.name, selectedField.label);
+                                                    form.setFieldValue(field.name, selectedField.value);
                                                 };
 
                                                 return (
@@ -469,7 +450,6 @@ const NewStudent = () => {
                                                         ]}
                                                         value={values.coursesRoadmap}
                                                         onChange={(selectedOptions) => {
-                                                            // Update the array with only the selected options
                                                             form.setFieldValue('coursesRoadmap', selectedOptions);
                                                         }}
                                                         closeMenuOnSelect={false}
