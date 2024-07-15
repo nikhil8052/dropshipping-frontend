@@ -1,7 +1,7 @@
-import { useRef, useState, useEffect } from 'react';
+import { useRef, useState } from 'react';
 import '../../../styles/Courses.scss';
 import { Button, Col, Row, Container } from 'react-bootstrap';
-import thumbnail from '../../../assets/icons/Thumbnail.svg';
+import courseThumbnail from '../../../assets/icons/Thumbnail.svg';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
@@ -15,20 +15,31 @@ import PencilLine from '../../../assets/icons/PencilLine.svg';
 import CoursesModal from './CoursesModal/CoursesModal';
 import AddLectureModal from './AddLectureModal';
 import { trimLongText } from '../../../utils/common';
+import { getFileObjectFromBlobUrl } from '../../../utils/utils';
 import UploadSimple from '@icons/UploadSimple.svg';
-// import axiosWrapper from '@utils/api';
+import Loading from '@components/Loading/Loading';
 import ConfirmationBox from '@components/ConfirmationBox/ConfirmationBox';
 import ImageCropper from '../../../components/ImageMask/ImageCropper';
+import axiosWrapper from '../../../utils/api';
+import { API_URL } from '../../../utils/apiUrl';
+import * as types from '../../../redux/actions/actionTypes';
+import { useDispatch, useSelector } from 'react-redux';
 
-const UploadFiles = ({ onNext, onBack }) => {
+const UploadFiles = ({ onNext, onBack, initialData, setStepComplete, updateCourseData }) => {
     const inputRef = useRef();
     const videoinputRef = useRef();
-    const [coursePhoto, setCoursePhoto] = useState(null);
-    const [courseVideo, setCourseVideo] = useState(null);
-    const [showDeleteModal, setShowDeleteModal] = useState(false);
+    const dispatch = useDispatch();
+    const [loading, setLoading] = useState(false);
+    const currentCourse = useSelector((state) => state?.root?.currentCourse);
+    const [showDeleteModal, setShowDeleteModal] = useState({
+        show: false,
+        title: '',
+        isEditable: false,
+        lectureId: null,
+        initialValues: null
+    });
+    const token = useSelector((state) => state?.auth?.userToken);
     const [loadingCRUD, setLoadingCRUD] = useState(false);
-    const [selectedRowId, setSelectedRowId] = useState(null);
-
     const [lectureModal, setLectureModal] = useState({
         show: false,
         title: '',
@@ -37,19 +48,10 @@ const UploadFiles = ({ onNext, onBack }) => {
         initialValues: null
     });
 
-    const [lectures, setLectures] = useState([]);
     const [cropping, setCropping] = useState(false);
     const [imageSrc, setImageSrc] = useState(null);
-    const [coachData, setCoachData] = useState({
-        courseDescription: ''
-    });
 
-    useEffect(() => {
-        // Fetch data from API here for now just update the data
-        setCoachData({
-            courseDescription: ''
-        });
-    }, []);
+    const { trailer, description, thumbnail } = initialData;
 
     const handleFileChange = async (e) => {
         const file = e.target.files[0];
@@ -64,18 +66,17 @@ const UploadFiles = ({ onNext, onBack }) => {
         setCropping(true);
     };
 
-    const handleCropComplete = (croppedImage) => {
-        setCoursePhoto(croppedImage);
-        // Upload File through API
-        setCropping(false);
-        toast.success('Image uploaded successfully!', {
-            icon: '🎉',
-            style: {
-                borderRadius: '10px',
-                background: '#333',
-                color: '#fff'
-            }
+    const handleCropComplete = async (croppedImage) => {
+        const file = await getFileObjectFromBlobUrl(croppedImage, 'courseThumbnail.jpeg');
+        const formData = new FormData();
+        formData.append('files', file);
+        formData.append('name', file.name);
+
+        const mediaFile = await axiosWrapper('POST', API_URL.UPLOAD_MEDIA, formData, '', true);
+        updateCourseData({
+            thumbnail: mediaFile.data[0].path
         });
+        setCropping(false);
     };
 
     const handleVideoChange = async (e) => {
@@ -86,17 +87,15 @@ const UploadFiles = ({ onNext, onBack }) => {
             return;
         }
 
-        toast.success('Video uploaded successfully!', {
-            icon: '🎉',
-            style: {
-                borderRadius: '10px',
-                background: '#333',
-                color: '#fff'
-            }
-        });
-
-        setCourseVideo(file);
         // Upload File through API
+        const formData = new FormData();
+        formData.append('files', file);
+        formData.append('name', file.name);
+
+        const mediaFile = await axiosWrapper('POST', API_URL.UPLOAD_MEDIA, formData, '', true);
+        updateCourseData({
+            trailer: mediaFile.data[0].path
+        });
     };
 
     const handleCreateClick = () => {
@@ -104,19 +103,33 @@ const UploadFiles = ({ onNext, onBack }) => {
             show: true,
             title: 'Add Lecture',
             isEditable: false,
+            courseId: currentCourse,
             lectureId: null,
             initialValues: {
-                lectureName: '',
-                lectureDescription: '',
-                questions: [''],
-                optionalQuestions: [{ question: '', option1: '', option2: '', option3: '', option4: '' }],
+                name: '',
+                description: '',
+                quiz: {
+                    questions: [
+                        {
+                            question: '',
+                            correctAnswer: ''
+                        }
+                    ],
+                    mcqs: [
+                        {
+                            question: '',
+                            options: ['', '', '', ''],
+                            correctAnswer: ''
+                        }
+                    ]
+                },
                 file: null
             }
         });
     };
 
     const handleEditClick = (id) => {
-        const lecture = lectures.find((lec) => lec.id === id);
+        const lecture = initialData?.lectures.find((lec) => lec._id === id);
         setLectureModal({
             show: true,
             title: 'Edit Lecture',
@@ -127,41 +140,51 @@ const UploadFiles = ({ onNext, onBack }) => {
     };
 
     const handleDeleteClick = (id) => {
-        setSelectedRowId(id);
-        setShowDeleteModal(true);
+        setShowDeleteModal({
+            show: true,
+            title: 'Delete Lecture',
+            isEditable: false,
+            lectureId: id,
+            initialValues: null
+        });
     };
 
     const handleCloseDeleteModal = () => {
-        setShowDeleteModal(false);
+        setShowDeleteModal({
+            show: false,
+            title: 'Delete Lecture',
+            isEditable: false,
+            lectureId: null,
+            initialValues: null
+        });
     };
 
     const handleDeleteSubmit = async () => {
         try {
             setLoadingCRUD(true);
-            // Commenting for future use
-            // const data = await axiosWrapper(
-            //     'delete',
-            //     `${import.meta.env.VITE_JSONPLACEHOLDER}/posts/${selectedRowId}}`
-            // );
-            setLectures(lectures.filter((lec) => lec.id !== selectedRowId));
-            toast.success('Lecture deleted successfully');
+            await axiosWrapper(
+                'DELETE',
+                `${API_URL.DELETE_LECTURE.replace(':id', showDeleteModal.lectureId)}`,
+                {},
+                token
+            );
+            dispatch({ type: types.ALL_RECORDS, data: { keyOfData: 'currentCourseUpdate', data: true } });
         } catch (error) {
             return;
         } finally {
             setLoadingCRUD(false);
-            setShowDeleteModal(false);
+            setShowDeleteModal({
+                show: false,
+                title: 'Delete Lecture',
+                isEditable: false,
+                lectureId: null,
+                initialValues: null
+            });
         }
     };
 
-    const handleSaveLecture = (values) => {
-        if (lectureModal.isEditable) {
-            setLectures((prevLectures) =>
-                prevLectures.map((lec) => (lec.id === lectureModal.lectureId ? { ...lec, ...values } : lec))
-            );
-        } else {
-            const newLecture = { ...values, id: Date.now() };
-            setLectures((prevLectures) => [...prevLectures, newLecture]);
-        }
+    const handleSaveLecture = () => {
+        dispatch({ type: types.ALL_RECORDS, data: { keyOfData: 'currentCourseUpdate', data: true } });
         resetLectureModal();
     };
 
@@ -175,13 +198,19 @@ const UploadFiles = ({ onNext, onBack }) => {
         });
     };
 
-    const handleUploadFilesSubmit = (values, { resetForm, setSubmitting }) => {
-        setTimeout(() => {
-            // Implement form submission logic here
+    const handleUploadFilesSubmit = async (values, { resetForm, setSubmitting }) => {
+        setSubmitting(true);
+        const formData = { ...values };
+        if (currentCourse) {
+            await axiosWrapper('PUT', `${API_URL.UPDATE_COURSE.replace(':id', currentCourse)}`, formData, token);
+            // Handle next
+            dispatch({ type: types.ALL_RECORDS, data: { keyOfData: 'currentCourseUpdate', data: true } });
+            setStepComplete('step2');
+            setSubmitting(false);
+            setLoading(false);
             onNext();
             resetForm();
-            setSubmitting(false);
-        }, 1000);
+        }
     };
 
     return (
@@ -200,9 +229,9 @@ const UploadFiles = ({ onNext, onBack }) => {
                     />
                 </CoursesModal>
             )}
-            {showDeleteModal && (
+            {showDeleteModal.show && (
                 <ConfirmationBox
-                    show={showDeleteModal}
+                    show={showDeleteModal.show}
                     onClose={handleCloseDeleteModal}
                     loading={loadingCRUD}
                     title="Delete Lecture"
@@ -214,255 +243,283 @@ const UploadFiles = ({ onNext, onBack }) => {
                     activeBtnTitle="Delete"
                 />
             )}
-            <div className="upload-form-section">
-                <div className="section-title">
-                    <p>Upload Files</p>
-                </div>
-                <div className="upload-course-form">
-                    <Formik
-                        initialValues={coachData}
-                        validationSchema={Yup.object({
-                            courseDescription: Yup.string()
-                        })}
-                        onSubmit={handleUploadFilesSubmit}
-                        enableReinitialize
-                    >
-                        {({ isSubmitting, handleSubmit, values }) => (
-                            <Form onSubmit={handleSubmit}>
-                                <Row className="mb-3">
-                                    <Col xs={12} sm={12} md={12} lg={6}>
-                                        {coursePhoto ? (
-                                            <></>
-                                        ) : (
-                                            <label className="title-thumbnail">Course Thumbnail</label>
-                                        )}
-                                        <Field name="coursePhoto">
-                                            {({ field }) => (
-                                                <>
-                                                    <input
-                                                        ref={inputRef}
-                                                        accept=".jpg,.jpeg,.png"
-                                                        {...field}
-                                                        type="file"
-                                                        style={{ display: 'none' }}
-                                                        onChange={handleFileChange}
-                                                    />
-                                                    {coursePhoto ? (
-                                                        <div className="image-renderer">
-                                                            <img
-                                                                src={
-                                                                    typeof coursePhoto === 'string'
-                                                                        ? coursePhoto
-                                                                        : URL.createObjectURL(coursePhoto)
-                                                                }
-                                                                alt=""
-                                                                style={{ borderRadius: '50%', objectFit: 'cover' }}
-                                                            />
-                                                            <span>{coursePhoto.name}</span>
-                                                        </div>
-                                                    ) : (
-                                                        <div className="image-preview">
-                                                            <img src={thumbnail} alt="thumbnail" />
-                                                            <div className="image-preview-text">
-                                                                <div>
-                                                                    <p>Upload your course Thumbnail here.</p>
-                                                                    <p>
-                                                                        Supported format:
-                                                                        <strong>.jpg, .jpeg, or .png</strong>
-                                                                    </p>
-                                                                </div>
-
-                                                                <Button
-                                                                    type="submit"
-                                                                    className="upload-btn"
-                                                                    disabled={isSubmitting}
-                                                                    onClick={(e) => {
-                                                                        e.preventDefault();
-                                                                        inputRef.current.click();
-                                                                    }}
-                                                                >
-                                                                    Upload{' '}
-                                                                    <img
-                                                                        className="mb-1"
-                                                                        src={UploadSimple}
-                                                                        alt="Upload Btn"
-                                                                    />
-                                                                </Button>
-                                                            </div>
-                                                        </div>
-                                                    )}
-                                                </>
+            {loading ? (
+                <Loading />
+            ) : (
+                <div className="upload-form-section">
+                    <div className="section-title">
+                        <p>Upload Files</p>
+                    </div>
+                    <div className="upload-course-form">
+                        <Formik
+                            initialValues={{
+                                description: description || '',
+                                thumbnail: thumbnail || '',
+                                trailer: trailer || ''
+                            }}
+                            validationSchema={Yup.object({
+                                description: Yup.string().required('Description is required'),
+                                thumbnail: Yup.string().required('Thumbnail is required'),
+                                trailer: Yup.string().required('Trailer is required')
+                            })}
+                            onSubmit={handleUploadFilesSubmit}
+                            enableReinitialize
+                        >
+                            {({ isSubmitting, handleSubmit, values }) => (
+                                <Form onSubmit={handleSubmit}>
+                                    <Row className="mb-3">
+                                        <Col xs={12} sm={12} md={12} lg={6}>
+                                            {thumbnail ? (
+                                                <></>
+                                            ) : (
+                                                <label className="title-thumbnail">Course Thumbnail</label>
                                             )}
-                                        </Field>
-                                    </Col>
-                                    <Col xs={12} sm={12} md={12} lg={6}>
-                                        {courseVideo ? <></> : <label className="field-label">Course Trailer</label>}
-                                        <Field name="coursePhoto">
-                                            {({ field }) => (
-                                                <>
-                                                    <input
-                                                        ref={videoinputRef}
-                                                        accept="video/*"
-                                                        {...field}
-                                                        type="file"
-                                                        style={{ display: 'none' }}
-                                                        onChange={handleVideoChange}
-                                                    />
-                                                    {courseVideo ? (
-                                                        <div className="image-renderer">
-                                                            {/* Display uploaded video */}
-                                                            <video controls>
-                                                                <source
-                                                                    src={URL.createObjectURL(courseVideo)}
-                                                                    type={courseVideo.type}
+                                            <Field name="thumbnail">
+                                                {() => (
+                                                    <>
+                                                        <input
+                                                            ref={inputRef}
+                                                            accept=".jpg,.jpeg,.png"
+                                                            type="file"
+                                                            style={{ display: 'none' }}
+                                                            onChange={handleFileChange}
+                                                        />
+                                                        {thumbnail ? (
+                                                            <div className="image-renderer">
+                                                                <img
+                                                                    src={
+                                                                        typeof thumbnail === 'string'
+                                                                            ? thumbnail
+                                                                            : URL.createObjectURL(thumbnail)
+                                                                    }
+                                                                    alt=""
+                                                                    style={{ borderRadius: '50%', objectFit: 'cover' }}
                                                                 />
-                                                                Your browser does not support the video tag.
-                                                            </video>
-                                                            <span>{courseVideo.name}</span>
-                                                        </div>
-                                                    ) : (
-                                                        <div className="image-preview">
-                                                            <img src={VideoIcon} alt="" />
-                                                            <div className="image-preview-text">
-                                                                <span>
-                                                                    Upload your course video here.
-                                                                    <br />
-                                                                    Supported formats: <strong>
-                                                                        MP4, WebM, Ogg,
-                                                                    </strong>{' '}
-                                                                    etc.
-                                                                </span>
-                                                                <Button
-                                                                    type="submit"
-                                                                    className="upload-btn"
-                                                                    disabled={isSubmitting}
-                                                                    onClick={(e) => {
-                                                                        e.preventDefault();
-                                                                        videoinputRef.current.click();
-                                                                    }}
-                                                                >
-                                                                    Upload{' '}
-                                                                    <img
-                                                                        className="mb-1"
-                                                                        src={UploadSimple}
-                                                                        alt="Upload Btn"
-                                                                    />
-                                                                </Button>
+                                                                <span>Course Thumbnail</span>
                                                             </div>
-                                                        </div>
-                                                    )}
-                                                </>
-                                            )}
-                                        </Field>
-                                    </Col>
-                                </Row>
+                                                        ) : (
+                                                            <>
+                                                                <div className="image-preview">
+                                                                    <img src={courseThumbnail} alt="thumbnail" />
+                                                                    <div className="image-preview-text">
+                                                                        <div>
+                                                                            <p>Upload your course Thumbnail here.</p>
+                                                                            <p>
+                                                                                Supported format:
+                                                                                <strong>.jpg, .jpeg, or .png</strong>
+                                                                            </p>
+                                                                        </div>
 
-                                <Row>
-                                    <Col>
-                                        <label className="field-label">Course Description</label>
-                                        <Field
-                                            name="courseDescription"
-                                            value={values.courseDescription}
-                                            as="textarea"
-                                            placeholder="Enter Course Description"
-                                            render={({ field }) => (
-                                                <ReactQuill
-                                                    {...field}
-                                                    value={field.value || ''}
-                                                    name={field.name}
-                                                    onChange={(value) => field.onChange(field.name)(value)} // Update the form value
-                                                    className="field-quill-control"
-                                                    modules={{ toolbar: true }}
-                                                />
-                                            )}
-                                        />
-                                        <ErrorMessage name="courseDescription" component="div" className="error" />
-                                    </Col>
-                                </Row>
+                                                                        <Button
+                                                                            type="submit"
+                                                                            className="upload-btn"
+                                                                            disabled={isSubmitting}
+                                                                            onClick={(e) => {
+                                                                                e.preventDefault();
+                                                                                inputRef.current.click();
+                                                                            }}
+                                                                        >
+                                                                            Upload{' '}
+                                                                            <img
+                                                                                className="mb-1"
+                                                                                src={UploadSimple}
+                                                                                alt="Upload Btn"
+                                                                            />
+                                                                        </Button>
+                                                                    </div>
+                                                                </div>
+                                                                <ErrorMessage
+                                                                    name="thumbnail"
+                                                                    component="div"
+                                                                    className="error"
+                                                                />
+                                                            </>
+                                                        )}
+                                                    </>
+                                                )}
+                                            </Field>
+                                        </Col>
+                                        <Col xs={12} sm={12} md={12} lg={6}>
+                                            {trailer ? <></> : <label className="field-label">Course Trailer</label>}
+                                            <Field name="trailer">
+                                                {() => (
+                                                    <>
+                                                        <input
+                                                            ref={videoinputRef}
+                                                            accept="video/*"
+                                                            type="file"
+                                                            style={{ display: 'none' }}
+                                                            onChange={handleVideoChange}
+                                                        />
+                                                        {trailer ? (
+                                                            <div className="image-renderer">
+                                                                {/* Display uploaded video */}
+                                                                <video controls>
+                                                                    <source
+                                                                        src={
+                                                                            typeof initialData?.trailer === 'string'
+                                                                                ? initialData?.trailer
+                                                                                : URL.createObjectURL(
+                                                                                      initialData?.trailer
+                                                                                  )
+                                                                        }
+                                                                        // type={trailer.type}
+                                                                    />
+                                                                    Your browser does not support the video tag.
+                                                                </video>
+                                                                <span>Course Trailer</span>
+                                                            </div>
+                                                        ) : (
+                                                            <>
+                                                                <div className="image-preview">
+                                                                    <img src={VideoIcon} alt="" />
+                                                                    <div className="image-preview-text">
+                                                                        <span>
+                                                                            Upload your course video here.
+                                                                            <br />
+                                                                            Supported formats:{' '}
+                                                                            <strong>MP4, WebM, Ogg,</strong> etc.
+                                                                        </span>
+                                                                        <Button
+                                                                            type="submit"
+                                                                            className="upload-btn"
+                                                                            disabled={isSubmitting}
+                                                                            onClick={(e) => {
+                                                                                e.preventDefault();
+                                                                                videoinputRef.current.click();
+                                                                            }}
+                                                                        >
+                                                                            Upload{' '}
+                                                                            <img
+                                                                                className="mb-1"
+                                                                                src={UploadSimple}
+                                                                                alt="Upload Btn"
+                                                                            />
+                                                                        </Button>
+                                                                    </div>
+                                                                </div>
+                                                                <ErrorMessage
+                                                                    name="trailer"
+                                                                    component="div"
+                                                                    className="error"
+                                                                />
+                                                            </>
+                                                        )}
+                                                    </>
+                                                )}
+                                            </Field>
+                                        </Col>
+                                    </Row>
 
-                                <Row>
-                                    <Container>
-                                        <div className="add-lecture-section">
-                                            <div className="add-lecture-nav">
-                                                <div className="d-flex gap-2">
-                                                    <img src={menuIcon} alt="menu" />
-                                                    <p>Add Lectures</p>
-                                                </div>
-                                                <div className="d-flex gap-2">
-                                                    <img
-                                                        className="cursor-pointer"
-                                                        src={plusIcon}
-                                                        alt="menu"
-                                                        onClick={handleCreateClick}
+                                    <Row>
+                                        <Col>
+                                            <label className="field-label">Course Description</label>
+                                            <Field
+                                                name="description"
+                                                value={values.description}
+                                                as="textarea"
+                                                placeholder="Enter Course Description"
+                                                render={({ field }) => (
+                                                    <ReactQuill
+                                                        {...field}
+                                                        value={field.value || ''}
+                                                        name={field.name}
+                                                        onChange={(value) => field.onChange(field.name)(value)} // Update the form value
+                                                        className="field-quill-control"
+                                                        modules={{ toolbar: true }}
                                                     />
-                                                </div>
-                                            </div>
-                                            {lectures.map((lecture) => (
-                                                <div key={lecture.id} className="add-lecture-item mb-3">
-                                                    <div className="items-text d-flex gap-2">
+                                                )}
+                                            />
+                                            <ErrorMessage name="description" component="div" className="error" />
+                                        </Col>
+                                    </Row>
+
+                                    <Row>
+                                        <Container>
+                                            <div className="add-lecture-section">
+                                                <div className="add-lecture-nav">
+                                                    <div className="d-flex gap-2">
                                                         <img src={menuIcon} alt="menu" />
-                                                        <p className="items-text-title">
-                                                            {lecture.lectureName} (
-                                                            <span className="">
-                                                                {trimLongText(lecture.lectureDescription, 20)}
-                                                            </span>
-                                                            )
-                                                        </p>
+                                                        <p>Add Lectures</p>
                                                     </div>
-                                                    <div className="items-button">
-                                                        <Button type="button" className="quiz-btn">
-                                                            {lecture.questions.length} Questions Added
-                                                        </Button>
-                                                        <Button type="button" className="quiz-lec-btn">
-                                                            Lecture Video
-                                                        </Button>
+                                                    <div className="d-flex gap-2">
                                                         <img
                                                             className="cursor-pointer"
-                                                            src={PencilLine}
-                                                            alt="Edit"
-                                                            onClick={() => handleEditClick(lecture.id)}
-                                                        />
-                                                        <img
-                                                            className="cursor-pointer"
-                                                            src={trashIconRed}
-                                                            alt="Delete"
-                                                            onClick={() => handleDeleteClick(lecture.id)}
+                                                            src={plusIcon}
+                                                            alt="menu"
+                                                            onClick={handleCreateClick}
                                                         />
                                                     </div>
                                                 </div>
-                                            ))}
-                                        </div>
-                                    </Container>
-                                </Row>
-                                <Row>
-                                    <Col>
-                                        <div className="mt-3 d-flex justify-content-between gap-3 flex-wrap">
-                                            <Button
-                                                type="button"
-                                                className="cancel-btn"
-                                                disabled={isSubmitting}
-                                                onClick={onBack}
-                                            >
-                                                Back
-                                            </Button>
-                                            <Button type="submit" className="submit-btn" disabled={isSubmitting}>
-                                                Save & Next
-                                            </Button>
-                                        </div>
-                                    </Col>
-                                </Row>
-                            </Form>
+                                                {initialData?.lectures?.map((lecture) => (
+                                                    <div key={lecture._id} className="add-lecture-item mb-3">
+                                                        <div className="items-text d-flex gap-2">
+                                                            <img src={menuIcon} alt="menu" />
+                                                            <p className="items-text-title">
+                                                                {lecture.name} (
+                                                                <span className="">
+                                                                    {trimLongText(lecture.description, 20)}
+                                                                </span>
+                                                                )
+                                                            </p>
+                                                        </div>
+                                                        <div className="items-button">
+                                                            <Button type="button" className="quiz-btn">
+                                                                {lecture.quiz.questions.length +
+                                                                    lecture.quiz.mcqs.length}{' '}
+                                                                Questions Added
+                                                            </Button>
+                                                            <Button type="button" className="quiz-lec-btn">
+                                                                Lecture {lecture?.file ? 'File' : 'Video'}
+                                                            </Button>
+                                                            <img
+                                                                className="cursor-pointer"
+                                                                src={PencilLine}
+                                                                alt="Edit"
+                                                                onClick={() => handleEditClick(lecture._id)}
+                                                            />
+                                                            <img
+                                                                className="cursor-pointer"
+                                                                src={trashIconRed}
+                                                                alt="Delete"
+                                                                onClick={() => handleDeleteClick(lecture._id)}
+                                                            />
+                                                        </div>
+                                                    </div>
+                                                ))}
+                                            </div>
+                                        </Container>
+                                    </Row>
+                                    <Row>
+                                        <Col>
+                                            <div className="mt-3 d-flex justify-content-between gap-3 flex-wrap">
+                                                <Button
+                                                    type="button"
+                                                    className="cancel-btn"
+                                                    disabled={isSubmitting}
+                                                    onClick={onBack}
+                                                >
+                                                    Back
+                                                </Button>
+                                                <Button type="submit" className="submit-btn" disabled={isSubmitting}>
+                                                    Save & Next
+                                                </Button>
+                                            </div>
+                                        </Col>
+                                    </Row>
+                                </Form>
+                            )}
+                        </Formik>
+                        {cropping && (
+                            <ImageCropper
+                                imageSrc={imageSrc}
+                                onCropComplete={handleCropComplete}
+                                onCancel={() => setCropping(false)}
+                            />
                         )}
-                    </Formik>
-                    {cropping && (
-                        <ImageCropper
-                            imageSrc={imageSrc}
-                            onCropComplete={handleCropComplete}
-                            onCancel={() => setCropping(false)}
-                        />
-                    )}
+                    </div>
                 </div>
-            </div>
+            )}
         </>
     );
 };

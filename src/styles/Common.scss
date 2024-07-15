@@ -273,6 +273,18 @@
     text-align: left;
 }
 
+.add-quiz-fields .add-quiz-question .quiz-multiple-choice input[type='text'] {
+    &.correctAnswer {
+        background-color: $success-color !important;
+        color: black !important;
+    }
+}
+
+.correctAnswer {
+    background-color: $success-color !important;
+    color: black !important;
+}
+
 // Media styles
 @media (max-width: $large-screen) {
     .responsive-btn {

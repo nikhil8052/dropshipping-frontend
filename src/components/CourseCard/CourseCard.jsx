@@ -3,8 +3,12 @@ import Form from 'react-bootstrap/Form';
 import ProgressBar from 'react-bootstrap/ProgressBar';
 import enrollIcon from '../../assets/icons/enroll-icon.svg';
 import { Link } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 
-const CourseCard = ({ img, title, detail, lectureNo, archive, enroll, role }) => {
+const CourseCard = ({ img, title, detail, lectureNo, archive, enroll, onChange }) => {
+    const { userInfo } = useSelector((state) => state?.auth);
+    const role = userInfo?.role;
+
     return (
         <>
             <div className="course-card">
@@ -18,10 +22,16 @@ const CourseCard = ({ img, title, detail, lectureNo, archive, enroll, role }) =>
                         <p className="lecture-No">{lectureNo}</p>
                     </div>
                 </Link>
-                {archive && role === 'ADMIN' && (
+                {role === 'ADMIN' && (
                     <div className="toggle-archive">
                         <Form>
-                            <Form.Check type="switch" id="custom-switch" label="Archive" />
+                            <Form.Check
+                                onChange={onChange}
+                                checked={archive}
+                                type="switch"
+                                id="custom-switch"
+                                label="Archive"
+                            />
                         </Form>
                     </div>
                 )}

@@ -12,7 +12,6 @@ import toast from 'react-hot-toast';
 import { useLocation, useNavigate } from 'react-router-dom';
 import ImageCropper from '../../../../components/ImageMask/ImageCropper';
 import UploadSimple from '@icons/UploadSimple.svg';
-import RichTextEditor from '@components/RichTextEditor/RichTextEditor';
 import Input from '@components/Input/Input';
 import { useSelector } from 'react-redux';
 import { API_URL } from '../../../../utils/apiUrl';
@@ -437,12 +436,12 @@ const NewCoach = () => {
                                     </Col>
                                     {values.coachType && ticketRender(values.coachType)}
                                 </Row>
-                                <Row>
+                                {/* <Row>
                                     <Col>
                                         <label className="field-label">
                                             Bio <span className="label-light">(Optional)</span>
                                         </label>
-                                        {/* eslint-disable */}
+                                        
                                         <Field
                                             name="bio"
                                             type="text"
@@ -456,6 +455,47 @@ const NewCoach = () => {
                                         />
 
                                         <ErrorMessage name="bio" component="div" className="error" />
+                                    </Col>
+                                </Row> */}
+                                <Row>
+                                    <Col>
+                                        <Input
+                                            type="richTextEditor"
+                                            name="bio"
+                                            label="Bio (optional)"
+                                            placeholder="Write your content here..."
+                                            modules={{
+                                                toolbar: [
+                                                    [{ header: '1' }, { header: '2' }, { font: [] }],
+                                                    [{ size: [] }],
+                                                    ['bold', 'italic', 'underline', 'strike', 'blockquote'],
+                                                    [
+                                                        { list: 'ordered' },
+                                                        { list: 'bullet' },
+                                                        { indent: '-1' },
+                                                        { indent: '+1' }
+                                                    ],
+                                                    ['link', 'image', 'video'],
+                                                    ['clean']
+                                                ]
+                                            }}
+                                            formats={[
+                                                'header',
+                                                'font',
+                                                'size',
+                                                'bold',
+                                                'italic',
+                                                'underline',
+                                                'strike',
+                                                'blockquote',
+                                                'list',
+                                                'bullet',
+                                                'indent',
+                                                'link',
+                                                'image',
+                                                'video'
+                                            ]}
+                                        />
                                     </Col>
                                 </Row>
                                 <Row>
