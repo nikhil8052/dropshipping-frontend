@@ -1,10 +1,6 @@
 import * as types from '../actions/actionTypes';
 
 export const initialMMState = {
-    searchQuery: '',
-    loiId: '',
-    spaId: '',
-    openChallenges: [],
     notifications: [],
     fullScreen: false
 };

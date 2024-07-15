@@ -104,14 +104,13 @@ const AddLectureModal = ({ lectureModal, resetModal, onSave }) => {
                 ? API_URL.UPDATE_LECTURE.replace(':id', lectureModal.lectureId) + query
                 : `${API_URL.ADD_LECTURE}` + query;
             const method = lectureModal.isEditable ? 'PUT' : 'POST';
-            /* eslint-disable */
             const response = await axiosWrapper(method, url, formData, token);
             // Video upload
-            if (response.data?.vimeoVideoData) {
-                const { upload_link } = response.data?.vimeoVideoData?.upload;
+            if (response.data.vimeoVideoData) {
+                const { upload_link: uploadLink } = response.data.vimeoVideoData.upload;
                 const upload = new Upload(values.file, {
-                    endpoint: upload_link,
-                    uploadUrl: upload_link,
+                    endpoint: uploadLink,
+                    uploadUrl: uploadLink,
                     retryDelays: [0, 3000, 5000, 10000, 20000],
                     metadata: {
                         filename: values.file.name,

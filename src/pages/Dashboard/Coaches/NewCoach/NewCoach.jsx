@@ -436,27 +436,6 @@ const NewCoach = () => {
                                     </Col>
                                     {values.coachType && ticketRender(values.coachType)}
                                 </Row>
-                                {/* <Row>
-                                    <Col>
-                                        <label className="field-label">
-                                            Bio <span className="label-light">(Optional)</span>
-                                        </label>
-                                        
-                                        <Field
-                                            name="bio"
-                                            type="text"
-                                            component={({ field, form }) => (
-                                                <RichTextEditor
-                                                    form={form}
-                                                    field={field}
-                                                    className="field-quill-control"
-                                                />
-                                            )}
-                                        />
-
-                                        <ErrorMessage name="bio" component="div" className="error" />
-                                    </Col>
-                                </Row> */}
                                 <Row>
                                     <Col>
                                         <Input
