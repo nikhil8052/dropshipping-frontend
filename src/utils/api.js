@@ -1,9 +1,5 @@
 import axios from 'axios';
 import toast from 'react-hot-toast';
-import store from '../redux/store';
-import { logoutUser } from '../redux/auth/auth_slice';
-// Add request interceptor
-
 // Add response interceptor
 axios.interceptors.response.use(
     (response) => {
@@ -22,7 +18,6 @@ axios.interceptors.response.use(
         if (error.response.status === 401 || error.response.statusText === 'Unauthorized') {
             // logout user, clear local storage, redirect to login page
             localStorage.clear();
-            store.dispatch(logoutUser());
             window.location.href = '/login';
         }
         const errorMessage = error?.response?.data?.message || error?.response?.data?.desc || error?.message;
