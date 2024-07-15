@@ -1,44 +1,66 @@
 import { useEffect, useState } from 'react';
 import { Form as FormikForm, Formik, Field, ErrorMessage, FieldArray } from 'formik';
-import { Row, Col, Button } from 'react-bootstrap';
+import { Row, Col, Button, ProgressBar, Modal } from 'react-bootstrap';
 import * as Yup from 'yup';
 import Loading from '@components/Loading/Loading';
 import { toast } from 'react-hot-toast';
 import bluePlus from '@icons/blue-plus.svg';
-import { useNavigate } from 'react-router-dom';
 import { FileUploader } from 'react-drag-drop-files';
 import { faMinus } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import axiosWrapper from '../../../utils/api';
+import { API_URL } from '../../../utils/apiUrl';
+import { useSelector } from 'react-redux';
+import { Upload } from 'tus-js-client';
 
 const AddLectureModal = ({ lectureModal, resetModal, onSave }) => {
     const [loading, setLoading] = useState(false);
-    const [file, setFile] = useState(null);
-    const navigate = useNavigate();
-    const fileTypes = ['JPEG', 'PNG', 'GIF', 'pdf', 'docx'];
+    const [uploading, setUploading] = useState(false);
+    const [uploadProgress, setUploadProgress] = useState(0);
+    const token = useSelector((state) => state?.auth?.userToken);
+    const fileTypes = ['pdf', 'docx', 'mp4', 'avi', 'mov'];
 
     const [initialValues, setInitialValues] = useState(
         lectureModal.initialValues || {
-            lectureName: '',
-            lectureDescription: '',
-            questions: [''],
-            optionalQuestions: [{ question: '', option1: '', option2: '', option3: '', option4: '' }],
+            name: '',
+            description: '',
+            quiz: {
+                questions: [
+                    {
+                        question: '',
+                        correctAnswer: ''
+                    }
+                ],
+                mcqs: [
+                    {
+                        question: '',
+                        options: ['', '', '', ''],
+                        correctAnswer: ''
+                    }
+                ]
+            },
             file: null
         }
     );
 
     const validationSchema = Yup.object().shape({
-        lectureName: Yup.string().required('Lecture name is required'),
-        lectureDescription: Yup.string().required('Lecture description is required'),
-        questions: Yup.array(),
-        optionalQuestions: Yup.array().of(
-            Yup.object().shape({
-                question: Yup.string(),
-                option1: Yup.string(),
-                option2: Yup.string(),
-                option3: Yup.string(),
-                option4: Yup.string()
-            })
-        ),
+        name: Yup.string().required('Lecture name is required'),
+        description: Yup.string().required('Lecture description is required'),
+        quiz: Yup.object().shape({
+            questions: Yup.array().of(
+                Yup.object().shape({
+                    question: Yup.string().required('Question is required'),
+                    correctAnswer: Yup.string().required('Correct answer is required')
+                })
+            ),
+            mcqs: Yup.array().of(
+                Yup.object().shape({
+                    question: Yup.string().required('Question is required'),
+                    options: Yup.array().of(Yup.string().required('Option is required')),
+                    correctAnswer: Yup.string().required('Correct answer is required')
+                })
+            )
+        }),
         file: Yup.mixed().required('File is required')
     });
 
@@ -49,51 +71,100 @@ const AddLectureModal = ({ lectureModal, resetModal, onSave }) => {
     const fetchLectureDetail = async () => {
         try {
             setLoading(true);
-            // Dummy API call
-            await delayedSetLecture();
-            setInitialValues(lectureModal.initialValues);
-            // return lectureId;
+            const response = await axiosWrapper(
+                'GET',
+                API_URL.GET_LECTURE.replace(':id', lectureModal.lectureId),
+                {},
+                token
+            );
+            setInitialValues(response.data);
         } catch (error) {
-            toast.error('Something went wrong');
+            setLoading(false);
         } finally {
             setLoading(false);
         }
     };
 
-    const delayedSetLecture = async () => {
-        await new Promise((resolve) => {
-            setTimeout(() => {
-                setInitialValues(lectureModal.initialValues);
-                resolve();
-            }, 1000);
-        });
-    };
-
     const handleSubmit = async (values, { setSubmitting }) => {
+        setSubmitting(true);
         try {
-            setSubmitting(true);
-            // Commenting for future use
-            // const { method, endpoint } = getRequestMeta(lectureModal.isEditable);
-            // Submit request here
-            // const data = await axiosWrapper(method, endpoint, values);
-            toast.success(lectureModal.isEditable ? 'Lecture updated successfully' : 'Lecture created successfully');
-            onSave(values);
+            let formData = { ...values, courseId: lectureModal.courseId };
+            if (formData.file.type === 'document') {
+                formData = { ...values, courseId: lectureModal.courseId, file: formData.file.path };
+            } else {
+                setUploading(true);
+                delete formData.file;
+            }
+
+            const query = formData.file
+                ? ''
+                : `?size=${values.file.size}&type=${values.file.type}&description=${formData.description}&name=${formData.name}`;
+
+            const url = lectureModal.isEditable
+                ? API_URL.UPDATE_LECTURE.replace(':id', lectureModal.lectureId) + query
+                : `${API_URL.ADD_LECTURE}` + query;
+            const method = lectureModal.isEditable ? 'PUT' : 'POST';
+            const response = await axiosWrapper(method, url, formData, token);
+            // Video upload
+            if (response.data.vimeoVideoData) {
+                const { upload_link: uploadLink } = response.data.vimeoVideoData.upload;
+                const upload = new Upload(values.file, {
+                    endpoint: uploadLink,
+                    uploadUrl: uploadLink,
+                    retryDelays: [0, 3000, 5000, 10000, 20000],
+                    metadata: {
+                        filename: values.file.name,
+                        filetype: values.file.type
+                    },
+                    onError: () => {
+                        toast.error('Upload failed. Please try again.');
+                        setUploading(false);
+                        setSubmitting(false);
+                        resetModal();
+                    },
+                    onProgress: (bytesUploaded, bytesTotal) => {
+                        const percentage = ((bytesUploaded / bytesTotal) * 100).toFixed(2);
+                        setUploadProgress(percentage);
+                    },
+                    onSuccess: () => {
+                        toast.success('Lecture Uploaded Successfully');
+                        setUploading(false);
+                        onSave();
+                        resetModal();
+                        setSubmitting(false);
+                    }
+                });
+                upload.start();
+            } else {
+                setUploading(false);
+                onSave();
+                resetModal();
+                setSubmitting(false);
+            }
         } catch (error) {
             setSubmitting(false);
-        } finally {
+            setUploading(false);
             resetModal();
         }
     };
 
-    // const getRequestMeta = (isEditable) => {
-    //     if (isEditable) {
-    //         return { method: 'PUT', endpoint: '/lectures/some-id' };
-    //     }
-    //     return { method: 'POST', endpoint: '/lectures' };
-    // };
+    const handleLectureUpload = async (file, setFieldValue) => {
+        if (!file.type.includes('video')) {
+            const formData = new FormData();
+            formData.append('files', file);
+            formData.append('name', file.name);
 
-    const handleFileChange = (file) => {
-        setFile(file);
+            const mediaFile = await axiosWrapper('POST', API_URL.UPLOAD_MEDIA, formData, '', true);
+            const path = mediaFile.data[0].path;
+            setFieldValue('file', {
+                path: path,
+                name: path.split('-')[1],
+                type: 'document'
+            });
+        } else {
+            // Set the video file as it is
+            setFieldValue('file', file);
+        }
     };
 
     return (
@@ -112,25 +183,29 @@ const AddLectureModal = ({ lectureModal, resetModal, onSave }) => {
                             <Row>
                                 <Col md={12} xs={12}>
                                     <Field
-                                        name="lectureName"
-                                        className="field-control"
+                                        name="name"
+                                        className="field-control mb-2"
                                         type="text"
                                         placeholder="Type lecture name..."
                                     />
-                                    <ErrorMessage name="lectureName" component="div" className="error" />
+                                    <div className="mb-2">
+                                        <ErrorMessage name="name" component="div" className="error" />
+                                    </div>
                                 </Col>
                             </Row>
 
                             <Row>
                                 <Col md={12} xs={12}>
                                     <Field
-                                        name="lectureDescription"
-                                        className="field-text-area-control"
+                                        name="description"
+                                        className="field-text-area-control mb-0"
                                         as="textarea"
                                         placeholder="Type lecture description here..."
                                         rows="6"
                                     />
-                                    <ErrorMessage name="lectureDescription" component="div" className="error" />
+                                    <div className="mb-2">
+                                        <ErrorMessage name="description" component="div" className="error" />
+                                    </div>
                                 </Col>
                             </Row>
 
@@ -139,7 +214,7 @@ const AddLectureModal = ({ lectureModal, resetModal, onSave }) => {
                                     <p> Add Quiz</p>
                                 </div>
                                 <div className="quiz-fields-container">
-                                    <FieldArray name="questions">
+                                    <FieldArray name="quiz.questions">
                                         {({ push, remove }) => (
                                             <div className="add-quiz-fields">
                                                 <div className="add-quiz-label">
@@ -147,37 +222,53 @@ const AddLectureModal = ({ lectureModal, resetModal, onSave }) => {
                                                         Please Insert questions for Student’s personal assessments of
                                                         this course.
                                                     </p>
-                                                    <span onClick={() => push('')}>
+                                                    <span onClick={() => push({ question: '', correctAnswer: '' })}>
                                                         <img src={bluePlus} alt="bluePlus" /> Add new
                                                     </span>
                                                 </div>
                                                 <div className="add-quiz-question">
-                                                    {values.questions.map((_, index) => (
-                                                        <div key={index} className="d-flex align-items-center mb-3">
-                                                            <Field
-                                                                name={`questions[${index}]`}
-                                                                className="field-control"
-                                                                type="text"
-                                                                placeholder="Please Type Question Here..."
-                                                            />
-                                                            <ErrorMessage
-                                                                name={`questions[${index}]`}
-                                                                component="div"
-                                                                className="error"
-                                                            />
-                                                            <Button
-                                                                type="button"
-                                                                className="btn btn-link minus-btn"
-                                                                onClick={() => {
-                                                                    const lastIndex = values.questions.length - 1;
-                                                                    if (!lastIndex) {
-                                                                        toast.error('No questions are added.');
-                                                                    }
-                                                                    remove(index);
-                                                                }}
-                                                            >
-                                                                <FontAwesomeIcon icon={faMinus} color="black" />
-                                                            </Button>
+                                                    {values.quiz.questions.map((_, index) => (
+                                                        <div key={index} className="mb-3">
+                                                            <div className="d-flex align-items-center">
+                                                                <Field
+                                                                    name={`quiz.questions[${index}].question`}
+                                                                    className="field-control"
+                                                                    type="text"
+                                                                    placeholder="Please Type Question Here..."
+                                                                />
+                                                                <Button
+                                                                    type="button"
+                                                                    className="btn btn-link minus-btn"
+                                                                    onClick={() => {
+                                                                        if (values.quiz.questions.length > 1)
+                                                                            remove(index);
+                                                                    }}
+                                                                >
+                                                                    <FontAwesomeIcon icon={faMinus} color="black" />
+                                                                </Button>
+                                                            </div>
+                                                            <div className="d-flex align-items-center mb-2">
+                                                                <ErrorMessage
+                                                                    name={`quiz.questions[${index}].question`}
+                                                                    component="span"
+                                                                    className="error"
+                                                                />
+                                                            </div>
+                                                            <div className="d-flex align-items-center">
+                                                                <Field
+                                                                    name={`quiz.questions[${index}].correctAnswer`}
+                                                                    className="field-control correctAnswer"
+                                                                    type="text"
+                                                                    placeholder="Please Type Correct Answer Here..."
+                                                                />
+                                                            </div>
+                                                            <div className="d-flex align-items-center">
+                                                                <ErrorMessage
+                                                                    name={`quiz.questions[${index}].correctAnswer`}
+                                                                    component="div"
+                                                                    className="error"
+                                                                />
+                                                            </div>
                                                         </div>
                                                     ))}
                                                 </div>
@@ -185,7 +276,7 @@ const AddLectureModal = ({ lectureModal, resetModal, onSave }) => {
                                         )}
                                     </FieldArray>
 
-                                    <FieldArray name="optionalQuestions">
+                                    <FieldArray name="quiz.mcqs">
                                         {({ push, remove }) => (
                                             <div className="add-quiz-fields">
                                                 <div className="add-quiz-label">
@@ -197,78 +288,59 @@ const AddLectureModal = ({ lectureModal, resetModal, onSave }) => {
                                                         onClick={() =>
                                                             push({
                                                                 question: '',
-                                                                option1: '',
-                                                                option2: '',
-                                                                option3: '',
-                                                                option4: ''
+                                                                options: ['', '', '', ''],
+                                                                correctAnswer: ''
                                                             })
                                                         }
                                                     >
                                                         <img src={bluePlus} alt="bluePlus" /> Add new
                                                     </span>
                                                 </div>
-                                                {values.optionalQuestions.map((_, index) => (
-                                                    <div key={index} className="add-quiz-question mb-3">
-                                                        <div className="d-flex align-items-center mb-3">
+                                                {values.quiz.mcqs.map((_, index) => (
+                                                    <div key={index} className="add-quiz-question">
+                                                        <div className="d-flex align-items-center">
                                                             <Field
-                                                                name={`optionalQuestions[${index}].question`}
+                                                                name={`quiz.mcqs[${index}].question`}
                                                                 className="field-control"
                                                                 type="text"
                                                                 placeholder="Please Type Question Here..."
-                                                            />
-                                                            <ErrorMessage
-                                                                name={`optionalQuestions[${index}].question`}
-                                                                component="div"
-                                                                className="error"
                                                             />
                                                             <Button
                                                                 type="button"
                                                                 className="btn btn-link minus-btn"
                                                                 onClick={() => {
-                                                                    const lastIndex =
-                                                                        values.optionalQuestions.length - 1;
-                                                                    if (!lastIndex) {
-                                                                        toast.error('No MCQs are added.');
-                                                                    }
-                                                                    remove(index);
+                                                                    if (values.quiz.mcqs.length > 1) remove(index);
                                                                 }}
                                                             >
                                                                 <FontAwesomeIcon icon={faMinus} color="black" />
                                                             </Button>
                                                         </div>
-                                                        <div className="quiz-multiple-choice">
-                                                            <Field
-                                                                name={`optionalQuestions[${index}].option1`}
-                                                                className="field-control"
-                                                                type="text"
-                                                                placeholder="Type option 1"
+                                                        <div className="d-flex align-items-center mb-2">
+                                                            <ErrorMessage
+                                                                name={`quiz.mcqs[${index}].question`}
+                                                                component="div"
+                                                                className="error"
                                                             />
-                                                            <Field
-                                                                name={`optionalQuestions[${index}].option2`}
-                                                                className="field-control"
-                                                                type="text"
-                                                                placeholder="Type option 2"
-                                                            />
-                                                            <Field
-                                                                name={`optionalQuestions[${index}].option3`}
-                                                                className="field-control"
-                                                                type="text"
-                                                                placeholder="Type option 3"
-                                                            />
-                                                            <div className="correct-answer">
-                                                                <Field
-                                                                    name={`optionalQuestions[${index}].option4`}
-                                                                    className="field-control"
-                                                                    type="text"
-                                                                    placeholder="Type Correct Answer"
-                                                                />
-                                                            </div>
                                                         </div>
-                                                        <ErrorMessage
-                                                            name={`optionalQuestions[${index}].option4`}
-                                                            component="div"
-                                                            className="error"
-                                                        />
+                                                        <div className="quiz-multiple-choice">
+                                                            {['option1', 'option2', 'option3', 'option4'].map(
+                                                                (option, optIndex) => (
+                                                                    <Field
+                                                                        key={optIndex}
+                                                                        name={`quiz.mcqs[${index}].options[${optIndex}]`}
+                                                                        className="field-control"
+                                                                        type="text"
+                                                                        placeholder={`Type option ${optIndex + 1}`}
+                                                                    />
+                                                                )
+                                                            )}
+                                                            <Field
+                                                                name={`quiz.mcqs[${index}].correctAnswer`}
+                                                                className="field-control correctAnswer"
+                                                                type="text"
+                                                                placeholder="Type Correct Answer"
+                                                            />
+                                                        </div>
                                                     </div>
                                                 ))}
                                             </div>
@@ -278,44 +350,79 @@ const AddLectureModal = ({ lectureModal, resetModal, onSave }) => {
                             </div>
                             <div>
                                 <div className="add-quiz-file">
-                                    <h4>Attach File</h4>
+                                    <h4>{lectureModal?.isEditable ? 'Update' : 'Attach'} File</h4>
                                     <FileUploader
-                                        multiple={true}
-                                        handleChange={(file) => {
-                                            setFieldValue('file', file);
-                                            handleFileChange(file);
-                                        }}
+                                        multiple={false}
+                                        handleChange={(file) => handleLectureUpload(file, setFieldValue)}
                                         name="file"
                                         types={fileTypes}
                                     />
-                                    <p>{file ? `File name: ${file[0].name}` : 'Drag and drop a file or browse file'}</p>
+                                    <p>
+                                        {values.file
+                                            ? `File name: ${values.file.name || values.file.split('-')[1]}`
+                                            : 'Drag and drop a file or browse file'}
+                                    </p>
                                 </div>
                                 <ErrorMessage name="file" component="div" className="error mt-2" />
                             </div>
+                            {/* Display the uploaded lecture */}
+
+                            {lectureModal.isEditable &&
+                                initialValues?.vimeoVideoData?.player_embed_url && ( // Display the uploaded lecture
+                                    <div className="mt-3">
+                                        <h4>Uploaded Lecture</h4>
+                                        <div className="uploaded-lecture">
+                                            {initialValues?.vimeoVideoData?.player_embed_url ? (
+                                                <iframe
+                                                    src={initialValues?.vimeoVideoData?.player_embed_url}
+                                                    width="100%"
+                                                    height="400"
+                                                    frameBorder="0"
+                                                    allow="autoplay; fullscreen; picture-in-picture"
+                                                    allowFullScreen
+                                                    title="Lecture"
+                                                />
+                                            ) : (
+                                                <p>No lecture uploaded yet</p>
+                                            )}
+                                        </div>
+                                    </div>
+                                )}
 
                             <Row>
                                 <Col>
                                     <div className="mt-3 d-flex justify-content-between gap-3">
                                         <Button
                                             type="button"
-                                            onClick={() => navigate(-1)}
+                                            onClick={() => resetModal()}
                                             className="cancel-btn"
                                             disabled={isSubmitting}
                                         >
                                             Cancel
                                         </Button>
                                         <Button type="submit" className="submit-btn" disabled={isSubmitting}>
-                                            {isSubmitting ? (
-                                                <Loading centered size="sm" />
-                                            ) : lectureModal.isEditable ? (
-                                                'Update'
-                                            ) : (
-                                                'Save'
-                                            )}
+                                            {lectureModal.isEditable ? 'Update' : 'Save'}
                                         </Button>
                                     </div>
                                 </Col>
                             </Row>
+
+                            <Modal show={uploading} backdrop="static" keyboard={false} centered>
+                                <Modal.Body className="d-flex flex-column align-items-center">
+                                    <h5 className="mb-3">Uploading File</h5>
+                                    <ProgressBar
+                                        now={uploadProgress}
+                                        label={`${uploadProgress}%`}
+                                        striped
+                                        animated
+                                        className="w-100 mb-3"
+                                    />
+                                    <p>{values.file ? `File: ${values.file.name}` : ''}</p>
+                                    <Button variant="secondary" onClick={() => setUploading(false)}>
+                                        Cancel
+                                    </Button>
+                                </Modal.Body>
+                            </Modal>
                         </FormikForm>
                     )}
                 </Formik>

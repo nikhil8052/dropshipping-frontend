@@ -1,6 +1,7 @@
 import axios from 'axios';
 import toast from 'react-hot-toast';
-
+import store from '../redux/store';
+import { logoutUser } from '../redux/auth/auth_slice';
 // Add request interceptor
 
 // Add response interceptor
@@ -18,6 +19,12 @@ axios.interceptors.response.use(
     },
     (error) => {
         // You can handle errors here, e.g., show a toast message, logout on certain errors, etc.
+        if (error.response.status === 401 || error.response.statusText === 'Unauthorized') {
+            // logout user, clear local storage, redirect to login page
+            localStorage.clear();
+            store.dispatch(logoutUser());
+            window.location.href = '/login';
+        }
         const errorMessage = error?.response?.data?.message || error?.response?.data?.desc || error?.message;
         toast.error(errorMessage);
         return Promise.reject(error);

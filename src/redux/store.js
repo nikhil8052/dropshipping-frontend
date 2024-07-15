@@ -5,10 +5,12 @@ import { createLogger } from 'redux-logger';
 import auth from './auth/auth_slice';
 import themeReducer from './theme/theme_slice';
 import sidebarReducer from '../redux/sidebar/sidebarSlice';
+import { rootReducer as appReducer } from '../redux/reducer/rootReducer';
 
 // Combine all the slices into a single root reducer
 const rootReducer = combineReducers({
     auth,
+    root: appReducer,
     theme: themeReducer,
     activeSidebarItem: sidebarReducer
 });
