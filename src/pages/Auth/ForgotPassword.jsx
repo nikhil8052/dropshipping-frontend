@@ -10,11 +10,13 @@ import Footer from './Footer';
 import { useNavigate } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
+import axiosWrapper from '@utils/api';
+import { API_URL } from '../../utils/apiUrl';
 
 const ForgotPassword = () => {
     const navigate = useNavigate();
     const { loading } = useSelector((state) => state?.auth);
-    const inititialValues = {
+    const initialValues = {
         email: ''
     };
 
@@ -28,7 +30,13 @@ const ForgotPassword = () => {
 
     const handleSubmit = async (values, { setSubmitting }) => {
         try {
-            navigate('/verification-code');
+            // Call API to send verification code
+            await axiosWrapper('PUT', API_URL.SEND_OTP_ON_EMAIL, values);
+            navigate('/verification-code', {
+                state: {
+                    email: values.email
+                }
+            });
             setSubmitting(false);
         } catch (error) {
             setSubmitting(false);
@@ -48,7 +56,7 @@ const ForgotPassword = () => {
                                     Enter the email address associated with your Dropship Academy X.
                                 </h3>
                                 <Formik
-                                    initialValues={inititialValues}
+                                    initialValues={initialValues}
                                     validationSchema={validationSchema}
                                     onSubmit={handleSubmit}
                                     enableReinitialize

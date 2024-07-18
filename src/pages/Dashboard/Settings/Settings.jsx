@@ -9,10 +9,19 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
 import UploadSimple from '@icons/UploadSimple.svg';
 import ImageCropper from '../../../components/ImageMask/ImageCropper';
+import { API_URL } from '../../../utils/apiUrl';
+import { updateUserInfo } from '../../../redux/auth/auth_slice';
+import { useDispatch, useSelector } from 'react-redux';
+import axiosWrapper from '@utils/api';
 import '../../../styles/Settings.scss';
+import { getFileObjectFromBlobUrl } from '../../../utils/utils';
 
 const Settings = () => {
     const inputRef = useRef();
+    const dispatch = useDispatch();
+    const { userInfo } = useSelector((state) => state?.auth);
+    const token = useSelector((state) => state?.auth?.userToken);
+    const role = userInfo?.role.toLowerCase();
     const [profilePhoto, setProfilePhoto] = useState(profile || null);
     const [cropping, setCropping] = useState(false);
     const [imageSrc, setImageSrc] = useState(null);
@@ -36,17 +45,20 @@ const Settings = () => {
     });
 
     useEffect(() => {
-        setProfileData({
-            name: 'John Doe',
-            email: ' John.Doe@example.com',
-            phoneNumber: '+31- 612 345 678'
-        });
+        if (userInfo) {
+            setProfileData({
+                name: userInfo.name,
+                email: userInfo.email,
+                phoneNumber: userInfo.phoneNumber
+            });
+            setProfilePhoto(userInfo.avatar);
+        }
         setPasswordData({
             currentPassword: '',
             newPassword: '',
             confirmPassword: ''
         });
-    }, []);
+    }, [dispatch]);
 
     const profileValidationSchema = Yup.object({
         name: Yup.string().required('Name is required'),
@@ -88,33 +100,44 @@ const Settings = () => {
         setCropping(true);
     };
 
-    const handleCropComplete = (croppedImage) => {
-        setProfilePhoto(croppedImage);
+    const handleCropComplete = async (croppedImage) => {
+        const file = await getFileObjectFromBlobUrl(croppedImage, 'avatar.jpg');
+        const formData = new FormData();
+        formData.append('files', file);
+        formData.append('name', file.name);
+
+        const mediaFile = await axiosWrapper('POST', API_URL.UPLOAD_MEDIA, formData, '', true);
+        setProfilePhoto(mediaFile.data[0].path);
         setCropping(false);
-        toast.success('Image updated successfully!', {
-            icon: '🎉',
-            style: {
-                borderRadius: '10px',
-                background: '#333',
-                color: '#fff'
-            }
-        });
     };
 
-    const handleProfileSubmit = (values, { resetForm, setSubmitting }) => {
-        setTimeout(() => {
-            resetForm();
-            setSubmitting(false);
-            navigate('/admin');
-        }, 1000);
+    const handleProfileSubmit = async (values, { setSubmitting }) => {
+        const profileData = { ...values };
+
+        if (profileData.email) {
+            delete profileData.email;
+        }
+
+        const response = await axiosWrapper('PUT', API_URL.UPDATE_PROFILE, { ...profileData }, token);
+        // update data in redux
+        dispatch(updateUserInfo({ ...response.data, avatar: profilePhoto }));
+
+        setSubmitting(false);
+        navigate(`/${role}`);
     };
 
-    const handlePasswordSubmit = (values, { resetForm, setSubmitting }) => {
-        setTimeout(() => {
-            resetForm();
-            setSubmitting(false);
-            navigate('/admin');
-        }, 1000);
+    const handlePasswordSubmit = async (values, { resetForm, setSubmitting }) => {
+        const profileData = { ...values };
+
+        if (profileData.confirmPassword) {
+            delete profileData.confirmPassword;
+        }
+
+        await axiosWrapper('PUT', API_URL.UPDATE_PROFILE, { ...profileData }, token);
+
+        setSubmitting(false);
+        navigate(`/${role}`);
+        resetForm();
     };
 
     const togglePasswordVisibility = (field) => {
@@ -209,7 +232,7 @@ const Settings = () => {
                                     <Field
                                         name="phoneNumber"
                                         className="field-control"
-                                        type="number"
+                                        type="text"
                                         placeholder="+31- 612 345 678"
                                     />
                                     <ErrorMessage name="phoneNumber" component="div" className="error" />

@@ -1,30 +1,34 @@
 import { useSelector } from 'react-redux';
 import { Button, Col, Row, Spinner } from 'react-bootstrap';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import Input from '@components/Input/Input';
 import * as Yup from 'yup';
 import { Form as FormikForm, Formik } from 'formik';
 import { Helmet } from 'react-helmet';
-import './auth.scss';
 import LoginLeftSec from './LoginLeftSec';
 import Footer from './Footer';
 import { useState } from 'react';
 import { faEye, faEyeSlash, faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import axiosWrapper from '@utils/api';
+import { API_URL } from '../../utils/apiUrl';
+import './auth.scss';
 
 const ResetPassword = () => {
     const navigate = useNavigate();
+    const location = useLocation();
+    const token = location.state?.token;
     const { loading } = useSelector((state) => state?.auth);
     const [showPassword, setShowPassword] = useState({
-        newPassword: false,
+        password: false,
         confirmPassword: false
     }); // State for password visibility
-    const inititialValues = {
-        newPassword: '',
+    const initialValues = {
+        password: '',
         confirmPassword: ''
     };
     const validationSchema = Yup.object().shape({
-        newPassword: Yup.string()
+        password: Yup.string()
             .required('New Password is required')
             .trim()
             .min(4, 'Password must be at least 4 characters long')
@@ -37,12 +41,14 @@ const ResetPassword = () => {
         confirmPassword: Yup.string()
             .required('Confirm Password is required')
             .trim()
-            .oneOf([Yup.ref('newPassword'), null], 'Passwords must match')
+            .oneOf([Yup.ref('password'), null], 'Passwords must match')
             .test('not-only-spaces', 'Confirm Password cannot be only spaces', (value) => /\S/.test(value))
     });
 
-    const handleSubmit = async ({ setSubmitting }) => {
+    const handleSubmit = async (values, { setSubmitting }) => {
         try {
+            await axiosWrapper('PUT', API_URL.UPDATE_EMAIL_PASSWORD, { ...values }, token);
+
             navigate('/login');
             setSubmitting(false);
         } catch (error) {
@@ -70,7 +76,7 @@ const ResetPassword = () => {
                                     used passwords for your account security.
                                 </h3>
                                 <Formik
-                                    initialValues={inititialValues}
+                                    initialValues={initialValues}
                                     validationSchema={validationSchema}
                                     onSubmit={handleSubmit}
                                     enableReinitialize
@@ -80,15 +86,15 @@ const ResetPassword = () => {
                                             <FormikForm>
                                                 <div className="input-password-container">
                                                     <Input
-                                                        name="newPassword"
+                                                        name="password"
                                                         placeholder="8+  character"
                                                         label="New Password"
-                                                        type={showPassword.newPassword ? 'text' : 'password'}
+                                                        type={showPassword.password ? 'text' : 'password'}
                                                     />
                                                     <FontAwesomeIcon
-                                                        icon={showPassword.newPassword ? faEyeSlash : faEye}
-                                                        onClick={() => togglePassword('newPassword')}
-                                                        className={`eye-icon-password ${showPassword.newPassword ? 'visible' : ''}`}
+                                                        icon={showPassword.password ? faEyeSlash : faEye}
+                                                        onClick={() => togglePassword('password')}
+                                                        className={`eye-icon-password ${showPassword.password ? 'visible' : ''}`}
                                                         color="rgba(200, 202, 216, 1)"
                                                     />
                                                 </div>
