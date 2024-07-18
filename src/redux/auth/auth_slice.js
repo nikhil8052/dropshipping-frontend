@@ -25,6 +25,9 @@ const authSlice = createSlice({
         loginWithoutAPI: (state, { payload }) => {
             state.isLoggedIn = true;
             state.userInfo = { email: payload.email, role: payload.role };
+        },
+        updateUserInfo: (state, { payload }) => {
+            state.userInfo = payload;
         }
     },
     extraReducers(builder) {
@@ -74,5 +77,5 @@ const authSlice = createSlice({
     }
 });
 
-export const { logoutUser, loginWithoutAPI } = authSlice.actions;
+export const { logoutUser, loginWithoutAPI, updateUserInfo } = authSlice.actions;
 export default authSlice.reducer;
