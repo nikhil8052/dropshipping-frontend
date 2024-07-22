@@ -1,7 +1,7 @@
 import { useEffect, useState, useDeferredValue } from 'react';
 import { AgGridReact } from 'ag-grid-react';
 import 'ag-grid-community';
-import { InputGroup, Form, Row, Col } from 'react-bootstrap';
+import { InputGroup, Form, Row, Col, Button } from 'react-bootstrap';
 import Loading from '../Loading/Loading';
 import Search from '../../assets/icons/Search.svg';
 
@@ -9,7 +9,18 @@ import './Table.scss';
 import 'ag-grid-community/styles/ag-grid.css';
 import 'ag-grid-community/styles/ag-theme-alpine.css';
 
-const Table = ({ columns, tableData, width, onRowClicked, loading, children, inputLgSize = 6, childLgSize = 6 }) => {
+const Table = ({
+    columns,
+    tableData,
+    width,
+    onRowClicked,
+    loading,
+    children,
+    inputLgSize = 6,
+    childLgSize = 6,
+    onExportCsv,
+    exportFileName
+}) => {
     const [gridApi, setGridApi] = useState(null);
     const [gridColumnApi, setGridColumnApi] = useState(null);
     const [search, setSearch] = useState('');
@@ -39,6 +50,10 @@ const Table = ({ columns, tableData, width, onRowClicked, loading, children, inp
 
     const onFilterTextChange = (event) => {
         setSearch(event.target.value);
+    };
+
+    const exportToCsv = () => {
+        gridApi.exportDataAsCsv();
     };
 
     const gridOptions = {
@@ -102,6 +117,11 @@ const Table = ({ columns, tableData, width, onRowClicked, loading, children, inp
                         rowHeight={57}
                         suppressMovableColumns={true}
                     />
+                )}
+                {onExportCsv && (
+                    <Button id={`${exportFileName}`} onClick={exportToCsv} className="d-none">
+                        Export CSV
+                    </Button>
                 )}
             </div>
         </div>

@@ -178,7 +178,7 @@ const Coaches = () => {
         </React.Fragment>
     );
     const NameRenderer = (props) => (
-        <div key={props.data.id}>
+        <div key={props.data._id}>
             <div className="d-flex align-items-center gap-2">
                 {props.data.avatar ? (
                     <img src={props.data.avatar} alt={props.data.name} className="avatar-image" />

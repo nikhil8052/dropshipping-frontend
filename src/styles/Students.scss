@@ -15,6 +15,13 @@
         }
     }
 
+    .avatar-image {
+        width: 28px;
+        height: 28px;
+        border-radius: 50%;
+        object-fit: cover;
+    }
+
     // Fee status colors
     .fee-status {
         display: inline-block;

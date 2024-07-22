@@ -5,6 +5,9 @@ const COACH_API_BASE = `${BASE_URL}/api/coach`;
 const MEDIA_API_BASE = `${BASE_URL}/api/media`;
 const COURSE_API_BASE = `${BASE_URL}/api/course`;
 const LECTURE_API_BASE = `${BASE_URL}/api/lecture`;
+const PRODUCT_API_BASE = `${BASE_URL}/api/product`;
+const DAILY_FINANCE_API_BASE = `${BASE_URL}/api/dailyFinance`;
+const INVOICE_API_BASE = `${BASE_URL}/api/invoice`;
 
 export const API_URL = {
     // User API
@@ -66,5 +69,23 @@ export const API_URL = {
     MARK_LECTURE_COMPLETED: `${LECTURE_API_BASE}/mark-completed/:id`,
     PERFORM_QUIZ: `${LECTURE_API_BASE}/quiz/:id`,
     GET_LECTURE: `${LECTURE_API_BASE}/:id`,
-    GET_ALL_LECTURES: `${LECTURE_API_BASE}/`
+    GET_ALL_LECTURES: `${LECTURE_API_BASE}/`,
+
+    // Products API
+    UPLOAD_PRODUCTS_CSV: `${PRODUCT_API_BASE}/upload-csv`,
+    GET_PRODUCT: `${PRODUCT_API_BASE}/:id`,
+    GET_ALL_PRODUCTS: `${PRODUCT_API_BASE}/`,
+    EXPORT_PRODUCTS: `${PRODUCT_API_BASE}/export`,
+
+    // Daily Finances API
+    UPLOAD_DAILY_FINANCES_CSV: `${DAILY_FINANCE_API_BASE}/upload-csv`,
+    GET_DAILY_FINANCE: `${DAILY_FINANCE_API_BASE}/:id`,
+    GET_ALL_DAILY_FINANCES: `${DAILY_FINANCE_API_BASE}/`,
+    EXPORT_DAILY_FINANCES: `${DAILY_FINANCE_API_BASE}/export`,
+
+    // Invoices API
+    UPLOAD_INVOICES_CSV: `${INVOICE_API_BASE}/upload-csv`,
+    GET_INVOICE: `${INVOICE_API_BASE}/:id`,
+    GET_ALL_INVOICES: `${INVOICE_API_BASE}/`,
+    EXPORT_INVOICES: `${INVOICE_API_BASE}/export`
 };

@@ -3,16 +3,15 @@ import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import { Container, Row, Col, Button, Image, InputGroup } from 'react-bootstrap';
 import toast from 'react-hot-toast';
-import { useNavigate } from 'react-router-dom';
 import profile from '@images/user-img.jpg';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
 import UploadSimple from '@icons/UploadSimple.svg';
 import ImageCropper from '../../../components/ImageMask/ImageCropper';
-import { API_URL } from '../../../utils/apiUrl';
 import { updateUserInfo } from '../../../redux/auth/auth_slice';
 import { useDispatch, useSelector } from 'react-redux';
 import axiosWrapper from '@utils/api';
+import { API_URL } from '../../../utils/apiUrl';
 import '../../../styles/Settings.scss';
 import { getFileObjectFromBlobUrl } from '../../../utils/utils';
 
@@ -21,11 +20,9 @@ const Settings = () => {
     const dispatch = useDispatch();
     const { userInfo } = useSelector((state) => state?.auth);
     const token = useSelector((state) => state?.auth?.userToken);
-    const role = userInfo?.role.toLowerCase();
     const [profilePhoto, setProfilePhoto] = useState(profile || null);
     const [cropping, setCropping] = useState(false);
     const [imageSrc, setImageSrc] = useState(null);
-    const navigate = useNavigate();
     const [showPasswords, setShowPasswords] = useState({
         current: false,
         new: false,
@@ -67,14 +64,7 @@ const Settings = () => {
     });
 
     const passwordValidationSchema = Yup.object({
-        currentPassword: Yup.string()
-            .required('Current password is required')
-            .min(4, 'Password must be at least 4 characters long')
-            .max(20, 'Password must be at most 20 characters long')
-            .matches(
-                /^(?=.*[A-Za-z])(?=.*\d)(?=.*[ !"#$%&'()*+,-./:;<=>?@[\\\]^_`{|}~¡¢£¤¥¦§¨©ª«¬®ˉ°±²³´µ¶¸¹º»¼½¾¿ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖ×ØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõö÷øùúûüýþÿ])[A-Za-z\d !"#$%&'()*+,-./:;<=>?@[\\\]^_`{|}~¡¢£¤¥¦§¨©ª«¬®ˉ°±²³´µ¶¸¹º»¼½¾¿ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖ×ØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõö÷øùúûüýþÿ]{4,20}$/,
-                'Password must contain letters, numbers, and special characters'
-            ),
+        currentPassword: Yup.string().required('Current password is required'),
         newPassword: Yup.string()
             .required('New password is required')
             .min(4, 'Password must be at least 4 characters long')
@@ -123,7 +113,6 @@ const Settings = () => {
         dispatch(updateUserInfo({ ...response.data, avatar: profilePhoto }));
 
         setSubmitting(false);
-        navigate(`/${role}`);
     };
 
     const handlePasswordSubmit = async (values, { resetForm, setSubmitting }) => {
@@ -136,7 +125,6 @@ const Settings = () => {
         await axiosWrapper('PUT', API_URL.UPDATE_PROFILE, { ...profileData }, token);
 
         setSubmitting(false);
-        navigate(`/${role}`);
         resetForm();
     };
 

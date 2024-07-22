@@ -12,7 +12,7 @@ import { arrayMove, SortableContext, verticalListSortingStrategy, useSortable } 
 import { CSS } from '@dnd-kit/utilities';
 import coursesPointer from '@icons/courses_pointer.svg';
 import { Col, Row } from 'react-bootstrap';
-const RoadMapList = ({ coursesList }) => {
+const RoadMapList = ({ coursesList, setCoursesMap }) => {
     // State to manage the courses array
     const [courses, setCourses] = useState(coursesList || []);
     // Sensors to handle different input methods
@@ -24,6 +24,7 @@ const RoadMapList = ({ coursesList }) => {
             const newIndex = courses.findIndex((course) => course.id === over.id);
             const newCourses = arrayMove(courses, oldIndex, newIndex);
             setCourses(newCourses); // Update the state with the new courses array
+            setCoursesMap(newCourses); // Update the parent component state
         }
     };
 
@@ -46,7 +47,7 @@ const RoadMapList = ({ coursesList }) => {
         </DndContext>
     );
 };
-const DraggableCourse = ({ id, course }) => {
+const DraggableCourse = ({ id, course, keyIndex, key }) => {
     const { attributes, listeners, setNodeRef, transform, transition } = useSortable({ id });
     // Style transformations and drag handle styling
     const style = {
@@ -63,7 +64,7 @@ const DraggableCourse = ({ id, course }) => {
     };
 
     return (
-        <div ref={setNodeRef} style={style} {...listeners} {...attributes}>
+        <div key={key} ref={setNodeRef} style={style} {...listeners} {...attributes}>
             <div
                 style={{
                     padding: '8px 16px'
@@ -76,7 +77,7 @@ const DraggableCourse = ({ id, course }) => {
                         </div>
                     </Col>
                     <Col>
-                        <span>{`${course.id}. ${course.label || course.title}`}</span>
+                        <span>{`${keyIndex + 1}. ${course.label || course.title}`}</span>
                     </Col>
                 </Row>
             </div>

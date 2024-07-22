@@ -2,12 +2,11 @@ import { useEffect, useRef, useState } from 'react';
 import CaretRight from '@icons/CaretRight.svg';
 import imagePreview from '@icons/image-preview.svg';
 import dropDownArrow from '@icons/drop-down-black.svg';
-import { Formik, Form, Field, ErrorMessage, FieldArray } from 'formik';
+import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import { Container, Row, Col, Button, DropdownButton, Dropdown } from 'react-bootstrap';
 import 'react-quill/dist/quill.snow.css';
-import CustomSelect from '../../../../components/Input/Select';
-import { studentDummyData, countryList, regions, COACH } from '../../../../data/data';
+import { countryList, regions, COACH } from '../../../../data/data';
 import toast from 'react-hot-toast';
 import { useLocation, useNavigate } from 'react-router-dom';
 import ImageCropper from '../../../../components/ImageMask/ImageCropper';
@@ -25,6 +24,7 @@ const NewCoach = () => {
     const [coachPhoto, setCoachPhoto] = useState(null);
     const location = useLocation();
     const coachId = location.state?.coachId;
+    const [loading, setLoading] = useState(false);
     const { userInfo } = useSelector((state) => state?.auth);
     const token = useSelector((state) => state?.auth?.userToken);
     const role = userInfo?.role?.toLowerCase();
@@ -32,6 +32,7 @@ const NewCoach = () => {
     const [cropping, setCropping] = useState(false);
 
     const [imageSrc, setImageSrc] = useState(null);
+    const [students, setStudents] = useState([]);
     const [coachData, setCoachData] = useState({
         name: '',
         email: '',
@@ -54,6 +55,19 @@ const NewCoach = () => {
     const getSingleCoachById = async (id) => {
         const response = await axiosWrapper('GET', API_URL.GET_COACH.replace(':id', id), {}, token);
         const coach = response.data;
+
+        const students = coach.assignedStudents.map((student) => ({
+            value: student._id,
+            label: student.name
+        }));
+
+        // bio is saved in html format, so we need to parse it to display in the editor
+        // the bio is saved in this format <p>bio content</p>
+
+        const parser = new DOMParser();
+        const htmlDoc = parser.parseFromString(coach.bio, 'text/html');
+        const bio = htmlDoc.body.textContent;
+
         setCoachData((prev) => ({
             ...prev,
             name: coach.name,
@@ -61,13 +75,35 @@ const NewCoach = () => {
             phoneNumber: coach.phoneNumber,
             country: coach.country,
             region: coach.region,
-            assignedStudents: coach.assignedStudents,
+            assignedStudents: coach.assignedStudents.map((student) => student._id),
             highTicketStudentSpots: coach.highTicketStudentSpots,
             lowTicketStudentSpots: coach.lowTicketStudentSpots,
-            bio: coach.bio,
+            bio: bio,
             coachType: coach.coachType
         }));
+
+        setStudents(students);
         setCoachPhoto(coach.avatar);
+    };
+
+    const getAllStudents = async (trajectory) => {
+        // Later we will replace this with actual API call
+        try {
+            setLoading(true);
+            const queryParams = new URLSearchParams({ coachingTrajectory: trajectory }).toString();
+
+            const { data } = await axiosWrapper('GET', `${API_URL.GET_ALL_STUDENTS}?${queryParams}`, {}, token);
+            const students = data.map((student) => ({
+                value: student._id,
+                label: student.name
+            }));
+
+            setStudents(students);
+        } catch (error) {
+            return;
+        } finally {
+            setLoading(false);
+        }
     };
 
     const handleFileChange = async (e) => {
@@ -133,9 +169,17 @@ const NewCoach = () => {
         setSubmitting(false);
         navigate(`/${role}/coaches`);
     };
-
+    // Disabling because i need that ticketRender function
+    // eslint-disable
+    /* eslint-disable */
     const ticketRender = (ticket) => {
         const ticketType = ticket === COACH.COACH_TYPE.HIGH_TICKET ? 'High' : 'Low';
+
+        useEffect(() => {
+            if (ticket) {
+                getAllStudents(ticket);
+            }
+        }, [ticket]);
         return (
             <Col md={6} xs={12}>
                 <label className="field-label">{ticketType} Ticket Student Spots</label>
@@ -392,26 +436,15 @@ const NewCoach = () => {
                                         </Field>
                                     </Col>
                                     <Col md={6} xs={12}>
-                                        <label className="field-label">Assigned Students</label>
-                                        <FieldArray name="assignedStudents">
-                                            {({ form }) => (
-                                                <CustomSelect
-                                                    name="assignedStudents"
-                                                    options={studentDummyData.map((student) => ({
-                                                        value: student.id,
-                                                        label: student.name
-                                                    }))}
-                                                    isMulti={true}
-                                                    value={values.assignedStudents}
-                                                    placeholder="Select or search students..."
-                                                    onChange={(selectedOptions) => {
-                                                        form.setFieldValue('assignedStudents', selectedOptions);
-                                                    }}
-                                                    onBlur={() => form.setFieldTouched('assignedStudents', true)}
-                                                />
-                                            )}
-                                        </FieldArray>
-                                        <ErrorMessage name="assignedStudents" component="div" className="error" />
+                                        <Input
+                                            options={students}
+                                            name="assignedStudents"
+                                            placeholder="Select or search students..."
+                                            label="Assigned Students"
+                                            type="select"
+                                            isMulti={true}
+                                            // value={}
+                                        />
                                     </Col>
                                 </Row>
 
@@ -439,6 +472,7 @@ const NewCoach = () => {
                                 <Row>
                                     <Col>
                                         <Input
+                                            className="field-quill-control"
                                             type="richTextEditor"
                                             name="bio"
                                             label="Bio (optional)"
@@ -488,7 +522,11 @@ const NewCoach = () => {
                                             >
                                                 Cancel
                                             </Button>
-                                            <Button type="submit" className="submit-btn" disabled={isSubmitting}>
+                                            <Button
+                                                type="submit"
+                                                className="submit-btn"
+                                                disabled={loading || isSubmitting}
+                                            >
                                                 {isSubmitting
                                                     ? coachId
                                                         ? 'Saving Changes...'

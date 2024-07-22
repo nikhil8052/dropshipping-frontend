@@ -5,6 +5,8 @@
     align-items: center;
     justify-content: end;
     gap: 10px;
+    position: absolute;
+    bottom: 1rem;
 
     .page-button {
         display: flex;

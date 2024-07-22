@@ -6,17 +6,18 @@ import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import { Container, Row, Col, Button, DropdownButton, Dropdown } from 'react-bootstrap';
 import 'react-quill/dist/quill.snow.css';
-import { coachingTrajectory, countryList, regions, studentDummyData, studentProducts } from '../../../../data/data';
+import { coachingTrajectory, countryList, regions } from '../../../../data/data';
 import toast from 'react-hot-toast';
 import UploadSimple from '@icons/UploadSimple.svg';
 import { useLocation, useNavigate } from 'react-router-dom';
-import Select from 'react-select';
+import Input from '@components/Input/Input';
 import RoadMapList from '../Roadmap/RoadmapList';
 import { useSelector } from 'react-redux';
 import CarouselWrapper from '@components/Carousel/CarouselWrapper';
 import ImageCropper from '@components/ImageMask/ImageCropper';
 import { API_URL } from '../../../../utils/apiUrl';
 import axiosWrapper from '../../../../utils/api';
+import { getFileObjectFromBlobUrl } from '../../../../utils/utils';
 import '../../../../styles/Students.scss';
 import '../../../../styles/Common.scss';
 
@@ -31,13 +32,15 @@ const NewStudent = () => {
     const navigate = useNavigate();
     const [cropping, setCropping] = useState(false);
     const [imageSrc, setImageSrc] = useState(null);
+    const [courses, setCourses] = useState([]);
+    const [studentProducts, setStudentProducts] = useState([]);
     const [studentData, setStudentData] = useState({
         name: '',
         email: '',
         phoneNumber: '',
         country: '',
         region: '',
-        coachingTrajectory: '',
+        coachingTrajectory: 'HIGH_TICKET',
         coursesRoadmap: []
     });
 
@@ -73,25 +76,60 @@ const NewStudent = () => {
 
     useEffect(() => {
         if (studentId) {
-            // For now it is a dummy data, later we will replace it with actual API call
-
-            // Fetch data from API here
-            const student = studentDummyData.find((student) => student.id === studentId);
-            // later we add the details to the form
-            if (student) {
-                setStudentPhoto(student.avatarUrl);
-                setStudentData({
-                    name: student.name,
-                    email: student.email,
-                    phoneNumber: student.phoneNumber,
-                    country: student.country,
-                    region: student.region,
-                    coursesRoadmap: student.coursesRoadmap,
-                    coachingTrajectory: student.coachingTrajectory
-                });
-            }
+            getSingleStudentById(studentId);
+            // Get students Products
+            getStudentProducts(studentId);
         }
     }, [studentId]);
+
+    const getSingleStudentById = async (id) => {
+        const response = await axiosWrapper('GET', API_URL.GET_STUDENT.replace(':id', id), {}, token);
+        const student = response.data;
+
+        const coursesRoadmap = student.coursesRoadmap.map((course) => ({
+            value: course._id,
+            label: course.title,
+            id: course._id
+        }));
+
+        setStudentData({
+            name: student.name,
+            email: student.email,
+            phoneNumber: student.phoneNumber,
+            country: student.country,
+            region: student.region,
+            coachingTrajectory: student.coachingTrajectory,
+            coursesRoadmap: student.coursesRoadmap.map((c) => c._id)
+        });
+        setCourses(coursesRoadmap);
+        setStudentPhoto(student.avatar);
+    };
+
+    const getStudentProducts = async (id) => {
+        // Fetch student products
+        const url = `${API_URL.GET_ALL_PRODUCTS}?createdBy=${id}`;
+        const response = await axiosWrapper('get', url, {}, token);
+        const { data } = response;
+        setStudentProducts(data);
+    };
+
+    useEffect(() => {
+        if (studentData.coachingTrajectory) {
+            getAllCourses(studentData.coachingTrajectory);
+        }
+    }, [studentData.coachingTrajectory]);
+
+    const getAllCourses = async (trajectory) => {
+        const response = await axiosWrapper('GET', `${API_URL.GET_ALL_COURSES}?coachType=${trajectory}`, {}, token);
+        const { data } = response;
+        const formattedData = data.map((c) => ({
+            value: c._id,
+            label: c.title,
+            id: c._id
+        }));
+
+        setCourses(formattedData);
+    };
 
     const handleFileChange = async (e) => {
         const file = e.target.files[0];
@@ -106,29 +144,20 @@ const NewStudent = () => {
         setCropping(true);
     };
 
-    const handleCropComplete = (croppedImage) => {
-        setStudentPhoto(croppedImage);
-        // Upload File through API
+    const handleCropComplete = async (croppedImage) => {
+        const file = await getFileObjectFromBlobUrl(croppedImage, 'avatar.jpg');
+        const formData = new FormData();
+        formData.append('files', file);
+        formData.append('name', file.name);
+
+        const mediaFile = await axiosWrapper('POST', API_URL.UPLOAD_MEDIA, formData, '', true);
+        setStudentPhoto(mediaFile.data[0].path);
         setCropping(false);
-        toast.success('Image uploaded successfully!', {
-            icon: '🎉',
-            style: {
-                borderRadius: '10px',
-                background: '#333',
-                color: '#fff'
-            }
-        });
     };
 
     const handleFormSubmit = async (values, { resetForm, setSubmitting }) => {
-        // Dummy ids for now
-        const courseIds = [];
-        if (values.coursesRoadmap) {
-            values.coursesRoadmap.forEach(() => {
-                courseIds.push('6683cffd269cf6979cb4c28b');
-            });
-        }
-        const formData = { ...values, avatar: studentPhoto, coursesRoadmap: courseIds };
+        if (studentId) delete values.email;
+        const formData = { ...values, avatar: studentPhoto };
         const url = studentId ? `${API_URL.UPDATE_STUDENT.replace(':id', studentId)}` : API_URL.CREATE_STUDENT;
         const method = studentId ? 'PUT' : 'POST';
 
@@ -385,6 +414,7 @@ const NewStudent = () => {
                                                     const selectedField = coachingTrajectory.find(
                                                         (coach) => coach.id.toString() === eventKey
                                                     );
+                                                    getAllCourses(selectedField.value);
                                                     form.setFieldValue(field.name, selectedField.value);
                                                 };
 
@@ -393,7 +423,11 @@ const NewStudent = () => {
                                                         <DropdownButton
                                                             title={
                                                                 <div className="d-flex justify-content-between align-items-center">
-                                                                    <span>{field.value || 'Select ...'}</span>
+                                                                    <span>
+                                                                        {coachingTrajectory.find(
+                                                                            (c) => c.value === field.value
+                                                                        )?.label || 'Select ...'}
+                                                                    </span>
                                                                     <img src={dropDownArrow} alt="arrow" />
                                                                 </div>
                                                             }
@@ -428,38 +462,13 @@ const NewStudent = () => {
 
                                     {!studentId && (
                                         <Col md={6} xs={12}>
-                                            <label className="field-label">Courses Roadmap</label>
-                                            {/* eslint-disable */}
-                                            <Field
+                                            <Input
+                                                options={courses}
                                                 name="coursesRoadmap"
-                                                component={({
-                                                    field, // { name, value, onChange, onBlur }
-                                                    form // also values, setXXXX, handleXXXX, dirty, isValid, status, etc.
-                                                }) => (
-                                                    <Select
-                                                        {...field}
-                                                        className="custom-multi-select"
-                                                        isMulti
-                                                        options={[
-                                                            { value: 'metadata', label: 'Meta Data Course', id: 1 },
-                                                            {
-                                                                value: 'msoffice',
-                                                                label: 'Microsoft Office Expert',
-                                                                id: 2
-                                                            }
-                                                        ]}
-                                                        value={values.coursesRoadmap}
-                                                        onChange={(selectedOptions) => {
-                                                            form.setFieldValue('coursesRoadmap', selectedOptions);
-                                                        }}
-                                                        closeMenuOnSelect={false}
-                                                    />
-                                                )}
-                                            />
-                                            <ErrorMessage
-                                                name="coursesRoadmap"
-                                                component="div"
-                                                className="error mt-2"
+                                                placeholder="Select..."
+                                                label="Courses Roadmap"
+                                                type="select"
+                                                isMulti={true}
                                             />
                                         </Col>
                                     )}
@@ -471,7 +480,12 @@ const NewStudent = () => {
                                             <>
                                                 <div className="field-label my-2">Courses Roadmap List </div>
                                                 <div className="course-roadmap-wrapper">
-                                                    <RoadMapList coursesList={values.coursesRoadmap} />
+                                                    <RoadMapList
+                                                        coursesList={courses.filter((c) =>
+                                                            values.coursesRoadmap.find((val) => c.id === val)
+                                                        )}
+                                                        setCoursesMap={setCourses}
+                                                    />
                                                 </div>
                                             </>
                                         )}
@@ -486,7 +500,7 @@ const NewStudent = () => {
                                                     type="button"
                                                     onClick={() =>
                                                         navigate(`/${role}/visualize-csv`, {
-                                                            state: { studentId }
+                                                            state: { studentId, studentName: values.name }
                                                         })
                                                     }
                                                     className="submit-btn my-2"
