@@ -4,21 +4,22 @@ import { Button, Col, Container, Row } from 'react-bootstrap';
 import ConfirmationBox from '@components/ConfirmationBox/ConfirmationBox';
 import { Helmet } from 'react-helmet';
 import axiosWrapper from '@utils/api';
-import { toast } from 'react-toastify';
+import toast from 'react-hot-toast';
 import TextExpand from '@components/TextExpand/TextExpand';
 import uploadSimple from '@icons/UploadSimpleBack.svg';
 import pdfExport from '@icons/picture_as_pdf.svg';
-import { visualizeCsv } from '../../../../data/data';
+import { API_URL } from '../../../../utils/apiUrl';
 import ProductDetail from './ProductDetail';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faArrowDown } from '@fortawesome/free-solid-svg-icons';
+import { faArrowDown, faCircleUser } from '@fortawesome/free-solid-svg-icons';
 import { FileUploader } from 'react-drag-drop-files';
 import DateRenderer from '@components/DateFormatter/DateFormatter';
+import { useSelector } from 'react-redux';
 
 const fileTypes = ['csv'];
 
 const StudentsTrainingProduct = ({ studentId }) => {
-    const [showDeleteModal, setShowDeleteModal] = useState(false);
+    const token = useSelector((state) => state?.auth?.userToken);
     const [selectedRowId, setSelectedRowId] = useState(null);
     const [loading, setLoading] = useState(false);
     const [loadingCRUD, setLoadingCRUD] = useState(false);
@@ -34,52 +35,27 @@ const StudentsTrainingProduct = ({ studentId }) => {
     useEffect(() => {
         // Fetch data from API here
         fetchData();
-    }, []);
+    }, [dateFilters, studentId]);
 
     const fetchData = async () => {
-        // Later we will replace this with actual API call
-        try {
-            setLoading(true);
-
-            setStudentsData(visualizeCsv);
-        } catch (error) {
-            return;
-        } finally {
-            setLoading(false);
-        }
+        setLoading(true);
+        const queryParams = new URLSearchParams(dateFilters).toString();
+        const url = `${API_URL.GET_ALL_PRODUCTS}?${queryParams}${studentId ? `&createdBy=${studentId}` : ''}`;
+        const response = await axiosWrapper('get', url, {}, token);
+        setStudentsData(response.data);
+        setLoading(false);
     };
 
     const handleRowClick = (event) => {
         // Handle row click event here
-        if (selectedRowId === event.data.id) {
+        if (selectedRowId === event.data._id) {
             setSelectedRowId(null);
             return;
         }
-        setSelectedRowId(event.data.id);
-    };
-
-    const handleCloseDeleteModal = () => {
-        setShowDeleteModal(false);
-    };
-
-    const handleDeleteSubmit = async () => {
-        try {
-            setLoadingCRUD(true);
-            const data = await axiosWrapper(
-                'delete',
-                `${import.meta.env.VITE_JSONPLACEHOLDER}/posts/${selectedRowId}}`
-            );
-            toast.success(data?.message || 'Item deleted successfully');
-        } catch (error) {
-            return;
-        } finally {
-            setLoadingCRUD(false);
-            setShowDeleteModal(false);
-        }
+        setSelectedRowId(event.data._id);
     };
 
     const toggleExpand = (event) => {
-        // Specifically in this component, we need to prevent the event from propagating to the parent element
         event.stopPropagation();
         setExpanded(!expanded);
     };
@@ -93,9 +69,13 @@ const StudentsTrainingProduct = ({ studentId }) => {
     /*eslint-disable */
 
     const NameRenderer = (props) => (
-        <div key={props.data.id}>
+        <div key={props.data._id}>
             <div className="d-flex align-items-center gap-2">
-                <img src={props.data.avatarUrl} alt={props.data.productName} className="avatar" />
+                {props.data.avatarUrl ? (
+                    <img src={props.data.avatarUrl} alt={props.data.productName} className="avatar-image" />
+                ) : (
+                    <FontAwesomeIcon size="2xl" icon={faCircleUser} color="rgba(200, 202, 216, 1)" />
+                )}
                 <div
                     style={{
                         overflow: 'hidden',
@@ -156,7 +136,7 @@ const StudentsTrainingProduct = ({ studentId }) => {
             cellRenderer: ({ data: rowData }) => {
                 const status = rowData.status;
                 return (
-                    <div className={`${status} status`} key={rowData.id}>
+                    <div className={`${status} status`} key={rowData._id}>
                         {status}
                     </div>
                 );
@@ -164,7 +144,7 @@ const StudentsTrainingProduct = ({ studentId }) => {
         },
         {
             headerName: 'Created By',
-            field: 'createdBy',
+            field: 'createdBy.name',
             filter: 'agSetColumnFilter',
             sortable: true,
             unSortIcon: true,
@@ -174,40 +154,30 @@ const StudentsTrainingProduct = ({ studentId }) => {
             resizable: false
         }
     ];
-    const handleUploadSubmit = async (e) => {
+
+    const handleUploadSubmit = async () => {
+        setLoadingCRUD(true);
         try {
-            setLoadingCRUD(true);
-            const file = e.target.files[0];
-            if (!file || !file.type.startsWith('image/')) {
-                // Display an error or handle the invalid file selection
-                toast.error('Invalid file selected. Please choose an CSV file.');
-                return;
-            }
-
-            const image = new Image();
-            image.src = window.URL.createObjectURL(file);
-            image.onload = () => {
-                toast.success('File uploaded successfully!', {
-                    icon: '🎉',
-                    style: {
-                        borderRadius: '10px',
-                        background: '#333',
-                        color: '#fff'
-                    }
-                });
-
-                setFile(file);
-                // Upload File through API
-            };
+            const filePath = 'uploads' + file.split('/uploads')[1];
+            await axiosWrapper('POST', API_URL.UPLOAD_PRODUCTS_CSV, { filePath }, token);
+            fetchData();
         } catch (error) {
-            return;
+            toast.error(error);
         } finally {
             setLoadingCRUD(false);
+            setUploadFileModal(false);
         }
+        setLoadingCRUD(false);
     };
 
-    const handleChange = (file) => {
-        setFile(file);
+    const handleChange = async (file) => {
+        const formData = new FormData();
+        formData.append('files', file);
+        formData.append('name', file.name);
+
+        const mediaFile = await axiosWrapper('POST', API_URL.UPLOAD_MEDIA, formData, '', true);
+
+        setFile(mediaFile.data[0].path);
     };
 
     const handleDateChange = ({ target: input }) => {
@@ -215,6 +185,10 @@ const StudentsTrainingProduct = ({ studentId }) => {
             ...pre,
             [input.name]: input.value
         }));
+    };
+
+    const handleExportProducts = async () => {
+        document.getElementById('training-products').click();
     };
 
     return (
@@ -229,20 +203,6 @@ const StudentsTrainingProduct = ({ studentId }) => {
                         <title>Visualize Csv | Dropship Academy</title>
                     </Helmet>
 
-                    {showDeleteModal && (
-                        <ConfirmationBox
-                            show={showDeleteModal}
-                            onClose={handleCloseDeleteModal}
-                            loading={loadingCRUD}
-                            title="Delete Student"
-                            body="Are you sure you want to delete this Student?"
-                            onConfirm={handleDeleteSubmit}
-                            customFooterClass="custom-footer-class"
-                            nonActiveBtn="cancel-button"
-                            activeBtn="delete-button"
-                            activeBtnTitle="Delete"
-                        />
-                    )}
                     {uploadFileModal && (
                         <ConfirmationBox
                             show={uploadFileModal}
@@ -256,7 +216,7 @@ const StudentsTrainingProduct = ({ studentId }) => {
                                             <div className="add-quiz-file">
                                                 <h4>Attach File</h4>
                                                 <FileUploader
-                                                    multiple={true}
+                                                    multiple={false}
                                                     handleChange={handleChange}
                                                     name="file"
                                                     types={fileTypes}
@@ -264,7 +224,7 @@ const StudentsTrainingProduct = ({ studentId }) => {
                                                 />
                                                 <p>
                                                     {file ? (
-                                                        `File name: ${file[0].name}`
+                                                        `File name: ${file.name || file.split('-')[1]}`
                                                     ) : (
                                                         <span>
                                                             Drag an drop a file or <strong> browse file</strong>
@@ -274,8 +234,7 @@ const StudentsTrainingProduct = ({ studentId }) => {
                                             </div>
                                         </Col>
                                         <Button className="sample-file-btn">
-                                            <FontAwesomeIcon className="me-2" icon={faArrowDown} /> Download Sample
-                                            File?
+                                            <FontAwesomeIcon className="me-2" icon={faArrowDown} /> Download Sample File
                                         </Button>
                                     </Row>
                                 </Container>
@@ -328,7 +287,7 @@ const StudentsTrainingProduct = ({ studentId }) => {
                                 {!studentId && (
                                     <>
                                         <Col md={12} lg={6} xl={6} xxl={3}>
-                                            <Button className="add-button w-100">
+                                            <Button className="add-button w-100" onClick={handleExportProducts}>
                                                 <span className="me-2">Export</span>
                                                 <img src={pdfExport} alt="" />
                                             </Button>
@@ -343,6 +302,8 @@ const StudentsTrainingProduct = ({ studentId }) => {
                                 )}
                             </Row>
                         }
+                        onExportCsv={true}
+                        exportFileName="training-products"
                     />
                 </>
             )}

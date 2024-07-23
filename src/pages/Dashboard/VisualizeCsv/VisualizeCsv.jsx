@@ -4,7 +4,6 @@ import DailyFinances from './DailyFinances';
 import Invoices from './Invoices';
 import { useLocation, useNavigate } from 'react-router-dom';
 import CaretRight from '@icons/CaretRight.svg';
-import { studentDummyData } from '../../../data/data';
 import { useSelector } from 'react-redux';
 import '../../../styles/VisualizeCsv.scss';
 
@@ -14,7 +13,7 @@ function VisualizeCsv() {
     const { userInfo } = useSelector((state) => state?.auth);
     const role = userInfo?.role;
     const studentId = location.state?.studentId;
-    const student = studentDummyData.find((student) => student.id === studentId);
+    const studentName = location.state?.studentName;
 
     return (
         <div className="visualize-csv-tabs">
@@ -23,7 +22,11 @@ function VisualizeCsv() {
                     <span onClick={() => navigate(`/${role}/students`)} style={{ cursor: 'pointer' }}>
                         Students <img src={CaretRight} alt=">" />
                     </span>{' '}
-                    {student?.name}'s Profile <img src={CaretRight} alt=">" /> View Test Products
+                    <span onClick={() => navigate(`/${role.toLowerCase()}/students`)} className="cursor-pointer">
+                        {' '}
+                        {studentName ? studentName.split(' ')[1] : 'student'}'s Profile{' '}
+                    </span>{' '}
+                    <img src={CaretRight} alt=">" /> View Test Products
                 </div>
             )}
             <Tabs fill defaultActiveKey="students" id="uncontrolled-tab-example" className="mb-3">

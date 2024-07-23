@@ -5,7 +5,6 @@ import Modal from '@components/Modal/Modal';
 import ConfirmationBox from '@components/ConfirmationBox/ConfirmationBox';
 import { Helmet } from 'react-helmet';
 import axiosWrapper from '@utils/api';
-import toast from 'react-hot-toast';
 import TextExpand from '@components/TextExpand/TextExpand';
 import editIcon from '@icons/edit_square.svg';
 import deleteIcon from '@icons/trash-2.svg';
@@ -15,12 +14,19 @@ import { coachDummyData } from '../../../data/data';
 import { useNavigate } from 'react-router-dom';
 import Roadmap from './Roadmap/Roadmap';
 import { useSelector } from 'react-redux';
+import { API_URL } from '../../../utils/apiUrl';
+import { faCircleUser } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import '../../../styles/Students.scss';
 import '../../../styles/Common.scss';
-import { API_URL } from '../../../utils/apiUrl';
 
 const Students = () => {
-    const [showDeleteModal, setShowDeleteModal] = useState(false);
+    const [showDeleteModal, setShowDeleteModal] = useState({
+        show: false,
+        title: 'Delete Student',
+        isEditable: false,
+        studentId: null
+    });
     const [selectedRowId, setSelectedRowId] = useState(null);
     const [expanded, setExpanded] = useState(false);
     const [coursesModal, setCoursesModal] = useState({
@@ -49,7 +55,7 @@ const Students = () => {
         // Later we will replace this with actual API call
         try {
             setLoading(true);
-            const coaches = await axiosWrapper('GET', API_URL.GET_ALL_COACHES, {}, token);
+            const coaches = await axiosWrapper('GET', API_URL.GET_ALL_STUDENTS, {}, token);
             setStudentsData(coaches.data);
         } catch (error) {
             return;
@@ -103,39 +109,47 @@ const Students = () => {
     const handleDeleteClick = (id) => {
         // Handle delete action here
         setSelectedRowId(id);
-        setShowDeleteModal(true);
+        setShowDeleteModal({
+            show: true,
+            title: 'Delete Student',
+            isEditable: false,
+            studentId: id
+        });
     };
 
     const handleCloseModal = () => {
-        resetCoursesModal();
+        resetModal();
     };
 
-    const resetCoursesModal = () => {
+    const resetModal = () => {
         setCoursesModal({
             show: false,
             title: '',
             isEditable: false,
             data: null
         });
+        setShowDeleteModal({
+            show: false,
+            title: '',
+            isEditable: false,
+            studentId: null
+        });
     };
 
     const handleCloseDeleteModal = () => {
-        setShowDeleteModal(false);
+        resetModal();
     };
 
     const handleDeleteSubmit = async () => {
         try {
             setLoadingCRUD(true);
-            const data = await axiosWrapper(
-                'delete',
-                `${import.meta.env.VITE_JSONPLACEHOLDER}/posts/${selectedRowId}}`
-            );
-            toast.success(data?.message || 'Student deleted successfully');
+            // Delete API call here
+            await axiosWrapper('DELETE', API_URL.DELETE_STUDENT.replace(':id', showDeleteModal?.studentId), {}, token);
+            fetchData();
+            resetModal();
         } catch (error) {
-            return;
-        } finally {
             setLoadingCRUD(false);
-            setShowDeleteModal(false);
+            resetModal();
         }
     };
 
@@ -147,13 +161,17 @@ const Students = () => {
         setSelectedOption(option);
     };
 
-    const handleToggleClick = (id) => {
-        const copyOfStudentData = [...studentsData];
-        const student = copyOfStudentData.find((student) => student.id === id);
-        const index = copyOfStudentData.indexOf(student);
-
-        copyOfStudentData[index].isActive = !copyOfStudentData[index].isActive;
-        setStudentsData(copyOfStudentData);
+    const handleToggleClick = async (student) => {
+        setLoadingCRUD(true);
+        let url = '';
+        if (student.isActive) {
+            url = `${API_URL.DEACTIVATE_STUDENT.replace(':id', student?._id)}`;
+        } else {
+            url = `${API_URL.ACTIVATE_STUDENT.replace(':id', student?._id)}`;
+        }
+        await axiosWrapper('PUT', url, {}, token);
+        fetchData();
+        setLoadingCRUD(false);
     };
 
     /*eslint-disable */
@@ -161,7 +179,7 @@ const Students = () => {
         <React.Fragment>
             <Row style={{ width: '100%' }}>
                 <Col lg={4} md={6} sm={6} xs={4} className="d-flex justify-content-center align-items-center">
-                    <div className="action-button edit-button" onClick={() => props.onEditClick(props.data.id)}>
+                    <div className="action-button edit-button" onClick={() => props.onEditClick(props.data._id)}>
                         <img src={editIcon} className="action-icon" alt="action-icon" />
                     </div>
                 </Col>
@@ -171,7 +189,7 @@ const Students = () => {
                     <Col lg={1} md={6} sm={6} xs={4} className="d-flex justify-content-center align-items-center">
                         <div
                             className="btn-light action-button delete-button"
-                            onClick={() => props.onDeleteClick(props.data.id)}
+                            onClick={() => props.onDeleteClick(props.data._id)}
                         >
                             <img src={deleteIcon} className="action-icon ms-3" alt="action-icon" />
                         </div>
@@ -196,9 +214,9 @@ const Students = () => {
                     <Form.Check // prettier-ignore
                         type="switch"
                         className="toggle-button"
-                        id={`custom-switch-${props.data.id}`}
+                        id={`custom-switch-${props.data._id}`}
                         checked={props.data.isActive}
-                        onChange={() => props.onToggleClick(props.data.id)}
+                        onChange={() => props.onToggleClick(props.data)}
                     />
                 </Col>
             </Row>
@@ -206,9 +224,14 @@ const Students = () => {
     );
 
     const NameRenderer = (props) => (
-        <div key={props.data.id}>
+        <div key={props.data._id}>
             <div className="d-flex align-items-center gap-2">
-                <img src={props.data.avatarUrl} alt={props.data.name} className="avatar" />
+                {/* <img src={props.data.avatarUrl} alt={props.data.name} className="avatar" /> */}
+                {props.data.avatar ? (
+                    <img src={props.data.avatar} alt={props.data.name} className="avatar-image" />
+                ) : (
+                    <FontAwesomeIcon size="2xl" icon={faCircleUser} color="rgba(200, 202, 216, 1)" />
+                )}
                 <div
                     style={{
                         overflow: 'hidden',
@@ -225,7 +248,7 @@ const Students = () => {
         </div>
     );
     const LinkRenderer = (props) => (
-        <div key={props.data.id}>
+        <div key={props.data._id}>
             <div className="d-flex align-items-center">
                 <div
                     style={{
@@ -290,9 +313,9 @@ const Students = () => {
             unSortIcon: true,
             resizable: false,
             cellRenderer: ({ data: rowData }) => {
-                const status = rowData.feeStatus;
+                const status = rowData.feeStatus || '--';
                 return (
-                    <div className={`${status} fee-status`} key={rowData.id}>
+                    <div className={`${status} fee-status`} key={rowData._id}>
                         {status}
                     </div>
                 );
@@ -311,25 +334,6 @@ const Students = () => {
             cellRendererParams: {
                 onRoadMapClick: handleCoursesRoadMapClick
             }
-
-            // cellRenderer: ({ data: rowData }) => {
-            //     const coursesRoadmap = rowData.coursesRoadmap;
-            //     const firstName = `Course 1 ${coursesRoadmap[0]?.title}`;
-
-            //     return (
-            //         <div
-            //             style={{
-            //                 overflow: 'hidden',
-            //                 textOverflow: 'ellipsis',
-            //                 whiteSpace: 'nowrap',
-            //                 cursor: 'pointer'
-            //             }}
-            //             onClick={() => handleCoursesRoadMapClick(coursesRoadmap)}
-            //         >
-            //             View Roadmap
-            //         </div>
-            //     );
-            // }
         },
         {
             headerName: 'Active/Deactivate',
@@ -366,13 +370,13 @@ const Students = () => {
             </Helmet>
             {coursesModal.show && (
                 <Modal size="md" show={coursesModal.show} onClose={handleCloseModal} title={coursesModal.title}>
-                    <Roadmap coursesModal={coursesModal} resetModal={resetCoursesModal} />
+                    <Roadmap coursesModal={coursesModal} resetModal={resetModal} />
                 </Modal>
             )}
 
-            {showDeleteModal && (
+            {showDeleteModal.show && (
                 <ConfirmationBox
-                    show={showDeleteModal}
+                    show={showDeleteModal.show}
                     onClose={handleCloseDeleteModal}
                     loading={loadingCRUD}
                     title="Delete Student"

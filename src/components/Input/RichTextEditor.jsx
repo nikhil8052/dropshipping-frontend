@@ -16,6 +16,7 @@ const RichTextEditor = (props) => {
                 value={field.value}
                 onChange={handleChange}
                 modules={props.modules}
+                className="field-quill-control"
                 formats={props.formats}
                 placeholder={props.placeholder}
             />

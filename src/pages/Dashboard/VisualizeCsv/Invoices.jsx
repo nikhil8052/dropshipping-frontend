@@ -3,23 +3,22 @@ import Table from '@components/Table/Table';
 import { Button, Col, Container, Row } from 'react-bootstrap';
 import ConfirmationBox from '@components/ConfirmationBox/ConfirmationBox';
 import { Helmet } from 'react-helmet';
-import axiosWrapper from '@utils/api';
-import { toast } from 'react-toastify';
 import TextExpand from '@components/TextExpand/TextExpand';
 import uploadSimple from '@icons/UploadSimpleBack.svg';
 import pdfExport from '@icons/picture_as_pdf.svg';
-import { invoicesData } from '../../../data/data';
-import { FileUploader } from 'react-drag-drop-files';
+import { API_URL } from '../../../utils/apiUrl';
 import DateRenderer from '@components/DateFormatter/DateFormatter';
+import { FileUploader } from 'react-drag-drop-files';
+import axiosWrapper from '@utils/api';
+import { useSelector } from 'react-redux';
 const fileTypes = ['csv'];
 
 const Invoices = ({ studentId }) => {
-    const [showDeleteModal, setShowDeleteModal] = useState(false);
+    const token = useSelector((state) => state?.auth?.userToken);
     const [selectedRowId, setSelectedRowId] = useState(null);
     const [loading, setLoading] = useState(false);
     const [loadingCRUD, setLoadingCRUD] = useState(false);
-    const [studentsData, setStudentsData] = useState(null);
-    const [expanded, setExpanded] = useState(false);
+    const [invoicesData, setInvoicesData] = useState(null);
     const [uploadFileModal, setUploadFileModal] = useState(false);
     const [file, setFile] = useState(null);
     const [dateFilters, setDateFilters] = useState({
@@ -30,76 +29,34 @@ const Invoices = ({ studentId }) => {
     useEffect(() => {
         // Fetch data from API here
         fetchData();
-    }, []);
+    }, [dateFilters, studentId]);
 
     const fetchData = async () => {
-        // Later we will replace this with actual API call
-        try {
-            setLoading(true);
-
-            setStudentsData(invoicesData);
-        } catch (error) {
-            return;
-        } finally {
-            setLoading(false);
-        }
+        setLoading(true);
+        const queryParams = new URLSearchParams(dateFilters).toString();
+        const url = `${API_URL.GET_ALL_INVOICES}?${queryParams}${studentId ? `&createdBy=${studentId}` : ''}`;
+        const response = await axiosWrapper('get', url, {}, token);
+        setInvoicesData(response.data);
+        setLoading(false);
     };
 
     const handleRowClick = (event) => {
         // Handle row click event here
-        if (selectedRowId === event.data.id) {
+        if (selectedRowId === event.data._id) {
             setSelectedRowId(null);
             return;
         }
-        setSelectedRowId(event.data.id);
+        setSelectedRowId(event.data._id);
     };
 
-    const handleCloseDeleteModal = () => {
-        setShowDeleteModal(false);
+    const handleCloseFileModal = () => {
+        setUploadFileModal(false);
     };
 
-    const handleDeleteSubmit = async () => {
-        try {
-            setLoadingCRUD(true);
-            const data = await axiosWrapper(
-                'delete',
-                `${import.meta.env.VITE_JSONPLACEHOLDER}/posts/${selectedRowId}}`
-            );
-            toast.success(data?.message || 'Item deleted successfully');
-        } catch (error) {
-            return;
-        } finally {
-            setLoadingCRUD(false);
-            setShowDeleteModal(false);
-        }
+    const handleUploadClick = () => {
+        setUploadFileModal(true);
     };
 
-    const toggleExpand = (event) => {
-        // Specifically in this component, we need to prevent the event from propagating to the parent element
-        event.stopPropagation();
-        setExpanded(!expanded);
-    };
-
-    /*eslint-disable */
-
-    const NameRenderer = (props) => (
-        <div key={props.data.id}>
-            <div className="d-flex align-items-center gap-2">
-                <img src={props.data.avatarUrl} alt={props.data.productName} className="avatar" />
-                <div
-                    style={{
-                        overflow: 'hidden',
-                        textOverflow: 'ellipsis',
-                        whiteSpace: expanded ? 'normal' : 'nowrap',
-                        cursor: 'pointer'
-                    }}
-                    onClick={toggleExpand}
-                >
-                    {props.value}
-                </div>
-            </div>
-        </div>
-    );
     /*eslint-disable */
     const columns = [
         {
@@ -169,55 +126,38 @@ const Invoices = ({ studentId }) => {
             cellRenderer: TextExpand
         }
     ];
-    const handleUploadClick = () => {
-        setUploadFileModal(true);
-    };
 
-    const handleCloseFileModal = () => {
-        setUploadFileModal(false);
-    };
-
-    const handleUploadSubmit = async (e) => {
+    const handleUploadSubmit = async () => {
+        setLoadingCRUD(true);
         try {
-            setLoadingCRUD(true);
-            const file = e.target.files[0];
-            if (!file || !file.type.startsWith('image/')) {
-                // Display an error or handle the invalid file selection
-                toast.error('Invalid file selected. Please choose an CSV file.');
-                return;
-            }
-
-            const image = new Image();
-            image.src = window.URL.createObjectURL(file);
-            image.onload = () => {
-                toast.success('File uploaded successfully!', {
-                    icon: '🎉',
-                    style: {
-                        borderRadius: '10px',
-                        background: '#333',
-                        color: '#fff'
-                    }
-                });
-
-                setFile(file);
-                // Upload File through API
-            };
+            const filePath = 'uploads' + file.split('/uploads')[1];
+            await axiosWrapper('POST', API_URL.UPLOAD_INVOICES_CSV, { filePath }, token);
+            fetchData();
         } catch (error) {
-            return;
         } finally {
             setLoadingCRUD(false);
+            setUploadFileModal(false);
         }
     };
 
-    const handleChange = (file) => {
-        setFile(file);
+    const handleChange = async (file) => {
+        const formData = new FormData();
+        formData.append('files', file);
+        formData.append('name', file.name);
+
+        const mediaFile = await axiosWrapper('POST', API_URL.UPLOAD_MEDIA, formData, '', true);
+        setFile(mediaFile.data[0].path);
     };
 
     const handleDateChange = ({ target: input }) => {
-        setDateFilters((pre) => ({
-            ...pre,
+        setDateFilters((prev) => ({
+            ...prev,
             [input.name]: input.value
         }));
+    };
+
+    const handleExport = async () => {
+        document.getElementById('invoices').click();
     };
 
     return (
@@ -226,22 +166,6 @@ const Invoices = ({ studentId }) => {
                 <Helmet>
                     <title>Visualize Csv | Dropship Academy</title>
                 </Helmet>
-
-                {showDeleteModal && (
-                    <ConfirmationBox
-                        show={showDeleteModal}
-                        onClose={handleCloseDeleteModal}
-                        loading={loadingCRUD}
-                        title="Delete Student"
-                        body="Are you sure you want to delete this Student?"
-                        onConfirm={handleDeleteSubmit}
-                        customFooterClass="custom-footer-class"
-                        nonActiveBtn="cancel-button"
-                        activeBtn="delete-button"
-                        activeBtnTitle="Delete"
-                    />
-                )}
-
                 {uploadFileModal && (
                     <ConfirmationBox
                         show={uploadFileModal}
@@ -249,31 +173,33 @@ const Invoices = ({ studentId }) => {
                         loading={loadingCRUD}
                         title="Attach File"
                         body={
-                            <Container className="pt-5">
-                                <Row>
-                                    <Col md={12}>
-                                        <div className="add-quiz-file">
-                                            <h4>Attach File</h4>
-                                            <FileUploader
-                                                multiple={true}
-                                                handleChange={handleChange}
-                                                name="file"
-                                                types={fileTypes}
-                                                label="hello"
-                                            />
-                                            <p>
-                                                {file ? (
-                                                    `File name: ${file[0].name}`
-                                                ) : (
-                                                    <span>
-                                                        Drag an drop a file or <strong> browse file</strong>
-                                                    </span>
-                                                )}
-                                            </p>
-                                        </div>
-                                    </Col>
-                                </Row>
-                            </Container>
+                            <>
+                                <Container className="pt-5">
+                                    <Row>
+                                        <Col md={12}>
+                                            <div className="add-quiz-file">
+                                                <h4>Attach File</h4>
+                                                <FileUploader
+                                                    multiple={false}
+                                                    handleChange={handleChange}
+                                                    name="file"
+                                                    types={fileTypes}
+                                                    label="Drag and drop a file or browse"
+                                                />
+                                                <p>
+                                                    {file ? (
+                                                        `File name: ${file.name || file.split('-')[1]}`
+                                                    ) : (
+                                                        <span>
+                                                            Drag and drop a file or <strong>browse file</strong>
+                                                        </span>
+                                                    )}
+                                                </p>
+                                            </div>
+                                        </Col>
+                                    </Row>
+                                </Container>
+                            </>
                         }
                         onConfirm={handleUploadSubmit}
                         customFooterClass="custom-footer-class"
@@ -287,14 +213,15 @@ const Invoices = ({ studentId }) => {
                     columns={columns}
                     inputLgSize={4}
                     childLgSize={8}
-                    tableData={studentsData}
+                    tableData={invoicesData}
                     onRowClicked={handleRowClick}
                     loading={loading}
+                    handleCreateClick
                     children={
                         <Row className={`mb-3 g-2 ${studentId ? 'justify-content-end' : ''}`}>
                             <Col md={12} lg={6} xl={6} xxl={3}>
-                                <div className=" d-flex justify-content-even align-items-center from-filter ">
-                                    <span className="me-2"> From: </span>
+                                <div className="d-flex justify-content-even align-items-center from-filter">
+                                    <span className="me-2">From:</span>
                                     <input
                                         value={dateFilters.from}
                                         onChange={handleDateChange}
@@ -302,13 +229,12 @@ const Invoices = ({ studentId }) => {
                                         type="date"
                                         max={dateFilters.to}
                                         name="from"
-                                        id=""
                                     />
                                 </div>
                             </Col>
                             <Col md={12} lg={6} xl={6} xxl={3}>
-                                <div className=" d-flex justify-content-even align-items-center">
-                                    <span className="me-2"> To: </span>
+                                <div className="d-flex justify-content-even align-items-center">
+                                    <span className="me-2">To:</span>
                                     <input
                                         value={dateFilters.to}
                                         onChange={handleDateChange}
@@ -316,14 +242,13 @@ const Invoices = ({ studentId }) => {
                                         type="date"
                                         name="to"
                                         min={dateFilters.from}
-                                        id=""
                                     />
                                 </div>
                             </Col>
                             {!studentId && (
                                 <>
                                     <Col md={12} lg={6} xl={6} xxl={3}>
-                                        <Button className="add-button w-100">
+                                        <Button className="add-button w-100" onClick={handleExport}>
                                             <span className="me-2">Export</span>
                                             <img src={pdfExport} alt="" />
                                         </Button>
@@ -338,6 +263,8 @@ const Invoices = ({ studentId }) => {
                             )}
                         </Row>
                     }
+                    onExportCsv={true}
+                    exportFileName="invoices"
                 />
             </>
         </div>
