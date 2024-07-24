@@ -122,28 +122,32 @@ const Courses = () => {
                 )}
             </div>
             <div className="custom-card-course">
-                <Row>
-                    {coursesData.map((course) => (
-                        <Col key={course._id} xs={12} sm={12} md={6} lg={4} xl={3} xxl={3}>
-                            <div className="custom-card-course-new">
-                                {role === 'ADMIN' || role === 'COACH' ? (
-                                    <CourseCard
-                                        {...course}
-                                        onChange={() => handleArchiveChange(course?._id, course?.archive)}
-                                    />
-                                ) : (
-                                    <CourseCard
-                                        {...course}
-                                        archive={false}
-                                        enroll={yourCourses ? false : true}
-                                        role={role}
-                                    />
-                                )}
-                            </div>
-                        </Col>
-                    ))}
-                    <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={handlePageChange} />
-                </Row>
+                {coursesData.length === 0 ? (
+                    <div className="no-data-wrapper">No Data Found.</div>
+                ) : (
+                    <Row>
+                        {coursesData.map((course) => (
+                            <Col key={course._id} xs={12} sm={12} md={6} lg={4} xl={3} xxl={3}>
+                                <div className="custom-card-course-new">
+                                    {role === 'ADMIN' || role === 'COACH' ? (
+                                        <CourseCard
+                                            {...course}
+                                            onChange={() => handleArchiveChange(course?._id, course?.archive)}
+                                        />
+                                    ) : (
+                                        <CourseCard
+                                            {...course}
+                                            archive={false}
+                                            enroll={yourCourses ? false : true}
+                                            role={role}
+                                        />
+                                    )}
+                                </div>
+                            </Col>
+                        ))}
+                        <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={handlePageChange} />
+                    </Row>
+                )}
             </div>
         </div>
     );

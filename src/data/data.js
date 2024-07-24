@@ -1838,6 +1838,24 @@ export const coachingTrajectory = [
     }
 ];
 
+export const studentsTrajectory = [
+    {
+        label: 'All',
+        value: 'all',
+        id: 1
+    },
+    {
+        label: 'LT',
+        value: 'LOW_TICKET',
+        id: 2
+    },
+    {
+        label: 'HT',
+        value: 'HIGH_TICKET',
+        id: 3
+    }
+];
+
 export const coursesRoadmap = [
     { id: '6683cffd269cf6979cb4c28b', label: 'Meta Data Engineering', progress: 'Completed', value: 1 },
     { id: '6683cffd269cf6979cb4c28b', label: 'Python Engineering', progress: 'OnGoing', value: 2 },

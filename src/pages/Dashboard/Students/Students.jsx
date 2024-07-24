@@ -10,7 +10,7 @@ import editIcon from '@icons/edit_square.svg';
 import deleteIcon from '@icons/trash-2.svg';
 import downArrow from '@icons/down-arrow.svg';
 import add from '@icons/add_white.svg';
-import { coachDummyData } from '../../../data/data';
+import { coachDummyData, studentsTrajectory } from '../../../data/data';
 import { useNavigate } from 'react-router-dom';
 import Roadmap from './Roadmap/Roadmap';
 import { useSelector } from 'react-redux';
@@ -43,19 +43,26 @@ const Students = () => {
     const role = userInfo?.role?.toLowerCase();
     const [studentsData, setStudentsData] = useState(null);
 
-    const [selectedOption, setSelectedOption] = useState('All');
+    const [selectedOption, setSelectedOption] = useState(studentsTrajectory[0].label);
     const [selectedCoach, setSelectedCoach] = useState('Assigned Coach');
 
     useEffect(() => {
         // Fetch data from API here
-        fetchData();
-    }, []);
+        if (selectedOption) {
+            fetchData(selectedOption);
+        }
+    }, [selectedOption]);
 
-    const fetchData = async () => {
+    const fetchData = async (query) => {
         // Later we will replace this with actual API call
         try {
             setLoading(true);
-            const coaches = await axiosWrapper('GET', API_URL.GET_ALL_STUDENTS, {}, token);
+            const coaches = await axiosWrapper(
+                'GET',
+                `${API_URL.GET_ALL_STUDENTS}?coachingTrajectory=${query}`,
+                {},
+                token
+            );
             setStudentsData(coaches.data);
         } catch (error) {
             return;
@@ -424,21 +431,27 @@ const Students = () => {
                         <DropdownButton
                             title={
                                 <div className="d-flex justify-content-between align-items-center gap-2">
-                                    <span>{selectedOption}</span>
+                                    <span>
+                                        {
+                                            studentsTrajectory.find(
+                                                (s) => s.value === selectedOption || s.label === selectedOption
+                                            ).label
+                                        }
+                                    </span>
                                     <img src={downArrow} alt="Down arrow" />
                                 </div>
                             }
-                            defaultValue={selectedOption}
+                            defaultValue={studentsTrajectory[0].label}
                             className="dropdown-button-fix"
                         >
-                            {['All', 'HT', 'LT'].map((option) => (
+                            {studentsTrajectory.map((option) => (
                                 <Dropdown.Item
-                                    key={option}
-                                    onClick={() => handleOptionChange(option)}
+                                    key={option.id}
+                                    onClick={() => handleOptionChange(option.value)}
                                     eventKey={option}
                                     className="my-1 ms-2"
                                 >
-                                    <span className="coach-name">{option}</span>
+                                    <span className="coach-name">{option.label}</span>
                                 </Dropdown.Item>
                             ))}
                         </DropdownButton>

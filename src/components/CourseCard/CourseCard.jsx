@@ -5,7 +5,7 @@ import enrollIcon from '../../assets/icons/enroll-icon.svg';
 import { Link } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 
-const CourseCard = ({ img, title, detail, lectureNo, archive, enroll, onChange }) => {
+const CourseCard = ({ img, title, detail, lectureNo, archive, enroll, onChange, ...rest }) => {
     const { userInfo } = useSelector((state) => state?.auth);
     const role = userInfo?.role;
 
@@ -13,7 +13,14 @@ const CourseCard = ({ img, title, detail, lectureNo, archive, enroll, onChange }
         <>
             <div className="course-card">
                 <Link
-                    to={role !== 'STUDENT' || !enroll ? `/${role}/courses/details` : `/${role}/courses/enrolled-course`}
+                    to={
+                        role !== 'STUDENT' || !enroll
+                            ? `/${role.toLowerCase()}/courses/details`
+                            : `/${role.toLowerCase()}/courses/enrolled-course`
+                    }
+                    state={{
+                        courseId: rest?._id
+                    }}
                 >
                     <div className="mb-3 p-2">
                         <img src={img} className="course-img " alt="course-icon" />

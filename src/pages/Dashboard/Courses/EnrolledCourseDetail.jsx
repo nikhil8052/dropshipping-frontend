@@ -13,7 +13,7 @@ import { lectures } from '../../../data/data';
 
 const EnrolledCourseDetail = () => {
     const userInfo = useSelector((state) => state?.auth?.userInfo);
-    const role = userInfo?.role;
+    const role = userInfo?.role.toLowerCase();
     const navigate = useNavigate();
     const [search, setSearch] = useState('');
     const [filteredLectures, setFilteredLectures] = useState([]);

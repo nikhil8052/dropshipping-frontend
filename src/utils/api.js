@@ -21,7 +21,11 @@ axios.interceptors.response.use(
             window.location.href = '/login';
         }
         const errorMessage = error?.response?.data?.message || error?.response?.data?.desc || error?.message;
-        toast.error(errorMessage);
+        if (errorMessage === 'Validation failed') {
+            toast.error(error.response?.data?.validation?.body?.message || error.validation?.body?.message);
+        } else {
+            toast.error(errorMessage);
+        }
         return Promise.reject(error);
     }
 );
