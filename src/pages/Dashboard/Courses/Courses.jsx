@@ -15,7 +15,6 @@ import axiosWrapper from '../../../utils/api';
 const Courses = () => {
     const [search, setSearch] = useState('');
     const [selectedEvent, setSelectedEvent] = useState('Your Courses');
-    const [yourCourses, setYourCourses] = useState(false);
     const [currentPage, setCurrentPage] = useState(1);
     const [coursesData, setCoursesData] = useState([]);
     const [totalPages, setTotalPages] = useState(1);
@@ -40,28 +39,29 @@ const Courses = () => {
 
     const handleEventSelect = (eventKey, course) => {
         setSelectedEvent(course);
-        setYourCourses(course === 'Your Courses');
     };
 
     useEffect(() => {
         // Fetch data from API here
         getAllCourses();
-    }, [search, currentPage]);
+    }, [search, currentPage, selectedEvent]);
 
     const getAllCourses = async () => {
-        const response = await axiosWrapper(
-            'GET',
-            `${API_URL.GET_ALL_COURSES}?page=${currentPage}&limit=${itemsPerPage}&search=${search}`,
-            {},
-            userToken
-        );
+        const method = 'GET';
+        let url = `${API_URL.GET_ALL_COURSES}?page=${currentPage}&limit=${itemsPerPage}&search=${search}`;
+        if (selectedEvent) {
+            url = `${url}&isEnrolled=${selectedEvent === 'Your Courses' ? true : false}`;
+        }
+
+        const response = await axiosWrapper(method, url, {}, userToken);
         const { data, total, limit } = response;
         const formattedData = data.map((c) => ({
-            img: c?.thumbnail,
-            title: c?.title,
-            detail: c?.subtitle,
-            lectureNo: `Lectures: ${c?.lectures.length}`,
-            archive: c?.isArchived,
+            img: c.thumbnail,
+            title: c.title,
+            detail: c.subtitle,
+            lectureNo: `Lectures: ${c.lectures.length}`,
+            archive: c.isArchived,
+            enroll: c.enrolledStudents.includes(userInfo?._id),
             _id: c?._id
         }));
 
@@ -76,6 +76,19 @@ const Courses = () => {
         await axiosWrapper('PUT', url, {}, userToken);
         getAllCourses(); // Refresh the course list
     };
+
+    // Admin | Coach Side
+    // 1. Enroll student to course when creating a new student (DONE)
+    // 2. Keep record of courses Roadmap in student (i.e student can not start other courses before finishing the previous one like proper indexing) (DONE)
+
+    // Student Side
+    // 1. Get All Courses (DONE)
+    // 2. Get All Enrolled Courses (DONE)
+    // Enrolled Courses
+    // a. Get Course Details By Id (Video | PDF) (DONE)
+    // b. Get Lecture Preview (Video | PDF) (disable other lectures until the previous one is completed with quiz completion)
+    // c. Perform a quiz Api (if quiz marks are less than 50% then student can not proceed to the next lecture and have a retry option for the quiz)
+    // d. Update the progress of the lecture (i.e. 1/10 lectures completed)
 
     return (
         <div className="course-section">
@@ -129,19 +142,10 @@ const Courses = () => {
                         {coursesData.map((course) => (
                             <Col key={course._id} xs={12} sm={12} md={6} lg={4} xl={3} xxl={3}>
                                 <div className="custom-card-course-new">
-                                    {role === 'ADMIN' || role === 'COACH' ? (
-                                        <CourseCard
-                                            {...course}
-                                            onChange={() => handleArchiveChange(course?._id, course?.archive)}
-                                        />
-                                    ) : (
-                                        <CourseCard
-                                            {...course}
-                                            archive={false}
-                                            enroll={yourCourses ? false : true}
-                                            role={role}
-                                        />
-                                    )}
+                                    <CourseCard
+                                        {...course}
+                                        onChange={() => handleArchiveChange(course?._id, course?.archive)}
+                                    />
                                 </div>
                             </Col>
                         ))}

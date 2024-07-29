@@ -12,13 +12,13 @@ import downArrow from '@icons/down-arrow.svg';
 import add from '@icons/add_white.svg';
 import { coachDummyData, studentsTrajectory } from '../../../data/data';
 import { useNavigate } from 'react-router-dom';
-import Roadmap from './Roadmap/Roadmap';
 import { useSelector } from 'react-redux';
 import { API_URL } from '../../../utils/apiUrl';
 import { faCircleUser } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import '../../../styles/Students.scss';
 import '../../../styles/Common.scss';
+import RoadMapList from './Roadmap/RoadmapList';
 
 const Students = () => {
     const [showDeleteModal, setShowDeleteModal] = useState({
@@ -33,7 +33,8 @@ const Students = () => {
         show: false,
         title: '',
         isEditable: false,
-        data: null
+        data: null,
+        courseId: null
     });
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
@@ -59,7 +60,7 @@ const Students = () => {
             setLoading(true);
             const coaches = await axiosWrapper(
                 'GET',
-                `${API_URL.GET_ALL_STUDENTS}?coachingTrajectory=${query}`,
+                `${API_URL.GET_ALL_STUDENTS}?coachingTrajectory=${query || selectedOption}`,
                 {},
                 token
             );
@@ -91,7 +92,7 @@ const Students = () => {
         });
     };
 
-    const handleCoursesRoadMapClick = (data) => {
+    const handleCoursesRoadMapClick = (data, courseId) => {
         // Handle edit action here
         setCoursesModal({
             show: true,
@@ -109,6 +110,7 @@ const Students = () => {
                 </div>
             ),
             isEditable: true,
+            courseId,
             data
         });
     };
@@ -133,7 +135,8 @@ const Students = () => {
             show: false,
             title: '',
             isEditable: false,
-            data: null
+            data: null,
+            courseId: null
         });
         setShowDeleteModal({
             show: false,
@@ -267,7 +270,7 @@ const Students = () => {
                         color: 'rgba(72, 128, 255, 1)'
                     }}
                     onClick={() => {
-                        props.onRoadMapClick(props.data.coursesRoadmap || []);
+                        props.onRoadMapClick(props.data.coursesRoadmap || [], props.data._id);
                     }}
                 >
                     View Roadmap
@@ -370,6 +373,30 @@ const Students = () => {
         }
     ];
 
+    const handleRoadmapUpdate = async (data, id) => {
+        if (id) {
+            setLoading(true);
+            try {
+                const url = `${API_URL.UPDATE_STUDENT.replace(':id', id)}`;
+                const method = 'PUT';
+
+                await axiosWrapper(
+                    method,
+                    url,
+                    {
+                        coursesRoadmap: data
+                    },
+                    token
+                );
+                fetchData();
+            } catch (error) {
+                setLoading(false);
+            } finally {
+                setLoading(false);
+            }
+        }
+    };
+
     return (
         <div className="students-page">
             <Helmet>
@@ -377,7 +404,14 @@ const Students = () => {
             </Helmet>
             {coursesModal.show && (
                 <Modal size="md" show={coursesModal.show} onClose={handleCloseModal} title={coursesModal.title}>
-                    <Roadmap coursesModal={coursesModal} resetModal={resetModal} />
+                    <RoadMapList
+                        coursesList={coursesModal.data.map((c) => ({
+                            value: c._id,
+                            label: c.title,
+                            id: c._id
+                        }))}
+                        setCoursesMap={(data) => handleRoadmapUpdate(data, coursesModal.courseId)}
+                    />
                 </Modal>
             )}
 

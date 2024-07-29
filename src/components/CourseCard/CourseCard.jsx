@@ -7,17 +7,13 @@ import { useSelector } from 'react-redux';
 
 const CourseCard = ({ img, title, detail, lectureNo, archive, enroll, onChange, ...rest }) => {
     const { userInfo } = useSelector((state) => state?.auth);
-    const role = userInfo?.role;
+    const role = userInfo?.role.toLowerCase();
 
     return (
         <>
             <div className="course-card">
                 <Link
-                    to={
-                        role !== 'STUDENT' || !enroll
-                            ? `/${role.toLowerCase()}/courses/details`
-                            : `/${role.toLowerCase()}/courses/enrolled-course`
-                    }
+                    to={role !== 'student' || !enroll ? `/${role}/courses/details` : `/${role}/courses/enrolled-course`}
                     state={{
                         courseId: rest?._id
                     }}
@@ -29,7 +25,7 @@ const CourseCard = ({ img, title, detail, lectureNo, archive, enroll, onChange, 
                         <p className="lecture-No">{lectureNo}</p>
                     </div>
                 </Link>
-                {role === 'ADMIN' && (
+                {role === 'admin' && (
                     <div className="toggle-archive">
                         <Form>
                             <Form.Check
@@ -42,7 +38,7 @@ const CourseCard = ({ img, title, detail, lectureNo, archive, enroll, onChange, 
                         </Form>
                     </div>
                 )}
-                {enroll && (
+                {role === 'student' && enroll && (
                     <>
                         <div className="progress-section  ">
                             <div>
