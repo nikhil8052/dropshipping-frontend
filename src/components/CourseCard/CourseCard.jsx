@@ -5,15 +5,18 @@ import enrollIcon from '../../assets/icons/enroll-icon.svg';
 import { Link } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 
-const CourseCard = ({ img, title, detail, lectureNo, archive, enroll, onChange }) => {
+const CourseCard = ({ img, title, detail, lectureNo, archive, enroll, onChange, ...rest }) => {
     const { userInfo } = useSelector((state) => state?.auth);
-    const role = userInfo?.role;
+    const role = userInfo?.role.toLowerCase();
 
     return (
         <>
             <div className="course-card">
                 <Link
-                    to={role !== 'STUDENT' || !enroll ? `/${role}/courses/details` : `/${role}/courses/enrolled-course`}
+                    to={role !== 'student' || !enroll ? `/${role}/courses/details` : `/${role}/courses/enrolled-course`}
+                    state={{
+                        courseId: rest?._id
+                    }}
                 >
                     <div className="mb-3 p-2">
                         <img src={img} className="course-img " alt="course-icon" />
@@ -22,7 +25,7 @@ const CourseCard = ({ img, title, detail, lectureNo, archive, enroll, onChange }
                         <p className="lecture-No">{lectureNo}</p>
                     </div>
                 </Link>
-                {role === 'ADMIN' && (
+                {role === 'admin' && (
                     <div className="toggle-archive">
                         <Form>
                             <Form.Check
@@ -35,7 +38,7 @@ const CourseCard = ({ img, title, detail, lectureNo, archive, enroll, onChange }
                         </Form>
                     </div>
                 )}
-                {enroll && (
+                {role === 'student' && enroll && (
                     <>
                         <div className="progress-section  ">
                             <div>

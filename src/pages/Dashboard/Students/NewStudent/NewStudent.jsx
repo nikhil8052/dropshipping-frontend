@@ -187,7 +187,7 @@ const NewStudent = () => {
                         onSubmit={handleFormSubmit}
                         enableReinitialize
                     >
-                        {({ isSubmitting, handleSubmit, values }) => (
+                        {({ isSubmitting, handleSubmit, values, setFieldValue }) => (
                             <Form onSubmit={handleSubmit}>
                                 <Row className="mb-3">
                                     <Col>
@@ -484,7 +484,9 @@ const NewStudent = () => {
                                                         coursesList={courses.filter((c) =>
                                                             values.coursesRoadmap.find((val) => c.id === val)
                                                         )}
-                                                        setCoursesMap={setCourses}
+                                                        setCoursesMap={(roadmap) => {
+                                                            setFieldValue('coursesRoadmap', roadmap);
+                                                        }}
                                                     />
                                                 </div>
                                             </>

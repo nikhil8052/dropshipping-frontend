@@ -8,6 +8,14 @@
     border-radius: 9px;
     padding: 10px 20px;
 
+    .no-data-wrapper {
+        position: absolute;
+        top: 50%;
+        left: 40%;
+        transform: translate(0, -50%);
+        padding: 10px;
+    }
+
     .courses-button-wrapper {
         display: flex;
         justify-content: space-between;
@@ -871,6 +879,14 @@
     .text-heading {
         padding: 45px;
         margin: 0px;
+    }
+
+    .error {
+        color: $danger-color;
+        font-size: 12px;
+        font-weight: 400;
+        line-height: 14px;
+        text-align: left;
     }
     .search-lectures {
         padding: 25px 25px 0px 25px;

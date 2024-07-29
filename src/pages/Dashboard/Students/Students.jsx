@@ -10,15 +10,15 @@ import editIcon from '@icons/edit_square.svg';
 import deleteIcon from '@icons/trash-2.svg';
 import downArrow from '@icons/down-arrow.svg';
 import add from '@icons/add_white.svg';
-import { coachDummyData } from '../../../data/data';
+import { coachDummyData, studentsTrajectory } from '../../../data/data';
 import { useNavigate } from 'react-router-dom';
-import Roadmap from './Roadmap/Roadmap';
 import { useSelector } from 'react-redux';
 import { API_URL } from '../../../utils/apiUrl';
 import { faCircleUser } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import '../../../styles/Students.scss';
 import '../../../styles/Common.scss';
+import RoadMapList from './Roadmap/RoadmapList';
 
 const Students = () => {
     const [showDeleteModal, setShowDeleteModal] = useState({
@@ -33,7 +33,8 @@ const Students = () => {
         show: false,
         title: '',
         isEditable: false,
-        data: null
+        data: null,
+        courseId: null
     });
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
@@ -43,19 +44,26 @@ const Students = () => {
     const role = userInfo?.role?.toLowerCase();
     const [studentsData, setStudentsData] = useState(null);
 
-    const [selectedOption, setSelectedOption] = useState('All');
+    const [selectedOption, setSelectedOption] = useState(studentsTrajectory[0].label);
     const [selectedCoach, setSelectedCoach] = useState('Assigned Coach');
 
     useEffect(() => {
         // Fetch data from API here
-        fetchData();
-    }, []);
+        if (selectedOption) {
+            fetchData(selectedOption);
+        }
+    }, [selectedOption]);
 
-    const fetchData = async () => {
+    const fetchData = async (query) => {
         // Later we will replace this with actual API call
         try {
             setLoading(true);
-            const coaches = await axiosWrapper('GET', API_URL.GET_ALL_STUDENTS, {}, token);
+            const coaches = await axiosWrapper(
+                'GET',
+                `${API_URL.GET_ALL_STUDENTS}?coachingTrajectory=${query || selectedOption}`,
+                {},
+                token
+            );
             setStudentsData(coaches.data);
         } catch (error) {
             return;
@@ -84,7 +92,7 @@ const Students = () => {
         });
     };
 
-    const handleCoursesRoadMapClick = (data) => {
+    const handleCoursesRoadMapClick = (data, courseId) => {
         // Handle edit action here
         setCoursesModal({
             show: true,
@@ -102,6 +110,7 @@ const Students = () => {
                 </div>
             ),
             isEditable: true,
+            courseId,
             data
         });
     };
@@ -126,7 +135,8 @@ const Students = () => {
             show: false,
             title: '',
             isEditable: false,
-            data: null
+            data: null,
+            courseId: null
         });
         setShowDeleteModal({
             show: false,
@@ -260,7 +270,7 @@ const Students = () => {
                         color: 'rgba(72, 128, 255, 1)'
                     }}
                     onClick={() => {
-                        props.onRoadMapClick(props.data.coursesRoadmap || []);
+                        props.onRoadMapClick(props.data.coursesRoadmap || [], props.data._id);
                     }}
                 >
                     View Roadmap
@@ -363,6 +373,30 @@ const Students = () => {
         }
     ];
 
+    const handleRoadmapUpdate = async (data, id) => {
+        if (id) {
+            setLoading(true);
+            try {
+                const url = `${API_URL.UPDATE_STUDENT.replace(':id', id)}`;
+                const method = 'PUT';
+
+                await axiosWrapper(
+                    method,
+                    url,
+                    {
+                        coursesRoadmap: data
+                    },
+                    token
+                );
+                fetchData();
+            } catch (error) {
+                setLoading(false);
+            } finally {
+                setLoading(false);
+            }
+        }
+    };
+
     return (
         <div className="students-page">
             <Helmet>
@@ -370,7 +404,14 @@ const Students = () => {
             </Helmet>
             {coursesModal.show && (
                 <Modal size="md" show={coursesModal.show} onClose={handleCloseModal} title={coursesModal.title}>
-                    <Roadmap coursesModal={coursesModal} resetModal={resetModal} />
+                    <RoadMapList
+                        coursesList={coursesModal.data.map((c) => ({
+                            value: c._id,
+                            label: c.title,
+                            id: c._id
+                        }))}
+                        setCoursesMap={(data) => handleRoadmapUpdate(data, coursesModal.courseId)}
+                    />
                 </Modal>
             )}
 
@@ -424,21 +465,27 @@ const Students = () => {
                         <DropdownButton
                             title={
                                 <div className="d-flex justify-content-between align-items-center gap-2">
-                                    <span>{selectedOption}</span>
+                                    <span>
+                                        {
+                                            studentsTrajectory.find(
+                                                (s) => s.value === selectedOption || s.label === selectedOption
+                                            ).label
+                                        }
+                                    </span>
                                     <img src={downArrow} alt="Down arrow" />
                                 </div>
                             }
-                            defaultValue={selectedOption}
+                            defaultValue={studentsTrajectory[0].label}
                             className="dropdown-button-fix"
                         >
-                            {['All', 'HT', 'LT'].map((option) => (
+                            {studentsTrajectory.map((option) => (
                                 <Dropdown.Item
-                                    key={option}
-                                    onClick={() => handleOptionChange(option)}
+                                    key={option.id}
+                                    onClick={() => handleOptionChange(option.value)}
                                     eventKey={option}
                                     className="my-1 ms-2"
                                 >
-                                    <span className="coach-name">{option}</span>
+                                    <span className="coach-name">{option.label}</span>
                                 </Dropdown.Item>
                             ))}
                         </DropdownButton>

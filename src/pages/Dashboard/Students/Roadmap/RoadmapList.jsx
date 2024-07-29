@@ -13,9 +13,7 @@ import { CSS } from '@dnd-kit/utilities';
 import coursesPointer from '@icons/courses_pointer.svg';
 import { Col, Row } from 'react-bootstrap';
 const RoadMapList = ({ coursesList, setCoursesMap }) => {
-    // State to manage the courses array
     const [courses, setCourses] = useState(coursesList || []);
-    // Sensors to handle different input methods
     const sensors = useSensors(useSensor(PointerSensor), useSensor(MouseSensor), useSensor(KeyboardSensor));
     const handleDragEnd = (event) => {
         const { active, over } = event;
@@ -23,8 +21,9 @@ const RoadMapList = ({ coursesList, setCoursesMap }) => {
             const oldIndex = courses.findIndex((course) => course.id === active.id);
             const newIndex = courses.findIndex((course) => course.id === over.id);
             const newCourses = arrayMove(courses, oldIndex, newIndex);
-            setCourses(newCourses); // Update the state with the new courses array
-            setCoursesMap(newCourses); // Update the parent component state
+
+            setCourses(newCourses);
+            setCoursesMap(newCourses.map((el) => el.id));
         }
     };
 
