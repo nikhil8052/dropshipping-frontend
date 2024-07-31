@@ -19,7 +19,7 @@ const EnrolledCourseDetail = () => {
     const userInfo = useSelector((state) => state?.auth?.userInfo);
     const token = useSelector((state) => state?.auth?.userToken);
     const courseId = location.state?.courseId;
-    const role = userInfo?.role.toLowerCase();
+    const role = userInfo?.role?.toLowerCase();
 
     const [search, setSearch] = useState('');
     const [lectures, setLectures] = useState([]);
@@ -34,6 +34,8 @@ const EnrolledCourseDetail = () => {
         questions: [],
         mcqs: []
     });
+
+    const isPass = selectedLecture?.completedBy?.includes(userInfo?._id);
 
     const validationSchema = Yup.object().shape({
         questions: Yup.array()
@@ -77,21 +79,27 @@ const EnrolledCourseDetail = () => {
         setLectures(data.lectures);
         // Handle search results
         setFilteredLectures(data.lectures);
-        // Current Lecture
-        setSelectedLecture(data.lectures[0]);
+        // Get the first lecture
+        getCurrentLecture(data.lectures[0]._id);
+    };
 
-        const questions = data.lectures[0].quiz?.questions;
-        const mcqs = data.lectures[0].quiz?.mcqs;
+    const getCurrentLecture = async (id) => {
+        const { data } = await axiosWrapper('GET', `${API_URL.GET_LECTURE.replace(':id', id)}`, {}, token);
+
+        setSelectedLecture(data);
+
+        const questions = data.quiz?.questions;
+        const mcqs = data.quiz?.mcqs;
 
         const initialValues = {
             questions: questions?.map((question) => ({
                 questionId: question._id,
-                answer: '',
+                answer: question.answer || '',
                 question: question.question
             })),
             mcqs: mcqs?.map((mcq) => ({
                 questionId: mcq._id,
-                answer: '',
+                answer: mcq.answer || '',
                 question: mcq.question,
                 options: mcq.options
             }))
@@ -118,31 +126,8 @@ const EnrolledCourseDetail = () => {
     }, [search, lectures]);
 
     const handleButtonClick = (index) => {
-        if (index > 0 && !lectures[index - 1].completedBy.includes(userInfo._id)) {
-            toast.error('Complete the previous lecture and quiz before proceeding.');
-            return;
-        }
         setActiveIndex(index);
-        setSelectedLecture(lectures[index]);
-
-        // set values on each tab change
-        const questions = lectures[index].quiz?.questions;
-        const mcqs = lectures[index].quiz?.mcqs;
-
-        const initialValues = {
-            questions: questions?.map((question) => ({
-                questionId: question._id,
-                answer: '',
-                question: question.question
-            })),
-            mcqs: mcqs?.map((mcq) => ({
-                questionId: mcq._id,
-                answer: '',
-                question: mcq.question,
-                options: mcq.options
-            }))
-        };
-        setInitialValues(initialValues);
+        getCurrentLecture(lectures[index]?._id);
         setContinueQuiz(false);
     };
 
@@ -171,6 +156,7 @@ const EnrolledCourseDetail = () => {
                 setRetryQuiz(false);
             } else {
                 // Handle retry logic
+                toast.error('You have failed the quiz. Please retry.');
                 setRetryQuiz(true);
             }
 
@@ -182,6 +168,9 @@ const EnrolledCourseDetail = () => {
             resetForm();
         }
     };
+
+    // Get Course By id
+    // Get Lecture By id (Id came from first index of lectures in course obj) setSelected(lecture)
 
     return (
         <div className="EnrolledCourseDetail">
@@ -235,9 +224,7 @@ const EnrolledCourseDetail = () => {
                                                 key={index}
                                                 className={`btn ${index === activeIndex ? 'active' : 'inactive'}`}
                                                 onClick={() => handleButtonClick(index)}
-                                                disabled={
-                                                    index > 0 && !lectures[index - 1].completedBy.includes(userInfo._id)
-                                                }
+                                                disabled={index > 0 && !isPass}
                                             >
                                                 <img src={InactiveIcon} alt="IconLect" />
                                                 <p>{lecture.name}</p>
@@ -278,6 +265,10 @@ const EnrolledCourseDetail = () => {
 
                                 {continueQuiz && selectedLecture && (
                                     <div className="quiz-curriculum">
+                                        <h1 className="text-end">
+                                            Status:{' '}
+                                            {!isPass ? <span className="text-danger"> Fail</span> : <span> Pass</span>}
+                                        </h1>
                                         <h1 className="title">Quiz {selectedLecture.name}:</h1>
                                         {values?.questions.length > 0 && (
                                             <>
@@ -373,7 +364,7 @@ const EnrolledCourseDetail = () => {
                             </Col>
                         </Row>
                         <div className="viewProgress-footer mx-auto">
-                            {continueQuiz ? (
+                            {!isPass && continueQuiz ? (
                                 <Button className="done-btn" type="submit" disabled={isSubmitting}>
                                     {retryQuiz ? 'Retry Quiz' : 'Submit Quiz'}
                                 </Button>

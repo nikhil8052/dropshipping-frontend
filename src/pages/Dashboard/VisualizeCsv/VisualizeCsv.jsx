@@ -22,7 +22,7 @@ function VisualizeCsv() {
                     <span onClick={() => navigate(`/${role}/students`)} style={{ cursor: 'pointer' }}>
                         Students <img src={CaretRight} alt=">" />
                     </span>{' '}
-                    <span onClick={() => navigate(`/${role.toLowerCase()}/students`)} className="cursor-pointer">
+                    <span onClick={() => navigate(`/${role?.toLowerCase()}/students`)} className="cursor-pointer">
                         {' '}
                         {studentName ? studentName.split(' ')[1] : 'student'}'s Profile{' '}
                     </span>{' '}

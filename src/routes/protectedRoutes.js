@@ -88,6 +88,13 @@ export const adminRoutes = [
         access: 'ADMIN'
     },
     {
+        path: 'courses/edit',
+        exact: true,
+        name: 'Courses',
+        Component: NewCourse,
+        access: 'ADMIN'
+    },
+    {
         path: 'courses/details',
         exact: true,
         name: 'Courses',
@@ -189,6 +196,13 @@ export const coachesRoutes = [
     },
     {
         path: 'courses/new',
+        exact: true,
+        name: 'Courses',
+        Component: NewCourse,
+        access: 'COACH'
+    },
+    {
+        path: 'courses/edit',
         exact: true,
         name: 'Courses',
         Component: NewCourse,

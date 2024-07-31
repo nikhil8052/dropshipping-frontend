@@ -1,14 +1,16 @@
-import '../../../styles/Courses.scss';
 import { Button, Row } from 'react-bootstrap';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import CarouselWrapper from '../../../components/Carousel/CarouselWrapper';
+import * as types from '../../../redux/actions/actionTypes';
+import '../../../styles/Courses.scss';
 
 const PublishCourses = ({ onBack, initialData, setStepComplete, publishCourse }) => {
     const navigate = useNavigate();
+    const dispatch = useDispatch();
     const coachName = useSelector((state) => state?.root?.coachName);
     const { userInfo } = useSelector((state) => state?.auth);
-    const role = userInfo?.role.toLowerCase();
+    const role = userInfo?.role?.toLowerCase();
     const lectures = initialData?.lectures || [];
     const pdfLectures = lectures.filter((lecture) => lecture.file);
     const totalQuestions = lectures.reduce((acc, item) => {
@@ -20,6 +22,7 @@ const PublishCourses = ({ onBack, initialData, setStepComplete, publishCourse })
     const handleSubmit = async () => {
         await publishCourse();
         navigate(`/${role}/courses/`);
+        dispatch({ type: types.ALL_RECORDS, data: { keyOfData: 'currentCourse', data: null } });
         setStepComplete('step3');
     };
 
@@ -47,7 +50,7 @@ const PublishCourses = ({ onBack, initialData, setStepComplete, publishCourse })
                     </div>
                     <div className="lecture-details-wrapper">
                         <div className="lecture-details">
-                            <div className="lecture-details-item lecture-details-2">
+                            <div className="lecture-detailpdfLecturess-item lecture-details-2">
                                 <h1>Lectures</h1>
                                 <p>
                                     {lectures?.length - pdfLectures.length} Video Lectures, {pdfLectures.length}{' '}

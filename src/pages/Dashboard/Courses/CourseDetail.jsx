@@ -1,25 +1,56 @@
-import '../../../styles/Courses.scss';
+import { useEffect, useState } from 'react';
 import { Button } from 'react-bootstrap';
 import { useSelector } from 'react-redux';
 import { useLocation, Link, useNavigate } from 'react-router-dom';
 import CaretRight from '@icons/CaretRight.svg';
 import CaretLeft from '@icons/CaretLeft.svg';
-import { lessons } from '../../../data/data';
 import CarouselWrapper from '../../../components/Carousel/CarouselWrapper';
+import axiosWrapper from '../../../utils/api';
+import { API_URL } from '../../../utils/apiUrl';
+import '../../../styles/Courses.scss';
 
 const CourseDetail = () => {
-    const userInfo = useSelector((state) => state?.auth?.userInfo);
-    const role = userInfo?.role;
     const navigate = useNavigate();
-
     const location = useLocation();
+    const userInfo = useSelector((state) => state?.auth?.userInfo);
+    const token = useSelector((state) => state?.auth?.userToken);
+    const [course, setCourse] = useState({});
+
+    const role = userInfo?.role;
+    const courseId = location.state?.courseId;
     const isDetailPage = location.pathname === '/admin/courses/details' || '/coach/courses/details';
+
+    const getCourseById = async (id) => {
+        const { data } = await axiosWrapper('GET', `${API_URL.GET_COURSE.replace(':id', id)}`, {}, token);
+
+        const mapLectures = data.lectures.map((lecture) => {
+            return {
+                id: lecture._id,
+                title: lecture.name,
+                type: lecture.file ? 'pdf' : 'video',
+                description: lecture.description
+            };
+        });
+        const pdfLectures = data.lectures?.filter((lecture) => lecture?.file);
+        const totalQuestions = data.lectures?.reduce((acc, item) => {
+            const questionsLength = item.quiz?.questions.length;
+            const mcqsLength = item.quiz?.mcqs?.length;
+            return acc + questionsLength + mcqsLength;
+        }, 0);
+
+        setCourse({ ...data, lectures: mapLectures, pdfLectures, totalQuestions });
+    };
+    useEffect(() => {
+        if (courseId) {
+            getCourseById(courseId);
+        }
+    }, [courseId]);
 
     return (
         <>
             <div className="publish-form-section">
                 {role === 'STUDENT' ? (
-                    <Link to={`/${role}/courses`}>
+                    <Link to={`/${role?.toLowerCase()}/courses`}>
                         <Button type="button" className="back-button">
                             <img src={CaretLeft} />
                             Back
@@ -28,7 +59,10 @@ const CourseDetail = () => {
                 ) : (
                     <div className="title-top mb-3">
                         {isDetailPage && (
-                            <span onClick={() => navigate(`/${role}/courses`)} style={{ cursor: 'pointer' }}>
+                            <span
+                                onClick={() => navigate(`/${role?.toLowerCase()}/courses`)}
+                                style={{ cursor: 'pointer' }}
+                            >
                                 Courses <img src={CaretRight} alt=">" />{' '}
                             </span>
                         )}
@@ -39,27 +73,26 @@ const CourseDetail = () => {
                 <div className="publish-course-wrapper">
                     <div className="card-background">
                         <div className="text-heading">
-                            <h1>Design Conference</h1>
-                            <p>Dropship Academy X</p>
+                            <h1>{course?.title || 'Design Conference'}</h1>
+                            <p>{course?.moduleManager?.name || 'Dropship Academy X'}</p>
                         </div>
                     </div>
                     <div className="lecture-details-wrapper">
                         <div className="lecture-details">
-                            <div className="lecture-details-item">
-                                <h1>Duration</h1>
-                                <p>3 Weeks, 120 Hr</p>
-                            </div>
                             <div className="lecture-details-item lecture-details-2">
                                 <h1>Lectures</h1>
-                                <p>28 Video Lectures, 5 Assesments</p>
+                                <p>
+                                    {course.lectures?.length - course.pdfLectures?.length} Video Lectures,{' '}
+                                    {course.pdfLectures?.length} Document Lectures, {course?.totalQuestions} Assesments
+                                </p>
                             </div>
                             <div className="lecture-details-item">
                                 <h1>Coach Name</h1>
-                                <p>David Richerson</p>
+                                <p>{course?.moduleManager?.name}</p>
                             </div>
                         </div>
                         <div className="carousel-lecture">
-                            <CarouselWrapper items={lessons} type="lecture" />
+                            <CarouselWrapper items={course?.lectures || []} type="lecture" />
                         </div>
                         {role !== 'STUDENT' && (
                             <div
@@ -67,15 +100,26 @@ const CourseDetail = () => {
                                 style={{ display: 'flex', justifyContent: 'space-between' }}
                             >
                                 <>
-                                    <Link to={`/${role}/courses/all-students`}>
+                                    {/* <Link to={}>
                                         <Button type="button" className="publish-btn">
                                             All Students
                                         </Button>
-                                    </Link>
+                                    </Link> */}
                                     <Button
                                         onClick={() =>
-                                            navigate(`/${role}/courses/new`, {
-                                                state: { isEdit: true }
+                                            navigate(`/${role?.toLowerCase()}/courses/all-students`, {
+                                                state: { courseId: course._id }
+                                            })
+                                        }
+                                        type="button"
+                                        className="publish-btn"
+                                    >
+                                        All Students
+                                    </Button>
+                                    <Button
+                                        onClick={() =>
+                                            navigate(`/${role?.toLowerCase()}/courses/edit`, {
+                                                state: { isEdit: true, courseId: course._id }
                                             })
                                         }
                                         type="button"

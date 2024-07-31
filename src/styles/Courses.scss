@@ -831,16 +831,23 @@
             }
         }
         .active {
-            background-color: rgba(245, 248, 249, 1);
+            background: rgba(0, 187, 86, 1);
             color: #ffffff;
             border-color: transparent;
         }
 
         .inactive {
-            background-color: rgba(245, 248, 249, 1);
+            background: rgba(244, 244, 244, 1);
             color: #1c1c1c; /* Adjust text color as needed */
             border: #f4f4f4;
         }
+    }
+    .avatar-student {
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        object-fit: cover;
+        margin-right: 0.5rem;
     }
 }
 .viewProgress-footer {

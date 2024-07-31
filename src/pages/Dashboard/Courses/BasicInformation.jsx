@@ -16,7 +16,7 @@ import '../../../styles/Courses.scss';
 
 const BasicInformation = ({ initialData, setStepComplete, createOrUpdateCourse }) => {
     const { userInfo, userToken } = useSelector((state) => state?.auth);
-    const role = userInfo?.role.toLowerCase();
+    const role = userInfo?.role?.toLowerCase();
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
     const [coachesData, setCoachesData] = useState(null);
