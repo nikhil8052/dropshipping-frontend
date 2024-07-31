@@ -9,14 +9,16 @@ import axiosWrapper from '@utils/api';
 import { toast } from 'react-toastify';
 import TextExpand from '@components/TextExpand/TextExpand';
 import downArrow from '@icons/down-arrow.svg';
-import { AllStudentsDummyData } from '../../../data/data';
-import { Link, useNavigate } from 'react-router-dom';
+import { studentsProgressTrajectory } from '../../../data/data';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import CaretRight from '@icons/CaretRight.svg';
 import '../../../styles/Courses.scss';
 import '../../../styles/Common.scss';
+import { API_URL } from '../../../utils/apiUrl';
 
 const AllStudents = () => {
+    const location = useLocation();
     const [showDeleteModal, setShowDeleteModal] = useState(false);
     const [selectedRowId, setSelectedRowId] = useState(null);
     const [studentModal, setStudentModal] = useState({
@@ -28,24 +30,35 @@ const AllStudents = () => {
     const [loading, setLoading] = useState(false);
     const [loadingCRUD, setLoadingCRUD] = useState(false);
     const navigate = useNavigate();
-
+    const token = useSelector((state) => state?.auth?.userToken);
     const [allStudentData, setAllStudentData] = useState(null);
-
     const [selectedOption, setSelectedOption] = useState('All');
     const userInfo = useSelector((state) => state?.auth?.userInfo);
     const role = userInfo?.role;
+    const courseId = location.state?.courseId;
 
     useEffect(() => {
         // Fetch data from API here
-        fetchData();
-    }, []);
+        fetchData(courseId);
+    }, [courseId]);
 
-    const fetchData = async () => {
+    useEffect(() => {
+        // Fetch data from API here
+        fetchData(courseId);
+    }, [courseId]);
+
+    const fetchData = async (id) => {
         // Later we will replace this with actual API call
         try {
             setLoading(true);
+            const students = await axiosWrapper(
+                'GET',
+                `${API_URL.GET_ALL_STUDENTS_IN_COURSE.replace(':courseId', id)}`,
+                {},
+                token
+            );
 
-            setAllStudentData(AllStudentsDummyData);
+            setAllStudentData(students?.data?.enrolledStudents);
         } catch (error) {
             return;
         } finally {
@@ -95,15 +108,15 @@ const AllStudents = () => {
         }
     };
 
-    const handleEventSelect = (eventKey, coach) => {
-        setSelectedOption(coach);
+    const handleOptionChange = (option) => {
+        setSelectedOption(option);
     };
     /*eslint-disable */
 
     const columns = [
         {
             headerName: 'Name',
-            field: 'studentName',
+            field: 'name',
             filter: 'agSetColumnFilter',
             sortable: true,
             unSortIcon: true,
@@ -113,16 +126,15 @@ const AllStudents = () => {
             resizable: false
         },
         {
-            headerName: 'ID',
-            field: 'studentId',
+            headerName: 'Phone Number',
+            field: 'phoneNumber',
             filter: 'agSetColumnFilter',
             sortable: true,
             unSortIcon: true,
+            cellRenderer: TextExpand,
             resizable: false,
-            cellRenderer: ({ data: rowData }) => {
-                const student_id = rowData.studentId;
-                return <div key={rowData.id}>{student_id}</div>;
-            }
+            wrapText: true,
+            autoHeight: true
         },
         {
             headerName: 'Email',
@@ -145,15 +157,17 @@ const AllStudents = () => {
             resizable: false,
             autoHeight: true,
             cellRenderer: ({ data: rowData }) => {
-                const status = rowData.progress;
-
                 return (
                     <Link
-                        to={`/${role}/courses/view-progress`}
+                        to={`/${role?.toLowerCase()}/courses/view-progress`}
+                        state={{
+                            studentId: rowData._id,
+                            courseId: courseId
+                        }}
                         className={'progress-btn-allstudent mx-auto'}
-                        key={rowData.id}
+                        key={rowData._id}
                     >
-                        {status}
+                        View Progress
                     </Link>
                 );
             }
@@ -184,7 +198,16 @@ const AllStudents = () => {
                 <span onClick={() => navigate(`/${role}/courses`)} style={{ cursor: 'pointer' }}>
                     Courses <img src={CaretRight} alt=">" />
                 </span>{' '}
-                <span onClick={() => navigate(`/${role}/courses/details`)} style={{ cursor: 'pointer' }}>
+                <span
+                    onClick={() =>
+                        navigate(`/${role}/courses/details`, {
+                            state: {
+                                courseId: courseId
+                            }
+                        })
+                    }
+                    style={{ cursor: 'pointer' }}
+                >
                     Course Details <img src={CaretRight} alt=">" />{' '}
                 </span>
                 All Students
@@ -201,21 +224,27 @@ const AllStudents = () => {
                                 <DropdownButton
                                     title={
                                         <div className="d-flex justify-content-between align-items-center gap-2">
-                                            <span>{selectedOption}</span>
+                                            <span>
+                                                {
+                                                    studentsProgressTrajectory.find(
+                                                        (s) => s.value === selectedOption || s.label === selectedOption
+                                                    ).label
+                                                }
+                                            </span>
                                             <img className="ms-3" src={downArrow} alt="Down arrow" />
                                         </div>
                                     }
-                                    defaultValue={selectedOption}
-                                    className="dropdown-button"
+                                    defaultValue={studentsProgressTrajectory[0].label}
+                                    className="dropdown-button-fix"
                                 >
-                                    {['Paid', 'Overdue', 'HT', 'LT'].map((events) => (
+                                    {studentsProgressTrajectory.map((option) => (
                                         <Dropdown.Item
-                                            onClick={(e) => handleEventSelect(e, events)}
-                                            key={events}
-                                            eventKey={events}
+                                            key={option.id}
+                                            onClick={() => handleOptionChange(option.value)}
+                                            eventKey={option}
                                             className="my-1 ms-2"
                                         >
-                                            <span className="coach-name"> {events}</span>
+                                            <span className="coach-name"> {option.label}</span>
                                         </Dropdown.Item>
                                     ))}
                                 </DropdownButton>

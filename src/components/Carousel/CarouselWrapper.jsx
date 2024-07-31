@@ -7,7 +7,7 @@ import 'swiper/css';
 import ProductCard from '../ProductCard/ProductCard';
 import LectureCard from '../LectureCard/LectureCard';
 
-const CarouselWrapper = ({ items, type = 'product' }) => {
+const CarouselWrapper = ({ items = [], type = 'product' }) => {
     const swiperBreakpoints = {
         320: {
             slidesPerView: 1,

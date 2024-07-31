@@ -7,7 +7,7 @@ import { useSelector } from 'react-redux';
 
 const CourseCard = ({ img, title, detail, lectureNo, archive, enroll, onChange, ...rest }) => {
     const { userInfo } = useSelector((state) => state?.auth);
-    const role = userInfo?.role.toLowerCase();
+    const role = userInfo?.role?.toLowerCase();
 
     return (
         <>

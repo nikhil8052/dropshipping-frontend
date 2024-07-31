@@ -6,11 +6,11 @@ import add from '@icons/add_white.svg';
 import downArrow from '@icons/down-arrow.svg';
 import { useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
-import '../../../styles/Courses.scss';
-import '../../../styles/Common.scss';
 import Pagination from '../../../components/Pagination/Pagination';
 import { API_URL } from '../../../utils/apiUrl';
 import axiosWrapper from '../../../utils/api';
+import '../../../styles/Common.scss';
+import '../../../styles/Courses.scss';
 
 const Courses = () => {
     const [search, setSearch] = useState('');
@@ -34,7 +34,9 @@ const Courses = () => {
     };
 
     const handleCreateClick = () => {
-        navigate(`/${role.toLowerCase()}/courses/new`);
+        navigate(`/${role?.toLowerCase()}/courses/new`, {
+            state: { isEdit: false, courseId: null }
+        });
     };
 
     const handleEventSelect = (eventKey, course) => {

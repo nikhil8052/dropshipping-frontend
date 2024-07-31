@@ -23,6 +23,7 @@ const AddNewCourse = () => {
     const token = useSelector((state) => state?.auth?.userToken);
     const role = userInfo?.role?.toLowerCase();
     const editMode = location.state?.isEdit || false;
+    const courseId = location.state?.courseId;
     const [activeKey, setActiveKey] = useState('basic-information');
     const currentCourse = useSelector((state) => state?.root?.currentCourse);
     const currentCourseUpdate = useSelector((state) => state?.root?.currentCourseUpdate);
@@ -74,6 +75,10 @@ const AddNewCourse = () => {
         try {
             const { data } = await axiosWrapper('GET', `${API_URL.GET_COURSE.replace(':id', id)}`, {}, token);
 
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(data.description, 'text/html');
+            const description = htmlDoc.body.textContent;
+
             updateCourseData({
                 title: data.title,
                 subtitle: data.subtitle,
@@ -81,7 +86,7 @@ const AddNewCourse = () => {
                 moduleManager: data.moduleManager?._id,
                 thumbnail: data.thumbnail,
                 trailer: data.trailer,
-                description: data.description,
+                description: description,
                 lectures: data.lectures
             });
             dispatch({ type: types.ALL_RECORDS, data: { keyOfData: 'currentCourseUpdate', data: false } });
@@ -93,22 +98,20 @@ const AddNewCourse = () => {
 
     const createOrUpdateCourse = async (formData) => {
         if (currentCourse) {
-            const course = await axiosWrapper(
-                'PUT',
-                `${API_URL.UPDATE_COURSE.replace(':id', currentCourse)}`,
-                formData,
-                token
-            );
-            updateCourseData({
-                title: course?.data?.title,
-                subtitle: course?.data?.subtitle,
-                category: course?.data?.category,
-                moduleManager: course?.data?.moduleManager?._id,
-                thumbnail: course?.data?.thumbnail,
-                trailer: course?.data?.trailer,
-                description: course?.data?.description,
-                lectures: course?.data?.lectures
-            });
+            await axiosWrapper('PUT', `${API_URL.UPDATE_COURSE.replace(':id', currentCourse)}`, formData, token);
+
+            getCourseById(currentCourse);
+
+            // updateCourseData({
+            //     title: course?.data?.title,
+            //     subtitle: course?.data?.subtitle,
+            //     category: course?.data?.category,
+            //     moduleManager: course?.data?.moduleManager?._id,
+            //     thumbnail: course?.data?.thumbnail,
+            //     trailer: course?.data?.trailer,
+            //     description: course?.data?.description,
+            //     lectures: course?.data?.lectures
+            // });
         } else {
             const course = await axiosWrapper('POST', API_URL.CREATE_COURSE, formData, token);
 
@@ -139,6 +142,13 @@ const AddNewCourse = () => {
             getCourseById(currentCourse);
         }
     }, [currentCourseUpdate]);
+
+    useEffect(() => {
+        if (courseId) {
+            dispatch({ type: types.ALL_RECORDS, data: { keyOfData: 'currentCourse', data: courseId } });
+            getCourseById(courseId);
+        }
+    }, [courseId]);
 
     // Steps for creating a new course
     // 1. Basic Information Module

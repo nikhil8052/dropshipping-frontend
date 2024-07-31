@@ -11,7 +11,7 @@ import 'ag-grid-community/styles/ag-theme-alpine.css';
 
 const Table = ({
     columns,
-    tableData,
+    tableData = [],
     width,
     onRowClicked,
     loading,
