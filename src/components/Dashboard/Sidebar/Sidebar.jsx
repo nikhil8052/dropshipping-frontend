@@ -4,7 +4,7 @@ import './sidebar.scss';
 import { useNavigate } from 'react-router-dom';
 import logoImg from '@icons/dropship-logo.svg';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCircleXmark } from '@fortawesome/free-solid-svg-icons';
+import { faCircleXmark, faCircleUser } from '@fortawesome/free-solid-svg-icons';
 import { useSelector, useDispatch } from 'react-redux';
 import SidebarItem from './SidebarItem';
 import SidebarItemCollapse from './SidebarItemCollapse';
@@ -12,7 +12,6 @@ import { collapseSidebar } from '@redux/theme/theme_slice.js';
 import ConfirmationBox from '../../ConfirmationBox/ConfirmationBox';
 import { logoutUser } from '@redux/auth/auth_slice';
 import { changeLink } from '@redux/sidebar/sidebarSlice';
-import profile from '@images/user-img.jpg';
 import dotBlue from '@icons/dot-blue-2.svg';
 
 // import all static icons
@@ -169,7 +168,16 @@ const Sidebar = () => {
 
                         <div className={`side-bar-profile ${sideBarEventModal ? 'remove-auto' : ''}`}>
                             <div className="profile-wrapper">
-                                <img src={profile} className="profile-pic" alt="nav-icon" />
+                                {userInfo?.avatar ? (
+                                    <img src={userInfo?.avatar} className="profile-pic" alt="nav-icon" />
+                                ) : (
+                                    <FontAwesomeIcon
+                                        className="profile-pic"
+                                        size="2xl"
+                                        icon={faCircleUser}
+                                        color="rgba(200, 202, 216, 1)"
+                                    />
+                                )}
                             </div>
                             <div className="profile-name">
                                 <p>{userInfo?.name.split(' ')[0]}</p>

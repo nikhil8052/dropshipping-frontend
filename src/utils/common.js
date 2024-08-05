@@ -22,3 +22,21 @@ export const trimLongText = (text, textLength = longTextLimit) => {
     }
     return finalText;
 };
+
+export const zoneDate = (timestamp, timeZone) => {
+    const options = {
+        timeZone,
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit',
+        hour12: false
+    };
+    return new Intl.DateTimeFormat('en-US', options).format(new Date(parseInt(timestamp)));
+};
+export const formatTimeZone = () => {
+    const options = { timeZoneName: 'long' };
+    const formatter = new Intl.DateTimeFormat('en-US', options);
+    return formatter.formatToParts().find((part) => part.type === 'timeZoneName').value;
+};

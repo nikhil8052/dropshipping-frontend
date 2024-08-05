@@ -1755,7 +1755,10 @@ export const AllStudentsDummyData = [
         progress: 'View Progress'
     }
 ];
-
+export const eventType = [
+    { value: 'ONSITE', label: 'Onsite', id: 1 },
+    { value: 'ONLINE', label: 'Online', id: 2 }
+];
 export const countryList = [
     {
         id: 1,
