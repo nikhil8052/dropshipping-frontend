@@ -8,6 +8,7 @@ const LECTURE_API_BASE = `${BASE_URL}/api/lecture`;
 const PRODUCT_API_BASE = `${BASE_URL}/api/product`;
 const DAILY_FINANCE_API_BASE = `${BASE_URL}/api/dailyFinance`;
 const INVOICE_API_BASE = `${BASE_URL}/api/invoice`;
+const EVENT_API_BASE = `${BASE_URL}/api/event`;
 
 export const API_URL = {
     // User API
@@ -87,5 +88,20 @@ export const API_URL = {
     UPLOAD_INVOICES_CSV: `${INVOICE_API_BASE}/upload-csv`,
     GET_INVOICE: `${INVOICE_API_BASE}/:id`,
     GET_ALL_INVOICES: `${INVOICE_API_BASE}/`,
-    EXPORT_INVOICES: `${INVOICE_API_BASE}/export`
+    EXPORT_INVOICES: `${INVOICE_API_BASE}/export`,
+
+    // Events API
+    AUTH: `${EVENT_API_BASE}/auth`,
+    CALLBACK: `${EVENT_API_BASE}/callback`,
+    CREATE_EVENT: `${EVENT_API_BASE}/create`,
+    REQUEST_MEETING: `${EVENT_API_BASE}/meeting-request`,
+    UPDATE_EVENT: `${EVENT_API_BASE}/update/:id`,
+    GET_EVENT: `${EVENT_API_BASE}/:id`,
+    GET_ALL_EVENTS: `${EVENT_API_BASE}/`,
+    GET_CALENDAR_EVENTS: `${EVENT_API_BASE}/calendar-events`,
+    GET_CALENDAR_EVENT_BY_ID: `${EVENT_API_BASE}/calendar/:id`,
+    DELETE_EVENT: `${EVENT_API_BASE}/delete/:id`,
+    GET_UPCOMING_EVENTS: `${EVENT_API_BASE}/upcoming-events`,
+    GET_ALL_EVENTS_FOR_STUDENT: `${EVENT_API_BASE}/student/events`,
+    GET_EVENT_BY_ID_FOR_STUDENT: `${EVENT_API_BASE}/student/events/:id`
 };

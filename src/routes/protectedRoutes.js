@@ -22,6 +22,7 @@ const NewCourse = lazy(() => import('@pages/Dashboard/Courses/AddNewCourse'));
 const CourseDetail = lazy(() => import('@pages/Dashboard/Courses/CourseDetail'));
 const AllStudents = lazy(() => import('@pages/Dashboard/Courses/AllStudents'));
 const ViewProgress = lazy(() => import('@pages/Dashboard/Courses/ViewProgress'));
+const CallBack = lazy(() => import('@pages/Auth/Callback'));
 
 export const adminRoutes = [
     {
@@ -170,6 +171,13 @@ export const adminRoutes = [
         name: 'Events',
         Component: SingleEvent,
         access: 'ADMIN'
+    },
+    {
+        path: 'redirect/',
+        exact: true,
+        name: 'EventsCallback',
+        Component: CallBack,
+        access: 'ADMIN'
     }
 ];
 export const coachesRoutes = [
@@ -291,6 +299,13 @@ export const coachesRoutes = [
         name: 'Events',
         Component: SingleEvent,
         access: 'COACH'
+    },
+    {
+        path: 'redirect/',
+        exact: true,
+        name: 'EventsCallback',
+        Component: CallBack,
+        access: 'COACH'
     }
 ];
 
@@ -363,6 +378,13 @@ export const studentRoutes = [
         exact: true,
         name: 'Settings',
         Component: Settings,
+        access: 'STUDENT'
+    },
+    {
+        path: 'redirect/',
+        exact: true,
+        name: 'EventsCallback',
+        Component: CallBack,
         access: 'STUDENT'
     }
 ];

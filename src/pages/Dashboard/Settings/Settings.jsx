@@ -13,6 +13,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import axiosWrapper from '@utils/api';
 import { API_URL } from '../../../utils/apiUrl';
 import '../../../styles/Settings.scss';
+import '../../../styles/Common.scss';
 import { getFileObjectFromBlobUrl } from '../../../utils/utils';
 
 const Settings = () => {
@@ -32,7 +33,8 @@ const Settings = () => {
     const [profileData, setProfileData] = useState({
         name: '',
         email: '',
-        phoneNumber: ''
+        phoneNumber: '',
+        meetingLink: ''
     });
 
     const [passwordData, setPasswordData] = useState({
@@ -46,7 +48,8 @@ const Settings = () => {
             setProfileData({
                 name: userInfo.name,
                 email: userInfo.email,
-                phoneNumber: userInfo.phoneNumber
+                phoneNumber: userInfo.phoneNumber,
+                meetingLink: userInfo.meetingLink
             });
             setProfilePhoto(userInfo.avatar);
         }
@@ -60,7 +63,11 @@ const Settings = () => {
     const profileValidationSchema = Yup.object({
         name: Yup.string().required('Name is required'),
         email: Yup.string().email('Invalid email address').required('Email is required'),
-        phoneNumber: Yup.string().required('Phone number is required')
+        phoneNumber: Yup.string().required('Phone number is required'),
+        meetingLink: Yup.string()
+            .trim()
+            .required('Meeting link is required for online events')
+            .test('not-only-spaces', 'Meeting link cannot be only spaces', (value) => /\S/.test(value))
     });
 
     const passwordValidationSchema = Yup.object({
@@ -225,6 +232,19 @@ const Settings = () => {
                                     />
                                     <ErrorMessage name="phoneNumber" component="div" className="error" />
                                 </Col>
+
+                                {userInfo?.role !== 'STUDENT' && (
+                                    <Col md={6} xs={12}>
+                                        <label className="field-label">Meeting Link</label>
+                                        <Field
+                                            name="meetingLink"
+                                            className="field-control"
+                                            type="text"
+                                            placeholder="https://zoom.us/j/97697547647?pwd=UytOUjFlUTlPRjYvbmJnQ0pvZ2RDUT09"
+                                        />
+                                        <ErrorMessage name="meetingLink" component="div" className="error" />
+                                    </Col>
+                                )}
                             </Row>
                             <Row>
                                 <Col>

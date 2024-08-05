@@ -6,6 +6,7 @@ const Signup = lazy(() => import('@pages/Auth/SignUp'));
 const ForgotPassword = lazy(() => import('@pages/Auth/ForgotPassword'));
 const VerificationCode = lazy(() => import('@pages/Auth/VerificationCode'));
 const ResetPassword = lazy(() => import('@pages/Auth/ResetPassword'));
+const CallBack = lazy(() => import('@pages/Auth/Callback'));
 
 const publicRoutes = [
     {
@@ -41,6 +42,13 @@ const publicRoutes = [
         exact: true,
         name: 'ResetPassword',
         Component: ResetPassword,
+        access: 'public'
+    },
+    {
+        path: 'redirect/',
+        exact: true,
+        name: 'EventsCallback',
+        Component: CallBack,
         access: 'public'
     }
 ];
