@@ -97,7 +97,7 @@ const Courses = () => {
             <div className="courses-button-wrapper">
                 <InputGroup>
                     <InputGroup.Text>
-                        <img src={Search} alt={search ? 'Search' : 'Search'} />
+                        <img src={Search} alt="Search" />
                     </InputGroup.Text>
                     <Form.Control
                         className="search-input"

@@ -291,3 +291,11 @@
         margin-top: 0.5rem !important;
     }
 }
+
+.no-data-wrapper {
+    position: absolute;
+    top: 50%;
+    left: 40%;
+    transform: translate(0, -50%);
+    padding: 10px;
+}

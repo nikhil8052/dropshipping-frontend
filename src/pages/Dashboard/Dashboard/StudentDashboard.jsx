@@ -10,6 +10,7 @@ import Costs from '@icons/Costs.svg';
 import { useNavigate } from 'react-router';
 import '../../../styles/Dashboard.scss';
 import { useIsSmallScreen } from '../../../utils/mediaQueries';
+import { OverlayTrigger, Tooltip } from 'react-bootstrap';
 
 const sampleData = [5000, 22200, 6000, 20000, 7500, 28000, 8500, 20000, 7500, 28000, 8500, 20000, 7500, 28000, 8500];
 const previousData = [3000, 12000, 4000, 16000, 5000, 24000, 6000, 18000, 5500, 26000, 7500, 22000];
@@ -291,13 +292,33 @@ const StudentDashboard = () => {
             <Row>
                 <Col>
                     <div className="d-flex justify-content-end">
-                        <Button
-                            variant="primary"
-                            className="meeting-btn me-2"
-                            onClick={() => navigate('/student/request-meeting')}
-                        >
-                            Request for meeting
-                        </Button>
+                        {!userInfo?.assignedCoach ? (
+                            <OverlayTrigger
+                                placement="top"
+                                overlay={
+                                    <Tooltip id="tooltip-top">
+                                        You need to be assigned a coach to request a meeting
+                                    </Tooltip>
+                                }
+                            >
+                                <Button
+                                    variant="primary"
+                                    className="meeting-btn me-2"
+                                    disabled={!userInfo?.assignedCoach}
+                                >
+                                    Request for meeting
+                                </Button>
+                            </OverlayTrigger>
+                        ) : (
+                            <Button
+                                variant="primary"
+                                className="meeting-btn me-2"
+                                onClick={() => navigate('/student/request-meeting')}
+                                disabled={!userInfo?.assignedCoach}
+                            >
+                                Request for meeting
+                            </Button>
+                        )}
                     </div>
                 </Col>
             </Row>

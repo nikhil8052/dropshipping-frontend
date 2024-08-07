@@ -68,7 +68,15 @@ const BigCalender = ({
                 //     }
                 // },
                 event: ({ event, title }) => {
-                    return <EventComponent event={event} title={title} onEventClick={() => onEventClick(event)} />;
+                    return (
+                        <EventComponent
+                            event={event}
+                            title={title}
+                            onEventClick={() => {
+                                onEventClick(event);
+                            }}
+                        />
+                    );
                 },
                 header: CustomHeader,
                 toolbar: (props) => (

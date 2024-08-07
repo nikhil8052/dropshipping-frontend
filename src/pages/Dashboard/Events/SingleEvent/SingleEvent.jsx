@@ -95,7 +95,7 @@ const SingleEvent = () => {
                                 <div className="d-flex justify-content-between">
                                     <div>
                                         <strong>Date & Time:</strong> <span> {formatDate(event?.dateTime)}</span>
-                                        <p>Central Standard Time ({event?.timeZone})</p>
+                                        <p> ({event?.timeZone})</p>
                                     </div>
                                     <div>
                                         <Button
