@@ -5,6 +5,7 @@ import { updateGoogleTokens } from '../../redux/auth/auth_slice';
 import Loading from '@components/Loading/Loading';
 import axiosWrapper from '../../utils/api';
 import { API_URL } from '../../utils/apiUrl';
+import toast from 'react-hot-toast';
 
 let isCall = false;
 
@@ -25,6 +26,7 @@ const CallBack = () => {
             const { googleTokens } = response.data;
 
             if (googleTokens) {
+                toast.success('You have successfully connected your Google account');
                 dispatch(
                     updateGoogleTokens({
                         googleTokens
@@ -58,7 +60,7 @@ const CallBack = () => {
                                 eventId
                             }
                         });
-                    } else navigate('/student/events/');
+                    } else navigate('/student/request-meeting');
                     break;
                 default:
                     navigate('/login');

@@ -1,3 +1,5 @@
+import { format } from 'date-fns';
+
 export function formatDate(value) {
     if (value) {
         const dateInUtc = new Date(value);
@@ -39,4 +41,28 @@ export const formatTimeZone = () => {
     const options = { timeZoneName: 'long' };
     const formatter = new Intl.DateTimeFormat('en-US', options);
     return formatter.formatToParts().find((part) => part.type === 'timeZoneName').value;
+};
+
+export const debounce = (func, wait) => {
+    let timeout;
+    return (...args) => {
+        clearTimeout(timeout);
+        timeout = setTimeout(() => {
+            func.apply(this, args);
+        }, wait);
+    };
+};
+
+// Helper function to get formatted start and end times from an ISO date-time string
+export const getFormattedTimes = (dateTime, durationInHours = 2) => {
+    if (!dateTime) return { startTime: '', endTime: '' };
+
+    const eventDate = new Date(dateTime);
+    const startTime = format(eventDate, 'h:mm a');
+
+    // Calculate end time based on duration
+    const endTimeDate = new Date(eventDate.getTime() + durationInHours * 60 * 60 * 1000);
+    const endTime = format(endTimeDate, 'h:mm a');
+
+    return { startTime, endTime };
 };
