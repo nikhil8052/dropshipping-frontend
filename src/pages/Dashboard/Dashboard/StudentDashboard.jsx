@@ -8,56 +8,27 @@ import { useSelector } from 'react-redux';
 import Profit from '@icons/Profit.svg';
 import Costs from '@icons/Costs.svg';
 import { useNavigate } from 'react-router';
-import '../../../styles/Dashboard.scss';
 import { useIsSmallScreen } from '../../../utils/mediaQueries';
+import axiosWrapper from '../../../utils/api';
+import { API_URL } from '../../../utils/apiUrl';
 import { OverlayTrigger, Tooltip } from 'react-bootstrap';
-
-const sampleData = [5000, 22200, 6000, 20000, 7500, 28000, 8500, 20000, 7500, 28000, 8500, 20000, 7500, 28000, 8500];
-const previousData = [3000, 12000, 4000, 16000, 5000, 24000, 6000, 18000, 5500, 26000, 7500, 22000];
-
-const currentData = [5000, 22200, 6000, 20000, 7500, 28000, 8500, 20000, 7500, 28000, 8500, 20000];
+import '../../../styles/Dashboard.scss';
+import { convertCamelCaseToTitle, formatNumberWithCommas } from '../../../utils/common';
 
 const StudentDashboard = () => {
     const navigate = useNavigate();
     const chartRef = useRef(null);
-    const [chartHeight, setChartHeight] = useState(100);
     const isSmallScreen = useIsSmallScreen();
     const [cardStats, setCardStats] = useState([]);
-    const [lineGraphData, setLineGraphData] = useState({
-        datasets: [
-            {
-                label: 'Revenue (Shopify)',
-                borderColor: 'rgba(1, 159, 216, 1)',
-                pointRadius: 0,
-                fill: true,
-                backgroundColor: 'yellow',
-                lineTension: 0.4,
-                data: sampleData,
-                borderWidth: 4
-            }
-        ]
-    });
-    const [cashFlowData, setCashFlowData] = useState({
-        datasets: [
-            {
-                label: 'Cash Flow',
-                borderColor: 'rgba(37, 205, 37, 1)',
-                pointRadius: 0,
-                fill: true,
-                backgroundColor: 'rgba(75, 192, 192, 0.2)',
-                lineTension: 0.4,
-                data: [2000, 5000, 1500, 1000, 2000, 4000, 7000, 9000],
-                borderWidth: 2
-            }
-        ]
-    });
+    const [cashFlowCards, setCashFlowCards] = useState([]);
+    const [lineGraphData, setLineGraphData] = useState(null);
+    const [cashFlowData, setCashFlowData] = useState(null);
     const [chartKey, setChartKey] = useState('students');
-
-    const [dataSet, setDataSet] = useState(false);
     const { userInfo } = useSelector((state) => state?.auth);
     const role = userInfo?.role;
+    const token = useSelector((state) => state?.auth?.userToken);
 
-    const [currentFilter, setCurrentFilter] = useState('current');
+    const [currentFilter, setCurrentFilter] = useState('current_month');
 
     useEffect(() => {
         return () => {
@@ -67,57 +38,50 @@ const StudentDashboard = () => {
         };
     }, []);
 
-    const statCards = [
-        {
-            id: 1,
-            title: 'Total Revenue',
-            value: '$2,235'
-        },
-        {
-            id: 2,
-            title: 'Profit / Loss',
-            value: '$2,100'
-        },
-        {
-            id: 3,
-            title: 'Products Tested',
-            value: '135'
-        },
-        {
-            id: 4,
-            title: 'Total Orders',
-            value: '565'
-        }
-    ];
-    const cashFlowCards = [
-        {
-            id: 1,
-            title: 'Profit',
-            value: '$235.5k',
-            icon: Profit
-        },
-        {
-            id: 2,
-            title: 'Costs',
-            value: '$996.5k',
-            icon: Costs
-        }
-    ];
+    useEffect(() => {
+        fetchDashboardData();
+    }, [role, currentFilter]);
 
-    // Line Chart data
-    const data = {
-        datasets: [
-            {
-                label: 'Revenue (Shopify)',
-                borderColor: 'rgba(1, 159, 216, 1)',
-                pointRadius: 0,
-                fill: true,
-                backgroundColor: 'yellow',
-                lineTension: 0.4,
-                data: sampleData,
-                borderWidth: 4
-            }
-        ]
+    const fetchDashboardData = async () => {
+        try {
+            let cardData, graphData, secondCard;
+
+            cardData = await axiosWrapper('GET', API_URL.GET_STUDENT_CARD_DATA, {}, token);
+
+            secondCard = await axiosWrapper('GET', API_URL.GET_STUDENT_SECOND_CARD_DATA, {}, token);
+
+            graphData = await axiosWrapper(
+                'GET',
+                `${API_URL.GET_STUDENT_GRAPH_DATA}?graphFilter=${currentFilter}`,
+                {},
+                token
+            );
+
+            // Map the data to the format required by the StatCard component
+            const amountKeys = ['totalRevenue', 'profitOrLoss'];
+            const mapCards = Object.entries(cardData?.data).map(([key, value], index) => ({
+                id: index,
+                title: convertCamelCaseToTitle(key),
+                value: amountKeys.includes(key) ? `$${formatNumberWithCommas(value)}` : value
+            }));
+
+            const mapSecondCards = Object.entries(secondCard?.data).map(([key, value], index) => ({
+                id: index + 1,
+                title: convertCamelCaseToTitle(key),
+                value: amountKeys.includes(key) ? `$${formatNumberWithCommas(value)}` : value,
+                icon: key === 'profit' ? Profit : Costs
+            }));
+
+            setCardStats(mapCards);
+            setCashFlowCards(mapSecondCards);
+
+            const revenueData = generateRevenueData(graphData?.data);
+            const cashFlowData = generateCashData(graphData?.data);
+            setLineGraphData(revenueData);
+            setCashFlowData(cashFlowData);
+        } catch (error) {
+            console.error('Error fetching dashboard data:', error);
+        }
     };
 
     const graphOptions = {
@@ -175,20 +139,23 @@ const StudentDashboard = () => {
             }
         }
     };
-    const cashData = {
-        datasets: [
-            {
-                label: 'Cash Flow',
-                borderColor: 'rgba(37, 205, 37, 1)',
-                pointRadius: 0,
-                fill: true,
-                backgroundColor: 'rgba(75, 192, 192, 0.2)',
-                lineTension: 0.4,
-                data: [2000, 5000, 15000, 10000, 20000, 4000, 7000, 900],
-                borderWidth: 2,
-                borderDash: [5, 5]
-            }
-        ]
+    const generateCashData = (data) => {
+        const { cashFlowData } = data;
+        return {
+            datasets: [
+                {
+                    label: 'Cash Flow',
+                    borderColor: 'rgba(37, 205, 37, 1)',
+                    pointRadius: 0,
+                    fill: true,
+                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                    lineTension: 0.4,
+                    data: cashFlowData?.flatMap((obj) => Object.values(obj)),
+                    borderWidth: 2,
+                    borderDash: [5, 5]
+                }
+            ]
+        };
     };
     const cashFlowOptions = {
         scales: {
@@ -196,7 +163,7 @@ const StudentDashboard = () => {
                 grid: {
                     display: true
                 },
-                labels: ['2017', '2018', '2019', '2020', '2021', '2022', '2023', '2024'],
+                labels: ['2020', '2021', '2022', '2023', '2024'],
                 ticks: {
                     color: 'rgba(28, 28, 28, 0.4)'
                 },
@@ -246,12 +213,23 @@ const StudentDashboard = () => {
         }
     };
 
-    useEffect(() => {
-        setCardStats(statCards);
-        setLineGraphData(data);
-        setCashFlowData(cashData);
-        setDataSet(false);
-    }, []);
+    const generateRevenueData = (data) => {
+        const { revenueData } = data;
+        return {
+            datasets: [
+                {
+                    label: 'Revenue (Shopify)',
+                    borderColor: 'rgba(1, 159, 216, 1)',
+                    pointRadius: 0,
+                    fill: true,
+                    backgroundColor: 'rgba(1, 159, 216, 0.1)',
+                    lineTension: 0.4,
+                    data: revenueData?.flatMap((obj) => Object.values(obj)),
+                    borderWidth: 4
+                }
+            ]
+        };
+    };
 
     const timePeriods = [
         { label: 'Monthly', value: 'monthly' },
@@ -259,24 +237,7 @@ const StudentDashboard = () => {
         { label: 'Yearly', value: 'yearly' }
     ];
     const handleFilterChange = (filter) => {
-        if (currentFilter !== filter) {
-            setCurrentFilter(filter);
-            const newData = filter === 'current' ? currentData : previousData;
-            setLineGraphData({
-                datasets: [
-                    {
-                        label: 'Revenue (Shopify)',
-                        borderColor: 'rgba(1, 159, 216, 1)',
-                        pointRadius: 0,
-                        fill: true,
-                        backgroundColor: 'rgba(1, 159, 216, 0.1)',
-                        lineTension: 0.4,
-                        data: newData,
-                        borderWidth: 4
-                    }
-                ]
-            });
-        }
+        setCurrentFilter(filter);
     };
 
     const tabTitles = {
@@ -336,19 +297,21 @@ const StudentDashboard = () => {
             </Row>
             <Row className="graph-wrapper">
                 <Col>
-                    <LineChart
-                        data={lineGraphData}
-                        options={graphOptions}
-                        timePeriods={timePeriods}
-                        chartHeight={isSmallScreen ? 200 : chartHeight}
-                        dataSet={dataSet}
-                        role={role}
-                        handleFilterChange={handleFilterChange}
-                        currentFilter={currentFilter}
-                        chartKey={chartKey}
-                        setChartKey={setChartKey}
-                        tabTitles={tabTitles}
-                    />
+                    {lineGraphData && (
+                        <LineChart
+                            data={lineGraphData}
+                            options={graphOptions}
+                            timePeriods={timePeriods}
+                            chartHeight={isSmallScreen ? 200 : 100}
+                            dataSet={false}
+                            role={role}
+                            handleFilterChange={handleFilterChange}
+                            currentFilter={currentFilter}
+                            chartKey={chartKey}
+                            setChartKey={setChartKey}
+                            tabTitles={tabTitles}
+                        />
+                    )}
                 </Col>
             </Row>
             <Row>
@@ -358,13 +321,13 @@ const StudentDashboard = () => {
                             <CashFlowLineChart
                                 data={cashFlowData}
                                 options={cashFlowOptions}
-                                chartHeight={isSmallScreen ? 200 : chartHeight}
+                                chartHeight={isSmallScreen ? 200 : 100}
                             />
                         )}
                     </Card>
                 </Col>
                 <Col lg={4}>
-                    {cashFlowCards.map((stat, index) => (
+                    {cashFlowCards?.map((stat, index) => (
                         <Col key={stat.id} className="w-100 d-flex flex-column h-50">
                             <Card customCardClass={`custom-card-colors h-100 ${index % 2 === 0 ? 'even' : 'odd'}`}>
                                 <StatCard {...stat} />
