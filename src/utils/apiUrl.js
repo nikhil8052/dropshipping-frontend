@@ -9,6 +9,7 @@ const PRODUCT_API_BASE = `${BASE_URL}/api/product`;
 const DAILY_FINANCE_API_BASE = `${BASE_URL}/api/dailyFinance`;
 const INVOICE_API_BASE = `${BASE_URL}/api/invoice`;
 const EVENT_API_BASE = `${BASE_URL}/api/event`;
+const DASHBOARD_API_BASE = `${BASE_URL}/api/dashboard`;
 
 export const API_URL = {
     // User API
@@ -103,5 +104,17 @@ export const API_URL = {
     DELETE_EVENT: `${EVENT_API_BASE}/delete/:id`,
     GET_UPCOMING_EVENTS: `${EVENT_API_BASE}/upcoming-events`,
     GET_ALL_EVENTS_FOR_STUDENT: `${EVENT_API_BASE}/student/events`,
-    GET_EVENT_BY_ID_FOR_STUDENT: `${EVENT_API_BASE}/student/events/:id`
+    GET_EVENT_BY_ID_FOR_STUDENT: `${EVENT_API_BASE}/student/events/:id`,
+
+    // Dashboard API
+    GET_ADMIN_CARD_DATA: `${DASHBOARD_API_BASE}/admin/cards`,
+    GET_ADMIN_GRAPH_DATA: `${DASHBOARD_API_BASE}/admin/graphs`,
+    GET_ADMIN_EVENTS_DATA: `${DASHBOARD_API_BASE}/admin/events`,
+    GET_COACH_CARD_DATA: `${DASHBOARD_API_BASE}/coach/cards`,
+    GET_COACH_GRAPH_DATA: `${DASHBOARD_API_BASE}/coach/graphs`,
+    GET_COACH_EVENTS_DATA: `${DASHBOARD_API_BASE}/coach/events`,
+    GET_STUDENT_CARD_DATA: `${DASHBOARD_API_BASE}/student/cards`,
+    GET_STUDENT_SECOND_CARD_DATA: `${DASHBOARD_API_BASE}/student/cards-second`,
+    GET_STUDENT_GRAPH_DATA: `${DASHBOARD_API_BASE}/student/graphs`,
+    GET_STUDENT_EVENTS_DATA: `${DASHBOARD_API_BASE}/student/events`
 };

@@ -66,3 +66,15 @@ export const getFormattedTimes = (dateTime, durationInHours = 2) => {
 
     return { startTime, endTime };
 };
+
+export const convertCamelCaseToTitle = (str) => {
+    // Insert a space before all capital letters
+    const result = str.replace(/([A-Z])/g, ' $1');
+    // Capitalize the first letter of the resulting string
+    const finalResult = result.charAt(0).toUpperCase() + result.slice(1);
+    return finalResult;
+};
+
+export const formatNumberWithCommas = (number) => {
+    return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+};
