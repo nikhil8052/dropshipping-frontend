@@ -5,9 +5,10 @@ import Search from '../../../assets/icons/Search.svg';
 import add from '@icons/add_white.svg';
 import downArrow from '@icons/down-arrow.svg';
 import { useNavigate } from 'react-router-dom';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import Pagination from '../../../components/Pagination/Pagination';
 import { API_URL } from '../../../utils/apiUrl';
+import * as types from '../../../redux/actions/actionTypes';
 import axiosWrapper from '../../../utils/api';
 import '../../../styles/Common.scss';
 import '../../../styles/Courses.scss';
@@ -17,6 +18,7 @@ const Courses = () => {
     const [selectedEvent, setSelectedEvent] = useState('Your Courses');
     const [currentPage, setCurrentPage] = useState(1);
     const [coursesData, setCoursesData] = useState([]);
+    const dispatch = useDispatch();
     const [totalPages, setTotalPages] = useState(1);
 
     const navigate = useNavigate();
@@ -46,6 +48,7 @@ const Courses = () => {
     useEffect(() => {
         // Fetch data from API here
         getAllCourses();
+        dispatch({ type: types.LOGOUT });
     }, [search, currentPage, selectedEvent]);
 
     const getAllCourses = async () => {

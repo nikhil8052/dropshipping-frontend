@@ -18,7 +18,7 @@ const rootReducer = combineReducers({
 const persistConfig = {
     key: 'root',
     storage,
-    whitelist: ['auth', 'theme', 'activeSidebarItem', 'root'],
+    whitelist: ['auth', 'theme', 'activeSidebarItem'],
     blacklist: []
 };
 

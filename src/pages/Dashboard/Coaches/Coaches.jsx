@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Table from '@components/Table/Table';
 import { Button, Col, Form, Row } from 'react-bootstrap';
 import Modal from '@components/Modal/Modal';
@@ -7,6 +7,7 @@ import ConfirmationBox from '@components/ConfirmationBox/ConfirmationBox';
 import { Helmet } from 'react-helmet';
 import axiosWrapper from '@utils/api';
 import TextExpand from '@components/TextExpand/TextExpand';
+import TextItemExpand from '@components/TextExpand/TextItemExpand';
 import editIcon from '@icons/edit_square.svg';
 import deleteIcon from '@icons/trash-2.svg';
 import add from '@icons/add_white.svg';
@@ -16,8 +17,6 @@ import '../../../styles/Coaches.scss';
 import '../../../styles/Common.scss';
 import { API_URL } from '../../../utils/apiUrl';
 import { useSelector } from 'react-redux';
-import { faCircleUser } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 const Coaches = () => {
     const [showDeleteModal, setShowDeleteModal] = useState({
@@ -27,7 +26,6 @@ const Coaches = () => {
         coachId: null
     });
     const [selectedRowId, setSelectedRowId] = useState(null);
-    const [expanded, setExpanded] = useState(false);
     const token = useSelector((state) => state?.auth?.userToken);
     const [productModal, setProductModal] = useState({
         show: false,
@@ -135,12 +133,6 @@ const Coaches = () => {
         resetModal();
     };
 
-    const toggleExpand = useCallback((event) => {
-        // Specifically in this component, we need to prevent the event from propagating to the parent element
-        event.stopPropagation();
-        setExpanded(!expanded);
-    }, []);
-
     /*eslint-disable */
     const ActionsRenderer = React.memo((props) => (
         <React.Fragment>
@@ -177,28 +169,6 @@ const Coaches = () => {
             </Row>
         </React.Fragment>
     );
-    const NameRenderer = (props) => (
-        <div key={props.data._id}>
-            <div className="d-flex align-items-center gap-2">
-                {props.data.avatar ? (
-                    <img src={props.data.avatar} alt={props.data.name} className="avatar-image" />
-                ) : (
-                    <FontAwesomeIcon size="2xl" icon={faCircleUser} color="rgba(200, 202, 216, 1)" />
-                )}
-                <div
-                    style={{
-                        overflow: 'hidden',
-                        textOverflow: 'ellipsis',
-                        whiteSpace: expanded ? 'normal' : 'nowrap',
-                        cursor: 'pointer'
-                    }}
-                    onClick={toggleExpand}
-                >
-                    {props.value}
-                </div>
-            </div>
-        </div>
-    );
     /*eslint-disable */
 
     const columns = [
@@ -210,7 +180,7 @@ const Coaches = () => {
             unSortIcon: true,
             wrapText: true,
             autoHeight: true,
-            cellRenderer: NameRenderer,
+            cellRenderer: TextItemExpand,
             resizable: false
         },
         {
