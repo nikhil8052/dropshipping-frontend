@@ -71,7 +71,7 @@ const NewStudent = () => {
             .oneOf(['HIGH_TICKET', 'LOW_TICKET'])
             .required('Please select a coaching trajectory')
             .matches(/\S/, 'Coaching trajectory cannot be empty or spaces only'),
-        coursesRoadmap: Yup.array().min(1, 'Please select at least one course')
+        coursesRoadmap: Yup.array()
     });
 
     useEffect(() => {
@@ -120,7 +120,12 @@ const NewStudent = () => {
     }, [studentData.coachingTrajectory]);
 
     const getAllCourses = async (trajectory) => {
-        const response = await axiosWrapper('GET', `${API_URL.GET_ALL_COURSES}?coachType=${trajectory}`, {}, token);
+        const response = await axiosWrapper(
+            'GET',
+            `${API_URL.GET_ALL_COURSES}?coachType=${trajectory}&studentId=${studentId}`,
+            {},
+            token
+        );
         const { data } = response;
         const formattedData = data.map((c) => ({
             value: c._id,
@@ -460,7 +465,7 @@ const NewStudent = () => {
                                         </Field>
                                     </Col>
 
-                                    {!studentId && (
+                                    {studentId && (
                                         <Col md={6} xs={12}>
                                             <Input
                                                 options={courses}
@@ -470,6 +475,11 @@ const NewStudent = () => {
                                                 type="select"
                                                 isMulti={true}
                                             />
+                                            {courses.length === 0 && (
+                                                <div>
+                                                    <div className="error mt-2">No coach assigned to this student.</div>
+                                                </div>
+                                            )}
                                         </Col>
                                     )}
                                 </Row>

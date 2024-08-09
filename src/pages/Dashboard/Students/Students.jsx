@@ -98,15 +98,21 @@ const Students = () => {
             show: true,
             title: (
                 <div>
-                    Courses Roadmap
-                    <p
-                        style={{
-                            color: 'rgba(132, 132, 132, 1)',
-                            fontSize: '14px'
-                        }}
-                    >
-                        (Drag Courses to change their numbers)
-                    </p>
+                    {data.length > 0 ? (
+                        <>
+                            Courses Roadmap
+                            <p
+                                style={{
+                                    color: 'rgba(132, 132, 132, 1)',
+                                    fontSize: '14px'
+                                }}
+                            >
+                                (Drag Courses to change their numbers)
+                            </p>
+                        </>
+                    ) : (
+                        <h5 className="text-center mt-5">You have not assigned in any courses.</h5>
+                    )}
                 </div>
             ),
             isEditable: true,
@@ -311,8 +317,9 @@ const Students = () => {
             unSortIcon: true,
             resizable: false,
             cellRenderer: ({ data: rowData }) => {
-                const courses = rowData.id;
-                return <div key={rowData.id}>{courses}%</div>;
+                // Calculate the percentage of courses completed
+                const courses = rowData.coursesRoadmap?.length || 0;
+                return <div key={rowData._id}>{courses}%</div>;
             }
         },
         {
