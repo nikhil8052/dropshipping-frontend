@@ -78,3 +78,6 @@ export const convertCamelCaseToTitle = (str) => {
 export const formatNumberWithCommas = (number) => {
     return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
 };
+
+export const currentDate = new Date().toISOString().split('.')[0];
+export const oneYearsLater = new Date(new Date().setFullYear(new Date().getFullYear() + 1)).toISOString().split('.')[0];

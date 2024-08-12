@@ -421,7 +421,6 @@ const UploadFiles = ({ onNext, onBack, initialData, setStepComplete, updateCours
                                                 placeholder="Enter Course Description"
                                                 render={({ field }) => (
                                                     <ReactQuill
-                                                        {...field}
                                                         value={field.value || ''}
                                                         name={field.name}
                                                         onChange={(value) => field.onChange(field.name)(value)} // Update the form value

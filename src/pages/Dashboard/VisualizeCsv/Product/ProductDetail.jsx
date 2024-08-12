@@ -55,7 +55,7 @@ const ProductDetail = ({ setSelectedRowId, selectedRowId }) => {
             <Container fluid className="product-detail-page">
                 <Row className="d-flex flex-column product-avatar ">
                     <Col className="d-flex justify-content-start">
-                        <Image src={productData.avatarUrl} className="avatar" />
+                        <Image src={productData.avatarUrl} className="product-image" />
                     </Col>
                     <h3> {productData.productName} </h3>
                 </Row>

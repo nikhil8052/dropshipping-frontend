@@ -20,6 +20,7 @@ import { getFileObjectFromBlobUrl } from '../../../../utils/utils';
 import * as types from '../../../../redux/actions/actionTypes';
 import '../../../../styles/Events.scss';
 import '../../../../styles/Common.scss';
+import { currentDate, oneYearsLater } from '../../../../utils/common';
 
 const NewEvent = () => {
     const inputRef = useRef();
@@ -340,6 +341,10 @@ const NewEvent = () => {
                                                     name="dateTime"
                                                     className="field-control"
                                                     type="datetime-local"
+                                                    min={currentDate}
+                                                    max={oneYearsLater}
+                                                    onClick={(e) => e.target.showPicker()}
+                                                    step="60"
                                                 />
                                                 <ErrorMessage name="dateTime" component="div" className="error" />
                                             </Col>
@@ -452,7 +457,7 @@ const NewEvent = () => {
                                                 <div className="mt-3 d-flex justify-content-end gap-3">
                                                     <Button
                                                         type="button"
-                                                        onClick={() => navigate(`/${role}/events`)}
+                                                        onClick={() => navigate(`/${role?.toLowerCase()}/events`)}
                                                         className="cancel-btn"
                                                         disabled={isSubmitting}
                                                     >

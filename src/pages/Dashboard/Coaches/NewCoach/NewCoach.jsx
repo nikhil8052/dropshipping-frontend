@@ -92,7 +92,12 @@ const NewCoach = () => {
             setLoading(true);
             const queryParams = new URLSearchParams({ coachingTrajectory: trajectory }).toString();
 
-            const { data } = await axiosWrapper('GET', `${API_URL.GET_ALL_STUDENTS}?${queryParams}`, {}, token);
+            const { data } = await axiosWrapper(
+                'GET',
+                `${API_URL.GET_ALL_STUDENTS}?${queryParams}&assignedCoach=false`,
+                {},
+                token
+            );
             const students = data.map((student) => ({
                 value: student._id,
                 label: student.name
@@ -130,23 +135,40 @@ const NewCoach = () => {
     };
 
     const validationSchema = Yup.object({
-        name: Yup.string().required('Coach name is required'),
+        name: Yup.string()
+            .required('Coach name is required')
+            .trim('Name cannot include leading or trailing spaces') // trims spaces
+            .strict(true), // ensures trimming is enforced during validation
+
         email: Yup.string().email('Invalid email address').required('Coach email is required'),
-        phoneNumber: Yup.string().required('Phone number is required'),
+
+        phoneNumber: Yup.string()
+            .required('Phone number is required')
+            .trim('Phone number cannot include leading or trailing spaces') // trims spaces
+            .strict(true), // ensures trimming is enforced during validation
+
         country: Yup.string().required('Country is required'),
+
         region: Yup.string().required('Region is required'),
+
         assignedStudents: Yup.array().optional(),
+
         highTicketStudentSpots: Yup.number().when('coachType', {
             is: COACH.COACH_TYPE.HIGH_TICKET,
             then: () => Yup.number().required('High ticket spots are required').positive('Must be a positive number'),
             otherwise: () => Yup.number()
         }),
+
         lowTicketStudentSpots: Yup.number().when('coachType', {
             is: COACH.COACH_TYPE.LOW_TICKET,
             then: () => Yup.number().required('Low ticket spots are required').positive('Must be a positive number'),
             otherwise: () => Yup.number()
         }),
-        bio: Yup.string(),
+
+        bio: Yup.string()
+            .trim('Bio cannot include leading or trailing spaces') // trims spaces
+            .strict(true), // ensures trimming is enforced during validation
+
         coachType: Yup.string()
             .oneOf([COACH.COACH_TYPE.HIGH_TICKET, COACH.COACH_TYPE.LOW_TICKET])
             .required('Please select the coach type')

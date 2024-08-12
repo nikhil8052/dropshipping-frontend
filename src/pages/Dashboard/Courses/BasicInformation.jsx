@@ -42,8 +42,12 @@ const BasicInformation = ({ initialData, setStepComplete, createOrUpdateCourse }
 
     useEffect(() => {
         // Fetch data from API here
-        getAllCoaches();
-    }, []);
+        if (userInfo?.role === 'COACH') {
+            getCoachById();
+        } else {
+            getAllCoaches();
+        }
+    }, [userInfo?.role]);
 
     const getAllCoaches = async () => {
         // Later we will replace this with actual API call
@@ -51,6 +55,23 @@ const BasicInformation = ({ initialData, setStepComplete, createOrUpdateCourse }
             setLoading(true);
             const coaches = await axiosWrapper('GET', API_URL.GET_ALL_COACHES, {}, userToken);
             setCoachesData(coaches?.data);
+        } catch (error) {
+            return;
+        } finally {
+            setLoading(false);
+        }
+    };
+    // If the user is a coach, get the coach by ID
+    const getCoachById = async () => {
+        try {
+            setLoading(true);
+            const coach = await axiosWrapper(
+                'GET',
+                `${API_URL.GET_COACH.replace(':id', userInfo?._id)}`,
+                {},
+                userToken
+            );
+            setCoachesData([coach?.data]);
         } catch (error) {
             return;
         } finally {
@@ -236,7 +257,7 @@ const BasicInformation = ({ initialData, setStepComplete, createOrUpdateCourse }
                                                     Cancel
                                                 </Button>
                                                 <Button type="submit" className="submit-btn" disabled={isSubmitting}>
-                                                    {isSubmitting ? 'Save Changes...' : 'Save & next'}
+                                                    {isSubmitting ? 'Save Changes...' : 'Save & Next'}
                                                 </Button>
                                             </div>
                                         </Col>

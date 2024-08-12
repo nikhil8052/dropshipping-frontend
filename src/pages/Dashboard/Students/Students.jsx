@@ -14,8 +14,7 @@ import { coachDummyData, studentsTrajectory } from '../../../data/data';
 import { useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { API_URL } from '../../../utils/apiUrl';
-import { faCircleUser } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import TextItemExpand from '@components/TextExpand/TextItemExpand';
 import '../../../styles/Students.scss';
 import '../../../styles/Common.scss';
 import RoadMapList from './Roadmap/RoadmapList';
@@ -65,6 +64,7 @@ const Students = () => {
                 token
             );
             setStudentsData(coaches.data);
+            setLoading(false);
         } catch (error) {
             return;
         } finally {
@@ -239,30 +239,6 @@ const Students = () => {
         </React.Fragment>
     );
 
-    const NameRenderer = (props) => (
-        <div key={props.data._id}>
-            <div className="d-flex align-items-center gap-2">
-                {/* <img src={props.data.avatarUrl} alt={props.data.name} className="avatar" /> */}
-                {props.data.avatar ? (
-                    <img src={props.data.avatar} alt={props.data.name} className="avatar-image" />
-                ) : (
-                    <FontAwesomeIcon size="2xl" icon={faCircleUser} color="rgba(200, 202, 216, 1)" />
-                )}
-                <div
-                    style={{
-                        overflow: 'hidden',
-                        textOverflow: 'ellipsis',
-                        whiteSpace: expanded ? 'normal' : 'nowrap',
-                        cursor: 'pointer',
-                        maxWidth: '120px'
-                    }}
-                    onClick={toggleExpand}
-                >
-                    {props.value}
-                </div>
-            </div>
-        </div>
-    );
     const LinkRenderer = (props) => (
         <div key={props.data._id}>
             <div className="d-flex align-items-center">
@@ -295,7 +271,7 @@ const Students = () => {
             unSortIcon: true,
             wrapText: true,
             autoHeight: true,
-            cellRenderer: NameRenderer,
+            cellRenderer: TextItemExpand,
             resizable: false
         },
         {

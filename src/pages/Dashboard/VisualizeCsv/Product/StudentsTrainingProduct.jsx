@@ -7,7 +7,7 @@ import axiosWrapper from '@utils/api';
 import toast from 'react-hot-toast';
 import TextExpand from '@components/TextExpand/TextExpand';
 import uploadSimple from '@icons/UploadSimpleBack.svg';
-import pdfExport from '@icons/picture_as_pdf.svg';
+import csvExport from '@icons/csv.svg';
 import { API_URL } from '../../../../utils/apiUrl';
 import ProductDetail from './ProductDetail';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -160,6 +160,7 @@ const StudentsTrainingProduct = ({ studentId }) => {
         try {
             const filePath = 'uploads' + file.split('/uploads')[1];
             await axiosWrapper('POST', API_URL.UPLOAD_PRODUCTS_CSV, { filePath }, token);
+            setFile(null);
             fetchData();
         } catch (error) {
             toast.error(error);
@@ -289,7 +290,7 @@ const StudentsTrainingProduct = ({ studentId }) => {
                                         <Col md={12} lg={6} xl={6} xxl={3}>
                                             <Button className="add-button w-100" onClick={handleExportProducts}>
                                                 <span className="me-2">Export</span>
-                                                <img src={pdfExport} alt="" />
+                                                <img src={csvExport} alt="" />
                                             </Button>
                                         </Col>
                                         <Col md={12} lg={6} xl={6} xxl={3}>

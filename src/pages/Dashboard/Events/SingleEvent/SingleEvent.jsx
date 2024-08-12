@@ -6,7 +6,6 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { Button, Card, Col, Row } from 'react-bootstrap';
 import { useSelector } from 'react-redux';
 import CaretLeft from '@icons/CaretLeft.svg';
-import calendar from '@icons/calendar.svg';
 import { useEffect, useState } from 'react';
 import axiosWrapper from '@utils/api';
 import Loading from '@components/Loading/Loading';
@@ -61,13 +60,14 @@ const SingleEvent = () => {
                                     <img src={CaretLeft} alt="CaretLeft" className="me-2" /> Back
                                 </Button>
                             </Col>
-                            <Col>
+                            {/* Commenting for later user no need right now */}
+                            {/* <Col>
                                 <div className="d-flex justify-content-end">
                                     <Button className="google-calendar-btn">
                                         <img src={calendar} alt="calendar" className="me-2" /> Google Calendar
                                     </Button>
                                 </div>
-                            </Col>
+                            </Col> */}
                         </Row>
                     )}
 

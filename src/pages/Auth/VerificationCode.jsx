@@ -7,7 +7,6 @@ import { Form as FormikForm, Formik } from 'formik';
 import './auth.scss';
 import LoginLeftSec from './LoginLeftSec';
 import Footer from './Footer';
-import toast from 'react-hot-toast';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 import axiosWrapper from '@utils/api';
@@ -43,6 +42,11 @@ const VerificationCode = () => {
         }
     };
 
+    const resendOtpCode = async () => {
+        // Call API to send verification code
+        await axiosWrapper('PUT', API_URL.SEND_OTP_ON_EMAIL, { email });
+    };
+
     return (
         <>
             <div className="auth-main-wrapper">
@@ -74,9 +78,7 @@ const VerificationCode = () => {
                                                     />
                                                     <span
                                                         className="resend-code cursor-pointer"
-                                                        onClick={() =>
-                                                            toast.success('Otp sent to your email successfully.')
-                                                        }
+                                                        onClick={resendOtpCode}
                                                     >
                                                         Resend code
                                                     </span>

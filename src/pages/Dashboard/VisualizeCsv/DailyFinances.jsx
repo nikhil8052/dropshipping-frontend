@@ -5,7 +5,7 @@ import ConfirmationBox from '@components/ConfirmationBox/ConfirmationBox';
 import { Helmet } from 'react-helmet';
 import TextExpand from '@components/TextExpand/TextExpand';
 import uploadSimple from '@icons/UploadSimpleBack.svg';
-import pdfExport from '@icons/picture_as_pdf.svg';
+import csvExport from '@icons/csv.svg';
 import { API_URL } from '../../../utils/apiUrl';
 import DateRenderer from '@components/DateFormatter/DateFormatter';
 import { FileUploader } from 'react-drag-drop-files';
@@ -290,7 +290,7 @@ const DailyFinances = ({ studentId }) => {
                                     <Col md={12} lg={6} xl={6} xxl={3}>
                                         <Button className="add-button w-100" onClick={handleExport}>
                                             <span className="me-2">Export</span>
-                                            <img src={pdfExport} alt="" />
+                                            <img src={csvExport} alt="" />
                                         </Button>
                                     </Col>
                                     <Col md={12} lg={6} xl={6} xxl={3}>

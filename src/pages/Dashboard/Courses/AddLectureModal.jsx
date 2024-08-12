@@ -12,6 +12,7 @@ import axiosWrapper from '../../../utils/api';
 import { API_URL } from '../../../utils/apiUrl';
 import { useSelector } from 'react-redux';
 import { Upload } from 'tus-js-client';
+import { trimLongText } from '../../../utils/common';
 
 const AddLectureModal = ({ lectureModal, resetModal, onSave }) => {
     const [loading, setLoading] = useState(false);
@@ -359,7 +360,7 @@ const AddLectureModal = ({ lectureModal, resetModal, onSave }) => {
                                     />
                                     <p>
                                         {values.file
-                                            ? `File name: ${values.file.name || values.file.split('-')[1]}`
+                                            ? `File name: ${trimLongText(values.file.name, 15) || trimLongText(values.file.split('-')[1], 15)}`
                                             : 'Drag and drop a file or browse file'}
                                     </p>
                                 </div>
@@ -417,7 +418,7 @@ const AddLectureModal = ({ lectureModal, resetModal, onSave }) => {
                                         animated
                                         className="w-100 mb-3"
                                     />
-                                    <p>{values.file ? `File: ${values.file.name}` : ''}</p>
+                                    <p>{values.file ? `File: ${trimLongText(values.file.name, 15)}` : ''}</p>
                                     <Button variant="secondary" onClick={() => setUploading(false)}>
                                         Cancel
                                     </Button>

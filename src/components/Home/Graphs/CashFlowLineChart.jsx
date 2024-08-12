@@ -16,7 +16,7 @@ import './LineGraph.scss';
 // Register the necessary components for a line chart
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend);
 
-const CashFlowLineChart = ({ data, options, chartHeight }) => {
+const CashFlowLineChart = ({ data, options }) => {
     return (
         <div className="chart-container">
             <Row className="d-flex justify-content-between">
@@ -26,7 +26,7 @@ const CashFlowLineChart = ({ data, options, chartHeight }) => {
             </Row>
             <Row>
                 <Col>
-                    <Line data={data} options={options} height={chartHeight} />
+                    <Line data={data} options={options} height={'200'} />
                 </Col>
             </Row>
         </div>

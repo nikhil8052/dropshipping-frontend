@@ -122,7 +122,7 @@ const NewStudent = () => {
     const getAllCourses = async (trajectory) => {
         const response = await axiosWrapper(
             'GET',
-            `${API_URL.GET_ALL_COURSES}?coachType=${trajectory}&studentId=${studentId}`,
+            `${API_URL.GET_ALL_COURSES}?coachType=${trajectory}${studentId ? `&studentId=${studentId}` : ''}`,
             {},
             token
         );

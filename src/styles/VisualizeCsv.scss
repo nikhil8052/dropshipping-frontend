@@ -23,6 +23,12 @@
         border-radius: 50%;
         object-fit: cover;
     }
+    .product-image {
+        width: 93px;
+        height: 93px;
+        border-radius: 50%;
+        object-fit: cover;
+    }
     .nav-tabs {
         &:focus-visible {
             outline: none !important;

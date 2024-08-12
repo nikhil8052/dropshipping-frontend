@@ -127,12 +127,17 @@ const Events = () => {
     };
 
     const handleDeleteSubmit = async () => {
-        setLoadingCRUD(true);
-        // Delete API call here
-        await axiosWrapper('DELETE', API_URL.DELETE_EVENT.replace(':id', showDeleteModal?.eventId), {}, token);
-        fetchData();
-        setLoadingCRUD(false);
-        resetModal();
+        try {
+            setLoadingCRUD(true);
+            // Delete API call here
+            await axiosWrapper('DELETE', API_URL.DELETE_EVENT.replace(':id', showDeleteModal?.eventId), {}, token);
+            fetchData();
+            setLoadingCRUD(false);
+            resetModal();
+        } catch (error) {
+            setLoadingCRUD(false);
+            resetModal();
+        }
     };
 
     const handleEventSelect = (eventKey, coach) => {
@@ -164,19 +169,26 @@ const Events = () => {
                         <img src={eyeIcon} className="action-icon ms-0" alt="action-icon" />
                     </div>
                 </Col>
-                <Col lg={3} md={4} sm={4} xs={4} className="d-flex justify-content-center align-items-center">
-                    <div className="action-button edit-button" onClick={() => props.onEditClick(props.data._id)}>
-                        <img src={editIcon} className="action-icon ms-0" alt="action-icon" />
-                    </div>
-                </Col>
-                <Col lg={3} md={4} sm={4} xs={4} className="d-flex justify-content-center align-items-center">
-                    <div
-                        className="btn-light action-button delete-button"
-                        onClick={() => props.onDeleteClick(props.data._id)}
-                    >
-                        <img src={deleteIcon} className="action-icon" alt="action-icon" />
-                    </div>
-                </Col>
+                {props.data.createdBy?._id.toString() === userInfo._id.toString() && (
+                    <>
+                        <Col lg={3} md={4} sm={4} xs={4} className="d-flex justify-content-center align-items-center">
+                            <div
+                                className="action-button edit-button"
+                                onClick={() => props.onEditClick(props.data._id)}
+                            >
+                                <img src={editIcon} className="action-icon ms-0" alt="action-icon" />
+                            </div>
+                        </Col>
+                        <Col lg={3} md={4} sm={4} xs={4} className="d-flex justify-content-center align-items-center">
+                            <div
+                                className="btn-light action-button delete-button"
+                                onClick={() => props.onDeleteClick(props.data._id)}
+                            >
+                                <img src={deleteIcon} className="action-icon" alt="action-icon" />
+                            </div>
+                        </Col>
+                    </>
+                )}
             </Row>
         </React.Fragment>
     );
