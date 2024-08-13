@@ -92,12 +92,7 @@ const NewCoach = () => {
             setLoading(true);
             const queryParams = new URLSearchParams({ coachingTrajectory: trajectory }).toString();
 
-            const { data } = await axiosWrapper(
-                'GET',
-                `${API_URL.GET_ALL_STUDENTS}?${queryParams}&assignedCoach=false`,
-                {},
-                token
-            );
+            const { data } = await axiosWrapper('GET', `${API_URL.GET_ALL_STUDENTS}?${queryParams}`, {}, token);
             const students = data.map((student) => ({
                 value: student._id,
                 label: student.name

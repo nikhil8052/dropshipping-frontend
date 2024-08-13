@@ -5,7 +5,8 @@ import CaretRight from '@icons/CaretRight.svg';
 import { InputGroup, Button, Form, Col, Row } from 'react-bootstrap';
 import Search from '../../../assets/icons/Search.svg';
 import InactiveIcon from '../../../assets/icons/Icon-inactive-lec.svg';
-import { Form as FormikForm, Formik, Field, ErrorMessage } from 'formik';
+import ActiveIcon from '../../../assets/icons/active-lect.svg';
+import { Form as FormikForm, Formik, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import axiosWrapper from '../../../utils/api';
 import { API_URL } from '../../../utils/apiUrl';
@@ -31,23 +32,10 @@ const EnrolledCourseDetail = () => {
     const [retryQuiz, setRetryQuiz] = useState(false);
 
     const [initialValues, setInitialValues] = useState({
-        questions: [],
         mcqs: []
     });
 
-    const isPass = selectedLecture?.completedBy?.includes(userInfo?._id);
-
     const validationSchema = Yup.object().shape({
-        questions: Yup.array()
-            .of(
-                Yup.object().shape({
-                    questionId: Yup.string()
-                        .matches(/^[0-9a-fA-F]{24}$/, 'Invalid question ID')
-                        .required('Question ID is required'),
-                    answer: Yup.string().required('Answer is required')
-                })
-            )
-            .required('Questions are required'),
         mcqs: Yup.array()
             .of(
                 Yup.object().shape({
@@ -68,8 +56,9 @@ const EnrolledCourseDetail = () => {
         setSearch(event.target.value);
     };
 
-    const getCourseById = async (id) => {
+    const getCourseById = async (id, nextLecture) => {
         const { data } = await axiosWrapper('GET', `${API_URL.GET_COURSE.replace(':id', id)}`, {}, token);
+
         // Higher Level info
         setCourseDetails({
             title: data.title,
@@ -77,10 +66,18 @@ const EnrolledCourseDetail = () => {
         });
         // Overall lectures
         setLectures(data.lectures);
+
         // Handle search results
         setFilteredLectures(data.lectures);
+        const incompleteLectureIndex = data.lectures.find((lec) => !lec.completedBy?.includes(userInfo?._id));
         // Get the first lecture
-        getCurrentLecture(data.lectures[0]._id);
+        if (nextLecture && activeIndex <= data?.lectures?.length - 1) {
+            getCurrentLecture(nextLecture);
+        } else if (incompleteLectureIndex?._id !== undefined) {
+            getCurrentLecture(incompleteLectureIndex?._id);
+        } else {
+            getCurrentLecture(data.lectures[0]?._id);
+        }
     };
 
     const getCurrentLecture = async (id) => {
@@ -88,15 +85,9 @@ const EnrolledCourseDetail = () => {
 
         setSelectedLecture(data);
 
-        const questions = data.quiz?.questions;
         const mcqs = data.quiz?.mcqs;
 
         const initialValues = {
-            questions: questions?.map((question) => ({
-                questionId: question._id,
-                answer: question.answer || '',
-                question: question.question
-            })),
             mcqs: mcqs?.map((mcq) => ({
                 questionId: mcq._id,
                 answer: mcq.answer || '',
@@ -125,19 +116,15 @@ const EnrolledCourseDetail = () => {
         }
     }, [search, lectures]);
 
-    const handleButtonClick = (index) => {
+    const handleButtonClick = (index, fetchLecture = true) => {
         setActiveIndex(index);
-        getCurrentLecture(lectures[index]?._id);
+        if (fetchLecture) getCurrentLecture(lectures[index]?._id);
         setContinueQuiz(false);
     };
 
     const handleSubmit = async (values, { setSubmitting, resetForm }) => {
         try {
             const answers = {
-                questions: values.questions.map((question) => ({
-                    questionId: question.questionId,
-                    answer: question.answer
-                })),
                 mcqs: values.mcqs.map((mcq) => ({
                     questionId: mcq.questionId,
                     answer: mcq.answer
@@ -152,15 +139,15 @@ const EnrolledCourseDetail = () => {
             );
             if (data.pass) {
                 // Proceed to next lecture if pass
-                handleButtonClick(activeIndex + 1);
+                handleButtonClick(activeIndex + 1, false);
+                getCourseById(courseId, lectures[activeIndex + 1]?._id); // Refresh course data
+                toast.success('You have passed the quiz. Proceeding to the next lecture.');
                 setRetryQuiz(false);
             } else {
                 // Handle retry logic
                 toast.error('You have failed the quiz. Please retry.');
                 setRetryQuiz(true);
             }
-
-            getCourseById(courseId); // Refresh course data
             setSubmitting(false);
             resetForm();
         } catch (error) {
@@ -168,9 +155,6 @@ const EnrolledCourseDetail = () => {
             resetForm();
         }
     };
-
-    // Get Course By id
-    // Get Lecture By id (Id came from first index of lectures in course obj) setSelected(lecture)
 
     return (
         <div className="EnrolledCourseDetail">
@@ -222,18 +206,28 @@ const EnrolledCourseDetail = () => {
                                             <Button
                                                 type="button"
                                                 key={index}
-                                                className={`btn ${index === activeIndex ? 'active' : 'inactive'}`}
+                                                className={`btn ${lecture?._id === selectedLecture?._id ? 'active' : 'inactive'} ${lecture?.completedBy?.includes(userInfo._id) && 'passed-lecture'}`}
                                                 onClick={() => handleButtonClick(index)}
-                                                disabled={index > 0 && !isPass}
+                                                disabled={
+                                                    index > 0 &&
+                                                    !filteredLectures[index - 1]?.completedBy?.includes(userInfo?._id)
+                                                }
                                             >
-                                                <img src={InactiveIcon} alt="IconLect" />
+                                                <img
+                                                    src={
+                                                        lecture?.completedBy?.includes(userInfo._id)
+                                                            ? ActiveIcon
+                                                            : InactiveIcon
+                                                    }
+                                                    alt="IconLect"
+                                                />
                                                 <p>{lecture.name}</p>
                                             </Button>
                                         ))}
                                     </div>
                                 </div>
                             </Col>
-                            <Col sm={8} md={8} lg={8} xl={9}>
+                            <Col sm={8} md={8} lg={8} xl={9} className="lecture-right">
                                 {!continueQuiz && selectedLecture && (
                                     <div className="lecture-curriculum">
                                         <h2 className="title">{selectedLecture.name}</h2>
@@ -265,49 +259,11 @@ const EnrolledCourseDetail = () => {
 
                                 {continueQuiz && selectedLecture && (
                                     <div className="quiz-curriculum">
-                                        <h1 className="text-end">
+                                        {/* <h1 className="text-end">
                                             Status:{' '}
                                             {!isPass ? <span className="text-danger"> Fail</span> : <span> Pass</span>}
-                                        </h1>
+                                        </h1> */}
                                         <h1 className="title">Quiz {selectedLecture.name}:</h1>
-                                        {values?.questions.length > 0 && (
-                                            <>
-                                                <p className="title fw-bold">
-                                                    Please Answer these questions for personal assessments of this
-                                                    course. ({values?.questions.length}/{values?.questions.length}) :
-                                                </p>
-                                                {values?.questions.map((question, index) => (
-                                                    <div className="add-quiz-question" key={index}>
-                                                        <div className="questions">
-                                                            <div className="question">
-                                                                <p>
-                                                                    Q 0{index + 1}: {question.question}
-                                                                </p>
-                                                            </div>
-
-                                                            <Field
-                                                                name={`questions[${index}].answer`}
-                                                                placeholder="Please type answer here..."
-                                                                type="text"
-                                                                className="form-control"
-                                                            />
-                                                            <ErrorMessage
-                                                                name={`questions[${index}].answer`}
-                                                                component="div"
-                                                                className="error"
-                                                            />
-
-                                                            <Field
-                                                                type="hidden"
-                                                                name={`questions[${index}].questionId`}
-                                                                value={question._id}
-                                                            />
-                                                            <p className="limit">0/120</p>
-                                                        </div>
-                                                    </div>
-                                                ))}
-                                            </>
-                                        )}
 
                                         {values?.mcqs.length > 0 && (
                                             <>
@@ -318,42 +274,37 @@ const EnrolledCourseDetail = () => {
                                                 {values?.mcqs.map((mcq, index) => (
                                                     <div className="add-quiz-question" key={index}>
                                                         <div className="questions">
-                                                            <Form>
-                                                                <Form.Label>{`Q 0${index + 1}: ${mcq.question}`}</Form.Label>
-                                                                <div className="d-flex flex-wrap">
-                                                                    {mcq.options.map((option, idx) => (
-                                                                        <div
-                                                                            key={`inline-radio-${index}-${idx}`}
-                                                                            className="d-selectedLecture.quiz
-                                                                            selectedLecture.quiz
-                                                                            selectedLecture.quiz
-                                                                            selectedLecture.quizflex"
-                                                                        >
-                                                                            <Form.Check
-                                                                                name={`mcqs[${index}].answer`}
-                                                                                inline
-                                                                                label={option}
-                                                                                onChange={(e) => {
-                                                                                    // Set field value in the formik
-                                                                                    setFieldValue(
-                                                                                        `mcqs[${index}].answer`,
-                                                                                        e.target.value
-                                                                                    );
-                                                                                }}
-                                                                                type="radio"
-                                                                                id={`inline-radio-${index}-${idx}`}
-                                                                                value={option}
-                                                                            />
-                                                                            {/* if No option selected then the answer is required */}
-                                                                            <ErrorMessage
-                                                                                name={`mcqs[${index}].answer`}
-                                                                                component="div"
-                                                                                className="error"
-                                                                            />
-                                                                        </div>
-                                                                    ))}
-                                                                </div>
-                                                            </Form>
+                                                            <Form.Label>{`Q 0${index + 1}: ${mcq.question}`}</Form.Label>
+                                                            <div className="d-flex flex-wrap">
+                                                                {mcq.options.map((option, idx) => (
+                                                                    <div
+                                                                        key={`inline-radio-${index}-${idx}`}
+                                                                        className="d-flex selectedLecture.quiz"
+                                                                    >
+                                                                        <Form.Check
+                                                                            name={`mcqs[${index}].answer`}
+                                                                            inline
+                                                                            label={option}
+                                                                            onChange={(e) => {
+                                                                                // Set field value in Formik
+                                                                                setFieldValue(
+                                                                                    `mcqs[${index}].answer`,
+                                                                                    e.target.value
+                                                                                );
+                                                                            }}
+                                                                            type="radio"
+                                                                            id={`inline-radio-${index}-${idx}`}
+                                                                            value={option}
+                                                                        />
+                                                                    </div>
+                                                                ))}
+                                                            </div>
+                                                            {/* Render the error message outside of the options loop */}
+                                                            <ErrorMessage
+                                                                name={`mcqs[${index}].answer`}
+                                                                component="div"
+                                                                className="error"
+                                                            />
                                                         </div>
                                                     </div>
                                                 ))}
@@ -364,12 +315,21 @@ const EnrolledCourseDetail = () => {
                             </Col>
                         </Row>
                         <div className="viewProgress-footer mx-auto">
-                            {!isPass && continueQuiz ? (
-                                <Button className="done-btn" type="submit" disabled={isSubmitting}>
+                            {continueQuiz ? (
+                                <Button
+                                    className="done-btn"
+                                    type="submit"
+                                    disabled={isSubmitting || selectedLecture?.completedBy?.includes(userInfo?._id)}
+                                >
                                     {retryQuiz ? 'Retry Quiz' : 'Submit Quiz'}
                                 </Button>
                             ) : (
-                                <Button className="done-btn" type="button" onClick={continueHandler}>
+                                <Button
+                                    className="done-btn"
+                                    type="button"
+                                    onClick={continueHandler}
+                                    disabled={isSubmitting || selectedLecture?.completedBy?.includes(userInfo?._id)}
+                                >
                                     Continue To Quiz
                                 </Button>
                             )}

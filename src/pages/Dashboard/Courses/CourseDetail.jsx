@@ -33,9 +33,8 @@ const CourseDetail = () => {
         });
         const pdfLectures = data.lectures?.filter((lecture) => lecture?.file);
         const totalQuestions = data.lectures?.reduce((acc, item) => {
-            const questionsLength = item.quiz?.questions.length;
             const mcqsLength = item.quiz?.mcqs?.length;
-            return acc + questionsLength + mcqsLength;
+            return acc + mcqsLength;
         }, 0);
 
         setCourse({ ...data, lectures: mapLectures, pdfLectures, totalQuestions });

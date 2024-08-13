@@ -79,5 +79,32 @@ export const formatNumberWithCommas = (number) => {
     return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
 };
 
-export const currentDate = new Date().toISOString().split('.')[0];
-export const oneYearsLater = new Date(new Date().setFullYear(new Date().getFullYear() + 1)).toISOString().split('.')[0];
+export const currentDate = new Date().toISOString().slice(0, 16);
+// Calculate one year later
+const oneYearLater = new Date();
+oneYearLater.setFullYear(oneYearLater.getFullYear() + 1);
+export const oneYearsLater = oneYearLater.toISOString().slice(0, 16);
+
+export const formatDateWithDateFnsInNetherlandsTimezone = (dateStr) => {
+    const date = new Date(dateStr);
+
+    const options = {
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric',
+        hour: 'numeric',
+        minute: 'numeric',
+        hour12: false,
+        timeZone: 'Europe/Amsterdam' // Set the time zone to Netherlands
+    };
+
+    const formattedDate = date.toLocaleString('en-US', { ...options, timeZoneName: 'longGeneric' });
+    // return the time zone name from the formatted date and date
+    return formattedDate;
+};
+
+export const convertToUTC = (localDateTimeStr) => {
+    const localDate = new Date(localDateTimeStr);
+    const utcDate = new Date(localDate.getTime() - localDate.getTimezoneOffset() * 60000);
+    return utcDate.toISOString();
+};

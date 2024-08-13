@@ -26,12 +26,6 @@ const AddLectureModal = ({ lectureModal, resetModal, onSave }) => {
             name: '',
             description: '',
             quiz: {
-                questions: [
-                    {
-                        question: '',
-                        correctAnswer: ''
-                    }
-                ],
                 mcqs: [
                     {
                         question: '',
@@ -48,12 +42,6 @@ const AddLectureModal = ({ lectureModal, resetModal, onSave }) => {
         name: Yup.string().required('Lecture name is required'),
         description: Yup.string().required('Lecture description is required'),
         quiz: Yup.object().shape({
-            questions: Yup.array().of(
-                Yup.object().shape({
-                    question: Yup.string().required('Question is required'),
-                    correctAnswer: Yup.string().required('Correct answer is required')
-                })
-            ),
             mcqs: Yup.array().of(
                 Yup.object().shape({
                     question: Yup.string().required('Question is required'),
@@ -215,68 +203,6 @@ const AddLectureModal = ({ lectureModal, resetModal, onSave }) => {
                                     <p> Add Quiz</p>
                                 </div>
                                 <div className="quiz-fields-container">
-                                    <FieldArray name="quiz.questions">
-                                        {({ push, remove }) => (
-                                            <div className="add-quiz-fields">
-                                                <div className="add-quiz-label">
-                                                    <p>
-                                                        Please Insert questions for Student’s personal assessments of
-                                                        this course.
-                                                    </p>
-                                                    <span onClick={() => push({ question: '', correctAnswer: '' })}>
-                                                        <img src={bluePlus} alt="bluePlus" /> Add new
-                                                    </span>
-                                                </div>
-                                                <div className="add-quiz-question">
-                                                    {values.quiz.questions.map((_, index) => (
-                                                        <div key={index} className="mb-3">
-                                                            <div className="d-flex align-items-center">
-                                                                <Field
-                                                                    name={`quiz.questions[${index}].question`}
-                                                                    className="field-control"
-                                                                    type="text"
-                                                                    placeholder="Please Type Question Here..."
-                                                                />
-                                                                <Button
-                                                                    type="button"
-                                                                    className="btn btn-link minus-btn"
-                                                                    onClick={() => {
-                                                                        if (values.quiz.questions.length > 1)
-                                                                            remove(index);
-                                                                    }}
-                                                                >
-                                                                    <FontAwesomeIcon icon={faMinus} color="black" />
-                                                                </Button>
-                                                            </div>
-                                                            <div className="d-flex align-items-center mb-2">
-                                                                <ErrorMessage
-                                                                    name={`quiz.questions[${index}].question`}
-                                                                    component="span"
-                                                                    className="error"
-                                                                />
-                                                            </div>
-                                                            <div className="d-flex align-items-center">
-                                                                <Field
-                                                                    name={`quiz.questions[${index}].correctAnswer`}
-                                                                    className="field-control correctAnswer"
-                                                                    type="text"
-                                                                    placeholder="Please Type Correct Answer Here..."
-                                                                />
-                                                            </div>
-                                                            <div className="d-flex align-items-center">
-                                                                <ErrorMessage
-                                                                    name={`quiz.questions[${index}].correctAnswer`}
-                                                                    component="div"
-                                                                    className="error"
-                                                                />
-                                                            </div>
-                                                        </div>
-                                                    ))}
-                                                </div>
-                                            </div>
-                                        )}
-                                    </FieldArray>
-
                                     <FieldArray name="quiz.mcqs">
                                         {({ push, remove }) => (
                                             <div className="add-quiz-fields">

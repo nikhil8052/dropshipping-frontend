@@ -14,9 +14,9 @@ const PublishCourses = ({ onBack, initialData, setStepComplete, publishCourse })
     const lectures = initialData?.lectures || [];
     const pdfLectures = lectures.filter((lecture) => lecture.file);
     const totalQuestions = lectures.reduce((acc, item) => {
-        const questionsLength = item.quiz?.questions.length;
+        // const questionsLength = item.quiz?.questions.length;
         const mcqsLength = item.quiz?.mcqs?.length;
-        return acc + questionsLength + mcqsLength;
+        return acc + mcqsLength;
     }, 0);
 
     const handleSubmit = async () => {

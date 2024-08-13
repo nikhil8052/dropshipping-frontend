@@ -1,7 +1,6 @@
 import 'react-quill/dist/quill.snow.css';
 import record from '@icons/record.svg';
 import blueLink from '@icons/blueLink.svg';
-import dotOptions from '@icons/dot-options.svg';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { Button, Card, Col, Row } from 'react-bootstrap';
 import { useSelector } from 'react-redux';
@@ -13,7 +12,7 @@ import { API_URL } from '@utils/apiUrl';
 import '../../../../styles/Events.scss';
 import '../../../../styles/Common.scss';
 import { capitalizeFirstLetter } from '../../../../utils/utils';
-import { formatDate, trimLongText } from '../../../../utils/common';
+import { formatDateWithDateFnsInNetherlandsTimezone, trimLongText } from '../../../../utils/common';
 
 const SingleEvent = () => {
     const location = useLocation();
@@ -92,10 +91,10 @@ const SingleEvent = () => {
                                 <span className="topic-detail">{event?.topic}</span>
                             </Card.Title>
                             <Card.Text className="meeting-time text-center">
-                                <div className="d-flex justify-content-between">
+                                <div className="d-flex justify-content-between align-items-center">
                                     <div>
-                                        <strong>Date & Time:</strong> <span> {formatDate(event?.dateTime)}</span>
-                                        <p> ({event?.timeZone})</p>
+                                        <strong>Date & Time:</strong>{' '}
+                                        <span> {formatDateWithDateFnsInNetherlandsTimezone(event?.dateTime)}</span>
                                     </div>
                                     <div>
                                         <Button
@@ -133,8 +132,6 @@ const SingleEvent = () => {
                                                     <p>Host</p>
                                                 </div>
                                             </div>
-
-                                            <img src={dotOptions} alt="dotOptions" className="dotOptions" />
                                         </div>
                                     </div>
                                 </Col>

@@ -895,10 +895,15 @@
         line-height: 14px;
         text-align: left;
     }
+    .lecture-right {
+        // background-color: #f5f7fa;
+        border: 1px solid rgba(233, 234, 240, 1);
+        border-bottom: unset;
+    }
     .search-lectures {
         padding: 25px 25px 0px 25px;
-        border: 1px solid rgba(233, 234, 240, 1);
-        border-left: unset;
+        // border: 1px solid rgba(233, 234, 240, 1);
+        // border-left: unset;
         @include respond-to($small-screen) {
             border-right: none;
         }
@@ -935,6 +940,7 @@
         .btn {
             display: flex;
             justify-content: center;
+            align-items: center;
             gap: 10px;
             width: 100%;
             padding: 5px 10px;
@@ -951,7 +957,9 @@
             color: rgba(28, 28, 28, 1);
             border-color: transparent;
         }
-
+        .passed-lecture {
+            color: #00bb56 !important;
+        }
         .inactive {
             background-color: transparent;
             color: #1c1c1c; /* Adjust text color as needed */

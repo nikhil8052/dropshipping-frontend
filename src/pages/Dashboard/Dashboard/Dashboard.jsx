@@ -310,8 +310,6 @@ const Dashboard = () => {
         getEventDetails(event.id);
     };
 
-    console.log(eventsData, 'eventsData');
-
     return (
         <div className="dashboard-page">
             <Helmet>

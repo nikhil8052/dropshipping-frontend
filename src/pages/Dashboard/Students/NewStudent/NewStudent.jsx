@@ -477,7 +477,10 @@ const NewStudent = () => {
                                             />
                                             {courses.length === 0 && (
                                                 <div>
-                                                    <div className="error mt-2">No coach assigned to this student.</div>
+                                                    <div className="error mt-2">
+                                                        No coach assigned to this student or coach is not created any
+                                                        courses yet.
+                                                    </div>
                                                 </div>
                                             )}
                                         </Col>

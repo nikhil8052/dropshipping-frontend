@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Col, Modal, Row } from 'react-bootstrap';
 import BigCalender from '../../Dashboard/Calender/BigCalender';
-import { eventsAndMeetings } from '../../../../data/data';
 import MeetingCard from '../../../../components/MeetingCard/MeetingCard';
 import axiosWrapper from '@utils/api';
 import { API_URL } from '@utils/apiUrl';
@@ -15,15 +14,6 @@ function EventPage() {
     const [loading, setLoading] = useState(false);
     const [eventsData, setEventsData] = useState([]);
     const token = useSelector((state) => state?.auth?.userToken);
-
-    const events = eventsAndMeetings.map((meeting) => ({
-        id: meeting.id,
-        title: meeting.title,
-        start: meeting.start,
-        end: meeting.end,
-        topic: meeting.topic
-    }));
-
     const handleEventClick = (event) => {
         getEventDetails(event.id);
     };
@@ -82,7 +72,7 @@ function EventPage() {
                 <Row className="w-100">
                     <Col>
                         <BigCalender
-                            events={eventsData && eventsData?.length > 0 ? eventsData : events}
+                            events={eventsData && eventsData?.length > 0 ? eventsData : []}
                             onEventClick={handleEventClick}
                             googleCalendar={true}
                             handleGoogleCalendarClick={handleGoogleCalendarClick}

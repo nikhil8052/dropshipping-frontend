@@ -109,12 +109,6 @@ const UploadFiles = ({ onNext, onBack, initialData, setStepComplete, updateCours
                 name: '',
                 description: '',
                 quiz: {
-                    questions: [
-                        {
-                            question: '',
-                            correctAnswer: ''
-                        }
-                    ],
                     mcqs: [
                         {
                             question: '',
@@ -363,7 +357,6 @@ const UploadFiles = ({ onNext, onBack, initialData, setStepComplete, updateCours
                                                                                       initialData?.trailer
                                                                                   )
                                                                         }
-                                                                        // type={trailer.type}
                                                                     />
                                                                     Your browser does not support the video tag.
                                                                 </video>
@@ -464,9 +457,7 @@ const UploadFiles = ({ onNext, onBack, initialData, setStepComplete, updateCours
                                                         </div>
                                                         <div className="items-button">
                                                             <Button type="button" className="quiz-btn">
-                                                                {lecture.quiz.questions.length +
-                                                                    lecture.quiz.mcqs.length}{' '}
-                                                                Questions Added
+                                                                {lecture.quiz.mcqs.length} Questions Added
                                                             </Button>
                                                             <Button type="button" className="quiz-lec-btn">
                                                                 Lecture {lecture?.file ? 'File' : 'Video'}

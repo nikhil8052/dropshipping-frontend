@@ -20,7 +20,7 @@ import { getFileObjectFromBlobUrl } from '../../../../utils/utils';
 import * as types from '../../../../redux/actions/actionTypes';
 import '../../../../styles/Events.scss';
 import '../../../../styles/Common.scss';
-import { currentDate, oneYearsLater } from '../../../../utils/common';
+import { convertToUTC, currentDate, oneYearsLater } from '../../../../utils/common';
 
 const NewEvent = () => {
     const inputRef = useRef();
@@ -124,9 +124,11 @@ const NewEvent = () => {
     });
 
     const handleFormSubmit = async (values, { resetForm, setSubmitting }) => {
+        const formatDate = convertToUTC(values.dateTime);
         const eventPayload = {
             ...values,
-            thumbnail: eventThumbnail
+            thumbnail: eventThumbnail,
+            dateTime: formatDate
         };
 
         if (eventPayload.typeOfEvent === 'ONLINE') {
@@ -142,7 +144,7 @@ const NewEvent = () => {
                 await axiosWrapper('POST', API_URL.CREATE_EVENT, eventPayload, token);
             }
             resetForm();
-            navigate(`/${role}/events`);
+            navigate(`/${role?.toLowerCase()}/events`);
         } catch (error) {
             setSubmitting(false);
         } finally {
@@ -337,6 +339,7 @@ const NewEvent = () => {
                                             </Col>
                                             <Col md={6} xs={12}>
                                                 <label className="field-label">Date & Time</label>
+
                                                 <Field
                                                     name="dateTime"
                                                     className="field-control"
@@ -344,7 +347,6 @@ const NewEvent = () => {
                                                     min={currentDate}
                                                     max={oneYearsLater}
                                                     onClick={(e) => e.target.showPicker()}
-                                                    step="60"
                                                 />
                                                 <ErrorMessage name="dateTime" component="div" className="error" />
                                             </Col>

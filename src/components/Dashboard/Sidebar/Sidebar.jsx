@@ -161,7 +161,7 @@ const Sidebar = () => {
                                 {/* Last child should be an image and role */}
                             </Nav>
 
-                            {sideBarStudentEventModal && (
+                            {sideBarStudentEventModal && eventData && (
                                 <div className="side-bar-event">
                                     <Card className="custom-event-card">
                                         <Card.Header className="d-flex flex-column align-items-start">
