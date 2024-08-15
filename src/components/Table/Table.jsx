@@ -4,7 +4,6 @@ import 'ag-grid-community';
 import { InputGroup, Form, Row, Col, Button } from 'react-bootstrap';
 import Loading from '../Loading/Loading';
 import Search from '../../assets/icons/Search.svg';
-
 import './Table.scss';
 import 'ag-grid-community/styles/ag-grid.css';
 import 'ag-grid-community/styles/ag-theme-alpine.css';

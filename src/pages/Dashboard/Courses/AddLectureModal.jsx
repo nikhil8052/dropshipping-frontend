@@ -43,8 +43,13 @@ const AddLectureModal = ({ lectureModal, resetModal, onSave }) => {
         quiz: Yup.object().shape({
             mcqs: Yup.array().of(
                 Yup.object().shape({
-                    question: Yup.string().required('Question is required'),
-                    options: Yup.array().of(Yup.string().required('Option is required'))
+                    question: Yup.string().optional(),
+                    options: Yup.array()
+                        .of(Yup.string().optional())
+                        .test('unique-options', 'Options must be unique', (options) => {
+                            const uniqueOptions = new Set(options);
+                            return uniqueOptions.size === options.length;
+                        })
                 })
             )
         }),
@@ -254,21 +259,28 @@ const AddLectureModal = ({ lectureModal, resetModal, onSave }) => {
                                                         <div className="quiz-multiple-choice">
                                                             {['option1', 'option2', 'option3', 'option4'].map(
                                                                 (option, optIndex) => (
-                                                                    <Field
-                                                                        key={optIndex}
-                                                                        name={`quiz.mcqs[${index}].options[${optIndex}]`}
-                                                                        // Also set the correct answer value
-                                                                        className={`field-control ${optIndex === 3 ? 'correctAnswer' : ''}`}
-                                                                        type="text"
-                                                                        placeholder={
-                                                                            optIndex === 3
-                                                                                ? 'Type Correct Option'
-                                                                                : `Type option ${optIndex + 1}`
-                                                                        }
-                                                                    />
+                                                                    <>
+                                                                        <Field
+                                                                            key={optIndex}
+                                                                            name={`quiz.mcqs[${index}].options[${optIndex}]`}
+                                                                            // Also set the correct answer value
+                                                                            className={`field-control ${optIndex === 3 ? 'correctAnswer' : ''}`}
+                                                                            type="text"
+                                                                            placeholder={
+                                                                                optIndex === 3
+                                                                                    ? 'Type Correct Option'
+                                                                                    : `Type option ${optIndex + 1}`
+                                                                            }
+                                                                        />
+                                                                    </>
                                                                 )
                                                             )}
                                                         </div>
+                                                        <ErrorMessage
+                                                            name={`quiz.mcqs[${index}].options`}
+                                                            component="div"
+                                                            className="error"
+                                                        />
                                                     </div>
                                                 ))}
                                             </div>

@@ -5,16 +5,16 @@ import { Container, Row, Col, Button, Image, InputGroup } from 'react-bootstrap'
 import toast from 'react-hot-toast';
 import profile from '@images/user-img.jpg';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
+import { faEye, faEyeSlash, faCircleUser } from '@fortawesome/free-solid-svg-icons';
 import UploadSimple from '@icons/UploadSimple.svg';
 import ImageCropper from '../../../components/ImageMask/ImageCropper';
 import { updateUserInfo } from '../../../redux/auth/auth_slice';
 import { useDispatch, useSelector } from 'react-redux';
+import { getFileObjectFromBlobUrl } from '../../../utils/utils';
 import axiosWrapper from '@utils/api';
 import { API_URL } from '../../../utils/apiUrl';
 import '../../../styles/Settings.scss';
 import '../../../styles/Common.scss';
-import { getFileObjectFromBlobUrl } from '../../../utils/utils';
 
 const Settings = () => {
     const inputRef = useRef();
@@ -175,14 +175,23 @@ const Settings = () => {
                                                         lg={3}
                                                         className="d-flex justify-content-start ms-5"
                                                     >
-                                                        <Image
-                                                            src={
-                                                                typeof profilePhoto === 'string'
-                                                                    ? profilePhoto
-                                                                    : URL.createObjectURL(profilePhoto)
-                                                            }
-                                                            className="profile-image"
-                                                        />
+                                                        {!profilePhoto ? (
+                                                            <FontAwesomeIcon
+                                                                className="profile-image"
+                                                                size="2xl"
+                                                                icon={faCircleUser}
+                                                                color="rgba(200, 202, 216, 1)"
+                                                            />
+                                                        ) : (
+                                                            <Image
+                                                                src={
+                                                                    typeof profilePhoto === 'string'
+                                                                        ? profilePhoto
+                                                                        : URL.createObjectURL(profilePhoto)
+                                                                }
+                                                                className="profile-image"
+                                                            />
+                                                        )}
                                                     </Col>
                                                     <Col xs={6} md={3} lg={3} className="d-flex justify-content-start">
                                                         <Button

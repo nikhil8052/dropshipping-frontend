@@ -53,10 +53,10 @@ const Students = () => {
         }
     }, [selectedOption]);
 
-    const fetchData = async (query) => {
+    const fetchData = async (query, loading = true) => {
         // Later we will replace this with actual API call
         try {
-            setLoading(true);
+            setLoading(loading);
             const coaches = await axiosWrapper(
                 'GET',
                 `${API_URL.GET_ALL_STUDENTS}?coachingTrajectory=${query || selectedOption}`,
@@ -64,7 +64,6 @@ const Students = () => {
                 token
             );
             setStudentsData(coaches.data);
-            setLoading(false);
         } catch (error) {
             return;
         } finally {
@@ -186,7 +185,7 @@ const Students = () => {
             url = `${API_URL.ACTIVATE_STUDENT.replace(':id', student?._id)}`;
         }
         await axiosWrapper('PUT', url, {}, token);
-        fetchData();
+        fetchData(selectedOption, false);
         setLoadingCRUD(false);
     };
 

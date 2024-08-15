@@ -277,7 +277,10 @@
 .add-quiz-fields .add-quiz-question .quiz-multiple-choice input[type='text'] {
     &.correctAnswer {
         background-color: $success-color !important;
-        color: black !important;
+        color: white !important;
+    }
+    &.correctAnswer::placeholder {
+        color: white !important;
     }
 }
 

@@ -486,6 +486,14 @@ const UploadFiles = ({ onNext, onBack, initialData, setStepComplete, updateCours
                                                     </div>
                                                 ))}
                                             </div>
+                                            {
+                                                // Display a message if no lectures are added
+                                                initialData?.lectures.length === 0 && (
+                                                    <div className="error mt-2">
+                                                        <p>No Lectures Added Yet</p>
+                                                    </div>
+                                                )
+                                            }
                                         </Container>
                                     </Row>
                                     <Row>
@@ -499,7 +507,11 @@ const UploadFiles = ({ onNext, onBack, initialData, setStepComplete, updateCours
                                                 >
                                                     Back
                                                 </Button>
-                                                <Button type="submit" className="submit-btn" disabled={isSubmitting}>
+                                                <Button
+                                                    type="submit"
+                                                    className="submit-btn"
+                                                    disabled={initialData?.lectures.length === 0 || isSubmitting}
+                                                >
                                                     Save & Next
                                                 </Button>
                                             </div>
