@@ -44,7 +44,7 @@ const PublishCourses = ({ onBack, initialData, setStepComplete, publishCourse })
                 <div className="publish-course-wrapper">
                     <div className="card-background">
                         <div className="text-heading">
-                            <h1>Design Conference</h1>
+                            <h1>{initialData?.title}</h1>
                             <p>Dropship Academy X</p>
                         </div>
                     </div>

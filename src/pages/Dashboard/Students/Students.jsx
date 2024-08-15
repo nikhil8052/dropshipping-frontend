@@ -318,8 +318,7 @@ const Students = () => {
             headerName: 'Courses Roadmap',
             field: 'coursesRoadmap',
             filter: 'agSetColumnFilter',
-            sortable: true,
-            unSortIcon: true,
+            sortable: false,
             wrapText: true,
             autoHeight: true,
             resizable: false,
@@ -329,7 +328,7 @@ const Students = () => {
             }
         },
         {
-            headerName: 'Active/Deactivate',
+            headerName: 'Activate/Deactivate',
             cellRenderer: ToggleRenderer,
             field: 'isActive',
             cellRendererParams: {

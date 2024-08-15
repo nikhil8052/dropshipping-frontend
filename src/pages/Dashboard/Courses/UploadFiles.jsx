@@ -178,7 +178,7 @@ const UploadFiles = ({ onNext, onBack, initialData, setStepComplete, updateCours
     };
 
     const handleSaveLecture = () => {
-        dispatch({ type: types.ALL_RECORDS, data: { keyOfData: 'currentCourseUpdate', data: true } });
+        dispatch({ type: types.ALL_RECORDS, data: { keyOfData: 'lectureUpdate', data: true } });
         resetLectureModal();
     };
 
@@ -413,13 +413,21 @@ const UploadFiles = ({ onNext, onBack, initialData, setStepComplete, updateCours
                                                 as="textarea"
                                                 placeholder="Enter Course Description"
                                                 render={({ field }) => (
-                                                    <ReactQuill
-                                                        value={field.value || ''}
-                                                        name={field.name}
-                                                        onChange={(value) => field.onChange(field.name)(value)} // Update the form value
-                                                        className="field-quill-control"
-                                                        modules={{ toolbar: true }}
-                                                    />
+                                                    <div
+                                                        onClick={() => {
+                                                            const elem = document.querySelector('.ql-editor');
+                                                            // focus on the editor where text is END
+                                                            elem.focus();
+                                                        }}
+                                                    >
+                                                        <ReactQuill
+                                                            value={field.value || ''}
+                                                            name={field.name}
+                                                            onChange={(value) => field.onChange(field.name)(value)} // Update the form value
+                                                            className="field-quill-control"
+                                                            modules={{ toolbar: true }}
+                                                        />
+                                                    </div>
                                                 )}
                                             />
                                             <ErrorMessage name="description" component="div" className="error" />

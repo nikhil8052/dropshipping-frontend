@@ -23,7 +23,7 @@ import '../../../../styles/Common.scss';
 
 const NewStudent = () => {
     const inputRef = useRef();
-    const [studentPhoto, setStudentPhoto] = useState(null);
+    const [studentPhoto, setStudentPhoto] = useState('');
     const location = useLocation();
     const studentId = location.state?.studentId;
     const { userInfo } = useSelector((state) => state?.auth);

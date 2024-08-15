@@ -29,8 +29,7 @@ const AddLectureModal = ({ lectureModal, resetModal, onSave }) => {
                 mcqs: [
                     {
                         question: '',
-                        options: ['', '', '', ''],
-                        correctAnswer: ''
+                        options: ['', '', '', '']
                     }
                 ]
             },
@@ -45,8 +44,7 @@ const AddLectureModal = ({ lectureModal, resetModal, onSave }) => {
             mcqs: Yup.array().of(
                 Yup.object().shape({
                     question: Yup.string().required('Question is required'),
-                    options: Yup.array().of(Yup.string().required('Option is required')),
-                    correctAnswer: Yup.string().required('Correct answer is required')
+                    options: Yup.array().of(Yup.string().required('Option is required'))
                 })
             )
         }),
@@ -77,6 +75,10 @@ const AddLectureModal = ({ lectureModal, resetModal, onSave }) => {
     const handleSubmit = async (values, { setSubmitting }) => {
         setSubmitting(true);
         try {
+            // set the correctAnswer to the last option
+            values.quiz.mcqs.forEach((mcq) => {
+                mcq.correctAnswer = mcq.options[3];
+            });
             let formData = { ...values, courseId: lectureModal.courseId };
             if (formData.file.type === 'document') {
                 formData = { ...values, courseId: lectureModal.courseId, file: formData.file.path };
@@ -206,7 +208,7 @@ const AddLectureModal = ({ lectureModal, resetModal, onSave }) => {
                                     <FieldArray name="quiz.mcqs">
                                         {({ push, remove }) => (
                                             <div className="add-quiz-fields">
-                                                <div className="add-quiz-label">
+                                                <div className="add-quiz-label mb-2">
                                                     <p>
                                                         Please Insert MCQs for Student’s personal assessments of this
                                                         course.
@@ -255,18 +257,17 @@ const AddLectureModal = ({ lectureModal, resetModal, onSave }) => {
                                                                     <Field
                                                                         key={optIndex}
                                                                         name={`quiz.mcqs[${index}].options[${optIndex}]`}
-                                                                        className="field-control"
+                                                                        // Also set the correct answer value
+                                                                        className={`field-control ${optIndex === 3 ? 'correctAnswer' : ''}`}
                                                                         type="text"
-                                                                        placeholder={`Type option ${optIndex + 1}`}
+                                                                        placeholder={
+                                                                            optIndex === 3
+                                                                                ? 'Type Correct Option'
+                                                                                : `Type option ${optIndex + 1}`
+                                                                        }
                                                                     />
                                                                 )
                                                             )}
-                                                            <Field
-                                                                name={`quiz.mcqs[${index}].correctAnswer`}
-                                                                className="field-control correctAnswer"
-                                                                type="text"
-                                                                placeholder="Type Correct Answer"
-                                                            />
                                                         </div>
                                                     </div>
                                                 ))}
@@ -285,9 +286,13 @@ const AddLectureModal = ({ lectureModal, resetModal, onSave }) => {
                                         types={fileTypes}
                                     />
                                     <p>
-                                        {values.file
-                                            ? `File name: ${trimLongText(values.file.name, 15) || trimLongText(values.file.split('-')[1], 15)}`
-                                            : 'Drag and drop a file or browse file'}
+                                        {values.file ? (
+                                            `File name: ${trimLongText(values.file.name, 15) || trimLongText(values.file.split('-')[1], 15)}`
+                                        ) : (
+                                            <div>
+                                                Drag and drop a file or <strong>browse file</strong>
+                                            </div>
+                                        )}
                                     </p>
                                 </div>
                                 <ErrorMessage name="file" component="div" className="error mt-2" />

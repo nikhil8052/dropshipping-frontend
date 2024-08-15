@@ -694,7 +694,6 @@
                 }
 
                 .lecture-details-2 {
-                    border-left: 0.3px solid #707070;
                     border-right: 0.3px solid #707070;
                     padding-inline: 66px;
                     @include respond-to($small-screen) {
@@ -1101,5 +1100,11 @@
         border: none;
         border-radius: 12px;
         min-height: 400px;
+    }
+}
+
+.overlayMenu {
+    .dropdown-menu {
+        background-color: red !important;
     }
 }

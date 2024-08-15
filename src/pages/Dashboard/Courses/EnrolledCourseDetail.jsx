@@ -13,6 +13,7 @@ import { API_URL } from '../../../utils/apiUrl';
 import '../../../styles/Courses.scss';
 import PdfModal from '../../../components/PdfRenderer/PdfViewer';
 import toast from 'react-hot-toast';
+import { shuffleArray } from '../../../utils/common';
 
 const EnrolledCourseDetail = () => {
     const navigate = useNavigate();
@@ -206,7 +207,7 @@ const EnrolledCourseDetail = () => {
                                             <Button
                                                 type="button"
                                                 key={index}
-                                                className={`btn ${lecture?._id === selectedLecture?._id ? 'active' : 'inactive'} ${lecture?.completedBy?.includes(userInfo._id) && 'passed-lecture'}`}
+                                                className={`btn ${lecture?._id === selectedLecture?._id ? 'active' : 'inactive'} ${lecture?.completedBy?.includes(userInfo?._id) && 'passed-lecture'}`}
                                                 onClick={() => handleButtonClick(index)}
                                                 disabled={
                                                     index > 0 &&
@@ -215,7 +216,7 @@ const EnrolledCourseDetail = () => {
                                             >
                                                 <img
                                                     src={
-                                                        lecture?.completedBy?.includes(userInfo._id)
+                                                        lecture?.completedBy?.includes(userInfo?._id)
                                                             ? ActiveIcon
                                                             : InactiveIcon
                                                     }
@@ -276,7 +277,7 @@ const EnrolledCourseDetail = () => {
                                                         <div className="questions">
                                                             <Form.Label>{`Q 0${index + 1}: ${mcq.question}`}</Form.Label>
                                                             <div className="d-flex flex-wrap">
-                                                                {mcq.options.map((option, idx) => (
+                                                                {shuffleArray(mcq.options).map((option, idx) => (
                                                                     <div
                                                                         key={`inline-radio-${index}-${idx}`}
                                                                         className="d-flex selectedLecture.quiz"

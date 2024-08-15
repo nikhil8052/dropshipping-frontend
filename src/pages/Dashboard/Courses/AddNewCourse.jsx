@@ -27,6 +27,7 @@ const AddNewCourse = () => {
     const [activeKey, setActiveKey] = useState('basic-information');
     const currentCourse = useSelector((state) => state?.root?.currentCourse);
     const currentCourseUpdate = useSelector((state) => state?.root?.currentCourseUpdate);
+    const lectureUpdate = useSelector((state) => state?.root?.lectureUpdate);
 
     const [courseData, setCourseData] = useState({
         title: '',
@@ -96,6 +97,19 @@ const AddNewCourse = () => {
         }
     };
 
+    const getLectures = async (id) => {
+        try {
+            const { data } = await axiosWrapper('GET', `${API_URL.GET_ALL_LECTURES}?courseId=${id}`, {}, token);
+            updateCourseData({
+                lectures: data
+            });
+
+            dispatch({ type: types.ALL_RECORDS, data: { keyOfData: 'lectureUpdate', data: false } });
+        } catch (error) {
+            dispatch({ type: types.ALL_RECORDS, data: { keyOfData: 'lectureUpdate', data: false } });
+        }
+    };
+
     const createOrUpdateCourse = async (formData) => {
         if (currentCourse) {
             await axiosWrapper('PUT', `${API_URL.UPDATE_COURSE.replace(':id', currentCourse)}`, formData, token);
@@ -125,7 +139,7 @@ const AddNewCourse = () => {
     const handlePublishCourse = async () => {
         await axiosWrapper('PUT', `${API_URL.PUBLISH_COURSE.replace(':id', currentCourse)}`, {}, token);
         // Call the get Course By Id so we can have updated state of part one
-        dispatch({ type: types.ALL_RECORDS, data: { keyOfData: 'currentCourseUpdate', data: true } });
+        // dispatch({ type: types.ALL_RECORDS, data: { keyOfData: 'currentCourseUpdate', data: true } });
     };
 
     // /////////// Hooks //////////
@@ -142,6 +156,12 @@ const AddNewCourse = () => {
             getCourseById(currentCourse);
         }
     }, [currentCourseUpdate]);
+
+    useEffect(() => {
+        if (lectureUpdate) {
+            getLectures(currentCourse);
+        }
+    }, [lectureUpdate]);
 
     useEffect(() => {
         if (courseId) {

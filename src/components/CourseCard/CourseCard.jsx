@@ -4,6 +4,7 @@ import ProgressBar from 'react-bootstrap/ProgressBar';
 import enrollIcon from '../../assets/icons/enroll-icon.svg';
 import { Link } from 'react-router-dom';
 import { useSelector } from 'react-redux';
+import { trimLongText } from '../../utils/common';
 
 const CourseCard = ({ img, title, detail, lectureNo, archive, enroll, onChange, ...rest }) => {
     const { userInfo } = useSelector((state) => state?.auth);
@@ -21,7 +22,7 @@ const CourseCard = ({ img, title, detail, lectureNo, archive, enroll, onChange, 
                     <div className="mb-3 p-2">
                         <img src={img} className="course-img " alt="course-icon" />
                         <h1 className="course-title">{title}</h1>
-                        <p className="course-des">{detail}</p>
+                        <p className="course-des">{trimLongText(detail, 50)}</p>
                         <p className="lecture-No">{lectureNo}</p>
                     </div>
                 </Link>
