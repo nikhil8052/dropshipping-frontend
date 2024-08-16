@@ -93,7 +93,7 @@ const EnrolledCourseDetail = () => {
                 questionId: mcq._id,
                 answer: mcq.answer || '',
                 question: mcq.question,
-                options: mcq.options
+                options: shuffleArray(mcq.options)
             }))
         };
         setInitialValues(initialValues);
@@ -277,7 +277,7 @@ const EnrolledCourseDetail = () => {
                                                         <div className="questions">
                                                             <Form.Label>{`Q 0${index + 1}: ${mcq.question}`}</Form.Label>
                                                             <div className="d-flex flex-wrap">
-                                                                {shuffleArray(mcq.options).map((option, idx) => (
+                                                                {mcq.options.map((option, idx) => (
                                                                     <div
                                                                         key={`inline-radio-${index}-${idx}`}
                                                                         className="d-flex selectedLecture.quiz"

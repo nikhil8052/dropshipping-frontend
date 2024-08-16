@@ -4,7 +4,6 @@ import { Button, Col, Container, Row } from 'react-bootstrap';
 import ConfirmationBox from '@components/ConfirmationBox/ConfirmationBox';
 import { Helmet } from 'react-helmet';
 import axiosWrapper from '@utils/api';
-import toast from 'react-hot-toast';
 import TextExpand from '@components/TextExpand/TextExpand';
 import uploadSimple from '@icons/UploadSimpleBack.svg';
 import csvExport from '@icons/csv.svg';
@@ -163,12 +162,11 @@ const StudentsTrainingProduct = ({ studentId }) => {
             setFile(null);
             fetchData();
         } catch (error) {
-            toast.error(error);
         } finally {
+            setFile(null);
             setLoadingCRUD(false);
             setUploadFileModal(false);
         }
-        setLoadingCRUD(false);
     };
 
     const handleChange = async (file) => {
@@ -243,6 +241,7 @@ const StudentsTrainingProduct = ({ studentId }) => {
                             onConfirm={handleUploadSubmit}
                             customFooterClass="custom-footer-class"
                             nonActiveBtn="cancel-button"
+                            disableBtn={!file}
                             activeBtn="yes-button"
                             activeBtnTitle="Attach File"
                             cancelButtonTitle="Cancel"
@@ -288,7 +287,11 @@ const StudentsTrainingProduct = ({ studentId }) => {
                                 {!studentId && (
                                     <>
                                         <Col md={12} lg={6} xl={6} xxl={3}>
-                                            <Button className="add-button w-100" onClick={handleExportProducts}>
+                                            <Button
+                                                disabled={studentsData?.length === 0}
+                                                className="add-button w-100"
+                                                onClick={handleExportProducts}
+                                            >
                                                 <span className="me-2">Export</span>
                                                 <img src={csvExport} alt="" />
                                             </Button>

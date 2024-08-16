@@ -43,10 +43,10 @@ const Coaches = () => {
         fetchData();
     }, []);
 
-    const fetchData = async () => {
+    const fetchData = async (loading = true) => {
         // Later we will replace this with actual API call
         try {
-            setLoading(true);
+            setLoading(loading);
             const coaches = await axiosWrapper('GET', API_URL.GET_ALL_COACHES, {}, token);
             setCoachesData(coaches?.data);
         } catch (error) {
@@ -86,7 +86,7 @@ const Coaches = () => {
             url = `${API_URL.ACTIVATE_COACH.replace(':id', coach?._id)}`;
         }
         await axiosWrapper('PUT', url, {}, token);
-        fetchData();
+        fetchData(false);
         setLoadingCRUD(false);
     };
 
@@ -128,7 +128,7 @@ const Coaches = () => {
         setLoadingCRUD(true);
         // Delete API call here
         await axiosWrapper('DELETE', API_URL.DELETE_COACH.replace(':id', showDeleteModal?.coachId), {}, token);
-        fetchData();
+        fetchData(false);
         setLoadingCRUD(false);
         resetModal();
     };

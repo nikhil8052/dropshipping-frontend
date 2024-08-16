@@ -33,6 +33,15 @@
         font-size: $font-size-small;
         color: rgba(150, 150, 150, 1);
     }
+    .show-more {
+        color: $info-color;
+        cursor: pointer;
+        margin-left: 5px;
+    }
+
+    .show-more:hover {
+        text-decoration: underline;
+    }
 }
 
 .toggle-archive {

@@ -171,6 +171,7 @@ const DailyFinances = ({ studentId }) => {
             fetchData();
         } catch (error) {
         } finally {
+            setFile(null);
             setLoadingCRUD(false);
             setUploadFileModal(false);
         }
@@ -239,6 +240,7 @@ const DailyFinances = ({ studentId }) => {
                                 </Container>
                             </>
                         }
+                        disableBtn={!file}
                         onConfirm={handleUploadSubmit}
                         customFooterClass="custom-footer-class"
                         nonActiveBtn="cancel-button"
@@ -288,7 +290,11 @@ const DailyFinances = ({ studentId }) => {
                             {!studentId && (
                                 <>
                                     <Col md={12} lg={6} xl={6} xxl={3}>
-                                        <Button className="add-button w-100" onClick={handleExport}>
+                                        <Button
+                                            disabled={studentsData?.length === 0}
+                                            className="add-button w-100"
+                                            onClick={handleExport}
+                                        >
                                             <span className="me-2">Export</span>
                                             <img src={csvExport} alt="" />
                                         </Button>

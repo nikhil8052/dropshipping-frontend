@@ -1,4 +1,5 @@
 import './CourseCard.scss';
+import { useState } from 'react';
 import Form from 'react-bootstrap/Form';
 import ProgressBar from 'react-bootstrap/ProgressBar';
 import enrollIcon from '../../assets/icons/enroll-icon.svg';
@@ -9,6 +10,17 @@ import { trimLongText } from '../../utils/common';
 const CourseCard = ({ img, title, detail, lectureNo, archive, enroll, onChange, ...rest }) => {
     const { userInfo } = useSelector((state) => state?.auth);
     const role = userInfo?.role?.toLowerCase();
+
+    const [isExpanded, setIsExpanded] = useState(false);
+
+    const handleToggleExpand = (e) => {
+        e.preventDefault();
+        e.stopPropagation(); // Prevent event bubbling to the Link
+        setIsExpanded(!isExpanded);
+    };
+
+    const trimmedText = trimLongText(detail, 20);
+    const displayText = isExpanded ? detail : trimmedText;
 
     return (
         <>
@@ -22,7 +34,14 @@ const CourseCard = ({ img, title, detail, lectureNo, archive, enroll, onChange, 
                     <div className="mb-3 p-2">
                         <img src={img} className="course-img " alt="course-icon" />
                         <h1 className="course-title">{title}</h1>
-                        <p className="course-des">{trimLongText(detail, 50)}</p>
+                        <p className="course-des">
+                            {displayText}
+                            {detail.length > 20 && (
+                                <span className="show-more" onClick={handleToggleExpand}>
+                                    {isExpanded ? 'Show Less' : 'Show More'}
+                                </span>
+                            )}
+                        </p>
                         <p className="lecture-No">{lectureNo}</p>
                     </div>
                 </Link>

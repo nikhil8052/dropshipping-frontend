@@ -134,7 +134,9 @@ const Invoices = ({ studentId }) => {
             await axiosWrapper('POST', API_URL.UPLOAD_INVOICES_CSV, { filePath }, token);
             fetchData();
         } catch (error) {
+            setFile(null);
         } finally {
+            setFile(null);
             setLoadingCRUD(false);
             setUploadFileModal(false);
         }
@@ -201,6 +203,7 @@ const Invoices = ({ studentId }) => {
                                 </Container>
                             </>
                         }
+                        disableBtn={!file}
                         onConfirm={handleUploadSubmit}
                         customFooterClass="custom-footer-class"
                         nonActiveBtn="cancel-button"
@@ -248,7 +251,11 @@ const Invoices = ({ studentId }) => {
                             {!studentId && (
                                 <>
                                     <Col md={12} lg={6} xl={6} xxl={3}>
-                                        <Button className="add-button w-100" onClick={handleExport}>
+                                        <Button
+                                            disabled={invoicesData?.length === 0}
+                                            className="add-button w-100"
+                                            onClick={handleExport}
+                                        >
                                             <span className="me-2">Export</span>
                                             <img src={csvExport} alt="" />
                                         </Button>

@@ -40,23 +40,19 @@ const ImageCropper = ({ imageSrc, onCropComplete, onCancel }) => {
                 <Modal.Title>Edit Image</Modal.Title>
             </Modal.Header>
             <Modal.Body>
-                {loading ? ( // Show loader when cropping
-                    <Loading centered={true} />
-                ) : (
-                    <div className="cropper-container">
-                        <div className="cropper">
-                            <Cropper
-                                image={imageSrc}
-                                crop={crop}
-                                zoom={zoom}
-                                aspect={4 / 3}
-                                onCropChange={onCropChange}
-                                onZoomChange={onZoomChange}
-                                onCropComplete={onCropCompleteCallback}
-                            />
-                        </div>
+                <div className="cropper-container">
+                    <div className="cropper">
+                        <Cropper
+                            image={imageSrc}
+                            crop={crop}
+                            zoom={zoom}
+                            aspect={4 / 3}
+                            onCropChange={onCropChange}
+                            onZoomChange={onZoomChange}
+                            onCropComplete={onCropCompleteCallback}
+                        />
                     </div>
-                )}
+                </div>
             </Modal.Body>
             <Modal.Footer className="d-flex justify-content-between">
                 <div className="d-flex align-items-center">
@@ -72,7 +68,7 @@ const ImageCropper = ({ imageSrc, onCropComplete, onCancel }) => {
                         Cancel
                     </Button>
                     <Button variant="primary" onClick={handleCropComplete} disabled={loading} className="ms-2 crop-btn">
-                        Crop
+                        {loading ? <Loading centered={true} /> : 'Crop'}
                     </Button>
                 </div>
             </Modal.Footer>

@@ -8,10 +8,12 @@ import Loading from '../Loading/Loading';
 const PdfModal = ({ file }) => {
     const [numPages, setNumPages] = useState(null);
     const [pageNumber, setPageNumber] = useState(1);
+    const [isLoading, setIsLoading] = useState(true);
 
     const onDocumentLoadSuccess = ({ numPages }) => {
         setNumPages(numPages);
         setPageNumber(1);
+        setIsLoading(false);
     };
     const onLoadProgress = () => <Loading centered />;
 
@@ -30,17 +32,19 @@ const PdfModal = ({ file }) => {
             <Document file={url} onLoadProgress={onLoadProgress} onLoadSuccess={onDocumentLoadSuccess}>
                 <Page pageNumber={pageNumber} width={800} renderTextLayer={false} renderAnnotationLayer={false} />
             </Document>
-            <div className="page-controls">
-                <button type="button" onClick={goToPrevPage} disabled={pageNumber <= 1}>
-                    Previous
-                </button>
-                <span>
-                    Page {pageNumber} of {numPages}
-                </span>
-                <button type="button" onClick={goToNextPage} disabled={pageNumber >= numPages}>
-                    Next
-                </button>
-            </div>
+            {!isLoading && (
+                <div className="page-controls">
+                    <button type="button" onClick={goToPrevPage} disabled={pageNumber <= 1}>
+                        Previous
+                    </button>
+                    <span>
+                        Page {pageNumber} of {numPages}
+                    </span>
+                    <button type="button" onClick={goToNextPage} disabled={pageNumber >= numPages}>
+                        Next
+                    </button>
+                </div>
+            )}
         </div>
     );
 };

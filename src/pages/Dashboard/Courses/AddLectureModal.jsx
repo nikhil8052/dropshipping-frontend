@@ -47,7 +47,8 @@ const AddLectureModal = ({ lectureModal, resetModal, onSave }) => {
                     options: Yup.array()
                         .of(Yup.string().optional())
                         .test('unique-options', 'Options must be unique', (options) => {
-                            const uniqueOptions = new Set(options);
+                            // Set for lower case as well
+                            const uniqueOptions = new Set(options.map((option) => option.toLowerCase()));
                             return uniqueOptions.size === options.length;
                         })
                 })
