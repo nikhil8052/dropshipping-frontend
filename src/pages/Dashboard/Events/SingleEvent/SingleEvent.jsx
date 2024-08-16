@@ -12,7 +12,10 @@ import { API_URL } from '@utils/apiUrl';
 import '../../../../styles/Events.scss';
 import '../../../../styles/Common.scss';
 import { capitalizeFirstLetter } from '../../../../utils/utils';
-import { formatDateWithDateFnsInNetherlandsTimezone, trimLongText } from '../../../../utils/common';
+import {
+    formatDateWithDateFnsInNetherlandsTimezoneWithDateFnsInNetherlandsTimezone,
+    trimLongText
+} from '../../../../utils/common';
 
 const SingleEvent = () => {
     const location = useLocation();
@@ -82,7 +85,6 @@ const SingleEvent = () => {
                                 <div className="meeting-title text-capitalize">
                                     {event?.createdBy?.name} ({capitalizeFirstLetter(event?.createdBy?.role)})
                                 </div>
-                                <div className="meeting-id">Meeting ID: {event?.googleCalendarEventId}</div>
                             </div>
                         </Card.Header>
                         <Card.Body>
@@ -94,7 +96,12 @@ const SingleEvent = () => {
                                 <div className="d-flex justify-content-between align-items-center">
                                     <div>
                                         <strong>Date & Time:</strong>{' '}
-                                        <span> {formatDateWithDateFnsInNetherlandsTimezone(event?.dateTime)}</span>
+                                        <span>
+                                            {' '}
+                                            {formatDateWithDateFnsInNetherlandsTimezoneWithDateFnsInNetherlandsTimezone(
+                                                event?.dateTime
+                                            )}
+                                        </span>
                                     </div>
                                     <div>
                                         <Button

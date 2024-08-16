@@ -4,15 +4,14 @@ import { Row, Col, Modal } from 'react-bootstrap';
 import Card from '@components/Card/Card';
 import { StatCard, LineChart } from '@components/Home';
 import { Helmet } from 'react-helmet';
-import EventDetailsModal from './Calender/CustomEventModal';
 import BigCalender from './Calender/BigCalender';
 import { useSelector } from 'react-redux';
-import { events, meetings } from '../../../data/data';
 import '../../../styles/Dashboard.scss';
 import { useIsSmallScreen } from '../../../utils/mediaQueries';
 import MeetingCard from '../../../components/MeetingCard/MeetingCard';
 import axiosWrapper from '../../../utils/api';
 import { API_URL } from '../../../utils/apiUrl';
+import Loading from '@components/Loading/Loading';
 import { convertCamelCaseToTitle } from '../../../utils/common';
 
 const Dashboard = () => {
@@ -31,6 +30,7 @@ const Dashboard = () => {
     const token = useSelector((state) => state?.auth?.userToken);
     const [gridOptionsLabel, setGridOptionsLabel] = useState();
     const [eventsData, setEventsData] = useState([]);
+    const [loading, setLoading] = useState(false);
 
     useEffect(() => {
         return () => {
@@ -102,6 +102,7 @@ const Dashboard = () => {
 
     const fetchDashboardData = async () => {
         try {
+            setLoading(true);
             let cardData, graphData, eventData;
             if (role === 'ADMIN') {
                 cardData = await axiosWrapper('GET', API_URL.GET_ADMIN_CARD_DATA, {}, token);
@@ -147,7 +148,9 @@ const Dashboard = () => {
 
             setLineGraphData(data);
         } catch (error) {
-            console.error('Error fetching dashboard data:', error);
+            return;
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -198,8 +201,6 @@ const Dashboard = () => {
             }
         };
     };
-
-    // const data = generateChartData(monthlyData);
 
     const coachData = {
         datasets: [
@@ -259,18 +260,6 @@ const Dashboard = () => {
         }
     };
 
-    // useEffect(() => {
-    //     if (role === 'ADMIN') {
-    //         setCardStats(statCards);
-    //         setLineGraphData(data);
-    //         setDataSet(true);
-    //     } else if (role === 'COACH') {
-    //         setCardStats(coachStatCards);
-    //         setDataSet(false);
-    //         setLineGraphData(coachData);
-    //     }
-    // }, [role]);
-
     const tabTitles = {
         students: 'Total Students',
         coaches: 'Total Coaches'
@@ -312,57 +301,63 @@ const Dashboard = () => {
 
     return (
         <div className="dashboard-page">
-            <Helmet>
-                <title>Dashboard | Dropship Academy</title>
-            </Helmet>
-            <Row>
-                {cardStats?.map((stat, index) => (
-                    <Col key={stat.id} xs={12} sm={12} md={6} lg={4} xl={3}>
-                        <Card
-                            customCardClass={`custom-card-colors ${index % 2 === 0 ? 'even' : 'odd'}`}
-                            cardType="small"
-                        >
-                            <StatCard {...stat} />
-                        </Card>
-                    </Col>
-                ))}
-            </Row>
-            <Row className="graph-wrapper">
-                <Col>
-                    {lineGraphData && lineGraphData.datasets && (
-                        <LineChart
-                            data={lineGraphData}
-                            options={graphOptions}
-                            chartKey={chartKey}
-                            setChartKey={setChartKey}
-                            tabTitles={tabTitles}
-                            timePeriods={timePeriods}
-                            chartHeight={chartHeight}
-                            dataSet={dataSet}
-                            role={role}
-                            handleFilterChange={handleFilterChange}
-                            currentFilter={currentFilter}
-                        />
-                    )}
-                </Col>
-            </Row>
-            <Row>
-                <Col>
-                    <Card header={true} title="Events" customCardClass="events-card">
-                        <BigCalender onEventClick={handleEventClick} events={eventsData} />
-                        <Modal
-                            show={showModal}
-                            onHide={() => setShowModal(false)}
-                            size="md"
-                            aria-labelledby="contained-modal-title-vcenter"
-                            centered
-                        >
-                            <Modal.Header style={{ borderBottom: 'none' }} closeButton></Modal.Header>
-                            <MeetingCard meeting={selectedEvent} />
-                        </Modal>
-                    </Card>
-                </Col>
-            </Row>
+            {loading ? (
+                <Loading centered={true} />
+            ) : (
+                <>
+                    <Helmet>
+                        <title>Dashboard | Dropship Academy</title>
+                    </Helmet>
+                    <Row>
+                        {cardStats?.map((stat, index) => (
+                            <Col key={stat.id} xs={12} sm={12} md={6} lg={4} xl={3}>
+                                <Card
+                                    customCardClass={`custom-card-colors ${index % 2 === 0 ? 'even' : 'odd'}`}
+                                    cardType="small"
+                                >
+                                    <StatCard {...stat} />
+                                </Card>
+                            </Col>
+                        ))}
+                    </Row>
+                    <Row className="graph-wrapper">
+                        <Col>
+                            {lineGraphData && lineGraphData.datasets && (
+                                <LineChart
+                                    data={lineGraphData}
+                                    options={graphOptions}
+                                    chartKey={chartKey}
+                                    setChartKey={setChartKey}
+                                    tabTitles={tabTitles}
+                                    timePeriods={timePeriods}
+                                    chartHeight={chartHeight}
+                                    dataSet={dataSet}
+                                    role={role}
+                                    handleFilterChange={handleFilterChange}
+                                    currentFilter={currentFilter}
+                                />
+                            )}
+                        </Col>
+                    </Row>
+                    <Row>
+                        <Col>
+                            <Card header={true} title="Events" customCardClass="events-card">
+                                <BigCalender onEventClick={handleEventClick} events={eventsData} />
+                                <Modal
+                                    show={showModal}
+                                    onHide={() => setShowModal(false)}
+                                    size="md"
+                                    aria-labelledby="contained-modal-title-vcenter"
+                                    centered
+                                >
+                                    <Modal.Header style={{ borderBottom: 'none' }} closeButton></Modal.Header>
+                                    <MeetingCard meeting={selectedEvent} />
+                                </Modal>
+                            </Card>
+                        </Col>
+                    </Row>
+                </>
+            )}
         </div>
     );
 };

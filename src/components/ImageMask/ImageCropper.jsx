@@ -68,7 +68,7 @@ const ImageCropper = ({ imageSrc, onCropComplete, onCancel }) => {
                         Cancel
                     </Button>
                     <Button variant="primary" onClick={handleCropComplete} disabled={loading} className="ms-2 crop-btn">
-                        {loading ? <Loading centered={true} /> : 'Crop'}
+                        {loading ? <Loading /> : 'Crop'}
                     </Button>
                 </div>
             </Modal.Footer>

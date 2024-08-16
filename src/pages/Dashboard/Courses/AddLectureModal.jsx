@@ -44,13 +44,13 @@ const AddLectureModal = ({ lectureModal, resetModal, onSave }) => {
             mcqs: Yup.array().of(
                 Yup.object().shape({
                     question: Yup.string().optional(),
-                    options: Yup.array()
-                        .of(Yup.string().optional())
-                        .test('unique-options', 'Options must be unique', (options) => {
-                            // Set for lower case as well
-                            const uniqueOptions = new Set(options.map((option) => option.toLowerCase()));
-                            return uniqueOptions.size === options.length;
-                        })
+                    options: Yup.array().of(Yup.string().optional())
+                    // Commenting for future edge case handle
+                    // .test('unique-options', 'Options must be unique', (options) => {
+                    //     // Set for lower case as well
+                    //     const uniqueOptions = new Set(options.map((option) => option?.toLowerCase()));
+                    //     return uniqueOptions.size === options.length;
+                    // })
                 })
             )
         }),

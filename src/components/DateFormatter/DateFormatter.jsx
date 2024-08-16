@@ -1,7 +1,7 @@
-import { formatDate } from '../../utils/common';
+import { formatDateWithDateFnsInNetherlandsTimezone } from '../../utils/common';
 
 const DateRenderer = ({ value }) => {
-    return <div>{formatDate(value)}</div>;
+    return <div>{formatDateWithDateFnsInNetherlandsTimezone(value)}</div>;
 };
 
 export default DateRenderer;

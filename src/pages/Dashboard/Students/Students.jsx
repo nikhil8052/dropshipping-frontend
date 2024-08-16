@@ -110,7 +110,7 @@ const Students = () => {
                             </p>
                         </>
                     ) : (
-                        <h5 className="text-center mt-5">You have not assigned in any courses.</h5>
+                        <h5 className="text-center mt-5 sentence-case">You have not assigned in any courses.</h5>
                     )}
                 </div>
             ),

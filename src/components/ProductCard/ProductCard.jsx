@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import './ProductCard.scss';
-import { trimLongText, formatDate } from '../../utils/common';
+import { trimLongText, formatDateWithDateFnsInNetherlandsTimezone } from '../../utils/common';
 
 const ProductCard = ({ item }) => {
     return (
@@ -9,7 +9,7 @@ const ProductCard = ({ item }) => {
             <div className="product-details">
                 <h5>{item.productName}</h5>
                 <p>Created by: {trimLongText(item.createdBy?.name, 10)}</p>
-                <p>Run Date: {formatDate(item.runDate)}</p>
+                <p>Run Date: {formatDateWithDateFnsInNetherlandsTimezone(item.runDate)}</p>
                 <button type="button" className={`status-btn ${item.status === 'Running' ? 'running' : ''}`}>
                     Status: {item.status}
                 </button>

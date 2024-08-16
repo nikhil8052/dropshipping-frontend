@@ -1,6 +1,6 @@
 import { Card, Image } from 'react-bootstrap';
 import './MeetingCard.scss';
-import { formatDate } from '../../utils/common';
+import { formatDateWithDateFnsInNetherlandsTimezone } from '../../utils/common';
 
 const MeetingCard = ({ meeting }) => {
     return (
@@ -20,7 +20,6 @@ const MeetingCard = ({ meeting }) => {
                     <div className="meeting-title">
                         {meeting?.createdBy?.name} ({meeting?.createdBy?.role})
                     </div>
-                    <div className="meeting-id">Meeting ID: {meeting?.googleCalendarEventId}</div>
                 </div>
             </Card.Header>
             <Card.Body>
@@ -28,7 +27,8 @@ const MeetingCard = ({ meeting }) => {
                     <span className="main-title"> Topic:</span> <span className="topic-detail">{meeting?.topic}</span>
                 </Card.Title>
                 <Card.Text className="meeting-time">
-                    <strong>Date & Time:</strong> <span> {formatDate(meeting?.dateTime)}</span>
+                    <strong>Date & Time:</strong>{' '}
+                    <span> {formatDateWithDateFnsInNetherlandsTimezone(meeting?.dateTime, true)}</span>
                     <p>Central Standard Time ({meeting?.timeZone})</p>
                 </Card.Text>
             </Card.Body>

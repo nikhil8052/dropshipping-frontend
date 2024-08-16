@@ -18,13 +18,7 @@ const EventDetailsModal = ({ show, onHide, event }) => {
                         <Col>
                             <div className="avatar">{event.coachInitials}</div>
                         </Col>
-                        <Col>
-                            {event.coachName} (Coach)
-                            <div className="meeting-details">
-                                Meeting ID: {event.meetingId} <br />
-                                Password: {event.password}
-                            </div>
-                        </Col>
+                        <Col>{event.coachName} (Coach)</Col>
                     </Row>
                 </Modal.Title>
             </Modal.Header>

@@ -53,7 +53,7 @@ const CourseCard = ({ img, title, detail, lectureNo, archive, enroll, onChange, 
                                 checked={archive}
                                 type="switch"
                                 id="custom-switch"
-                                label="Archive"
+                                label={archive ? 'Inactive' : 'Active'}
                             />
                         </Form>
                     </div>

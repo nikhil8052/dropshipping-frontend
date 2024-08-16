@@ -1,23 +1,5 @@
 import ReactQuill from 'react-quill';
-
-const modules = {
-    toolbar: true
-};
-
-const formats = [
-    'header',
-    'bold',
-    'italic',
-    'underline',
-    'strike',
-    'blockquote',
-    'list',
-    'bullet',
-    'indent',
-    'link',
-    'image',
-    'video'
-];
+import { FORMATS, TOOLBAR_CONFIG } from '../../utils/common';
 
 const RichTextEditor = ({ field, form, className = 'field-quill-control' }) => {
     const handleChange = (html) => {
@@ -25,7 +7,15 @@ const RichTextEditor = ({ field, form, className = 'field-quill-control' }) => {
     };
 
     return (
-        <ReactQuill formats={formats} className={className} modules={modules} onChange={handleChange} theme="snow" />
+        <ReactQuill
+            modules={{
+                toolbar: TOOLBAR_CONFIG
+            }}
+            formats={FORMATS}
+            className={className}
+            onChange={handleChange}
+            theme="snow"
+        />
     );
 };
 

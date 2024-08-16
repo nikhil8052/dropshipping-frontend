@@ -85,7 +85,7 @@ const oneYearLater = new Date();
 oneYearLater.setFullYear(oneYearLater.getFullYear() + 1);
 export const oneYearsLater = oneYearLater.toISOString().slice(0, 16);
 
-export const formatDateWithDateFnsInNetherlandsTimezone = (dateStr) => {
+export const formatDateWithDateFnsInNetherlandsTimezone = (dateStr, timeZoneName = false) => {
     const date = new Date(dateStr);
 
     const options = {
@@ -95,10 +95,11 @@ export const formatDateWithDateFnsInNetherlandsTimezone = (dateStr) => {
         hour: 'numeric',
         minute: 'numeric',
         hour12: false,
-        timeZone: 'Europe/Amsterdam' // Set the time zone to Netherlands
+        timeZone: 'Europe/Amsterdam',
+        timeZoneName: timeZoneName ? 'longGeneric' : undefined
     };
 
-    const formattedDate = date.toLocaleString('en-US', { ...options, timeZoneName: 'longGeneric' });
+    const formattedDate = date.toLocaleString('en-US', { ...options });
     // return the time zone name from the formatted date and date
     return formattedDate;
 };
@@ -118,3 +119,14 @@ export const shuffleArray = (array) => {
     }
     return shuffledArray;
 };
+
+// Toolbar constants
+export const TEXT_FORMATTING = ['bold', 'italic', 'underline', 'strike'];
+export const LINK = ['link'];
+export const LISTS = [{ list: 'ordered' }, { list: 'bullet' }];
+
+// Aggregated toolbar configuration
+export const TOOLBAR_CONFIG = [TEXT_FORMATTING, LINK, LISTS];
+
+// Formats constants
+export const FORMATS = ['bold', 'italic', 'underline', 'strike', 'link', 'list', 'bullet'];

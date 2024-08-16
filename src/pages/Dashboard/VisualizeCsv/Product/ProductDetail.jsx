@@ -15,7 +15,7 @@ import ProductDetailField from './ProductDetailField';
 import axiosWrapper from '@utils/api';
 import { API_URL } from '../../../../utils/apiUrl';
 import { useSelector } from 'react-redux';
-import { formatDate } from '../../../../utils/common';
+import { formatDateWithDateFnsInNetherlandsTimezone } from '../../../../utils/common';
 
 const ProductDetail = ({ setSelectedRowId, selectedRowId }) => {
     const [productData, setProductData] = useState({});
@@ -65,7 +65,11 @@ const ProductDetail = ({ setSelectedRowId, selectedRowId }) => {
                     value={productData.status}
                     customClass={`${productData.status} productStatus`}
                 />
-                <ProductDetailField icon={dateIcon} label="Date" value={formatDate(productData.runDate)} />
+                <ProductDetailField
+                    icon={dateIcon}
+                    label="Date"
+                    value={formatDateWithDateFnsInNetherlandsTimezone(productData.runDate)}
+                />
                 <ProductDetailField icon={productNameIcon} label="Product Name" value={productData.productName} />
                 <ProductDetailField
                     icon={researchMethodIcon}

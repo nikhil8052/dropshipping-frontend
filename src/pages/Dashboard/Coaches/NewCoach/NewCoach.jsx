@@ -16,8 +16,10 @@ import { useSelector } from 'react-redux';
 import { API_URL } from '../../../../utils/apiUrl';
 import { getFileObjectFromBlobUrl } from '../../../../utils/utils';
 import axiosWrapper from '../../../../utils/api';
+import Loading from '@components/Loading/Loading';
 import '../../../../styles/Coaches.scss';
 import '../../../../styles/Common.scss';
+import { FORMATS, TOOLBAR_CONFIG } from '../../../../utils/common';
 
 const NewCoach = () => {
     const inputRef = useRef();
@@ -53,37 +55,44 @@ const NewCoach = () => {
     }, [coachId]);
 
     const getSingleCoachById = async (id) => {
-        const response = await axiosWrapper('GET', API_URL.GET_COACH.replace(':id', id), {}, token);
-        const coach = response.data;
+        try {
+            setLoading(true);
+            const response = await axiosWrapper('GET', API_URL.GET_COACH.replace(':id', id), {}, token);
+            const coach = response.data;
 
-        const students = coach.assignedStudents.map((student) => ({
-            value: student._id,
-            label: student.name
-        }));
+            const students = coach.assignedStudents.map((student) => ({
+                value: student._id,
+                label: student.name
+            }));
 
-        // bio is saved in html format, so we need to parse it to display in the editor
-        // the bio is saved in this format <p>bio content</p>
+            // bio is saved in html format, so we need to parse it to display in the editor
+            // the bio is saved in this format <p>bio content</p>
 
-        const parser = new DOMParser();
-        const htmlDoc = parser.parseFromString(coach.bio, 'text/html');
-        const bio = htmlDoc.body.textContent;
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(coach.bio, 'text/html');
+            const bio = htmlDoc.body.textContent;
 
-        setCoachData((prev) => ({
-            ...prev,
-            name: coach.name,
-            email: coach.email,
-            phoneNumber: coach.phoneNumber,
-            country: coach.country,
-            region: coach.region,
-            assignedStudents: coach.assignedStudents.map((student) => student._id),
-            highTicketStudentSpots: coach.highTicketStudentSpots,
-            lowTicketStudentSpots: coach.lowTicketStudentSpots,
-            bio: bio,
-            coachType: coach.coachType
-        }));
+            setCoachData((prev) => ({
+                ...prev,
+                name: coach.name,
+                email: coach.email,
+                phoneNumber: coach.phoneNumber,
+                country: coach.country,
+                region: coach.region,
+                assignedStudents: coach.assignedStudents.map((student) => student._id),
+                highTicketStudentSpots: coach.highTicketStudentSpots,
+                lowTicketStudentSpots: coach.lowTicketStudentSpots,
+                bio: bio,
+                coachType: coach.coachType
+            }));
 
-        setStudents(students);
-        setCoachPhoto(coach.avatar);
+            setStudents(students);
+            setCoachPhoto(coach.avatar);
+        } catch (error) {
+            return;
+        } finally {
+            setLoading(false);
+        }
     };
 
     const getAllStudents = async (trajectory) => {
@@ -218,355 +227,355 @@ const NewCoach = () => {
 
     return (
         <div className="new-coach-page-wrapper">
-            <div className="title-top">
-                <span onClick={() => navigate(`/${role}/coaches`)} style={{ cursor: 'pointer' }}>
-                    Coaches <img src={CaretRight} alt=">" />
-                </span>{' '}
-                {coachId ? 'Coach Profile' : 'Add New Coach'}
-            </div>
-            <div className="new-coach-page">
-                <Container fluid className="p-3">
-                    <h4 className="mb-3 new-coach-title">{coachId ? 'Coach Profile' : 'Add New Coach'}</h4>
-                    <Formik
-                        initialValues={coachData}
-                        validationSchema={validationSchema}
-                        onSubmit={handleFormSubmit}
-                        enableReinitialize
-                    >
-                        {({ isSubmitting, handleSubmit, values }) => (
-                            <Form onSubmit={handleSubmit}>
-                                <Row className="mb-3">
-                                    <Col>
-                                        {coachPhoto ? (
-                                            <label className="field-label fw-bold">Profile image</label>
-                                        ) : (
-                                            <label className="field-label">
-                                                UPLOAD PHOTO <span className="label-light">(Mandatory)</span>
-                                            </label>
-                                        )}
-                                        <div className="image_wrapper">
-                                            <Field name="coachPhoto">
-                                                {({ field }) => (
-                                                    <>
-                                                        <input
-                                                            ref={inputRef}
-                                                            accept=".jpg,.jpeg,.png"
-                                                            {...field}
-                                                            type="file"
-                                                            style={{ display: 'none' }}
-                                                            onChange={handleFileChange}
-                                                        />
-                                                        {coachPhoto ? (
-                                                            <div className="image-renderer">
-                                                                <div className="img-wrapper">
-                                                                    <img
-                                                                        src={
-                                                                            typeof coachPhoto === 'string'
-                                                                                ? coachPhoto
-                                                                                : URL.createObjectURL(coachPhoto)
-                                                                        }
-                                                                        alt=""
-                                                                        style={{ borderRadius: '50%' }}
-                                                                    />
-                                                                    <div
-                                                                        className="overlay-image"
-                                                                        onClick={(e) => {
-                                                                            e.preventDefault();
-                                                                            inputRef.current.click();
-                                                                        }}
-                                                                    >
-                                                                        Edit
-                                                                    </div>
-                                                                </div>
-                                                                <span>{coachPhoto.name}</span>
-                                                            </div>
-                                                        ) : (
-                                                            <div className="image-preview">
-                                                                <img
-                                                                    onClick={(e) => {
-                                                                        e.preventDefault();
-                                                                        inputRef.current.click();
-                                                                    }}
-                                                                    src={imagePreview}
-                                                                    alt=""
-                                                                />
-                                                                <span>
-                                                                    Upload Coach Picture here
-                                                                    <br />
-                                                                    Supported formats:{' '}
-                                                                    <strong>.jpg, .jpeg, or .png</strong>
-                                                                    <br />
-                                                                    <Button
-                                                                        onClick={(e) => {
-                                                                            e.preventDefault();
-                                                                            inputRef.current.click();
-                                                                        }}
-                                                                        className="upload-image-btn"
-                                                                    >
-                                                                        Upload Image{' '}
-                                                                        <img src={UploadSimple} alt="Upload Btn" />
-                                                                    </Button>
-                                                                </span>
-                                                            </div>
-                                                        )}
-                                                    </>
+            {loading ? (
+                <Loading centered={true} />
+            ) : (
+                <>
+                    <div className="title-top">
+                        <span onClick={() => navigate(`/${role}/coaches`)} style={{ cursor: 'pointer' }}>
+                            Coaches <img src={CaretRight} alt=">" />
+                        </span>{' '}
+                        {coachId ? 'Coach Profile' : 'Add New Coach'}
+                    </div>
+                    <div className="new-coach-page">
+                        <Container fluid className="p-3">
+                            <h4 className="mb-3 new-coach-title">{coachId ? 'Coach Profile' : 'Add New Coach'}</h4>
+                            <Formik
+                                initialValues={coachData}
+                                validationSchema={validationSchema}
+                                onSubmit={handleFormSubmit}
+                                enableReinitialize
+                            >
+                                {({ isSubmitting, handleSubmit, values }) => (
+                                    <Form onSubmit={handleSubmit}>
+                                        <Row className="mb-3">
+                                            <Col>
+                                                {coachPhoto ? (
+                                                    <label className="field-label fw-bold">Profile image</label>
+                                                ) : (
+                                                    <label className="field-label">
+                                                        UPLOAD PHOTO <span className="label-light">(Mandatory)</span>
+                                                    </label>
                                                 )}
-                                            </Field>
-                                        </div>
-                                    </Col>
-                                </Row>
-                                <Row>
-                                    <Col md={6} xs={12}>
-                                        <label className="field-label">Coach Name</label>
-                                        <Field
-                                            name="name"
-                                            className="field-control"
-                                            type="text"
-                                            placeholder="E.g David Henderson"
-                                        />
-                                        <ErrorMessage name="name" component="div" className="error" />
-                                    </Col>
-                                    <Col md={6} xs={12}>
-                                        <label className="field-label">Coach Email</label>
-                                        <Field
-                                            name="email"
-                                            className="field-control"
-                                            type="email"
-                                            readOnly={coachId}
-                                            placeholder="kevin12345@gmail.com"
-                                        />
-                                        <ErrorMessage name="email" component="div" className="error" />
-                                    </Col>
-                                </Row>
-
-                                <Row>
-                                    <Col md={6} xs={12}>
-                                        <label className="field-label">Phone Number</label>
-                                        <Field
-                                            name="phoneNumber"
-                                            className="field-control"
-                                            type="text"
-                                            placeholder="+1-202-555-0118"
-                                        />
-                                        <ErrorMessage name="phoneNumber" component="div" className="error" />
-                                    </Col>
-                                    <Col md={6} xs={12}>
-                                        <label className="field-label">Country</label>
-                                        {/* eslint-disable */}
-                                        <Field
-                                            name="country"
-                                            className="field-select-control"
-                                            type="text"
-                                            component={({ field, form }) => {
-                                                const handleSelect = (eventKey) => {
-                                                    const selectedCountry = countryList.find(
-                                                        (country) => country.id.toString() === eventKey
-                                                    );
-                                                    form.setFieldValue(field.name, selectedCountry.name);
-                                                };
-
-                                                return (
-                                                    <>
-                                                        <DropdownButton
-                                                            title={
-                                                                <div className="d-flex justify-content-between align-items-center">
-                                                                    <span>{field.value || 'Select a country ...'}</span>
-                                                                    <img src={dropDownArrow} alt="arrow" />
-                                                                </div>
-                                                            }
-                                                            id={field.name}
-                                                            onSelect={handleSelect}
-                                                            className="dropdown-button w-100"
-                                                        >
-                                                            {countryList.map((country) => (
-                                                                <Dropdown.Item
-                                                                    key={country.id}
-                                                                    eventKey={country.id}
-                                                                    className="my-1 ms-2 w-100"
-                                                                >
-                                                                    <span className="country-name">{country.name}</span>
-                                                                </Dropdown.Item>
-                                                            ))}
-                                                        </DropdownButton>
-                                                        {form.touched[field.name] && form.errors[field.name] && (
-                                                            <div className="error mt-2">{form.errors[field.name]}</div>
+                                                <div className="image_wrapper">
+                                                    <Field name="coachPhoto">
+                                                        {({ field }) => (
+                                                            <>
+                                                                <input
+                                                                    ref={inputRef}
+                                                                    accept=".jpg,.jpeg,.png"
+                                                                    {...field}
+                                                                    type="file"
+                                                                    style={{ display: 'none' }}
+                                                                    onChange={handleFileChange}
+                                                                />
+                                                                {coachPhoto ? (
+                                                                    <div className="image-renderer">
+                                                                        <div className="img-wrapper">
+                                                                            <img
+                                                                                src={
+                                                                                    typeof coachPhoto === 'string'
+                                                                                        ? coachPhoto
+                                                                                        : URL.createObjectURL(
+                                                                                              coachPhoto
+                                                                                          )
+                                                                                }
+                                                                                alt=""
+                                                                                style={{ borderRadius: '50%' }}
+                                                                            />
+                                                                            <div
+                                                                                className="overlay-image"
+                                                                                onClick={(e) => {
+                                                                                    e.preventDefault();
+                                                                                    inputRef.current.click();
+                                                                                }}
+                                                                            >
+                                                                                Edit
+                                                                            </div>
+                                                                        </div>
+                                                                        <span>{coachPhoto.name}</span>
+                                                                    </div>
+                                                                ) : (
+                                                                    <div className="image-preview">
+                                                                        <img
+                                                                            onClick={(e) => {
+                                                                                e.preventDefault();
+                                                                                inputRef.current.click();
+                                                                            }}
+                                                                            src={imagePreview}
+                                                                            alt=""
+                                                                        />
+                                                                        <span>
+                                                                            Upload Coach Picture here
+                                                                            <br />
+                                                                            Supported formats:{' '}
+                                                                            <strong>.jpg, .jpeg, or .png</strong>
+                                                                            <br />
+                                                                            <Button
+                                                                                onClick={(e) => {
+                                                                                    e.preventDefault();
+                                                                                    inputRef.current.click();
+                                                                                }}
+                                                                                className="upload-image-btn"
+                                                                            >
+                                                                                Upload Image{' '}
+                                                                                <img
+                                                                                    src={UploadSimple}
+                                                                                    alt="Upload Btn"
+                                                                                />
+                                                                            </Button>
+                                                                        </span>
+                                                                    </div>
+                                                                )}
+                                                            </>
                                                         )}
-                                                    </>
-                                                );
-                                            }}
-                                        />
-                                    </Col>
-                                </Row>
-                                <Row>
-                                    <Col md={6} xs={12}>
-                                        <label className="field-label">Region/State</label>
-                                        {/* eslint-disable */}
-                                        <Field
-                                            name="region"
-                                            className="field-select-control"
-                                            type="text"
-                                            component={({ field, form }) => {
-                                                const handleSelect = (eventKey) => {
-                                                    const selectedCountry = regions.find(
-                                                        (country) => country.id.toString() === eventKey
-                                                    );
-                                                    form.setFieldValue(field.name, selectedCountry.label);
-                                                };
+                                                    </Field>
+                                                </div>
+                                            </Col>
+                                        </Row>
+                                        <Row>
+                                            <Col md={6} xs={12}>
+                                                <label className="field-label">Coach Name</label>
+                                                <Field
+                                                    name="name"
+                                                    className="field-control"
+                                                    type="text"
+                                                    placeholder="E.g David Henderson"
+                                                />
+                                                <ErrorMessage name="name" component="div" className="error" />
+                                            </Col>
+                                            <Col md={6} xs={12}>
+                                                <label className="field-label">Coach Email</label>
+                                                <Field
+                                                    name="email"
+                                                    className="field-control"
+                                                    type="email"
+                                                    readOnly={coachId}
+                                                    placeholder="kevin12345@gmail.com"
+                                                />
+                                                <ErrorMessage name="email" component="div" className="error" />
+                                            </Col>
+                                        </Row>
 
-                                                return (
-                                                    <>
-                                                        <DropdownButton
-                                                            title={
-                                                                <div className="d-flex justify-content-between align-items-center">
-                                                                    <span>{field.value || 'Select a region ...'}</span>
-                                                                    <img src={dropDownArrow} alt="arrow" />
-                                                                </div>
-                                                            }
-                                                            id={field.name}
-                                                            onSelect={handleSelect}
-                                                            className="dropdown-button w-100"
-                                                        >
-                                                            {regions.map((country) => (
-                                                                <Dropdown.Item
-                                                                    key={country.id}
-                                                                    eventKey={country.id}
-                                                                    className="my-1 ms-2 w-100"
+                                        <Row>
+                                            <Col md={6} xs={12}>
+                                                <label className="field-label">Phone Number</label>
+                                                <Field
+                                                    name="phoneNumber"
+                                                    className="field-control"
+                                                    type="text"
+                                                    placeholder="+1-202-555-0118"
+                                                />
+                                                <ErrorMessage name="phoneNumber" component="div" className="error" />
+                                            </Col>
+                                            <Col md={6} xs={12}>
+                                                <label className="field-label">Country</label>
+                                                {/* eslint-disable */}
+                                                <Field
+                                                    name="country"
+                                                    className="field-select-control"
+                                                    type="text"
+                                                    component={({ field, form }) => {
+                                                        const handleSelect = (eventKey) => {
+                                                            const selectedCountry = countryList.find(
+                                                                (country) => country.id.toString() === eventKey
+                                                            );
+                                                            form.setFieldValue(field.name, selectedCountry.name);
+                                                        };
+
+                                                        return (
+                                                            <>
+                                                                <DropdownButton
+                                                                    title={
+                                                                        <div className="d-flex justify-content-between align-items-center">
+                                                                            <span>
+                                                                                {field.value || 'Select a country ...'}
+                                                                            </span>
+                                                                            <img src={dropDownArrow} alt="arrow" />
+                                                                        </div>
+                                                                    }
+                                                                    id={field.name}
+                                                                    onSelect={handleSelect}
+                                                                    className="dropdown-button w-100"
                                                                 >
-                                                                    <span className="country-name">
-                                                                        {country.label}
-                                                                    </span>
-                                                                </Dropdown.Item>
-                                                            ))}
-                                                        </DropdownButton>
-                                                        {form.touched[field.name] && form.errors[field.name] && (
-                                                            <div className="error mt-2">{form.errors[field.name]}</div>
-                                                        )}
-                                                    </>
-                                                );
-                                            }}
-                                        >
-                                            {regions.map((region) => (
-                                                <option key={region.label} value={region.value}>
-                                                    {region.label}
-                                                </option>
-                                            ))}
-                                        </Field>
-                                    </Col>
-                                    <Col md={6} xs={12}>
-                                        <Input
-                                            options={students}
-                                            name="assignedStudents"
-                                            placeholder="Select or search students..."
-                                            label="Assigned Students"
-                                            type="select"
-                                            isMulti={true}
-                                            // value={}
-                                        />
-                                    </Col>
-                                </Row>
+                                                                    {countryList.map((country) => (
+                                                                        <Dropdown.Item
+                                                                            key={country.id}
+                                                                            eventKey={country.id}
+                                                                            className="my-1 ms-2 w-100"
+                                                                        >
+                                                                            <span className="country-name">
+                                                                                {country.name}
+                                                                            </span>
+                                                                        </Dropdown.Item>
+                                                                    ))}
+                                                                </DropdownButton>
+                                                                {form.touched[field.name] &&
+                                                                    form.errors[field.name] && (
+                                                                        <div className="error mt-2">
+                                                                            {form.errors[field.name]}
+                                                                        </div>
+                                                                    )}
+                                                            </>
+                                                        );
+                                                    }}
+                                                />
+                                            </Col>
+                                        </Row>
+                                        <Row>
+                                            <Col md={6} xs={12}>
+                                                <label className="field-label">Region/State</label>
+                                                {/* eslint-disable */}
+                                                <Field
+                                                    name="region"
+                                                    className="field-select-control"
+                                                    type="text"
+                                                    component={({ field, form }) => {
+                                                        const handleSelect = (eventKey) => {
+                                                            const selectedCountry = regions.find(
+                                                                (country) => country.id.toString() === eventKey
+                                                            );
+                                                            form.setFieldValue(field.name, selectedCountry.label);
+                                                        };
 
-                                <Row className="mb-3 mt-2">
-                                    <Col md={6} xs={12}>
-                                        <Input
-                                            name="coachType"
-                                            placeholder="Please Select the Coach Type"
-                                            label="Coach Type"
-                                            type="radio"
-                                            options={[
-                                                {
-                                                    label: 'High Ticket',
-                                                    value: COACH.COACH_TYPE.HIGH_TICKET
-                                                },
-                                                {
-                                                    label: 'Low Ticket',
-                                                    value: COACH.COACH_TYPE.LOW_TICKET
-                                                }
-                                            ]}
-                                        />
-                                    </Col>
-                                    {values.coachType && ticketRender(values.coachType)}
-                                </Row>
-                                <Row>
-                                    <Col>
-                                        <Input
-                                            className="field-quill-control"
-                                            type="richTextEditor"
-                                            name="bio"
-                                            label="Bio (optional)"
-                                            placeholder="Write your content here..."
-                                            modules={{
-                                                toolbar: [
-                                                    [{ header: '1' }, { header: '2' }, { font: [] }],
-                                                    [{ size: [] }],
-                                                    ['bold', 'italic', 'underline', 'strike', 'blockquote'],
-                                                    [
-                                                        { list: 'ordered' },
-                                                        { list: 'bullet' },
-                                                        { indent: '-1' },
-                                                        { indent: '+1' }
-                                                    ],
-                                                    ['link', 'image', 'video'],
-                                                    ['clean']
-                                                ]
-                                            }}
-                                            formats={[
-                                                'header',
-                                                'font',
-                                                'size',
-                                                'bold',
-                                                'italic',
-                                                'underline',
-                                                'strike',
-                                                'blockquote',
-                                                'list',
-                                                'bullet',
-                                                'indent',
-                                                'link',
-                                                'image',
-                                                'video'
-                                            ]}
-                                        />
-                                    </Col>
-                                </Row>
-                                <Row>
-                                    <Col>
-                                        <div className="mt-3 d-flex justify-content-end gap-3">
-                                            <Button
-                                                type="button"
-                                                onClick={() => navigate(`/${role}/coaches`)}
-                                                className="cancel-btn"
-                                                disabled={isSubmitting}
-                                            >
-                                                Cancel
-                                            </Button>
-                                            <Button
-                                                type="submit"
-                                                className="submit-btn"
-                                                disabled={loading || isSubmitting}
-                                            >
-                                                {isSubmitting
-                                                    ? coachId
-                                                        ? 'Saving Changes...'
-                                                        : 'Adding Coach...'
-                                                    : coachId
-                                                      ? 'Save Changes'
-                                                      : 'Add Coach'}
-                                            </Button>
-                                        </div>
-                                    </Col>
-                                </Row>
-                            </Form>
-                        )}
-                    </Formik>
-                    {cropping && (
-                        <ImageCropper
-                            imageSrc={imageSrc}
-                            onCropComplete={handleCropComplete}
-                            onCancel={() => setCropping(false)}
-                        />
-                    )}
-                </Container>
-            </div>
+                                                        return (
+                                                            <>
+                                                                <DropdownButton
+                                                                    title={
+                                                                        <div className="d-flex justify-content-between align-items-center">
+                                                                            <span>
+                                                                                {field.value || 'Select a region ...'}
+                                                                            </span>
+                                                                            <img src={dropDownArrow} alt="arrow" />
+                                                                        </div>
+                                                                    }
+                                                                    id={field.name}
+                                                                    onSelect={handleSelect}
+                                                                    className="dropdown-button w-100"
+                                                                >
+                                                                    {regions.map((country) => (
+                                                                        <Dropdown.Item
+                                                                            key={country.id}
+                                                                            eventKey={country.id}
+                                                                            className="my-1 ms-2 w-100"
+                                                                        >
+                                                                            <span className="country-name">
+                                                                                {country.label}
+                                                                            </span>
+                                                                        </Dropdown.Item>
+                                                                    ))}
+                                                                </DropdownButton>
+                                                                {form.touched[field.name] &&
+                                                                    form.errors[field.name] && (
+                                                                        <div className="error mt-2">
+                                                                            {form.errors[field.name]}
+                                                                        </div>
+                                                                    )}
+                                                            </>
+                                                        );
+                                                    }}
+                                                >
+                                                    {regions.map((region) => (
+                                                        <option key={region.label} value={region.value}>
+                                                            {region.label}
+                                                        </option>
+                                                    ))}
+                                                </Field>
+                                            </Col>
+                                            <Col md={6} xs={12}>
+                                                <Input
+                                                    options={students}
+                                                    name="assignedStudents"
+                                                    placeholder="Select or search students..."
+                                                    label="Assigned Students"
+                                                    type="select"
+                                                    isMulti={true}
+                                                    // value={}
+                                                />
+                                            </Col>
+                                        </Row>
+
+                                        <Row className="mb-3 mt-2">
+                                            <Col md={6} xs={12}>
+                                                <Input
+                                                    name="coachType"
+                                                    placeholder="Please Select the Coach Type"
+                                                    label="Coach Type"
+                                                    type="radio"
+                                                    options={[
+                                                        {
+                                                            label: 'High Ticket',
+                                                            value: COACH.COACH_TYPE.HIGH_TICKET
+                                                        },
+                                                        {
+                                                            label: 'Low Ticket',
+                                                            value: COACH.COACH_TYPE.LOW_TICKET
+                                                        }
+                                                    ]}
+                                                />
+                                            </Col>
+                                            {values.coachType && ticketRender(values.coachType)}
+                                        </Row>
+                                        <Row>
+                                            <Col>
+                                                <Input
+                                                    className="field-quill-control"
+                                                    type="richTextEditor"
+                                                    name="bio"
+                                                    label="Bio (optional)"
+                                                    placeholder="Write your content here..."
+                                                    modules={{
+                                                        toolbar: TOOLBAR_CONFIG
+                                                    }}
+                                                    formats={FORMATS}
+                                                />
+                                            </Col>
+                                        </Row>
+                                        <Row>
+                                            <Col>
+                                                <div className="mt-3 d-flex justify-content-end gap-3">
+                                                    <Button
+                                                        type="button"
+                                                        onClick={() => navigate(`/${role}/coaches`)}
+                                                        className="cancel-btn"
+                                                        disabled={isSubmitting}
+                                                    >
+                                                        Cancel
+                                                    </Button>
+                                                    <Button
+                                                        type="submit"
+                                                        className="submit-btn"
+                                                        disabled={loading || isSubmitting}
+                                                    >
+                                                        {isSubmitting ? (
+                                                            coachId ? (
+                                                                'Saving Changes...'
+                                                            ) : (
+                                                                <Loading />
+                                                            )
+                                                        ) : coachId ? (
+                                                            'Save Changes'
+                                                        ) : (
+                                                            'Add Coach'
+                                                        )}
+                                                    </Button>
+                                                </div>
+                                            </Col>
+                                        </Row>
+                                    </Form>
+                                )}
+                            </Formik>
+                            {cropping && (
+                                <ImageCropper
+                                    imageSrc={imageSrc}
+                                    onCropComplete={handleCropComplete}
+                                    onCancel={() => setCropping(false)}
+                                />
+                            )}
+                        </Container>
+                    </div>
+                </>
+            )}
         </div>
     );
 };

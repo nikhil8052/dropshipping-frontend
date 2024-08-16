@@ -14,7 +14,7 @@ import trashIconRed from '../../../assets/icons/Trash-rename.svg';
 import PencilLine from '../../../assets/icons/PencilLine.svg';
 import CoursesModal from './CoursesModal/CoursesModal';
 import AddLectureModal from './AddLectureModal';
-import { trimLongText } from '../../../utils/common';
+import { FORMATS, TOOLBAR_CONFIG, trimLongText } from '../../../utils/common';
 import { getFileObjectFromBlobUrl } from '../../../utils/utils';
 import UploadSimple from '@icons/UploadSimple.svg';
 import Loading from '@components/Loading/Loading';
@@ -423,9 +423,12 @@ const UploadFiles = ({ onNext, onBack, initialData, setStepComplete, updateCours
                                                         <ReactQuill
                                                             value={field.value || ''}
                                                             name={field.name}
-                                                            onChange={(value) => field.onChange(field.name)(value)} // Update the form value
+                                                            onChange={(value) => field.onChange(field.name)(value)}
                                                             className="field-quill-control"
-                                                            modules={{ toolbar: true }}
+                                                            modules={{
+                                                                toolbar: TOOLBAR_CONFIG
+                                                            }}
+                                                            formats={FORMATS}
                                                         />
                                                     </div>
                                                 )}
