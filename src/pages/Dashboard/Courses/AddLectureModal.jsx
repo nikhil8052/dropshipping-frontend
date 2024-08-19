@@ -40,20 +40,29 @@ const AddLectureModal = ({ lectureModal, resetModal, onSave }) => {
     const validationSchema = Yup.object().shape({
         name: Yup.string().required('Lecture name is required'),
         description: Yup.string().required('Lecture description is required'),
-        quiz: Yup.object().shape({
-            mcqs: Yup.array().of(
-                Yup.object().shape({
-                    question: Yup.string().optional(),
-                    options: Yup.array().of(Yup.string().optional())
-                    // Commenting for future edge case handle
-                    // .test('unique-options', 'Options must be unique', (options) => {
-                    //     // Set for lower case as well
-                    //     const uniqueOptions = new Set(options.map((option) => option?.toLowerCase()));
-                    //     return uniqueOptions.size === options.length;
-                    // })
-                })
-            )
-        }),
+        quiz: Yup.object()
+            .optional()
+            .shape({
+                mcqs: Yup.array()
+                    .optional()
+                    .of(
+                        Yup.object().shape({
+                            question: Yup.string().when('options', {
+                                is: (options) => options && options.length > 0,
+                                then: () => Yup.string().required('Question is required when options are provided'),
+                                otherwise: () => Yup.string().optional()
+                            }),
+                            options: Yup.array()
+                                .of(Yup.string().optional())
+                                // Commenting for future edge case handle
+                                .test('unique-options', 'Options must be unique', (options) => {
+                                    // Set for lower case as well
+                                    const uniqueOptions = new Set(options.map((option) => option?.toLowerCase()));
+                                    return uniqueOptions.size === options.length;
+                                })
+                        })
+                    )
+            }),
         file: Yup.mixed().required('File is required')
     });
 
@@ -92,7 +101,6 @@ const AddLectureModal = ({ lectureModal, resetModal, onSave }) => {
                 setUploading(true);
                 delete formData.file;
             }
-
             const query = formData.file
                 ? ''
                 : `?size=${values.file.size}&type=${values.file.type}&description=${formData.description}&name=${formData.name}`;
@@ -146,6 +154,13 @@ const AddLectureModal = ({ lectureModal, resetModal, onSave }) => {
     };
 
     const handleLectureUpload = async (file, setFieldValue) => {
+        if (lectureModal.isEditable && initialValues?.vimeoVideoData) {
+            if (!file.type.includes('video')) {
+                toast.error('Please upload a video file');
+                return;
+            }
+        }
+
         if (!file.type.includes('video')) {
             const formData = new FormData();
             formData.append('files', file);
@@ -244,7 +259,7 @@ const AddLectureModal = ({ lectureModal, resetModal, onSave }) => {
                                                                 type="button"
                                                                 className="btn btn-link minus-btn"
                                                                 onClick={() => {
-                                                                    if (values.quiz.mcqs.length > 1) remove(index);
+                                                                    remove(index);
                                                                 }}
                                                             >
                                                                 <FontAwesomeIcon icon={faMinus} color="black" />
@@ -317,7 +332,13 @@ const AddLectureModal = ({ lectureModal, resetModal, onSave }) => {
                                     <div className="mt-3">
                                         <h4>Uploaded Lecture</h4>
                                         <div className="uploaded-lecture">
-                                            {initialValues?.vimeoVideoData?.player_embed_url ? (
+                                            {initialValues?.vimeoVideoData?.status !== 'available' ||
+                                            initialValues?.vimeoVideoData?.transcode?.status !== 'complete' ? (
+                                                <p>
+                                                    Lecture is still being processed. Please check back later or upload
+                                                    a new lecture
+                                                </p>
+                                            ) : initialValues?.vimeoVideoData?.player_embed_url ? (
                                                 <iframe
                                                     src={initialValues?.vimeoVideoData?.player_embed_url}
                                                     width="100%"
@@ -363,9 +384,6 @@ const AddLectureModal = ({ lectureModal, resetModal, onSave }) => {
                                         className="w-100 mb-3"
                                     />
                                     <p>{values.file ? `File: ${trimLongText(values.file.name, 15)}` : ''}</p>
-                                    <Button variant="secondary" onClick={() => setUploading(false)}>
-                                        Cancel
-                                    </Button>
                                 </Modal.Body>
                             </Modal>
                         </FormikForm>

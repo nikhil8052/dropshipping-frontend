@@ -103,7 +103,7 @@ const NewEvent = () => {
         meetingLink: Yup.string()
             .trim()
             .when('typeOfEvent', {
-                is: 'Online',
+                is: 'ONLINE',
                 then: () =>
                     Yup.string()
                         .required('Meeting link is required for online events')
@@ -113,7 +113,7 @@ const NewEvent = () => {
         location: Yup.string()
             .trim()
             .when('typeOfEvent', {
-                is: 'Onsite',
+                is: 'ONSITE',
                 then: () =>
                     Yup.string()
                         .required('Location is required for Onsite events')
@@ -133,7 +133,7 @@ const NewEvent = () => {
 
         if (eventPayload.typeOfEvent === 'ONLINE') {
             delete eventPayload.location;
-        } else if (eventPayload.typeOfEvent === ' ONSITE') {
+        } else if (eventPayload.typeOfEvent === 'ONSITE') {
             delete eventPayload.meetingLink;
         }
 

@@ -13,7 +13,7 @@ const LectureCard = ({ item }) => {
                 <img src="https://i.vimeocdn.com/video/default" alt={item.title} className="product-image" />
             )}
             <div className="product-details">
-                <h5>{item.title}</h5>
+                <h5>{trimLongText(item.title, 15)}</h5>
                 <p>{trimLongText(item.description, 20)}</p>
             </div>
         </div>

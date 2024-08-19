@@ -125,12 +125,17 @@ const Coaches = () => {
     };
 
     const handleDeleteSubmit = async () => {
-        setLoadingCRUD(true);
-        // Delete API call here
-        await axiosWrapper('DELETE', API_URL.DELETE_COACH.replace(':id', showDeleteModal?.coachId), {}, token);
-        fetchData(false);
-        setLoadingCRUD(false);
-        resetModal();
+        try {
+            setLoadingCRUD(true);
+            // Delete API call here
+            await axiosWrapper('DELETE', API_URL.DELETE_COACH.replace(':id', showDeleteModal?.coachId), {}, token);
+            fetchData(false);
+            setLoadingCRUD(false);
+            resetModal();
+        } catch (error) {
+            resetModal();
+            setLoadingCRUD(false);
+        }
     };
 
     /*eslint-disable */

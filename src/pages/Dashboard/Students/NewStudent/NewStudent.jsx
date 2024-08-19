@@ -3,6 +3,7 @@ import CaretRight from '@icons/CaretRight.svg';
 import imagePreview from '@icons/image-preview.svg';
 import dropDownArrow from '@icons/drop-down-black.svg';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
+import ConfirmationBox from '@components/ConfirmationBox/ConfirmationBox';
 import * as Yup from 'yup';
 import { Container, Row, Col, Button, DropdownButton, Dropdown } from 'react-bootstrap';
 import 'react-quill/dist/quill.snow.css';
@@ -34,6 +35,7 @@ const NewStudent = () => {
     const [imageSrc, setImageSrc] = useState(null);
     const [courses, setCourses] = useState([]);
     const [studentProducts, setStudentProducts] = useState([]);
+    const [loadingCRUD, setLoadingCRUD] = useState(false);
     const [studentData, setStudentData] = useState({
         name: '',
         email: '',
@@ -42,6 +44,12 @@ const NewStudent = () => {
         region: '',
         coachingTrajectory: 'HIGH_TICKET',
         coursesRoadmap: []
+    });
+    const [showModal, setShowModal] = useState({
+        show: false,
+        title: 'Update Trajectory',
+        isEditable: false,
+        studentId: null
     });
 
     const schema = Yup.object({
@@ -172,6 +180,40 @@ const NewStudent = () => {
             navigate(`/${role}/students`);
         } catch (error) {
             setSubmitting(false);
+        }
+    };
+
+    const resetModal = () => {
+        setShowModal({
+            show: false,
+            title: '',
+            isEditable: false,
+            studentId: null
+        });
+    };
+
+    const handleCloseModal = () => {
+        resetModal();
+    };
+
+    const handleUpdateTrajectory = async () => {
+        try {
+            setLoadingCRUD(true);
+            // Delete API call here
+            await axiosWrapper(
+                'PUT',
+                API_URL.UPDATE_STUDENT.replace(':id', showModal?.studentId),
+                {
+                    coachingTrajectory: showModal?.trajectory
+                },
+                token
+            );
+            setLoadingCRUD(false);
+            getSingleStudentById(showModal?.studentId);
+            resetModal();
+        } catch (error) {
+            setLoadingCRUD(false);
+            resetModal();
         }
     };
 
@@ -419,6 +461,17 @@ const NewStudent = () => {
                                                     const selectedField = coachingTrajectory.find(
                                                         (coach) => coach.id.toString() === eventKey
                                                     );
+                                                    if (studentId && values.coursesRoadmap.length > 0) {
+                                                        // show a toast message that on changing course trajectory, the courses will be updated or removed all the courses
+                                                        setShowModal({
+                                                            show: true,
+                                                            title: 'Update Trajectory',
+                                                            isEditable: true,
+                                                            studentId,
+                                                            trajectory: selectedField.value
+                                                        });
+                                                        return;
+                                                    }
                                                     getAllCourses(selectedField.value);
                                                     form.setFieldValue(field.name, selectedField.value);
                                                 };
@@ -559,6 +612,20 @@ const NewStudent = () => {
                             imageSrc={imageSrc}
                             onCropComplete={handleCropComplete}
                             onCancel={() => setCropping(false)}
+                        />
+                    )}
+                    {showModal.show && (
+                        <ConfirmationBox
+                            show={showModal.show}
+                            onClose={handleCloseModal}
+                            loading={loadingCRUD}
+                            title={showModal.title}
+                            body="The student will be unassigned from all courses and coach. Are you sure you want to change the trajectory?"
+                            onConfirm={handleUpdateTrajectory}
+                            customFooterClass="custom-footer-class"
+                            nonActiveBtn="cancel-button"
+                            activeBtn="delete-button"
+                            activeBtnTitle="Update"
                         />
                     )}
                 </Container>

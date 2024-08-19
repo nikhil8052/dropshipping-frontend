@@ -104,28 +104,34 @@ const CourseDetail = () => {
                                             All Students
                                         </Button>
                                     </Link> */}
-                                    <Button
-                                        onClick={() =>
-                                            navigate(`/${role?.toLowerCase()}/courses/all-students`, {
-                                                state: { courseId: course._id }
-                                            })
-                                        }
-                                        type="button"
-                                        className="publish-btn"
-                                    >
-                                        All Students
-                                    </Button>
-                                    <Button
-                                        onClick={() =>
-                                            navigate(`/${role?.toLowerCase()}/courses/edit`, {
-                                                state: { isEdit: true, courseId: course._id }
-                                            })
-                                        }
-                                        type="button"
-                                        className="edit-btn"
-                                    >
-                                        Edit
-                                    </Button>
+                                    {userInfo?.role !== 'ADMIN' && course?.moduleManager?._id !== userInfo?._id ? (
+                                        <></>
+                                    ) : (
+                                        <>
+                                            <Button
+                                                onClick={() =>
+                                                    navigate(`/${role?.toLowerCase()}/courses/all-students`, {
+                                                        state: { courseId: course._id }
+                                                    })
+                                                }
+                                                type="button"
+                                                className="publish-btn"
+                                            >
+                                                All Students
+                                            </Button>
+                                            <Button
+                                                onClick={() =>
+                                                    navigate(`/${role?.toLowerCase()}/courses/edit`, {
+                                                        state: { isEdit: true, courseId: course._id }
+                                                    })
+                                                }
+                                                type="button"
+                                                className="edit-btn"
+                                            >
+                                                Edit
+                                            </Button>
+                                        </>
+                                    )}
                                 </>
                             </div>
                         )}

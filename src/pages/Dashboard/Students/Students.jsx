@@ -189,6 +189,29 @@ const Students = () => {
         setLoadingCRUD(false);
     };
 
+    const calcPercentage = (rowData) => {
+        const courses = rowData.coursesRoadmap || [];
+
+        const percentages = courses.map((course) => {
+            const lectures = course.lectures || [];
+            const totalLectures = lectures.length;
+            const studentId = rowData?._id;
+
+            // Count completed lectures
+            const completedLectures = lectures.filter((lecture) => {
+                const completedBy = lecture.completedBy || [];
+                // Check if the student's ID is in the completedBy array
+                return completedBy.includes(studentId) || completedBy.some((item) => item._id === studentId);
+            }).length;
+
+            // Calculate the completion percentage for this course
+            return totalLectures > 0 ? (completedLectures / totalLectures) * 100 : 0;
+        });
+
+        // Return the average percentage across all courses, or individual percentages as needed
+        return percentages.length > 0 ? percentages.reduce((a, b) => a + b, 0) / percentages.length : 0;
+    };
+
     /*eslint-disable */
     const ActionsRenderer = (props) => (
         <React.Fragment>
@@ -293,8 +316,9 @@ const Students = () => {
             resizable: false,
             cellRenderer: ({ data: rowData }) => {
                 // Calculate the percentage of courses completed
-                const courses = rowData.coursesRoadmap?.length || 0;
-                return <div key={rowData._id}>{courses}%</div>;
+                const coursePercentage = calcPercentage(rowData);
+
+                return <div key={rowData?._id}>{coursePercentage.toFixed(2)}%</div>;
             }
         },
         {
