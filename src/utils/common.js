@@ -85,7 +85,7 @@ const oneYearLater = new Date();
 oneYearLater.setFullYear(oneYearLater.getFullYear() + 1);
 export const oneYearsLater = oneYearLater.toISOString().slice(0, 16);
 
-export const formatDateWithDateFnsInNetherlandsTimezone = (dateStr, timeZoneName = false) => {
+export const formatTimezone = (dateStr, timeZoneName = false) => {
     const date = new Date(dateStr);
 
     const options = {

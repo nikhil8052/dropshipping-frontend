@@ -1,6 +1,6 @@
 import { Card, Image } from 'react-bootstrap';
 import './MeetingCard.scss';
-import { formatDateWithDateFnsInNetherlandsTimezone } from '../../utils/common';
+import { formatTimezone } from '../../utils/common';
 
 const MeetingCard = ({ meeting }) => {
     return (
@@ -27,8 +27,7 @@ const MeetingCard = ({ meeting }) => {
                     <span className="main-title"> Topic:</span> <span className="topic-detail">{meeting?.topic}</span>
                 </Card.Title>
                 <Card.Text className="meeting-time">
-                    <strong>Date & Time:</strong>{' '}
-                    <span> {formatDateWithDateFnsInNetherlandsTimezone(meeting?.dateTime, true)}</span>
+                    <strong>Date & Time:</strong> <span> {formatTimezone(meeting?.dateTime, true)}</span>
                     <p>Central Standard Time ({meeting?.timeZone})</p>
                 </Card.Text>
             </Card.Body>

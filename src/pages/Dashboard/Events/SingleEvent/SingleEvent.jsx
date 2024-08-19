@@ -12,10 +12,7 @@ import { API_URL } from '@utils/apiUrl';
 import '../../../../styles/Events.scss';
 import '../../../../styles/Common.scss';
 import { capitalizeFirstLetter } from '../../../../utils/utils';
-import {
-    formatDateWithDateFnsInNetherlandsTimezoneWithDateFnsInNetherlandsTimezone,
-    trimLongText
-} from '../../../../utils/common';
+import { formatTimezone, trimLongText } from '../../../../utils/common';
 
 const SingleEvent = () => {
     const location = useLocation();
@@ -95,13 +92,7 @@ const SingleEvent = () => {
                             <Card.Text className="meeting-time text-center">
                                 <div className="d-flex justify-content-between align-items-center">
                                     <div>
-                                        <strong>Date & Time:</strong>{' '}
-                                        <span>
-                                            {' '}
-                                            {formatDateWithDateFnsInNetherlandsTimezoneWithDateFnsInNetherlandsTimezone(
-                                                event?.dateTime
-                                            )}
-                                        </span>
+                                        <strong>Date & Time:</strong> <span> {formatTimezone(event?.dateTime)}</span>
                                     </div>
                                     <div>
                                         <Button

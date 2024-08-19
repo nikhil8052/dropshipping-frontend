@@ -124,11 +124,11 @@ const NewEvent = () => {
     });
 
     const handleFormSubmit = async (values, { resetForm, setSubmitting }) => {
-        const formatDateWithDateFnsInNetherlandsTimezone = convertToUTC(values.dateTime);
+        const formatTimezone = convertToUTC(values.dateTime);
         const eventPayload = {
             ...values,
             thumbnail: eventThumbnail,
-            dateTime: formatDateWithDateFnsInNetherlandsTimezone
+            dateTime: formatTimezone
         };
 
         if (eventPayload.typeOfEvent === 'ONLINE') {
