@@ -11,6 +11,8 @@ import Loading from '@components/Loading/Loading';
 import { API_URL } from '@utils/apiUrl';
 import '../../../../styles/Events.scss';
 import '../../../../styles/Common.scss';
+import { faCircleUser } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { capitalizeFirstLetter } from '../../../../utils/utils';
 import { formatTimezone, trimLongText } from '../../../../utils/common';
 
@@ -124,7 +126,15 @@ const SingleEvent = () => {
                                     <div className="d-flex justify-content-end">
                                         <div className="personal-meeting-btn d-flex">
                                             <div className="d-flex profile-icon">
-                                                <img src={event?.createdBy?.avatar} alt="icon" />
+                                                {event?.createdBy?.avatar ? (
+                                                    <img src={event?.createdBy?.avatar} alt="Event Host Avatar" />
+                                                ) : (
+                                                    <FontAwesomeIcon
+                                                        size="2xl"
+                                                        icon={faCircleUser}
+                                                        color="rgba(200, 202, 216, 1)"
+                                                    />
+                                                )}
                                                 <div>
                                                     <h1>{trimLongText(event?.createdBy?.name)}</h1>
                                                     <p>Host</p>

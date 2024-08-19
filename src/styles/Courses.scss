@@ -942,14 +942,15 @@
         }
         .btn {
             display: flex;
-            justify-content: center;
+            justify-content: flex-start;
             align-items: center;
             gap: 10px;
             width: 100%;
             padding: 5px 10px;
             border-radius: 80px;
             font-size: $font-size-medium;
-            text-wrap: nowrap;
+            text-wrap: wrap;
+            text-align: left;
             @include respond-to($small-screen) {
                 justify-content: center;
                 width: 100%;

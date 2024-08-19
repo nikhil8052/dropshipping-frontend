@@ -14,6 +14,7 @@ function Select(props) {
                         : props.options.find((option) => option.value === field.value)
                 }
                 classNamePrefix="custom_select" // class prefix for customization
+                className={props.className}
                 isMulti={props.isMulti}
                 onChange={(e) => {
                     if (props.isMulti) {

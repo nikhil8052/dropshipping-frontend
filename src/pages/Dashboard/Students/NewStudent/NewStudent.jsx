@@ -527,6 +527,7 @@ const NewStudent = () => {
                                                 label="Courses Roadmap"
                                                 type="select"
                                                 isMulti={true}
+                                                className="up-menu"
                                             />
                                             {courses.length === 0 && (
                                                 <div>

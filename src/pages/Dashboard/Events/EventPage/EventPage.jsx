@@ -48,7 +48,6 @@ function EventPage() {
 
     const getEventDetails = async (id) => {
         try {
-            setLoading(true);
             const response = await axiosWrapper(
                 'GET',
                 API_URL.GET_EVENT_BY_ID_FOR_STUDENT.replace(':id', id),
@@ -58,9 +57,8 @@ function EventPage() {
             const event = response.data;
             setSelectedEvent(event);
             setShowModal(true);
-            setLoading(false);
         } catch (error) {
-            setLoading(false);
+            setShowModal(false);
         }
     };
 

@@ -6,7 +6,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 const LectureCard = ({ item }) => {
     return (
-        <div className="product-card" key={item.id}>
+        <div className="product-card h-100" key={item.id}>
             {item.type === 'pdf' ? (
                 <FontAwesomeIcon className="product-image" icon={faFilePdf} color="rgba(200, 202, 216, 1)" />
             ) : (

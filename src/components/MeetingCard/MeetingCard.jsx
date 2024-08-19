@@ -4,7 +4,7 @@ import { formatTimezone } from '../../utils/common';
 
 const MeetingCard = ({ meeting }) => {
     return (
-        <Card className="card-custom">
+        <Card className="card-custom h-100">
             <Card.Header className="card-header-custom">
                 {meeting?.thumbnail ? (
                     <Image src={meeting?.thumbnail} rounded className="image-custom" />
@@ -28,7 +28,6 @@ const MeetingCard = ({ meeting }) => {
                 </Card.Title>
                 <Card.Text className="meeting-time">
                     <strong>Date & Time:</strong> <span> {formatTimezone(meeting?.dateTime, true)}</span>
-                    <p>Central Standard Time ({meeting?.timeZone})</p>
                 </Card.Text>
             </Card.Body>
             <Card.Footer className="card-footer-custom">

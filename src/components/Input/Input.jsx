@@ -1,3 +1,4 @@
+import './input.scss';
 import Text from './Text';
 import Password from './Password';
 import Label from './Label';
@@ -5,7 +6,6 @@ import Radio from './Radio';
 import TextArea from './TextArea';
 import Select from './Select';
 import { ErrorMessage } from 'formik';
-import './input.scss';
 import RichTextEditor from './RichTextEditor';
 
 export default function Input(props) {
