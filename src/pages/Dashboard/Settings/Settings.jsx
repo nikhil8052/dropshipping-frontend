@@ -3,20 +3,27 @@ import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import { Container, Row, Col, Button, Image, InputGroup } from 'react-bootstrap';
 import toast from 'react-hot-toast';
-import { useNavigate } from 'react-router-dom';
 import profile from '@images/user-img.jpg';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
+import { faEye, faEyeSlash, faCircleUser } from '@fortawesome/free-solid-svg-icons';
 import UploadSimple from '@icons/UploadSimple.svg';
 import ImageCropper from '../../../components/ImageMask/ImageCropper';
+import { updateUserInfo } from '../../../redux/auth/auth_slice';
+import { useDispatch, useSelector } from 'react-redux';
+import { getFileObjectFromBlobUrl } from '../../../utils/utils';
+import axiosWrapper from '@utils/api';
+import { API_URL } from '../../../utils/apiUrl';
 import '../../../styles/Settings.scss';
+import '../../../styles/Common.scss';
 
 const Settings = () => {
     const inputRef = useRef();
+    const dispatch = useDispatch();
+    const { userInfo } = useSelector((state) => state?.auth);
+    const token = useSelector((state) => state?.auth?.userToken);
     const [profilePhoto, setProfilePhoto] = useState(profile || null);
     const [cropping, setCropping] = useState(false);
     const [imageSrc, setImageSrc] = useState(null);
-    const navigate = useNavigate();
     const [showPasswords, setShowPasswords] = useState({
         current: false,
         new: false,
@@ -26,7 +33,8 @@ const Settings = () => {
     const [profileData, setProfileData] = useState({
         name: '',
         email: '',
-        phoneNumber: ''
+        phoneNumber: '',
+        meetingLink: ''
     });
 
     const [passwordData, setPasswordData] = useState({
@@ -36,33 +44,34 @@ const Settings = () => {
     });
 
     useEffect(() => {
-        setProfileData({
-            name: 'John Doe',
-            email: ' John.Doe@example.com',
-            phoneNumber: '+31- 612 345 678'
-        });
+        if (userInfo) {
+            setProfileData({
+                name: userInfo.name,
+                email: userInfo.email,
+                phoneNumber: userInfo.phoneNumber,
+                meetingLink: userInfo.meetingLink
+            });
+            setProfilePhoto(userInfo.avatar);
+        }
         setPasswordData({
             currentPassword: '',
             newPassword: '',
             confirmPassword: ''
         });
-    }, []);
+    }, [dispatch]);
 
     const profileValidationSchema = Yup.object({
         name: Yup.string().required('Name is required'),
         email: Yup.string().email('Invalid email address').required('Email is required'),
-        phoneNumber: Yup.string().required('Phone number is required')
+        phoneNumber: Yup.string().required('Phone number is required'),
+        meetingLink: Yup.string()
+            .trim()
+            .required('Meeting link is required for online events')
+            .test('not-only-spaces', 'Meeting link cannot be only spaces', (value) => /\S/.test(value))
     });
 
     const passwordValidationSchema = Yup.object({
-        currentPassword: Yup.string()
-            .required('Current password is required')
-            .min(4, 'Password must be at least 4 characters long')
-            .max(20, 'Password must be at most 20 characters long')
-            .matches(
-                /^(?=.*[A-Za-z])(?=.*\d)(?=.*[ !"#$%&'()*+,-./:;<=>?@[\\\]^_`{|}~¡¢£¤¥¦§¨©ª«¬®ˉ°±²³´µ¶¸¹º»¼½¾¿ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖ×ØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõö÷øùúûüýþÿ])[A-Za-z\d !"#$%&'()*+,-./:;<=>?@[\\\]^_`{|}~¡¢£¤¥¦§¨©ª«¬®ˉ°±²³´µ¶¸¹º»¼½¾¿ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖ×ØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõö÷øùúûüýþÿ]{4,20}$/,
-                'Password must contain letters, numbers, and special characters'
-            ),
+        currentPassword: Yup.string().required('Current password is required'),
         newPassword: Yup.string()
             .required('New password is required')
             .min(4, 'Password must be at least 4 characters long')
@@ -88,33 +97,45 @@ const Settings = () => {
         setCropping(true);
     };
 
-    const handleCropComplete = (croppedImage) => {
-        setProfilePhoto(croppedImage);
-        setCropping(false);
-        toast.success('Image updated successfully!', {
-            icon: '🎉',
-            style: {
-                borderRadius: '10px',
-                background: '#333',
-                color: '#fff'
-            }
-        });
+    const handleCropComplete = async (croppedImage) => {
+        try {
+            const file = await getFileObjectFromBlobUrl(croppedImage, 'avatar.jpg');
+            const formData = new FormData();
+            formData.append('files', file);
+            formData.append('name', file.name);
+            setCropping(false);
+            const mediaFile = await axiosWrapper('POST', API_URL.UPLOAD_MEDIA, formData, '', true);
+            setProfilePhoto(mediaFile.data[0].path);
+        } catch (error) {
+            setCropping(false);
+        }
     };
 
-    const handleProfileSubmit = (values, { resetForm, setSubmitting }) => {
-        setTimeout(() => {
-            resetForm();
-            setSubmitting(false);
-            navigate('/admin');
-        }, 1000);
+    const handleProfileSubmit = async (values, { setSubmitting }) => {
+        const profileData = { ...values };
+
+        if (profileData.email) {
+            delete profileData.email;
+        }
+
+        const response = await axiosWrapper('PUT', API_URL.UPDATE_PROFILE, { ...profileData }, token);
+        // update data in redux
+        dispatch(updateUserInfo({ ...response.data, avatar: profilePhoto }));
+
+        setSubmitting(false);
     };
 
-    const handlePasswordSubmit = (values, { resetForm, setSubmitting }) => {
-        setTimeout(() => {
-            resetForm();
-            setSubmitting(false);
-            navigate('/admin');
-        }, 1000);
+    const handlePasswordSubmit = async (values, { resetForm, setSubmitting }) => {
+        const profileData = { ...values };
+
+        if (profileData.confirmPassword) {
+            delete profileData.confirmPassword;
+        }
+
+        await axiosWrapper('PUT', API_URL.UPDATE_PROFILE, { ...profileData }, token);
+
+        setSubmitting(false);
+        resetForm();
     };
 
     const togglePasswordVisibility = (field) => {
@@ -157,14 +178,23 @@ const Settings = () => {
                                                         lg={3}
                                                         className="d-flex justify-content-start ms-5"
                                                     >
-                                                        <Image
-                                                            src={
-                                                                typeof profilePhoto === 'string'
-                                                                    ? profilePhoto
-                                                                    : URL.createObjectURL(profilePhoto)
-                                                            }
-                                                            className="profile-image"
-                                                        />
+                                                        {!profilePhoto ? (
+                                                            <FontAwesomeIcon
+                                                                className="profile-image"
+                                                                size="2xl"
+                                                                icon={faCircleUser}
+                                                                color="rgba(200, 202, 216, 1)"
+                                                            />
+                                                        ) : (
+                                                            <Image
+                                                                src={
+                                                                    typeof profilePhoto === 'string'
+                                                                        ? profilePhoto
+                                                                        : URL.createObjectURL(profilePhoto)
+                                                                }
+                                                                className="profile-image"
+                                                            />
+                                                        )}
                                                     </Col>
                                                     <Col xs={6} md={3} lg={3} className="d-flex justify-content-start">
                                                         <Button
@@ -209,11 +239,24 @@ const Settings = () => {
                                     <Field
                                         name="phoneNumber"
                                         className="field-control"
-                                        type="number"
+                                        type="text"
                                         placeholder="+31- 612 345 678"
                                     />
                                     <ErrorMessage name="phoneNumber" component="div" className="error" />
                                 </Col>
+
+                                {userInfo?.role !== 'STUDENT' && (
+                                    <Col md={6} xs={12}>
+                                        <label className="field-label">Meeting Link</label>
+                                        <Field
+                                            name="meetingLink"
+                                            className="field-control"
+                                            type="text"
+                                            placeholder="https://zoom.us/j/97697547647?pwd=UytOUjFlUTlPRjYvbmJnQ0pvZ2RDUT09"
+                                        />
+                                        <ErrorMessage name="meetingLink" component="div" className="error" />
+                                    </Col>
+                                )}
                             </Row>
                             <Row>
                                 <Col>

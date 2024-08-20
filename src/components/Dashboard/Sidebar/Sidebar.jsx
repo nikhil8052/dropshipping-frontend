@@ -4,25 +4,29 @@ import './sidebar.scss';
 import { useNavigate } from 'react-router-dom';
 import logoImg from '@icons/dropship-logo.svg';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCircleXmark } from '@fortawesome/free-solid-svg-icons';
+import { faCircleXmark, faCircleUser } from '@fortawesome/free-solid-svg-icons';
 import { useSelector, useDispatch } from 'react-redux';
+import axiosWrapper from '@utils/api';
+import { API_URL } from '@utils/apiUrl';
 import SidebarItem from './SidebarItem';
 import SidebarItemCollapse from './SidebarItemCollapse';
 import { collapseSidebar } from '@redux/theme/theme_slice.js';
 import ConfirmationBox from '../../ConfirmationBox/ConfirmationBox';
 import { logoutUser } from '@redux/auth/auth_slice';
 import { changeLink } from '@redux/sidebar/sidebarSlice';
-import profile from '@images/user-img.jpg';
 import dotBlue from '@icons/dot-blue-2.svg';
 
 // import all static icons
 import { adminSidebarItems, coachSidebarItems, studentSidebarItems } from './sidebarData';
+import { getFormattedTimes, trimLongText } from '../../../utils/common';
 
 const Sidebar = () => {
     const dispatch = useDispatch();
+    const token = useSelector((state) => state?.auth?.userToken);
     const collapsed = useSelector((state) => state.theme.collapsed);
     const autoCollapsed = useSelector((state) => state.theme.autoCollapsed);
     const { userInfo } = useSelector((state) => state?.auth);
+    const [eventData, setEventData] = useState({});
     const [updatedItems, setUpdatedItems] = useState([]);
 
     // Later we change this to actual role
@@ -33,11 +37,11 @@ const Sidebar = () => {
     const { activeSidebarItem } = useSelector((state) => state.activeSidebarItem);
 
     useEffect(() => {
-        const items = role === 'admin' ? adminSidebarItems : role === 'coach' ? coachSidebarItems : studentSidebarItems;
+        const items = role === 'ADMIN' ? adminSidebarItems : role === 'COACH' ? coachSidebarItems : studentSidebarItems;
         setUpdatedItems(items);
     }, [role, activeSidebarItem]);
 
-    const sideBarEventModal = role === 'student';
+    const sideBarStudentEventModal = role === 'STUDENT';
 
     const navigate = useNavigate();
 
@@ -71,6 +75,24 @@ const Sidebar = () => {
         }
     };
 
+    // Upcoming event call for student
+
+    const getUpcomingEvent = async () => {
+        // Fetch the upcoming event for the student
+
+        const response = await axiosWrapper('GET', API_URL.GET_UPCOMING_EVENTS, {}, token);
+        setEventData(response.data[0]);
+    };
+
+    useEffect(() => {
+        if (sideBarStudentEventModal) {
+            // Fetch the upcoming event for the student
+            // setInterval(() => {
+            getUpcomingEvent();
+            // }, [5000]);
+        }
+    }, []);
+
     useEffect(() => {
         selectActiveItem();
         // This effect should ideally depend on the pathname to update active items on route change
@@ -78,6 +100,10 @@ const Sidebar = () => {
 
     const handleLogoutClick = () => {
         setModalShow(!modalShow);
+    };
+
+    const handleButtonClick = () => {
+        window.open(eventData?.typeOfEvent === 'ONLINE' ? eventData?.meetingLink : eventData?.location, '_blank');
     };
 
     return (
@@ -135,7 +161,7 @@ const Sidebar = () => {
                                 {/* Last child should be an image and role */}
                             </Nav>
 
-                            {sideBarEventModal && (
+                            {sideBarStudentEventModal && eventData && (
                                 <div className="side-bar-event">
                                     <Card className="custom-event-card">
                                         <Card.Header className="d-flex flex-column align-items-start">
@@ -147,17 +173,21 @@ const Sidebar = () => {
                                             </div>
                                             <div className="d-flex align-items-center justify-content-center w-100">
                                                 <Card.Text className="mb-0 text-nowrap">
-                                                    <img src={dotBlue} alt="Dot" /> Meeting with Prashant...
+                                                    <img src={dotBlue} alt="Dot" /> {trimLongText(eventData?.topic, 15)}
                                                 </Card.Text>
                                             </div>
                                         </Card.Header>
                                         <Card.Body>
                                             <div className="d-flex align-items-center justify-content-between mb-2 px-2">
-                                                <Card.Text className="mb-0 event-time">8:45 AM</Card.Text>
+                                                <Card.Text className="mb-0 event-time">
+                                                    {getFormattedTimes(eventData?.dateTime).startTime}
+                                                </Card.Text>
                                                 <div className="exchange-icon"></div>
-                                                <Card.Text className="mb-0 event-time">10:45 AM</Card.Text>
+                                                <Card.Text className="mb-0 event-time">
+                                                    {getFormattedTimes(eventData?.dateTime).endTime}
+                                                </Card.Text>
                                             </div>
-                                            <Button variant="primary" className="w-100 mt-3  zoom-btn">
+                                            <Button onClick={handleButtonClick} className="w-100 mt-3  zoom-btn">
                                                 <div className="zoom-icon me-2"></div>
                                                 Go to Zoom link
                                             </Button>
@@ -167,12 +197,21 @@ const Sidebar = () => {
                             )}
                         </div>
 
-                        <div className={`side-bar-profile ${sideBarEventModal ? 'remove-auto' : ''}`}>
+                        <div className={`side-bar-profile ${sideBarStudentEventModal ? 'remove-auto' : ''}`}>
                             <div className="profile-wrapper">
-                                <img src={profile} className="profile-pic" alt="nav-icon" />
+                                {userInfo?.avatar ? (
+                                    <img src={userInfo?.avatar} className="profile-pic" alt="nav-icon" />
+                                ) : (
+                                    <FontAwesomeIcon
+                                        className="profile-pic"
+                                        size="2xl"
+                                        icon={faCircleUser}
+                                        color="rgba(200, 202, 216, 1)"
+                                    />
+                                )}
                             </div>
                             <div className="profile-name">
-                                <p>{userInfo?.email}</p>
+                                <p>{userInfo?.name.split(' ')[0]}</p>
                                 <span>{userInfo?.role}</span>
                             </div>
                         </div>

@@ -6,25 +6,32 @@ import ProductForm from '@components/Listings/ProductForm/ProductForm';
 import ConfirmationBox from '@components/ConfirmationBox/ConfirmationBox';
 import { Helmet } from 'react-helmet';
 import axiosWrapper from '@utils/api';
-import toast from 'react-hot-toast';
 import TextExpand from '@components/TextExpand/TextExpand';
 import DateRenderer from '@components/DateFormatter/DateFormatter';
 import editIcon from '@icons/edit_square.svg';
 import deleteIcon from '@icons/trash-2.svg';
 import eyeIcon from '@icons/basil_eye-solid.svg';
-import add from '@icons/add_white.svg';
+import calendar from '@icons/calendar.svg';
 import downArrow from '@icons/down-arrow.svg';
-import { eventsDummyData } from '../../../data/data';
 import { useNavigate } from 'react-router-dom';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import '../../../styles/Events.scss';
 import '../../../styles/Common.scss';
+import { API_URL } from '../../../utils/apiUrl';
+import * as types from '../../../redux/actions/actionTypes';
 
 const Events = () => {
-    const [showDeleteModal, setShowDeleteModal] = useState(false);
+    const dispatch = useDispatch();
+    const [showDeleteModal, setShowDeleteModal] = useState({
+        show: false,
+        title: 'Delete Event',
+        isEditable: false,
+        eventId: null
+    });
     const [selectedRowId, setSelectedRowId] = useState(null);
     const { userInfo } = useSelector((state) => state?.auth);
-    const role = userInfo?.role;
+    const token = useSelector((state) => state?.auth?.userToken);
+    const role = userInfo?.role?.toLowerCase();
     const [expanded, setExpanded] = useState(false);
     const [studentModal, setStudentModal] = useState({
         show: false,
@@ -38,19 +45,22 @@ const Events = () => {
 
     const [eventsData, setEventsData] = useState(null);
 
-    const [selectedEvent, setSelectedEvent] = useState('Upcoming Events');
+    const [selectedEvent, setSelectedEvent] = useState('All Events');
 
     useEffect(() => {
         // Fetch data from API here
-        fetchData();
-    }, []);
+        if (selectedEvent) {
+            fetchData(selectedEvent);
+        }
+    }, [selectedEvent]);
 
-    const fetchData = async () => {
+    ////////////////// Handlers ////////////////////
+    const fetchData = async (query) => {
         // Later we will replace this with actual API call
         try {
             setLoading(true);
-
-            setEventsData(eventsDummyData);
+            const events = await axiosWrapper('GET', `${API_URL.GET_ALL_EVENTS}?dateTime=${query || ''}`, {}, token);
+            setEventsData(events?.data);
         } catch (error) {
             return;
         } finally {
@@ -79,50 +89,36 @@ const Events = () => {
                 eventId: id
             }
         });
+
+        dispatch({ type: types.ALL_RECORDS, data: { keyOfData: 'eventId', data: id } });
         // Handle delete action here
         setSelectedRowId(id);
         setShowDeleteModal(true);
     };
 
     const handleViewClick = (id) => {
-        // Handle delete action here
-        // navigate(`/${role}/events/details`);
         navigate(`/${role}/events/detail`, {
             state: {
-                event: {
-                    id,
-                    name: 'Tony Serna',
-                    title: 'Coach',
-                    meetingId: '226326',
-                    password: '4K22MJ7',
-                    topic: 'Detailed meeting about the new course descriptions, their time frame.',
-                    dateTime: 'Feb 2, 2024 19:28',
-                    timeZone: 'Central Standard Time (GMT-6)',
-                    attendees: [
-                        'https://randomuser.me/api/portraits/men/5.jpg',
-                        'https://randomuser.me/api/portraits/men/5.jpg',
-                        'https://randomuser.me/api/portraits/men/5.jpg',
-                        'https://randomuser.me/api/portraits/men/5.jpg',
-                        'https://randomuser.me/api/portraits/men/5.jpg'
-                    ],
-                    attendeesCount: 15,
-                    image: 'https://randomuser.me/api/portraits/men/1.jpg'
-                },
-                role
+                eventId: id
             }
         });
-        // navigate(`/student/events/detail`);
     };
     const handleCloseModal = () => {
-        resetProductModal();
+        resetModal();
     };
 
-    const resetProductModal = () => {
+    const resetModal = () => {
         setStudentModal({
             show: false,
             title: '',
             isEditable: false,
             studentId: null
+        });
+        setShowDeleteModal({
+            show: false,
+            title: '',
+            isEditable: false,
+            eventId: null
         });
     };
 
@@ -133,16 +129,14 @@ const Events = () => {
     const handleDeleteSubmit = async () => {
         try {
             setLoadingCRUD(true);
-            const data = await axiosWrapper(
-                'delete',
-                `${import.meta.env.VITE_JSONPLACEHOLDER}/posts/${selectedRowId}}`
-            );
-            toast.success(data?.message || 'Event deleted successfully');
-        } catch (error) {
-            return;
-        } finally {
+            // Delete API call here
+            await axiosWrapper('DELETE', API_URL.DELETE_EVENT.replace(':id', showDeleteModal?.eventId), {}, token);
+            fetchData();
             setLoadingCRUD(false);
-            setShowDeleteModal(false);
+            resetModal();
+        } catch (error) {
+            setLoadingCRUD(false);
+            resetModal();
         }
     };
 
@@ -153,8 +147,15 @@ const Events = () => {
     const handleDeleteClick = (id) => {
         // Handle delete action here
         setSelectedRowId(id);
-        setShowDeleteModal(true);
+        setShowDeleteModal({
+            show: true,
+            title: 'Delete Event',
+            isEditable: false,
+            eventId: id
+        });
     };
+
+    // Component Renders
 
     /*eslint-disable */
     const ActionsRenderer = (props) => (
@@ -163,24 +164,31 @@ const Events = () => {
                 <Col lg={3} md={4} sm={4} xs={4} className="d-flex justify-content-center align-items-center">
                     <div
                         className="btn-light action-button delete-button"
-                        onClick={() => props.onViewClick(props.data.id)}
+                        onClick={() => props.onViewClick(props.data._id)}
                     >
                         <img src={eyeIcon} className="action-icon ms-0" alt="action-icon" />
                     </div>
                 </Col>
-                <Col lg={3} md={4} sm={4} xs={4} className="d-flex justify-content-center align-items-center">
-                    <div className="action-button edit-button" onClick={() => props.onEditClick(props.data.id)}>
-                        <img src={editIcon} className="action-icon ms-0" alt="action-icon" />
-                    </div>
-                </Col>
-                <Col lg={3} md={4} sm={4} xs={4} className="d-flex justify-content-center align-items-center">
-                    <div
-                        className="btn-light action-button delete-button"
-                        onClick={() => props.onDeleteClick(props.data.id)}
-                    >
-                        <img src={deleteIcon} className="action-icon" alt="action-icon" />
-                    </div>
-                </Col>
+                {props.data.createdBy?._id.toString() === userInfo._id.toString() && (
+                    <>
+                        <Col lg={3} md={4} sm={4} xs={4} className="d-flex justify-content-center align-items-center">
+                            <div
+                                className="action-button edit-button"
+                                onClick={() => props.onEditClick(props.data._id)}
+                            >
+                                <img src={editIcon} className="action-icon ms-0" alt="action-icon" />
+                            </div>
+                        </Col>
+                        <Col lg={3} md={4} sm={4} xs={4} className="d-flex justify-content-center align-items-center">
+                            <div
+                                className="btn-light action-button delete-button"
+                                onClick={() => props.onDeleteClick(props.data._id)}
+                            >
+                                <img src={deleteIcon} className="action-icon" alt="action-icon" />
+                            </div>
+                        </Col>
+                    </>
+                )}
             </Row>
         </React.Fragment>
     );
@@ -190,7 +198,7 @@ const Events = () => {
         setExpanded(!expanded);
     };
     const LinkRenderer = (props) => (
-        <div key={props.data.id}>
+        <div key={props.data._id}>
             <OverlayTrigger placement="top" overlay={<Tooltip id="tooltip-top">{props.value}</Tooltip>}>
                 <div className="d-flex align-items-center gap-2">
                     <a
@@ -208,7 +216,7 @@ const Events = () => {
                             color: 'rgba(72, 128, 255, 1)'
                         }}
                     >
-                        Meeting Link
+                        {props.data.typeOfEvent === 'ONLINE' ? 'Meeting Link' : 'Location'}
                     </a>
                 </div>
             </OverlayTrigger>
@@ -229,13 +237,15 @@ const Events = () => {
             resizable: false
         },
         {
-            headerName: 'Join Link',
-            field: 'joinLink',
+            headerName: 'Link/Location',
             filter: 'agSetColumnFilter',
             sortable: true,
             unSortIcon: true,
             wrapText: true,
             autoHeight: true,
+            valueGetter: (params) => {
+                return params.data.typeOfEvent === 'ONLINE' ? params.data.meetingLink : params.data.location;
+            },
             cellRenderer: LinkRenderer,
             resizable: false
         },
@@ -277,6 +287,7 @@ const Events = () => {
             cellClass: ['d-flex', 'align-items-center', 'justify-content-center']
         }
     ];
+
     return (
         <div className="events-page">
             <Helmet>
@@ -284,12 +295,12 @@ const Events = () => {
             </Helmet>
             {studentModal.show && (
                 <Modal size="large" show={studentModal.show} onClose={handleCloseModal} title={studentModal.title}>
-                    <ProductForm productModal={studentModal} resetModal={resetProductModal} />
+                    <ProductForm productModal={studentModal} resetModal={resetModal} />
                 </Modal>
             )}
-            {showDeleteModal && (
+            {showDeleteModal.show && (
                 <ConfirmationBox
-                    show={showDeleteModal}
+                    show={showDeleteModal.show}
                     onClose={handleCloseDeleteModal}
                     loading={loadingCRUD}
                     title="Delete Event"
@@ -334,7 +345,7 @@ const Events = () => {
                         </div>
 
                         <Button className="add-button" onClick={handleCreateClick}>
-                            <img src={add} alt="" /> <span className="ms-1">Create New Event</span>
+                            <img src={calendar} alt="" /> <span className="ms-1">Create New Event</span>
                         </Button>
                     </div>
                 }

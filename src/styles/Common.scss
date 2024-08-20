@@ -68,9 +68,6 @@
         .event-name {
             font-size: small;
             color: rgba(85, 95, 126, 1);
-            overflow: hidden;
-            white-space: nowrap;
-            text-overflow: ellipsis;
             display: inline-block;
             max-width: 80px;
         }
@@ -82,6 +79,7 @@
         background: rgba(242, 248, 255, 1);
     }
 }
+
 .custom_select__control {
     border-radius: unset !important;
 }
@@ -276,9 +274,32 @@
     text-align: left;
 }
 
+.add-quiz-fields .add-quiz-question .quiz-multiple-choice input[type='text'] {
+    &.correctAnswer {
+        background-color: $success-color !important;
+        color: white !important;
+    }
+    &.correctAnswer::placeholder {
+        color: white !important;
+    }
+}
+
+.correctAnswer {
+    background-color: $success-color !important;
+    color: black !important;
+}
+
 // Media styles
 @media (max-width: $large-screen) {
     .responsive-btn {
         margin-top: 0.5rem !important;
     }
+}
+
+.no-data-wrapper {
+    position: absolute;
+    top: 50%;
+    left: 40%;
+    transform: translate(0, -50%);
+    padding: 10px;
 }

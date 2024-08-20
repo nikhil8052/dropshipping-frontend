@@ -1,216 +1,191 @@
 import { useEffect, useState } from 'react';
 import { Row, Col, InputGroup, Form, Button, DropdownButton, Dropdown } from 'react-bootstrap';
 import CourseCard from '../../../components/CourseCard/CourseCard';
-import eventImg from '../../../assets/images/Event-Image.svg';
 import Search from '../../../assets/icons/Search.svg';
 import add from '@icons/add_white.svg';
 import downArrow from '@icons/down-arrow.svg';
 import { useNavigate } from 'react-router-dom';
-import { useSelector } from 'react-redux';
-import '../../../styles/Courses.scss';
-import '../../../styles/Common.scss';
+import { useDispatch, useSelector } from 'react-redux';
 import Pagination from '../../../components/Pagination/Pagination';
+import { API_URL } from '../../../utils/apiUrl';
+import * as types from '../../../redux/actions/actionTypes';
+import axiosWrapper from '../../../utils/api';
+import '../../../styles/Common.scss';
+import '../../../styles/Courses.scss';
 
 const Courses = () => {
     const [search, setSearch] = useState('');
     const [selectedEvent, setSelectedEvent] = useState('Your Courses');
-    const [yourCourses, setYourCourses] = useState(false);
     const [currentPage, setCurrentPage] = useState(1);
-    const [filteredCourses, setFilteredCourses] = useState([]);
+    const [coursesData, setCoursesData] = useState([]);
+    const dispatch = useDispatch();
+    const [totalPages, setTotalPages] = useState(1);
 
     const navigate = useNavigate();
-    const userInfo = useSelector((state) => state?.auth?.userInfo);
+    const { userInfo, userToken } = useSelector((state) => state?.auth);
     const role = userInfo?.role;
     const itemsPerPage = 8;
+
     const onFilterTextChange = (event) => {
         setSearch(event.target.value);
+        setCurrentPage(1); // Reset to first page on search change
     };
+
     const handlePageChange = (page) => {
         setCurrentPage(page);
     };
 
-    const courseCards = [
-        {
-            id: 1,
-            title: 'Design Conference',
-            detail: 'Coach: David Everson',
-            lectureNo: 'Lectures: 28',
-            img: eventImg
-        },
-        {
-            id: 2,
-            title: 'Design Conference',
-            detail: 'Coach: David Everson',
-            lectureNo: 'Lectures: 28',
-            img: eventImg
-        },
-        {
-            id: 3,
-            title: 'Structured Query',
-            detail: 'Dropship Academy X',
-            lectureNo: 'Lectures: 28',
-            img: eventImg
-        },
-        {
-            id: 4,
-            title: 'Advance programing',
-            detail: 'Dropship Academy X',
-            lectureNo: 'Lectures: 28',
-
-            img: eventImg
-        },
-        {
-            id: 5,
-            title: 'Blogs creation',
-            detail: 'Dropship Academy X',
-            lectureNo: 'Lectures: 28',
-            img: eventImg
-        },
-        {
-            id: 6,
-            title: 'Web Design',
-            detail: 'Dropship Academy X',
-            lectureNo: 'Lectures: 28',
-            img: eventImg
-        },
-        {
-            id: 7,
-            title: 'Web Design',
-            detail: 'Dropship Academy X',
-            lectureNo: 'Lectures: 28',
-            img: eventImg
-        },
-        {
-            id: 8,
-            title: 'Web Design',
-            detail: 'Dropship Academy X',
-            lectureNo: 'Lectures: 28',
-            img: eventImg
-        },
-        {
-            id: 9,
-            title: 'Web Design',
-            detail: 'Dropship Academy X',
-            lectureNo: 'Lectures: 28',
-            img: eventImg
-        },
-        {
-            id: 10,
-            title: 'Web Design',
-            detail: 'Dropship Academy X',
-            lectureNo: 'Lectures: 28',
-            img: eventImg
-        }
-    ];
-
-    const totalPages = Math.ceil(courseCards.length / itemsPerPage);
-
-    // Get current items for the current page
-    const indexOfLastItem = currentPage * itemsPerPage;
-    const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-    const currentItems = filteredCourses.slice(indexOfFirstItem, indexOfLastItem);
-
     const handleCreateClick = () => {
-        if (role === 'admin') {
-            navigate('/admin/courses/new');
-        } else {
-            // Handle create button click event here
-            navigate('/coach/courses/new');
-        }
+        navigate(`/${role?.toLowerCase()}/courses/new`, {
+            state: { isEdit: false, courseId: null }
+        });
     };
+
     const handleEventSelect = (eventKey, course) => {
         setSelectedEvent(course);
-        if (course === 'Your Courses') {
-            setYourCourses(false);
-        } else {
-            setYourCourses(true);
-        }
     };
 
     useEffect(() => {
-        setFilteredCourses(courseCards);
-    }, []);
+        // Fetch data from API here
+        getAllCourses();
+        dispatch({ type: types.LOGOUT });
+    }, [search, currentPage, selectedEvent]);
 
-    useEffect(() => {
-        const handleSearch = setTimeout(() => {
-            const filtered = courseCards.filter((course) => course.title.toLowerCase().includes(search.toLowerCase()));
-            setFilteredCourses(filtered);
-            setCurrentPage(1);
-        }, 300);
+    const getAllCourses = async () => {
+        const method = 'GET';
+        let url = `${API_URL.GET_ALL_COURSES}?page=${currentPage}&limit=${itemsPerPage}&search=${search}`;
+        if (selectedEvent) {
+            url = `${url}&isEnrolled=${selectedEvent === 'Your Courses' ? true : false}`;
+        }
 
-        return () => {
-            clearTimeout(handleSearch);
-        };
-    }, [search]);
+        const response = await axiosWrapper(method, url, {}, userToken);
+        const { data, total, limit } = response;
+        const formattedData = data.map((c) => ({
+            img: c.thumbnail,
+            title: c.title,
+            detail: c.subtitle,
+            lectureNo: `Lectures: ${c.lectures.length}`,
+            archive: c.isArchived,
+            enroll: c.enrolledStudents.includes(userInfo?._id),
+            _id: c?._id
+        }));
+
+        setCoursesData(formattedData);
+        setTotalPages(Math.ceil(total / limit));
+    };
+
+    const handleArchiveChange = async (id, archiveStatus) => {
+        const url = archiveStatus
+            ? `${API_URL.UNARCHIVE_COURSE.replace(':id', id)}`
+            : `${API_URL.ARCHIVE_COURSE.replace(':id', id)}`;
+        await axiosWrapper('PUT', url, {}, userToken);
+        getAllCourses(); // Refresh the course list
+    };
+
+    // Admin | Coach Side
+    // 1. Enroll student to course when creating a new student (DONE)
+    // 2. Keep record of courses Roadmap in student (i.e student can not start other courses before finishing the previous one like proper indexing) (DONE)
+
+    // Student Side
+    // 1. Get All Courses (DONE)
+    // 2. Get All Enrolled Courses (DONE)
+    // Enrolled Courses
+    // a. Get Course Details By Id (Video | PDF) (DONE)
+    // b. Get Lecture Preview (Video | PDF) (disable other lectures until the previous one is completed with quiz completion)
+    // c. Perform a quiz Api (if quiz marks are less than 50% then student can not proceed to the next lecture and have a retry option for the quiz)
+    // d. Update the progress of the lecture (i.e. 1/10 lectures completed)
+
+    const calcProgress = (course, studentId) => {
+        const lectures = course.lectures || [];
+        const totalLectures = lectures.length;
+
+        // Count completed lectures
+        const completedLectures = lectures.filter((lecture) => {
+            const completedBy = lecture.completedBy || [];
+            return completedBy.includes(studentId) || completedBy.some((item) => item._id === studentId);
+        }).length;
+
+        // Calculate the completion percentage for this course
+        return totalLectures > 0 ? (completedLectures / totalLectures) * 100 : 0;
+    };
 
     return (
-        <>
-            <div className="course-section">
-                <div className="courses-button-wrapper">
-                    <InputGroup>
-                        <InputGroup.Text>
-                            <img src={Search} alt={search ? 'Search' : 'Search'} />
-                        </InputGroup.Text>
-                        <Form.Control
-                            className="search-input"
-                            type="text"
-                            name="Search"
-                            label="Search"
-                            onChange={onFilterTextChange}
-                            placeholder="Search"
-                        />
-                    </InputGroup>
-                    {role === 'student' ? (
-                        <DropdownButton
-                            title={
-                                <div className=" d-flex justify-content-between align-items-center gap-2">
-                                    <span>{selectedEvent}</span>
-                                    <img src={downArrow} alt="Down arrow" />
-                                </div>
-                            }
-                            defaultValue={selectedEvent}
-                            className="dropdown-button"
-                        >
-                            {['All Courses', 'Your Courses'].map((event) => (
-                                <Dropdown.Item
-                                    onClick={(e) => handleEventSelect(e, event)}
-                                    key={event}
-                                    eventKey={event}
-                                    className="my-1 ms-2"
-                                >
-                                    <span className="coach-name"> {event}</span>
-                                </Dropdown.Item>
-                            ))}
-                        </DropdownButton>
-                    ) : (
-                        <Button className="add-button" onClick={handleCreateClick}>
-                            <img src={add} alt="" /> <span className="ms-1">Add New Course</span>
-                        </Button>
-                    )}
-                </div>
-                <div className="custom-card-course">
-                    <Row>
-                        {currentItems.map((cousre) => (
-                            <Col key={cousre.id} xs={12} sm={12} md={6} lg={4} xl={3} xxl={3}>
-                                <div className="custom-card-course-new">
-                                    {role === 'admin' || role === 'coach' ? (
-                                        <CourseCard {...cousre} archive={true} role={role} />
-                                    ) : (
-                                        <CourseCard
-                                            {...cousre}
-                                            archive={false}
-                                            enroll={yourCourses ? false : true}
-                                            role={role}
-                                        />
-                                    )}
-                                </div>
-                            </Col>
+        <div className="course-section">
+            <div className="courses-button-wrapper">
+                <InputGroup>
+                    <InputGroup.Text>
+                        <img src={Search} alt="Search" />
+                    </InputGroup.Text>
+                    <Form.Control
+                        className="search-input"
+                        type="text"
+                        name="Search"
+                        label="Search"
+                        onChange={onFilterTextChange}
+                        placeholder="Search"
+                    />
+                </InputGroup>
+                {role === 'STUDENT' ? (
+                    <DropdownButton
+                        title={
+                            <div className="d-flex justify-content-between align-items-center gap-2">
+                                <span>{selectedEvent}</span>
+                                <img src={downArrow} alt="Down arrow" />
+                            </div>
+                        }
+                        defaultValue={selectedEvent}
+                        className="dropdown-button"
+                    >
+                        {['All Courses', 'Your Courses'].map((event) => (
+                            <Dropdown.Item
+                                onClick={(e) => handleEventSelect(e, event)}
+                                key={event}
+                                eventKey={event}
+                                className="my-1 ms-2"
+                            >
+                                <span className="coach-name">{event}</span>
+                            </Dropdown.Item>
                         ))}
+                    </DropdownButton>
+                ) : (
+                    <Button className="add-button" onClick={handleCreateClick}>
+                        <img src={add} alt="" /> <span className="ms-1">Add New Course</span>
+                    </Button>
+                )}
+            </div>
+            <div className="custom-card-course">
+                {coursesData.length === 0 ? (
+                    <div className="no-data-wrapper">No Data Found.</div>
+                ) : (
+                    <Row>
+                        {coursesData.map((course, index) => {
+                            const previousCourse = coursesData[index - 1];
+                            const previousCourseProgress = previousCourse
+                                ? calcProgress(previousCourse, userInfo?._id)
+                                : 100;
+                            const currentCourseProgress = calcProgress(course, userInfo?._id);
+
+                            // The student can access the current course only if the previous course is completed 100%
+                            const canAccessCourse = previousCourseProgress === 100;
+                            return (
+                                <Col key={course._id} xs={12} sm={12} md={6} lg={4} xl={3} xxl={3}>
+                                    <div className="custom-card-course-new">
+                                        <CourseCard
+                                            {...course}
+                                            onChange={() => handleArchiveChange(course?._id, course?.archive)}
+                                            currentCourseProgress={currentCourseProgress}
+                                            previousCourseProgress={previousCourseProgress}
+                                            canAccessCourse={canAccessCourse}
+                                        />
+                                    </div>
+                                </Col>
+                            );
+                        })}
                         <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={handlePageChange} />
                     </Row>
-                </div>
+                )}
             </div>
-        </>
+        </div>
     );
 };
 

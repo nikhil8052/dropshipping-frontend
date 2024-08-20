@@ -38,8 +38,6 @@ const EventDetails = () => {
                         <div className="card-profile-img">AG</div>
                         <div className="meeting-details">
                             <h1>Ada Guyen(Coach)</h1>
-                            <h2>Meeting ID : 226326</h2>
-                            <p>Password : 4K22MJ7</p>
                         </div>
                     </div>
                     <div className="meeting-detail-body ">

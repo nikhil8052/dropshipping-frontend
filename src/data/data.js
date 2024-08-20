@@ -1755,59 +1755,53 @@ export const AllStudentsDummyData = [
         progress: 'View Progress'
     }
 ];
+export const eventType = [
+    { value: 'ONSITE', label: 'Onsite', id: 1 },
+    { value: 'ONLINE', label: 'Online', id: 2 }
+];
 
 export const countryList = [
     {
         id: 1,
-        name: 'United States',
-        code: 'US',
-        dialCode: '+1',
-        currency: 'USD',
-        currencyName: 'United States Dollar'
+        name: 'Belgium',
+        code: 'BE',
+        dialCode: '+32',
+        currency: 'EUR',
+        currencyName: 'Euro'
     },
     {
         id: 2,
-        name: 'United Kingdom',
-        code: 'GB',
-        dialCode: '+44',
-        currency: 'GBP',
-        currencyName: 'British Pound Sterling'
-    },
-    {
-        id: 3,
-        name: 'Canada',
-        code: 'CA',
-        dialCode: '+1',
-        currency: 'CAD',
-        currencyName: 'Canadian Dollar'
-    },
-    {
-        id: 4,
-        name: 'Australia',
-        code: 'AU',
-        dialCode: '+61',
-        currency: 'AUD',
-        currencyName: 'Australian Dollar'
+        name: 'Netherlands',
+        code: 'NL',
+        dialCode: '+31',
+        currency: 'EUR',
+        currencyName: 'Euro'
     }
 ];
 
 export const regions = [
     {
-        label: 'Region 1',
-        value: 'Region 1',
-        id: 1
+        countryCode: 'BE',
+        name: 'Belgium',
+        regions: [
+            { label: 'Flanders', value: 'Flanders', id: 1 },
+            { label: 'Wallonia', value: 'Wallonia', id: 2 },
+            { label: 'Brussels-Capital', value: 'Brussels-Capital', id: 3 }
+        ]
     },
     {
-        label: 'Region 2',
-        value: 'Region 2',
-        id: 2
-    },
-    {
-        label: 'Region 3',
-        value: 'Region 3',
-        id: 3
+        countryCode: 'NL',
+        name: 'Netherlands',
+        regions: [
+            { label: 'North Holland', value: 'North Holland', id: 4 },
+            { label: 'South Holland', value: 'South Holland', id: 5 },
+            { label: 'Utrecht', value: 'Utrecht', id: 6 },
+            { label: 'Gelderland', value: 'Gelderland', id: 7 },
+            { label: 'North Brabant', value: 'North Brabant', id: 8 }
+        ]
     }
 ];
+
 export const courseCategory = [
     {
         label: 'Category 1',
@@ -1827,28 +1821,69 @@ export const courseCategory = [
 ];
 export const coachingTrajectory = [
     {
-        label: 'Coaching Trajectory 1',
-        value: 'Coaching Trajectory 1',
+        label: 'High Ticket',
+        value: 'HIGH_TICKET',
         id: 1
     },
     {
-        label: 'Coaching Trajectory 2',
-        value: 'Coaching Trajectory 2',
+        label: 'Low Ticket',
+        value: 'LOW_TICKET',
+        id: 2
+    }
+];
+
+export const studentsTrajectory = [
+    {
+        label: 'All',
+        value: 'all',
+        id: 1
+    },
+    {
+        label: 'LT',
+        value: 'LOW_TICKET',
         id: 2
     },
     {
-        label: 'Coaching Trajectory 3',
-        value: 'Coaching Trajectory 3',
+        label: 'HT',
+        value: 'HIGH_TICKET',
         id: 3
     }
 ];
 
+export const studentsProgressTrajectory = [
+    {
+        label: 'All',
+        value: 'all',
+        id: 1
+    },
+    {
+        label: 'LT',
+        value: 'LOW_TICKET',
+        id: 2
+    },
+    {
+        label: 'HT',
+        value: 'HIGH_TICKET',
+        id: 3
+    },
+    {
+        label: 'Overdue',
+        value: 'overdue',
+        id: 4
+    },
+    {
+        label: 'Paid',
+        value: 'paid',
+        id: 5
+    }
+];
+
 export const coursesRoadmap = [
-    { id: 1, label: 'Meta Data Engineering', progress: 'Completed', value: 1 },
-    { id: 2, label: 'Python Engineering', progress: 'OnGoing', value: 2 },
-    { id: 3, label: 'Microsoft Office Expert', progress: 'Not Started', value: 3 },
-    { id: 4, label: 'Dropshiping For Beginners', progress: 'Not Started', value: 4 },
-    { id: 5, label: 'Search Engine Optimization', progress: 'Not Started', value: 5 }
+    { id: '6683cffd269cf6979cb4c28b', label: 'Meta Data Engineering', progress: 'Completed', value: 1 },
+    { id: '6683cffd269cf6979cb4c28b', label: 'Python Engineering', progress: 'OnGoing', value: 2 },
+    { id: '6683cffd269cf6979cb4c28b', label: 'Microsoft Office Expert', progress: 'Not Started', value: 3 },
+    { id: '6683cffd269cf6979cb4c28b', label: 'Dropshiping For Beginners', progress: 'Not Started', value: 4 },
+    { id: '6683cffd269cf6979cb4c28b', label: 'Search Engine Optimization', progress: 'Not Started', value: 5 }
 ];
 
 const now = new Date();
@@ -2903,3 +2938,10 @@ export const studentProducts = [
         status: 'Running'
     }
 ];
+
+export const COACH = {
+    COACH_TYPE: {
+        HIGH_TICKET: 'HIGH_TICKET',
+        LOW_TICKET: 'LOW_TICKET'
+    }
+};

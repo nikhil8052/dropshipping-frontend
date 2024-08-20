@@ -77,7 +77,7 @@ const LineChart = ({
                                 </Col>
                             </Row>
                         </Tab.Container>
-                    ) : role === 'coach' ? (
+                    ) : role === 'COACH' ? (
                         <>
                             <Row className="d-flex justify-content-between">
                                 <Col className="flex-grow-1 ">
@@ -115,16 +115,16 @@ const LineChart = ({
                                         type="checkbox"
                                         id="prev-checkbox"
                                         label="Previous"
-                                        checked={currentFilter === 'previous'}
-                                        onChange={() => handleFilterChange('previous')}
+                                        checked={currentFilter === 'previous_month'}
+                                        onChange={() => handleFilterChange('previous_month')}
                                         className="me-2"
                                     />
                                     <Form.Check
                                         type="checkbox"
                                         id="current-checkbox"
                                         label="Current"
-                                        checked={currentFilter === 'current'}
-                                        onChange={() => handleFilterChange('current')}
+                                        checked={currentFilter === 'current_month'}
+                                        onChange={() => handleFilterChange('current_month')}
                                     />
                                 </Col>
                             </Row>

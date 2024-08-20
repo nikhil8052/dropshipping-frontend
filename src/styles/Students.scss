@@ -15,20 +15,30 @@
         }
     }
 
+    .avatar-image {
+        width: 28px;
+        height: 28px;
+        border-radius: 50%;
+        object-fit: cover;
+    }
+
     // Fee status colors
     .fee-status {
         display: inline-block;
         border-radius: 130px;
-        color: #ffff;
+        color: rgba(0, 0, 0);
         &.Paid {
             background-color: $success-light-color;
+            color: #ffff;
             padding: 0px 30px;
         }
         &.Unpaid {
+            color: #ffff;
             padding: 0px 20px;
             background-color: $danger-light-color;
         }
         &.partial {
+            color: #ffff;
             background-color: $warning-color;
         }
     }

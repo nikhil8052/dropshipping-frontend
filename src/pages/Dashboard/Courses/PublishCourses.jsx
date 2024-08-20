@@ -1,32 +1,39 @@
-import { useEffect, useState } from 'react';
-import '../../../styles/Courses.scss';
 import { Button, Row } from 'react-bootstrap';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import CarouselWrapper from '../../../components/Carousel/CarouselWrapper';
-import { lessons } from '../../../data/data';
+import * as types from '../../../redux/actions/actionTypes';
+import '../../../styles/Courses.scss';
 
-const PublishCourses = ({ onBack }) => {
-    const userInfo = useSelector((state) => state?.auth?.userInfo);
-    const [isAdmin, setIsAdmin] = useState(false);
-
+const PublishCourses = ({ onBack, initialData, setStepComplete, publishCourse }) => {
     const navigate = useNavigate();
+    const dispatch = useDispatch();
+    const coachName = useSelector((state) => state?.root?.coachName);
+    const { userInfo } = useSelector((state) => state?.auth);
+    const role = userInfo?.role?.toLowerCase();
+    const lectures = initialData?.lectures || [];
+    const pdfLectures = lectures.filter((lecture) => lecture.file);
+    const totalQuestions = lectures.reduce((acc, item) => {
+        // const questionsLength = item.quiz?.questions.length;
+        const mcqsLength = item.quiz?.mcqs?.length;
+        return acc + mcqsLength;
+    }, 0);
 
-    useEffect(() => {
-        if (userInfo) {
-            const role = userInfo?.role;
-            setIsAdmin(role === 'admin');
-        }
-    }, [userInfo]);
-
-    const handleSubmit = () => {
-        if (isAdmin) {
-            navigate('/admin/courses/details');
-        } else {
-            // Handle create button click event here
-            navigate('/coach/courses/details');
-        }
+    const handleSubmit = async () => {
+        await publishCourse();
+        navigate(`/${role}/courses/`);
+        dispatch({ type: types.ALL_RECORDS, data: { keyOfData: 'currentCourse', data: null } });
+        setStepComplete('step3');
     };
+
+    const mapLectures = lectures.map((lecture) => {
+        return {
+            id: lecture._id,
+            title: lecture.name,
+            type: lecture.file ? 'pdf' : 'video',
+            description: lecture.description
+        };
+    });
 
     return (
         <>
@@ -37,27 +44,26 @@ const PublishCourses = ({ onBack }) => {
                 <div className="publish-course-wrapper">
                     <div className="card-background">
                         <div className="text-heading">
-                            <h1>Design Conference</h1>
+                            <h1>{initialData?.title}</h1>
                             <p>Dropship Academy X</p>
                         </div>
                     </div>
                     <div className="lecture-details-wrapper">
                         <div className="lecture-details">
-                            <div className="lecture-details-item">
-                                <h1>Duration</h1>
-                                <p>3 Weeks, 120 Hr</p>
-                            </div>
-                            <div className="lecture-details-item lecture-details-2">
+                            <div className="lecture-detailpdfLecturess-item lecture-details-2">
                                 <h1>Lectures</h1>
-                                <p>28 Video Lectures, 5 Assesments</p>
+                                <p>
+                                    {lectures?.length - pdfLectures.length} Video Lectures, {pdfLectures.length}{' '}
+                                    Document Lectures, {totalQuestions} Assesments
+                                </p>
                             </div>
                             <div className="lecture-details-item">
                                 <h1>Coach Name</h1>
-                                <p>David Richerson</p>
+                                <p>{coachName || ''}</p>
                             </div>
                         </div>
                         <div className="carousel-lecture">
-                            <CarouselWrapper items={lessons} type="lecture" />
+                            <CarouselWrapper items={mapLectures} type="lecture" />
                         </div>
                         <Row>
                             <div className="mt-3 pb-3 d-flex justify-content-between gap-3">

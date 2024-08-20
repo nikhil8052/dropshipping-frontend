@@ -5,50 +5,65 @@ import Modal from '@components/Modal/Modal';
 import ConfirmationBox from '@components/ConfirmationBox/ConfirmationBox';
 import { Helmet } from 'react-helmet';
 import axiosWrapper from '@utils/api';
-import toast from 'react-hot-toast';
 import TextExpand from '@components/TextExpand/TextExpand';
 import editIcon from '@icons/edit_square.svg';
 import deleteIcon from '@icons/trash-2.svg';
 import downArrow from '@icons/down-arrow.svg';
 import add from '@icons/add_white.svg';
-import { studentDummyData, coachDummyData } from '../../../data/data';
+import { coachDummyData, studentsTrajectory } from '../../../data/data';
 import { useNavigate } from 'react-router-dom';
-import Roadmap from './Roadmap/Roadmap';
 import { useSelector } from 'react-redux';
+import { API_URL } from '../../../utils/apiUrl';
+import TextItemExpand from '@components/TextExpand/TextItemExpand';
 import '../../../styles/Students.scss';
 import '../../../styles/Common.scss';
+import RoadMapList from './Roadmap/RoadmapList';
 
 const Students = () => {
-    const [showDeleteModal, setShowDeleteModal] = useState(false);
+    const [showDeleteModal, setShowDeleteModal] = useState({
+        show: false,
+        title: 'Delete Student',
+        isEditable: false,
+        studentId: null
+    });
     const [selectedRowId, setSelectedRowId] = useState(null);
     const [expanded, setExpanded] = useState(false);
     const [coursesModal, setCoursesModal] = useState({
         show: false,
         title: '',
         isEditable: false,
-        data: null
+        data: null,
+        courseId: null
     });
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
     const [loadingCRUD, setLoadingCRUD] = useState(false);
     const { userInfo } = useSelector((state) => state?.auth);
-    const role = userInfo?.role;
+    const token = useSelector((state) => state?.auth?.userToken);
+    const role = userInfo?.role?.toLowerCase();
     const [studentsData, setStudentsData] = useState(null);
 
-    const [selectedOption, setSelectedOption] = useState('All');
+    const [selectedOption, setSelectedOption] = useState(studentsTrajectory[0].label);
     const [selectedCoach, setSelectedCoach] = useState('Assigned Coach');
 
     useEffect(() => {
         // Fetch data from API here
-        fetchData();
-    }, []);
+        if (selectedOption) {
+            fetchData(selectedOption);
+        }
+    }, [selectedOption]);
 
-    const fetchData = async () => {
+    const fetchData = async (query, loading = true) => {
         // Later we will replace this with actual API call
         try {
-            setLoading(true);
-
-            setStudentsData(studentDummyData);
+            setLoading(loading);
+            const coaches = await axiosWrapper(
+                'GET',
+                `${API_URL.GET_ALL_STUDENTS}?coachingTrajectory=${query || selectedOption}`,
+                {},
+                token
+            );
+            setStudentsData(coaches.data);
         } catch (error) {
             return;
         } finally {
@@ -76,24 +91,31 @@ const Students = () => {
         });
     };
 
-    const handleCoursesRoadMapClick = (data) => {
+    const handleCoursesRoadMapClick = (data, courseId) => {
         // Handle edit action here
         setCoursesModal({
             show: true,
             title: (
                 <div>
-                    Courses Roadmap
-                    <p
-                        style={{
-                            color: 'rgba(132, 132, 132, 1)',
-                            fontSize: '14px'
-                        }}
-                    >
-                        (Drag Courses to change their numbers)
-                    </p>
+                    {data.length > 0 ? (
+                        <>
+                            Courses Roadmap
+                            <p
+                                style={{
+                                    color: 'rgba(132, 132, 132, 1)',
+                                    fontSize: '14px'
+                                }}
+                            >
+                                (Drag Courses to change their numbers)
+                            </p>
+                        </>
+                    ) : (
+                        <h5 className="text-center mt-5 sentence-case">You have not assigned in any courses.</h5>
+                    )}
                 </div>
             ),
             isEditable: true,
+            courseId,
             data
         });
     };
@@ -101,39 +123,48 @@ const Students = () => {
     const handleDeleteClick = (id) => {
         // Handle delete action here
         setSelectedRowId(id);
-        setShowDeleteModal(true);
+        setShowDeleteModal({
+            show: true,
+            title: 'Delete Student',
+            isEditable: false,
+            studentId: id
+        });
     };
 
     const handleCloseModal = () => {
-        resetCoursesModal();
+        resetModal();
     };
 
-    const resetCoursesModal = () => {
+    const resetModal = () => {
         setCoursesModal({
             show: false,
             title: '',
             isEditable: false,
-            data: null
+            data: null,
+            courseId: null
+        });
+        setShowDeleteModal({
+            show: false,
+            title: '',
+            isEditable: false,
+            studentId: null
         });
     };
 
     const handleCloseDeleteModal = () => {
-        setShowDeleteModal(false);
+        resetModal();
     };
 
     const handleDeleteSubmit = async () => {
         try {
             setLoadingCRUD(true);
-            const data = await axiosWrapper(
-                'delete',
-                `${import.meta.env.VITE_JSONPLACEHOLDER}/posts/${selectedRowId}}`
-            );
-            toast.success(data?.message || 'Student deleted successfully');
+            // Delete API call here
+            await axiosWrapper('DELETE', API_URL.DELETE_STUDENT.replace(':id', showDeleteModal?.studentId), {}, token);
+            fetchData();
+            resetModal();
         } catch (error) {
-            return;
-        } finally {
             setLoadingCRUD(false);
-            setShowDeleteModal(false);
+            resetModal();
         }
     };
 
@@ -145,13 +176,40 @@ const Students = () => {
         setSelectedOption(option);
     };
 
-    const handleToggleClick = (id) => {
-        const copyOfStudentData = [...studentsData];
-        const student = copyOfStudentData.find((student) => student.id === id);
-        const index = copyOfStudentData.indexOf(student);
+    const handleToggleClick = async (student) => {
+        setLoadingCRUD(true);
+        let url = '';
+        if (student.isActive) {
+            url = `${API_URL.DEACTIVATE_STUDENT.replace(':id', student?._id)}`;
+        } else {
+            url = `${API_URL.ACTIVATE_STUDENT.replace(':id', student?._id)}`;
+        }
+        await axiosWrapper('PUT', url, {}, token);
+        fetchData(selectedOption, false);
+        setLoadingCRUD(false);
+    };
 
-        copyOfStudentData[index].isActive = !copyOfStudentData[index].isActive;
-        setStudentsData(copyOfStudentData);
+    const calcPercentage = (rowData) => {
+        const courses = rowData.coursesRoadmap || [];
+
+        const percentages = courses.map((course) => {
+            const lectures = course.lectures || [];
+            const totalLectures = lectures.length;
+            const studentId = rowData?._id;
+
+            // Count completed lectures
+            const completedLectures = lectures.filter((lecture) => {
+                const completedBy = lecture.completedBy || [];
+                // Check if the student's ID is in the completedBy array
+                return completedBy.includes(studentId) || completedBy.some((item) => item._id === studentId);
+            }).length;
+
+            // Calculate the completion percentage for this course
+            return totalLectures > 0 ? (completedLectures / totalLectures) * 100 : 0;
+        });
+
+        // Return the average percentage across all courses, or individual percentages as needed
+        return percentages.length > 0 ? percentages.reduce((a, b) => a + b, 0) / percentages.length : 0;
     };
 
     /*eslint-disable */
@@ -159,17 +217,17 @@ const Students = () => {
         <React.Fragment>
             <Row style={{ width: '100%' }}>
                 <Col lg={4} md={6} sm={6} xs={4} className="d-flex justify-content-center align-items-center">
-                    <div className="action-button edit-button" onClick={() => props.onEditClick(props.data.id)}>
+                    <div className="action-button edit-button" onClick={() => props.onEditClick(props.data._id)}>
                         <img src={editIcon} className="action-icon" alt="action-icon" />
                     </div>
                 </Col>
-                {role === 'coach' ? (
+                {role === 'COACH' ? (
                     <></>
                 ) : (
                     <Col lg={1} md={6} sm={6} xs={4} className="d-flex justify-content-center align-items-center">
                         <div
                             className="btn-light action-button delete-button"
-                            onClick={() => props.onDeleteClick(props.data.id)}
+                            onClick={() => props.onDeleteClick(props.data._id)}
                         >
                             <img src={deleteIcon} className="action-icon ms-3" alt="action-icon" />
                         </div>
@@ -194,36 +252,17 @@ const Students = () => {
                     <Form.Check // prettier-ignore
                         type="switch"
                         className="toggle-button"
-                        id={`custom-switch-${props.data.id}`}
+                        id={`custom-switch-${props.data._id}`}
                         checked={props.data.isActive}
-                        onChange={() => props.onToggleClick(props.data.id)}
+                        onChange={() => props.onToggleClick(props.data)}
                     />
                 </Col>
             </Row>
         </React.Fragment>
     );
 
-    const NameRenderer = (props) => (
-        <div key={props.data.id}>
-            <div className="d-flex align-items-center gap-2">
-                <img src={props.data.avatarUrl} alt={props.data.name} className="avatar" />
-                <div
-                    style={{
-                        overflow: 'hidden',
-                        textOverflow: 'ellipsis',
-                        whiteSpace: expanded ? 'normal' : 'nowrap',
-                        cursor: 'pointer',
-                        maxWidth: '120px'
-                    }}
-                    onClick={toggleExpand}
-                >
-                    {props.value}
-                </div>
-            </div>
-        </div>
-    );
     const LinkRenderer = (props) => (
-        <div key={props.data.id}>
+        <div key={props.data._id}>
             <div className="d-flex align-items-center">
                 <div
                     style={{
@@ -235,8 +274,7 @@ const Students = () => {
                         color: 'rgba(72, 128, 255, 1)'
                     }}
                     onClick={() => {
-                        console.log(props, 'clicked');
-                        props.onRoadMapClick(props.data.coursesRoadmap || []);
+                        props.onRoadMapClick(props.data.coursesRoadmap || [], props.data._id);
                     }}
                 >
                     View Roadmap
@@ -255,7 +293,7 @@ const Students = () => {
             unSortIcon: true,
             wrapText: true,
             autoHeight: true,
-            cellRenderer: NameRenderer,
+            cellRenderer: TextItemExpand,
             resizable: false
         },
         {
@@ -277,8 +315,15 @@ const Students = () => {
             unSortIcon: true,
             resizable: false,
             cellRenderer: ({ data: rowData }) => {
-                const courses = rowData.id;
-                return <div key={rowData.id}>{courses}%</div>;
+                // Calculate the percentage of courses completed
+                const coursePercentage = calcPercentage(rowData);
+                return (
+                    <div key={rowData?._id}>
+                        {coursePercentage === 0.0 || coursePercentage === '0.00'
+                            ? '--'
+                            : `${coursePercentage.toFixed(2)}%`}
+                    </div>
+                );
             }
         },
         {
@@ -289,9 +334,9 @@ const Students = () => {
             unSortIcon: true,
             resizable: false,
             cellRenderer: ({ data: rowData }) => {
-                const status = rowData.feeStatus;
+                const status = rowData.feeStatus || '--';
                 return (
-                    <div className={`${status} fee-status`} key={rowData.id}>
+                    <div className={`${status} fee-status`} key={rowData._id}>
                         {status}
                     </div>
                 );
@@ -301,8 +346,7 @@ const Students = () => {
             headerName: 'Courses Roadmap',
             field: 'coursesRoadmap',
             filter: 'agSetColumnFilter',
-            sortable: true,
-            unSortIcon: true,
+            sortable: false,
             wrapText: true,
             autoHeight: true,
             resizable: false,
@@ -310,28 +354,9 @@ const Students = () => {
             cellRendererParams: {
                 onRoadMapClick: handleCoursesRoadMapClick
             }
-
-            // cellRenderer: ({ data: rowData }) => {
-            //     const coursesRoadmap = rowData.coursesRoadmap;
-            //     const firstName = `Course 1 ${coursesRoadmap[0]?.title}`;
-
-            //     return (
-            //         <div
-            //             style={{
-            //                 overflow: 'hidden',
-            //                 textOverflow: 'ellipsis',
-            //                 whiteSpace: 'nowrap',
-            //                 cursor: 'pointer'
-            //             }}
-            //             onClick={() => handleCoursesRoadMapClick(coursesRoadmap)}
-            //         >
-            //             View Roadmap
-            //         </div>
-            //     );
-            // }
         },
         {
-            headerName: 'Active/Deactivate',
+            headerName: 'Activate/Deactivate',
             cellRenderer: ToggleRenderer,
             field: 'isActive',
             cellRendererParams: {
@@ -358,6 +383,30 @@ const Students = () => {
         }
     ];
 
+    const handleRoadmapUpdate = async (data, id) => {
+        if (id) {
+            setLoading(true);
+            try {
+                const url = `${API_URL.UPDATE_STUDENT.replace(':id', id)}`;
+                const method = 'PUT';
+
+                await axiosWrapper(
+                    method,
+                    url,
+                    {
+                        coursesRoadmap: data
+                    },
+                    token
+                );
+                fetchData();
+            } catch (error) {
+                setLoading(false);
+            } finally {
+                setLoading(false);
+            }
+        }
+    };
+
     return (
         <div className="students-page">
             <Helmet>
@@ -365,13 +414,20 @@ const Students = () => {
             </Helmet>
             {coursesModal.show && (
                 <Modal size="md" show={coursesModal.show} onClose={handleCloseModal} title={coursesModal.title}>
-                    <Roadmap coursesModal={coursesModal} resetModal={resetCoursesModal} />
+                    <RoadMapList
+                        coursesList={coursesModal.data.map((c) => ({
+                            value: c._id,
+                            label: c.title,
+                            id: c._id
+                        }))}
+                        setCoursesMap={(data) => handleRoadmapUpdate(data, coursesModal.courseId)}
+                    />
                 </Modal>
             )}
 
-            {showDeleteModal && (
+            {showDeleteModal.show && (
                 <ConfirmationBox
-                    show={showDeleteModal}
+                    show={showDeleteModal.show}
                     onClose={handleCloseDeleteModal}
                     loading={loadingCRUD}
                     title="Delete Student"
@@ -390,7 +446,7 @@ const Students = () => {
                 loading={loading}
                 children={
                     <div className="button-wrapper">
-                        {role === 'admin' && (
+                        {role === 'ADMIN' && (
                             <DropdownButton
                                 title={
                                     <div className="d-flex justify-content-between align-items-center gap-2">
@@ -419,21 +475,27 @@ const Students = () => {
                         <DropdownButton
                             title={
                                 <div className="d-flex justify-content-between align-items-center gap-2">
-                                    <span>{selectedOption}</span>
+                                    <span>
+                                        {
+                                            studentsTrajectory.find(
+                                                (s) => s.value === selectedOption || s.label === selectedOption
+                                            ).label
+                                        }
+                                    </span>
                                     <img src={downArrow} alt="Down arrow" />
                                 </div>
                             }
-                            defaultValue={selectedOption}
+                            defaultValue={studentsTrajectory[0].label}
                             className="dropdown-button-fix"
                         >
-                            {['All', 'HT', 'LT'].map((option) => (
+                            {studentsTrajectory.map((option) => (
                                 <Dropdown.Item
-                                    key={option}
-                                    onClick={() => handleOptionChange(option)}
+                                    key={option.id}
+                                    onClick={() => handleOptionChange(option.value)}
                                     eventKey={option}
                                     className="my-1 ms-2"
                                 >
-                                    <span className="coach-name">{option}</span>
+                                    <span className="coach-name">{option.label}</span>
                                 </Dropdown.Item>
                             ))}
                         </DropdownButton>

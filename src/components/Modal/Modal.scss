@@ -14,3 +14,7 @@
         border-bottom: unset !important;
     }
 }
+// New class to override text-transform for sentence case
+.sentence-case {
+    text-transform: none !important;
+}

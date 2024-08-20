@@ -1,39 +1,39 @@
-import { Button, Card, Image } from 'react-bootstrap';
+import { Card, Image } from 'react-bootstrap';
 import './MeetingCard.scss';
+import { formatTimezone } from '../../utils/common';
 
-const MeetingCard = ({ meeting, handleCardClick }) => {
+const MeetingCard = ({ meeting }) => {
     return (
-        <Card className="card-custom" onClick={() => handleCardClick(meeting)}>
+        <Card className="card-custom h-100">
             <Card.Header className="card-header-custom">
-                <Image src={meeting.image} rounded className="image-custom" />
+                {meeting?.thumbnail ? (
+                    <Image src={meeting?.thumbnail} rounded className="image-custom" />
+                ) : (
+                    <div className="card-profile-name me-2">
+                        {meeting?.createdBy?.name
+                            .split(' ')
+                            .map((n, index) => (index === 0 || index === 1 ? n[0] : null))
+                            .filter((v) => !!v)}
+                    </div>
+                )}
                 <div>
                     <div className="meeting-title">
-                        {meeting.name} ({meeting.title})
+                        {meeting?.createdBy?.name} ({meeting?.createdBy?.role})
                     </div>
-                    <div className="meeting-id">Meeting ID: {meeting.meetingId}</div>
-                    <div className="meeting-password">Password: {meeting.password}</div>
                 </div>
             </Card.Header>
             <Card.Body>
                 <Card.Title>
-                    <span className="main-title"> Topic:</span> <span className="topic-detail">{meeting.topic}</span>
+                    <span className="main-title"> Topic:</span> <span className="topic-detail">{meeting?.topic}</span>
                 </Card.Title>
                 <Card.Text className="meeting-time">
-                    <strong>Date & Time:</strong> <span> {meeting.dateTime}</span>
-                    <p>{meeting.timeZone}</p>
+                    <strong>Date & Time:</strong> <span> {formatTimezone(meeting?.dateTime, true)}</span>
                 </Card.Text>
-                {/* Commenting for future use */}
-                {/* <Card.Text className="footer-title">
-                    <img src={ethereum} alt="" /> Attendees
-                </Card.Text> */}
             </Card.Body>
             <Card.Footer className="card-footer-custom">
-                {/* Commenting for future use */}
-                {/* <AvatarGroup
-                    attendees={meeting.attendees.slice(0, 3)}
-                    count={`${meeting.attendees.slice(3, meeting.attendees.length).length}+`}
-                /> */}
-                <Button variant="primary">Join</Button>
+                <a href={meeting?.meetingLink} target="_blank" className="join" rel="noreferrer">
+                    Join
+                </a>
             </Card.Footer>
         </Card>
     );

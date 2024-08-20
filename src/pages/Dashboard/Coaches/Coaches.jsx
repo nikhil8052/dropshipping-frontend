@@ -1,29 +1,37 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Table from '@components/Table/Table';
 import { Button, Col, Form, Row } from 'react-bootstrap';
 import Modal from '@components/Modal/Modal';
 import ProductForm from '@components/Listings/ProductForm/ProductForm';
 import ConfirmationBox from '@components/ConfirmationBox/ConfirmationBox';
 import { Helmet } from 'react-helmet';
-import toast from 'react-hot-toast';
+import axiosWrapper from '@utils/api';
 import TextExpand from '@components/TextExpand/TextExpand';
+import TextItemExpand from '@components/TextExpand/TextItemExpand';
 import editIcon from '@icons/edit_square.svg';
 import deleteIcon from '@icons/trash-2.svg';
 import add from '@icons/add_white.svg';
-import { coachDummyData } from '../../../data/data';
+import { COACH } from '../../../data/data';
 import { useNavigate } from 'react-router-dom';
 import '../../../styles/Coaches.scss';
 import '../../../styles/Common.scss';
+import { API_URL } from '../../../utils/apiUrl';
+import { useSelector } from 'react-redux';
 
 const Coaches = () => {
-    const [showDeleteModal, setShowDeleteModal] = useState(false);
+    const [showDeleteModal, setShowDeleteModal] = useState({
+        show: false,
+        title: 'Delete Coach',
+        isEditable: false,
+        coachId: null
+    });
     const [selectedRowId, setSelectedRowId] = useState(null);
-    const [expanded, setExpanded] = useState(false);
+    const token = useSelector((state) => state?.auth?.userToken);
     const [productModal, setProductModal] = useState({
         show: false,
         title: '',
         isEditable: false,
-        productId: null
+        coachId: null
     });
     const [loading, setLoading] = useState(false);
     const [loadingCRUD, setLoadingCRUD] = useState(false);
@@ -35,12 +43,12 @@ const Coaches = () => {
         fetchData();
     }, []);
 
-    const fetchData = async () => {
+    const fetchData = async (loading = true) => {
         // Later we will replace this with actual API call
         try {
-            setLoading(true);
-
-            setCoachesData(coachDummyData);
+            setLoading(loading);
+            const coaches = await axiosWrapper('GET', API_URL.GET_ALL_COACHES, {}, token);
+            setCoachesData(coaches?.data);
         } catch (error) {
             return;
         } finally {
@@ -68,78 +76,81 @@ const Coaches = () => {
             state: { coachId }
         });
     };
-    const handleToggleClick = (id) => {
-        // Handle edit action here
-        const copyOfCoachData = [...coachesData];
 
-        const coach = copyOfCoachData.find((coach) => coach.id === id);
-        const index = copyOfCoachData.indexOf(coach);
-        copyOfCoachData[index].isActive = !copyOfCoachData[index].isActive;
-        setCoachesData(copyOfCoachData);
+    const handleToggleClick = async (coach) => {
+        setLoadingCRUD(true);
+        let url = '';
+        if (coach.isActive) {
+            url = `${API_URL.DEACTIVATE_COACH.replace(':id', coach?._id)}`;
+        } else {
+            url = `${API_URL.ACTIVATE_COACH.replace(':id', coach?._id)}`;
+        }
+        await axiosWrapper('PUT', url, {}, token);
+        fetchData(false);
+        setLoadingCRUD(false);
     };
 
     const handleDeleteClick = (id) => {
         // Handle delete action here
         setSelectedRowId(id);
-        setShowDeleteModal(true);
+        setShowDeleteModal({
+            show: true,
+            title: 'Delete Coach',
+            isEditable: false,
+            coachId: id
+        });
     };
 
     const handleCloseModal = () => {
-        resetProductModal();
+        resetModal();
     };
 
-    const resetProductModal = () => {
+    const resetModal = () => {
         setProductModal({
             show: false,
             title: '',
             isEditable: false,
-            productId: null
+            coachId: null
+        });
+        setShowDeleteModal({
+            show: false,
+            title: '',
+            isEditable: false,
+            coachId: null
         });
     };
 
     const handleCloseDeleteModal = () => {
-        setShowDeleteModal(false);
+        resetModal();
     };
 
     const handleDeleteSubmit = async () => {
         try {
             setLoadingCRUD(true);
             // Delete API call here
-            const copyOfCoachData = [...coachesData];
-            const coach = copyOfCoachData.find((coach) => coach.id === selectedRowId);
-            const index = copyOfCoachData.indexOf(coach);
-            copyOfCoachData.splice(index, 1);
-            setCoachesData(copyOfCoachData);
-            toast.success('Coach deleted successfully');
-            // Call the get API
-            fetchData();
-        } catch (error) {
-            return;
-        } finally {
+            await axiosWrapper('DELETE', API_URL.DELETE_COACH.replace(':id', showDeleteModal?.coachId), {}, token);
+            fetchData(false);
             setLoadingCRUD(false);
-            setShowDeleteModal(false);
+            resetModal();
+        } catch (error) {
+            resetModal();
+            setLoadingCRUD(false);
         }
     };
-
-    const toggleExpand = useCallback((event) => {
-        // Specifically in this component, we need to prevent the event from propagating to the parent element
-        event.stopPropagation();
-        setExpanded(!expanded);
-    }, []);
 
     /*eslint-disable */
     const ActionsRenderer = React.memo((props) => (
         <React.Fragment>
             <Row style={{ width: '100%' }}>
                 <Col lg={4} md={4} sm={6} xs={4} className="d-flex justify-content-center align-items-center">
-                    <div className="action-button edit-button" onClick={() => props.onEditClick(props.data.id)}>
+                    <div className="action-button edit-button" onClick={() => props.onEditClick(props.data._id)}>
                         <img src={editIcon} className="action-icon" alt="action-icon" />
                     </div>
                 </Col>
                 <Col lg={1} md={4} sm={6} xs={4} className="d-flex justify-content-center align-items-center">
                     <div
                         className="btn-light action-button delete-button"
-                        onClick={() => props.onDeleteClick(props.data.id)}
+                        onClick={() => props.onDeleteClick(props.data._id)}
                     >
                         <img src={deleteIcon} className="action-icon ms-3" alt="action-icon" />
                     </div>
@@ -155,31 +166,13 @@ const Coaches = () => {
                     <Form.Check // prettier-ignore
                         type="switch"
                         className="toggle-button"
-                        id={`custom-switch-${props.data.id}`}
+                        id={`custom-switch-${props.data._id}`}
                         checked={props.data.isActive}
-                        onChange={() => props.onToggleClick(props.data.id)}
+                        onChange={() => props.onToggleClick(props.data)}
                     />
                 </Col>
             </Row>
         </React.Fragment>
-    );
-    const NameRenderer = (props) => (
-        <div key={props.data.id}>
-            <div className="d-flex align-items-center gap-2">
-                <img src={props.data.avatarUrl} alt={props.data.name} className="avatar" />
-                <div
-                    style={{
-                        overflow: 'hidden',
-                        textOverflow: 'ellipsis',
-                        whiteSpace: expanded ? 'normal' : 'nowrap',
-                        cursor: 'pointer'
-                    }}
-                    onClick={toggleExpand}
-                >
-                    {props.value}
-                </div>
-            </div>
-        </div>
     );
     /*eslint-disable */
 
@@ -192,7 +185,7 @@ const Coaches = () => {
             unSortIcon: true,
             wrapText: true,
             autoHeight: true,
-            cellRenderer: NameRenderer,
+            cellRenderer: TextItemExpand,
             resizable: false
         },
         {
@@ -209,11 +202,15 @@ const Coaches = () => {
         },
         {
             headerName: 'HT / LT',
-            field: 'coursesType',
+            field: 'coachType',
             filter: 'agSetColumnFilter',
             sortable: true,
             unSortIcon: true,
-            resizable: false
+            resizable: false,
+            cellRenderer: ({ data: rowData }) => {
+                const coachType = rowData.coachType;
+                return <div key={rowData._id}>{coachType === COACH.COACH_TYPE.HIGH_TICKET ? 'HT' : 'LT'}</div>;
+            }
         },
         {
             headerName: 'Capacity',
@@ -224,18 +221,25 @@ const Coaches = () => {
             wrapText: true,
             autoHeight: true,
             cellRenderer: ({ data: rowData }) => {
-                const occupied = rowData.occupied;
-                const capacity = rowData.capacity;
+                const coachType = rowData.coachType;
+                const occupied = rowData.assignedStudents.length;
+                let totalCapacity = 0;
+                if (coachType === COACH.COACH_TYPE.HIGH_TICKET) {
+                    totalCapacity = rowData.highTicketStudentSpots;
+                } else {
+                    totalCapacity = rowData.lowTicketStudentSpots;
+                }
+
                 return (
                     <div key={rowData.id}>
-                        {occupied}/{capacity}
+                        {occupied}/{totalCapacity}
                     </div>
                 );
             },
             resizable: false
         },
         {
-            headerName: 'Active/Deactivate',
+            headerName: 'Activate/Deactivate',
             field: 'isActive',
             cellRenderer: ToggleRenderer,
             cellRendererParams: {
@@ -271,15 +275,15 @@ const Coaches = () => {
             </Helmet>
             {productModal.show && (
                 <Modal size="large" show={productModal.show} onClose={handleCloseModal} title={productModal.title}>
-                    <ProductForm productModal={productModal} resetModal={resetProductModal} />
+                    <ProductForm productModal={productModal} resetModal={resetModal} />
                 </Modal>
             )}
-            {showDeleteModal && (
+            {showDeleteModal.show && (
                 <ConfirmationBox
-                    show={showDeleteModal}
+                    show={showDeleteModal.show}
                     onClose={handleCloseDeleteModal}
                     loading={loadingCRUD}
-                    title="Delete Coach"
+                    title={showDeleteModal.title}
                     body="Are you sure you want to delete this Coach?"
                     onConfirm={handleDeleteSubmit}
                     customFooterClass="custom-footer-class"

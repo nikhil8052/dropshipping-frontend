@@ -3,9 +3,18 @@
 @import '@constants/typography.scss';
 
 .course-section {
+    position: relative;
     box-shadow: 0px 0px 14.83px 0px rgba(0, 0, 0, 0.06);
     border-radius: 9px;
     padding: 10px 20px;
+
+    .no-data-wrapper {
+        position: absolute;
+        top: 50%;
+        left: 40%;
+        transform: translate(0, -50%);
+        padding: 10px;
+    }
 
     .courses-button-wrapper {
         display: flex;
@@ -269,6 +278,12 @@
             border-radius: 10px !important;
 
             // object-fit: cover;
+        }
+
+        .reset-image {
+            width: 20px !important;
+            height: 20px !important;
+            cursor: pointer !important;
         }
 
         .upload-image-btn {
@@ -658,11 +673,12 @@
 
             .lecture-details {
                 display: flex;
-                border-radius: 10px;
                 justify-content: space-evenly;
+                align-items: center;
+
+                border-radius: 10px;
                 background-color: #ffffff;
                 box-shadow: 10px 6px 14.83px 8px rgba(0, 0, 0, 0.06);
-                align-items: center;
                 width: 100%;
                 padding: 20px 0px;
                 margin-top: -45px;
@@ -685,9 +701,11 @@
                 }
 
                 .lecture-details-2 {
-                    border-left: 0.3px solid #707070;
                     border-right: 0.3px solid #707070;
                     padding-inline: 66px;
+                    display: flex;
+                    flex-direction: column;
+                    align-items: flex-start;
                     @include respond-to($small-screen) {
                         padding-inline: 10px;
                     }
@@ -810,11 +828,15 @@
         }
         .btn {
             display: flex;
-            justify-content: center;
+            justify-content: flex-start;
+            align-items: center;
+            text-wrap: wrap;
+            text-align: left;
             gap: 10px;
             width: 180px;
             height: 36px;
             border-radius: 80px;
+            padding: 5px 10px;
             font-size: $font-size-medium;
             @include respond-to($small-screen) {
                 justify-content: center;
@@ -822,16 +844,23 @@
             }
         }
         .active {
-            background-color: rgba(245, 248, 249, 1);
+            background: rgba(0, 187, 86, 1);
             color: #ffffff;
             border-color: transparent;
         }
 
         .inactive {
-            background-color: rgba(245, 248, 249, 1);
+            background: rgba(244, 244, 244, 1);
             color: #1c1c1c; /* Adjust text color as needed */
             border: #f4f4f4;
         }
+    }
+    .avatar-student {
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        object-fit: cover;
+        margin-right: 0.5rem;
     }
 }
 .viewProgress-footer {
@@ -844,7 +873,7 @@
         background-color: #000000;
         padding-inline: 70px;
         padding-block: 8px;
-        text-align: center;
+        text-align: center !important;
         border-radius: 120px;
         border: none;
     }
@@ -871,10 +900,23 @@
         padding: 45px;
         margin: 0px;
     }
+
+    .error {
+        color: $danger-color;
+        font-size: 12px;
+        font-weight: 400;
+        line-height: 14px;
+        text-align: left;
+    }
+    .lecture-right {
+        // background-color: #f5f7fa;
+        border: 1px solid rgba(233, 234, 240, 1);
+        border-bottom: unset;
+    }
     .search-lectures {
         padding: 25px 25px 0px 25px;
-        border: 1px solid rgba(233, 234, 240, 1);
-        border-left: unset;
+        // border: 1px solid rgba(233, 234, 240, 1);
+        // border-left: unset;
         @include respond-to($small-screen) {
             border-right: none;
         }
@@ -910,13 +952,15 @@
         }
         .btn {
             display: flex;
-            justify-content: center;
+            justify-content: flex-start;
+            align-items: center;
             gap: 10px;
             width: 100%;
             padding: 5px 10px;
             border-radius: 80px;
             font-size: $font-size-medium;
-            text-wrap: nowrap;
+            text-wrap: wrap;
+            text-align: left;
             @include respond-to($small-screen) {
                 justify-content: center;
                 width: 100%;
@@ -927,7 +971,9 @@
             color: rgba(28, 28, 28, 1);
             border-color: transparent;
         }
-
+        .passed-lecture {
+            color: #00bb56 !important;
+        }
         .inactive {
             background-color: transparent;
             color: #1c1c1c; /* Adjust text color as needed */
@@ -1069,5 +1115,11 @@
         border: none;
         border-radius: 12px;
         min-height: 400px;
+    }
+}
+
+.overlayMenu {
+    .dropdown-menu {
+        background-color: red !important;
     }
 }

@@ -4,13 +4,15 @@ import { Row, Col, Modal } from 'react-bootstrap';
 import Card from '@components/Card/Card';
 import { StatCard, LineChart } from '@components/Home';
 import { Helmet } from 'react-helmet';
-import EventDetailsModal from './Calender/CustomEventModal';
 import BigCalender from './Calender/BigCalender';
 import { useSelector } from 'react-redux';
-import { events, meetings } from '../../../data/data';
 import '../../../styles/Dashboard.scss';
 import { useIsSmallScreen } from '../../../utils/mediaQueries';
 import MeetingCard from '../../../components/MeetingCard/MeetingCard';
+import axiosWrapper from '../../../utils/api';
+import { API_URL } from '../../../utils/apiUrl';
+import Loading from '@components/Loading/Loading';
+import { convertCamelCaseToTitle } from '../../../utils/common';
 
 const Dashboard = () => {
     const chartRef = useRef(null);
@@ -25,6 +27,10 @@ const Dashboard = () => {
     const isSmallScreen = useIsSmallScreen();
     const [selectedEvent, setSelectedEvent] = useState(null);
     const [currentFilter, setCurrentFilter] = useState('monthly');
+    const token = useSelector((state) => state?.auth?.userToken);
+    const [gridOptionsLabel, setGridOptionsLabel] = useState();
+    const [eventsData, setEventsData] = useState([]);
+    const [loading, setLoading] = useState(false);
 
     useEffect(() => {
         return () => {
@@ -40,103 +46,114 @@ const Dashboard = () => {
         }
     }, [chartKey]);
 
-    const statCards = [
-        {
-            id: 1,
-            title: 'Low Ticket Students Available',
-            value: '7,265'
-        },
-        {
-            id: 2,
-            title: 'High Ticket Students Available',
-            value: '3,671'
-        },
-        {
-            id: 3,
-            title: 'Courses',
-            value: '156'
-        },
-        {
-            id: 4,
-            title: 'Upcoming Events',
-            value: '2,318'
-        }
-    ];
-    const coachStatCards = [
-        {
-            id: 1,
-            title: 'Total Students',
-            value: '7,265'
-        },
-        {
-            id: 2,
-            title: 'Spots Available',
-            value: '15'
-        },
-        {
-            id: 3,
-            title: 'Coaching calls scheduled',
-            value: '2365'
-        },
-        {
-            id: 4,
-            title: 'Revenue',
-            value: '2,318'
-        }
-    ];
-
     // Sample data for different time periods
     const monthlyData = [5000, 22200, 6000, 20000, 7500, 28000, 8500];
     const weeklyData = [1000, 5000, 3000, 4000, 2000, 7000, 3500];
     const yearlyData = [12000, 15000, 13000, 19000, 14000, 27000, 15500];
 
-    // Line Chart data
-    const generateChartData = (data) => ({
-        datasets: {
-            students: {
-                labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul'],
-                datasets: [
-                    {
-                        label: 'Total Students',
-                        data: data,
-                        fill: true,
-                        backgroundColor: 'rgba(133, 193, 233, 0.5)',
-                        borderColor: 'rgba(0, 0, 0, 0.4)',
-                        tension: 0.4
-                    }
-                ]
-            },
-            coaches: {
-                labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul'],
-                datasets: [
-                    {
-                        label: 'Total Coaches',
-                        data: data,
-                        fill: true,
-                        backgroundColor: 'rgba(233, 193, 133, 0.5)', // Different color
-                        borderColor: 'rgba(0, 0, 0, 0.4)', // Another color
-                        tension: 0.4
-                    }
-                ]
+    useEffect(() => {
+        fetchDashboardData();
+    }, [role, currentFilter]);
+
+    const fetchDashboardData = async () => {
+        try {
+            setLoading(true);
+            let cardData, graphData, eventData;
+            if (role === 'ADMIN') {
+                cardData = await axiosWrapper('GET', API_URL.GET_ADMIN_CARD_DATA, {}, token);
+                graphData = await axiosWrapper(
+                    'GET',
+                    `${API_URL.GET_ADMIN_GRAPH_DATA}?graphFilter=${currentFilter}`,
+                    {},
+                    token
+                );
+                eventData = await axiosWrapper('GET', API_URL.GET_ADMIN_EVENTS_DATA, {}, token);
+                setDataSet(true);
             }
+
+            if (role === 'COACH') {
+                cardData = await axiosWrapper('GET', API_URL.GET_COACH_CARD_DATA, {}, token);
+                graphData = await axiosWrapper(
+                    'GET',
+                    API_URL.GET_COACH_GRAPH_DATA,
+                    { graphFilter: currentFilter },
+                    token
+                );
+                eventData = await axiosWrapper('GET', API_URL.GET_COACH_EVENTS_DATA, {}, token);
+                setDataSet(false);
+            }
+            // Map the data to the format required by the StatCard component
+            const mapCards = Object.entries(cardData?.data).map(([key, value], index) => ({
+                id: index,
+                title: convertCamelCaseToTitle(key),
+                value
+            }));
+
+            const mappedEvents = eventData?.data?.map((event) => ({
+                id: event?._id,
+                title: event?.topic,
+                start: new Date(event.dateTime),
+                end: new Date(event.dateTime),
+                topic: event?.topic
+            }));
+            setCardStats(mapCards);
+            setEventsData(mappedEvents);
+            const data = generateChartData(graphData?.data, currentFilter);
+
+            setLineGraphData(data);
+        } catch (error) {
+            return;
+        } finally {
+            setLoading(false);
         }
-    });
+    };
 
-    const data = generateChartData(monthlyData);
+    // Line Chart data
+    const generateChartData = (data, filter) => {
+        let labels = [];
+        let datasets = [];
+        if (filter === 'yearly' || filter === 'monthly') {
+            labels = data?.totalStudentsData?.flatMap((obj) => Object.keys(obj));
+            datasets = data?.totalStudentsData?.flatMap((obj) => Object.values(obj));
+            setGridOptionsLabel(labels);
+        }
 
-    const coachData = {
-        datasets: [
-            {
-                label: 'Hours Worked',
-                borderColor: 'rgba(0, 0, 0, 0.4)',
-                pointRadius: 0,
-                fill: true,
-                backgroundColor: 'yellow',
-                lineTension: 0.4,
-                data: monthlyData,
-                borderWidth: 1
+        if (filter === 'weekly') {
+            labels = data?.totalStudentsData?.flatMap((obj) => Object.keys(obj));
+            datasets = data?.totalStudentsData?.flatMap((obj) => Object.values(obj));
+            setGridOptionsLabel(labels);
+        }
+
+        return {
+            datasets: {
+                students: {
+                    labels: labels,
+                    datasets: [
+                        {
+                            label: 'Total Students',
+                            data: datasets,
+                            fill: true,
+                            backgroundColor: 'rgba(133, 193, 233, 0.5)',
+                            borderColor: 'rgba(0, 0, 0, 0.4)',
+                            tension: 0.4
+                        }
+                    ]
+                },
+                coaches: {
+                    labels: data?.totalCoachesData?.flatMap((obj) => Object.keys(obj)),
+                    datasets: [
+                        {
+                            label: 'Total Coaches',
+                            data: data?.totalCoachesData.flatMap((obj) => Object.values(obj)),
+                            fill: true,
+                            backgroundColor: 'rgba(233, 193, 133, 0.5)', // Different color
+                            borderColor: 'rgba(0, 0, 0, 0.4)', // Another color
+                            tension: 0.4
+                        }
+                    ]
+                }
             }
-        ]
+        };
     };
 
     const graphOptions = {
@@ -145,7 +162,7 @@ const Dashboard = () => {
                 grid: {
                     display: false
                 },
-                labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul'],
+                labels: gridOptionsLabel,
                 ticks: {
                     color: 'rgba(28, 28, 28, 0.4)'
                 },
@@ -161,16 +178,8 @@ const Dashboard = () => {
                 border: {
                     display: false
                 },
-                ticks: {
-                    stepSize: 10000, // Set steps of 10,000
-                    callback: function (value, index, values) {
-                        // Optional: format ticks to show 'k' (e.g., 10k, 20k)
-                        return value === 0 ? '0' : value / 1000 + 'k';
-                    },
-                    color: 'rgba(28, 28, 28, 0.4)'
-                },
                 min: 0, // Minimum value for Y-axis
-                max: 30000 // Maximum value for Y-axis
+                max: 10 // Maximum value for Y-axis
             }
         },
         maintainAspectRatio: true,
@@ -190,18 +199,6 @@ const Dashboard = () => {
         }
     };
 
-    useEffect(() => {
-        if (role === 'admin') {
-            setCardStats(statCards);
-            setLineGraphData(data);
-            setDataSet(true);
-        } else if (role === 'coach') {
-            setCardStats(coachStatCards);
-            setDataSet(false);
-            setLineGraphData(coachData);
-        }
-    }, [role]);
-
     const tabTitles = {
         students: 'Total Students',
         coaches: 'Total Coaches'
@@ -212,12 +209,6 @@ const Dashboard = () => {
         { label: 'Weekly', value: 'weekly' },
         { label: 'Yearly', value: 'yearly' }
     ];
-
-    const handleEventClick = (event) => {
-        const meeting = meetings.find((meeting) => meeting.id === event.id);
-        setSelectedEvent(meeting);
-        setShowModal(true);
-    };
 
     const handleFilterChange = (filter) => {
         setCurrentFilter(filter);
@@ -234,59 +225,78 @@ const Dashboard = () => {
         setLineGraphData(newData);
     };
 
+    const getEventDetails = async (id) => {
+        try {
+            const response = await axiosWrapper('GET', API_URL.GET_EVENT.replace(':id', id), {}, token);
+            const event = response.data;
+            setSelectedEvent(event);
+            setShowModal(true);
+        } catch (error) {}
+    };
+
+    const handleEventClick = (event) => {
+        getEventDetails(event.id);
+    };
+
     return (
         <div className="dashboard-page">
-            <Helmet>
-                <title>Dashboard | Dropship Academy</title>
-            </Helmet>
-            <Row>
-                {cardStats.map((stat, index) => (
-                    <Col key={stat.id} xs={12} sm={12} md={6} lg={4} xl={3}>
-                        <Card
-                            customCardClass={`custom-card-colors ${index % 2 === 0 ? 'even' : 'odd'}`}
-                            cardType="small"
-                        >
-                            <StatCard {...stat} />
-                        </Card>
-                    </Col>
-                ))}
-            </Row>
-            <Row className="graph-wrapper">
-                <Col>
-                    {lineGraphData && lineGraphData.datasets && (
-                        <LineChart
-                            data={lineGraphData}
-                            options={graphOptions}
-                            chartKey={chartKey}
-                            setChartKey={setChartKey}
-                            tabTitles={tabTitles}
-                            timePeriods={timePeriods}
-                            chartHeight={chartHeight}
-                            dataSet={dataSet}
-                            role={role}
-                            handleFilterChange={handleFilterChange}
-                            currentFilter={currentFilter}
-                        />
-                    )}
-                </Col>
-            </Row>
-            <Row>
-                <Col>
-                    <Card header={true} title="Events" customCardClass="events-card">
-                        <BigCalender onEventClick={(event) => handleEventClick(event)} events={events} />
-                        <Modal
-                            show={showModal}
-                            onHide={() => setShowModal(false)}
-                            size="md"
-                            aria-labelledby="contained-modal-title-vcenter"
-                            centered
-                        >
-                            <Modal.Header style={{ borderBottom: 'none' }} closeButton></Modal.Header>
-                            <MeetingCard meeting={selectedEvent} />
-                        </Modal>
-                    </Card>
-                </Col>
-            </Row>
+            {loading ? (
+                <Loading centered={true} />
+            ) : (
+                <>
+                    <Helmet>
+                        <title>Dashboard | Dropship Academy</title>
+                    </Helmet>
+                    <Row>
+                        {cardStats?.map((stat, index) => (
+                            <Col key={stat.id} xs={12} sm={12} md={6} lg={4} xl={3}>
+                                <Card
+                                    customCardClass={`custom-card-colors ${index % 2 === 0 ? 'even' : 'odd'}`}
+                                    cardType="small"
+                                >
+                                    <StatCard {...stat} />
+                                </Card>
+                            </Col>
+                        ))}
+                    </Row>
+                    <Row className="graph-wrapper">
+                        <Col>
+                            {lineGraphData && lineGraphData.datasets && (
+                                <LineChart
+                                    data={lineGraphData}
+                                    options={graphOptions}
+                                    chartKey={chartKey}
+                                    setChartKey={setChartKey}
+                                    tabTitles={tabTitles}
+                                    timePeriods={timePeriods}
+                                    chartHeight={chartHeight}
+                                    dataSet={dataSet}
+                                    role={role}
+                                    handleFilterChange={handleFilterChange}
+                                    currentFilter={currentFilter}
+                                />
+                            )}
+                        </Col>
+                    </Row>
+                    <Row>
+                        <Col>
+                            <Card header={true} title="Events" customCardClass="events-card">
+                                <BigCalender onEventClick={handleEventClick} events={eventsData} />
+                                <Modal
+                                    show={showModal}
+                                    onHide={() => setShowModal(false)}
+                                    size="md"
+                                    aria-labelledby="contained-modal-title-vcenter"
+                                    centered
+                                >
+                                    <Modal.Header style={{ borderBottom: 'none' }} closeButton></Modal.Header>
+                                    <MeetingCard meeting={selectedEvent} />
+                                </Modal>
+                            </Card>
+                        </Col>
+                    </Row>
+                </>
+            )}
         </div>
     );
 };

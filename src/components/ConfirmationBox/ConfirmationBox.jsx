@@ -13,7 +13,7 @@ const ConfirmationBox = ({
     loading,
     customFooterClass,
     nonActiveBtn,
-
+    disableBtn = false,
     activeBtn,
     cancelButtonTitle = 'No',
     activeBtnTitle = 'Yes'
@@ -35,7 +35,7 @@ const ConfirmationBox = ({
                 </Button>
                 <Button
                     className={`custom-button ${activeBtn}`}
-                    disabled={loading}
+                    disabled={disableBtn || loading}
                     variant="danger"
                     onClick={onConfirm}
                 >

@@ -11,7 +11,7 @@ const DashboardLayout = () => {
     const navigate = useNavigate();
 
     useEffect(() => {
-        if (!isLoggedIn || role !== 'admin') navigate('/login');
+        if (!isLoggedIn || role !== 'ADMIN') navigate('/login');
     }, [isLoggedIn, role]);
 
     return (

@@ -17,6 +17,18 @@
         margin-bottom: 0.5rem;
         opacity: 0px;
     }
+    .avatar-image {
+        width: 28px;
+        height: 28px;
+        border-radius: 50%;
+        object-fit: cover;
+    }
+    .product-image {
+        width: 93px;
+        height: 93px;
+        border-radius: 50%;
+        object-fit: cover;
+    }
     .nav-tabs {
         &:focus-visible {
             outline: none !important;
@@ -72,6 +84,12 @@
 }
 
 .students-product-page {
+    .avatar-image {
+        width: 28px;
+        height: 28px;
+        border-radius: 50%;
+        object-fit: cover;
+    }
     .add-button {
         @include pagination-gradient;
         border-radius: 59px;

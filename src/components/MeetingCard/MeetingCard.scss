@@ -22,6 +22,7 @@
             height: 80px;
             margin-right: 0.625rem;
             border-radius: 15px !important;
+            object-fit: cover;
         }
         .meeting-title {
             font-family: Inter;
@@ -98,7 +99,7 @@
         background-color: transparent;
         border-top: none !important;
 
-        button {
+        a {
             background-color: transparent !important;
             color: black !important;
             padding: 5px 30px;
@@ -106,6 +107,19 @@
             border-radius: 10px;
         }
     }
+}
+
+.card-profile-name {
+    padding-block: 21px;
+    padding-inline: 21px;
+    border: 1px solid;
+    font-size: 32px;
+    align-items: center;
+    text-align: center;
+    font-weight: $font-weight-medium;
+    color: #ffffff;
+    background-color: #019fd8;
+    border-radius: 15px;
 }
 
 // Events Detail Card
@@ -124,6 +138,18 @@
         height: 80px;
         margin-right: 0.625rem;
         border-radius: 15px !important;
+    }
+    .card-profile-name {
+        padding-block: 21px;
+        padding-inline: 21px;
+        border: 1px solid;
+        font-size: 32px;
+        align-items: center;
+        text-align: center;
+        font-weight: $font-weight-medium;
+        color: #ffffff;
+        background-color: #019fd8;
+        border-radius: 15px;
     }
     .zoom-btn {
         background: rgba(242, 248, 255, 1);

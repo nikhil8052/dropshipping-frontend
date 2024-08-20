@@ -1,14 +1,15 @@
 import PropTypes from 'prop-types';
 import './ProductCard.scss';
+import { trimLongText, formatTimezone } from '../../utils/common';
 
 const ProductCard = ({ item }) => {
     return (
         <div className="product-card">
-            <img src={item.image} alt={item.title} className="product-image" />
+            <img src={item.avatarUrl} alt={item.productName} className="product-image" />
             <div className="product-details">
-                <h5>{item.title}</h5>
-                <p>Created by: {item.creator}</p>
-                <p>Run Date: {item.runDate}</p>
+                <h5>{item.productName}</h5>
+                <p>Created by: {trimLongText(item.createdBy?.name, 10)}</p>
+                <p>Run Date: {formatTimezone(item.runDate)}</p>
                 <button type="button" className={`status-btn ${item.status === 'Running' ? 'running' : ''}`}>
                     Status: {item.status}
                 </button>
@@ -19,9 +20,9 @@ const ProductCard = ({ item }) => {
 
 ProductCard.propTypes = {
     item: PropTypes.shape({
-        image: PropTypes.string.isRequired,
-        title: PropTypes.string.isRequired,
-        creator: PropTypes.string.isRequired,
+        avatarUrl: PropTypes.string.isRequired,
+        productName: PropTypes.string.isRequired,
+        createdBy: PropTypes.object,
         runDate: PropTypes.string.isRequired,
         status: PropTypes.string.isRequired
     }).isRequired
