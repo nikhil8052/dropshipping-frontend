@@ -307,7 +307,9 @@ const UploadFiles = ({ onNext, onBack, initialData, setStepComplete, updateCours
                                                                 <span>Course Thumbnail</span>
                                                                 <div
                                                                     className="align-self-start"
-                                                                    style={{ marginLeft: 'auto' }}
+                                                                    style={{
+                                                                        marginLeft: 'auto'
+                                                                    }}
                                                                 >
                                                                     <img
                                                                         src={cross}
@@ -317,11 +319,7 @@ const UploadFiles = ({ onNext, onBack, initialData, setStepComplete, updateCours
                                                                                 inputRef.current.value = '';
                                                                             }
                                                                         }}
-                                                                        style={{
-                                                                            cursor: 'pointer',
-                                                                            width: '20px !important',
-                                                                            height: '20px !important'
-                                                                        }}
+                                                                        className="reset-image"
                                                                         alt="reset"
                                                                     />
                                                                 </div>
@@ -410,11 +408,7 @@ const UploadFiles = ({ onNext, onBack, initialData, setStepComplete, updateCours
                                                                                 videoinputRef.current.value = '';
                                                                             }
                                                                         }}
-                                                                        style={{
-                                                                            cursor: 'pointer',
-                                                                            width: '20px !important',
-                                                                            height: '20px !important'
-                                                                        }}
+                                                                        className="reset-image"
                                                                         alt="reset"
                                                                     />
                                                                 </div>

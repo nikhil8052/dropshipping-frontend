@@ -280,6 +280,12 @@
             // object-fit: cover;
         }
 
+        .reset-image {
+            width: 20px !important;
+            height: 20px !important;
+            cursor: pointer !important;
+        }
+
         .upload-image-btn {
             border-radius: 59px;
             font-weight: 400;
