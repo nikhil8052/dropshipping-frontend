@@ -46,51 +46,6 @@ const Dashboard = () => {
         }
     }, [chartKey]);
 
-    const statCards = [
-        {
-            id: 1,
-            title: 'Low Ticket Students Available',
-            value: '7,265'
-        },
-        {
-            id: 2,
-            title: 'High Ticket Students Available',
-            value: '3,671'
-        },
-        {
-            id: 3,
-            title: 'Courses',
-            value: '156'
-        },
-        {
-            id: 4,
-            title: 'Upcoming Events',
-            value: '2,318'
-        }
-    ];
-    const coachStatCards = [
-        {
-            id: 1,
-            title: 'Total Students',
-            value: '7,265'
-        },
-        {
-            id: 2,
-            title: 'Spots Available',
-            value: '15'
-        },
-        {
-            id: 3,
-            title: 'Coaching calls scheduled',
-            value: '2365'
-        },
-        {
-            id: 4,
-            title: 'Revenue',
-            value: '2,318'
-        }
-    ];
-
     // Sample data for different time periods
     const monthlyData = [5000, 22200, 6000, 20000, 7500, 28000, 8500];
     const weeklyData = [1000, 5000, 3000, 4000, 2000, 7000, 3500];
@@ -106,7 +61,6 @@ const Dashboard = () => {
             let cardData, graphData, eventData;
             if (role === 'ADMIN') {
                 cardData = await axiosWrapper('GET', API_URL.GET_ADMIN_CARD_DATA, {}, token);
-
                 graphData = await axiosWrapper(
                     'GET',
                     `${API_URL.GET_ADMIN_GRAPH_DATA}?graphFilter=${currentFilter}`,
@@ -200,21 +154,6 @@ const Dashboard = () => {
                 }
             }
         };
-    };
-
-    const coachData = {
-        datasets: [
-            {
-                label: 'Hours Worked',
-                borderColor: 'rgba(0, 0, 0, 0.4)',
-                pointRadius: 0,
-                fill: true,
-                backgroundColor: 'yellow',
-                lineTension: 0.4,
-                data: monthlyData,
-                borderWidth: 1
-            }
-        ]
     };
 
     const graphOptions = {

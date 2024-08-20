@@ -24,6 +24,7 @@ import axiosWrapper from '../../../utils/api';
 import { API_URL } from '../../../utils/apiUrl';
 import * as types from '../../../redux/actions/actionTypes';
 import { useDispatch, useSelector } from 'react-redux';
+import cross from '@icons/red-cross.svg';
 
 const UploadFiles = ({ onNext, onBack, initialData, setStepComplete, updateCourseData }) => {
     const inputRef = useRef();
@@ -48,6 +49,9 @@ const UploadFiles = ({ onNext, onBack, initialData, setStepComplete, updateCours
         initialValues: null
     });
 
+    const [loadingThum, setLoadingThumb] = useState(false);
+    const [loadingVideo, setLoadingVideo] = useState(false);
+
     const [cropping, setCropping] = useState(false);
     const [imageSrc, setImageSrc] = useState(null);
 
@@ -67,23 +71,22 @@ const UploadFiles = ({ onNext, onBack, initialData, setStepComplete, updateCours
     };
 
     const handleCropComplete = async (croppedImage) => {
-        try {
-            const file = await getFileObjectFromBlobUrl(croppedImage, 'courseThumbnail.jpeg');
-            const formData = new FormData();
-            formData.append('files', file);
-            formData.append('name', file.name);
+        setLoadingThumb(true);
+        const file = await getFileObjectFromBlobUrl(croppedImage, 'courseThumbnail.jpeg');
+        const formData = new FormData();
+        formData.append('files', file);
+        formData.append('name', file.name);
 
-            setCropping(false);
-            const mediaFile = await axiosWrapper('POST', API_URL.UPLOAD_MEDIA, formData, '', true);
-            updateCourseData({
-                thumbnail: mediaFile.data[0].path
-            });
-        } catch (error) {
-            setCropping(false);
-        }
+        const mediaFile = await axiosWrapper('POST', API_URL.UPLOAD_MEDIA, formData, '', true);
+        updateCourseData({
+            thumbnail: mediaFile.data[0].path
+        });
+        setCropping(false);
+        setLoadingThumb(false);
     };
 
     const handleVideoChange = async (e) => {
+        setLoadingVideo(true);
         const file = e.target.files[0];
         if (!file || !file.type.startsWith('video/')) {
             // Display an error or handle the invalid file selection
@@ -100,6 +103,7 @@ const UploadFiles = ({ onNext, onBack, initialData, setStepComplete, updateCours
         updateCourseData({
             trailer: mediaFile.data[0].path
         });
+        setLoadingVideo(false);
     };
 
     const handleCreateClick = () => {
@@ -282,7 +286,9 @@ const UploadFiles = ({ onNext, onBack, initialData, setStepComplete, updateCours
                                                             style={{ display: 'none' }}
                                                             onChange={handleFileChange}
                                                         />
-                                                        {thumbnail ? (
+                                                        {loadingThum ? (
+                                                            <Loading />
+                                                        ) : thumbnail ? (
                                                             <div className="image-renderer">
                                                                 <img
                                                                     src={
@@ -291,9 +297,34 @@ const UploadFiles = ({ onNext, onBack, initialData, setStepComplete, updateCours
                                                                             : URL.createObjectURL(thumbnail)
                                                                     }
                                                                     alt=""
-                                                                    style={{ borderRadius: '50%', objectFit: 'cover' }}
+                                                                    style={{
+                                                                        borderRadius: '50%',
+                                                                        objectFit: 'cover',
+                                                                        width: '200px',
+                                                                        height: '128px'
+                                                                    }}
                                                                 />
                                                                 <span>Course Thumbnail</span>
+                                                                <div
+                                                                    className="align-self-start"
+                                                                    style={{ marginLeft: 'auto' }}
+                                                                >
+                                                                    <img
+                                                                        src={cross}
+                                                                        onClick={() => {
+                                                                            updateCourseData({ thumbnail: null });
+                                                                            if (inputRef.current) {
+                                                                                inputRef.current.value = '';
+                                                                            }
+                                                                        }}
+                                                                        style={{
+                                                                            cursor: 'pointer',
+                                                                            width: '20px !important',
+                                                                            height: '20px !important'
+                                                                        }}
+                                                                        alt="reset"
+                                                                    />
+                                                                </div>
                                                             </div>
                                                         ) : (
                                                             <>
@@ -349,7 +380,9 @@ const UploadFiles = ({ onNext, onBack, initialData, setStepComplete, updateCours
                                                             style={{ display: 'none' }}
                                                             onChange={handleVideoChange}
                                                         />
-                                                        {trailer ? (
+                                                        {loadingVideo ? (
+                                                            <Loading />
+                                                        ) : trailer ? (
                                                             <div className="image-renderer">
                                                                 {/* Display uploaded video */}
                                                                 <video controls>
@@ -365,6 +398,26 @@ const UploadFiles = ({ onNext, onBack, initialData, setStepComplete, updateCours
                                                                     Your browser does not support the video tag.
                                                                 </video>
                                                                 <span>Course Trailer</span>
+                                                                <div
+                                                                    className="align-self-start"
+                                                                    style={{ marginLeft: 'auto' }}
+                                                                >
+                                                                    <img
+                                                                        src={cross}
+                                                                        onClick={() => {
+                                                                            updateCourseData({ trailer: null });
+                                                                            if (videoinputRef.current) {
+                                                                                videoinputRef.current.value = '';
+                                                                            }
+                                                                        }}
+                                                                        style={{
+                                                                            cursor: 'pointer',
+                                                                            width: '20px !important',
+                                                                            height: '20px !important'
+                                                                        }}
+                                                                        alt="reset"
+                                                                    />
+                                                                </div>
                                                             </div>
                                                         ) : (
                                                             <>
