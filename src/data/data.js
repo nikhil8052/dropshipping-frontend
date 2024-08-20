@@ -1759,58 +1759,49 @@ export const eventType = [
     { value: 'ONSITE', label: 'Onsite', id: 1 },
     { value: 'ONLINE', label: 'Online', id: 2 }
 ];
+
 export const countryList = [
     {
         id: 1,
-        name: 'United States',
-        code: 'US',
-        dialCode: '+1',
-        currency: 'USD',
-        currencyName: 'United States Dollar'
+        name: 'Belgium',
+        code: 'BE',
+        dialCode: '+32',
+        currency: 'EUR',
+        currencyName: 'Euro'
     },
     {
         id: 2,
-        name: 'United Kingdom',
-        code: 'GB',
-        dialCode: '+44',
-        currency: 'GBP',
-        currencyName: 'British Pound Sterling'
-    },
-    {
-        id: 3,
-        name: 'Canada',
-        code: 'CA',
-        dialCode: '+1',
-        currency: 'CAD',
-        currencyName: 'Canadian Dollar'
-    },
-    {
-        id: 4,
-        name: 'Australia',
-        code: 'AU',
-        dialCode: '+61',
-        currency: 'AUD',
-        currencyName: 'Australian Dollar'
+        name: 'Netherlands',
+        code: 'NL',
+        dialCode: '+31',
+        currency: 'EUR',
+        currencyName: 'Euro'
     }
 ];
 
 export const regions = [
     {
-        label: 'Region 1',
-        value: 'Region 1',
-        id: 1
+        countryCode: 'BE',
+        name: 'Belgium',
+        regions: [
+            { label: 'Flanders', value: 'Flanders', id: 1 },
+            { label: 'Wallonia', value: 'Wallonia', id: 2 },
+            { label: 'Brussels-Capital', value: 'Brussels-Capital', id: 3 }
+        ]
     },
     {
-        label: 'Region 2',
-        value: 'Region 2',
-        id: 2
-    },
-    {
-        label: 'Region 3',
-        value: 'Region 3',
-        id: 3
+        countryCode: 'NL',
+        name: 'Netherlands',
+        regions: [
+            { label: 'North Holland', value: 'North Holland', id: 4 },
+            { label: 'South Holland', value: 'South Holland', id: 5 },
+            { label: 'Utrecht', value: 'Utrecht', id: 6 },
+            { label: 'Gelderland', value: 'Gelderland', id: 7 },
+            { label: 'North Brabant', value: 'North Brabant', id: 8 }
+        ]
     }
 ];
+
 export const courseCategory = [
     {
         label: 'Category 1',

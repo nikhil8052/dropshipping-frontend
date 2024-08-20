@@ -39,7 +39,7 @@ const NewCoach = () => {
         name: '',
         email: '',
         phoneNumber: '',
-        country: '',
+        country: 'Belgium',
         region: '',
         assignedStudents: [],
         highTicketStudentSpots: '',
@@ -381,6 +381,8 @@ const NewCoach = () => {
                                                         (country) => country.id.toString() === eventKey
                                                     );
                                                     form.setFieldValue(field.name, selectedCountry.name);
+                                                    // clear the selected region
+                                                    form.setFieldValue('region', '');
                                                 };
 
                                                 return (
@@ -425,7 +427,10 @@ const NewCoach = () => {
                                             type="text"
                                             component={({ field, form }) => {
                                                 const handleSelect = (eventKey) => {
-                                                    const selectedCountry = regions.find(
+                                                    const currentRegion = regions.find(
+                                                        (r) => r.name === values.country
+                                                    );
+                                                    const selectedCountry = currentRegion.regions.find(
                                                         (country) => country.id.toString() === eventKey
                                                     );
                                                     form.setFieldValue(field.name, selectedCountry.label);
@@ -444,17 +449,19 @@ const NewCoach = () => {
                                                             onSelect={handleSelect}
                                                             className="dropdown-button w-100"
                                                         >
-                                                            {regions.map((country) => (
-                                                                <Dropdown.Item
-                                                                    key={country.id}
-                                                                    eventKey={country.id}
-                                                                    className="my-1 ms-2 w-100"
-                                                                >
-                                                                    <span className="country-name">
-                                                                        {country.label}
-                                                                    </span>
-                                                                </Dropdown.Item>
-                                                            ))}
+                                                            {regions
+                                                                .find((r) => r.name === values.country)
+                                                                .regions.map((country) => (
+                                                                    <Dropdown.Item
+                                                                        key={country.id}
+                                                                        eventKey={country.id}
+                                                                        className="my-1 ms-2 w-100"
+                                                                    >
+                                                                        <span className="country-name">
+                                                                            {country.label}
+                                                                        </span>
+                                                                    </Dropdown.Item>
+                                                                ))}
                                                         </DropdownButton>
                                                         {form.touched[field.name] && form.errors[field.name] && (
                                                             <div className="error mt-2">{form.errors[field.name]}</div>
