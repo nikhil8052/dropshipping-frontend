@@ -133,14 +133,18 @@ const NewCoach = () => {
     };
 
     const handleCropComplete = async (croppedImage) => {
-        const file = await getFileObjectFromBlobUrl(croppedImage, 'coachAvatar.jpg');
-        const formData = new FormData();
-        formData.append('files', file);
-        formData.append('name', file.name);
+        try {
+            const file = await getFileObjectFromBlobUrl(croppedImage, 'coachAvatar.jpg');
+            const formData = new FormData();
+            formData.append('files', file);
+            formData.append('name', file.name);
 
-        const mediaFile = await axiosWrapper('POST', API_URL.UPLOAD_MEDIA, formData, '', true);
-        setCoachPhoto(mediaFile.data[0].path);
-        setCropping(false);
+            setCropping(false);
+            const mediaFile = await axiosWrapper('POST', API_URL.UPLOAD_MEDIA, formData, '', true);
+            setCoachPhoto(mediaFile.data[0].path);
+        } catch (error) {
+            setCropping(false);
+        }
     };
 
     const validationSchema = Yup.object({

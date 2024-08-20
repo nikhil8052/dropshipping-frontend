@@ -317,8 +317,13 @@ const Students = () => {
             cellRenderer: ({ data: rowData }) => {
                 // Calculate the percentage of courses completed
                 const coursePercentage = calcPercentage(rowData);
-
-                return <div key={rowData?._id}>{coursePercentage.toFixed(2)}%</div>;
+                return (
+                    <div key={rowData?._id}>
+                        {coursePercentage === 0.0 || coursePercentage === '0.00'
+                            ? '--'
+                            : `${coursePercentage.toFixed(2)}%`}
+                    </div>
+                );
             }
         },
         {

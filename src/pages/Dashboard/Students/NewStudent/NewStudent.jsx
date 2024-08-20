@@ -158,14 +158,17 @@ const NewStudent = () => {
     };
 
     const handleCropComplete = async (croppedImage) => {
-        const file = await getFileObjectFromBlobUrl(croppedImage, 'avatar.jpg');
-        const formData = new FormData();
-        formData.append('files', file);
-        formData.append('name', file.name);
-
-        const mediaFile = await axiosWrapper('POST', API_URL.UPLOAD_MEDIA, formData, '', true);
-        setStudentPhoto(mediaFile.data[0].path);
-        setCropping(false);
+        try {
+            const file = await getFileObjectFromBlobUrl(croppedImage, 'avatar.jpg');
+            const formData = new FormData();
+            formData.append('files', file);
+            formData.append('name', file.name);
+            setCropping(false);
+            const mediaFile = await axiosWrapper('POST', API_URL.UPLOAD_MEDIA, formData, '', true);
+            setStudentPhoto(mediaFile.data[0].path);
+        } catch (error) {
+            setCropping(false);
+        }
     };
 
     const handleFormSubmit = async (values, { resetForm, setSubmitting }) => {

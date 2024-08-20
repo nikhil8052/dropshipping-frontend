@@ -10,7 +10,7 @@ import csvExport from '@icons/csv.svg';
 import { API_URL } from '../../../../utils/apiUrl';
 import ProductDetail from './ProductDetail';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faArrowDown, faCircleUser } from '@fortawesome/free-solid-svg-icons';
+import { faCircleUser } from '@fortawesome/free-solid-svg-icons';
 import { FileUploader } from 'react-drag-drop-files';
 import DateRenderer from '@components/DateFormatter/DateFormatter';
 import { useSelector } from 'react-redux';
@@ -232,9 +232,6 @@ const StudentsTrainingProduct = ({ studentId }) => {
                                                 </p>
                                             </div>
                                         </Col>
-                                        <Button className="sample-file-btn">
-                                            <FontAwesomeIcon className="me-2" icon={faArrowDown} /> Download Sample File
-                                        </Button>
                                     </Row>
                                 </Container>
                             }

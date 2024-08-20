@@ -822,11 +822,15 @@
         }
         .btn {
             display: flex;
-            justify-content: center;
+            justify-content: flex-start;
+            align-items: center;
+            text-wrap: wrap;
+            text-align: left;
             gap: 10px;
             width: 180px;
             height: 36px;
             border-radius: 80px;
+            padding: 5px 10px;
             font-size: $font-size-medium;
             @include respond-to($small-screen) {
                 justify-content: center;
@@ -863,7 +867,7 @@
         background-color: #000000;
         padding-inline: 70px;
         padding-block: 8px;
-        text-align: center;
+        text-align: center !important;
         border-radius: 120px;
         border: none;
     }

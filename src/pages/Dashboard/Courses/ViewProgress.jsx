@@ -10,6 +10,7 @@ import activeIcon from '../../../assets/icons/IconLect.svg';
 import axiosWrapper from '../../../utils/api';
 import { API_URL } from '../../../utils/apiUrl';
 import '../../../styles/Courses.scss';
+import { trimLongText } from '../../../utils/common';
 
 const ViewProgress = () => {
     const location = useLocation();
@@ -144,7 +145,7 @@ const ViewProgress = () => {
                                         className={lecture.isCompleted ? 'btn active ' : 'btn inactive'}
                                     >
                                         <img src={lecture.isCompleted ? activeIcon : inActiveIcon} alt="IconLect" />
-                                        <p>{lecture.lectureTitle}</p>
+                                        <p>{trimLongText(lecture.lectureTitle)}</p>
                                     </Button>
                                 </Col>
                             ))
@@ -155,7 +156,7 @@ const ViewProgress = () => {
                 </div>
                 <div className="viewProgress-footer mx-auto">
                     <Link to={`/${role}/courses`}>
-                        <Button className="done-btn" type="button">
+                        <Button className="done-btn text-center d-flex justify-content-center" type="button">
                             Done
                         </Button>
                     </Link>

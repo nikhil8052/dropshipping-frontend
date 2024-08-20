@@ -80,14 +80,18 @@ const NewEvent = () => {
     };
 
     const handleCropComplete = async (croppedImage) => {
-        const file = await getFileObjectFromBlobUrl(croppedImage, 'event.jpg');
-        const formData = new FormData();
-        formData.append('files', file);
-        formData.append('name', file.name);
+        try {
+            const file = await getFileObjectFromBlobUrl(croppedImage, 'event.jpg');
+            const formData = new FormData();
+            formData.append('files', file);
+            formData.append('name', file.name);
+            setCropping(false);
 
-        const mediaFile = await axiosWrapper('POST', API_URL.UPLOAD_MEDIA, formData, '', true);
-        setEventThumbnail(mediaFile.data[0].path);
-        setCropping(false);
+            const mediaFile = await axiosWrapper('POST', API_URL.UPLOAD_MEDIA, formData, '', true);
+            setEventThumbnail(mediaFile.data[0].path);
+        } catch (error) {
+            setCropping(false);
+        }
     };
 
     const validationSchema = Yup.object({
@@ -117,7 +121,12 @@ const NewEvent = () => {
                 then: () =>
                     Yup.string()
                         .required('Location is required for Onsite events')
-                        .test('not-only-spaces', 'location cannot be only spaces', (value) => /\S/.test(value)),
+                        .test('not-only-spaces', 'location cannot be only spaces', (value) => /\S/.test(value))
+                        .test('valid-location-url', 'Location must be a valid Google Maps URL', (value) => {
+                            const urlPattern =
+                                /https:\/\/(www\.)?google\.com\/maps\/place\/.+|https:\/\/maps\.app\.goo\.gl\/.+/;
+                            return urlPattern.test(value);
+                        }),
                 otherwise: () => Yup.string().trim()
             }),
         attendees: Yup.array().min(1, 'Select at least one attendee')

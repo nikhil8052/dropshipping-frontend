@@ -67,16 +67,20 @@ const UploadFiles = ({ onNext, onBack, initialData, setStepComplete, updateCours
     };
 
     const handleCropComplete = async (croppedImage) => {
-        const file = await getFileObjectFromBlobUrl(croppedImage, 'courseThumbnail.jpeg');
-        const formData = new FormData();
-        formData.append('files', file);
-        formData.append('name', file.name);
+        try {
+            const file = await getFileObjectFromBlobUrl(croppedImage, 'courseThumbnail.jpeg');
+            const formData = new FormData();
+            formData.append('files', file);
+            formData.append('name', file.name);
 
-        const mediaFile = await axiosWrapper('POST', API_URL.UPLOAD_MEDIA, formData, '', true);
-        updateCourseData({
-            thumbnail: mediaFile.data[0].path
-        });
-        setCropping(false);
+            setCropping(false);
+            const mediaFile = await axiosWrapper('POST', API_URL.UPLOAD_MEDIA, formData, '', true);
+            updateCourseData({
+                thumbnail: mediaFile.data[0].path
+            });
+        } catch (error) {
+            setCropping(false);
+        }
     };
 
     const handleVideoChange = async (e) => {

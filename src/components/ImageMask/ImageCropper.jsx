@@ -28,10 +28,13 @@ const ImageCropper = ({ imageSrc, onCropComplete, onCancel }) => {
     }, []);
 
     const handleCropComplete = async () => {
-        setLoading(true);
-        const croppedImage = await getCroppedImg(imageSrc, croppedAreaPixels);
-        setLoading(false);
-        onCropComplete(croppedImage);
+        try {
+            setLoading(true);
+            const croppedImage = await getCroppedImg(imageSrc, croppedAreaPixels);
+            onCropComplete(croppedImage);
+        } catch (error) {
+            setLoading(false);
+        }
     };
 
     return (
