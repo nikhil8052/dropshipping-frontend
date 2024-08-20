@@ -16,8 +16,7 @@ const CourseCard = ({
     archive,
     enroll,
     onChange,
-    previousCourseProgress,
-    currentCourseProgress,
+    progress = 0,
     canAccessCourse,
     ...rest
 }) => {
@@ -80,9 +79,9 @@ const CourseCard = ({
                     <>
                         <div className="progress-section  ">
                             <div>
-                                <ProgressBar now={currentCourseProgress} />
+                                <ProgressBar now={Math.floor(progress)} />
                             </div>
-                            <p className="text-end p-2">{currentCourseProgress.toFixed(2)}% Progress</p>
+                            <p className="text-end p-2">{Math.floor(progress)}% Progress</p>
                         </div>
                         <div className="enroll-icon">
                             <img src={!canAccessCourse ? lockIcon : enrollIcon} alt="enrollIcon" />

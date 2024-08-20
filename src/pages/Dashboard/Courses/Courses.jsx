@@ -60,16 +60,25 @@ const Courses = () => {
 
         const response = await axiosWrapper(method, url, {}, userToken);
         const { data, total, limit } = response;
-        const formattedData = data.map((c) => ({
-            img: c.thumbnail,
-            title: c.title,
-            detail: c.subtitle,
-            lectureNo: `Lectures: ${c.lectures.length}`,
-            archive: c.isArchived,
-            enroll: c.enrolledStudents.includes(userInfo?._id),
-            _id: c?._id
-        }));
 
+        const formattedData = data.map((course) => {
+            const baseCourseData = {
+                img: course?.thumbnail,
+                title: course?.title,
+                detail: course?.subtitle,
+                lectureNo: `Lectures: ${course?.lectures.length}`,
+                archive: course?.isArchived,
+                enroll: course?.enrolledStudents.includes(userInfo?._id),
+                _id: course?._id
+            };
+
+            if (role === 'STUDENT') {
+                const progress = calcProgress(course, userInfo?._id);
+                return { ...baseCourseData, progress };
+            }
+
+            return baseCourseData;
+        });
         setCoursesData(formattedData);
         setTotalPages(Math.ceil(total / limit));
     };
@@ -160,10 +169,7 @@ const Courses = () => {
                     <Row>
                         {coursesData.map((course, index) => {
                             const previousCourse = coursesData[index - 1];
-                            const previousCourseProgress = previousCourse
-                                ? calcProgress(previousCourse, userInfo?._id)
-                                : 100;
-                            const currentCourseProgress = calcProgress(course, userInfo?._id);
+                            const previousCourseProgress = previousCourse ? previousCourse.progress : 100;
 
                             // The student can access the current course only if the previous course is completed 100%
                             const canAccessCourse = previousCourseProgress === 100;
@@ -173,8 +179,6 @@ const Courses = () => {
                                         <CourseCard
                                             {...course}
                                             onChange={() => handleArchiveChange(course?._id, course?.archive)}
-                                            currentCourseProgress={currentCourseProgress}
-                                            previousCourseProgress={previousCourseProgress}
                                             canAccessCourse={canAccessCourse}
                                         />
                                     </div>
