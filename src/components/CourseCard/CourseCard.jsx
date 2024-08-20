@@ -3,11 +3,24 @@ import { useState } from 'react';
 import Form from 'react-bootstrap/Form';
 import ProgressBar from 'react-bootstrap/ProgressBar';
 import enrollIcon from '../../assets/icons/enroll-icon.svg';
+import lockIcon from '../../assets/icons/lock-icon.svg';
 import { Link } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { trimLongText } from '../../utils/common';
 
-const CourseCard = ({ img, title, detail, lectureNo, archive, enroll, onChange, ...rest }) => {
+const CourseCard = ({
+    img,
+    title,
+    detail,
+    lectureNo,
+    archive,
+    enroll,
+    onChange,
+    previousCourseProgress,
+    currentCourseProgress,
+    canAccessCourse,
+    ...rest
+}) => {
     const { userInfo } = useSelector((state) => state?.auth);
     const role = userInfo?.role?.toLowerCase();
 
@@ -22,11 +35,16 @@ const CourseCard = ({ img, title, detail, lectureNo, archive, enroll, onChange, 
     const trimmedText = trimLongText(detail, 20);
     const displayText = isExpanded ? detail : trimmedText;
 
+    // check if the previous course is 100% complete then it can move to next course
     return (
         <>
             <div className="course-card">
                 <Link
-                    to={role !== 'student' || !enroll ? `/${role}/courses/details` : `/${role}/courses/enrolled-course`}
+                    to={
+                        role === 'student' && enroll && canAccessCourse
+                            ? `/${role}/courses/enrolled-course`
+                            : `/${role}/courses/details`
+                    }
                     state={{
                         courseId: rest?._id
                     }}
@@ -62,13 +80,13 @@ const CourseCard = ({ img, title, detail, lectureNo, archive, enroll, onChange, 
                     <>
                         <div className="progress-section  ">
                             <div>
-                                <ProgressBar now={60} />
+                                <ProgressBar now={currentCourseProgress} />
                             </div>
-                            <p className="text-end p-2">60% Progress</p>
+                            <p className="text-end p-2">{currentCourseProgress.toFixed(2)}% Progress</p>
                         </div>
                         <div className="enroll-icon">
-                            <img src={enrollIcon} alt="enrollIcon" />
-                            <p className="">Enrolled</p>
+                            <img src={!canAccessCourse ? lockIcon : enrollIcon} alt="enrollIcon" />
+                            <p className="">{!canAccessCourse ? 'Locked' : 'Enrolled'}</p>
                         </div>
                     </>
                 )}

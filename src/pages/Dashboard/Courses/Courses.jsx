@@ -95,6 +95,20 @@ const Courses = () => {
     // c. Perform a quiz Api (if quiz marks are less than 50% then student can not proceed to the next lecture and have a retry option for the quiz)
     // d. Update the progress of the lecture (i.e. 1/10 lectures completed)
 
+    const calcProgress = (course, studentId) => {
+        const lectures = course.lectures || [];
+        const totalLectures = lectures.length;
+
+        // Count completed lectures
+        const completedLectures = lectures.filter((lecture) => {
+            const completedBy = lecture.completedBy || [];
+            return completedBy.includes(studentId) || completedBy.some((item) => item._id === studentId);
+        }).length;
+
+        // Calculate the completion percentage for this course
+        return totalLectures > 0 ? (completedLectures / totalLectures) * 100 : 0;
+    };
+
     return (
         <div className="course-section">
             <div className="courses-button-wrapper">
@@ -144,16 +158,29 @@ const Courses = () => {
                     <div className="no-data-wrapper">No Data Found.</div>
                 ) : (
                     <Row>
-                        {coursesData.map((course) => (
-                            <Col key={course._id} xs={12} sm={12} md={6} lg={4} xl={3} xxl={3}>
-                                <div className="custom-card-course-new">
-                                    <CourseCard
-                                        {...course}
-                                        onChange={() => handleArchiveChange(course?._id, course?.archive)}
-                                    />
-                                </div>
-                            </Col>
-                        ))}
+                        {coursesData.map((course, index) => {
+                            const previousCourse = coursesData[index - 1];
+                            const previousCourseProgress = previousCourse
+                                ? calcProgress(previousCourse, userInfo?._id)
+                                : 100;
+                            const currentCourseProgress = calcProgress(course, userInfo?._id);
+
+                            // The student can access the current course only if the previous course is completed 100%
+                            const canAccessCourse = previousCourseProgress === 100;
+                            return (
+                                <Col key={course._id} xs={12} sm={12} md={6} lg={4} xl={3} xxl={3}>
+                                    <div className="custom-card-course-new">
+                                        <CourseCard
+                                            {...course}
+                                            onChange={() => handleArchiveChange(course?._id, course?.archive)}
+                                            currentCourseProgress={currentCourseProgress}
+                                            previousCourseProgress={previousCourseProgress}
+                                            canAccessCourse={canAccessCourse}
+                                        />
+                                    </div>
+                                </Col>
+                            );
+                        })}
                         <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={handlePageChange} />
                     </Row>
                 )}
