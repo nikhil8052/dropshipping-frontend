@@ -157,6 +157,12 @@ const EnrolledCourseDetail = () => {
         }
     };
 
+    const markLectureAsCompleted = async (lectureId) => {
+        await axiosWrapper('PUT', `${API_URL.MARK_LECTURE_COMPLETED.replace(':id', lectureId)}`, {}, token);
+        // Refresh course data
+        getCourseById(courseId, lectures[activeIndex + 1]?._id);
+    };
+
     return (
         <div className="EnrolledCourseDetail">
             <div className="title-top">
@@ -325,14 +331,32 @@ const EnrolledCourseDetail = () => {
                                     {retryQuiz ? 'Retry Quiz' : 'Submit Quiz'}
                                 </Button>
                             ) : (
-                                <Button
-                                    className="done-btn"
-                                    type="button"
-                                    onClick={continueHandler}
-                                    disabled={isSubmitting || selectedLecture?.completedBy?.includes(userInfo?._id)}
-                                >
-                                    Continue To Quiz
-                                </Button>
+                                <>
+                                    {
+                                        /* Continue to Quiz Button */
+                                        selectedLecture?.quiz.mcqs.length !== 0 ? (
+                                            <Button
+                                                className="done-btn"
+                                                type="button"
+                                                onClick={continueHandler}
+                                                disabled={
+                                                    isSubmitting ||
+                                                    selectedLecture?.completedBy?.includes(userInfo?._id)
+                                                }
+                                            >
+                                                Continue To Quiz
+                                            </Button>
+                                        ) : (
+                                            <Button
+                                                className="done-btn"
+                                                type="button"
+                                                onClick={() => markLectureAsCompleted(selectedLecture?._id)}
+                                            >
+                                                Done
+                                            </Button>
+                                        )
+                                    }
+                                </>
                             )}
                         </div>
                     </FormikForm>
