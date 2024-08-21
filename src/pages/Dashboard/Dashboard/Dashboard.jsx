@@ -53,11 +53,17 @@ const Dashboard = () => {
 
     useEffect(() => {
         fetchDashboardData();
-    }, [role, currentFilter]);
+    }, [role]);
 
-    const fetchDashboardData = async () => {
+    useEffect(() => {
+        if (currentFilter) {
+            fetchDashboardData(false);
+        }
+    }, [currentFilter]);
+
+    const fetchDashboardData = async (loading = true) => {
         try {
-            setLoading(true);
+            setLoading(loading);
             let cardData, graphData, eventData;
             if (role === 'ADMIN') {
                 cardData = await axiosWrapper('GET', API_URL.GET_ADMIN_CARD_DATA, {}, token);
