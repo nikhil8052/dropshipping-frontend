@@ -2,9 +2,9 @@ import { Card, Image } from 'react-bootstrap';
 import './MeetingCard.scss';
 import { formatTimezone } from '../../utils/common';
 
-const MeetingCard = ({ meeting }) => {
+const MeetingCard = ({ meeting, handleCardClick, isClickable = false }) => {
     return (
-        <Card className="card-custom h-100">
+        <Card className="card-custom h-100" onClick={isClickable ? () => handleCardClick(meeting?._id) : null}>
             <Card.Header className="card-header-custom">
                 {meeting?.thumbnail ? (
                     <Image src={meeting?.thumbnail} rounded className="image-custom" />
@@ -31,7 +31,12 @@ const MeetingCard = ({ meeting }) => {
                 </Card.Text>
             </Card.Body>
             <Card.Footer className="card-footer-custom">
-                <a href={meeting?.meetingLink} target="_blank" className="join" rel="noreferrer">
+                <a
+                    href={meeting?.typeOfEvent === 'ONSITE' ? meeting?.location : meeting?.meetingLink}
+                    target="_blank"
+                    className="join"
+                    rel="noreferrer"
+                >
                     Join
                 </a>
             </Card.Footer>

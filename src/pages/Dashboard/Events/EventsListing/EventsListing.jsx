@@ -21,7 +21,6 @@ const EventsListing = () => {
     const [eventsData, setEventsData] = useState([]);
     const token = useSelector((state) => state?.auth?.userToken);
     const [loading, setLoading] = useState(false);
-    const [selectedEvent, setSelectedEvent] = useState(null);
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const allListingsChange = useSelector((state) => state.root.allListingsChange);
@@ -49,16 +48,9 @@ const EventsListing = () => {
     // Get current items for the current page
     const currentItems = eventsData.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage) || [];
 
-    const handleCardClick = (data) => {
-        setSelectedEvent(data);
+    const handleCardClick = (eventId) => {
+        navigate('/student/events/detail', { state: { eventId } });
     };
-
-    useEffect(() => {
-        if (selectedEvent?.id) {
-            // Redirect to event details page
-            navigate('/student/events/detail', { state: { event: selectedEvent } });
-        }
-    }, [selectedEvent?.id]);
 
     useEffect(() => {
         fetchData(querySearch, currentPage);
@@ -181,7 +173,11 @@ const EventsListing = () => {
                                         xl={4}
                                         className="mb-4"
                                     >
-                                        <MeetingCard meeting={meeting} handleCardClick={handleCardClick} />
+                                        <MeetingCard
+                                            isClickable={true}
+                                            meeting={meeting}
+                                            handleCardClick={handleCardClick}
+                                        />
                                     </Col>
                                 ))}
                             </Row>

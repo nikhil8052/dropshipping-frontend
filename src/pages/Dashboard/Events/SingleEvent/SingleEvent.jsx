@@ -35,7 +35,8 @@ const SingleEvent = () => {
     const getEventDetails = async (id) => {
         try {
             setLoading(true);
-            const response = await axiosWrapper('GET', API_URL.GET_EVENT.replace(':id', id), {}, token);
+            const url = role === 'student' ? API_URL.GET_EVENT_BY_ID_FOR_STUDENT : API_URL.GET_EVENT;
+            const response = await axiosWrapper('GET', url.replace(':id', id), {}, token);
             const event = response.data;
 
             setEventData(event);
@@ -56,19 +57,13 @@ const SingleEvent = () => {
                             <Col>
                                 <Button
                                     className="submit-btn d-flex align-items-center mb-2"
-                                    onClick={() => navigate(`/${role}/events`)}
+                                    onClick={() =>
+                                        navigate(role === 'student' ? `/${role}/events/listing` : `/${role}/events`)
+                                    }
                                 >
                                     <img src={CaretLeft} alt="CaretLeft" className="me-2" /> Back
                                 </Button>
                             </Col>
-                            {/* Commenting for later user no need right now */}
-                            {/* <Col>
-                                <div className="d-flex justify-content-end">
-                                    <Button className="google-calendar-btn">
-                                        <img src={calendar} alt="calendar" className="me-2" /> Google Calendar
-                                    </Button>
-                                </div>
-                            </Col> */}
                         </Row>
                     )}
 
@@ -99,7 +94,7 @@ const SingleEvent = () => {
                                     <div>
                                         <Button
                                             variant="primary"
-                                            className={`zoom-btn ${role !== 'STUDENT' ? 'w-100' : ''}`}
+                                            className={`zoom-btn ${role !== 'student' ? 'w-100' : ''}`}
                                         >
                                             <img src={blueLink} alt="" /> |{' '}
                                             {event?.typeOfEvent === 'ONLINE' ? event?.meetingLink : event?.location}
@@ -108,16 +103,15 @@ const SingleEvent = () => {
                                 </div>
                             </Card.Text>
                             <Row className="my-3">
-                                {role === 'STUDENT' && (
+                                {role === 'student' && event?.zoomMeetingDetails && (
                                     <Col>
-                                        meeting
                                         <Row className="justify-content-start">
                                             <Col lg={2}>
                                                 <img src={record} alt="record" className="me-5" />{' '}
                                             </Col>
                                             <Col>
                                                 <strong>[Recording] Meeting Held at Feb 2, 2024 at</strong>
-                                                <div className="recording-date"> {event?.dateTime}</div>
+                                                <div className="recording-date"> {formatTimezone(event?.dateTime)}</div>
                                             </Col>
                                         </Row>
                                     </Col>
@@ -145,20 +139,28 @@ const SingleEvent = () => {
                                 </Col>
                             </Row>
 
-                            {role === 'STUDENT' ? (
-                                <Row>
-                                    <Col>
-                                        <iframe
-                                            src="https://www.youtube.com/embed/rqGNDT_utao"
-                                            title="YouTube video player"
-                                            frameBorder="0"
-                                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                                            allowFullScreen
-                                            className="video-iframe w-100"
-                                            height={400}
-                                        ></iframe>
-                                    </Col>
-                                </Row>
+                            {!event?.zoomMeetingDetails && (
+                                <p className="text-danger text-center">Meeting Details on zoom not found</p>
+                            )}
+
+                            {role === 'student' ? (
+                                <>
+                                    {event?.zoomMeetingDetails && (
+                                        <Row>
+                                            <Col>
+                                                <iframe
+                                                    src="https://www.youtube.com/embed/rqGNDT_utao"
+                                                    title="YouTube video player"
+                                                    frameBorder="0"
+                                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                                    allowFullScreen
+                                                    className="video-iframe w-100"
+                                                    height={400}
+                                                ></iframe>
+                                            </Col>
+                                        </Row>
+                                    )}
+                                </>
                             ) : (
                                 <div className="event-detail-footer">
                                     <button

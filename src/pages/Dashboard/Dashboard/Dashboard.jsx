@@ -81,8 +81,8 @@ const Dashboard = () => {
                 cardData = await axiosWrapper('GET', API_URL.GET_COACH_CARD_DATA, {}, token);
                 graphData = await axiosWrapper(
                     'GET',
-                    API_URL.GET_COACH_GRAPH_DATA,
-                    { graphFilter: currentFilter },
+                    `${API_URL.GET_COACH_GRAPH_DATA}?graphFilter=${currentFilter}`,
+                    {},
                     token
                 );
                 eventData = await axiosWrapper('GET', API_URL.GET_COACH_EVENTS_DATA, {}, token);
@@ -104,8 +104,14 @@ const Dashboard = () => {
             }));
             setCardStats(mapCards);
             setEventsData(mappedEvents);
-            const data = generateChartData(graphData?.data, currentFilter);
-
+            let data = [];
+            if (role === 'ADMIN') {
+                data = generateChartData(graphData?.data, currentFilter);
+            } else if (role === 'COACH') {
+                data = generateCoachGraphData(graphData?.data, currentFilter);
+            } else {
+                data = [];
+            }
             setLineGraphData(data);
         } catch (error) {
             return;
@@ -118,6 +124,7 @@ const Dashboard = () => {
     const generateChartData = (data, filter) => {
         let labels = [];
         let datasets = [];
+
         if (filter === 'yearly' || filter === 'monthly') {
             labels = data?.totalStudentsData?.flatMap((obj) => Object.keys(obj));
             datasets = data?.totalStudentsData?.flatMap((obj) => Object.values(obj));
@@ -159,6 +166,38 @@ const Dashboard = () => {
                     ]
                 }
             }
+        };
+    };
+
+    const generateCoachGraphData = (data, filter) => {
+        let labels = [];
+        let datasets = [];
+
+        if (filter === 'yearly' || filter === 'monthly') {
+            labels = data?.hoursWorkedData?.flatMap((obj) => Object.keys(obj));
+            datasets = data?.hoursWorkedData?.flatMap((obj) => Object.values(obj));
+            setGridOptionsLabel(labels);
+        }
+
+        if (filter === 'weekly') {
+            labels = data?.hoursWorkedData?.flatMap((obj) => Object.keys(obj));
+            datasets = data?.hoursWorkedData?.flatMap((obj) => Object.values(obj));
+            setGridOptionsLabel(labels);
+        }
+        return {
+            labels: labels,
+            datasets: [
+                {
+                    label: 'Hours Worked',
+                    borderColor: 'rgba(0, 0, 0, 0.4)',
+                    // pointRadius: 0,
+                    // fill: true,
+                    // backgroundColor: 'yellow',
+                    lineTension: 0.4,
+                    data: datasets,
+                    borderWidth: 1
+                }
+            ]
         };
     };
 

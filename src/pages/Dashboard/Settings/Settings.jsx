@@ -30,6 +30,8 @@ const Settings = () => {
         confirm: false
     });
 
+    const [showSecret, setShowSecret] = useState(false);
+
     const [profileData, setProfileData] = useState({
         name: '',
         email: '',
@@ -145,6 +147,10 @@ const Settings = () => {
         }));
     };
 
+    const toggleSecretVisibility = () => {
+        setShowSecret((prev) => !prev);
+    };
+
     return (
         <div className="settings-page">
             <Container fluid className="p-3">
@@ -258,6 +264,54 @@ const Settings = () => {
                                     </Col>
                                 )}
                             </Row>
+
+                            {/* Zoom Fields */}
+
+                            {userInfo?.role !== 'STUDENT' && (
+                                <Row>
+                                    <Col md={6} xs={12}>
+                                        <label className="field-label">Account Id</label>
+                                        <Field
+                                            name="accountId"
+                                            className="field-control"
+                                            type="text"
+                                            placeholder="Zoom Account ID"
+                                        />
+                                        <ErrorMessage name="accountId" component="div" className="error" />
+                                    </Col>
+
+                                    <Col md={6} xs={12}>
+                                        <label className="field-label">Client Id</label>
+                                        <Field
+                                            name="clientId"
+                                            className="field-control"
+                                            type="text"
+                                            placeholder="Zoom Client ID"
+                                        />
+                                        <ErrorMessage name="clientId" component="div" className="error" />
+                                    </Col>
+
+                                    <Col md={6} xs={12}>
+                                        <label className="field-label">Client Secret</label>
+                                        <InputGroup>
+                                            <Field
+                                                name="clientSecret"
+                                                className="field-control"
+                                                type={showSecret ? 'text' : 'password'}
+                                                placeholder="*************"
+                                            />
+                                            <FontAwesomeIcon
+                                                icon={showSecret ? faEyeSlash : faEye}
+                                                onClick={toggleSecretVisibility}
+                                                className="eye-icon"
+                                                color="rgba(200, 202, 216, 1)"
+                                            />
+                                        </InputGroup>
+                                        <ErrorMessage name="clientSecret" component="div" className="error" />
+                                    </Col>
+                                </Row>
+                            )}
+
                             <Row>
                                 <Col>
                                     <div className="mt-3 d-flex justify-content-start gap-3">
