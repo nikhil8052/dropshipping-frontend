@@ -24,7 +24,6 @@ const LineChart = ({
     tabTitles,
     timePeriods,
     chartHeight,
-    dataSet,
     role,
     handleFilterChange,
     currentFilter
@@ -33,7 +32,7 @@ const LineChart = ({
         <Card className="graph-card">
             <Card.Body>
                 <div className="chart-container">
-                    {dataSet ? (
+                    {role === 'ADMIN' ? (
                         <Tab.Container id="line-chart-tabs" activeKey={chartKey} onSelect={(k) => setChartKey(k)}>
                             <Row>
                                 <Col sm={12}>
@@ -87,7 +86,7 @@ const LineChart = ({
                                     <Form.Select
                                         className="custom-form-select"
                                         aria-label="Select Time Period"
-                                        onChange={(e) => setChartKey(e.target.value)}
+                                        onChange={(e) => handleFilterChange(e.target.value)}
                                         style={{ width: 'auto', display: 'inline-block' }}
                                     >
                                         {timePeriods.map((period) => (
@@ -104,7 +103,7 @@ const LineChart = ({
                                 </Col>
                             </Row>
                         </>
-                    ) : (
+                    ) : role === 'STUDENT' ? (
                         <>
                             <Row className="d-flex justify-content-between">
                                 <Col className="flex-grow-1 ">
@@ -134,7 +133,7 @@ const LineChart = ({
                                 </Col>
                             </Row>
                         </>
-                    )}
+                    ) : null}
                 </div>
             </Card.Body>
         </Card>
