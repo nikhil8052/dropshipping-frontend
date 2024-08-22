@@ -15,6 +15,7 @@ import axiosWrapper from '@utils/api';
 import { API_URL } from '../../../utils/apiUrl';
 import '../../../styles/Settings.scss';
 import '../../../styles/Common.scss';
+import { Helmet } from 'react-helmet';
 
 const Settings = () => {
     const inputRef = useRef();
@@ -153,6 +154,9 @@ const Settings = () => {
 
     return (
         <div className="settings-page">
+            <Helmet>
+                <title>Settings | Dropship Academy</title>
+            </Helmet>
             <Container fluid className="p-3">
                 <Formik
                     initialValues={profileData}

@@ -12,6 +12,7 @@ import * as types from '../../../redux/actions/actionTypes';
 import axiosWrapper from '../../../utils/api';
 import '../../../styles/Common.scss';
 import '../../../styles/Courses.scss';
+import { Helmet } from 'react-helmet';
 
 const Courses = () => {
     const [search, setSearch] = useState('');
@@ -72,7 +73,7 @@ const Courses = () => {
                 _id: course?._id
             };
 
-            if (role === 'STUDENT') {
+            if (role === 'STUDENT' && course?.enrolledStudents.includes(userInfo?._id)) {
                 const progress = calcProgress(course, userInfo?._id);
                 return { ...baseCourseData, progress };
             }
@@ -120,6 +121,9 @@ const Courses = () => {
 
     return (
         <div className="course-section">
+            <Helmet>
+                <title>Courses | Dropship Academy</title>
+            </Helmet>
             <div className="courses-button-wrapper">
                 <InputGroup>
                     <InputGroup.Text>

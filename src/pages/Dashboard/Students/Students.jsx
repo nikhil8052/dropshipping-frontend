@@ -410,7 +410,7 @@ const Students = () => {
     return (
         <div className="students-page">
             <Helmet>
-                <title>Coaches | Dropship Academy</title>
+                <title>Students | Dropship Academy</title>
             </Helmet>
             {coursesModal.show && (
                 <Modal size="md" show={coursesModal.show} onClose={handleCloseModal} title={coursesModal.title}>

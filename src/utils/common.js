@@ -54,7 +54,7 @@ export const debounce = (func, wait) => {
 };
 
 // Helper function to get formatted start and end times from an ISO date-time string
-export const getFormattedTimes = (dateTime, durationInHours = 2) => {
+export const getFormattedTimes = (dateTime, durationInHours = 1) => {
     if (!dateTime) return { startTime: '', endTime: '' };
 
     const eventDate = new Date(dateTime);

@@ -1,7 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
-import { Button, Col, Dropdown, Form, InputGroup, Row } from 'react-bootstrap';
+import { Col, Dropdown, Form, InputGroup, Row } from 'react-bootstrap';
 import Search from '@icons/Search.svg';
-import calendar from '@icons/calendar.svg';
 import MeetingCard from '@components/MeetingCard/MeetingCard';
 import Pagination from '@components/Pagination/Pagination';
 import { useNavigate } from 'react-router-dom';
@@ -134,9 +133,6 @@ const EventsListing = () => {
                         </Col>
                         <Col lg={4}>
                             <div className="d-flex justify-content-end">
-                                <Button className="google-calendar-btn responsive-btn">
-                                    <img src={calendar} alt="calendar" className="me-2" /> Google Calendar
-                                </Button>
                                 <Dropdown className="dropdown-button-fix ms-3 responsive-btn">
                                     <Dropdown.Toggle variant="success" id="dropdown-basic">
                                         <span className="me-2">{querySearch.dateTime}</span>

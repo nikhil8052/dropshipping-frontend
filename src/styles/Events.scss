@@ -114,34 +114,33 @@
         }
     }
 
-    .event-detail-footer {
-        display: flex;
-        justify-content: end;
-        gap: 10px;
-        padding-inline: 24px;
-        padding-block: 32px;
-        border-top: 0.2px solid #707070;
+    // .event-detail-footer {
+    //     display: flex;
+    //     justify-content: end;
+    //     gap: 10px;
+    //     padding-inline: 24px;
+    //     padding-block: 32px;
+    //     border-top: 0.2px solid #707070;
 
-        .edit {
-            background-color: transparent;
-            color: #212121;
-            border: 3.3px solid #2f80ed;
-            width: 224px;
-            height: 45px;
-            border-radius: 50px;
-        }
+    //     .edit {
+    //         background-color: transparent;
+    //         color: #212121;
+    //         border: 3.3px solid #2f80ed;
+    //         width: 224px;
+    //         height: 45px;
+    //         border-radius: 50px;
+    //     }
 
-        .join {
-            background-color: #2f80ed;
-            color: #ffffff;
-            border: 0.3px solid #2f80ed;
-            padding-inline: auto;
-            // padding-block: 12px;
-            border-radius: 50px;
-            width: 224px;
-            height: 45px;
-        }
-    }
+    //     .join {
+    //         background-color: #2f80ed;
+    //         color: #ffffff;
+    //         border: 0.3px solid #2f80ed;
+    //         padding-inline: auto;
+    //         border-radius: 50px;
+    //         width: 224px;
+    //         height: 45px;
+    //     }
+    // }
 
     .main-row-meeting-link {
         display: flex;
