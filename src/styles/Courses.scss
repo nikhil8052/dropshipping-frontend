@@ -322,17 +322,11 @@
     color: #8c94a3;
     font-size: $font-size-medium;
     padding: 15px 20px;
-    .dtlKip {
-        display: none !important;
-    }
 
     .guZdik {
         // display: none !important;
         border: none !important;
         .jWkLDY,
-        .dtlKip {
-            display: none !important;
-        }
         svg {
             display: none !important;
         }
@@ -523,9 +517,6 @@
     padding: 15px;
     color: #8c94a3;
     font-size: $font-size-medium;
-    .dtlKip {
-        display: none !important;
-    }
     h4 {
         font-size: $font-size-medium;
 
@@ -543,9 +534,6 @@
     }
 }
 .jWkLDY,
-.dtlKip {
-    display: none !important;
-}
 .submit-btn,
 .cancel-btn {
     border-radius: 59px;
