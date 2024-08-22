@@ -323,7 +323,8 @@
     font-size: $font-size-medium;
     padding: 15px 20px;
 
-    .guZdik {
+    .guZdik,
+    .dtlKip {
         // display: none !important;
         border: none !important;
         .jWkLDY {
@@ -536,8 +537,9 @@
         display: none;
     }
 }
-.jWkLDY {
-    display: none;
+.jWkLDY,
+.dtlKip {
+    display: none !important;
 }
 .submit-btn,
 .cancel-btn {
