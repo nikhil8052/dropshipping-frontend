@@ -1,12 +1,11 @@
 import './CourseCard.scss';
-import { useState } from 'react';
 import Form from 'react-bootstrap/Form';
 import ProgressBar from 'react-bootstrap/ProgressBar';
 import enrollIcon from '../../assets/icons/enroll-icon.svg';
 import lockIcon from '../../assets/icons/lock-icon.svg';
 import { Link } from 'react-router-dom';
 import { useSelector } from 'react-redux';
-import { trimLongText } from '../../utils/common';
+import TextExpand from '@components/TextExpand/TextExpand';
 
 const CourseCard = ({
     img,
@@ -22,17 +21,6 @@ const CourseCard = ({
 }) => {
     const { userInfo } = useSelector((state) => state?.auth);
     const role = userInfo?.role?.toLowerCase();
-
-    const [isExpanded, setIsExpanded] = useState(false);
-
-    const handleToggleExpand = (e) => {
-        e.preventDefault();
-        e.stopPropagation(); // Prevent event bubbling to the Link
-        setIsExpanded(!isExpanded);
-    };
-
-    const trimmedText = trimLongText(detail, 20);
-    const displayText = isExpanded ? detail : trimmedText;
 
     // check if the previous course is 100% complete then it can move to next course
     return (
@@ -50,15 +38,8 @@ const CourseCard = ({
                 >
                     <div className="mb-3 p-2">
                         <img src={img} className="course-img " alt="course-icon" />
-                        <h1 className="course-title">{title}</h1>
-                        <p className="course-des">
-                            {displayText}
-                            {detail.length > 20 && (
-                                <span className="show-more" onClick={handleToggleExpand}>
-                                    {isExpanded ? 'Show Less' : 'Show More'}
-                                </span>
-                            )}
-                        </p>
+                        <TextExpand className="course-title" value={title} width="100%" />
+                        <TextExpand className="course-des" value={detail} width="100%" />
                         <p className="lecture-No">{lectureNo}</p>
                     </div>
                 </Link>

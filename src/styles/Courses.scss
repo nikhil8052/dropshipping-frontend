@@ -60,6 +60,7 @@
             display: flex;
             justify-content: center;
             margin-block: 1.3rem;
+            height: 100%;
             @include respond-to($small-screen) {
                 margin-bottom: 5px !important;
                 margin-top: 15px !important;

@@ -9,6 +9,7 @@ import inActiveIcon from '../../../assets/icons/Icon-inactive-lec.svg';
 import activeIcon from '../../../assets/icons/IconLect.svg';
 import axiosWrapper from '../../../utils/api';
 import { API_URL } from '../../../utils/apiUrl';
+import TextExpand from '@components/TextExpand/TextExpand';
 import '../../../styles/Courses.scss';
 import { trimLongText } from '../../../utils/common';
 
@@ -66,7 +67,6 @@ const ViewProgress = () => {
     }, [search, progress]);
 
     // Later we can add a infinite scroll to load more lectures
-
     return (
         <div className="view-progress-section">
             <div className="title-top">
@@ -102,7 +102,8 @@ const ViewProgress = () => {
 
             <div className="card-background">
                 <div className="text-heading">
-                    <h1>Design Conference</h1>
+                    <TextExpand className="text-white fw-bold fs-1" value={progress?.course?.title} width="50%" />
+
                     <div className="viewProfile-img">
                         <img
                             className="avatar-student"

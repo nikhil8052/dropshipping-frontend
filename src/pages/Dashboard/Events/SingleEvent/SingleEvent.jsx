@@ -139,7 +139,7 @@ const SingleEvent = () => {
                                 </Col>
                             </Row>
 
-                            {!event?.zoomMeetingDetails && (
+                            {role === 'student' && !event?.zoomMeetingDetails && (
                                 <p className="text-danger text-center">Meeting Details on zoom not found</p>
                             )}
 
@@ -163,19 +163,21 @@ const SingleEvent = () => {
                                 </>
                             ) : (
                                 <div className="event-detail-footer">
-                                    <button
-                                        type="button"
-                                        className="edit"
-                                        onClick={() =>
-                                            navigate(`/${role}/events/edit`, {
-                                                state: {
-                                                    eventId: event?._id
-                                                }
-                                            })
-                                        }
-                                    >
-                                        Edit
-                                    </button>
+                                    {event?.createdBy?._id.toString() === userInfo._id.toString() && (
+                                        <button
+                                            type="button"
+                                            className="edit"
+                                            onClick={() =>
+                                                navigate(`/${role}/events/edit`, {
+                                                    state: {
+                                                        eventId: event?._id
+                                                    }
+                                                })
+                                            }
+                                        >
+                                            Edit
+                                        </button>
+                                    )}
                                     <a
                                         href={event?.typeOfEvent === 'ONLINE' ? event?.meetingLink : event?.location}
                                         type="button"
@@ -183,7 +185,7 @@ const SingleEvent = () => {
                                         className="join"
                                         rel="noreferrer"
                                     >
-                                        Join Meeting
+                                        {event?.typeOfEvent === 'ONLINE' ? 'Join Meeting' : 'Open Location'}
                                     </a>
                                 </div>
                             )}

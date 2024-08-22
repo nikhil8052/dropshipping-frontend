@@ -15,6 +15,7 @@ import calendar from '@icons/calendar.svg';
 import downArrow from '@icons/down-arrow.svg';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
+import { toast } from 'react-hot-toast';
 import '../../../styles/Events.scss';
 import '../../../styles/Common.scss';
 import { API_URL } from '../../../utils/apiUrl';
@@ -169,26 +170,31 @@ const Events = () => {
                         <img src={eyeIcon} className="action-icon ms-0" alt="action-icon" />
                     </div>
                 </Col>
-                {props.data.createdBy?._id.toString() === userInfo._id.toString() && (
-                    <>
-                        <Col lg={3} md={4} sm={4} xs={4} className="d-flex justify-content-center align-items-center">
-                            <div
-                                className="action-button edit-button"
-                                onClick={() => props.onEditClick(props.data._id)}
-                            >
-                                <img src={editIcon} className="action-icon ms-0" alt="action-icon" />
-                            </div>
-                        </Col>
-                        <Col lg={3} md={4} sm={4} xs={4} className="d-flex justify-content-center align-items-center">
-                            <div
-                                className="btn-light action-button delete-button"
-                                onClick={() => props.onDeleteClick(props.data._id)}
-                            >
-                                <img src={deleteIcon} className="action-icon" alt="action-icon" />
-                            </div>
-                        </Col>
-                    </>
-                )}
+
+                <Col lg={3} md={4} sm={4} xs={4} className="d-flex justify-content-center align-items-center">
+                    <div
+                        className="action-button edit-button"
+                        onClick={
+                            props.data.createdBy?._id.toString() !== userInfo._id.toString()
+                                ? () => toast.error('Only event host can edit events!')
+                                : () => props.onEditClick(props.data._id)
+                        }
+                    >
+                        <img src={editIcon} className="action-icon ms-0" alt="action-icon" />
+                    </div>
+                </Col>
+                <Col lg={3} md={4} sm={4} xs={4} className="d-flex justify-content-center align-items-center">
+                    <div
+                        className="btn-light action-button delete-button"
+                        onClick={
+                            props.data.createdBy?._id.toString() !== userInfo._id.toString()
+                                ? () => toast.error('Only event host can delete events!')
+                                : () => props.onDeleteClick(props.data._id)
+                        }
+                    >
+                        <img src={deleteIcon} className="action-icon" alt="action-icon" />
+                    </div>
+                </Col>
             </Row>
         </React.Fragment>
     );
@@ -291,7 +297,7 @@ const Events = () => {
     return (
         <div className="events-page">
             <Helmet>
-                <title>Coaches | Dropship Academy</title>
+                <title>Events | Dropship Academy</title>
             </Helmet>
             {studentModal.show && (
                 <Modal size="large" show={studentModal.show} onClose={handleCloseModal} title={studentModal.title}>

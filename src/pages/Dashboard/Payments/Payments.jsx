@@ -232,7 +232,7 @@ const Payments = () => {
     return (
         <div className="payments-page">
             <Helmet>
-                <title>Coaches | Dropship Academy</title>
+                <title>Payments | Dropship Academy</title>
             </Helmet>
             {studentModal.show && (
                 <Modal size="large" show={studentModal.show} onClose={handleCloseModal} title={studentModal.title}>
