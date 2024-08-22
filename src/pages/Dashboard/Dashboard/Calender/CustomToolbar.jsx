@@ -40,11 +40,11 @@ const CustomToolbar = (toolbar) => {
                     <Dropdown.Toggle variant="success" id="dropdown-basic">
                         {toolbar.label}
                     </Dropdown.Toggle>
-                    <Dropdown.Menu>
+                    {/* <Dropdown.Menu>
                         <Dropdown.Item eventKey="month">Month</Dropdown.Item>
                         <Dropdown.Item eventKey="week">Week</Dropdown.Item>
                         <Dropdown.Item eventKey="day">Day</Dropdown.Item>
-                    </Dropdown.Menu>
+                    </Dropdown.Menu> */}
                 </Dropdown>
             </span>
         </div>
