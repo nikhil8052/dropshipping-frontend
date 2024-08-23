@@ -201,7 +201,7 @@ const MeetingRequest = () => {
                                         </Row>
                                         <Row>
                                             <Col md={12} xs={12}>
-                                                <label className="field-label">Reason (Mandatory)</label>
+                                                <label className="field-label">Reason</label>
                                                 <Field
                                                     name="reason"
                                                     className="field-text-area-control"

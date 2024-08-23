@@ -234,6 +234,12 @@ const NewCoach = () => {
         );
     };
 
+    const resetCropper = () => {
+        setCropping(false);
+        setCoachPhoto(null);
+        setImageSrc(null);
+    };
+
     return (
         <div className="new-coach-page-wrapper">
             <div className="title-top">
@@ -258,9 +264,7 @@ const NewCoach = () => {
                                         {coachPhoto ? (
                                             <label className="field-label fw-bold">Profile image</label>
                                         ) : (
-                                            <label className="field-label">
-                                                UPLOAD PHOTO <span className="label-light">(Mandatory)</span>
-                                            </label>
+                                            <label className="field-label">UPLOAD PHOTO</label>
                                         )}
                                         <div className="image_wrapper">
                                             <Field name="coachPhoto">
@@ -364,7 +368,7 @@ const NewCoach = () => {
                                             name="phoneNumber"
                                             className="field-control"
                                             type="text"
-                                            placeholder="+1-202-555-0118"
+                                            placeholder="+31-24-3611111"
                                         />
                                         <ErrorMessage name="phoneNumber" component="div" className="error" />
                                     </Col>
@@ -561,11 +565,7 @@ const NewCoach = () => {
                         )}
                     </Formik>
                     {cropping && (
-                        <ImageCropper
-                            imageSrc={imageSrc}
-                            onCropComplete={handleCropComplete}
-                            onCancel={() => setCropping(false)}
-                        />
+                        <ImageCropper imageSrc={imageSrc} onCropComplete={handleCropComplete} onCancel={resetCropper} />
                     )}
                 </Container>
             </div>

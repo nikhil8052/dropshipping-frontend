@@ -171,6 +171,12 @@ const NewStudent = () => {
         }
     };
 
+    const resetCropper = () => {
+        setCropping(false);
+        setStudentPhoto(null);
+        setImageSrc(null);
+    };
+
     const handleFormSubmit = async (values, { resetForm, setSubmitting }) => {
         if (studentId) delete values.email;
         const formData = { ...values, avatar: studentPhoto };
@@ -244,9 +250,7 @@ const NewStudent = () => {
                                         {studentPhoto ? (
                                             <label className="field-label fw-bold">Profile image</label>
                                         ) : (
-                                            <label className="field-label">
-                                                UPLOAD PHOTO <span className="label-light">(Mandatory)</span>
-                                            </label>
+                                            <label className="field-label">UPLOAD PHOTO</label>
                                         )}
                                         <div className="image_wrapper">
                                             <Field name="studentPhoto">
@@ -346,7 +350,7 @@ const NewStudent = () => {
                                             name="phoneNumber"
                                             className="field-control"
                                             type="text"
-                                            placeholder="+1-202-555-0118"
+                                            placeholder="+31-24-3611111"
                                         />
                                         <ErrorMessage name="phoneNumber" component="div" className="error" />
                                     </Col>
@@ -530,7 +534,7 @@ const NewStudent = () => {
                                     </Col>
 
                                     {studentId && (
-                                        <Col md={6} xs={12}>
+                                        <Col md={6} xs={12} className="mt-2">
                                             <Input
                                                 options={courses}
                                                 name="coursesRoadmap"
@@ -620,11 +624,7 @@ const NewStudent = () => {
                         )}
                     </Formik>
                     {cropping && (
-                        <ImageCropper
-                            imageSrc={imageSrc}
-                            onCropComplete={handleCropComplete}
-                            onCancel={() => setCropping(false)}
-                        />
+                        <ImageCropper imageSrc={imageSrc} onCropComplete={handleCropComplete} onCancel={resetCropper} />
                     )}
                     {showModal.show && (
                         <ConfirmationBox
