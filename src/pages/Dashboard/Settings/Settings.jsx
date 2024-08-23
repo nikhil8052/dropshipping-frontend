@@ -114,6 +114,12 @@ const Settings = () => {
         }
     };
 
+    const resetCropper = () => {
+        setCropping(false);
+        setProfilePhoto(null);
+        setImageSrc(null);
+    };
+
     const handleProfileSubmit = async (values, { setSubmitting }) => {
         const profileData = { ...values };
 
@@ -250,7 +256,7 @@ const Settings = () => {
                                         name="phoneNumber"
                                         className="field-control"
                                         type="text"
-                                        placeholder="+31- 612 345 678"
+                                        placeholder="+31-24-3611111"
                                     />
                                     <ErrorMessage name="phoneNumber" component="div" className="error" />
                                 </Col>
@@ -409,11 +415,7 @@ const Settings = () => {
                     )}
                 </Formik>
                 {cropping && (
-                    <ImageCropper
-                        imageSrc={imageSrc}
-                        onCropComplete={handleCropComplete}
-                        onCancel={() => setCropping(false)}
-                    />
+                    <ImageCropper imageSrc={imageSrc} onCropComplete={handleCropComplete} onCancel={resetCropper} />
                 )}
             </Container>
         </div>

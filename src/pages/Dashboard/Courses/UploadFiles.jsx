@@ -28,6 +28,7 @@ import cross from '@icons/red-cross.svg';
 
 const UploadFiles = ({ onNext, onBack, initialData, setStepComplete, updateCourseData }) => {
     const inputRef = useRef();
+    const quillRef = useRef();
     const videoinputRef = useRef();
     const dispatch = useDispatch();
     const [loading, setLoading] = useState(false);
@@ -213,6 +214,14 @@ const UploadFiles = ({ onNext, onBack, initialData, setStepComplete, updateCours
             onNext();
             resetForm();
         }
+    };
+
+    const resetCropper = () => {
+        setCropping(false);
+        updateCourseData({
+            thumbnail: ''
+        });
+        setImageSrc(null);
     };
 
     return (
@@ -466,12 +475,13 @@ const UploadFiles = ({ onNext, onBack, initialData, setStepComplete, updateCours
                                                 render={({ field }) => (
                                                     <div
                                                         onClick={() => {
-                                                            const elem = document.querySelector('.ql-editor');
-                                                            // focus on the editor where text is END
-                                                            elem.focus();
+                                                            if (quillRef.current) {
+                                                                quillRef.current.focus();
+                                                            }
                                                         }}
                                                     >
                                                         <ReactQuill
+                                                            ref={quillRef}
                                                             value={field.value || ''}
                                                             name={field.name}
                                                             onChange={(value) => field.onChange(field.name)(value)}
@@ -578,7 +588,7 @@ const UploadFiles = ({ onNext, onBack, initialData, setStepComplete, updateCours
                             <ImageCropper
                                 imageSrc={imageSrc}
                                 onCropComplete={handleCropComplete}
-                                onCancel={() => setCropping(false)}
+                                onCancel={resetCropper}
                             />
                         )}
                     </div>

@@ -105,8 +105,9 @@ const Students = () => {
                                     color: 'rgba(132, 132, 132, 1)',
                                     fontSize: '14px'
                                 }}
+                                className="sentence-case"
                             >
-                                (Drag Courses to change their numbers)
+                                (Drag courses to change their order)
                             </p>
                         </>
                     ) : (

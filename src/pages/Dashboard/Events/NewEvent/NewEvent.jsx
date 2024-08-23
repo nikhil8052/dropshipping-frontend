@@ -94,6 +94,12 @@ const NewEvent = () => {
         }
     };
 
+    const resetCropper = () => {
+        setCropping(false);
+        setEventThumbnail(null);
+        setImageSrc(null);
+    };
+
     const validationSchema = Yup.object({
         topic: Yup.string()
             .trim()
@@ -497,7 +503,7 @@ const NewEvent = () => {
                                 <ImageCropper
                                     imageSrc={imageSrc}
                                     onCropComplete={handleCropComplete}
-                                    onCancel={() => setCropping(false)}
+                                    onCancel={resetCropper}
                                 />
                             )}
                         </Container>

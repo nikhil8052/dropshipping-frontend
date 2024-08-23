@@ -284,7 +284,7 @@ const AddLectureModal = ({ lectureModal, resetModal, onSave }) => {
                                                                             type="text"
                                                                             placeholder={
                                                                                 optIndex === 3
-                                                                                    ? 'Type Correct Option'
+                                                                                    ? 'Correct option'
                                                                                     : `Type option ${optIndex + 1}`
                                                                             }
                                                                         />
