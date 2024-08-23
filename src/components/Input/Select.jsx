@@ -15,6 +15,12 @@ function Select(props) {
                 }
                 classNamePrefix="custom_select" // class prefix for customization
                 className={props.className}
+                styles={{
+                    container: (provided) => ({
+                        ...provided,
+                        height: '39px'
+                    })
+                }}
                 isMulti={props.isMulti}
                 onChange={(e) => {
                     if (props.isMulti) {

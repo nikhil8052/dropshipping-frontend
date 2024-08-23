@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Form as FormikForm, Formik, Field, ErrorMessage, FieldArray } from 'formik';
 import { Row, Col, Button, ProgressBar, Modal } from 'react-bootstrap';
 import * as Yup from 'yup';
@@ -20,6 +20,7 @@ const AddLectureModal = ({ lectureModal, resetModal, onSave }) => {
     const [uploadProgress, setUploadProgress] = useState(0);
     const token = useSelector((state) => state?.auth?.userToken);
     const fileTypes = ['pdf', 'docx', 'mp4', 'avi', 'mov'];
+    const fileRef = useRef(null);
 
     const [initialValues, setInitialValues] = useState(
         lectureModal.initialValues || {
@@ -305,13 +306,21 @@ const AddLectureModal = ({ lectureModal, resetModal, onSave }) => {
                                 </div>
                             </div>
                             <div>
-                                <div className="add-quiz-file">
+                                <div
+                                    className="add-quiz-file cursor-pointer "
+                                    onClick={(e) => {
+                                        e.preventDefault();
+                                        document.querySelector('.file-uploader').click();
+                                    }}
+                                >
                                     <h4>{lectureModal?.isEditable ? 'Update' : 'Attach'} File</h4>
                                     <FileUploader
+                                        ref={fileRef}
                                         multiple={false}
                                         handleChange={(file) => handleLectureUpload(file, setFieldValue)}
                                         name="file"
                                         types={fileTypes}
+                                        classes="file-uploader d-none"
                                     />
                                     <p>
                                         {values.file ? (

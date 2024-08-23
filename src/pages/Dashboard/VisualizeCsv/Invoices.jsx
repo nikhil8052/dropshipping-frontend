@@ -176,10 +176,16 @@ const Invoices = ({ studentId }) => {
                         title="Attach File"
                         body={
                             <>
-                                <Container className="pt-5">
+                                <Container className="pt-1">
                                     <Row>
                                         <Col md={12}>
-                                            <div className="add-quiz-file">
+                                            <div
+                                                className="add-quiz-file cursor-pointer"
+                                                onClick={(e) => {
+                                                    e.preventDefault();
+                                                    document.querySelector('.file-uploader-invoices').click();
+                                                }}
+                                            >
                                                 <h4>Attach File</h4>
                                                 <FileUploader
                                                     multiple={false}
@@ -187,6 +193,7 @@ const Invoices = ({ studentId }) => {
                                                     name="file"
                                                     types={fileTypes}
                                                     label="Drag and drop a file or browse"
+                                                    classes="file-uploader-invoices d-none"
                                                 />
                                                 <p>
                                                     {file ? (

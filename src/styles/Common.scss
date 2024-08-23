@@ -21,6 +21,8 @@
         padding: 5px 20px;
         border: none;
         width: 100%;
+        // Add extra height to match the default input
+        height: 39px !important;
 
         &:active {
             color: rgba(148, 148, 148, 1);
@@ -222,6 +224,7 @@
     width: 100%;
     margin-bottom: 0.5rem;
 }
+
 // on active or focus the border and color should be bold
 .field-control:focus-visible,
 .field-select-control:focus-visible,
