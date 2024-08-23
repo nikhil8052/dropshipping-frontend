@@ -209,10 +209,16 @@ const StudentsTrainingProduct = ({ studentId }) => {
                             loading={loadingCRUD}
                             title="Attach File"
                             body={
-                                <Container className="pt-5">
+                                <Container className="pt-1">
                                     <Row>
                                         <Col md={12}>
-                                            <div className="add-quiz-file">
+                                            <div
+                                                className="add-quiz-file cursor-pointer"
+                                                onClick={(e) => {
+                                                    e.preventDefault();
+                                                    document.querySelector('.file-uploader-product').click();
+                                                }}
+                                            >
                                                 <h4>Attach File</h4>
                                                 <FileUploader
                                                     multiple={false}
@@ -220,6 +226,7 @@ const StudentsTrainingProduct = ({ studentId }) => {
                                                     name="file"
                                                     types={fileTypes}
                                                     label="hello"
+                                                    classes="file-uploader-product d-none"
                                                 />
                                                 <p>
                                                     {file ? (

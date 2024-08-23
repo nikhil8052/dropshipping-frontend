@@ -313,7 +313,7 @@ const NewCoach = () => {
                                                                     alt=""
                                                                 />
                                                                 <span>
-                                                                    Upload Coach Picture here
+                                                                    Upload coach picture here
                                                                     <br />
                                                                     Supported formats:{' '}
                                                                     <strong>.jpg, .jpeg, or .png</strong>
@@ -489,7 +489,6 @@ const NewCoach = () => {
                                             label="Assigned Students"
                                             type="select"
                                             isMulti={true}
-                                            // value={}
                                         />
                                     </Col>
                                 </Row>

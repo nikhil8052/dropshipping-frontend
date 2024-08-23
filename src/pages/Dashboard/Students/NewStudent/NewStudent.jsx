@@ -299,7 +299,7 @@ const NewStudent = () => {
                                                                     alt=""
                                                                 />
                                                                 <span>
-                                                                    Upload Student Picture here
+                                                                    Upload student picture here
                                                                     <br />
                                                                     Supported formats:{' '}
                                                                     <strong>.jpg, .jpeg, or .png</strong>
