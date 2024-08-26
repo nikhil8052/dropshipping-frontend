@@ -1783,21 +1783,47 @@ export const regions = [
     {
         countryCode: 'BE',
         name: 'Belgium',
-        regions: [
+        famousRegions: [
             { label: 'Flanders', value: 'Flanders', id: 1 },
             { label: 'Wallonia', value: 'Wallonia', id: 2 },
             { label: 'Brussels-Capital', value: 'Brussels-Capital', id: 3 }
+        ],
+        regions: [
+            { label: 'Antwerp', value: 'Antwerp', id: 1 },
+            { label: 'East Flanders', value: 'East Flanders', id: 2 },
+            { label: 'Flemish Brabant', value: 'Flemish Brabant', id: 3 },
+            { label: 'Hainaut', value: 'Hainaut', id: 4 },
+            { label: 'Liège', value: 'Liège', id: 5 },
+            { label: 'Limburg', value: 'Limburg', id: 6 },
+            { label: 'Luxembourg', value: 'Luxembourg', id: 7 },
+            { label: 'Namur', value: 'Namur', id: 8 },
+            { label: 'Walloon Brabant', value: 'Walloon Brabant', id: 9 },
+            { label: 'West Flanders', value: 'West Flanders', id: 10 }
         ]
     },
     {
         countryCode: 'NL',
         name: 'Netherlands',
-        regions: [
+        famousRegions: [
             { label: 'North Holland', value: 'North Holland', id: 4 },
             { label: 'South Holland', value: 'South Holland', id: 5 },
             { label: 'Utrecht', value: 'Utrecht', id: 6 },
             { label: 'Gelderland', value: 'Gelderland', id: 7 },
             { label: 'North Brabant', value: 'North Brabant', id: 8 }
+        ],
+        regions: [
+            { label: 'Drenthe', value: 'Drenthe', id: 11 },
+            { label: 'Flevoland', value: 'Flevoland', id: 12 },
+            { label: 'Friesland', value: 'Friesland', id: 13 },
+            { label: 'Gelderland', value: 'Gelderland', id: 14 },
+            { label: 'Groningen', value: 'Groningen', id: 15 },
+            { label: 'Limburg', value: 'Limburg', id: 16 },
+            { label: 'North Brabant', value: 'North Brabant', id: 17 },
+            { label: 'North Holland', value: 'North Holland', id: 18 },
+            { label: 'Overijssel', value: 'Overijssel', id: 19 },
+            { label: 'South Holland', value: 'South Holland', id: 20 },
+            { label: 'Utrecht', value: 'Utrecht', id: 21 },
+            { label: 'Zeeland', value: 'Zeeland', id: 22 }
         ]
     }
 ];
