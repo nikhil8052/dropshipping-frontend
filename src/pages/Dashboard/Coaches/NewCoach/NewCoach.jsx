@@ -159,7 +159,18 @@ const NewCoach = () => {
 
         phoneNumber: Yup.string()
             .required('Phone number is required')
-            .trim('Phone number cannot include leading or trailing spaces') // trims spaces
+            .trim('Phone number cannot include leading or trailing spaces')
+            .test(
+                'is-valid-phone',
+                'Phone number must be in the format of belgium or netherlands i.e +32 or +31',
+                (value) => {
+                    if (!value) return false; // If value is undefined/null, it fails the test
+                    // Check for the valid patterns
+                    const belgiumPattern = '32';
+                    const netherlandsPattern = '31';
+                    return value.startsWith(belgiumPattern) || value.startsWith(netherlandsPattern);
+                }
+            )
             .strict(true), // ensures trimming is enforced during validation
 
         country: Yup.string().required('Country is required'),
