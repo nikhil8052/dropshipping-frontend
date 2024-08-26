@@ -10,6 +10,7 @@ import Costs from '@icons/Costs.svg';
 import { useNavigate } from 'react-router';
 import { useIsSmallScreen } from '../../../utils/mediaQueries';
 import axiosWrapper from '../../../utils/api';
+import Loading from '@components/Loading/Loading';
 import { API_URL } from '../../../utils/apiUrl';
 import { OverlayTrigger, Tooltip } from 'react-bootstrap';
 import '../../../styles/Dashboard.scss';
@@ -25,6 +26,7 @@ const StudentDashboard = () => {
     const [cashFlowData, setCashFlowData] = useState(null);
     const [chartKey, setChartKey] = useState('students');
     const { userInfo } = useSelector((state) => state?.auth);
+    const [loading, setLoading] = useState(false);
     const role = userInfo?.role;
     const token = useSelector((state) => state?.auth?.userToken);
 
@@ -40,12 +42,18 @@ const StudentDashboard = () => {
 
     useEffect(() => {
         fetchDashboardData();
-    }, [role, currentFilter]);
+    }, [role]);
 
-    const fetchDashboardData = async () => {
+    useEffect(() => {
+        if (currentFilter) {
+            fetchDashboardData(false);
+        }
+    }, [currentFilter]);
+
+    const fetchDashboardData = async (loading = true) => {
+        setLoading(loading);
         try {
             let cardData, graphData, secondCard;
-
             cardData = await axiosWrapper('GET', API_URL.GET_STUDENT_CARD_DATA, {}, token);
 
             secondCard = await axiosWrapper('GET', API_URL.GET_STUDENT_SECOND_CARD_DATA, {}, token);
@@ -79,7 +87,9 @@ const StudentDashboard = () => {
             const cashFlowData = generateCashData(graphData?.data);
             setLineGraphData(revenueData);
             setCashFlowData(cashFlowData);
+            setLoading(false);
         } catch (error) {
+            setLoading(false);
             console.error('Error fetching dashboard data:', error);
         }
     };
@@ -250,92 +260,101 @@ const StudentDashboard = () => {
             <Helmet>
                 <title>Dashboard | Dropship Academy</title>
             </Helmet>
-            <Row>
-                <Col>
-                    <div className="d-flex justify-content-end">
-                        {!userInfo?.assignedCoach ? (
-                            <OverlayTrigger
-                                placement="top"
-                                overlay={
-                                    <Tooltip id="tooltip-top">
-                                        You need to be assigned a coach to request a meeting
-                                    </Tooltip>
-                                }
-                            >
-                                <Button
-                                    variant="primary"
-                                    className="meeting-btn me-2"
-                                    disabled={!userInfo?.assignedCoach}
+            {false ? (
+                <Loading centered={true} />
+            ) : (
+                <>
+                    <Row>
+                        <Col>
+                            <div className="d-flex justify-content-end">
+                                {!userInfo?.assignedCoach ? (
+                                    <OverlayTrigger
+                                        placement="top"
+                                        overlay={
+                                            <Tooltip id="tooltip-top">
+                                                You need to be assigned a coach to request a meeting
+                                            </Tooltip>
+                                        }
+                                    >
+                                        <Button
+                                            variant="primary"
+                                            className="meeting-btn me-2"
+                                            disabled={!userInfo?.assignedCoach}
+                                        >
+                                            Request for meeting
+                                        </Button>
+                                    </OverlayTrigger>
+                                ) : (
+                                    <Button
+                                        variant="primary"
+                                        className="meeting-btn me-2"
+                                        onClick={() => navigate('/student/request-meeting')}
+                                        disabled={!userInfo?.assignedCoach}
+                                    >
+                                        Request for meeting
+                                    </Button>
+                                )}
+                            </div>
+                        </Col>
+                    </Row>
+                    <Row>
+                        {cardStats.map((stat, index) => (
+                            <Col key={stat.id} xs={12} sm={12} md={6} lg={4} xl={3}>
+                                <Card
+                                    customCardClass={`custom-card-colors ${index % 2 === 0 ? 'even' : 'odd'}`}
+                                    cardType="small"
                                 >
-                                    Request for meeting
-                                </Button>
-                            </OverlayTrigger>
-                        ) : (
-                            <Button
-                                variant="primary"
-                                className="meeting-btn me-2"
-                                onClick={() => navigate('/student/request-meeting')}
-                                disabled={!userInfo?.assignedCoach}
-                            >
-                                Request for meeting
-                            </Button>
-                        )}
-                    </div>
-                </Col>
-            </Row>
-            <Row>
-                {cardStats.map((stat, index) => (
-                    <Col key={stat.id} xs={12} sm={12} md={6} lg={4} xl={3}>
-                        <Card
-                            customCardClass={`custom-card-colors ${index % 2 === 0 ? 'even' : 'odd'}`}
-                            cardType="small"
-                        >
-                            <StatCard {...stat} />
-                        </Card>
-                    </Col>
-                ))}
-            </Row>
-            <Row className="graph-wrapper">
-                <Col>
-                    {lineGraphData && (
-                        <LineChart
-                            data={lineGraphData}
-                            options={graphOptions}
-                            timePeriods={timePeriods}
-                            chartHeight={isSmallScreen ? 200 : 100}
-                            dataSet={false}
-                            role={role}
-                            handleFilterChange={handleFilterChange}
-                            currentFilter={currentFilter}
-                            chartKey={chartKey}
-                            setChartKey={setChartKey}
-                            tabTitles={tabTitles}
-                        />
-                    )}
-                </Col>
-            </Row>
-            <Row>
-                <Col lg={8}>
-                    <Card header={true} customCardClass="events-card">
-                        {cashFlowData && (
-                            <CashFlowLineChart
-                                data={cashFlowData}
-                                options={cashFlowOptions}
-                                chartHeight={isSmallScreen ? 200 : 100}
-                            />
-                        )}
-                    </Card>
-                </Col>
-                <Col lg={4}>
-                    {cashFlowCards?.map((stat, index) => (
-                        <Col key={stat.id} className="w-100 d-flex flex-column h-50">
-                            <Card customCardClass={`custom-card-colors h-100 ${index % 2 === 0 ? 'even' : 'odd'}`}>
-                                <StatCard {...stat} />
+                                    <StatCard {...stat} />
+                                </Card>
+                            </Col>
+                        ))}
+                    </Row>
+                    <Row className="graph-wrapper">
+                        <Col>
+                            {lineGraphData && (
+                                <LineChart
+                                    data={lineGraphData}
+                                    options={graphOptions}
+                                    timePeriods={timePeriods}
+                                    chartHeight={isSmallScreen ? 200 : 100}
+                                    dataSet={false}
+                                    role={role}
+                                    handleFilterChange={handleFilterChange}
+                                    currentFilter={currentFilter}
+                                    chartKey={chartKey}
+                                    setChartKey={setChartKey}
+                                    tabTitles={tabTitles}
+                                />
+                            )}
+                        </Col>
+                    </Row>
+
+                    <Row>
+                        <Col lg={8}>
+                            <Card header={true} customCardClass="events-card">
+                                {cashFlowData && (
+                                    <CashFlowLineChart
+                                        data={cashFlowData}
+                                        options={cashFlowOptions}
+                                        chartHeight={isSmallScreen ? 200 : 100}
+                                    />
+                                )}
                             </Card>
                         </Col>
-                    ))}
-                </Col>
-            </Row>
+                        <Col lg={4}>
+                            {cashFlowCards?.map((stat, index) => (
+                                <Col key={stat.id} className="w-100 d-flex flex-column h-50">
+                                    <Card
+                                        customCardClass={`custom-card-colors h-100 ${index % 2 === 0 ? 'even' : 'odd'}`}
+                                    >
+                                        <StatCard {...stat} />
+                                    </Card>
+                                </Col>
+                            ))}
+                        </Col>
+                    </Row>
+                </>
+            )}
         </div>
     );
 };
