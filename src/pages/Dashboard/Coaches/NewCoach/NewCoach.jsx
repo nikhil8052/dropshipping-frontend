@@ -19,7 +19,9 @@ import axiosWrapper from '../../../../utils/api';
 import Loading from '@components/Loading/Loading';
 import '../../../../styles/Coaches.scss';
 import '../../../../styles/Common.scss';
+import 'react-phone-input-2/lib/style.css';
 import { FORMATS, TOOLBAR_CONFIG } from '../../../../utils/common';
+import PhoneInputField from '../../../../components/Input/PhoneInput';
 
 const NewCoach = () => {
     const inputRef = useRef();
@@ -361,16 +363,15 @@ const NewCoach = () => {
                                     </Col>
                                 </Row>
 
-                                <Row>
+                                <Row className="mb-2">
                                     <Col md={6} xs={12}>
-                                        <label className="field-label">Phone Number</label>
-                                        <Field
+                                        <PhoneInputField
                                             name="phoneNumber"
-                                            className="field-control"
-                                            type="text"
-                                            placeholder="+31-24-3611111"
+                                            label="Phone Number"
+                                            defaultCountry="be" // Default to Belgium
+                                            countriesAllowed={['be', 'nl']} // Allow only Belgium and Netherlands
+                                            placeholder="+32-24-3611111"
                                         />
-                                        <ErrorMessage name="phoneNumber" component="div" className="error" />
                                     </Col>
                                     <Col md={6} xs={12}>
                                         <label className="field-label">Country</label>

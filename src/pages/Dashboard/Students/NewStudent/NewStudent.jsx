@@ -21,6 +21,7 @@ import axiosWrapper from '../../../../utils/api';
 import { getFileObjectFromBlobUrl } from '../../../../utils/utils';
 import '../../../../styles/Students.scss';
 import '../../../../styles/Common.scss';
+import PhoneInputField from '../../../../components/Input/PhoneInput';
 
 const NewStudent = () => {
     const inputRef = useRef();
@@ -345,14 +346,13 @@ const NewStudent = () => {
                                         <ErrorMessage name="email" component="div" className="error" />
                                     </Col>
                                     <Col md={6} xs={12}>
-                                        <label className="field-label">Phone Number</label>
-                                        <Field
+                                        <PhoneInputField
                                             name="phoneNumber"
-                                            className="field-control"
-                                            type="text"
-                                            placeholder="+31-24-3611111"
+                                            label="Phone Number"
+                                            defaultCountry="be" // Default to Belgium
+                                            countriesAllowed={['be', 'nl']} // Allow only Belgium and Netherlands
+                                            placeholder="+32-24-3611111"
                                         />
-                                        <ErrorMessage name="phoneNumber" component="div" className="error" />
                                     </Col>
 
                                     <Col md={6} xs={12}>
