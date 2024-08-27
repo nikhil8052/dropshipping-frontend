@@ -73,7 +73,7 @@ const CourseDetail = () => {
                     <div className="card-background">
                         <div className="text-heading">
                             <h1>{course?.title || 'Design Conference'}</h1>
-                            <p>Dropship Academy X</p>
+                            <p>{course?.moduleManager?.name || 'Dropship Academy X'}</p>
                         </div>
                     </div>
                     <div className="lecture-details-wrapper">
