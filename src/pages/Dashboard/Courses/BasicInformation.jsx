@@ -14,7 +14,7 @@ import Loading from '@components/Loading/Loading';
 import '../../../styles/Common.scss';
 import '../../../styles/Courses.scss';
 
-const BasicInformation = ({ initialData, setStepComplete, createOrUpdateCourse }) => {
+const BasicInformation = ({ initialData, setStepComplete, createOrUpdateCourse, resetStep }) => {
     const { userInfo, userToken } = useSelector((state) => state?.auth);
     const role = userInfo?.role?.toLowerCase();
     const [loading, setLoading] = useState(false);
@@ -29,15 +29,21 @@ const BasicInformation = ({ initialData, setStepComplete, createOrUpdateCourse }
     });
 
     const handleSubmit = async (values, { resetForm, setSubmitting }) => {
-        setLoading(true);
-        // Create the course
-        const formData = { ...values };
-        await createOrUpdateCourse(formData);
+        try {
+            setLoading(true);
+            // Create the course
+            const formData = { ...values };
+            await createOrUpdateCourse(formData);
 
-        setStepComplete('step1');
-        setSubmitting(false);
-        setLoading(false);
-        resetForm();
+            setStepComplete('step1');
+            setSubmitting(false);
+            setLoading(false);
+            resetForm();
+        } catch (error) {
+            setSubmitting(false);
+            setLoading(false);
+            resetStep();
+        }
     };
 
     useEffect(() => {

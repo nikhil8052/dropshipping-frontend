@@ -70,6 +70,14 @@ const AddNewCourse = () => {
             [step]: true
         }));
     };
+    const resetStep = () => {
+        setStepsCompleted((prevSteps) => ({
+            ...prevSteps,
+            step1: false,
+            step2: false,
+            step3: false
+        }));
+    };
 
     // ///////////////// APi Calls ///////////////
     const getCourseById = async (id) => {
@@ -217,6 +225,7 @@ const AddNewCourse = () => {
                 >
                     <BasicInformation
                         setStepComplete={completeStep}
+                        resetStep={resetStep}
                         initialData={courseData}
                         onNext={() => handleTabChange('upload-files')}
                         createOrUpdateCourse={createOrUpdateCourse}

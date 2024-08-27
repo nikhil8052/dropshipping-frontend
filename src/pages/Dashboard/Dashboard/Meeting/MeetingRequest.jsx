@@ -8,10 +8,9 @@ import { API_URL } from '@utils/apiUrl';
 import toast from 'react-hot-toast';
 import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
-import Loading from '@components/Loading/Loading';
 import '../../../../styles/Common.scss';
 import './MeetingRequest.scss';
-import { isValidUrl } from '../../../../utils/common';
+import { currentDate, isValidUrl, oneYearsLater } from '../../../../utils/common';
 
 const MeetingRequest = () => {
     const navigate = useNavigate();
@@ -38,30 +37,32 @@ const MeetingRequest = () => {
     });
 
     const handleFormSubmit = async (values, { resetForm, setSubmitting }) => {
-        setLoading(true);
-        setSubmitting(true);
-        // Later we will replace this with actual API call
-
-        const formData = {
-            topic: values.topic,
-            dateTime: values.dateTime,
-            attendees: [coachData?._id],
-            eventHost: coachData?.name,
-            reason: values.reason,
-            typeOfEvent: coachData?.meetingLink ? 'ONLINE' : 'ONSITE',
-            ...(coachData?.meetingLink && { meetingLink: coachData.meetingLink }),
-            ...(coachData?.location && { location: coachData.location })
-        };
-
         try {
+            setLoading(true);
+            setSubmitting(true);
+            // Later we will replace this with actual API call
+
+            const formData = {
+                topic: values.topic,
+                dateTime: values.dateTime,
+                attendees: [coachData?._id],
+                eventHost: coachData?.name,
+                reason: values.reason,
+                typeOfEvent: coachData?.meetingLink ? 'ONLINE' : 'ONSITE',
+                ...(coachData?.meetingLink && { meetingLink: coachData.meetingLink }),
+                ...(coachData?.location && { location: coachData.location })
+            };
+
             await axiosWrapper('POST', API_URL.REQUEST_MEETING, formData, token);
 
             // Call API here
             resetForm();
             navigate('/student');
             setLoading(false);
+            setSubmitting(false);
         } catch (error) {
-            return;
+            setSubmitting(false);
+            setLoading(false);
         } finally {
             setSubmitting(false);
             setLoading(false);
@@ -141,103 +142,99 @@ const MeetingRequest = () => {
                 </Col>
             </Row>
             <div className="meeting-request-page">
-                {
-                    // Show loader if data is loading
-                    loading ? (
-                        <Loading centered={true} />
-                    ) : (
-                        <Container fluid className="p-3">
-                            <h4 className="mb-3 meeting-request-title">Request For Meeting</h4>
-                            <Formik
-                                initialValues={meetingData}
-                                validationSchema={validationSchema}
-                                onSubmit={handleFormSubmit}
-                                enableReinitialize
-                            >
-                                {({ isSubmitting, handleSubmit }) => (
-                                    <Form onSubmit={handleSubmit}>
-                                        <Row>
-                                            <Col>
-                                                <label className="field-label">Topic</label>
-                                                <Field
-                                                    name="topic"
-                                                    className="field-control"
-                                                    type="text"
-                                                    placeholder="E.g David Enderson meeting related to XYZ Course"
-                                                />
-                                                <ErrorMessage name="topic" component="div" className="error" />
-                                            </Col>
-                                            <Col md={6} xs={12}>
-                                                <label className="field-label">Date & Time</label>
-                                                <Field
-                                                    name="dateTime"
-                                                    className="field-control"
-                                                    type="datetime-local"
-                                                />
-                                                <ErrorMessage name="dateTime" component="div" className="error" />
-                                            </Col>
-                                        </Row>
-                                        <Row>
-                                            <Col md={6} xs={12}>
-                                                <label className="field-label">Assigned Coach</label>
-                                                <Field
-                                                    name="assignedCoach"
-                                                    className="field-control"
-                                                    type="text"
-                                                    placeholder="Kathrine Jenifer"
-                                                    readOnly
-                                                />
-                                                <ErrorMessage name="assignedCoach" component="div" className="error" />
-                                            </Col>
+                <Container fluid className="p-3">
+                    <h4 className="mb-3 meeting-request-title">Request For Meeting</h4>
+                    <Formik
+                        initialValues={meetingData}
+                        validationSchema={validationSchema}
+                        onSubmit={handleFormSubmit}
+                        enableReinitialize
+                    >
+                        {({ isSubmitting, handleSubmit }) => (
+                            <Form onSubmit={handleSubmit}>
+                                <Row>
+                                    <Col>
+                                        <label className="field-label">Topic</label>
+                                        <Field
+                                            name="topic"
+                                            className="field-control"
+                                            type="text"
+                                            placeholder="E.g David Enderson meeting related to XYZ Course"
+                                        />
+                                        <ErrorMessage name="topic" component="div" className="error" />
+                                    </Col>
+                                    <Col md={6} xs={12}>
+                                        <label className="field-label">Date & Time</label>
+                                        <Field
+                                            name="dateTime"
+                                            className="field-control"
+                                            type="datetime-local"
+                                            min={currentDate}
+                                            max={oneYearsLater}
+                                            onClick={(e) => e.target.showPicker()}
+                                        />
+                                        <ErrorMessage name="dateTime" component="div" className="error" />
+                                    </Col>
+                                </Row>
+                                <Row>
+                                    <Col md={6} xs={12}>
+                                        <label className="field-label">Assigned Coach</label>
+                                        <Field
+                                            name="assignedCoach"
+                                            className="field-control"
+                                            type="text"
+                                            placeholder="Kathrine Jenifer"
+                                            readOnly
+                                        />
+                                        <ErrorMessage name="assignedCoach" component="div" className="error" />
+                                    </Col>
 
-                                            <Col md={6} xs={12}>
-                                                <label className="field-label">Meeting Link / Location</label>
-                                                <Field
-                                                    name="joinLink"
-                                                    className="field-control"
-                                                    type="text"
-                                                    placeholder="Meeting Link | Location"
-                                                    readOnly
-                                                />
-                                                <ErrorMessage name="joinLink" component="div" className="error" />
-                                            </Col>
-                                        </Row>
-                                        <Row>
-                                            <Col md={12} xs={12}>
-                                                <label className="field-label">Reason</label>
-                                                <Field
-                                                    name="reason"
-                                                    className="field-text-area-control"
-                                                    as="textarea"
-                                                    placeholder="E.g Type brief summary of the coach"
-                                                    rows="12"
-                                                />
-                                                <ErrorMessage name="reason" component="div" className="error" />
-                                            </Col>
-                                        </Row>
-                                        <div className="mt-3 d-flex justify-content-end gap-3 flex-wrap">
-                                            <Button
-                                                type="button"
-                                                onClick={() => navigate('/student')}
-                                                className="cancel-btn"
-                                                disabled={isSubmitting}
-                                            >
-                                                Cancel
-                                            </Button>
-                                            <Button
-                                                type="submit"
-                                                className="submit-btn custom-width"
-                                                disabled={isSubmitting}
-                                            >
-                                                {isSubmitting ? 'Save Changes...' : 'Save'}
-                                            </Button>
-                                        </div>
-                                    </Form>
-                                )}
-                            </Formik>
-                        </Container>
-                    )
-                }
+                                    <Col md={6} xs={12}>
+                                        <label className="field-label">Meeting Link / Location</label>
+                                        <Field
+                                            name="joinLink"
+                                            className="field-control"
+                                            type="text"
+                                            placeholder="Meeting Link | Location"
+                                            readOnly
+                                        />
+                                        <ErrorMessage name="joinLink" component="div" className="error" />
+                                    </Col>
+                                </Row>
+                                <Row>
+                                    <Col md={12} xs={12}>
+                                        <label className="field-label">Reason</label>
+                                        <Field
+                                            name="reason"
+                                            className="field-text-area-control"
+                                            as="textarea"
+                                            placeholder="E.g Type brief summary of the coach"
+                                            rows="12"
+                                        />
+                                        <ErrorMessage name="reason" component="div" className="error" />
+                                    </Col>
+                                </Row>
+                                <div className="mt-3 d-flex justify-content-end gap-3 flex-wrap">
+                                    <Button
+                                        type="button"
+                                        onClick={() => navigate('/student')}
+                                        className="cancel-btn"
+                                        disabled={isSubmitting}
+                                    >
+                                        Cancel
+                                    </Button>
+                                    <Button
+                                        type="submit"
+                                        className="submit-btn custom-width"
+                                        disabled={isSubmitting || loading}
+                                    >
+                                        {isSubmitting ? 'Save Changes...' : 'Save'}
+                                    </Button>
+                                </div>
+                            </Form>
+                        )}
+                    </Formik>
+                </Container>
             </div>
         </div>
     );
