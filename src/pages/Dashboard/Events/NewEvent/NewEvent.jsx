@@ -20,7 +20,7 @@ import { getFileObjectFromBlobUrl } from '../../../../utils/utils';
 import * as types from '../../../../redux/actions/actionTypes';
 import '../../../../styles/Events.scss';
 import '../../../../styles/Common.scss';
-import { convertToUTC, currentDate, oneYearsLater } from '../../../../utils/common';
+import { convertToUTC, currentDate, isValidUrl, oneYearsLater } from '../../../../utils/common';
 
 const NewEvent = () => {
     const inputRef = useRef();
@@ -98,6 +98,7 @@ const NewEvent = () => {
         setCropping(false);
         setEventThumbnail(null);
         setImageSrc(null);
+        inputRef.current.value = null;
     };
 
     const validationSchema = Yup.object({
@@ -117,7 +118,10 @@ const NewEvent = () => {
                 then: () =>
                     Yup.string()
                         .required('Meeting link is required for online events')
-                        .test('not-only-spaces', 'Meeting link cannot be only spaces', (value) => /\S/.test(value)),
+                        .test('not-only-spaces', 'Meeting link cannot be only spaces', (value) => /\S/.test(value))
+                        .test('is-valid-url', 'Please enter a valid URL for meeting link', (value) =>
+                            isValidUrl(value)
+                        ),
                 otherwise: () => Yup.string().trim()
             }),
         location: Yup.string()
@@ -128,11 +132,7 @@ const NewEvent = () => {
                     Yup.string()
                         .required('Location is required for Onsite events')
                         .test('not-only-spaces', 'location cannot be only spaces', (value) => /\S/.test(value))
-                        .test('valid-location-url', 'Location must be a valid Google Maps URL', (value) => {
-                            const urlPattern =
-                                /https:\/\/(www\.)?google\.com\/maps\/place\/.+|https:\/\/maps\.app\.goo\.gl\/.+/;
-                            return urlPattern.test(value);
-                        }),
+                        .test('is-valid-url', 'Please enter a valid URL for location', (value) => isValidUrl(value)),
                 otherwise: () => Yup.string().trim()
             }),
         attendees: Yup.array().min(1, 'Select at least one attendee')

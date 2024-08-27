@@ -222,6 +222,7 @@ const UploadFiles = ({ onNext, onBack, initialData, setStepComplete, updateCours
             thumbnail: ''
         });
         setImageSrc(null);
+        inputRef.current.value = null;
     };
 
     return (

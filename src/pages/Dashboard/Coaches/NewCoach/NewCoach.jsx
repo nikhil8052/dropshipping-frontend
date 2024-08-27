@@ -251,6 +251,7 @@ const NewCoach = () => {
         setCropping(false);
         setCoachPhoto(null);
         setImageSrc(null);
+        inputRef.current.value = null;
     };
 
     return (

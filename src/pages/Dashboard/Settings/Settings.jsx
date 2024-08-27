@@ -16,6 +16,7 @@ import { API_URL } from '../../../utils/apiUrl';
 import '../../../styles/Settings.scss';
 import '../../../styles/Common.scss';
 import { Helmet } from 'react-helmet';
+import { isValidUrl } from '../../../utils/common';
 
 const Settings = () => {
     const inputRef = useRef();
@@ -69,8 +70,9 @@ const Settings = () => {
         phoneNumber: Yup.string().required('Phone number is required'),
         meetingLink: Yup.string()
             .trim()
-            .required('Meeting link is required for online events')
+            .optional()
             .test('not-only-spaces', 'Meeting link cannot be only spaces', (value) => /\S/.test(value))
+            .test('is-valid-url', 'Please enter a valid URL for the meeting link', (value) => isValidUrl(value))
     });
 
     const passwordValidationSchema = Yup.object({
@@ -118,6 +120,7 @@ const Settings = () => {
         setCropping(false);
         setProfilePhoto(null);
         setImageSrc(null);
+        inputRef.current.value = null;
     };
 
     const handleProfileSubmit = async (values, { setSubmitting }) => {
@@ -126,7 +129,6 @@ const Settings = () => {
         if (profileData.email) {
             delete profileData.email;
         }
-
         const response = await axiosWrapper('PUT', API_URL.UPDATE_PROFILE, { ...profileData }, token);
         // update data in redux
         dispatch(updateUserInfo({ ...response.data, avatar: profilePhoto }));
@@ -251,7 +253,7 @@ const Settings = () => {
                             </Row>
                             <Row>
                                 <Col md={6} xs={12}>
-                                    <label className="field-label">Phone No</label>
+                                    <label className="field-label">Phone Number</label>
                                     <Field
                                         name="phoneNumber"
                                         className="field-control"
