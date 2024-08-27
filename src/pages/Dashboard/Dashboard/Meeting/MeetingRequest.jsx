@@ -11,6 +11,7 @@ import { useSelector } from 'react-redux';
 import Loading from '@components/Loading/Loading';
 import '../../../../styles/Common.scss';
 import './MeetingRequest.scss';
+import { isValidUrl } from '../../../../utils/common';
 
 const MeetingRequest = () => {
     const navigate = useNavigate();
@@ -30,7 +31,9 @@ const MeetingRequest = () => {
     const validationSchema = Yup.object({
         topic: Yup.string().required('Topic is required'),
         dateTime: Yup.date().required('Date and Time is required').typeError('Invalid date and time'),
-        joinLink: Yup.string().required('Join Link is required'),
+        joinLink: Yup.string()
+            .required('Join Link is required')
+            .test('is-valid-url', 'Please enter a valid URL for link', (value) => isValidUrl(value)),
         reason: Yup.string().required('Reason is required')
     });
 

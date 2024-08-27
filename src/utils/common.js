@@ -130,3 +130,16 @@ export const TOOLBAR_CONFIG = [TEXT_FORMATTING, LINK, LISTS];
 
 // Formats constants
 export const FORMATS = ['bold', 'italic', 'underline', 'strike', 'link', 'list', 'bullet'];
+
+export const urlRegex = /^(https?:\/\/)?([a-zA-Z0-9.-]+\.[a-zA-Z]{2,})(\/\S*)?$/;
+
+export const isValidUrl = (url) => {
+    try {
+        const baseUrl = 'https://';
+        const isProperUrl = url.startsWith(baseUrl);
+        if (!isProperUrl) return false;
+        return true;
+    } catch (error) {
+        return false;
+    }
+};

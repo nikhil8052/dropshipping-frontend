@@ -187,6 +187,7 @@ const NewStudent = () => {
         setCropping(false);
         setStudentPhoto(null);
         setImageSrc(null);
+        inputRef.current.value = null;
     };
 
     const handleFormSubmit = async (values, { resetForm, setSubmitting }) => {
