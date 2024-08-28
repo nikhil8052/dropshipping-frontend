@@ -41,7 +41,7 @@ const NewCoach = () => {
         name: '',
         email: '',
         phoneNumber: '',
-        country: 'Belgium',
+        country: 'Netherlands',
         region: '',
         assignedStudents: [],
         highTicketStudentSpots: '',
@@ -380,7 +380,7 @@ const NewCoach = () => {
                                         <PhoneInputField
                                             name="phoneNumber"
                                             label="Phone Number"
-                                            defaultCountry="be" // Default to Belgium
+                                            defaultCountry="nl" // Default to Belgium
                                             countriesAllowed={['be', 'nl']} // Allow only Belgium and Netherlands
                                             placeholder="+32-24-3611111"
                                         />
