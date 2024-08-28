@@ -23,7 +23,7 @@ const BasicInformation = ({ initialData, setStepComplete, createOrUpdateCourse, 
 
     const schema = Yup.object({
         title: Yup.string().required('Please enter the course title'),
-        subtitle: Yup.string().required('Please enter the course subtitle'),
+        subtitle: Yup.string().optional(),
         category: Yup.string().required('Please select a course category'),
         moduleManager: Yup.string().required('Please select a module manager')
     });
