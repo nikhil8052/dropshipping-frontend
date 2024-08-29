@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Row, Col, InputGroup, Form, Button, DropdownButton, Dropdown } from 'react-bootstrap';
-import CourseCard from '../../../components/CourseCard/CourseCard';
+import { InputGroup, Form, Button, DropdownButton, Dropdown } from 'react-bootstrap';
 import Search from '../../../assets/icons/Search.svg';
 import add from '@icons/add_white.svg';
 import downArrow from '@icons/down-arrow.svg';
@@ -13,6 +12,7 @@ import axiosWrapper from '../../../utils/api';
 import '../../../styles/Common.scss';
 import '../../../styles/Courses.scss';
 import { Helmet } from 'react-helmet';
+import GenericCard from '../../../components/GenericCard/GenericCard';
 
 const Courses = () => {
     const [search, setSearch] = useState('');
@@ -69,6 +69,7 @@ const Courses = () => {
                 detail: course?.subtitle,
                 lectureNo: `Lectures: ${course?.lectures.length}`,
                 archive: course?.isArchived,
+                coachName: course?.moduleManager?.name,
                 enroll: course?.enrolledStudents.includes(userInfo?._id),
                 _id: course?._id
             };
@@ -84,7 +85,8 @@ const Courses = () => {
         setTotalPages(Math.ceil(total / limit));
     };
 
-    const handleArchiveChange = async (id, archiveStatus) => {
+    const handleArchiveChange = async (e, id, archiveStatus) => {
+        e.stopPropagation();
         const url = archiveStatus
             ? `${API_URL.UNARCHIVE_COURSE.replace(':id', id)}`
             : `${API_URL.ARCHIVE_COURSE.replace(':id', id)}`;
@@ -170,29 +172,28 @@ const Courses = () => {
                 {coursesData.length === 0 ? (
                     <div className="no-data-wrapper">No Data Found.</div>
                 ) : (
-                    <Row>
+                    <>
                         {coursesData.map((course, index) => {
                             const previousCourse = coursesData[index - 1];
                             const previousCourseProgress = previousCourse ? previousCourse.progress : 100;
-
                             // The student can access the current course only if the previous course is completed 100%
                             const canAccessCourse = previousCourseProgress === 100;
+
                             return (
-                                <Col key={course._id} xs={12} sm={12} md={6} lg={4} xl={3} xxl={3}>
-                                    <div className="custom-card-course-new">
-                                        <CourseCard
-                                            {...course}
-                                            onChange={() => handleArchiveChange(course?._id, course?.archive)}
-                                            canAccessCourse={canAccessCourse}
-                                        />
-                                    </div>
-                                </Col>
+                                <GenericCard
+                                    key={index}
+                                    {...course}
+                                    onChange={(e) => handleArchiveChange(e, course?._id, course?.archive)}
+                                    canAccessCourse={canAccessCourse}
+                                />
                             );
                         })}
-                        <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={handlePageChange} />
-                    </Row>
+                    </>
                 )}
             </div>
+            {coursesData.length !== 0 && (
+                <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={handlePageChange} />
+            )}
         </div>
     );
 };

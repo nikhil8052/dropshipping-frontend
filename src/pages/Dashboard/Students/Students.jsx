@@ -73,11 +73,21 @@ const Students = () => {
 
     const handleRowClick = (event) => {
         // Handle row click event here
-        if (selectedRowId === event.data.id) {
+        if (selectedRowId === event.data._id) {
             setSelectedRowId(null);
             return;
         }
-        setSelectedRowId(event.data.id);
+        setSelectedRowId(event.data._id);
+
+        const isChecked = event.event.target.checked;
+        const isRoadmapClick = coursesModal.show;
+        if (isChecked || isRoadmapClick) {
+            return;
+        } else {
+            navigate(`/${role}/students/edit`, {
+                state: { studentId: event.data?._id }
+            });
+        }
     };
 
     const handleCreateClick = () => {
