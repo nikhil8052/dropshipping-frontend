@@ -10,7 +10,7 @@ import editIcon from '@icons/edit_square.svg';
 import deleteIcon from '@icons/trash-2.svg';
 import downArrow from '@icons/down-arrow.svg';
 import add from '@icons/add_white.svg';
-import { coachDummyData, studentsTrajectory } from '../../../data/data';
+import { COACH, coachDummyData, studentsTrajectory } from '../../../data/data';
 import { useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { API_URL } from '../../../utils/apiUrl';
@@ -73,11 +73,21 @@ const Students = () => {
 
     const handleRowClick = (event) => {
         // Handle row click event here
-        if (selectedRowId === event.data.id) {
+        if (selectedRowId === event.data._id) {
             setSelectedRowId(null);
             return;
         }
-        setSelectedRowId(event.data.id);
+        setSelectedRowId(event.data._id);
+
+        const isChecked = event.event.target.checked;
+        const isRoadmapClick = coursesModal.show;
+        if (isChecked || isRoadmapClick) {
+            return;
+        } else {
+            navigate(`/${role}/students/edit`, {
+                state: { studentId: event.data?._id }
+            });
+        }
     };
 
     const handleCreateClick = () => {
@@ -341,6 +351,18 @@ const Students = () => {
                         {status}
                     </div>
                 );
+            }
+        },
+        {
+            headerName: 'HT / LT',
+            field: 'coachingTrajectory',
+            filter: 'agSetColumnFilter',
+            sortable: true,
+            unSortIcon: true,
+            resizable: false,
+            cellRenderer: ({ data: rowData }) => {
+                const coachingTrajectory = rowData.coachingTrajectory;
+                return <div key={rowData._id}>{coachingTrajectory === COACH.COACH_TYPE.HIGH_TICKET ? 'HT' : 'LT'}</div>;
             }
         },
         {

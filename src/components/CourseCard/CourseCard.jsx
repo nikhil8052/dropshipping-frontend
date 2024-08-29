@@ -22,7 +22,6 @@ const CourseCard = ({
     const { userInfo } = useSelector((state) => state?.auth);
     const role = userInfo?.role?.toLowerCase();
 
-    // check if the previous course is 100% complete then it can move to next course
     return (
         <>
             <div className="course-card">

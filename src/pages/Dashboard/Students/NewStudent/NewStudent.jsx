@@ -41,7 +41,7 @@ const NewStudent = () => {
         name: '',
         email: '',
         phoneNumber: '',
-        country: 'Belgium',
+        country: 'Netherlands',
         region: '',
         coachingTrajectory: 'HIGH_TICKET',
         coursesRoadmap: []
@@ -67,17 +67,13 @@ const NewStudent = () => {
             .trim()
             .required('Please enter a phone number')
             .matches(/\S/, 'Phone number cannot be empty or spaces only')
-            .test(
-                'is-valid-phone',
-                'Phone number must be in the format of belgium or netherlands i.e +32 or +31',
-                (value) => {
-                    if (!value) return false; // If value is undefined/null, it fails the test
-                    // Check for the valid patterns
-                    const belgiumPattern = '32';
-                    const netherlandsPattern = '31';
-                    return value.startsWith(belgiumPattern) || value.startsWith(netherlandsPattern);
-                }
-            ),
+            .test('is-valid-phone', 'Phone number must be in the correct format country', (value) => {
+                if (!value) return false; // If value is undefined/null, it fails the test
+                // Check for the valid patterns
+                const belgiumPattern = '32';
+                const netherlandsPattern = '31';
+                return value.startsWith(belgiumPattern) || value.startsWith(netherlandsPattern);
+            }),
         country: Yup.string()
             .trim()
             .required('Please select a country')
@@ -361,9 +357,7 @@ const NewStudent = () => {
                                         <PhoneInputField
                                             name="phoneNumber"
                                             label="Phone Number"
-                                            defaultCountry="be" // Default to Belgium
-                                            countriesAllowed={['be', 'nl']} // Allow only Belgium and Netherlands
-                                            placeholder="+32-24-3611111"
+                                            countriesAllowed={values.country === 'Netherlands' ? ['nl'] : ['be']}
                                         />
                                     </Col>
 

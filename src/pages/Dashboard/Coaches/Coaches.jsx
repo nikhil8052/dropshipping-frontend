@@ -57,12 +57,19 @@ const Coaches = () => {
     };
 
     const handleRowClick = (event) => {
-        // Handle row click event here
-        if (selectedRowId === event.data.id) {
+        const isChecked = event.event.target.checked;
+        if (selectedRowId === event.data?._id) {
             setSelectedRowId(null);
             return;
         }
-        setSelectedRowId(event.data.id);
+        setSelectedRowId(event.data?._id);
+        if (isChecked) {
+            return;
+        } else {
+            navigate('/admin/coaches/edit', {
+                state: { coachId: event.data?._id }
+            });
+        }
     };
 
     const handleCreateClick = () => {

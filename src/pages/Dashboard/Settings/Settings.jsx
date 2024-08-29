@@ -68,11 +68,16 @@ const Settings = () => {
         name: Yup.string().required('Name is required'),
         email: Yup.string().email('Invalid email address').required('Email is required'),
         phoneNumber: Yup.string().required('Phone number is required'),
-        meetingLink: Yup.string()
-            .trim()
-            .optional()
-            .test('not-only-spaces', 'Meeting link cannot be only spaces', (value) => /\S/.test(value))
-            .test('is-valid-url', 'Please enter a valid URL for the meeting link', (value) => isValidUrl(value))
+        meetingLink:
+            userInfo?.role === 'STUDENT'
+                ? Yup.string().optional()
+                : Yup.string()
+                      .trim()
+                      .optional()
+                      .test('not-only-spaces', 'Meeting link cannot be only spaces', (value) => /\S/.test(value))
+                      .test('is-valid-url', 'Please enter a valid URL for the meeting link', (value) =>
+                          isValidUrl(value)
+                      )
     });
 
     const passwordValidationSchema = Yup.object({
