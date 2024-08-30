@@ -53,7 +53,7 @@ const GenericCard = ({
 
                 {role === 'admin' && (
                     <div className="card-archive">
-                        <span>{archive ? 'Inactive' : 'Active'}</span>
+                        <span>Activate/Deactivate</span>
                         <Form.Check
                             className="archive-toggle-btn"
                             onChange={onChange}

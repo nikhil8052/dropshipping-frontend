@@ -86,12 +86,22 @@ const Courses = () => {
     };
 
     const handleArchiveChange = async (e, id, archiveStatus) => {
-        e.stopPropagation();
-        const url = archiveStatus
-            ? `${API_URL.UNARCHIVE_COURSE.replace(':id', id)}`
-            : `${API_URL.ARCHIVE_COURSE.replace(':id', id)}`;
-        await axiosWrapper('PUT', url, {}, userToken);
-        getAllCourses(); // Refresh the course list
+        const courseIndex = coursesData.findIndex((c) => c._id === id);
+        const copyCourse = [...coursesData];
+
+        try {
+            e.stopPropagation();
+            const url = archiveStatus
+                ? `${API_URL.UNARCHIVE_COURSE.replace(':id', id)}`
+                : `${API_URL.ARCHIVE_COURSE.replace(':id', id)}`;
+            await axiosWrapper('PUT', url, {}, userToken);
+
+            copyCourse[courseIndex].archive = !archiveStatus;
+            setCoursesData(copyCourse);
+        } catch (error) {
+            copyCourse[courseIndex].archive = archiveStatus;
+            setCoursesData(copyCourse);
+        }
     };
 
     // Admin | Coach Side

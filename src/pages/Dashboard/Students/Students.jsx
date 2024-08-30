@@ -78,7 +78,6 @@ const Students = () => {
             return;
         }
         setSelectedRowId(event.data._id);
-
         const isChecked = event.event.target.checked;
         const isRoadmapClick = coursesModal.show;
         if (isChecked || isRoadmapClick) {
