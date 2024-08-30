@@ -18,7 +18,7 @@
 
     .archive-toggle-btn {
         .form-check-input:checked {
-            background-color: $success-color !important;
+            background-color: $info-color !important;
             border-color: transparent;
         }
         .form-check-input:not(:checked) {
