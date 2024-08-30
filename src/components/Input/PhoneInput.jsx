@@ -14,7 +14,9 @@ const PhoneInputField = ({ name, label, countriesAllowed }) => {
                         key={countriesAllowed.join(',')}
                         country={countriesAllowed.join('')} // Default country code
                         onlyCountries={countriesAllowed} // Restrict to specific countries
+                        masks={{ be: '........', nl: '.........' }}
                         onChange={(value) => form.setFieldValue(name, value)}
+                        placeholder="+32 232323232"
                         inputClass="field-control-phone-mask"
                     />
                 )}
