@@ -70,7 +70,7 @@ const AddLectureModal = ({ lectureModal, resetModal, onSave }) => {
         vimeoLink: Yup.string()
             .optional()
             .nullable()
-            .matches(/^https:\/\/player\.vimeo\.com\/video\/\d+\?h=[a-zA-Z0-9]+$/, 'Please provide a valid Vimeo link')
+            .matches(/^https:\/\/player\.vimeo\.com\/video\/\d+$/, 'Please provide a valid Vimeo link')
             .test('file-or-link', 'Either file or Vimeo link is required', function (value) {
                 const { file } = this.parent;
                 return !!file || !!value;
