@@ -17,6 +17,7 @@ import GenericCard from '../../../components/GenericCard/GenericCard';
 const Courses = () => {
     const [search, setSearch] = useState('');
     const [selectedEvent, setSelectedEvent] = useState('Your Courses');
+    const [coursesFilter, setCoursesFilter] = useState('All Courses');
     const [currentPage, setCurrentPage] = useState(1);
     const [coursesData, setCoursesData] = useState([]);
     const dispatch = useDispatch();
@@ -46,17 +47,25 @@ const Courses = () => {
         setSelectedEvent(course);
     };
 
+    const handleCoursesFilter = (eventKey, course) => {
+        setCoursesFilter(course);
+    };
+
     useEffect(() => {
         // Fetch data from API here
         getAllCourses();
         dispatch({ type: types.LOGOUT });
-    }, [search, currentPage, selectedEvent]);
+    }, [search, currentPage, selectedEvent, coursesFilter]);
 
     const getAllCourses = async () => {
         const method = 'GET';
         let url = `${API_URL.GET_ALL_COURSES}?page=${currentPage}&limit=${itemsPerPage}&search=${search}`;
         if (selectedEvent) {
             url = `${url}&isEnrolled=${selectedEvent === 'Your Courses' ? true : false}`;
+        }
+
+        if (coursesFilter) {
+            url = `${url}&isActive=${coursesFilter}`;
         }
 
         const response = await axiosWrapper(method, url, {}, userToken);
@@ -173,9 +182,32 @@ const Courses = () => {
                         ))}
                     </DropdownButton>
                 ) : (
-                    <Button className="add-button" onClick={handleCreateClick}>
-                        <img src={add} alt="" /> <span className="ms-1">Add New Course</span>
-                    </Button>
+                    <div className="d-flex gap-2 flex-wrap">
+                        <DropdownButton
+                            title={
+                                <div className="d-flex justify-content-between align-items-center gap-2">
+                                    <span>{coursesFilter}</span>
+                                    <img src={downArrow} alt="Down arrow" />
+                                </div>
+                            }
+                            defaultValue={coursesFilter}
+                            className="dropdown-button"
+                        >
+                            {['All Courses', 'Active Courses', 'Inactive Courses'].map((event) => (
+                                <Dropdown.Item
+                                    onClick={(e) => handleCoursesFilter(e, event)}
+                                    key={event}
+                                    eventKey={event}
+                                    className="my-1 ms-2"
+                                >
+                                    <span className="coach-name">{event}</span>
+                                </Dropdown.Item>
+                            ))}
+                        </DropdownButton>
+                        <Button className="add-button" onClick={handleCreateClick}>
+                            <img src={add} alt="" /> <span className="ms-1">Add New Course</span>
+                        </Button>
+                    </div>
                 )}
             </div>
             <div className="custom-card-course">
@@ -202,7 +234,12 @@ const Courses = () => {
                 )}
             </div>
             {coursesData.length !== 0 && (
-                <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={handlePageChange} />
+                <Pagination
+                    customClass={coursesData.length < itemsPerPage ? 'card-position' : ''}
+                    currentPage={currentPage}
+                    totalPages={totalPages}
+                    onPageChange={handlePageChange}
+                />
             )}
         </div>
     );

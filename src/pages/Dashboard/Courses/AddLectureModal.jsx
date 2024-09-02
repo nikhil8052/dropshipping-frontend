@@ -13,6 +13,7 @@ import { API_URL } from '../../../utils/apiUrl';
 import { useSelector } from 'react-redux';
 import { Upload } from 'tus-js-client';
 import { trimLongText } from '../../../utils/common';
+import cross from '@icons/red-cross.svg';
 
 const AddLectureModal = ({ lectureModal, resetModal, onSave }) => {
     const [loading, setLoading] = useState(false);
@@ -34,7 +35,8 @@ const AddLectureModal = ({ lectureModal, resetModal, onSave }) => {
                     }
                 ]
             },
-            file: null
+            file: null,
+            vimeoLink: null
         }
     );
 
@@ -64,7 +66,15 @@ const AddLectureModal = ({ lectureModal, resetModal, onSave }) => {
                         })
                     )
             }),
-        file: Yup.mixed().required('File is required')
+        file: Yup.mixed().nullable(), // Allowing it to be null
+        vimeoLink: Yup.string()
+            .optional()
+            .nullable()
+            .matches(/^https:\/\/player\.vimeo\.com\/video\/\d+\?h=[a-zA-Z0-9]+$/, 'Please provide a valid Vimeo link')
+            .test('file-or-link', 'Either file or Vimeo link is required', function (value) {
+                const { file } = this.parent;
+                return !!file || !!value;
+            })
     });
 
     useEffect(() => {
@@ -95,21 +105,29 @@ const AddLectureModal = ({ lectureModal, resetModal, onSave }) => {
             values.quiz.mcqs.forEach((mcq) => {
                 mcq.correctAnswer = mcq.options[3];
             });
+
             let formData = { ...values, courseId: lectureModal.courseId };
-            if (formData.file.type === 'document') {
+
+            if (formData.file && formData?.file.type === 'document') {
                 formData = { ...values, courseId: lectureModal.courseId, file: formData.file.path };
+            } else if (formData?.vimeoLink) {
+                delete formData.file;
             } else {
                 setUploading(true);
                 delete formData.file;
             }
-            const query = formData.file
-                ? ''
-                : `?size=${values.file.size}&type=${values.file.type}&description=${formData.description}&name=${formData.name}`;
+
+            const query =
+                formData.file || formData?.vimeoLink
+                    ? ''
+                    : `?size=${values.file.size}&type=${values.file.type}&description=${formData.description}&name=${formData.name}`;
 
             const url = lectureModal.isEditable
                 ? API_URL.UPDATE_LECTURE.replace(':id', lectureModal.lectureId) + query
                 : `${API_URL.ADD_LECTURE}` + query;
+
             const method = lectureModal.isEditable ? 'PUT' : 'POST';
+
             const response = await axiosWrapper(method, url, formData, token);
             // Video upload
             if (response.data.vimeoVideoData) {
@@ -155,6 +173,8 @@ const AddLectureModal = ({ lectureModal, resetModal, onSave }) => {
     };
 
     const handleLectureUpload = async (file, setFieldValue) => {
+        setFieldValue('vimeoLink', null);
+
         if (lectureModal.isEditable && initialValues?.vimeoVideoData) {
             if (!file.type.includes('video')) {
                 toast.error('Please upload a video file');
@@ -305,37 +325,90 @@ const AddLectureModal = ({ lectureModal, resetModal, onSave }) => {
                                     </FieldArray>
                                 </div>
                             </div>
-                            <div>
-                                <div
-                                    className="add-quiz-file cursor-pointer "
-                                    onClick={(e) => {
-                                        e.preventDefault();
-                                        document.querySelector('.file-uploader').click();
-                                    }}
-                                >
-                                    <h4>{lectureModal?.isEditable ? 'Update' : 'Attach'} File</h4>
-                                    <FileUploader
-                                        ref={fileRef}
-                                        multiple={false}
-                                        handleChange={(file) => handleLectureUpload(file, setFieldValue)}
-                                        name="file"
-                                        types={fileTypes}
-                                        classes="file-uploader d-none"
-                                    />
-                                    <p>
-                                        {values.file ? (
-                                            `File name: ${trimLongText(values.file.name, 15) || trimLongText(values.file.split('-')[1], 15)}`
-                                        ) : (
-                                            <div>
-                                                Drag and drop a file or <strong>browse file</strong>
-                                            </div>
-                                        )}
-                                    </p>
-                                </div>
-                                <ErrorMessage name="file" component="div" className="error mt-2" />
-                            </div>
-                            {/* Display the uploaded lecture */}
+                            {!values?.vimeoLink && !initialValues?.vimeoLink && (
+                                <>
+                                    <div>
+                                        <div
+                                            className="add-quiz-file cursor-pointer "
+                                            onClick={(e) => {
+                                                e.preventDefault();
+                                                document.querySelector('.file-uploader').click();
+                                            }}
+                                        >
+                                            <h4>{lectureModal?.isEditable ? 'Update' : 'Attach'} File</h4>
 
+                                            {values?.file && (
+                                                <div
+                                                    className="align-self-start"
+                                                    style={{
+                                                        marginLeft: 'auto'
+                                                    }}
+                                                >
+                                                    <img
+                                                        src={cross}
+                                                        onClick={(e) => {
+                                                            e.stopPropagation();
+                                                            setInitialValues((pre) => ({
+                                                                ...pre,
+                                                                file: null
+                                                            }));
+                                                            if (fileRef.current) {
+                                                                fileRef.current.value = '';
+                                                            }
+                                                            setFieldValue('file', null);
+                                                        }}
+                                                        className="reset-image "
+                                                        alt="reset"
+                                                    />
+                                                </div>
+                                            )}
+
+                                            <FileUploader
+                                                ref={fileRef}
+                                                multiple={false}
+                                                handleChange={(file) => handleLectureUpload(file, setFieldValue)}
+                                                name="file"
+                                                types={fileTypes}
+                                                classes="file-uploader d-none"
+                                            />
+                                            <p>
+                                                {values.file ? (
+                                                    `File name: ${trimLongText(values.file.name, 15) || trimLongText(values.file.split('-')[1], 15)}`
+                                                ) : (
+                                                    <div>
+                                                        Drag and drop a file or <strong>browse file</strong>
+                                                    </div>
+                                                )}
+                                            </p>
+                                        </div>
+                                        <ErrorMessage name="file" component="div" className="error mt-2" />
+                                    </div>
+                                </>
+                            )}
+
+                            {!values?.file &&
+                                !values?.vimeoLink &&
+                                !initialValues?.vimeoLink &&
+                                !initialValues?.vimeoVideoData && <hr className="hr-text gradient" data-content="OR" />}
+                            {/* Or Upload link here */}
+                            {!values?.file && !initialValues?.vimeoVideoData && (
+                                <div className="mt-1">
+                                    <label htmlFor="vimeoLink" className="field-label">
+                                        Vimeo Video Link
+                                    </label>
+                                    <Field
+                                        name="vimeoLink"
+                                        className="field-control mb-2"
+                                        type="text"
+                                        placeholder="https://player.vimeo.com/video/1005340787?h=bb4c9a98dd"
+                                    />
+                                    <div className="mb-2">
+                                        <ErrorMessage name="vimeoLink" component="div" className="error" />
+                                    </div>
+                                </div>
+                            )}
+                            {/* Display the uploaded lecture */}
+                            {/* Uploaded state of video lecture */}
                             {lectureModal.isEditable &&
                                 initialValues?.vimeoVideoData?.player_embed_url && ( // Display the uploaded lecture
                                     <div className="mt-3">
@@ -363,7 +436,24 @@ const AddLectureModal = ({ lectureModal, resetModal, onSave }) => {
                                         </div>
                                     </div>
                                 )}
-
+                            {/* Uploaded state of vimeo link lecture */}
+                            {lectureModal.isEditable &&
+                                initialValues?.vimeoLink && ( // Display the uploaded lecture
+                                    <div className="mt-3">
+                                        <h4>Uploaded Lecture</h4>
+                                        <div className="uploaded-lecture">
+                                            <iframe
+                                                src={initialValues?.vimeoLink}
+                                                width="100%"
+                                                height="400"
+                                                frameBorder="0"
+                                                allow="autoplay; fullscreen; picture-in-picture"
+                                                allowFullScreen
+                                                title="Lecture"
+                                            />
+                                        </div>
+                                    </div>
+                                )}
                             <Row>
                                 <Col>
                                     <div className="mt-3 d-flex justify-content-between gap-3">
