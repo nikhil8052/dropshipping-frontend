@@ -1,6 +1,6 @@
 import './Pagination.scss';
 
-const Pagination = ({ currentPage, totalPages, onPageChange }) => {
+const Pagination = ({ currentPage, totalPages, onPageChange, customClass = '' }) => {
     const handlePrevious = () => {
         if (currentPage > 1) {
             onPageChange(currentPage - 1);
@@ -14,7 +14,7 @@ const Pagination = ({ currentPage, totalPages, onPageChange }) => {
     };
 
     return (
-        <div className="pagination-custom">
+        <div className={`pagination-custom ${customClass}`}>
             <button
                 className={`page-button ${currentPage === 1 ? 'disabled' : ''}`}
                 onClick={handlePrevious}

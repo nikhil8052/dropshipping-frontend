@@ -259,10 +259,13 @@ const EnrolledCourseDetail = () => {
                                                             <PdfModal file={selectedLecture.file} />
                                                         </div>
                                                     </div>
-                                                ) : selectedLecture.vimeoVideoData ? (
+                                                ) : selectedLecture?.vimeoLink || selectedLecture?.vimeoVideoData ? (
                                                     <div className="video">
                                                         <iframe
-                                                            src={selectedLecture.vimeoVideoData.player_embed_url}
+                                                            src={
+                                                                selectedLecture?.vimeoLink ||
+                                                                selectedLecture.vimeoVideoData?.player_embed_url
+                                                            }
                                                             title="Vimeo video player"
                                                             frameBorder="0"
                                                             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
