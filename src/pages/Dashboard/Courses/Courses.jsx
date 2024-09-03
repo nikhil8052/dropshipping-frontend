@@ -13,6 +13,7 @@ import '../../../styles/Common.scss';
 import '../../../styles/Courses.scss';
 import { Helmet } from 'react-helmet';
 import GenericCard from '../../../components/GenericCard/GenericCard';
+import { precisionRound } from '../../../utils/common';
 
 const Courses = () => {
     const [search, setSearch] = useState('');
@@ -85,7 +86,7 @@ const Courses = () => {
 
             if (role === 'STUDENT' && course?.enrolledStudents.includes(userInfo?._id)) {
                 const progress = calcProgress(course, userInfo?._id);
-                return { ...baseCourseData, progress };
+                return { ...baseCourseData, progress: precisionRound(progress, 0) };
             }
 
             return baseCourseData;
