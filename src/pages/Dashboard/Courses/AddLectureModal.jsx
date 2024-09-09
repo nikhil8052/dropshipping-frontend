@@ -110,9 +110,12 @@ const AddLectureModal = ({ lectureModal, resetModal, onSave }) => {
 
             if (formData.file && formData?.file.type === 'document') {
                 formData = { ...values, courseId: lectureModal.courseId, file: formData.file.path };
+                formData.dataType = 'file';
             } else if (formData?.vimeoLink) {
+                formData.dataType = 'vimeoLink';
                 delete formData.file;
             } else {
+                formData.dataType = 'video';
                 setUploading(true);
                 delete formData.file;
             }
@@ -172,15 +175,17 @@ const AddLectureModal = ({ lectureModal, resetModal, onSave }) => {
         }
     };
 
-    const handleLectureUpload = async (file, setFieldValue) => {
-        setFieldValue('vimeoLink', null);
+    // On update lecture we can update it with pdf or vimeo link or anything else
 
-        if (lectureModal.isEditable && initialValues?.vimeoVideoData) {
-            if (!file.type.includes('video')) {
-                toast.error('Please upload a video file');
-                return;
-            }
-        }
+    const handleLectureUpload = async (file, setFieldValue) => {
+        // setFieldValue('vimeoLink', null);
+
+        // if (lectureModal.isEditable && initialValues?.vimeoVideoData) {
+        //     if (!file.type.includes('video')) {
+        //         toast.error('Please upload a video file');
+        //         return;
+        //     }
+        // }
 
         if (!file.type.includes('video')) {
             const formData = new FormData();
@@ -325,7 +330,7 @@ const AddLectureModal = ({ lectureModal, resetModal, onSave }) => {
                                     </FieldArray>
                                 </div>
                             </div>
-                            {!values?.vimeoLink && !initialValues?.vimeoLink && (
+                            {!values?.vimeoLink && (
                                 <>
                                     <div>
                                         <div
@@ -386,12 +391,11 @@ const AddLectureModal = ({ lectureModal, resetModal, onSave }) => {
                                 </>
                             )}
 
-                            {!values?.file &&
-                                !values?.vimeoLink &&
-                                !initialValues?.vimeoLink &&
-                                !initialValues?.vimeoVideoData && <hr className="hr-text gradient" data-content="OR" />}
+                            {!values?.file && !values?.vimeoLink && (
+                                <hr className="hr-text gradient" data-content="OR" />
+                            )}
                             {/* Or Upload link here */}
-                            {!values?.file && !initialValues?.vimeoVideoData && (
+                            {!values?.file && (
                                 <div className="mt-1">
                                     <label htmlFor="vimeoLink" className="field-label">
                                         Vimeo Video Link
