@@ -49,11 +49,11 @@ const GenericCard = ({
                 <Card.Text className="card-coach">
                     <TextExpand className="course-des" value={detail} width="100%" />
                 </Card.Text>
-                <Card.Text className="card-coach">Coach: {coachName}</Card.Text>
-
                 {role === 'admin' && (
                     <div className="card-archive">
-                        <span>Activate/Deactivate</span>
+                        <span>
+                            <strong>Status:</strong> {archive ? 'Active' : 'Inactive'}
+                        </span>
                         <Form.Check
                             className="archive-toggle-btn"
                             onChange={onChange}

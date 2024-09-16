@@ -10,7 +10,15 @@ const LectureCard = ({ item }) => {
             {item.type === 'pdf' ? (
                 <FontAwesomeIcon className="product-image" icon={faFilePdf} color="rgba(200, 202, 216, 1)" />
             ) : (
-                <img src="https://i.vimeocdn.com/video/default" alt={item.title} className="product-image" />
+                <img
+                    src={item?.thumbnail || 'https://i.vimeocdn.com/video/default'}
+                    alt={item.title}
+                    className="product-image"
+                    onError={(e) => {
+                        e.target.onerror = null; // Prevent infinite loop in case the default image fails too
+                        e.target.src = 'https://i.vimeocdn.com/video/default'; // Set default image
+                    }}
+                />
             )}
             <div className="product-details">
                 <h5>{trimLongText(item.title, 15)}</h5>

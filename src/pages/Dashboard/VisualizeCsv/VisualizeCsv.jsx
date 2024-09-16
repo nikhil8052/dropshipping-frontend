@@ -37,7 +37,7 @@ function VisualizeCsv() {
                 </div>
             )}
             <Tabs fill defaultActiveKey="students" id="uncontrolled-tab-example" className="mb-3">
-                <Tab eventKey="students" title="Students Training Products">
+                <Tab eventKey="students" title="Test Products">
                     <StudentsTrainingProduct studentId={studentId} />
                 </Tab>
                 <Tab eventKey="finance" title="Daily Finances">

@@ -1,13 +1,18 @@
 import { Keyboard, Navigation, Pagination, Scrollbar } from 'swiper/modules';
 import './CarouselWrapper.scss';
 import { Swiper, SwiperSlide } from 'swiper/react';
-import { Col, Row } from 'react-bootstrap';
 import 'swiper/swiper-bundle.css';
 import 'swiper/css';
 import ProductCard from '../ProductCard/ProductCard';
 import LectureCard from '../LectureCard/LectureCard';
+import Modal from '../Modal/Modal';
+import { useState } from 'react';
+import PdfModal from '../PdfRenderer/PdfViewer';
 
 const CarouselWrapper = ({ items = [], type = 'product' }) => {
+    const [showModal, setShowModal] = useState(false);
+    const [selectedItem, setSelectedItem] = useState(null);
+
     const swiperBreakpoints = {
         320: {
             slidesPerView: 1,
@@ -50,29 +55,68 @@ const CarouselWrapper = ({ items = [], type = 'product' }) => {
             spaceBetween: -30
         }
     };
+
+    const handleSlideClick = (e, item) => {
+        e.stopPropagation();
+        e.preventDefault();
+        if (type === 'product') return;
+        // Preview of lectures
+        setSelectedItem(item);
+        setShowModal(true);
+    };
+    const handleClose = () => {
+        setShowModal(false);
+        setSelectedItem(null);
+    };
     return (
-        <Swiper
-            loop={true}
-            breakpoints={swiperBreakpoints}
-            navigation={true}
-            modules={[Keyboard, Scrollbar, Navigation, Pagination]}
-        >
-            <Row>
+        <>
+            <Swiper
+                loop={true}
+                breakpoints={swiperBreakpoints}
+                navigation={true}
+                modules={[Keyboard, Scrollbar, Navigation, Pagination]}
+            >
                 {items.map((item, index) => (
-                    <Col key={index}>
-                        <SwiperSlide className="slide-item" key={index}>
-                            {type === 'product' ? (
-                                <ProductCard item={item} />
-                            ) : type === 'lecture' ? (
-                                <LectureCard item={item} />
-                            ) : (
-                                <></>
-                            )}
-                        </SwiperSlide>
-                    </Col>
+                    <SwiperSlide
+                        className="slide-item cursor-pointer"
+                        key={index}
+                        onClick={(e) => handleSlideClick(e, item)}
+                    >
+                        {type === 'product' ? (
+                            <ProductCard item={item} />
+                        ) : type === 'lecture' ? (
+                            <LectureCard item={item} />
+                        ) : (
+                            <></>
+                        )}
+                    </SwiperSlide>
                 ))}
-            </Row>
-        </Swiper>
+            </Swiper>
+            <Modal
+                size="large" // You can change the size as needed
+                show={showModal}
+                onClose={handleClose}
+                title={selectedItem?.name || 'Preview'}
+            >
+                {selectedItem?.dataType === 'file' ? (
+                    <PdfModal file={selectedItem?.file} />
+                ) : (
+                    <iframe
+                        src={
+                            selectedItem?.vimeoLink
+                                ? selectedItem?.vimeoLink
+                                : selectedItem?.vimeoVideoData?.player_embed_url
+                        }
+                        width="100%"
+                        height="400"
+                        frameBorder="0"
+                        allow="autoplay; fullscreen; picture-in-picture"
+                        allowFullScreen
+                        title="Lecture"
+                    />
+                )}
+            </Modal>
+        </>
     );
 };
 

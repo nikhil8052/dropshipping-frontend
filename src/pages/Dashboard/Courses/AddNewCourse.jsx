@@ -14,6 +14,7 @@ import '../../../styles/Courses.scss';
 import axiosWrapper from '../../../utils/api';
 import * as types from '../../../redux/actions/actionTypes';
 import { API_URL } from '../../../utils/apiUrl';
+import toast from 'react-hot-toast';
 
 const AddNewCourse = () => {
     const location = useLocation();
@@ -50,9 +51,12 @@ const AddNewCourse = () => {
         if (
             key === 'basic-information' ||
             (key === 'upload-files' && stepsCompleted.step1) ||
+            (key === 'publish-course' && stepsCompleted.step1) ||
             (key === 'publish-course' && stepsCompleted.step1 && stepsCompleted.step2)
         ) {
             setActiveKey(key);
+        } else {
+            toast.error('Please click save button to move to the next step');
         }
     };
 

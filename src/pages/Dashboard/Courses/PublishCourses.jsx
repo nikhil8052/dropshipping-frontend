@@ -14,7 +14,6 @@ const PublishCourses = ({ onBack, initialData, setStepComplete, publishCourse })
     const lectures = initialData?.lectures || [];
     const pdfLectures = lectures.filter((lecture) => lecture.file);
     const totalQuestions = lectures.reduce((acc, item) => {
-        // const questionsLength = item.quiz?.questions.length;
         const mcqsLength = item.quiz?.mcqs?.length;
         return acc + mcqsLength;
     }, 0);
@@ -31,7 +30,12 @@ const PublishCourses = ({ onBack, initialData, setStepComplete, publishCourse })
             id: lecture._id,
             title: lecture.name,
             type: lecture.file ? 'pdf' : 'video',
-            description: lecture.description
+            description: lecture?.description,
+            thumbnail: lecture?.thumbnail,
+            dataType: lecture?.dataType,
+            file: lecture?.file || null,
+            vimeoLink: lecture?.vimeoLink || '',
+            vimeoVideoData: lecture?.vimeoVideoData || null
         };
     });
 

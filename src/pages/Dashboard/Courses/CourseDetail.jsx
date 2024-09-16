@@ -28,7 +28,12 @@ const CourseDetail = () => {
                 id: lecture._id,
                 title: lecture.name,
                 type: lecture.file ? 'pdf' : 'video',
-                description: lecture.description
+                description: lecture?.description,
+                thumbnail: lecture?.thumbnail || '',
+                dataType: lecture?.dataType,
+                file: lecture?.file || null,
+                vimeoLink: lecture?.vimeoLink || '',
+                vimeoVideoData: lecture?.vimeoVideoData || null
             };
         });
         const pdfLectures = data.lectures?.filter((lecture) => lecture?.file);

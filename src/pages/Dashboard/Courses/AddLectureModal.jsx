@@ -7,13 +7,18 @@ import { toast } from 'react-hot-toast';
 import bluePlus from '@icons/blue-plus.svg';
 import { FileUploader } from 'react-drag-drop-files';
 import { faMinus } from '@fortawesome/free-solid-svg-icons';
+import courseThumbnail from '../../../assets/icons/Thumbnail.svg';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import axiosWrapper from '../../../utils/api';
 import { API_URL } from '../../../utils/apiUrl';
 import { useSelector } from 'react-redux';
 import { Upload } from 'tus-js-client';
 import { trimLongText } from '../../../utils/common';
+import { getFileObjectFromBlobUrl } from '../../../utils/utils';
 import cross from '@icons/red-cross.svg';
+import UploadSimple from '@icons/UploadSimple.svg';
+import ImageCropper from '../../../components/ImageMask/ImageCropper';
+import '../../../styles/Courses.scss';
 
 const AddLectureModal = ({ lectureModal, resetModal, onSave }) => {
     const [loading, setLoading] = useState(false);
@@ -21,7 +26,14 @@ const AddLectureModal = ({ lectureModal, resetModal, onSave }) => {
     const [uploadProgress, setUploadProgress] = useState(0);
     const token = useSelector((state) => state?.auth?.userToken);
     const fileTypes = ['pdf', 'docx', 'mp4', 'avi', 'mov'];
+    const inputRef = useRef();
     const fileRef = useRef(null);
+
+    const [cropping, setCropping] = useState(false);
+    const [imageSrc, setImageSrc] = useState(null);
+    const [loadingThum, setLoadingThumb] = useState(false);
+    const [thumbnail, setThumbnail] = useState('');
+    const [dataType, setDataType] = useState('');
 
     const [initialValues, setInitialValues] = useState(
         lectureModal.initialValues || {
@@ -36,7 +48,8 @@ const AddLectureModal = ({ lectureModal, resetModal, onSave }) => {
                 ]
             },
             file: null,
-            vimeoLink: null
+            vimeoLink: null,
+            vimeoVideoData: null
         }
     );
 
@@ -73,7 +86,8 @@ const AddLectureModal = ({ lectureModal, resetModal, onSave }) => {
             .matches(/^https:\/\/player\.vimeo\.com\/video\/\d+$/, 'Please provide a valid Vimeo link')
             .test('file-or-link', 'Either file or Vimeo link is required', function (value) {
                 const { file } = this.parent;
-                return !!file || !!value;
+                const isVimeo = initialValues.vimeoVideoData;
+                return !!isVimeo || !!file || !!value;
             })
     });
 
@@ -90,98 +104,249 @@ const AddLectureModal = ({ lectureModal, resetModal, onSave }) => {
                 {},
                 token
             );
-            setInitialValues(response.data);
+            const lectureDetail = {
+                name: response.data?.name,
+                description: response.data?.description,
+                quiz: response.data?.quiz,
+                file: response.data?.file,
+                vimeoLink: response.data?.vimeoLink,
+                vimeoVideoData: response.data?.vimeoVideoData,
+                _id: response.data?._id
+            };
+            setInitialValues(lectureDetail);
+            setThumbnail(response.data?.thumbnail);
+            setDataType(response.data?.dataType);
         } catch (error) {
             setLoading(false);
         } finally {
             setLoading(false);
         }
     };
+    // Commenting for future use
+    // const handleSubmit = async (values, { setSubmitting }) => {
+    //     setSubmitting(true);
+    //     try {
+    //         // set the correctAnswer to the last option
+    //         values.quiz.mcqs.forEach((mcq) => {
+    //             mcq.correctAnswer = mcq.options[3];
+    //         });
+
+    //         let formData = { ...values, courseId: lectureModal.courseId };
+
+    //         if (formData.file && formData?.file.type === 'document') {
+    //             formData = { ...values, courseId: lectureModal.courseId, file: formData.file.path };
+    //             formData.dataType = 'file';
+    //         } else if (formData?.vimeoLink) {
+    //             if (thumbnail) {
+    //                 const filePath = 'uploads' + thumbnail.split('/uploads')[1];
+    //                 formData.thumbnail = filePath;
+    //             }
+    //             formData.dataType = 'vimeoLink';
+    //             delete formData.file;
+    //         } else {
+    //             if (thumbnail) {
+    //                 const filePath = 'uploads' + thumbnail.split('/uploads')[1];
+    //                 formData.thumbnail = filePath;
+    //             }
+
+    //             formData.dataType = 'video';
+    //             if (lectureModal.isEditable && values.file.name !== initialValues?.vimeoVideoData?.fileInfo?.name) {
+    //                 setUploading(false);
+    //             } else {
+    //                 setUploading(true);
+    //             }
+
+    //             delete formData.file;
+    //         }
+
+    //         const query =
+    //             formData.file || formData?.vimeoLink
+    //                 ? ''
+    //                 : (values.file &&
+    //                       `?size=${values.file.size}&type=${values.file.type}&description=${formData.description}&name=${formData.name}&fileName=${values.file.name}`) ||
+    //                   '';
+
+    //         const url = lectureModal.isEditable
+    //             ? API_URL.UPDATE_LECTURE.replace(':id', lectureModal.lectureId) + query
+    //             : `${API_URL.ADD_LECTURE}` + query;
+
+    //         const method = lectureModal.isEditable ? 'PUT' : 'POST';
+
+    //         const response = await axiosWrapper(method, url, formData, token);
+    //         // Video upload
+    //         // check if the file is not a new file then do not call the upload function
+
+    //         if (response.data.vimeoVideoData) {
+    //             const { upload_link: uploadLink } = response.data.vimeoVideoData.upload;
+    //             const upload = new Upload(values.file, {
+    //                 endpoint: uploadLink,
+    //                 uploadUrl: uploadLink,
+    //                 retryDelays: [0, 3000, 5000, 10000, 20000],
+    //                 metadata: {
+    //                     filename: values.file.name,
+    //                     filetype: values.file.type
+    //                 },
+    //                 onError: () => {
+    //                     toast.error('Upload failed. Please try again.');
+    //                     setUploading(false);
+    //                     setSubmitting(false);
+    //                     resetModal();
+    //                 },
+    //                 onProgress: (bytesUploaded, bytesTotal) => {
+    //                     const percentage = ((bytesUploaded / bytesTotal) * 100).toFixed(2);
+    //                     setUploadProgress(percentage);
+    //                 },
+    //                 onSuccess: () => {
+    //                     toast.success('Lecture Uploaded Successfully');
+    //                     setUploading(false);
+    //                     onSave();
+    //                     resetModal();
+    //                     setSubmitting(false);
+    //                 }
+    //             });
+    //             upload.start();
+    //         } else {
+    //             setUploading(false);
+    //             onSave();
+    //             resetModal();
+    //             setSubmitting(false);
+    //         }
+    //     } catch (error) {
+    //         setSubmitting(false);
+    //         setUploading(false);
+    //         resetModal();
+    //     }
+    // };
 
     const handleSubmit = async (values, { setSubmitting }) => {
         setSubmitting(true);
+
         try {
-            // set the correctAnswer to the last option
-            values.quiz.mcqs.forEach((mcq) => {
-                mcq.correctAnswer = mcq.options[3];
-            });
+            // Prepare form data
+            const formData = prepareFormData(values);
 
-            let formData = { ...values, courseId: lectureModal.courseId };
+            // Build query string if needed
+            const query = formData.file || formData.vimeoLink ? '' : createQueryString(values.file, formData);
 
-            if (formData.file && formData?.file.type === 'document') {
-                formData = { ...values, courseId: lectureModal.courseId, file: formData.file.path };
-            } else if (formData?.vimeoLink) {
-                delete formData.file;
-            } else {
-                setUploading(true);
-                delete formData.file;
-            }
-
-            const query =
-                formData.file || formData?.vimeoLink
-                    ? ''
-                    : `?size=${values.file.size}&type=${values.file.type}&description=${formData.description}&name=${formData.name}`;
-
-            const url = lectureModal.isEditable
-                ? API_URL.UPDATE_LECTURE.replace(':id', lectureModal.lectureId) + query
-                : `${API_URL.ADD_LECTURE}` + query;
-
+            // Get the appropriate API URL
+            const url = getApiUrl(lectureModal.isEditable, lectureModal.lectureId, query);
             const method = lectureModal.isEditable ? 'PUT' : 'POST';
-
+            // Make the API call
             const response = await axiosWrapper(method, url, formData, token);
-            // Video upload
+
+            // Handle Vimeo upload if needed
             if (response.data.vimeoVideoData) {
-                const { upload_link: uploadLink } = response.data.vimeoVideoData.upload;
-                const upload = new Upload(values.file, {
-                    endpoint: uploadLink,
-                    uploadUrl: uploadLink,
-                    retryDelays: [0, 3000, 5000, 10000, 20000],
-                    metadata: {
-                        filename: values.file.name,
-                        filetype: values.file.type
-                    },
-                    onError: () => {
-                        toast.error('Upload failed. Please try again.');
-                        setUploading(false);
-                        setSubmitting(false);
-                        resetModal();
-                    },
-                    onProgress: (bytesUploaded, bytesTotal) => {
-                        const percentage = ((bytesUploaded / bytesTotal) * 100).toFixed(2);
-                        setUploadProgress(percentage);
-                    },
-                    onSuccess: () => {
-                        toast.success('Lecture Uploaded Successfully');
-                        setUploading(false);
-                        onSave();
-                        resetModal();
-                        setSubmitting(false);
-                    }
-                });
-                upload.start();
+                if (response?.new) {
+                    setUploading(true);
+                }
+                await handleVimeoUpload(response.data.vimeoVideoData.upload.upload_link, values.file);
             } else {
-                setUploading(false);
-                onSave();
-                resetModal();
+                finalizeUpload(false);
                 setSubmitting(false);
             }
         } catch (error) {
+            handleError();
             setSubmitting(false);
-            setUploading(false);
-            resetModal();
         }
     };
 
-    const handleLectureUpload = async (file, setFieldValue) => {
-        setFieldValue('vimeoLink', null);
+    // Helper functions
+    const prepareFormData = (values) => {
+        values.quiz.mcqs.forEach((mcq) => {
+            mcq.correctAnswer = mcq.options[3]; // Set correctAnswer to the last option
+        });
 
-        if (lectureModal.isEditable && initialValues?.vimeoVideoData) {
-            if (!file.type.includes('video')) {
-                toast.error('Please upload a video file');
-                return;
-            }
+        let formData = { ...values, courseId: lectureModal.courseId };
+
+        if (dataType === 'file') {
+            formData = { ...formData, file: formData.file.path, dataType };
+        } else if (dataType === 'video') {
+            formData = prepareVideoData(formData, values.file);
+        } else {
+            formData = prepareVimeoData(formData);
         }
 
+        return formData;
+    };
+
+    const prepareVimeoData = (formData) => {
+        if (thumbnail && thumbnail.includes('/uploads')) {
+            formData.thumbnail = extractFilePath(thumbnail);
+        }
+        delete formData.file;
+        formData.dataType = 'vimeoLink';
+
+        return formData;
+    };
+
+    const prepareVideoData = (formData, file) => {
+        if (thumbnail && thumbnail.includes('/uploads')) {
+            formData.thumbnail = extractFilePath(thumbnail);
+        }
+        formData.dataType = 'video';
+
+        if (lectureModal.isEditable && file.name !== initialValues?.vimeoVideoData?.fileInfo?.name) {
+            setUploading(false);
+        } else {
+            setUploading(true);
+        }
+
+        delete formData.file;
+        return formData;
+    };
+
+    const createQueryString = (file, formData) => {
+        return (
+            file &&
+            `?size=${file.size}&type=${file.type}&description=${formData.description}&name=${formData.name}&fileName=${file.name}`
+        );
+    };
+
+    const getApiUrl = (isEditable, lectureId, query) => {
+        return isEditable
+            ? `${API_URL.UPDATE_LECTURE.replace(':id', lectureId)}${query}`
+            : `${API_URL.ADD_LECTURE}${query}`;
+    };
+
+    const handleVimeoUpload = async (uploadLink, file) => {
+        const upload = new Upload(file, {
+            endpoint: uploadLink,
+            uploadUrl: uploadLink,
+            retryDelays: [0, 3000, 5000, 10000, 20000],
+            metadata: {
+                filename: file.name,
+                filetype: file.type
+            },
+            onError: () => handleError(),
+            onProgress: (bytesUploaded, bytesTotal) => {
+                const percentage = ((bytesUploaded / bytesTotal) * 100).toFixed(2);
+                setUploadProgress(percentage);
+            },
+            onSuccess: () => finalizeUpload(true)
+        });
+
+        upload.start();
+    };
+
+    const extractFilePath = (thumbnail) => 'uploads' + thumbnail.split('/uploads')[1];
+
+    const finalizeUpload = (showToast) => {
+        if (showToast) {
+            toast.success('Lecture Uploaded Successfully');
+        }
+        setUploading(false);
+        onSave();
+        resetModal();
+    };
+
+    const handleError = () => {
+        setUploading(false);
+        resetModal();
+    };
+
+    // On update lecture we can update it with pdf or vimeo link or anything else
+
+    const handleLectureUpload = async (file, setFieldValue) => {
         if (!file.type.includes('video')) {
             const formData = new FormData();
             formData.append('files', file);
@@ -194,10 +359,46 @@ const AddLectureModal = ({ lectureModal, resetModal, onSave }) => {
                 name: path.split('-')[1],
                 type: 'document'
             });
+            // set data type for the file
+            setDataType('file');
         } else {
             // Set the video file as it is
+            setDataType('video');
             setFieldValue('file', file);
         }
+    };
+
+    const handleFileChange = async (e) => {
+        const file = e.target.files[0];
+        if (!file || !file.type.startsWith('image/')) {
+            // Display an error or handle the invalid file selection
+            toast.error('Invalid file selected. Please choose an image file.');
+            return;
+        }
+
+        const image = URL.createObjectURL(file);
+        setImageSrc(image);
+        setCropping(true);
+    };
+
+    const resetCropper = () => {
+        setCropping(false);
+        setThumbnail('');
+        setImageSrc(null);
+        inputRef.current.value = null;
+    };
+
+    const handleCropComplete = async (croppedImage) => {
+        setLoadingThumb(true);
+        const file = await getFileObjectFromBlobUrl(croppedImage, 'lectureThumbnail.jpeg');
+        const formData = new FormData();
+        formData.append('files', file);
+        formData.append('name', file.name);
+
+        const mediaFile = await axiosWrapper('POST', API_URL.UPLOAD_MEDIA, formData, '', true);
+        setThumbnail(mediaFile.data[0].path);
+        setCropping(false);
+        setLoadingThumb(false);
     };
 
     return (
@@ -205,224 +406,353 @@ const AddLectureModal = ({ lectureModal, resetModal, onSave }) => {
             {loading ? (
                 <Loading />
             ) : (
-                <Formik
-                    enableReinitialize
-                    initialValues={initialValues}
-                    validationSchema={validationSchema}
-                    onSubmit={handleSubmit}
-                >
-                    {({ isSubmitting, values, setFieldValue }) => (
-                        <FormikForm>
-                            <Row>
-                                <Col md={12} xs={12}>
-                                    <Field
-                                        name="name"
-                                        className="field-control mb-2"
-                                        type="text"
-                                        placeholder="Type lecture name..."
-                                    />
-                                    <div className="mb-2">
-                                        <ErrorMessage name="name" component="div" className="error" />
-                                    </div>
-                                </Col>
-                            </Row>
+                <div className="upload-course-form">
+                    <Formik
+                        enableReinitialize
+                        initialValues={initialValues}
+                        validationSchema={validationSchema}
+                        onSubmit={handleSubmit}
+                    >
+                        {({ isSubmitting, values, setFieldValue }) => (
+                            <FormikForm>
+                                <Row className="mt-3">
+                                    <Col md={12} xs={12}>
+                                        <Field
+                                            name="name"
+                                            className="field-control mb-2"
+                                            type="text"
+                                            placeholder="Type lecture name..."
+                                        />
+                                        <div className="mb-2">
+                                            <ErrorMessage name="name" component="div" className="error" />
+                                        </div>
+                                    </Col>
+                                </Row>
 
-                            <Row>
-                                <Col md={12} xs={12}>
-                                    <Field
-                                        name="description"
-                                        className="field-text-area-control mb-0"
-                                        as="textarea"
-                                        placeholder="Type lecture description here..."
-                                        rows="6"
-                                    />
-                                    <div className="mb-2">
-                                        <ErrorMessage name="description" component="div" className="error" />
-                                    </div>
-                                </Col>
-                            </Row>
+                                <Row>
+                                    <Col md={12} xs={12}>
+                                        <Field
+                                            name="description"
+                                            className="field-text-area-control mb-0"
+                                            as="textarea"
+                                            placeholder="Type lecture description here..."
+                                            rows="6"
+                                        />
+                                        <div className="mb-2">
+                                            <ErrorMessage name="description" component="div" className="error" />
+                                        </div>
+                                    </Col>
+                                </Row>
 
-                            <div className="quiz-wrapper">
-                                <div className="add-quiz-title">
-                                    <p> Add Quiz</p>
-                                </div>
-                                <div className="quiz-fields-container">
-                                    <FieldArray name="quiz.mcqs">
-                                        {({ push, remove }) => (
-                                            <div className="add-quiz-fields">
-                                                <div className="add-quiz-label mb-2">
-                                                    <p>
-                                                        Please Insert MCQs for Student’s personal assessments of this
-                                                        course.
-                                                    </p>
-                                                    <span
-                                                        onClick={() =>
-                                                            push({
-                                                                question: '',
-                                                                options: ['', '', '', ''],
-                                                                correctAnswer: ''
-                                                            })
-                                                        }
-                                                    >
-                                                        <img src={bluePlus} alt="bluePlus" /> Add new
-                                                    </span>
-                                                </div>
-                                                {values.quiz.mcqs.map((_, index) => (
-                                                    <div key={index} className="add-quiz-question">
-                                                        <div className="d-flex align-items-center">
-                                                            <Field
-                                                                name={`quiz.mcqs[${index}].question`}
-                                                                className="field-control"
-                                                                type="text"
-                                                                placeholder="Please Type Question Here..."
-                                                            />
-                                                            <Button
-                                                                type="button"
-                                                                className="btn btn-link minus-btn"
-                                                                onClick={() => {
-                                                                    remove(index);
-                                                                }}
-                                                            >
-                                                                <FontAwesomeIcon icon={faMinus} color="black" />
-                                                            </Button>
-                                                        </div>
-                                                        <div className="d-flex align-items-center mb-2">
+                                <div className="quiz-wrapper">
+                                    <div className="add-quiz-title">
+                                        <p> Add Quiz</p>
+                                    </div>
+                                    <div className="quiz-fields-container">
+                                        <FieldArray name="quiz.mcqs">
+                                            {({ push, remove }) => (
+                                                <div className="add-quiz-fields">
+                                                    <div className="add-quiz-label mb-2">
+                                                        <p>
+                                                            Please Insert MCQs for Student’s personal assessments of
+                                                            this course.
+                                                        </p>
+                                                        <span
+                                                            onClick={() =>
+                                                                push({
+                                                                    question: '',
+                                                                    options: ['', '', '', ''],
+                                                                    correctAnswer: ''
+                                                                })
+                                                            }
+                                                        >
+                                                            <img src={bluePlus} alt="bluePlus" /> Add new
+                                                        </span>
+                                                    </div>
+                                                    {values.quiz.mcqs.map((_, index) => (
+                                                        <div key={index} className="add-quiz-question">
+                                                            <div className="d-flex align-items-center">
+                                                                <Field
+                                                                    name={`quiz.mcqs[${index}].question`}
+                                                                    className="field-control"
+                                                                    type="text"
+                                                                    placeholder="Please Type Question Here..."
+                                                                />
+                                                                <Button
+                                                                    type="button"
+                                                                    className="btn btn-link minus-btn"
+                                                                    onClick={() => {
+                                                                        remove(index);
+                                                                    }}
+                                                                >
+                                                                    <FontAwesomeIcon icon={faMinus} color="black" />
+                                                                </Button>
+                                                            </div>
+                                                            <div className="d-flex align-items-center mb-2">
+                                                                <ErrorMessage
+                                                                    name={`quiz.mcqs[${index}].question`}
+                                                                    component="div"
+                                                                    className="error"
+                                                                />
+                                                            </div>
+                                                            <div className="quiz-multiple-choice">
+                                                                {['option1', 'option2', 'option3', 'option4'].map(
+                                                                    (option, optIndex) => (
+                                                                        <>
+                                                                            <Field
+                                                                                key={optIndex}
+                                                                                name={`quiz.mcqs[${index}].options[${optIndex}]`}
+                                                                                // Also set the correct answer value
+                                                                                className={`field-control ${optIndex === 3 ? 'correctAnswer' : ''}`}
+                                                                                type="text"
+                                                                                placeholder={
+                                                                                    optIndex === 3
+                                                                                        ? 'Correct option'
+                                                                                        : `Type option ${optIndex + 1}`
+                                                                                }
+                                                                            />
+                                                                        </>
+                                                                    )
+                                                                )}
+                                                            </div>
                                                             <ErrorMessage
-                                                                name={`quiz.mcqs[${index}].question`}
+                                                                name={`quiz.mcqs[${index}].options`}
                                                                 component="div"
                                                                 className="error"
                                                             />
                                                         </div>
-                                                        <div className="quiz-multiple-choice">
-                                                            {['option1', 'option2', 'option3', 'option4'].map(
-                                                                (option, optIndex) => (
-                                                                    <>
-                                                                        <Field
-                                                                            key={optIndex}
-                                                                            name={`quiz.mcqs[${index}].options[${optIndex}]`}
-                                                                            // Also set the correct answer value
-                                                                            className={`field-control ${optIndex === 3 ? 'correctAnswer' : ''}`}
-                                                                            type="text"
-                                                                            placeholder={
-                                                                                optIndex === 3
-                                                                                    ? 'Correct option'
-                                                                                    : `Type option ${optIndex + 1}`
-                                                                            }
-                                                                        />
-                                                                    </>
-                                                                )
-                                                            )}
-                                                        </div>
-                                                        <ErrorMessage
-                                                            name={`quiz.mcqs[${index}].options`}
-                                                            component="div"
-                                                            className="error"
-                                                        />
-                                                    </div>
-                                                ))}
-                                            </div>
-                                        )}
-                                    </FieldArray>
-                                </div>
-                            </div>
-                            {!values?.vimeoLink && !initialValues?.vimeoLink && (
-                                <>
-                                    <div>
-                                        <div
-                                            className="add-quiz-file cursor-pointer "
-                                            onClick={(e) => {
-                                                e.preventDefault();
-                                                document.querySelector('.file-uploader').click();
-                                            }}
-                                        >
-                                            <h4>{lectureModal?.isEditable ? 'Update' : 'Attach'} File</h4>
-
-                                            {values?.file && (
-                                                <div
-                                                    className="align-self-start"
-                                                    style={{
-                                                        marginLeft: 'auto'
-                                                    }}
-                                                >
-                                                    <img
-                                                        src={cross}
-                                                        onClick={(e) => {
-                                                            e.stopPropagation();
-                                                            setInitialValues((pre) => ({
-                                                                ...pre,
-                                                                file: null
-                                                            }));
-                                                            if (fileRef.current) {
-                                                                fileRef.current.value = '';
-                                                            }
-                                                            setFieldValue('file', null);
-                                                        }}
-                                                        className="reset-image "
-                                                        alt="reset"
-                                                    />
+                                                    ))}
                                                 </div>
                                             )}
-
-                                            <FileUploader
-                                                ref={fileRef}
-                                                multiple={false}
-                                                handleChange={(file) => handleLectureUpload(file, setFieldValue)}
-                                                name="file"
-                                                types={fileTypes}
-                                                classes="file-uploader d-none"
-                                            />
-                                            <p>
-                                                {values.file ? (
-                                                    `File name: ${trimLongText(values.file.name, 15) || trimLongText(values.file.split('-')[1], 15)}`
-                                                ) : (
-                                                    <div>
-                                                        Drag and drop a file or <strong>browse file</strong>
-                                                    </div>
-                                                )}
-                                            </p>
-                                        </div>
-                                        <ErrorMessage name="file" component="div" className="error mt-2" />
-                                    </div>
-                                </>
-                            )}
-
-                            {!values?.file &&
-                                !values?.vimeoLink &&
-                                !initialValues?.vimeoLink &&
-                                !initialValues?.vimeoVideoData && <hr className="hr-text gradient" data-content="OR" />}
-                            {/* Or Upload link here */}
-                            {!values?.file && !initialValues?.vimeoVideoData && (
-                                <div className="mt-1">
-                                    <label htmlFor="vimeoLink" className="field-label">
-                                        Vimeo Video Link
-                                    </label>
-                                    <Field
-                                        name="vimeoLink"
-                                        className="field-control mb-2"
-                                        type="text"
-                                        placeholder="https://player.vimeo.com/video/1005340787?h=bb4c9a98dd"
-                                    />
-                                    <div className="mb-2">
-                                        <ErrorMessage name="vimeoLink" component="div" className="error" />
+                                        </FieldArray>
                                     </div>
                                 </div>
-                            )}
-                            {/* Display the uploaded lecture */}
-                            {/* Uploaded state of video lecture */}
-                            {lectureModal.isEditable &&
-                                initialValues?.vimeoVideoData?.player_embed_url && ( // Display the uploaded lecture
-                                    <div className="mt-3">
-                                        <h4>Uploaded Lecture</h4>
-                                        <div className="uploaded-lecture">
-                                            {initialValues?.vimeoVideoData?.status !== 'available' ||
-                                            initialValues?.vimeoVideoData?.transcode?.status !== 'complete' ? (
+                                {!values?.vimeoLink && (
+                                    <>
+                                        <div>
+                                            <div
+                                                className="add-quiz-file cursor-pointer "
+                                                onClick={(e) => {
+                                                    e.preventDefault();
+                                                    document.querySelector('.file-uploader').click();
+                                                }}
+                                            >
+                                                <h4>{lectureModal?.isEditable ? 'Update' : 'Attach'} File</h4>
+
+                                                {(values?.file || initialValues?.vimeoVideoData) && (
+                                                    <div
+                                                        className="align-self-start"
+                                                        style={{
+                                                            marginLeft: 'auto'
+                                                        }}
+                                                    >
+                                                        <img
+                                                            src={cross}
+                                                            onClick={(e) => {
+                                                                e.stopPropagation();
+                                                                setInitialValues((pre) => ({
+                                                                    ...pre,
+                                                                    file: null,
+                                                                    vimeoVideoData: null
+                                                                }));
+                                                                if (fileRef.current) {
+                                                                    fileRef.current.value = '';
+                                                                }
+                                                                setFieldValue('file', null);
+                                                            }}
+                                                            className="reset-image "
+                                                            alt="reset"
+                                                        />
+                                                    </div>
+                                                )}
+
+                                                <FileUploader
+                                                    ref={fileRef}
+                                                    multiple={false}
+                                                    handleChange={(file) => handleLectureUpload(file, setFieldValue)}
+                                                    name="file"
+                                                    types={fileTypes}
+                                                    classes="file-uploader d-none"
+                                                />
                                                 <p>
-                                                    Lecture is still being processed. Please check back later or upload
-                                                    a new lecture
+                                                    {values?.file || initialValues?.vimeoVideoData ? (
+                                                        `File name: ${trimLongText(values?.file?.name, 15) || trimLongText(values?.file?.split('-')[1], 15) || trimLongText(initialValues?.vimeoVideoData?.fileInfo?.name) || ''}`
+                                                    ) : (
+                                                        <div>
+                                                            Drag and drop a file or <strong>browse file</strong>
+                                                        </div>
+                                                    )}
                                                 </p>
-                                            ) : initialValues?.vimeoVideoData?.player_embed_url ? (
+                                            </div>
+                                            <ErrorMessage name="file" component="div" className="error mt-2" />
+                                        </div>
+                                    </>
+                                )}
+
+                                {!values?.file && !values?.vimeoLink && (
+                                    <hr className="hr-text gradient" data-content="OR" />
+                                )}
+                                {/* Or Upload link here */}
+                                {!values?.file && (
+                                    <div className="mt-1">
+                                        <label htmlFor="vimeoLink" className="field-label">
+                                            Vimeo Video Link
+                                        </label>
+                                        <Field
+                                            name="vimeoLink"
+                                            className="field-control mb-2"
+                                            type="text"
+                                            placeholder="https://player.vimeo.com/video/1005340787?h=bb4c9a98dd"
+                                        />
+                                        <div className="mb-2">
+                                            <ErrorMessage name="vimeoLink" component="div" className="error" />
+                                        </div>
+                                    </div>
+                                )}
+                                {(values?.vimeoLink ||
+                                    ((values?.file || initialValues?.vimeoVideoData) &&
+                                        values?.file?.type !== 'document')) &&
+                                    dataType !== 'file' && (
+                                        <Row className="mt-3">
+                                            <Col>
+                                                {thumbnail ? (
+                                                    <></>
+                                                ) : (
+                                                    <label className="title-thumbnail">Lecture Thumbnail</label>
+                                                )}
+                                                <Field name="thumbnail">
+                                                    {() => (
+                                                        <>
+                                                            <input
+                                                                ref={inputRef}
+                                                                accept=".jpg,.jpeg,.png"
+                                                                type="file"
+                                                                style={{ display: 'none' }}
+                                                                onChange={handleFileChange}
+                                                            />
+                                                            {loadingThum ? (
+                                                                <Loading />
+                                                            ) : thumbnail ? (
+                                                                <div className="image-renderer">
+                                                                    <img
+                                                                        src={
+                                                                            typeof thumbnail === 'string'
+                                                                                ? thumbnail
+                                                                                : URL.createObjectURL(thumbnail)
+                                                                        }
+                                                                        alt=""
+                                                                        style={{
+                                                                            borderRadius: '50%',
+                                                                            objectFit: 'cover',
+                                                                            width: '200px',
+                                                                            height: '128px'
+                                                                        }}
+                                                                    />
+                                                                    <span>Lecture Thumbnail</span>
+                                                                    <div
+                                                                        className="align-self-start"
+                                                                        style={{
+                                                                            marginLeft: 'auto'
+                                                                        }}
+                                                                    >
+                                                                        <img
+                                                                            src={cross}
+                                                                            onClick={() => {
+                                                                                if (inputRef.current) {
+                                                                                    inputRef.current.value = '';
+                                                                                }
+                                                                                setThumbnail('');
+                                                                            }}
+                                                                            className="reset-image"
+                                                                            alt="reset"
+                                                                        />
+                                                                    </div>
+                                                                </div>
+                                                            ) : (
+                                                                <>
+                                                                    <div className="image-preview">
+                                                                        <img src={courseThumbnail} alt="thumbnail" />
+                                                                        <div className="image-preview-text">
+                                                                            <div>
+                                                                                <p>
+                                                                                    Upload your lecture Thumbnail here.
+                                                                                </p>
+                                                                                <p>
+                                                                                    Supported format:
+                                                                                    <strong>
+                                                                                        .jpg, .jpeg, or .png
+                                                                                    </strong>
+                                                                                </p>
+                                                                            </div>
+
+                                                                            <Button
+                                                                                type="submit"
+                                                                                className="upload-btn"
+                                                                                disabled={isSubmitting}
+                                                                                onClick={(e) => {
+                                                                                    e.preventDefault();
+                                                                                    inputRef.current.click();
+                                                                                }}
+                                                                            >
+                                                                                Upload{' '}
+                                                                                <img
+                                                                                    className="mb-1"
+                                                                                    src={UploadSimple}
+                                                                                    alt="Upload Btn"
+                                                                                />
+                                                                            </Button>
+                                                                        </div>
+                                                                    </div>
+                                                                    <ErrorMessage
+                                                                        name="thumbnail"
+                                                                        component="div"
+                                                                        className="error"
+                                                                    />
+                                                                </>
+                                                            )}
+                                                        </>
+                                                    )}
+                                                </Field>
+                                            </Col>
+                                        </Row>
+                                    )}
+                                {/* Display the uploaded lecture */}
+                                {/* Uploaded state of video lecture */}
+                                {lectureModal.isEditable &&
+                                    initialValues?.vimeoVideoData?.player_embed_url && ( // Display the uploaded lecture
+                                        <div className="mt-3">
+                                            <h4>Uploaded Lecture</h4>
+                                            <div className="uploaded-lecture">
+                                                {initialValues?.vimeoVideoData?.status !== 'available' ||
+                                                initialValues?.vimeoVideoData?.transcode?.status !== 'complete' ? (
+                                                    <p>
+                                                        Lecture is still being processed. Please check back later or
+                                                        upload a new lecture
+                                                    </p>
+                                                ) : initialValues?.vimeoVideoData?.player_embed_url ? (
+                                                    <iframe
+                                                        src={initialValues?.vimeoVideoData?.player_embed_url}
+                                                        width="100%"
+                                                        height="400"
+                                                        frameBorder="0"
+                                                        allow="autoplay; fullscreen; picture-in-picture"
+                                                        allowFullScreen
+                                                        title="Lecture"
+                                                    />
+                                                ) : (
+                                                    <p>No lecture uploaded yet</p>
+                                                )}
+                                            </div>
+                                        </div>
+                                    )}
+                                {/* Uploaded state of vimeo link lecture */}
+                                {lectureModal.isEditable &&
+                                    initialValues?.vimeoLink && ( // Display the uploaded lecture
+                                        <div className="mt-3">
+                                            <h4>Uploaded Lecture</h4>
+                                            <div className="uploaded-lecture">
                                                 <iframe
-                                                    src={initialValues?.vimeoVideoData?.player_embed_url}
+                                                    src={initialValues?.vimeoLink}
                                                     width="100%"
                                                     height="400"
                                                     frameBorder="0"
@@ -430,64 +760,47 @@ const AddLectureModal = ({ lectureModal, resetModal, onSave }) => {
                                                     allowFullScreen
                                                     title="Lecture"
                                                 />
-                                            ) : (
-                                                <p>No lecture uploaded yet</p>
-                                            )}
+                                            </div>
                                         </div>
-                                    </div>
-                                )}
-                            {/* Uploaded state of vimeo link lecture */}
-                            {lectureModal.isEditable &&
-                                initialValues?.vimeoLink && ( // Display the uploaded lecture
-                                    <div className="mt-3">
-                                        <h4>Uploaded Lecture</h4>
-                                        <div className="uploaded-lecture">
-                                            <iframe
-                                                src={initialValues?.vimeoLink}
-                                                width="100%"
-                                                height="400"
-                                                frameBorder="0"
-                                                allow="autoplay; fullscreen; picture-in-picture"
-                                                allowFullScreen
-                                                title="Lecture"
-                                            />
+                                    )}
+                                <Row>
+                                    <Col>
+                                        <div className="mt-3 d-flex justify-content-between gap-3">
+                                            <Button
+                                                type="button"
+                                                onClick={() => resetModal()}
+                                                className="cancel-btn"
+                                                disabled={isSubmitting}
+                                            >
+                                                Cancel
+                                            </Button>
+                                            <Button type="submit" className="submit-btn" disabled={isSubmitting}>
+                                                {lectureModal.isEditable ? 'Update' : 'Save'}
+                                            </Button>
                                         </div>
-                                    </div>
-                                )}
-                            <Row>
-                                <Col>
-                                    <div className="mt-3 d-flex justify-content-between gap-3">
-                                        <Button
-                                            type="button"
-                                            onClick={() => resetModal()}
-                                            className="cancel-btn"
-                                            disabled={isSubmitting}
-                                        >
-                                            Cancel
-                                        </Button>
-                                        <Button type="submit" className="submit-btn" disabled={isSubmitting}>
-                                            {lectureModal.isEditable ? 'Update' : 'Save'}
-                                        </Button>
-                                    </div>
-                                </Col>
-                            </Row>
+                                    </Col>
+                                </Row>
 
-                            <Modal show={uploading} backdrop="static" keyboard={false} centered>
-                                <Modal.Body className="d-flex flex-column align-items-center">
-                                    <h5 className="mb-3">Uploading File</h5>
-                                    <ProgressBar
-                                        now={uploadProgress}
-                                        label={`${uploadProgress}%`}
-                                        striped
-                                        animated
-                                        className="w-100 mb-3"
-                                    />
-                                    <p>{values.file ? `File: ${trimLongText(values.file.name, 15)}` : ''}</p>
-                                </Modal.Body>
-                            </Modal>
-                        </FormikForm>
-                    )}
-                </Formik>
+                                <Modal show={uploading} backdrop="static" keyboard={false} centered>
+                                    <Modal.Body className="d-flex flex-column align-items-center">
+                                        <h5 className="mb-3">Uploading File</h5>
+                                        <ProgressBar
+                                            now={uploadProgress}
+                                            label={`${uploadProgress}%`}
+                                            striped
+                                            animated
+                                            className="w-100 mb-3"
+                                        />
+                                        <p>{values.file ? `File: ${trimLongText(values.file.name, 15)}` : ''}</p>
+                                    </Modal.Body>
+                                </Modal>
+                            </FormikForm>
+                        )}
+                    </Formik>
+                </div>
+            )}
+            {cropping && (
+                <ImageCropper imageSrc={imageSrc} onCropComplete={handleCropComplete} onCancel={resetCropper} />
             )}
         </>
     );
