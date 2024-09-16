@@ -39,7 +39,6 @@ const AddLectureModal = ({ lectureModal, resetModal, onSave }) => {
         lectureModal.initialValues || {
             name: '',
             description: '',
-            thumbnail: '',
             quiz: {
                 mcqs: [
                     {
@@ -105,7 +104,16 @@ const AddLectureModal = ({ lectureModal, resetModal, onSave }) => {
                 {},
                 token
             );
-            setInitialValues(response.data);
+            const lectureDetail = {
+                name: response.data?.name,
+                description: response.data?.description,
+                quiz: response.data?.quiz,
+                file: response.data?.file,
+                vimeoLink: response.data?.vimeoLink,
+                vimeoVideoData: response.data?.vimeoVideoData,
+                _id: response.data?._id
+            };
+            setInitialValues(lectureDetail);
             setThumbnail(response.data?.thumbnail);
             setDataType(response.data?.dataType);
         } catch (error) {
@@ -223,12 +231,14 @@ const AddLectureModal = ({ lectureModal, resetModal, onSave }) => {
             // Get the appropriate API URL
             const url = getApiUrl(lectureModal.isEditable, lectureModal.lectureId, query);
             const method = lectureModal.isEditable ? 'PUT' : 'POST';
-
             // Make the API call
             const response = await axiosWrapper(method, url, formData, token);
 
             // Handle Vimeo upload if needed
             if (response.data.vimeoVideoData) {
+                if (response?.new) {
+                    setUploading(true);
+                }
                 await handleVimeoUpload(response.data.vimeoVideoData.upload.upload_link, values.file);
             } else {
                 finalizeUpload(false);
@@ -260,7 +270,7 @@ const AddLectureModal = ({ lectureModal, resetModal, onSave }) => {
     };
 
     const prepareVimeoData = (formData) => {
-        if (thumbnail) {
+        if (thumbnail && thumbnail.includes('/uploads')) {
             formData.thumbnail = extractFilePath(thumbnail);
         }
         delete formData.file;
@@ -270,7 +280,7 @@ const AddLectureModal = ({ lectureModal, resetModal, onSave }) => {
     };
 
     const prepareVideoData = (formData, file) => {
-        if (thumbnail) {
+        if (thumbnail && thumbnail.includes('/uploads')) {
             formData.thumbnail = extractFilePath(thumbnail);
         }
         formData.dataType = 'video';
@@ -542,7 +552,8 @@ const AddLectureModal = ({ lectureModal, resetModal, onSave }) => {
                                                                 e.stopPropagation();
                                                                 setInitialValues((pre) => ({
                                                                     ...pre,
-                                                                    file: null
+                                                                    file: null,
+                                                                    vimeoVideoData: null
                                                                 }));
                                                                 if (fileRef.current) {
                                                                     fileRef.current.value = '';
@@ -564,8 +575,8 @@ const AddLectureModal = ({ lectureModal, resetModal, onSave }) => {
                                                     classes="file-uploader d-none"
                                                 />
                                                 <p>
-                                                    {values.file || initialValues?.vimeoVideoData ? (
-                                                        `File name: ${trimLongText(values.file.name, 15) || trimLongText(values.file.split('-')[1], 15) || initialValues?.vimeoVideoData?.fileInfo?.name || ''}`
+                                                    {values?.file || initialValues?.vimeoVideoData ? (
+                                                        `File name: ${trimLongText(values?.file?.name, 15) || trimLongText(values?.file?.split('-')[1], 15) || trimLongText(initialValues?.vimeoVideoData?.fileInfo?.name) || ''}`
                                                     ) : (
                                                         <div>
                                                             Drag and drop a file or <strong>browse file</strong>
