@@ -83,7 +83,11 @@ const AddLectureModal = ({ lectureModal, resetModal, onSave }) => {
         vimeoLink: Yup.string()
             .optional()
             .nullable()
-            .matches(/^https:\/\/player\.vimeo\.com\/video\/\d+$/, 'Please provide a valid Vimeo link')
+            // .matches(/^https:\/\/player\.vimeo\.com\/video\/\d+$/, 'Please provide a valid Vimeo link')
+            .matches(
+                /^https:\/\/vimeo\.com\/\d+$/,
+                'Please provide a valid Vimeo link in the format https://vimeo.com/{id}'
+            )
             .test('file-or-link', 'Either file or Vimeo link is required', function (value) {
                 const { file } = this.parent;
                 const isVimeo = initialValues.vimeoVideoData;
@@ -270,6 +274,14 @@ const AddLectureModal = ({ lectureModal, resetModal, onSave }) => {
     };
 
     const prepareVimeoData = (formData) => {
+        // Check if the Vimeo link exists and is in the vimeo.com format
+        if (formData.vimeoLink && formData.vimeoLink.includes('https://vimeo.com')) {
+            // Extract the Vimeo ID from the link
+            const vimeoId = formData.vimeoLink.split('https://vimeo.com/')[1];
+            // Reformat the link to the embedded format
+            formData.vimeoLink = `https://player.vimeo.com/video/${vimeoId}`;
+        }
+
         if (thumbnail && thumbnail.includes('/uploads')) {
             formData.thumbnail = extractFilePath(thumbnail);
         }
@@ -340,8 +352,10 @@ const AddLectureModal = ({ lectureModal, resetModal, onSave }) => {
     };
 
     const handleError = () => {
-        setUploading(false);
-        resetModal();
+        // Commenting for late use
+        // We will just not close the lecture modal on error and not reset the form.
+        // setUploading(false);
+        // resetModal();
     };
 
     // On update lecture we can update it with pdf or vimeo link or anything else
@@ -602,7 +616,7 @@ const AddLectureModal = ({ lectureModal, resetModal, onSave }) => {
                                             name="vimeoLink"
                                             className="field-control mb-2"
                                             type="text"
-                                            placeholder="https://player.vimeo.com/video/1005340787?h=bb4c9a98dd"
+                                            placeholder="https://vimeo.com/1009858724"
                                         />
                                         <div className="mb-2">
                                             <ErrorMessage name="vimeoLink" component="div" className="error" />

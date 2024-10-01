@@ -4,7 +4,6 @@ import { Button, Dropdown, DropdownButton, Row, Col } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import dropDownArrow from '@icons/drop-down-black.svg';
-import { courseCategory } from '../../../data/data';
 import axiosWrapper from '../../../utils/api';
 import { API_URL } from '../../../utils/apiUrl';
 import { useEffect, useState } from 'react';
@@ -13,10 +12,12 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Loading from '@components/Loading/Loading';
 import '../../../styles/Common.scss';
 import '../../../styles/Courses.scss';
+import Input from '../../../components/Input/Input';
 
 const BasicInformation = ({ initialData, setStepComplete, createOrUpdateCourse, resetStep }) => {
     const { userInfo, userToken } = useSelector((state) => state?.auth);
     const role = userInfo?.role?.toLowerCase();
+    const [categories, setCategories] = useState([]); // Stores categories
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
     const [coachesData, setCoachesData] = useState(null);
@@ -24,7 +25,10 @@ const BasicInformation = ({ initialData, setStepComplete, createOrUpdateCourse, 
     const schema = Yup.object({
         title: Yup.string().required('Please enter the course title'),
         subtitle: Yup.string().optional(),
-        category: Yup.string().required('Please select a course category'),
+        category: Yup.array()
+            .of(Yup.string())
+            .min(1, 'Please select at least one course category') // Ensure at least one category is selected
+            .required('Please select a course category'),
         moduleManager: Yup.string().required('Please select a module manager')
     });
 
@@ -85,6 +89,80 @@ const BasicInformation = ({ initialData, setStepComplete, createOrUpdateCourse, 
         }
     };
 
+    const getAllCategories = async () => {
+        try {
+            setLoading(true);
+            const response = await axiosWrapper('GET', `${API_URL.GET_ALL_CATEGORIES}`, {}, userToken);
+            const mappedCategories = response?.data?.map((category) => ({
+                label: category.name,
+                value: category._id
+            }));
+            setCategories(mappedCategories);
+        } catch (error) {
+            setLoading(false);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const loadCategories = async (inputValue) => {
+        try {
+            const response = await axiosWrapper('GET', `${API_URL.GET_ALL_CATEGORIES}`, {}, userToken);
+            const allCategories = response?.data || [];
+
+            // Filter categories based on input value
+            const filteredCategories = allCategories.filter((category) =>
+                category.name.toLowerCase().includes(inputValue.toLowerCase())
+            );
+
+            // Format the categories for react-select
+            const mappedCategories = filteredCategories.map((category) => ({
+                label: category.name,
+                value: category._id // Assuming _id is the unique identifier for categories
+            }));
+
+            setCategories(mappedCategories);
+
+            return mappedCategories;
+        } catch (error) {
+            return [];
+        }
+    };
+
+    // Function to create a new category
+    const createCategory = async (newCategoryName) => {
+        try {
+            const response = await axiosWrapper(
+                'POST',
+                `${API_URL.CREATE_CATEGORY}`,
+                { name: newCategoryName, createdBy: userInfo?._id },
+                userToken
+            );
+
+            const createdCategory = response?.data; // Assuming API returns the created category
+
+            return {
+                label: createdCategory.name,
+                value: createdCategory._id
+            };
+        } catch (error) {
+            return null;
+        }
+    };
+
+    // Handle category creation when "create" option is selected
+    const handleCreateCategory = async (inputValue, setFieldValue) => {
+        const newCategory = await createCategory(inputValue);
+        if (newCategory) {
+            getAllCategories();
+            // Update the category list with the new category
+            setCategories((prev) => [...prev, newCategory]);
+            setFieldValue('category', [...categories, newCategory]);
+        }
+
+        return newCategory;
+    };
+
     return (
         <>
             {loading ? (
@@ -99,14 +177,14 @@ const BasicInformation = ({ initialData, setStepComplete, createOrUpdateCourse, 
                             initialValues={{
                                 title: initialData?.title || '',
                                 subtitle: initialData?.subtitle || '',
-                                category: initialData?.category || '',
+                                category: initialData?.category || [],
                                 moduleManager: initialData?.moduleManager || ''
                             }}
                             validationSchema={schema}
                             onSubmit={handleSubmit}
                             enableReinitialize
                         >
-                            {({ isSubmitting, handleSubmit }) => (
+                            {({ isSubmitting, handleSubmit, setFieldValue }) => (
                                 <Form onSubmit={handleSubmit}>
                                     <Row>
                                         <Col md={12} xs={12}>
@@ -132,56 +210,20 @@ const BasicInformation = ({ initialData, setStepComplete, createOrUpdateCourse, 
 
                                     <Row>
                                         <Col md={12} xs={12}>
-                                            <label className="field-label">Course Category</label>
-                                            {/* eslint-disable */}
-                                            <Field
+                                            <Input
                                                 name="category"
-                                                className="field-select-control"
-                                                type="text"
-                                                component={({ field, form }) => {
-                                                    const handleSelect = (eventKey) => {
-                                                        const selectedField = courseCategory.find(
-                                                            (category) => category.id.toString() === eventKey
-                                                        );
-                                                        form.setFieldValue(field.name, selectedField.label);
-                                                    };
-
-                                                    return (
-                                                        <>
-                                                            <DropdownButton
-                                                                title={
-                                                                    <div className="d-flex justify-content-between align-items-center">
-                                                                        <span>
-                                                                            {field.value || 'Select a category ...'}
-                                                                        </span>
-                                                                        <img src={dropDownArrow} alt="arrow" />
-                                                                    </div>
-                                                                }
-                                                                id={field.name}
-                                                                onSelect={handleSelect}
-                                                                className="dropdown-button w-100"
-                                                            >
-                                                                {courseCategory.map((category) => (
-                                                                    <Dropdown.Item
-                                                                        key={category.id}
-                                                                        eventKey={category.id}
-                                                                        className="my-1 ms-2 w-100"
-                                                                    >
-                                                                        <span className="category-name">
-                                                                            {category.label}
-                                                                        </span>
-                                                                    </Dropdown.Item>
-                                                                ))}
-                                                            </DropdownButton>
-                                                            {form.touched[field.name] && form.errors[field.name] && (
-                                                                <div className="error mt-2">
-                                                                    {form.errors[field.name]}
-                                                                </div>
-                                                            )}
-                                                        </>
-                                                    );
+                                                label="Course Category"
+                                                component={Input}
+                                                type="asyncSelect"
+                                                loadOptions={loadCategories}
+                                                placeholder="Select a category ..."
+                                                options={categories}
+                                                isMulti={true}
+                                                onCreateOption={(inputValue) => {
+                                                    handleCreateCategory(inputValue, setFieldValue);
                                                 }}
                                             />
+
                                             <label className="field-label mt-3">Module Manager</label>
                                             {/* eslint-disable */}
                                             <Field

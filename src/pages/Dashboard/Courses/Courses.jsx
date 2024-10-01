@@ -17,7 +17,6 @@ import { precisionRound } from '../../../utils/common';
 
 const Courses = () => {
     const [search, setSearch] = useState('');
-    const [selectedEvent, setSelectedEvent] = useState('Your Courses');
     const [coursesFilter, setCoursesFilter] = useState('All Courses');
     const [currentPage, setCurrentPage] = useState(1);
     const [coursesData, setCoursesData] = useState([]);
@@ -44,10 +43,6 @@ const Courses = () => {
         });
     };
 
-    const handleEventSelect = (eventKey, course) => {
-        setSelectedEvent(course);
-    };
-
     const handleCoursesFilter = (eventKey, course) => {
         setCoursesFilter(course);
     };
@@ -56,13 +51,13 @@ const Courses = () => {
         // Fetch data from API here
         getAllCourses();
         dispatch({ type: types.LOGOUT });
-    }, [search, currentPage, selectedEvent, coursesFilter]);
+    }, [search, currentPage, coursesFilter]);
 
     const getAllCourses = async () => {
         const method = 'GET';
         let url = `${API_URL.GET_ALL_COURSES}?page=${currentPage}&limit=${itemsPerPage}&search=${search}`;
-        if (selectedEvent) {
-            url = `${url}&isEnrolled=${selectedEvent === 'Your Courses' ? true : false}`;
+        if (role === 'STUDENT') {
+            url = `${url}&isEnrolled=${true}`;
         }
 
         if (coursesFilter) {
@@ -161,27 +156,8 @@ const Courses = () => {
                     />
                 </InputGroup>
                 {role === 'STUDENT' ? (
-                    <DropdownButton
-                        title={
-                            <div className="d-flex justify-content-between align-items-center gap-2">
-                                <span>{selectedEvent}</span>
-                                <img src={downArrow} alt="Down arrow" />
-                            </div>
-                        }
-                        defaultValue={selectedEvent}
-                        className="dropdown-button"
-                    >
-                        {['All Courses', 'Your Courses'].map((event) => (
-                            <Dropdown.Item
-                                onClick={(e) => handleEventSelect(e, event)}
-                                key={event}
-                                eventKey={event}
-                                className="my-1 ms-2"
-                            >
-                                <span className="coach-name">{event}</span>
-                            </Dropdown.Item>
-                        ))}
-                    </DropdownButton>
+                    // Commenting for future reference
+                    <></>
                 ) : (
                     <div className="d-flex gap-2 flex-wrap">
                         <DropdownButton

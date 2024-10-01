@@ -33,7 +33,7 @@ const AddNewCourse = () => {
     const [courseData, setCourseData] = useState({
         title: '',
         subtitle: '',
-        category: '',
+        category: [],
         moduleManager: null,
         thumbnail: '',
         trailer: '',
@@ -233,6 +233,7 @@ const AddNewCourse = () => {
                         initialData={courseData}
                         onNext={() => handleTabChange('upload-files')}
                         createOrUpdateCourse={createOrUpdateCourse}
+                        updateCourseData={updateCourseData}
                     />
                 </Tab>
                 <Tab
