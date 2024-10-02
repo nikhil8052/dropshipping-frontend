@@ -59,6 +59,26 @@ const BasicInformation = ({ initialData, setStepComplete, createOrUpdateCourse, 
         }
     }, [userInfo?.role]);
 
+    useEffect(() => {
+        // When initialData.category changes, update the categories state to include them
+        if (initialData?.category) {
+            setCategories((prevCategories) => {
+                const combined = [...prevCategories, ...initialData.category];
+                const uniqueCategories = combined.reduce((acc, current) => {
+                    if (!acc.some((item) => item.value === current.value)) {
+                        acc.push(current);
+                    }
+                    return acc;
+                }, []);
+                return uniqueCategories;
+            });
+        }
+    }, [initialData?.category]);
+
+    useEffect(() => {
+        getAllCategories();
+    }, []);
+
     const getAllCoaches = async () => {
         // Later we will replace this with actual API call
         try {
@@ -121,7 +141,16 @@ const BasicInformation = ({ initialData, setStepComplete, createOrUpdateCourse, 
                 value: category._id // Assuming _id is the unique identifier for categories
             }));
 
-            setCategories(mappedCategories);
+            setCategories((prevCategories) => {
+                const combined = [...prevCategories, ...mappedCategories];
+                const uniqueCategories = combined.reduce((acc, current) => {
+                    if (!acc.some((item) => item.value === current.value)) {
+                        acc.push(current);
+                    }
+                    return acc;
+                }, []);
+                return uniqueCategories;
+            });
 
             return mappedCategories;
         } catch (error) {
@@ -129,7 +158,6 @@ const BasicInformation = ({ initialData, setStepComplete, createOrUpdateCourse, 
         }
     };
 
-    // Function to create a new category
     const createCategory = async (newCategoryName) => {
         try {
             const response = await axiosWrapper(
@@ -141,23 +169,34 @@ const BasicInformation = ({ initialData, setStepComplete, createOrUpdateCourse, 
 
             const createdCategory = response?.data; // Assuming API returns the created category
 
-            return {
+            const newCategoryOption = {
                 label: createdCategory.name,
                 value: createdCategory._id
             };
+
+            // Update the category list with the new category without duplicates
+            setCategories((prevCategories) => {
+                if (!prevCategories.some((cat) => cat.value === newCategoryOption.value)) {
+                    return [...prevCategories, newCategoryOption];
+                }
+                return prevCategories;
+            });
+
+            return newCategoryOption;
         } catch (error) {
             return null;
         }
     };
 
-    // Handle category creation when "create" option is selected
-    const handleCreateCategory = async (inputValue, setFieldValue) => {
+    const handleCreateCategory = async (inputValue, setFieldValue, currentValues) => {
         const newCategory = await createCategory(inputValue);
         if (newCategory) {
-            getAllCategories();
             // Update the category list with the new category
             setCategories((prev) => [...prev, newCategory]);
-            setFieldValue('category', [...categories, newCategory]);
+
+            // Update the selected values to include the new category
+            const newSelectedValues = [...(currentValues || []), newCategory.value];
+            setFieldValue('category', newSelectedValues);
         }
 
         return newCategory;
@@ -177,14 +216,14 @@ const BasicInformation = ({ initialData, setStepComplete, createOrUpdateCourse, 
                             initialValues={{
                                 title: initialData?.title || '',
                                 subtitle: initialData?.subtitle || '',
-                                category: initialData?.category || [],
+                                category: initialData?.category ? initialData.category.map((cat) => cat.value) : [],
                                 moduleManager: initialData?.moduleManager || ''
                             }}
                             validationSchema={schema}
                             onSubmit={handleSubmit}
                             enableReinitialize
                         >
-                            {({ isSubmitting, handleSubmit, setFieldValue }) => (
+                            {({ isSubmitting, handleSubmit, setFieldValue, values }) => (
                                 <Form onSubmit={handleSubmit}>
                                     <Row>
                                         <Col md={12} xs={12}>
@@ -220,7 +259,7 @@ const BasicInformation = ({ initialData, setStepComplete, createOrUpdateCourse, 
                                                 options={categories}
                                                 isMulti={true}
                                                 onCreateOption={(inputValue) => {
-                                                    handleCreateCategory(inputValue, setFieldValue);
+                                                    handleCreateCategory(inputValue, setFieldValue, values.category);
                                                 }}
                                             />
 

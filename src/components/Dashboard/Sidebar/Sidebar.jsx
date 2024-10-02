@@ -211,7 +211,7 @@ const Sidebar = () => {
                                 )}
                             </div>
                             <div className="profile-name">
-                                <p>{userInfo?.name.split(' ')[0]}</p>
+                                <p>{userInfo?.name?.split(' ')[0]}</p>
                                 <span>{userInfo?.role}</span>
                             </div>
                         </div>

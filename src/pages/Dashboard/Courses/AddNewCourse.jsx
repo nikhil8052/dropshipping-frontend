@@ -92,16 +92,23 @@ const AddNewCourse = () => {
             const htmlDoc = parser.parseFromString(data.description, 'text/html');
             const description = htmlDoc.body.textContent;
 
+            // Map categories to { label, value } format
+            const categories = data.category.map((cat) => ({
+                label: cat.name,
+                value: cat._id
+            }));
+
             updateCourseData({
                 title: data.title,
                 subtitle: data.subtitle,
-                category: data.category,
+                category: categories,
                 moduleManager: data.moduleManager?._id,
                 thumbnail: data.thumbnail,
                 trailer: data.trailer,
                 description: description,
                 lectures: data.lectures
             });
+
             dispatch({ type: types.ALL_RECORDS, data: { keyOfData: 'currentCourseUpdate', data: false } });
             dispatch({ type: types.ALL_RECORDS, data: { keyOfData: 'coachName', data: data.moduleManager?.name } });
         } catch (error) {
