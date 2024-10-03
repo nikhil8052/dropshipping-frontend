@@ -15,7 +15,7 @@ import PencilLine from '../../../assets/icons/PencilLine.svg';
 import CoursesModal from './CoursesModal/CoursesModal';
 import AddLectureModal from './AddLectureModal';
 import { FORMATS, TOOLBAR_CONFIG, trimLongText } from '../../../utils/common';
-import { getFileObjectFromBlobUrl } from '../../../utils/utils';
+import { getFileObjectFromBlobUrl, textParser } from '../../../utils/utils';
 import UploadSimple from '@icons/UploadSimple.svg';
 import Loading from '@components/Loading/Loading';
 import ConfirmationBox from '@components/ConfirmationBox/ConfirmationBox';
@@ -505,7 +505,7 @@ const UploadFiles = ({ onNext, onBack, initialData, setStepComplete, updateCours
                                                 <div className="add-lecture-nav">
                                                     <div className="d-flex gap-2">
                                                         <img src={menuIcon} alt="menu" />
-                                                        <p>Add Lectures</p>
+                                                        <p></p>
                                                     </div>
                                                     <div className="d-flex gap-2">
                                                         <img
@@ -523,7 +523,7 @@ const UploadFiles = ({ onNext, onBack, initialData, setStepComplete, updateCours
                                                             <p className="items-text-title">
                                                                 {lecture.name} (
                                                                 <span className="">
-                                                                    {trimLongText(lecture.description, 20)}
+                                                                    {trimLongText(textParser(lecture.description), 20)}
                                                                 </span>
                                                                 )
                                                             </p>

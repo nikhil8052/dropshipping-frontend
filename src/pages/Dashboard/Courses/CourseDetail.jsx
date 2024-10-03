@@ -8,6 +8,7 @@ import CarouselWrapper from '../../../components/Carousel/CarouselWrapper';
 import axiosWrapper from '../../../utils/api';
 import { API_URL } from '../../../utils/apiUrl';
 import '../../../styles/Courses.scss';
+import { textParser } from '../../../utils/utils';
 
 const CourseDetail = () => {
     const navigate = useNavigate();
@@ -24,11 +25,12 @@ const CourseDetail = () => {
         const { data } = await axiosWrapper('GET', `${API_URL.GET_COURSE.replace(':id', id)}`, {}, token);
 
         const mapLectures = data.lectures.map((lecture) => {
+            const description = textParser(lecture?.description);
             return {
                 id: lecture._id,
                 title: lecture.name,
                 type: lecture.file ? 'pdf' : 'video',
-                description: lecture?.description,
+                description: description,
                 thumbnail: lecture?.thumbnail || '',
                 dataType: lecture?.dataType,
                 file: lecture?.file || null,

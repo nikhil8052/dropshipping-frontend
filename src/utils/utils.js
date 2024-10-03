@@ -18,3 +18,16 @@ export const generateString = (length) => {
 
 export const capitalizeFirstLetter = (string) =>
     string && string?.charAt(0).toUpperCase() + string.slice(1).toLowerCase();
+
+export const textParser = (text) => {
+    const parser = new DOMParser();
+    const htmlDoc = parser.parseFromString(text, 'text/html');
+    const parsed = htmlDoc.body.textContent;
+    return parsed;
+};
+
+export const stripHtmlTags = (html) => {
+    const div = document.createElement('div');
+    div.innerHTML = html;
+    return div.textContent || div.innerText || '';
+};

@@ -13,12 +13,13 @@ import axiosWrapper from '../../../utils/api';
 import { API_URL } from '../../../utils/apiUrl';
 import { useSelector } from 'react-redux';
 import { Upload } from 'tus-js-client';
-import { trimLongText } from '../../../utils/common';
-import { getFileObjectFromBlobUrl } from '../../../utils/utils';
+import { FORMATS, TOOLBAR_CONFIG, trimLongText } from '../../../utils/common';
+import { getFileObjectFromBlobUrl, stripHtmlTags } from '../../../utils/utils';
 import cross from '@icons/red-cross.svg';
 import UploadSimple from '@icons/UploadSimple.svg';
 import ImageCropper from '../../../components/ImageMask/ImageCropper';
 import '../../../styles/Courses.scss';
+import ReactQuill from 'react-quill';
 
 const AddLectureModal = ({ lectureModal, resetModal, onSave }) => {
     const [loading, setLoading] = useState(false);
@@ -28,6 +29,8 @@ const AddLectureModal = ({ lectureModal, resetModal, onSave }) => {
     const fileTypes = ['pdf', 'docx', 'mp4', 'avi', 'mov'];
     const inputRef = useRef();
     const fileRef = useRef(null);
+    const quillRef = useRef();
+    const [showCancelModal, setShowCancelModal] = useState(false);
 
     const [cropping, setCropping] = useState(false);
     const [imageSrc, setImageSrc] = useState(null);
@@ -108,9 +111,12 @@ const AddLectureModal = ({ lectureModal, resetModal, onSave }) => {
                 {},
                 token
             );
+
+            const description = stripHtmlTags(response.data?.description);
+
             const lectureDetail = {
                 name: response.data?.name,
-                description: response.data?.description,
+                description: description,
                 quiz: response.data?.quiz,
                 file: response.data?.file,
                 vimeoLink: response.data?.vimeoLink,
@@ -415,6 +421,19 @@ const AddLectureModal = ({ lectureModal, resetModal, onSave }) => {
         setLoadingThumb(false);
     };
 
+    const handleCancelClick = () => {
+        setShowCancelModal(true);
+    };
+
+    const handleConfirmCancel = () => {
+        resetModal();
+        setShowCancelModal(false);
+    };
+
+    const handleCloseModal = () => {
+        setShowCancelModal(false);
+    };
+
     return (
         <>
             {loading ? (
@@ -443,18 +462,37 @@ const AddLectureModal = ({ lectureModal, resetModal, onSave }) => {
                                     </Col>
                                 </Row>
 
-                                <Row>
-                                    <Col md={12} xs={12}>
+                                <Row className="mb-3">
+                                    <Col>
                                         <Field
                                             name="description"
-                                            className="field-text-area-control mb-0"
+                                            value={values.description}
                                             as="textarea"
                                             placeholder="Type lecture description here..."
-                                            rows="6"
+                                            render={({ field }) => (
+                                                <div
+                                                    onClick={() => {
+                                                        if (quillRef.current) {
+                                                            quillRef.current.focus();
+                                                        }
+                                                    }}
+                                                >
+                                                    <ReactQuill
+                                                        ref={quillRef}
+                                                        value={field.value || ''}
+                                                        name={field.name}
+                                                        onChange={(value) => field.onChange(field.name)(value)}
+                                                        placeholder="Type lecture description here..."
+                                                        className="field-quill-control"
+                                                        modules={{
+                                                            toolbar: TOOLBAR_CONFIG
+                                                        }}
+                                                        formats={FORMATS}
+                                                    />
+                                                </div>
+                                            )}
                                         />
-                                        <div className="mb-2">
-                                            <ErrorMessage name="description" component="div" className="error" />
-                                        </div>
+                                        <ErrorMessage name="description" component="div" className="error mb-2" />
                                     </Col>
                                 </Row>
 
@@ -782,7 +820,7 @@ const AddLectureModal = ({ lectureModal, resetModal, onSave }) => {
                                         <div className="mt-3 d-flex justify-content-between gap-3">
                                             <Button
                                                 type="button"
-                                                onClick={() => resetModal()}
+                                                onClick={handleCancelClick}
                                                 className="cancel-btn"
                                                 disabled={isSubmitting}
                                             >
@@ -807,6 +845,23 @@ const AddLectureModal = ({ lectureModal, resetModal, onSave }) => {
                                         />
                                         <p>{values.file ? `File: ${trimLongText(values.file.name, 15)}` : ''}</p>
                                     </Modal.Body>
+                                </Modal>
+
+                                <Modal show={showCancelModal} onHide={handleCloseModal} centered backdrop="static">
+                                    <Modal.Header closeButton>
+                                        <Modal.Title>Confirm Cancel</Modal.Title>
+                                    </Modal.Header>
+                                    <Modal.Body>
+                                        Are you sure you want to cancel? The lecture data will be lost.
+                                    </Modal.Body>
+                                    <Modal.Footer>
+                                        <Button variant="secondary" onClick={handleCloseModal}>
+                                            No, go back
+                                        </Button>
+                                        <Button variant="danger" onClick={handleConfirmCancel}>
+                                            Yes, Cancel
+                                        </Button>
+                                    </Modal.Footer>
                                 </Modal>
                             </FormikForm>
                         )}

@@ -15,6 +15,7 @@ import axiosWrapper from '../../../utils/api';
 import * as types from '../../../redux/actions/actionTypes';
 import { API_URL } from '../../../utils/apiUrl';
 import toast from 'react-hot-toast';
+import { textParser } from '../../../utils/utils';
 
 const AddNewCourse = () => {
     const location = useLocation();
@@ -88,16 +89,20 @@ const AddNewCourse = () => {
         try {
             const { data } = await axiosWrapper('GET', `${API_URL.GET_COURSE.replace(':id', id)}`, {}, token);
 
-            const parser = new DOMParser();
-            const htmlDoc = parser.parseFromString(data.description, 'text/html');
-            const description = htmlDoc.body.textContent;
+            const description = textParser(data.description);
 
             // Map categories to { label, value } format
             const categories = data.category.map((cat) => ({
                 label: cat.name,
                 value: cat._id
             }));
-
+            const updatedLecture = data.lectures.map((lec) => {
+                const description = textParser(lec.description);
+                return {
+                    ...lec,
+                    description: description
+                };
+            });
             updateCourseData({
                 title: data.title,
                 subtitle: data.subtitle,
@@ -106,7 +111,7 @@ const AddNewCourse = () => {
                 thumbnail: data.thumbnail,
                 trailer: data.trailer,
                 description: description,
-                lectures: data.lectures
+                lectures: updatedLecture
             });
 
             dispatch({ type: types.ALL_RECORDS, data: { keyOfData: 'currentCourseUpdate', data: false } });

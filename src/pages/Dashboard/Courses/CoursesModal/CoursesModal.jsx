@@ -16,7 +16,7 @@ const CoursesModal = ({ size, show, onClose, title, children }) => {
         }
     };
     return (
-        <BootstrapModal show={show} size={getSize(size)} onHide={onClose} centered>
+        <BootstrapModal show={show} size={getSize(size)} onHide={onClose} centered backdrop="static">
             <BootstrapModal.Header closeButton>
                 <BootstrapModal.Title className="modal-title">{title}</BootstrapModal.Title>
             </BootstrapModal.Header>

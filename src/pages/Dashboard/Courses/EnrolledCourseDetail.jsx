@@ -14,6 +14,7 @@ import '../../../styles/Courses.scss';
 import PdfModal from '../../../components/PdfRenderer/PdfViewer';
 import toast from 'react-hot-toast';
 import { shuffleArray } from '../../../utils/common';
+import { stripHtmlTags } from '../../../utils/utils';
 
 const EnrolledCourseDetail = () => {
     const navigate = useNavigate();
@@ -253,6 +254,7 @@ const EnrolledCourseDetail = () => {
                                         {!continueQuiz && selectedLecture && (
                                             <div className="lecture-curriculum">
                                                 <h2 className="title">{selectedLecture.name}</h2>
+                                                <p className="">{stripHtmlTags(selectedLecture.description)}</p>
                                                 {selectedLecture.file ? (
                                                     <div className="video">
                                                         <div className="pdf-viewer">
