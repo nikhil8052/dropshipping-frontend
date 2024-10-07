@@ -14,7 +14,6 @@ import '../../../styles/Courses.scss';
 import axiosWrapper from '../../../utils/api';
 import * as types from '../../../redux/actions/actionTypes';
 import { API_URL } from '../../../utils/apiUrl';
-import toast from 'react-hot-toast';
 import { textParser } from '../../../utils/utils';
 
 const AddNewCourse = () => {
@@ -35,7 +34,7 @@ const AddNewCourse = () => {
         title: '',
         subtitle: '',
         category: [],
-        moduleManager: null,
+        createdBy: null,
         thumbnail: '',
         trailer: '',
         description: '',
@@ -49,15 +48,16 @@ const AddNewCourse = () => {
 
     // //////////////////////////////Handlers////////////////////////
     const handleTabChange = (key) => {
-        if (
-            key === 'basic-information' ||
-            (key === 'upload-files' && stepsCompleted.step1) ||
-            (key === 'publish-course' && stepsCompleted.step1) ||
-            (key === 'publish-course' && stepsCompleted.step1 && stepsCompleted.step2)
-        ) {
+        if (courseId) {
             setActiveKey(key);
         } else {
-            toast.error('Please click save button to move to the next step');
+            if (
+                key === 'basic-information' ||
+                (key === 'upload-files' && stepsCompleted.step1) ||
+                (key === 'publish-course' && stepsCompleted.step1 && stepsCompleted.step2)
+            ) {
+                setActiveKey(key);
+            }
         }
     };
 
@@ -107,7 +107,7 @@ const AddNewCourse = () => {
                 title: data.title,
                 subtitle: data.subtitle,
                 category: categories,
-                moduleManager: data.moduleManager?._id,
+                createdBy: data.createdBy?._id,
                 thumbnail: data.thumbnail,
                 trailer: data.trailer,
                 description: description,
@@ -115,7 +115,7 @@ const AddNewCourse = () => {
             });
 
             dispatch({ type: types.ALL_RECORDS, data: { keyOfData: 'currentCourseUpdate', data: false } });
-            dispatch({ type: types.ALL_RECORDS, data: { keyOfData: 'coachName', data: data.moduleManager?.name } });
+            dispatch({ type: types.ALL_RECORDS, data: { keyOfData: 'coachName', data: data.createdBy?.name } });
         } catch (error) {
             dispatch({ type: types.ALL_RECORDS, data: { keyOfData: 'currentCourseUpdate', data: false } });
         }
@@ -144,7 +144,7 @@ const AddNewCourse = () => {
             //     title: course?.data?.title,
             //     subtitle: course?.data?.subtitle,
             //     category: course?.data?.category,
-            //     moduleManager: course?.data?.moduleManager?._id,
+            //     createdBy: course?.data?.createdBy?._id,
             //     thumbnail: course?.data?.thumbnail,
             //     trailer: course?.data?.trailer,
             //     description: course?.data?.description,

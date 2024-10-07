@@ -26,7 +26,7 @@ const AddLectureModal = ({ lectureModal, resetModal, onSave }) => {
     const [uploading, setUploading] = useState(false);
     const [uploadProgress, setUploadProgress] = useState(0);
     const token = useSelector((state) => state?.auth?.userToken);
-    const fileTypes = ['pdf', 'docx', 'mp4', 'avi', 'mov'];
+    const fileTypes = ['pdf', 'mp4', 'avi', 'mov'];
     const inputRef = useRef();
     const fileRef = useRef(null);
     const quillRef = useRef();

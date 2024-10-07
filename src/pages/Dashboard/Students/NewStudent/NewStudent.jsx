@@ -37,6 +37,8 @@ const NewStudent = () => {
     const [courses, setCourses] = useState([]);
     const [studentProducts, setStudentProducts] = useState([]);
     const [loadingCRUD, setLoadingCRUD] = useState(false);
+    const [categories, setCategories] = useState([]);
+
     const [studentData, setStudentData] = useState({
         name: '',
         email: '',
@@ -44,7 +46,8 @@ const NewStudent = () => {
         country: 'Netherlands',
         region: '',
         coachingTrajectory: 'HIGH_TICKET',
-        coursesRoadmap: []
+        coursesRoadmap: [],
+        category: []
     });
     const [showModal, setShowModal] = useState({
         show: false,
@@ -87,7 +90,10 @@ const NewStudent = () => {
             .oneOf(['HIGH_TICKET', 'LOW_TICKET'])
             .required('Please select a coaching trajectory')
             .matches(/\S/, 'Coaching trajectory cannot be empty or spaces only'),
-        coursesRoadmap: Yup.array()
+        coursesRoadmap: Yup.array(),
+        category: Yup.array()
+            .min(1, 'Please select at least one category') // Ensures at least one category is selected
+            .required('Please select a category')
     });
 
     useEffect(() => {
@@ -108,12 +114,21 @@ const NewStudent = () => {
             id: course._id
         }));
 
+        const mappedCategories = student.category.map((category) => {
+            return {
+                value: category._id,
+                label: category.name
+            };
+        });
+
+        setCategories(mappedCategories);
         setStudentData({
             name: student.name,
             email: student.email,
             phoneNumber: student.phoneNumber,
             country: student.country,
             region: student.region,
+            category: mappedCategories,
             coachingTrajectory: student.coachingTrajectory,
             coursesRoadmap: student.coursesRoadmap.map((c) => c._id)
         });
@@ -188,7 +203,7 @@ const NewStudent = () => {
 
     const handleFormSubmit = async (values, { resetForm, setSubmitting }) => {
         if (studentId) delete values.email;
-        const formData = { ...values, avatar: studentPhoto };
+        const formData = { ...values, avatar: studentPhoto, category: values.category.map((cat) => cat.value) };
         const url = studentId ? `${API_URL.UPDATE_STUDENT.replace(':id', studentId)}` : API_URL.CREATE_STUDENT;
         const method = studentId ? 'PUT' : 'POST';
 
@@ -233,6 +248,102 @@ const NewStudent = () => {
             setLoadingCRUD(false);
             resetModal();
         }
+    };
+
+    const getAllCategories = async () => {
+        const response = await axiosWrapper('GET', `${API_URL.GET_ALL_CATEGORIES}`, {}, token);
+        const mappedCategories = response?.data?.map((category) => ({
+            label: category.name,
+            value: category._id
+        }));
+        setCategories(mappedCategories);
+    };
+    useEffect(() => {
+        getAllCategories();
+    }, []);
+
+    useEffect(() => {
+        // When initialData.category changes, update the categories state to include them
+        if (studentData?.category) {
+            setCategories((prevCategories) => {
+                const combined = [...prevCategories, ...studentData.category];
+                const uniqueCategories = combined.reduce((acc, current) => {
+                    if (!acc.some((item) => item.value === current.value)) {
+                        acc.push(current);
+                    }
+                    return acc;
+                }, []);
+                return uniqueCategories;
+            });
+        }
+    }, [studentData?.category]);
+
+    const loadCategories = async (inputValue) => {
+        try {
+            const response = await axiosWrapper('GET', `${API_URL.GET_ALL_CATEGORIES}`, {}, token);
+            const allCategories = response?.data || [];
+
+            // Filter categories based on input value
+            const filteredCategories = allCategories.filter((category) =>
+                category.name.toLowerCase().includes(inputValue.toLowerCase())
+            );
+
+            // Format the categories for react-select
+            const mappedCategories = filteredCategories.map((category) => ({
+                label: category.name,
+                value: category._id // Assuming _id is the unique identifier for categories
+            }));
+
+            setCategories((prevCategories) => {
+                const combined = [...prevCategories, ...mappedCategories];
+                const uniqueCategories = combined.reduce((acc, current) => {
+                    if (!acc.some((item) => item.value === current.value)) {
+                        acc.push(current);
+                    }
+                    return acc;
+                }, []);
+                return uniqueCategories;
+            });
+
+            return mappedCategories;
+        } catch (error) {
+            return [];
+        }
+    };
+
+    const createCategory = async (newCategoryName) => {
+        try {
+            const response = await axiosWrapper(
+                'POST',
+                API_URL.CREATE_CATEGORY,
+                { name: newCategoryName, createdBy: userInfo?._id },
+                token
+            );
+            const createdCategory = response?.data; // Assuming API returns the created category
+
+            const newCategoryOption = {
+                label: createdCategory.name,
+                value: createdCategory._id
+            };
+
+            // Update the category list with the new category without duplicates
+            setCategories((prevCategories) => {
+                return [...prevCategories, newCategoryOption];
+            });
+
+            return newCategoryOption;
+        } catch {
+            return null;
+        }
+    };
+
+    const handleCreateCategory = async (inputValue, setFieldValue, currentValues) => {
+        const newCategory = await createCategory(inputValue);
+        if (newCategory) {
+            const updatedSelectedValues = [...(currentValues || []), newCategory];
+            setFieldValue('category', updatedSelectedValues);
+        }
+        return newCategory;
     };
 
     return (
@@ -469,6 +580,7 @@ const NewStudent = () => {
                                             ))}
                                         </Field>
                                     </Col>
+                                    {console.log(values)}
 
                                     <Col md={6} xs={12}>
                                         <label className="field-label">Coaching Trajectory</label>
@@ -560,6 +672,22 @@ const NewStudent = () => {
                                             )}
                                         </Col>
                                     )}
+
+                                    <Col>
+                                        <Input
+                                            name="category"
+                                            label="Course Category"
+                                            component={Input}
+                                            type="asyncSelect"
+                                            loadOptions={loadCategories}
+                                            placeholder="Select a category ..."
+                                            options={categories}
+                                            isMulti
+                                            onCreateOption={(inputValue) =>
+                                                handleCreateCategory(inputValue, setFieldValue, values.category)
+                                            }
+                                        />
+                                    </Col>
                                 </Row>
 
                                 <Row>

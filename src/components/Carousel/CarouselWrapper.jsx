@@ -103,15 +103,15 @@ const CarouselWrapper = ({ items = [], type = 'product' }) => {
                     <>
                         <div>
                             <h5>{selectedItem?.title}</h5>
-                            <p>{stripHtmlTags(selectedItem?.description)}</p>
                         </div>
                         <PdfModal file={selectedItem?.file} />
+                        <hr />
+                        <p>{stripHtmlTags(selectedItem?.description)}</p>
                     </>
                 ) : (
                     <>
                         <div>
                             <h5>{selectedItem?.title}</h5>
-                            <p>{stripHtmlTags(selectedItem?.description)}</p>
                         </div>
                         <iframe
                             src={
@@ -126,6 +126,8 @@ const CarouselWrapper = ({ items = [], type = 'product' }) => {
                             allowFullScreen
                             title="Lecture"
                         />
+                        <hr />
+                        <p>{stripHtmlTags(selectedItem?.description)}</p>
                     </>
                 )}
             </Modal>

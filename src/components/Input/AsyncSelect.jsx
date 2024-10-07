@@ -2,29 +2,21 @@
 import { useField, useFormikContext } from 'formik';
 import AsyncCreatableSelect from 'react-select/async-creatable';
 
-function AsyncReactSelect({ name, loadOptions, options = [], isMulti = false, ...props }) {
+function AsyncReactSelect({ name, loadOptions, options = [], onCreateOption, ...props }) {
     const { setFieldValue } = useFormikContext();
     const [field] = useField(name);
 
-    const handleChange = (selectedOption) => {
-        if (isMulti) {
-            const values = selectedOption ? selectedOption.map((option) => option.value) : [];
-            setFieldValue(name, values);
-        } else {
-            const value = selectedOption ? selectedOption.value : '';
-            setFieldValue(name, value);
-        }
+    const handleChange = (selectedOptions) => {
+        setFieldValue(name, selectedOptions || []);
     };
 
-    // Combine options and selected options to ensure all selected options are displayed correctly
-    const selectedValues = isMulti ? field.value || [] : [field.value];
-    const selectedOptions = selectedValues
-        .map((value) => {
-            return options.find((option) => option.value === value) || { label: value, value };
-        })
-        .filter((option) => option.value);
+    // Set selected options based on `field.value`
+    const selectedOptions = (field.value || []).map((value) => {
+        // Ensure selected options are complete objects
+        return options.find((option) => option.value === value.value) || { label: value.label, value: value.value };
+    });
 
-    // Merge options and selectedOptions to ensure all selected options are included
+    // Combine default options and selected options without duplicates
     const combinedOptions = [...options, ...selectedOptions].reduce((acc, current) => {
         if (!acc.some((item) => item.value === current.value)) {
             acc.push(current);
@@ -37,12 +29,12 @@ function AsyncReactSelect({ name, loadOptions, options = [], isMulti = false, ..
             cacheOptions
             loadOptions={loadOptions}
             defaultOptions={combinedOptions}
-            isMulti={isMulti}
+            isMulti
             name={name}
-            value={isMulti ? selectedOptions : selectedOptions[0] || null}
+            value={selectedOptions}
             classNamePrefix="custom_select"
             onChange={handleChange}
-            onCreateOption={props.onCreateOption}
+            onCreateOption={onCreateOption}
             styles={{
                 container: (provided) => ({
                     ...provided,
