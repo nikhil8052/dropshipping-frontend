@@ -609,40 +609,6 @@
         border-top-left-radius: 5px;
         border-top-right-radius: 5px;
     }
-    .category-container {
-        margin-left: 49px;
-        display: flex;
-        flex-wrap: wrap;
-        gap: 12px;
-        margin-top: 20px; // Space between text and categories
-        position: relative;
-        z-index: 2; // Ensure category tags are also above the overlay
-
-        .category-tag {
-            background-color: linear-gradient(90.19deg, #00c7cc -0.27%, #009cd8 99.11%);
-            color: white;
-            padding: 6px 14px;
-            border-radius: 25px;
-            font-size: 14px;
-            font-weight: 500;
-            letter-spacing: 0.5px;
-            transition:
-                background-color 0.3s ease,
-                transform 0.3s ease;
-
-            &:hover {
-                background-color: #138496;
-                transform: scale(1.05);
-            }
-        }
-
-        .no-categories {
-            color: #dc3545;
-            font-style: italic;
-            position: relative;
-            z-index: 2; // Ensure it's visible above overlay
-        }
-    }
 }
 
 //css Publish Tab
@@ -712,12 +678,16 @@
                 border-top-right-radius: 5px;
             }
             .category-container {
+                margin-left: 49px;
                 display: flex;
                 flex-wrap: wrap;
                 gap: 12px;
+                margin-top: 20px; // Space between text and categories
+                position: relative;
+                z-index: 2; // Ensure category tags are also above the overlay
 
                 .category-tag {
-                    background-color: #17a2b8;
+                    background-color: #00c7cc !important;
                     color: white;
                     padding: 6px 14px;
                     border-radius: 25px;
@@ -737,6 +707,8 @@
                 .no-categories {
                     color: #dc3545;
                     font-style: italic;
+                    position: relative;
+                    z-index: 2; // Ensure it's visible above overlay
                 }
             }
         }
@@ -865,12 +837,16 @@
     .card-background {
         height: 160px;
         .category-container {
+            margin-left: 49px;
             display: flex;
             flex-wrap: wrap;
             gap: 12px;
+            margin-top: 20px; // Space between text and categories
+            position: relative;
+            z-index: 2; // Ensure category tags are also above the overlay
 
             .category-tag {
-                background-color: #17a2b8;
+                background-color: #00c7cc !important;
                 color: white;
                 padding: 6px 14px;
                 border-radius: 25px;
@@ -890,6 +866,8 @@
             .no-categories {
                 color: #dc3545;
                 font-style: italic;
+                position: relative;
+                z-index: 2; // Ensure it's visible above overlay
             }
         }
     }
@@ -1219,6 +1197,43 @@
         border: none;
         border-radius: 12px;
         min-height: 400px;
+    }
+
+    .category-container {
+        margin-left: 49px;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        position: relative;
+        margin-bottom: 1rem;
+        top: -1.5rem;
+        left: -0.5rem;
+        z-index: 2; // Ensure category tags are also above the overlay
+
+        .category-tag {
+            background-color: #00c7cc !important;
+            color: white;
+            padding: 6px 14px;
+            border-radius: 25px;
+            font-size: 14px;
+            font-weight: 500;
+            letter-spacing: 0.5px;
+            transition:
+                background-color 0.3s ease,
+                transform 0.3s ease;
+
+            &:hover {
+                background-color: #138496;
+                transform: scale(1.05);
+            }
+        }
+
+        .no-categories {
+            color: #dc3545;
+            font-style: italic;
+            position: relative;
+            z-index: 2; // Ensure it's visible above overlay
+        }
     }
 }
 

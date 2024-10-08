@@ -127,7 +127,12 @@ const CarouselWrapper = ({ items = [], type = 'product' }) => {
                             title="Lecture"
                         />
                         <hr />
-                        <p>{stripHtmlTags(selectedItem?.description)}</p>
+                        <div className="modal-description">
+                            <div
+                                className="content"
+                                dangerouslySetInnerHTML={{ __html: selectedItem?.description }} // Render HTML content safely
+                            />
+                        </div>
                     </>
                 )}
             </Modal>

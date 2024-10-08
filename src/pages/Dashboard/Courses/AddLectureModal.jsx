@@ -360,8 +360,9 @@ const AddLectureModal = ({ lectureModal, resetModal, onSave }) => {
     const handleError = () => {
         // Commenting for late use
         // We will just not close the lecture modal on error and not reset the form.
-        // setUploading(false);
-        // resetModal();
+        setUploading(false);
+        onSave();
+        resetModal();
     };
 
     // On update lecture we can update it with pdf or vimeo link or anything else
