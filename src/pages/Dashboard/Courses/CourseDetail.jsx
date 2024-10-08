@@ -89,7 +89,7 @@ const CourseDetail = () => {
                                 <span key={cat._id} className="category-tag">
                                     {cat.name}
                                 </span>
-                            )) || <span className="no-categories">No categories available</span>}
+                            ))}
                         </div>
                     </div>
                     <div className="lecture-details-wrapper">

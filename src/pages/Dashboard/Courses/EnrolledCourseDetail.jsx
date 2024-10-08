@@ -211,7 +211,7 @@ const EnrolledCourseDetail = () => {
                                             <span key={cat._id} className="category-tag">
                                                 {cat.name}
                                             </span>
-                                        )) || <span className="no-categories">No categories available</span>}
+                                        ))}
                                     </div>
                                 </div>
                                 <Row className="section-border">

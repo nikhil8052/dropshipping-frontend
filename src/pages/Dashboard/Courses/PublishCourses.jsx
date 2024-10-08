@@ -53,12 +53,12 @@ const PublishCourses = ({ onBack, initialData, setStepComplete, publishCourse })
                         </div>
 
                         <div className="category-container">
-                            {(initialData?.category.length > 0 &&
+                            {initialData?.category.length > 0 &&
                                 initialData?.category?.map((cat) => (
                                     <span key={cat?.value} className="category-tag">
                                         {cat?.label}
                                     </span>
-                                ))) || <span className="no-categories">No categories available</span>}
+                                ))}
                         </div>
                     </div>
                     <div className="lecture-details-wrapper">
