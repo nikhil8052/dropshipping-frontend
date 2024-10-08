@@ -580,7 +580,6 @@ const NewStudent = () => {
                                             ))}
                                         </Field>
                                     </Col>
-                                    {console.log(values)}
 
                                     <Col md={6} xs={12}>
                                         <label className="field-label">Coaching Trajectory</label>

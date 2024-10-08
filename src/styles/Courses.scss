@@ -609,6 +609,40 @@
         border-top-left-radius: 5px;
         border-top-right-radius: 5px;
     }
+    .category-container {
+        margin-left: 49px;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        margin-top: 20px; // Space between text and categories
+        position: relative;
+        z-index: 2; // Ensure category tags are also above the overlay
+
+        .category-tag {
+            background-color: linear-gradient(90.19deg, #00c7cc -0.27%, #009cd8 99.11%);
+            color: white;
+            padding: 6px 14px;
+            border-radius: 25px;
+            font-size: 14px;
+            font-weight: 500;
+            letter-spacing: 0.5px;
+            transition:
+                background-color 0.3s ease,
+                transform 0.3s ease;
+
+            &:hover {
+                background-color: #138496;
+                transform: scale(1.05);
+            }
+        }
+
+        .no-categories {
+            color: #dc3545;
+            font-style: italic;
+            position: relative;
+            z-index: 2; // Ensure it's visible above overlay
+        }
+    }
 }
 
 //css Publish Tab
@@ -676,6 +710,34 @@
                 background: rgba(0, 0, 0, 0.1); // Adjust overlay color and opacity
                 border-top-left-radius: 5px;
                 border-top-right-radius: 5px;
+            }
+            .category-container {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 12px;
+
+                .category-tag {
+                    background-color: #17a2b8;
+                    color: white;
+                    padding: 6px 14px;
+                    border-radius: 25px;
+                    font-size: 14px;
+                    font-weight: 500;
+                    letter-spacing: 0.5px;
+                    transition:
+                        background-color 0.3s ease,
+                        transform 0.3s ease;
+
+                    &:hover {
+                        background-color: #138496;
+                        transform: scale(1.05);
+                    }
+                }
+
+                .no-categories {
+                    color: #dc3545;
+                    font-style: italic;
+                }
             }
         }
 
@@ -802,6 +864,34 @@
     }
     .card-background {
         height: 160px;
+        .category-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+
+            .category-tag {
+                background-color: #17a2b8;
+                color: white;
+                padding: 6px 14px;
+                border-radius: 25px;
+                font-size: 14px;
+                font-weight: 500;
+                letter-spacing: 0.5px;
+                transition:
+                    background-color 0.3s ease,
+                    transform 0.3s ease;
+
+                &:hover {
+                    background-color: #138496;
+                    transform: scale(1.05);
+                }
+            }
+
+            .no-categories {
+                color: #dc3545;
+                font-style: italic;
+            }
+        }
     }
 
     .card-large {

@@ -82,6 +82,15 @@ const CourseDetail = () => {
                             <h1>{course?.title || 'Design Conference'}</h1>
                             <p>{course?.createdBy?.name || 'Dropship Academy X'}</p>
                         </div>
+                        {/* Map the categories here */}
+
+                        <div className="category-container">
+                            {course?.category?.map((cat) => (
+                                <span key={cat._id} className="category-tag">
+                                    {cat.name}
+                                </span>
+                            )) || <span className="no-categories">No categories available</span>}
+                        </div>
                     </div>
                     <div className="lecture-details-wrapper">
                         <div className="lecture-details">
