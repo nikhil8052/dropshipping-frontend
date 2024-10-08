@@ -10,6 +10,7 @@ const DAILY_FINANCE_API_BASE = `${BASE_URL}/api/dailyFinance`;
 const INVOICE_API_BASE = `${BASE_URL}/api/invoice`;
 const EVENT_API_BASE = `${BASE_URL}/api/event`;
 const DASHBOARD_API_BASE = `${BASE_URL}/api/dashboard`;
+const CATEGORY_API_BASE = `${BASE_URL}/api/category`;
 
 export const API_URL = {
     // User API
@@ -116,5 +117,12 @@ export const API_URL = {
     GET_STUDENT_CARD_DATA: `${DASHBOARD_API_BASE}/student/cards`,
     GET_STUDENT_SECOND_CARD_DATA: `${DASHBOARD_API_BASE}/student/cards-second`,
     GET_STUDENT_GRAPH_DATA: `${DASHBOARD_API_BASE}/student/graphs`,
-    GET_STUDENT_EVENTS_DATA: `${DASHBOARD_API_BASE}/student/events`
+    GET_STUDENT_EVENTS_DATA: `${DASHBOARD_API_BASE}/student/events`,
+
+    // Categories API
+    CREATE_CATEGORY: `${CATEGORY_API_BASE}/create`,
+    UPDATE_CATEGORY: `${CATEGORY_API_BASE}/update/:id`,
+    GET_CATEGORY: `${CATEGORY_API_BASE}/:id`,
+    GET_ALL_CATEGORIES: `${CATEGORY_API_BASE}/`,
+    DELETE_CATEGORY: `${CATEGORY_API_BASE}/delete/:id`
 };

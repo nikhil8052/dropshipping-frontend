@@ -14,7 +14,7 @@ import trashIconRed from '../../../assets/icons/Trash-rename.svg';
 import PencilLine from '../../../assets/icons/PencilLine.svg';
 import CoursesModal from './CoursesModal/CoursesModal';
 import AddLectureModal from './AddLectureModal';
-import { FORMATS, TOOLBAR_CONFIG, trimLongText } from '../../../utils/common';
+import { FORMATS, TOOLBAR_CONFIG } from '../../../utils/common';
 import { getFileObjectFromBlobUrl } from '../../../utils/utils';
 import UploadSimple from '@icons/UploadSimple.svg';
 import Loading from '@components/Loading/Loading';
@@ -520,13 +520,8 @@ const UploadFiles = ({ onNext, onBack, initialData, setStepComplete, updateCours
                                                     <div key={lecture._id} className="add-lecture-item mb-3">
                                                         <div className="items-text d-flex gap-2">
                                                             <img src={menuIcon} alt="menu" />
-                                                            <p className="items-text-title">
-                                                                {lecture.name} (
-                                                                <span className="">
-                                                                    {trimLongText(lecture.description, 20)}
-                                                                </span>
-                                                                )
-                                                            </p>
+
+                                                            <p className="items-text-title">{lecture.name}</p>
                                                         </div>
                                                         <div className="items-button">
                                                             <Button type="button" className="quiz-btn">

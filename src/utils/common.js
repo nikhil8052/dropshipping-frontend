@@ -148,3 +148,5 @@ export const precisionRound = (number, precision = 2) => {
     const factor = Math.pow(10, precision);
     return Math.round(number * factor) / factor;
 };
+
+export const thumbnailErrorMessage = 'Thumbnail could not upload to a different account!.';

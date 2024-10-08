@@ -63,7 +63,8 @@ const EnrolledCourseDetail = () => {
         // Higher Level info
         setCourseDetails({
             title: data.title,
-            moduleManager: data.moduleManager?.name
+            moduleManager: data.createdBy?.name,
+            category: data.category || []
         });
         // Overall lectures
         setLectures(data.lectures);
@@ -98,6 +99,11 @@ const EnrolledCourseDetail = () => {
             }))
         };
         setInitialValues(initialValues);
+    };
+    const decodeHtmlEntities = (encodedString) => {
+        const textarea = document.createElement('textarea');
+        textarea.innerHTML = encodedString;
+        return textarea.value;
     };
 
     useEffect(() => {
@@ -199,6 +205,14 @@ const EnrolledCourseDetail = () => {
                                             <p>{courseDetails?.moduleManager || 'Module Manager'}</p>
                                         </div>
                                     </div>
+
+                                    <div className="category-container">
+                                        {courseDetails?.category?.map((cat) => (
+                                            <span key={cat._id} className="category-tag">
+                                                {cat.name}
+                                            </span>
+                                        ))}
+                                    </div>
                                 </div>
                                 <Row className="section-border">
                                     <Col sm={3} md={4} lg={4} xl={3}>
@@ -253,6 +267,14 @@ const EnrolledCourseDetail = () => {
                                         {!continueQuiz && selectedLecture && (
                                             <div className="lecture-curriculum">
                                                 <h2 className="title">{selectedLecture.name}</h2>
+                                                <p
+                                                    className=""
+                                                    dangerouslySetInnerHTML={{
+                                                        __html: decodeHtmlEntities(selectedLecture.description)
+                                                    }}
+                                                ></p>
+                                                <hr />
+
                                                 {selectedLecture.file ? (
                                                     <div className="video">
                                                         <div className="pdf-viewer">

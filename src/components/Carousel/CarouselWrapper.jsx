@@ -8,6 +8,7 @@ import LectureCard from '../LectureCard/LectureCard';
 import Modal from '../Modal/Modal';
 import { useState } from 'react';
 import PdfModal from '../PdfRenderer/PdfViewer';
+import { stripHtmlTags } from '../../utils/utils';
 
 const CarouselWrapper = ({ items = [], type = 'product' }) => {
     const [showModal, setShowModal] = useState(false);
@@ -99,21 +100,40 @@ const CarouselWrapper = ({ items = [], type = 'product' }) => {
                 title={selectedItem?.name || 'Preview'}
             >
                 {selectedItem?.dataType === 'file' ? (
-                    <PdfModal file={selectedItem?.file} />
+                    <>
+                        <div>
+                            <h5>{selectedItem?.title}</h5>
+                        </div>
+                        <PdfModal file={selectedItem?.file} />
+                        <hr />
+                        <p>{stripHtmlTags(selectedItem?.description)}</p>
+                    </>
                 ) : (
-                    <iframe
-                        src={
-                            selectedItem?.vimeoLink
-                                ? selectedItem?.vimeoLink
-                                : selectedItem?.vimeoVideoData?.player_embed_url
-                        }
-                        width="100%"
-                        height="400"
-                        frameBorder="0"
-                        allow="autoplay; fullscreen; picture-in-picture"
-                        allowFullScreen
-                        title="Lecture"
-                    />
+                    <>
+                        <div>
+                            <h5>{selectedItem?.title}</h5>
+                        </div>
+                        <iframe
+                            src={
+                                selectedItem?.vimeoLink
+                                    ? selectedItem?.vimeoLink
+                                    : selectedItem?.vimeoVideoData?.player_embed_url
+                            }
+                            width="100%"
+                            height="400"
+                            frameBorder="0"
+                            allow="autoplay; fullscreen; picture-in-picture"
+                            allowFullScreen
+                            title="Lecture"
+                        />
+                        <hr />
+                        <div className="modal-description">
+                            <div
+                                className="content"
+                                dangerouslySetInnerHTML={{ __html: selectedItem?.description }} // Render HTML content safely
+                            />
+                        </div>
+                    </>
                 )}
             </Modal>
         </>

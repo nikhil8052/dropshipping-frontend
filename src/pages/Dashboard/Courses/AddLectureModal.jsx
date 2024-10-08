@@ -13,21 +13,24 @@ import axiosWrapper from '../../../utils/api';
 import { API_URL } from '../../../utils/apiUrl';
 import { useSelector } from 'react-redux';
 import { Upload } from 'tus-js-client';
-import { trimLongText } from '../../../utils/common';
-import { getFileObjectFromBlobUrl } from '../../../utils/utils';
+import { FORMATS, TOOLBAR_CONFIG, trimLongText } from '../../../utils/common';
+import { getFileObjectFromBlobUrl, stripHtmlTags } from '../../../utils/utils';
 import cross from '@icons/red-cross.svg';
 import UploadSimple from '@icons/UploadSimple.svg';
 import ImageCropper from '../../../components/ImageMask/ImageCropper';
 import '../../../styles/Courses.scss';
+import ReactQuill from 'react-quill';
 
 const AddLectureModal = ({ lectureModal, resetModal, onSave }) => {
     const [loading, setLoading] = useState(false);
     const [uploading, setUploading] = useState(false);
     const [uploadProgress, setUploadProgress] = useState(0);
     const token = useSelector((state) => state?.auth?.userToken);
-    const fileTypes = ['pdf', 'docx', 'mp4', 'avi', 'mov'];
+    const fileTypes = ['pdf', 'mp4', 'avi', 'mov'];
     const inputRef = useRef();
     const fileRef = useRef(null);
+    const quillRef = useRef();
+    const [showCancelModal, setShowCancelModal] = useState(false);
 
     const [cropping, setCropping] = useState(false);
     const [imageSrc, setImageSrc] = useState(null);
@@ -83,7 +86,11 @@ const AddLectureModal = ({ lectureModal, resetModal, onSave }) => {
         vimeoLink: Yup.string()
             .optional()
             .nullable()
-            .matches(/^https:\/\/player\.vimeo\.com\/video\/\d+$/, 'Please provide a valid Vimeo link')
+            // .matches(/^https:\/\/player\.vimeo\.com\/video\/\d+$/, 'Please provide a valid Vimeo link')
+            .matches(
+                /^https:\/\/vimeo\.com\/\d+$/,
+                'Please provide a valid Vimeo link in the format https://vimeo.com/{id}'
+            )
             .test('file-or-link', 'Either file or Vimeo link is required', function (value) {
                 const { file } = this.parent;
                 const isVimeo = initialValues.vimeoVideoData;
@@ -104,12 +111,15 @@ const AddLectureModal = ({ lectureModal, resetModal, onSave }) => {
                 {},
                 token
             );
+
+            const description = stripHtmlTags(response.data?.description);
+
             const lectureDetail = {
                 name: response.data?.name,
-                description: response.data?.description,
+                description: description,
                 quiz: response.data?.quiz,
                 file: response.data?.file,
-                vimeoLink: response.data?.vimeoLink,
+                vimeoLink: 'https://vimeo.com/' + response.data.vimeoLink.split('https://player.vimeo.com/video/')[1],
                 vimeoVideoData: response.data?.vimeoVideoData,
                 _id: response.data?._id
             };
@@ -270,6 +280,14 @@ const AddLectureModal = ({ lectureModal, resetModal, onSave }) => {
     };
 
     const prepareVimeoData = (formData) => {
+        // Check if the Vimeo link exists and is in the vimeo.com format
+        if (formData.vimeoLink && formData.vimeoLink.includes('https://vimeo.com')) {
+            // Extract the Vimeo ID from the link
+            const vimeoId = formData.vimeoLink.split('https://vimeo.com/')[1];
+            // Reformat the link to the embedded format
+            formData.vimeoLink = `https://player.vimeo.com/video/${vimeoId}`;
+        }
+
         if (thumbnail && thumbnail.includes('/uploads')) {
             formData.thumbnail = extractFilePath(thumbnail);
         }
@@ -340,7 +358,10 @@ const AddLectureModal = ({ lectureModal, resetModal, onSave }) => {
     };
 
     const handleError = () => {
+        // Commenting for late use
+        // We will just not close the lecture modal on error and not reset the form.
         setUploading(false);
+        onSave();
         resetModal();
     };
 
@@ -401,6 +422,19 @@ const AddLectureModal = ({ lectureModal, resetModal, onSave }) => {
         setLoadingThumb(false);
     };
 
+    const handleCancelClick = () => {
+        setShowCancelModal(true);
+    };
+
+    const handleConfirmCancel = () => {
+        resetModal();
+        setShowCancelModal(false);
+    };
+
+    const handleCloseModal = () => {
+        setShowCancelModal(false);
+    };
+
     return (
         <>
             {loading ? (
@@ -429,18 +463,37 @@ const AddLectureModal = ({ lectureModal, resetModal, onSave }) => {
                                     </Col>
                                 </Row>
 
-                                <Row>
-                                    <Col md={12} xs={12}>
+                                <Row className="mb-3">
+                                    <Col>
                                         <Field
                                             name="description"
-                                            className="field-text-area-control mb-0"
+                                            value={values.description}
                                             as="textarea"
                                             placeholder="Type lecture description here..."
-                                            rows="6"
+                                            render={({ field }) => (
+                                                <div
+                                                    onClick={() => {
+                                                        if (quillRef.current) {
+                                                            quillRef.current.focus();
+                                                        }
+                                                    }}
+                                                >
+                                                    <ReactQuill
+                                                        ref={quillRef}
+                                                        value={field.value || ''}
+                                                        name={field.name}
+                                                        onChange={(value) => field.onChange(field.name)(value)}
+                                                        placeholder="Type lecture description here..."
+                                                        className="field-quill-control"
+                                                        modules={{
+                                                            toolbar: TOOLBAR_CONFIG
+                                                        }}
+                                                        formats={FORMATS}
+                                                    />
+                                                </div>
+                                            )}
                                         />
-                                        <div className="mb-2">
-                                            <ErrorMessage name="description" component="div" className="error" />
-                                        </div>
+                                        <ErrorMessage name="description" component="div" className="error mb-2" />
                                     </Col>
                                 </Row>
 
@@ -602,7 +655,7 @@ const AddLectureModal = ({ lectureModal, resetModal, onSave }) => {
                                             name="vimeoLink"
                                             className="field-control mb-2"
                                             type="text"
-                                            placeholder="https://player.vimeo.com/video/1005340787?h=bb4c9a98dd"
+                                            placeholder="https://vimeo.com/1009858724"
                                         />
                                         <div className="mb-2">
                                             <ErrorMessage name="vimeoLink" component="div" className="error" />
@@ -647,6 +700,11 @@ const AddLectureModal = ({ lectureModal, resetModal, onSave }) => {
                                                                             width: '200px',
                                                                             height: '128px'
                                                                         }}
+                                                                        onError={(e) => {
+                                                                            e.target.onerror = null; // Prevent infinite loop in case the default image fails too
+                                                                            e.target.src =
+                                                                                'https://i.vimeocdn.com/video/default'; // Set default image
+                                                                        }}
                                                                     />
                                                                     <span>Lecture Thumbnail</span>
                                                                     <div
@@ -665,6 +723,11 @@ const AddLectureModal = ({ lectureModal, resetModal, onSave }) => {
                                                                             }}
                                                                             className="reset-image"
                                                                             alt="reset"
+                                                                            onError={(e) => {
+                                                                                e.target.onerror = null; // Prevent infinite loop in case the default image fails too
+                                                                                e.target.src =
+                                                                                    'https://i.vimeocdn.com/video/default'; // Set default image
+                                                                            }}
                                                                         />
                                                                     </div>
                                                                 </div>
@@ -768,7 +831,7 @@ const AddLectureModal = ({ lectureModal, resetModal, onSave }) => {
                                         <div className="mt-3 d-flex justify-content-between gap-3">
                                             <Button
                                                 type="button"
-                                                onClick={() => resetModal()}
+                                                onClick={handleCancelClick}
                                                 className="cancel-btn"
                                                 disabled={isSubmitting}
                                             >
@@ -793,6 +856,23 @@ const AddLectureModal = ({ lectureModal, resetModal, onSave }) => {
                                         />
                                         <p>{values.file ? `File: ${trimLongText(values.file.name, 15)}` : ''}</p>
                                     </Modal.Body>
+                                </Modal>
+
+                                <Modal show={showCancelModal} onHide={handleCloseModal} centered backdrop="static">
+                                    <Modal.Header closeButton>
+                                        <Modal.Title>Confirm Cancel</Modal.Title>
+                                    </Modal.Header>
+                                    <Modal.Body>
+                                        Are you sure you want to cancel? The lecture data will be lost.
+                                    </Modal.Body>
+                                    <Modal.Footer>
+                                        <Button variant="secondary" onClick={handleCloseModal}>
+                                            No, go back
+                                        </Button>
+                                        <Button variant="danger" onClick={handleConfirmCancel}>
+                                            Yes, Cancel
+                                        </Button>
+                                    </Modal.Footer>
                                 </Modal>
                             </FormikForm>
                         )}

@@ -7,6 +7,7 @@ import TextArea from './TextArea';
 import Select from './Select';
 import { ErrorMessage } from 'formik';
 import RichTextEditor from './RichTextEditor';
+import AsyncReactSelect from './AsyncSelect';
 
 export default function Input(props) {
     const inputs = {
@@ -15,7 +16,8 @@ export default function Input(props) {
         radio: Radio,
         textarea: TextArea,
         select: Select,
-        richTextEditor: RichTextEditor
+        richTextEditor: RichTextEditor,
+        asyncSelect: AsyncReactSelect
     };
     const InputComponent = inputs[props.type];
     return (

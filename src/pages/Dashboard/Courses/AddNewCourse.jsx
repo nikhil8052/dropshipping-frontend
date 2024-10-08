@@ -14,7 +14,7 @@ import '../../../styles/Courses.scss';
 import axiosWrapper from '../../../utils/api';
 import * as types from '../../../redux/actions/actionTypes';
 import { API_URL } from '../../../utils/apiUrl';
-import toast from 'react-hot-toast';
+import { textParser } from '../../../utils/utils';
 
 const AddNewCourse = () => {
     const location = useLocation();
@@ -33,8 +33,8 @@ const AddNewCourse = () => {
     const [courseData, setCourseData] = useState({
         title: '',
         subtitle: '',
-        category: '',
-        moduleManager: null,
+        category: [],
+        createdBy: null,
         thumbnail: '',
         trailer: '',
         description: '',
@@ -48,15 +48,16 @@ const AddNewCourse = () => {
 
     // //////////////////////////////Handlers////////////////////////
     const handleTabChange = (key) => {
-        if (
-            key === 'basic-information' ||
-            (key === 'upload-files' && stepsCompleted.step1) ||
-            (key === 'publish-course' && stepsCompleted.step1) ||
-            (key === 'publish-course' && stepsCompleted.step1 && stepsCompleted.step2)
-        ) {
+        if (courseId) {
             setActiveKey(key);
         } else {
-            toast.error('Please click save button to move to the next step');
+            if (
+                key === 'basic-information' ||
+                (key === 'upload-files' && stepsCompleted.step1) ||
+                (key === 'publish-course' && stepsCompleted.step1 && stepsCompleted.step2)
+            ) {
+                setActiveKey(key);
+            }
         }
     };
 
@@ -88,22 +89,33 @@ const AddNewCourse = () => {
         try {
             const { data } = await axiosWrapper('GET', `${API_URL.GET_COURSE.replace(':id', id)}`, {}, token);
 
-            const parser = new DOMParser();
-            const htmlDoc = parser.parseFromString(data.description, 'text/html');
-            const description = htmlDoc.body.textContent;
+            const description = textParser(data.description);
 
+            // Map categories to { label, value } format
+            const categories = data.category.map((cat) => ({
+                label: cat.name,
+                value: cat._id
+            }));
+            const updatedLecture = data.lectures.map((lec) => {
+                const description = textParser(lec.description);
+                return {
+                    ...lec,
+                    description: description
+                };
+            });
             updateCourseData({
                 title: data.title,
                 subtitle: data.subtitle,
-                category: data.category,
-                moduleManager: data.moduleManager?._id,
+                category: categories,
+                createdBy: data.createdBy?._id,
                 thumbnail: data.thumbnail,
                 trailer: data.trailer,
                 description: description,
-                lectures: data.lectures
+                lectures: updatedLecture
             });
+
             dispatch({ type: types.ALL_RECORDS, data: { keyOfData: 'currentCourseUpdate', data: false } });
-            dispatch({ type: types.ALL_RECORDS, data: { keyOfData: 'coachName', data: data.moduleManager?.name } });
+            dispatch({ type: types.ALL_RECORDS, data: { keyOfData: 'coachName', data: data.createdBy?.name } });
         } catch (error) {
             dispatch({ type: types.ALL_RECORDS, data: { keyOfData: 'currentCourseUpdate', data: false } });
         }
@@ -132,7 +144,7 @@ const AddNewCourse = () => {
             //     title: course?.data?.title,
             //     subtitle: course?.data?.subtitle,
             //     category: course?.data?.category,
-            //     moduleManager: course?.data?.moduleManager?._id,
+            //     createdBy: course?.data?.createdBy?._id,
             //     thumbnail: course?.data?.thumbnail,
             //     trailer: course?.data?.trailer,
             //     description: course?.data?.description,
@@ -233,6 +245,7 @@ const AddNewCourse = () => {
                         initialData={courseData}
                         onNext={() => handleTabChange('upload-files')}
                         createOrUpdateCourse={createOrUpdateCourse}
+                        updateCourseData={updateCourseData}
                     />
                 </Tab>
                 <Tab

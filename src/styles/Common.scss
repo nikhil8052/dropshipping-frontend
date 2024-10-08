@@ -78,7 +78,7 @@
     .custom_select__multi-value {
         border-radius: 60px;
         padding: 0px 10px;
-        background: rgba(242, 248, 255, 1);
+        // background: rgba(242, 248, 255, 1);
     }
 }
 
@@ -360,4 +360,13 @@
     width: 20px !important;
     height: 20px !important;
     cursor: pointer !important;
+}
+
+.field-quill-control {
+    .ql-toolbar {
+        border: 0.8px solid rgba(233, 234, 240, 1) !important;
+    }
+    .ql-container {
+        border: 0.8px solid rgba(233, 234, 240, 1) !important;
+    }
 }

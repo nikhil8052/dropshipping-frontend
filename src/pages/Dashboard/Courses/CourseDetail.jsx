@@ -8,6 +8,7 @@ import CarouselWrapper from '../../../components/Carousel/CarouselWrapper';
 import axiosWrapper from '../../../utils/api';
 import { API_URL } from '../../../utils/apiUrl';
 import '../../../styles/Courses.scss';
+import { textParser } from '../../../utils/utils';
 
 const CourseDetail = () => {
     const navigate = useNavigate();
@@ -24,11 +25,12 @@ const CourseDetail = () => {
         const { data } = await axiosWrapper('GET', `${API_URL.GET_COURSE.replace(':id', id)}`, {}, token);
 
         const mapLectures = data.lectures.map((lecture) => {
+            const description = textParser(lecture?.description);
             return {
                 id: lecture._id,
                 title: lecture.name,
                 type: lecture.file ? 'pdf' : 'video',
-                description: lecture?.description,
+                description: description,
                 thumbnail: lecture?.thumbnail || '',
                 dataType: lecture?.dataType,
                 file: lecture?.file || null,
@@ -78,7 +80,16 @@ const CourseDetail = () => {
                     <div className="card-background">
                         <div className="text-heading">
                             <h1>{course?.title || 'Design Conference'}</h1>
-                            <p>{course?.moduleManager?.name || 'Dropship Academy X'}</p>
+                            <p>{course?.createdBy?.name || 'Dropship Academy X'}</p>
+                        </div>
+                        {/* Map the categories here */}
+
+                        <div className="category-container">
+                            {course?.category?.map((cat) => (
+                                <span key={cat._id} className="category-tag">
+                                    {cat.name}
+                                </span>
+                            ))}
                         </div>
                     </div>
                     <div className="lecture-details-wrapper">
@@ -92,7 +103,7 @@ const CourseDetail = () => {
                             </div>
                             <div className="lecture-details-item">
                                 <h1>Coach Name</h1>
-                                <p>{course?.moduleManager?.name}</p>
+                                <p>{course?.createdBy?.name}</p>
                             </div>
                         </div>
                         <div className="carousel-lecture">
@@ -109,7 +120,7 @@ const CourseDetail = () => {
                                             All Students
                                         </Button>
                                     </Link> */}
-                                    {userInfo?.role !== 'ADMIN' && course?.moduleManager?._id !== userInfo?._id ? (
+                                    {userInfo?.role !== 'ADMIN' && course?.createdBy?._id !== userInfo?._id ? (
                                         <></>
                                     ) : (
                                         <>

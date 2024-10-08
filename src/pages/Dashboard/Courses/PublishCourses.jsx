@@ -49,7 +49,16 @@ const PublishCourses = ({ onBack, initialData, setStepComplete, publishCourse })
                     <div className="card-background">
                         <div className="text-heading">
                             <h1>{initialData?.title}</h1>
-                            <p>Dropship Academy X</p>
+                            <p>{coachName || 'Dropship Academy X'}</p>
+                        </div>
+
+                        <div className="category-container">
+                            {initialData?.category.length > 0 &&
+                                initialData?.category?.map((cat) => (
+                                    <span key={cat?.value} className="category-tag">
+                                        {cat?.label}
+                                    </span>
+                                ))}
                         </div>
                     </div>
                     <div className="lecture-details-wrapper">

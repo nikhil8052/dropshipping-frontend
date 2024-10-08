@@ -3,6 +3,7 @@ import './LectureCard.scss';
 import { trimLongText } from '../../utils/common';
 import { faFilePdf } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { stripHtmlTags } from '../../utils/utils';
 
 const LectureCard = ({ item }) => {
     return (
@@ -20,9 +21,9 @@ const LectureCard = ({ item }) => {
                     }}
                 />
             )}
-            <div className="product-details">
-                <h5>{trimLongText(item.title, 15)}</h5>
-                <p>{trimLongText(item.description, 20)}</p>
+            <div className="product-details mb-2">
+                <h5>{trimLongText(item.title, 20)}</h5>
+                <p>{trimLongText(stripHtmlTags(item.description), 25)}</p>
             </div>
         </div>
     );
