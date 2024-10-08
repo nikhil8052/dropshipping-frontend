@@ -119,7 +119,7 @@ const AddLectureModal = ({ lectureModal, resetModal, onSave }) => {
                 description: description,
                 quiz: response.data?.quiz,
                 file: response.data?.file,
-                vimeoLink: response.data?.vimeoLink,
+                vimeoLink: 'https://vimeo.com/' + response.data.vimeoLink.split('https://player.vimeo.com/video/')[1],
                 vimeoVideoData: response.data?.vimeoVideoData,
                 _id: response.data?._id
             };
@@ -700,6 +700,11 @@ const AddLectureModal = ({ lectureModal, resetModal, onSave }) => {
                                                                             width: '200px',
                                                                             height: '128px'
                                                                         }}
+                                                                        onError={(e) => {
+                                                                            e.target.onerror = null; // Prevent infinite loop in case the default image fails too
+                                                                            e.target.src =
+                                                                                'https://i.vimeocdn.com/video/default'; // Set default image
+                                                                        }}
                                                                     />
                                                                     <span>Lecture Thumbnail</span>
                                                                     <div
@@ -718,6 +723,11 @@ const AddLectureModal = ({ lectureModal, resetModal, onSave }) => {
                                                                             }}
                                                                             className="reset-image"
                                                                             alt="reset"
+                                                                            onError={(e) => {
+                                                                                e.target.onerror = null; // Prevent infinite loop in case the default image fails too
+                                                                                e.target.src =
+                                                                                    'https://i.vimeocdn.com/video/default'; // Set default image
+                                                                            }}
                                                                         />
                                                                     </div>
                                                                 </div>
