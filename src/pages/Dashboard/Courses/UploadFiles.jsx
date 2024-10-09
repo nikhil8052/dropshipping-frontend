@@ -3,7 +3,6 @@ import '../../../styles/Courses.scss';
 import { Button, Col, Row, Container } from 'react-bootstrap';
 import courseThumbnail from '../../../assets/icons/Thumbnail.svg';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
-import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import * as Yup from 'yup';
 import toast from 'react-hot-toast';
@@ -25,10 +24,10 @@ import { API_URL } from '../../../utils/apiUrl';
 import * as types from '../../../redux/actions/actionTypes';
 import { useDispatch, useSelector } from 'react-redux';
 import cross from '@icons/red-cross.svg';
+import Input from '../../../components/Input/Input';
 
 const UploadFiles = ({ onNext, onBack, initialData, setStepComplete, updateCourseData }) => {
     const inputRef = useRef();
-    const quillRef = useRef();
     const videoinputRef = useRef();
     const dispatch = useDispatch();
     const [loading, setLoading] = useState(false);
@@ -277,7 +276,7 @@ const UploadFiles = ({ onNext, onBack, initialData, setStepComplete, updateCours
                             onSubmit={handleUploadFilesSubmit}
                             enableReinitialize
                         >
-                            {({ isSubmitting, handleSubmit, values }) => (
+                            {({ isSubmitting, handleSubmit }) => (
                                 <Form onSubmit={handleSubmit}>
                                     <Row className="mb-3">
                                         <Col xs={12} sm={12} md={12} lg={6}>
@@ -467,35 +466,17 @@ const UploadFiles = ({ onNext, onBack, initialData, setStepComplete, updateCours
 
                                     <Row>
                                         <Col>
-                                            <label className="field-label">Course Description</label>
-                                            <Field
+                                            <Input
+                                                className="field-quill-control"
+                                                type="richTextEditor"
                                                 name="description"
-                                                value={values.description}
-                                                as="textarea"
+                                                label="Course Description"
                                                 placeholder="Enter Course Description"
-                                                render={({ field }) => (
-                                                    <div
-                                                        onClick={() => {
-                                                            if (quillRef.current) {
-                                                                quillRef.current.focus();
-                                                            }
-                                                        }}
-                                                    >
-                                                        <ReactQuill
-                                                            ref={quillRef}
-                                                            value={field.value || ''}
-                                                            name={field.name}
-                                                            onChange={(value) => field.onChange(field.name)(value)}
-                                                            className="field-quill-control"
-                                                            modules={{
-                                                                toolbar: TOOLBAR_CONFIG
-                                                            }}
-                                                            formats={FORMATS}
-                                                        />
-                                                    </div>
-                                                )}
+                                                modules={{
+                                                    toolbar: TOOLBAR_CONFIG
+                                                }}
+                                                formats={FORMATS}
                                             />
-                                            <ErrorMessage name="description" component="div" className="error" />
                                         </Col>
                                     </Row>
 

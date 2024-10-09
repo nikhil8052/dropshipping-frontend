@@ -19,7 +19,7 @@ import cross from '@icons/red-cross.svg';
 import UploadSimple from '@icons/UploadSimple.svg';
 import ImageCropper from '../../../components/ImageMask/ImageCropper';
 import '../../../styles/Courses.scss';
-import ReactQuill from 'react-quill';
+import Input from '@components/Input/Input';
 
 const AddLectureModal = ({ lectureModal, resetModal, onSave }) => {
     const [loading, setLoading] = useState(false);
@@ -29,7 +29,6 @@ const AddLectureModal = ({ lectureModal, resetModal, onSave }) => {
     const fileTypes = ['pdf', 'mp4', 'avi', 'mov'];
     const inputRef = useRef();
     const fileRef = useRef(null);
-    const quillRef = useRef();
     const [showCancelModal, setShowCancelModal] = useState(false);
 
     const [cropping, setCropping] = useState(false);
@@ -88,8 +87,8 @@ const AddLectureModal = ({ lectureModal, resetModal, onSave }) => {
             .nullable()
             // .matches(/^https:\/\/player\.vimeo\.com\/video\/\d+$/, 'Please provide a valid Vimeo link')
             .matches(
-                /^https:\/\/vimeo\.com\/\d+$/,
-                'Please provide a valid Vimeo link in the format https://vimeo.com/{id}'
+                /^https:\/\/(player\.)?vimeo\.com(\/video)?\/\d+$/,
+                'Please provide a valid Vimeo link in the format https://vimeo.com/{id} or https://player.vimeo.com/video/{id}'
             )
             .test('file-or-link', 'Either file or Vimeo link is required', function (value) {
                 const { file } = this.parent;
@@ -119,7 +118,7 @@ const AddLectureModal = ({ lectureModal, resetModal, onSave }) => {
                 description: description,
                 quiz: response.data?.quiz,
                 file: response.data?.file,
-                vimeoLink: 'https://vimeo.com/' + response.data.vimeoLink.split('https://player.vimeo.com/video/')[1],
+                vimeoLink: response.data.vimeoLink,
                 vimeoVideoData: response.data?.vimeoVideoData,
                 _id: response.data?._id
             };
@@ -465,35 +464,16 @@ const AddLectureModal = ({ lectureModal, resetModal, onSave }) => {
 
                                 <Row className="mb-3">
                                     <Col>
-                                        <Field
+                                        <Input
+                                            className="field-quill-control"
+                                            type="richTextEditor"
                                             name="description"
-                                            value={values.description}
-                                            as="textarea"
                                             placeholder="Type lecture description here..."
-                                            render={({ field }) => (
-                                                <div
-                                                    onClick={() => {
-                                                        if (quillRef.current) {
-                                                            quillRef.current.focus();
-                                                        }
-                                                    }}
-                                                >
-                                                    <ReactQuill
-                                                        ref={quillRef}
-                                                        value={field.value || ''}
-                                                        name={field.name}
-                                                        onChange={(value) => field.onChange(field.name)(value)}
-                                                        placeholder="Type lecture description here..."
-                                                        className="field-quill-control"
-                                                        modules={{
-                                                            toolbar: TOOLBAR_CONFIG
-                                                        }}
-                                                        formats={FORMATS}
-                                                    />
-                                                </div>
-                                            )}
+                                            modules={{
+                                                toolbar: TOOLBAR_CONFIG
+                                            }}
+                                            formats={FORMATS}
                                         />
-                                        <ErrorMessage name="description" component="div" className="error mb-2" />
                                     </Col>
                                 </Row>
 

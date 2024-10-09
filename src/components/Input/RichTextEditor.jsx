@@ -2,6 +2,7 @@ import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import { useField } from 'formik';
 import { useRef } from 'react';
+import './input.scss';
 
 const RichTextEditor = (props) => {
     const [field, , helpers] = useField(props.name);
@@ -14,13 +15,8 @@ const RichTextEditor = (props) => {
         }
     };
 
-    const handleClick = () => {
-        if (quillRef.current) {
-            quillRef.current.focus();
-        }
-    };
     return (
-        <div className="quill-editor" onClick={handleClick}>
+        <div className="quill-editor">
             <ReactQuill
                 ref={quillRef}
                 value={field.value}
