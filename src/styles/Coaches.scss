@@ -76,12 +76,16 @@
             .ql-toolbar {
                 border: 0.8px solid rgba(233, 234, 240, 1);
                 border-radius: 10px 10px 0 0;
-                order: -1;
             }
             .ql-container {
                 border: 0.8px solid rgba(233, 234, 240, 1);
                 border-radius: 0 0 10px 10px;
+            }
+            .ql-editor {
                 min-height: 200px;
+            }
+            .ql-editing {
+                left: 0px !important;
             }
         }
 
