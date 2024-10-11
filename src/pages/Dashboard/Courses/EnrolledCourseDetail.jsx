@@ -243,10 +243,11 @@ const EnrolledCourseDetail = () => {
                                                         className={`btn ${lecture?._id === selectedLecture?._id ? 'active' : 'inactive'} ${lecture?.completedBy?.includes(userInfo?._id) && 'passed-lecture'}`}
                                                         onClick={() => handleButtonClick(index)}
                                                         disabled={
-                                                            index > 0 &&
+                                                            index > 0 && // Only disable lectures after the first one
                                                             !filteredLectures[index - 1]?.completedBy?.includes(
                                                                 userInfo?._id
-                                                            )
+                                                            ) && // Previous lecture is not completed
+                                                            lecture?.quiz?.mcqs?.length > 0
                                                         }
                                                     >
                                                         <img
@@ -267,14 +268,6 @@ const EnrolledCourseDetail = () => {
                                         {!continueQuiz && selectedLecture && (
                                             <div className="lecture-curriculum">
                                                 <h2 className="title">{selectedLecture.name}</h2>
-                                                <p
-                                                    className=""
-                                                    dangerouslySetInnerHTML={{
-                                                        __html: decodeHtmlEntities(selectedLecture.description)
-                                                    }}
-                                                ></p>
-                                                <hr />
-
                                                 {selectedLecture.file ? (
                                                     <div className="video">
                                                         <div className="pdf-viewer">
@@ -303,6 +296,13 @@ const EnrolledCourseDetail = () => {
                                                         </p>
                                                     </div>
                                                 )}
+                                                <hr />
+                                                <p
+                                                    className="mb-2"
+                                                    dangerouslySetInnerHTML={{
+                                                        __html: decodeHtmlEntities(selectedLecture.description)
+                                                    }}
+                                                ></p>
                                             </div>
                                         )}
 
