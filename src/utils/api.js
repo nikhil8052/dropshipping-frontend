@@ -56,7 +56,10 @@ const axiosWrapper = async (method, url, data, token, isFormData = false) => {
         const response = await axios(config);
         return response.data;
     } catch (error) {
-        throw error?.response?.data?.message || error?.message;
+        //  i need to handle some exception in my component layers so return the error
+        return Promise.reject(error.response ? error.response.data : error);
+        // Commenting for future use
+        // throw error?.response?.data?.message || error?.message;
     }
 };
 

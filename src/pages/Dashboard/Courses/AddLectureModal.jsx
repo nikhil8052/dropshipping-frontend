@@ -254,8 +254,16 @@ const AddLectureModal = ({ lectureModal, resetModal, onSave }) => {
                 setSubmitting(false);
             }
         } catch (error) {
-            handleError();
-            setSubmitting(false);
+            if (
+                error?.desc === "The requested video couldn't be found." ||
+                error.desc === 'Video not found in that account'
+            ) {
+                // Exception (do not close the modal)
+                return null;
+            } else {
+                handleError();
+                setSubmitting(false);
+            }
         }
     };
 
