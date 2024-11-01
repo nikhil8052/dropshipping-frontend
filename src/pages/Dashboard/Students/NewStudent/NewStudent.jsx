@@ -47,7 +47,10 @@ const NewStudent = () => {
         region: '',
         coachingTrajectory: 'HIGH_TICKET',
         coursesRoadmap: [],
-        category: []
+        category: [],
+        paymentType: '',
+        installmentFrequency: '',
+        installmentCount: 0
     });
     const [showModal, setShowModal] = useState({
         show: false,
@@ -93,7 +96,13 @@ const NewStudent = () => {
         coursesRoadmap: Yup.array(),
         category: Yup.array()
             .min(1, 'Please select at least one category') // Ensures at least one category is selected
-            .required('Please select a category')
+            .required('Please select a category'),
+        paymentType: Yup.string().required('Please select a payment type'),
+        installmentFrequency: Yup.string().when('paymentType', {
+            is: 'installments',
+            then: () => Yup.string().required('Please select installment frequency'),
+            otherwise: () => Yup.string().nullable()
+        })
     });
 
     useEffect(() => {
@@ -130,7 +139,10 @@ const NewStudent = () => {
             region: student.region,
             category: mappedCategories,
             coachingTrajectory: student.coachingTrajectory,
-            coursesRoadmap: student.coursesRoadmap.map((c) => c._id)
+            coursesRoadmap: student.coursesRoadmap.map((c) => c._id),
+            paymentType: student.paymentType || 'one-time', // Default to 'one-time' if not present
+            installmentFrequency: student.installmentFrequency || '',
+            installmentCount: student.installmentCount || 0
         });
         setCourses(coursesRoadmap);
         setStudentPhoto(student.avatar);
@@ -651,7 +663,7 @@ const NewStudent = () => {
                                     </Col>
 
                                     {studentId && (
-                                        <Col md={6} xs={12} className="mt-2">
+                                        <Col md={6} xs={12}>
                                             <Input
                                                 options={courses}
                                                 name="coursesRoadmap"
@@ -687,6 +699,112 @@ const NewStudent = () => {
                                             }
                                         />
                                     </Col>
+                                </Row>
+
+                                <Row>
+                                    <h4 className="my-3 new-student-title">Payment Information</h4>
+                                    <Col md={12} xs={12}>
+                                        <label className="field-label">Payment Type</label>
+                                        <Field
+                                            name="paymentType"
+                                            component={({ field, form }) => {
+                                                const handleSelect = (eventKey) => {
+                                                    form.setFieldValue(field.name, eventKey);
+                                                    // Reset installment frequency when payment type changes
+                                                    if (eventKey !== 'installments') {
+                                                        form.setFieldValue('installmentFrequency', '');
+                                                    }
+                                                };
+
+                                                return (
+                                                    <DropdownButton
+                                                        title={
+                                                            <div className="d-flex justify-content-between align-items-center">
+                                                                <span>
+                                                                    {field.value
+                                                                        ? field.value === 'one-time'
+                                                                            ? 'One-Time'
+                                                                            : 'Installments'
+                                                                        : 'Select Payment Type'}
+                                                                </span>
+                                                                <img src={dropDownArrow} alt="arrow" />
+                                                            </div>
+                                                        }
+                                                        id={field.name}
+                                                        onSelect={handleSelect}
+                                                        className="dropdown-button w-100"
+                                                    >
+                                                        <Dropdown.Item eventKey="one-time">One-Time</Dropdown.Item>
+                                                        <Dropdown.Item eventKey="installments">
+                                                            Installments
+                                                        </Dropdown.Item>
+                                                    </DropdownButton>
+                                                );
+                                            }}
+                                        />
+                                        <ErrorMessage name="paymentType" component="div" className="error mt-2" />
+                                    </Col>
+
+                                    {/* Installment Frequency Dropdown (conditional) */}
+                                    {values.paymentType === 'installments' && (
+                                        <>
+                                            <Col md={6} xs={12}>
+                                                <label className="field-label">Installment Frequency</label>
+                                                <Field
+                                                    name="installmentFrequency"
+                                                    component={({ field, form }) => {
+                                                        const handleSelect = (eventKey) => {
+                                                            form.setFieldValue(field.name, eventKey);
+                                                        };
+
+                                                        return (
+                                                            <DropdownButton
+                                                                title={
+                                                                    <div className="d-flex justify-content-between align-items-center">
+                                                                        <span>
+                                                                            {field.value
+                                                                                ? field.value === 'weekly'
+                                                                                    ? 'Weekly'
+                                                                                    : 'Monthly'
+                                                                                : 'Select Frequency'}
+                                                                        </span>
+                                                                        <img src={dropDownArrow} alt="arrow" />
+                                                                    </div>
+                                                                }
+                                                                id={field.name}
+                                                                onSelect={handleSelect}
+                                                                className="dropdown-button w-100"
+                                                            >
+                                                                <Dropdown.Item eventKey="weekly">Weekly</Dropdown.Item>
+                                                                <Dropdown.Item eventKey="monthly">
+                                                                    Monthly
+                                                                </Dropdown.Item>
+                                                            </DropdownButton>
+                                                        );
+                                                    }}
+                                                />
+                                                <ErrorMessage
+                                                    name="installmentFrequency"
+                                                    component="div"
+                                                    className="error mt-2"
+                                                />
+                                            </Col>
+                                            <Col md={6} xs={12}>
+                                                <label className="field-label">Number of Installments</label>
+                                                <Field
+                                                    name="installmentCount"
+                                                    type="number"
+                                                    className="field-control"
+                                                    placeholder="Enter number of installments"
+                                                />
+                                                <ErrorMessage
+                                                    name="installmentCount"
+                                                    component="div"
+                                                    className="error mt-2"
+                                                />
+                                            </Col>
+                                        </>
+                                    )}
                                 </Row>
 
                                 <Row>

@@ -3,20 +3,20 @@ import Table from '@components/Table/Table';
 import { Col, Row, DropdownButton, Dropdown } from 'react-bootstrap';
 import Modal from '@components/Modal/Modal';
 import ProductForm from '@components/Listings/ProductForm/ProductForm';
-import ConfirmationBox from '@components/ConfirmationBox/ConfirmationBox';
 import { Helmet } from 'react-helmet';
 import axiosWrapper from '@utils/api';
 import toast from 'react-hot-toast';
 import TextExpand from '@components/TextExpand/TextExpand';
 import DateRenderer from '@components/DateFormatter/DateFormatter';
 import eyeIcon from '@icons/basil_eye-solid.svg';
-import { paymentsDummyData } from '../../../data/data';
+import { paymentFilters } from '../../../data/data';
 import downArrow from '@icons/down-arrow.svg';
 import '../../../styles/Common.scss';
 import '../../../styles/Payments.scss';
+import { API_URL } from '../../../utils/apiUrl';
+import TextItemExpand from '../../../components/TextExpand/TextItemExpand';
 
 const Payments = () => {
-    const [showDeleteModal, setShowDeleteModal] = useState(false);
     const [selectedRowId, setSelectedRowId] = useState(null);
     const [expanded, setExpanded] = useState(false);
 
@@ -27,26 +27,31 @@ const Payments = () => {
         studentId: null
     });
     const [loading, setLoading] = useState(false);
-    const [loadingCRUD, setLoadingCRUD] = useState(false);
 
-    const [paymentsData, setPaymentsData] = useState(null);
+    const [paymentsData, setPaymentsData] = useState([]);
 
-    const [selectedOption, setSelectedOption] = useState('All');
+    const [selectedOption, setSelectedOption] = useState(paymentFilters[0].label);
 
     useEffect(() => {
-        // Fetch data from API here
-        fetchData();
-    }, []);
-
-    const fetchData = async () => {
-        // Later we will replace this with actual API call
+        fetchPayments();
+    }, [selectedOption]);
+    const fetchPayments = async () => {
         try {
             setLoading(true);
+            const filterValue = paymentFilters.find((filter) => filter.value === selectedOption)?.value;
+            const queryParams = [];
 
-            setPaymentsData(paymentsDummyData);
+            if (['Paid', 'Overdue'].includes(filterValue)) {
+                queryParams.push(`status=${filterValue}`);
+            } else if (['LOW_TICKET', 'HIGH_TICKET'].includes(filterValue)) {
+                queryParams.push(`trajectory=${filterValue}`);
+            }
+
+            const urlWithParams = `${API_URL.GET_ALL_PAYMENTS_BY_ADMIN}?${queryParams.join('&')}`;
+
+            const response = await axiosWrapper('GET', urlWithParams, null, null);
+            setPaymentsData(response?.data?.data || []);
         } catch (error) {
-            return;
-        } finally {
             setLoading(false);
         }
     };
@@ -60,21 +65,6 @@ const Payments = () => {
         setSelectedRowId(event.data.id);
     };
 
-    const handleEditClick = (studentId) => {
-        // Handle edit action here
-        setStudentModal({
-            show: true,
-            title: 'Edit Product',
-            isEditable: true,
-            studentId: studentId
-        });
-    };
-
-    const handleDeleteClick = (id) => {
-        // Handle delete action here
-        setSelectedRowId(id);
-        setShowDeleteModal(true);
-    };
     const handleViewClick = () => {
         // Later we implement stripe payment here
         toast.success('Will Be Redirected to Stripe Payment Page later.');
@@ -93,28 +83,8 @@ const Payments = () => {
         });
     };
 
-    const handleCloseDeleteModal = () => {
-        setShowDeleteModal(false);
-    };
-
-    const handleDeleteSubmit = async () => {
-        try {
-            setLoadingCRUD(true);
-            const data = await axiosWrapper(
-                'delete',
-                `${import.meta.env.VITE_JSONPLACEHOLDER}/posts/${selectedRowId}}`
-            );
-            toast.success(data?.message || 'Item deleted successfully');
-        } catch (error) {
-            return;
-        } finally {
-            setLoadingCRUD(false);
-            setShowDeleteModal(false);
-        }
-    };
-
-    const handleEventSelect = (eventKey, coach) => {
-        setSelectedOption(coach);
+    const handleEventSelect = (option) => {
+        setSelectedOption(option);
     };
     const toggleExpand = (event) => {
         // Specifically in this component, we need to prevent the event from propagating to the parent element
@@ -134,6 +104,7 @@ const Payments = () => {
             </Row>
         </React.Fragment>
     );
+
     const NameRenderer = (props) => (
         <div key={props.data.id}>
             <div className="d-flex align-items-center gap-2">
@@ -157,18 +128,18 @@ const Payments = () => {
     const columns = [
         {
             headerName: 'Student Name',
-            field: 'studentName',
+            field: 'user.name',
             filter: 'agSetColumnFilter',
             sortable: true,
             unSortIcon: true,
             wrapText: true,
             autoHeight: true,
-            cellRenderer: NameRenderer,
+            cellRenderer: TextItemExpand,
             resizable: false
         },
         {
             headerName: 'Email',
-            field: 'email',
+            field: 'user.email',
             filter: 'agSetColumnFilter',
             sortable: true,
             unSortIcon: true,
@@ -179,31 +150,41 @@ const Payments = () => {
         },
         {
             headerName: 'Payment ID',
-            field: 'paymentId',
             filter: 'agSetColumnFilter',
             sortable: true,
             unSortIcon: true,
             resizable: false,
+            field: 'paymentId',
+            cellRenderer: ({ data }) => <div>{data.paymentId.split('-')[0] || '--'}</div>
+        },
+        {
+            headerName: 'Payment Status',
+            filter: 'agSetColumnFilter',
+            sortable: true,
+            unSortIcon: true,
+            resizable: false,
+            field: 'status',
             cellRenderer: ({ data: rowData }) => {
-                const paymentId = rowData.paymentId;
-                return <div key={rowData.id}>{paymentId}</div>;
+                const status = rowData.status || '--';
+                return (
+                    <div className={`${status} fee-status`} key={rowData._id}>
+                        {status}
+                    </div>
+                );
             }
         },
         {
             headerName: 'Amount Paid ($)',
-            field: 'amountPaid',
+            field: 'amount',
+            cellRenderer: ({ data }) => <div>{data.amount.toFixed(0) || '--'}</div>,
             filter: 'agSetColumnFilter',
             sortable: true,
             unSortIcon: true,
-            resizable: false,
-            cellRenderer: ({ data: rowData }) => {
-                const amountPaid = rowData.amountPaid;
-                return <div key={rowData.id}>{amountPaid}</div>;
-            }
+            resizable: false
         },
         {
             headerName: 'Date & Time',
-            field: 'dateTime',
+            field: 'createdAt',
             filter: 'agSetColumnFilter',
             sortable: true,
             unSortIcon: true,
@@ -217,8 +198,6 @@ const Payments = () => {
             maxWidth: 100,
             cellRenderer: ActionsRenderer,
             cellRendererParams: {
-                onEditClick: handleEditClick,
-                onDeleteClick: handleDeleteClick,
                 onViewClick: handleViewClick
             },
             pinned: 'right',
@@ -239,16 +218,7 @@ const Payments = () => {
                     <ProductForm productModal={studentModal} resetModal={resetProductModal} />
                 </Modal>
             )}
-            {showDeleteModal && (
-                <ConfirmationBox
-                    show={showDeleteModal}
-                    onClose={handleCloseDeleteModal}
-                    loading={loadingCRUD}
-                    title="Delete Entry"
-                    body="Are you sure you want to delete this entry?"
-                    onConfirm={handleDeleteSubmit}
-                />
-            )}
+
             <Table
                 columns={columns}
                 tableData={paymentsData}
@@ -259,21 +229,27 @@ const Payments = () => {
                         <DropdownButton
                             title={
                                 <div className="d-flex justify-content-between align-items-center gap-2">
-                                    <span>{selectedOption}</span>
+                                    <span>
+                                        {
+                                            paymentFilters.find(
+                                                (s) => s.value === selectedOption || s.label === selectedOption
+                                            ).label
+                                        }
+                                    </span>
                                     <img className="ms-3" src={downArrow} alt="Down arrow" />
                                 </div>
                             }
-                            defaultValue={selectedOption}
+                            defaultValue={paymentFilters[0].label}
                             className="dropdown-button"
                         >
-                            {['Paid', 'Overdue', 'HT', 'LT'].map((events) => (
+                            {paymentFilters.map((events) => (
                                 <Dropdown.Item
-                                    onClick={(e) => handleEventSelect(e, events)}
-                                    key={events}
+                                    onClick={() => handleEventSelect(events.value)}
+                                    key={events.id}
                                     eventKey={events}
                                     className="my-1 ms-2"
                                 >
-                                    <span className="payment-name"> {events}</span>
+                                    <span className="payment-name"> {events.label}</span>
                                 </Dropdown.Item>
                             ))}
                         </DropdownButton>

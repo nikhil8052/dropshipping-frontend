@@ -11,6 +11,7 @@ const INVOICE_API_BASE = `${BASE_URL}/api/invoice`;
 const EVENT_API_BASE = `${BASE_URL}/api/event`;
 const DASHBOARD_API_BASE = `${BASE_URL}/api/dashboard`;
 const CATEGORY_API_BASE = `${BASE_URL}/api/category`;
+const PAYMENT_API_BASE = `${BASE_URL}/api/payment`;
 
 export const API_URL = {
     // User API
@@ -124,5 +125,12 @@ export const API_URL = {
     UPDATE_CATEGORY: `${CATEGORY_API_BASE}/update/:id`,
     GET_CATEGORY: `${CATEGORY_API_BASE}/:id`,
     GET_ALL_CATEGORIES: `${CATEGORY_API_BASE}/`,
-    DELETE_CATEGORY: `${CATEGORY_API_BASE}/delete/:id`
+    DELETE_CATEGORY: `${CATEGORY_API_BASE}/delete/:id`,
+
+    // Payments API
+    CREATE_PAYMENT_LINK: `${PAYMENT_API_BASE}/create-payment-link`,
+    HANDLE_WEBHOOK: `${PAYMENT_API_BASE}/webhook`,
+    GET_ALL_PAYMENTS: `${PAYMENT_API_BASE}/payments`,
+    GET_ALL_PAYMENTS_BY_ADMIN: `${PAYMENT_API_BASE}/all`,
+    RETRIEVE_PAYMENT_LINK: `${PAYMENT_API_BASE}/retrieve/:paymentLinkId`
 };

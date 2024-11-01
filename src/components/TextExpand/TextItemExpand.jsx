@@ -1,7 +1,7 @@
 import { faCircleUser } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { OverlayTrigger, Tooltip } from 'react-bootstrap';
-const TextItemExpand = ({ value, ...rest }) => {
+const TextItemExpand = ({ value = '--', ...rest }) => {
     return (
         <OverlayTrigger placement="top" overlay={<Tooltip id="tooltip-top">{value}</Tooltip>}>
             <div className="d-flex align-items-center gap-2">

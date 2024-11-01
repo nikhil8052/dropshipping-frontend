@@ -1876,6 +1876,34 @@ export const studentsTrajectory = [
     }
 ];
 
+export const paymentFilters = [
+    {
+        label: 'All',
+        value: 'All',
+        id: 1
+    },
+    {
+        label: 'Paid',
+        value: 'Paid',
+        id: 2
+    },
+    {
+        label: 'Overdue',
+        value: 'Overdue',
+        id: 3
+    },
+    {
+        label: 'LT',
+        value: 'LOW_TICKET',
+        id: 4
+    },
+    {
+        label: 'HT',
+        value: 'HIGH_TICKET',
+        id: 5
+    }
+];
+
 export const studentsProgressTrajectory = [
     {
         label: 'All',
