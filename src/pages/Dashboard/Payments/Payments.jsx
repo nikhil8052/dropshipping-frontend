@@ -26,7 +26,6 @@ const Payments = () => {
         isEditable: false,
         studentId: null
     });
-    const [loading, setLoading] = useState(false);
 
     const [paymentsData, setPaymentsData] = useState([]);
 
@@ -36,24 +35,19 @@ const Payments = () => {
         fetchPayments();
     }, [selectedOption]);
     const fetchPayments = async () => {
-        try {
-            setLoading(true);
-            const filterValue = paymentFilters.find((filter) => filter.value === selectedOption)?.value;
-            const queryParams = [];
+        const filterValue = paymentFilters.find((filter) => filter.value === selectedOption)?.value;
+        const queryParams = [];
 
-            if (['Paid', 'Overdue'].includes(filterValue)) {
-                queryParams.push(`status=${filterValue}`);
-            } else if (['LOW_TICKET', 'HIGH_TICKET'].includes(filterValue)) {
-                queryParams.push(`trajectory=${filterValue}`);
-            }
-
-            const urlWithParams = `${API_URL.GET_ALL_PAYMENTS_BY_ADMIN}?${queryParams.join('&')}`;
-
-            const response = await axiosWrapper('GET', urlWithParams, null, null);
-            setPaymentsData(response?.data?.data || []);
-        } catch (error) {
-            setLoading(false);
+        if (['Paid', 'Overdue'].includes(filterValue)) {
+            queryParams.push(`status=${filterValue}`);
+        } else if (['LOW_TICKET', 'HIGH_TICKET'].includes(filterValue)) {
+            queryParams.push(`trajectory=${filterValue}`);
         }
+
+        const urlWithParams = `${API_URL.GET_ALL_PAYMENTS_BY_ADMIN}?${queryParams.join('&')}`;
+
+        const response = await axiosWrapper('GET', urlWithParams, null, null);
+        setPaymentsData(response?.data?.data || []);
     };
 
     const handleRowClick = (event) => {
@@ -223,7 +217,6 @@ const Payments = () => {
                 columns={columns}
                 tableData={paymentsData}
                 onRowClicked={handleRowClick}
-                loading={loading}
                 children={
                     <div className="payments-button-wrapper">
                         <DropdownButton
