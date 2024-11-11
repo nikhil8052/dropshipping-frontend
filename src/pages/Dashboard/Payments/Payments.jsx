@@ -1,24 +1,25 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import Table from '@components/Table/Table';
 import { Col, Row, DropdownButton, Dropdown } from 'react-bootstrap';
 import Modal from '@components/Modal/Modal';
 import ProductForm from '@components/Listings/ProductForm/ProductForm';
 import { Helmet } from 'react-helmet';
 import axiosWrapper from '@utils/api';
-import toast from 'react-hot-toast';
 import TextExpand from '@components/TextExpand/TextExpand';
 import DateRenderer from '@components/DateFormatter/DateFormatter';
-import eyeIcon from '@icons/basil_eye-solid.svg';
 import { paymentFilters } from '../../../data/data';
 import downArrow from '@icons/down-arrow.svg';
 import '../../../styles/Common.scss';
 import '../../../styles/Payments.scss';
 import { API_URL } from '../../../utils/apiUrl';
 import TextItemExpand from '../../../components/TextExpand/TextItemExpand';
-
+import { faLink } from '@fortawesome/free-solid-svg-icons';
+import LinkPaymentModal from './LinkPaymentModal';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 const Payments = () => {
     const [selectedRowId, setSelectedRowId] = useState(null);
     const [expanded, setExpanded] = useState(false);
+    const [linkModal, setLinkModal] = useState({ show: false, paymentId: null });
 
     const [studentModal, setStudentModal] = useState({
         show: false,
@@ -59,13 +60,9 @@ const Payments = () => {
         setSelectedRowId(event.data.id);
     };
 
-    const handleViewClick = () => {
-        // Later we implement stripe payment here
-        toast.success('Will Be Redirected to Stripe Payment Page later.');
-    };
-
     const handleCloseModal = () => {
         resetProductModal();
+        fetchPayments();
     };
 
     const resetProductModal = () => {
@@ -86,17 +83,35 @@ const Payments = () => {
         setExpanded(!expanded);
     };
 
+    const handleLinkPayment = (paymentId) => {
+        setLinkModal({ show: true, paymentId });
+    };
+
+    const handleCloseLinkModal = () => {
+        setLinkModal({ show: false, paymentId: null });
+    };
+
     /*eslint-disable */
-    const ActionsRenderer = (props) => (
-        <React.Fragment>
-            <Row style={{ width: '100%' }}>
-                <Col lg={6} md={6} sm={6} className="d-flex justify-content-center align-items-center">
-                    <div className="btn-light action-button delete-button" onClick={() => props.onViewClick()}>
-                        <img src={eyeIcon} className="action-icon ms-3" alt="action-icon" />
-                    </div>
-                </Col>
-            </Row>
-        </React.Fragment>
+    // const ActionsRenderer = (props) => (
+    //     <React.Fragment>
+    //         <Row style={{ width: '100%' }}>
+    //             <Col lg={6} md={6} sm={6} className="d-flex justify-content-center align-items-center">
+    //                 <div className="btn-light action-button delete-button" onClick={() => props.onViewClick()}>
+    //                     <img src={eyeIcon} className="action-icon ms-3" alt="action-icon" />
+    //                 </div>
+    //             </Col>
+    //         </Row>
+    //     </React.Fragment>
+    // );
+
+    const ActionsRenderer = ({ onLinkClick }) => (
+        <Row style={{ width: '100%' }}>
+            <Col className="d-flex justify-content-center align-items-center">
+                <button className="btn btn-light action-button" onClick={onLinkClick}>
+                    <FontAwesomeIcon icon={faLink} className="action-icon" />
+                </button>
+            </Col>
+        </Row>
     );
 
     const NameRenderer = (props) => (
@@ -140,6 +155,7 @@ const Payments = () => {
             wrapText: true,
             autoHeight: true,
             cellRenderer: TextExpand,
+            valueGetter: (params) => params.data.user?.email || params.data.customerEmail,
             resizable: false
         },
         {
@@ -190,10 +206,11 @@ const Payments = () => {
         {
             headerName: 'Actions',
             maxWidth: 100,
-            cellRenderer: ActionsRenderer,
-            cellRendererParams: {
-                onViewClick: handleViewClick
-            },
+            cellRenderer: (props) => <ActionsRenderer onLinkClick={() => handleLinkPayment(props.data.paymentId)} />,
+            // cellRenderer: ActionsRenderer,
+            // cellRendererParams: {
+            //     onViewClick: handleViewClick
+            // },
             pinned: 'right',
             sortable: false,
             filter: false,
@@ -249,8 +266,18 @@ const Payments = () => {
                     </div>
                 }
             />
+            {linkModal.show && (
+                <LinkPaymentModal
+                    show={linkModal.show}
+                    onClose={handleCloseLinkModal}
+                    paymentId={linkModal.paymentId}
+                />
+            )}
         </div>
     );
 };
 
 export default Payments;
+
+// Payment flow for linking payment when student paid with a different account.
+//

@@ -25,6 +25,7 @@ export const API_URL = {
     DELETE_ACCOUNT: `${USER_API_BASE}/delete-account`,
     DELETE_USER: `${USER_API_BASE}/delete/:id`,
     DROP_COLLECTION: `${USER_API_BASE}/drop`,
+    GET_UNPAID_STUDENTS: `${USER_API_BASE}/unpaid-students`,
     DECODE_TOKEN: `${USER_API_BASE}/token`,
     SET_COURSES_ROADMAP: `${USER_API_BASE}/set-courses-roadmap/:studentId`,
     GET_USER: `${USER_API_BASE}/:id`,
@@ -132,5 +133,6 @@ export const API_URL = {
     HANDLE_WEBHOOK: `${PAYMENT_API_BASE}/webhook`,
     GET_ALL_PAYMENTS: `${PAYMENT_API_BASE}/payments`,
     GET_ALL_PAYMENTS_BY_ADMIN: `${PAYMENT_API_BASE}/all`,
-    RETRIEVE_PAYMENT_LINK: `${PAYMENT_API_BASE}/retrieve/:paymentLinkId`
+    RETRIEVE_PAYMENT_LINK: `${PAYMENT_API_BASE}/retrieve/:paymentLinkId`,
+    LINK_PAYMENT_TO_STUDENT: `${PAYMENT_API_BASE}/link-payment/:paymentId`
 };

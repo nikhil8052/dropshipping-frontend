@@ -22,6 +22,8 @@ import { getFileObjectFromBlobUrl } from '../../../../utils/utils';
 import '../../../../styles/Students.scss';
 import '../../../../styles/Common.scss';
 import PhoneInputField from '../../../../components/Input/PhoneInput';
+import PaymentStatusOneTime from './Payments/PaymentStatusOneTime';
+import PaymentStatusInstallments from './Payments/PaymentStatusInstallments';
 
 const NewStudent = () => {
     const inputRef = useRef();
@@ -38,7 +40,7 @@ const NewStudent = () => {
     const [studentProducts, setStudentProducts] = useState([]);
     const [loadingCRUD, setLoadingCRUD] = useState(false);
     const [categories, setCategories] = useState([]);
-
+    // Form state
     const [studentData, setStudentData] = useState({
         name: '',
         email: '',
@@ -50,8 +52,10 @@ const NewStudent = () => {
         category: [],
         paymentType: '',
         installmentFrequency: '',
-        installmentCount: 0
+        installmentCount: 0,
+        paymentHistory: []
     });
+
     const [showModal, setShowModal] = useState({
         show: false,
         title: 'Update Trajectory',
@@ -142,7 +146,8 @@ const NewStudent = () => {
             coursesRoadmap: student.coursesRoadmap.map((c) => c._id),
             paymentType: student.paymentType || 'one-time', // Default to 'one-time' if not present
             installmentFrequency: student.installmentFrequency || '',
-            installmentCount: student.installmentCount || 0
+            installmentCount: student.installmentCount || 0,
+            paymentHistory: student.paymentHistory
         });
         setCourses(coursesRoadmap);
         setStudentPhoto(student.avatar);
@@ -804,6 +809,27 @@ const NewStudent = () => {
                                                 />
                                             </Col>
                                         </>
+                                    )}
+                                    {studentId && (
+                                        <Col md={12} xs={12}>
+                                            {values.paymentType === 'one-time' && (
+                                                <PaymentStatusOneTime
+                                                    studentName={studentData.name}
+                                                    paymentDate={studentData.paymentHistory?.[0]?.paymentDate}
+                                                    status={
+                                                        studentData.paymentHistory?.[0]?.status === 'paid'
+                                                            ? 'Paid'
+                                                            : 'Unpaid'
+                                                    }
+                                                />
+                                            )}
+                                            {values.paymentType === 'installments' && (
+                                                <PaymentStatusInstallments
+                                                    studentName={studentData.name}
+                                                    paymentHistory={studentData.paymentHistory || []}
+                                                />
+                                            )}
+                                        </Col>
                                     )}
                                 </Row>
 
