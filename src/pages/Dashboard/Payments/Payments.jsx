@@ -13,9 +13,9 @@ import '../../../styles/Common.scss';
 import '../../../styles/Payments.scss';
 import { API_URL } from '../../../utils/apiUrl';
 import TextItemExpand from '../../../components/TextExpand/TextItemExpand';
-import { faLink } from '@fortawesome/free-solid-svg-icons';
+// import { faLink } from '@fortawesome/free-solid-svg-icons';
 import LinkPaymentModal from './LinkPaymentModal';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+// import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 const Payments = () => {
     const [selectedRowId, setSelectedRowId] = useState(null);
     const [expanded, setExpanded] = useState(false);
@@ -35,6 +35,7 @@ const Payments = () => {
     useEffect(() => {
         fetchPayments();
     }, [selectedOption]);
+
     const fetchPayments = async () => {
         const filterValue = paymentFilters.find((filter) => filter.value === selectedOption)?.value;
         const queryParams = [];
@@ -48,7 +49,16 @@ const Payments = () => {
         const urlWithParams = `${API_URL.GET_ALL_PAYMENTS_BY_ADMIN}?${queryParams.join('&')}`;
 
         const response = await axiosWrapper('GET', urlWithParams, null, null);
-        setPaymentsData(response?.data?.data || []);
+        const mappedData = response?.data?.data.map((data) => ({
+            ...data,
+            name: data.user?.name || '--',
+            email: data.user?.email || data.customerEmail,
+            avatar: data.user?.avatar || '',
+            paymentIdShort: data.paymentId.split('-')[0] || '--',
+            coachingTrajectory: data.userData?.coachingTrajectory || 'N/A'
+        }));
+
+        setPaymentsData(mappedData || []);
     };
 
     const handleRowClick = (event) => {
@@ -107,9 +117,9 @@ const Payments = () => {
     const ActionsRenderer = ({ onLinkClick }) => (
         <Row style={{ width: '100%' }}>
             <Col className="d-flex justify-content-center align-items-center">
-                <button className="btn btn-light action-button" onClick={onLinkClick}>
+                {/* <button className="btn btn-light action-button" onClick={onLinkClick}>
                     <FontAwesomeIcon icon={faLink} className="action-icon" />
-                </button>
+                </button> */}
             </Col>
         </Row>
     );
@@ -137,7 +147,7 @@ const Payments = () => {
     const columns = [
         {
             headerName: 'Student Name',
-            field: 'user.name',
+            field: 'name',
             filter: 'agSetColumnFilter',
             sortable: true,
             unSortIcon: true,
@@ -148,14 +158,14 @@ const Payments = () => {
         },
         {
             headerName: 'Email',
-            field: 'user.email',
+            field: 'email',
             filter: 'agSetColumnFilter',
             sortable: true,
             unSortIcon: true,
             wrapText: true,
             autoHeight: true,
             cellRenderer: TextExpand,
-            valueGetter: (params) => params.data.user?.email || params.data.customerEmail,
+            valueGetter: (params) => params.data.email,
             resizable: false
         },
         {
@@ -165,7 +175,7 @@ const Payments = () => {
             unSortIcon: true,
             resizable: false,
             field: 'paymentId',
-            cellRenderer: ({ data }) => <div>{data.paymentId.split('-')[0] || '--'}</div>
+            cellRenderer: ({ data }) => <div>{data.paymentIdShort}</div>
         },
         {
             headerName: 'Payment Status',
@@ -174,17 +184,10 @@ const Payments = () => {
             unSortIcon: true,
             resizable: false,
             field: 'status',
-            cellRenderer: ({ data: rowData }) => {
-                const status = rowData.status || '--';
-                return (
-                    <div className={`${status} fee-status`} key={rowData._id}>
-                        {status}
-                    </div>
-                );
-            }
+            cellRenderer: ({ data }) => <div className={`${data.status} fee-status`}>{data.status || '--'}</div>
         },
         {
-            headerName: 'Amount Paid ($)',
+            headerName: 'Amount Paid',
             field: 'amount',
             cellRenderer: ({ data }) => <div>{data.amount.toFixed(0) || '--'}</div>,
             filter: 'agSetColumnFilter',
@@ -207,10 +210,6 @@ const Payments = () => {
             headerName: 'Actions',
             maxWidth: 100,
             cellRenderer: (props) => <ActionsRenderer onLinkClick={() => handleLinkPayment(props.data.paymentId)} />,
-            // cellRenderer: ActionsRenderer,
-            // cellRendererParams: {
-            //     onViewClick: handleViewClick
-            // },
             pinned: 'right',
             sortable: false,
             filter: false,
@@ -218,6 +217,65 @@ const Payments = () => {
             cellClass: ['d-flex', 'align-items-center', 'justify-content-center']
         }
     ];
+    // const columns = [
+    //     {
+    //         headerName: 'Student Name',
+    //         field: 'name',
+    //         cellRenderer: TextItemExpand,
+    //         wrapText: true,
+    //         autoHeight: true,
+    //         resizable: true
+    //     },
+    //     {
+    //         headerName: 'Email',
+    //         field: 'email',
+    //         cellRenderer: TextExpand,
+    //         valueGetter: (params) => params.data.email,
+    //         wrapText: true,
+    //         autoHeight: true,
+    //         resizable: true
+    //     },
+    //     {
+    //         headerName: 'Payment ID',
+    //         field: 'paymentIdShort',
+    //         cellRenderer: ({ data }) => <div>{data.paymentIdShort}</div>,
+    //         // wrapText: true,
+    //         autoHeight: true,
+    //         resizable: true
+    //     },
+    //     {
+    //         headerName: 'Status',
+    //         field: 'status',
+    //         cellRenderer: ({ data }) => <div className={`${data.status} fee-status`}>{data.status || '--'}</div>,
+    //         wrapText: true,
+    //         autoHeight: true,
+    //         resizable: true
+    //     },
+    //     {
+    //         headerName: 'Amount ($)',
+    //         field: 'amount',
+    //         cellRenderer: ({ data }) => <div>{data.amount.toFixed(0) || '--'}</div>,
+    //         wrapText: true,
+    //         autoHeight: true,
+    //         resizable: true
+    //     },
+    //     {
+    //         headerName: 'Date & Time',
+    //         field: 'createdAt',
+    //         cellRenderer: DateRenderer,
+    //         wrapText: true,
+    //         autoHeight: true,
+    //         resizable: true
+    //     },
+    //     {
+    //         headerName: 'Actions',
+    //         field: 'actions',
+    //         cellRenderer: (props) => <ActionsRenderer onLinkClick={() => handleLinkPayment(props.data.paymentId)} />,
+    //         wrapText: true,
+    //         autoHeight: true,
+    //         resizable: true
+    //     }
+    // ];
 
     return (
         <div className="payments-page">
