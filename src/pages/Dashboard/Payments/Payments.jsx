@@ -217,65 +217,6 @@ const Payments = () => {
             cellClass: ['d-flex', 'align-items-center', 'justify-content-center']
         }
     ];
-    // const columns = [
-    //     {
-    //         headerName: 'Student Name',
-    //         field: 'name',
-    //         cellRenderer: TextItemExpand,
-    //         wrapText: true,
-    //         autoHeight: true,
-    //         resizable: true
-    //     },
-    //     {
-    //         headerName: 'Email',
-    //         field: 'email',
-    //         cellRenderer: TextExpand,
-    //         valueGetter: (params) => params.data.email,
-    //         wrapText: true,
-    //         autoHeight: true,
-    //         resizable: true
-    //     },
-    //     {
-    //         headerName: 'Payment ID',
-    //         field: 'paymentIdShort',
-    //         cellRenderer: ({ data }) => <div>{data.paymentIdShort}</div>,
-    //         // wrapText: true,
-    //         autoHeight: true,
-    //         resizable: true
-    //     },
-    //     {
-    //         headerName: 'Status',
-    //         field: 'status',
-    //         cellRenderer: ({ data }) => <div className={`${data.status} fee-status`}>{data.status || '--'}</div>,
-    //         wrapText: true,
-    //         autoHeight: true,
-    //         resizable: true
-    //     },
-    //     {
-    //         headerName: 'Amount ($)',
-    //         field: 'amount',
-    //         cellRenderer: ({ data }) => <div>{data.amount.toFixed(0) || '--'}</div>,
-    //         wrapText: true,
-    //         autoHeight: true,
-    //         resizable: true
-    //     },
-    //     {
-    //         headerName: 'Date & Time',
-    //         field: 'createdAt',
-    //         cellRenderer: DateRenderer,
-    //         wrapText: true,
-    //         autoHeight: true,
-    //         resizable: true
-    //     },
-    //     {
-    //         headerName: 'Actions',
-    //         field: 'actions',
-    //         cellRenderer: (props) => <ActionsRenderer onLinkClick={() => handleLinkPayment(props.data.paymentId)} />,
-    //         wrapText: true,
-    //         autoHeight: true,
-    //         resizable: true
-    //     }
-    // ];
 
     return (
         <div className="payments-page">
