@@ -5,7 +5,7 @@ import dropDownArrow from '@icons/drop-down-black.svg';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import ConfirmationBox from '@components/ConfirmationBox/ConfirmationBox';
 import * as Yup from 'yup';
-import { Container, Row, Col, Button, DropdownButton, Dropdown } from 'react-bootstrap';
+import { Container, Row, Col, Button, DropdownButton, Dropdown, Badge } from 'react-bootstrap';
 import 'react-quill/dist/quill.snow.css';
 import { coachingTrajectory, countryList, regions } from '../../../../data/data';
 import toast from 'react-hot-toast';
@@ -24,6 +24,7 @@ import '../../../../styles/Common.scss';
 import PhoneInputField from '../../../../components/Input/PhoneInput';
 import PaymentStatusOneTime from './Payments/PaymentStatusOneTime';
 import PaymentStatusInstallments from './Payments/PaymentStatusInstallments';
+import Card from '@components/Card/Card';
 
 const NewStudent = () => {
     const inputRef = useRef();
@@ -61,6 +62,12 @@ const NewStudent = () => {
         title: 'Update Trajectory',
         isEditable: false,
         studentId: null
+    });
+    // Session details
+    const [sessionInfo, setSessionInfo] = useState({
+        paymentStatus: 'unpaid',
+        remainingSessions: 0,
+        nextSessionAvailableDate: null
     });
 
     const schema = Yup.object({
@@ -114,6 +121,7 @@ const NewStudent = () => {
             getSingleStudentById(studentId);
             // Get students Products
             getStudentProducts(studentId);
+            getSessionInfo(studentId);
         }
     }, [studentId]);
 
@@ -159,6 +167,16 @@ const NewStudent = () => {
         const response = await axiosWrapper('get', url, {}, token);
         const { data } = response;
         setStudentProducts(data);
+    };
+
+    const getSessionInfo = async (id) => {
+        const response = await axiosWrapper('GET', API_URL.GET_STUDENT_SESSION_INFO.replace(':id', id), {}, token);
+        const { paymentStatus, remainingSessions, nextSessionAvailableDate } = response.data;
+        setSessionInfo({
+            paymentStatus,
+            remainingSessions,
+            nextSessionAvailableDate: nextSessionAvailableDate ? new Date(nextSessionAvailableDate) : null
+        });
     };
 
     useEffect(() => {
@@ -852,6 +870,39 @@ const NewStudent = () => {
                                         )}
                                     </Col>
                                 </Row>
+                                {/* Session Information */}
+                                {studentId && (
+                                    <>
+                                        <Row>
+                                            <h4 className="my-3 new-student-title">Coaching Session Information</h4>
+                                            <Col md={12} xs={12}>
+                                                <Card className="p-3 events-card">
+                                                    <p>
+                                                        <strong>Payment Status:</strong>{' '}
+                                                        {sessionInfo.paymentStatus === 'paid' ? (
+                                                            <Badge bg="success">Paid</Badge>
+                                                        ) : (
+                                                            <Badge bg="danger">Unpaid</Badge>
+                                                        )}
+                                                    </p>
+                                                    <p>
+                                                        <strong>Remaining Sessions:</strong>{' '}
+                                                        {sessionInfo.remainingSessions}/
+                                                        {studentData.installmentFrequency === 'weekly' ? '1' : '4'}{' '}
+                                                        sessions available
+                                                    </p>
+                                                    {sessionInfo.nextSessionAvailableDate &&
+                                                        !isNaN(sessionInfo.nextSessionAvailableDate.getTime()) && (
+                                                            <p>
+                                                                <strong>Next Session Available On:</strong>{' '}
+                                                                {sessionInfo.nextSessionAvailableDate.toLocaleDateString()}
+                                                            </p>
+                                                        )}
+                                                </Card>
+                                            </Col>
+                                        </Row>
+                                    </>
+                                )}
 
                                 {studentId && (
                                     <>
