@@ -305,75 +305,118 @@ const StudentDashboard = () => {
                 <Loading centered={true} />
             ) : (
                 <>
-                    <Row className="my-4 align-items-center">
-                        <Col xs={12}>
-                            <Card header={false} customCardClass="events-card">
-                                <Row className="align-items-center">
-                                    <Col xs={12} lg={8}>
-                                        <h5>Coaching Sessions</h5>
-                                        {!userInfo?.assignedCoach ? (
-                                            <p className="text-danger">
-                                                You have not been assigned a coach. Please contact support to get
-                                                assigned a coach.
-                                            </p>
-                                        ) : (
-                                            <>
-                                                <p>
-                                                    <Badge bg={paymentUpToDate ? 'success' : 'danger'} className="p-2">
+                    {userInfo?.paymentType === 'installments' && (
+                        <Row className="my-4 align-items-center">
+                            <Col xs={12}>
+                                <Card header={false} customCardClass="events-card">
+                                    <Row className="align-items-center">
+                                        <Col xs={12} lg={8}>
+                                            <h5>Coaching Sessions</h5>
+                                            {!userInfo?.assignedCoach ? (
+                                                <p className="text-danger">
+                                                    You have not been assigned a coach. Please contact support to get
+                                                    assigned a coach.
+                                                </p>
+                                            ) : (
+                                                <>
+                                                    <p>
+                                                        <Badge
+                                                            bg={paymentUpToDate ? 'success' : 'danger'}
+                                                            className="p-2"
+                                                        >
+                                                            {paymentUpToDate
+                                                                ? `${availableSessions}/${
+                                                                      userInfo.installmentFrequency === 'weekly'
+                                                                          ? '1'
+                                                                          : '4'
+                                                                  } sessions available`
+                                                                : `0/${userInfo.installmentFrequency === 'weekly' ? '1' : '4'} sessions available`}
+                                                        </Badge>
+
+                                                        {paymentUpToDate &&
+                                                            availableSessions > 0 &&
+                                                            nextSessionDate && (
+                                                                <span className="ms-3">
+                                                                    Next session available in:{' '}
+                                                                    <strong>{countdown}</strong>
+                                                                </span>
+                                                            )}
+                                                    </p>
+
+                                                    <p className="text-muted">
                                                         {paymentUpToDate
-                                                            ? `${availableSessions}/${
-                                                                  userInfo.installmentFrequency === 'weekly' ? '1' : '4'
-                                                              } sessions available`
-                                                            : `0/${userInfo.installmentFrequency === 'weekly' ? '1' : '4'} sessions available`}
-                                                    </Badge>
-
-                                                    {paymentUpToDate && availableSessions > 0 && nextSessionDate && (
-                                                        <span className="ms-3">
-                                                            Next session available in: <strong>{countdown}</strong>
-                                                        </span>
-                                                    )}
-                                                </p>
-
-                                                <p className="text-muted">
-                                                    {paymentUpToDate
-                                                        ? `You are eligible to schedule up to ${availableSessions} coaching session${
-                                                              availableSessions !== 1 ? 's' : ''
-                                                          } this ${userInfo.installmentFrequency === 'weekly' ? 'week' : 'month'}.`
-                                                        : 'Your payments are not up-to-date. Please complete your payment to access coaching sessions.'}
-                                                </p>
-                                            </>
-                                        )}
-                                    </Col>
-                                    <Col xs={12} lg={4} className="d-flex justify-content-lg-end mt-3 mt-lg-0">
-                                        {!userInfo?.assignedCoach || !paymentUpToDate || availableSessions === 0 ? (
-                                            <OverlayTrigger
-                                                placement="top"
-                                                overlay={
-                                                    <Tooltip id="tooltip-top">
-                                                        {!userInfo?.assignedCoach
-                                                            ? 'You need to be assigned a coach to request a meeting.'
-                                                            : !paymentUpToDate
-                                                              ? 'Payments are not up-to-date. You cannot schedule a session.'
-                                                              : 'No available sessions remaining this month.'}
-                                                    </Tooltip>
-                                                }
-                                            >
-                                                <Button variant="primary" className="meeting-btn" disabled>
+                                                            ? `You are eligible to schedule up to ${availableSessions} coaching session${
+                                                                  availableSessions !== 1 ? 's' : ''
+                                                              } this ${userInfo.installmentFrequency === 'weekly' ? 'week' : 'month'}.`
+                                                            : 'Your payments are not up-to-date. Please complete your payment to access coaching sessions.'}
+                                                    </p>
+                                                </>
+                                            )}
+                                        </Col>
+                                        <Col xs={12} lg={4} className="d-flex justify-content-lg-end mt-3 mt-lg-0">
+                                            {!userInfo?.assignedCoach || !paymentUpToDate || availableSessions === 0 ? (
+                                                <OverlayTrigger
+                                                    placement="top"
+                                                    overlay={
+                                                        <Tooltip id="tooltip-top">
+                                                            {!userInfo?.assignedCoach
+                                                                ? 'You need to be assigned a coach to request a meeting.'
+                                                                : !paymentUpToDate
+                                                                  ? 'Payments are not up-to-date. You cannot schedule a session.'
+                                                                  : 'No available sessions remaining this month.'}
+                                                        </Tooltip>
+                                                    }
+                                                >
+                                                    <Button variant="primary" className="meeting-btn" disabled>
+                                                        Request for meeting
+                                                    </Button>
+                                                </OverlayTrigger>
+                                            ) : (
+                                                <Button
+                                                    variant="primary"
+                                                    className="meeting-btn"
+                                                    onClick={() => navigate('/student/request-meeting')}
+                                                >
                                                     Request for meeting
                                                 </Button>
-                                            </OverlayTrigger>
-                                        ) : (
-                                            <Button
-                                                variant="primary"
-                                                className="meeting-btn"
-                                                onClick={() => navigate('/student/request-meeting')}
-                                            >
-                                                Request for meeting
-                                            </Button>
-                                        )}
-                                    </Col>
-                                </Row>
-                            </Card>
+                                            )}
+                                        </Col>
+                                    </Row>
+                                </Card>
+                            </Col>
+                        </Row>
+                    )}
+                    <Row>
+                        <Col className="d-flex justify-content-end">
+                            {!userInfo?.assignedCoach ? (
+                                <OverlayTrigger
+                                    placement="top"
+                                    overlay={
+                                        <Tooltip id="tooltip-top">
+                                            You need to be assigned a coach to request a meeting
+                                        </Tooltip>
+                                    }
+                                >
+                                    <span className="d-inline-block">
+                                        <Button
+                                            variant="primary"
+                                            className="meeting-btn me-2"
+                                            disabled
+                                            style={{ pointerEvents: 'none' }}
+                                        >
+                                            Request for meeting
+                                        </Button>
+                                    </span>
+                                </OverlayTrigger>
+                            ) : (
+                                <Button
+                                    variant="primary"
+                                    className="meeting-btn me-2"
+                                    onClick={() => navigate('/student/request-meeting')}
+                                >
+                                    Request for meeting
+                                </Button>
+                            )}
                         </Col>
                     </Row>
 

@@ -871,7 +871,7 @@ const NewStudent = () => {
                                     </Col>
                                 </Row>
                                 {/* Session Information */}
-                                {studentId && (
+                                {studentId && studentData.paymentType === 'installments' && (
                                     <>
                                         <Row>
                                             <h4 className="my-3 new-student-title">Coaching Session Information</h4>
