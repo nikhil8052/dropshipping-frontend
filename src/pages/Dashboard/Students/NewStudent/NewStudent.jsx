@@ -237,8 +237,14 @@ const NewStudent = () => {
     };
 
     const handleFormSubmit = async (values, { resetForm, setSubmitting }) => {
-        if (studentId) delete values.email;
-        const formData = { ...values, avatar: studentPhoto, category: values.category.map((cat) => cat.value) };
+        let formData = { ...values, avatar: studentPhoto, category: values.category.map((cat) => cat.value) };
+
+        // If updating an existing student, exclude the email field
+        if (studentId) {
+            const { email, ...rest } = formData;
+            formData = rest;
+        }
+
         const url = studentId ? `${API_URL.UPDATE_STUDENT.replace(':id', studentId)}` : API_URL.CREATE_STUDENT;
         const method = studentId ? 'PUT' : 'POST';
 
