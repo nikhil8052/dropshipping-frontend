@@ -762,6 +762,7 @@ const NewStudent = () => {
                                                         id={field.name}
                                                         onSelect={handleSelect}
                                                         className="dropdown-button w-100"
+                                                        disabled={studentId}
                                                     >
                                                         <Dropdown.Item eventKey="one-time">One-Time</Dropdown.Item>
                                                         <Dropdown.Item eventKey="installments">
@@ -803,6 +804,7 @@ const NewStudent = () => {
                                                                 id={field.name}
                                                                 onSelect={handleSelect}
                                                                 className="dropdown-button w-100"
+                                                                disabled={studentId}
                                                             >
                                                                 <Dropdown.Item eventKey="weekly">Weekly</Dropdown.Item>
                                                                 <Dropdown.Item eventKey="monthly">
@@ -825,6 +827,7 @@ const NewStudent = () => {
                                                     type="number"
                                                     className="field-control"
                                                     placeholder="Enter number of installments"
+                                                    disabled={studentId}
                                                 />
                                                 <ErrorMessage
                                                     name="installmentCount"
