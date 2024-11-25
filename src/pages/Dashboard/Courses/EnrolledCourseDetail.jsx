@@ -31,6 +31,7 @@ const EnrolledCourseDetail = () => {
     const [continueQuiz, setContinueQuiz] = useState(false);
     const [courseDetails, setCourseDetails] = useState({});
     const [retryQuiz, setRetryQuiz] = useState(false);
+    const [accessRestricted, setAccessRestricted] = useState(false);
 
     const [initialValues, setInitialValues] = useState({
         mcqs: []
@@ -81,6 +82,21 @@ const EnrolledCourseDetail = () => {
             getCurrentLecture(data.lectures[0]?._id);
         }
     };
+    // Handle eligibility check based on courseAccessUntil
+    const checkAccessEligibility = () => {
+        const currentDate = new Date();
+        const accessUntilDate = new Date(userInfo.courseAccessUntil);
+
+        if (userInfo.paymentType === 'installments' && accessUntilDate < currentDate) {
+            setAccessRestricted(true);
+        } else {
+            setAccessRestricted(false);
+        }
+    };
+
+    useEffect(() => {
+        checkAccessEligibility(); // Check eligibility on component load
+    }, [userInfo?.courseAccessUntil]);
 
     const getCurrentLecture = async (id) => {
         if (!id) return;
@@ -184,228 +200,244 @@ const EnrolledCourseDetail = () => {
                 </>
             ) : (
                 <>
-                    <div className="title-top">
-                        <span onClick={() => navigate(`/${role}/courses`)} style={{ cursor: 'pointer' }}>
-                            Courses <img src={CaretRight} alt=">" />
-                        </span>{' '}
-                        Enrolled Course Details <img src={CaretRight} alt=">" /> Lecture {activeIndex + 1}
-                    </div>
-                    <Formik
-                        enableReinitialize
-                        initialValues={initialValues}
-                        validationSchema={validationSchema}
-                        onSubmit={handleSubmit}
-                    >
-                        {({ isSubmitting, values, setFieldValue }) => (
-                            <FormikForm>
-                                <div className="card-background">
-                                    <div className="text-heading">
-                                        <h1>{courseDetails?.title || 'Course Title'}</h1>
-                                        <div className="viewProfile-img">
-                                            <p>{courseDetails?.moduleManager || 'Module Manager'}</p>
-                                        </div>
-                                    </div>
-
-                                    <div className="category-container">
-                                        {courseDetails?.category?.map((cat) => (
-                                            <span key={cat._id} className="category-tag">
-                                                {cat.name}
-                                            </span>
-                                        ))}
-                                    </div>
-                                </div>
-                                <Row className="section-border">
-                                    <Col sm={3} md={4} lg={4} xl={3}>
-                                        <div className="search-lectures">
-                                            <InputGroup>
-                                                <InputGroup.Text>
-                                                    <img src={Search} alt="Search" />
-                                                </InputGroup.Text>
-                                                <Form.Control
-                                                    className="search-input"
-                                                    type="text"
-                                                    name="Search"
-                                                    label="Search"
-                                                    value={search}
-                                                    onChange={onFilterTextChange}
-                                                    placeholder="Search"
-                                                />
-                                            </InputGroup>
-                                            <div className="title-lecture-btns">
-                                                <h1>All Lectures</h1>
+                    {accessRestricted ? (
+                        <div className="restricted-access-message">
+                            <h3>Access Restricted</h3>
+                            <p>
+                                Your access to this course has been restricted. Please pay the next installment to
+                                continue.
+                            </p>
+                        </div>
+                    ) : (
+                        <>
+                            <div className="title-top">
+                                <span onClick={() => navigate(`/${role}/courses`)} style={{ cursor: 'pointer' }}>
+                                    Courses <img src={CaretRight} alt=">" />
+                                </span>{' '}
+                                Enrolled Course Details <img src={CaretRight} alt=">" /> Lecture {activeIndex + 1}
+                            </div>
+                            <Formik
+                                enableReinitialize
+                                initialValues={initialValues}
+                                validationSchema={validationSchema}
+                                onSubmit={handleSubmit}
+                            >
+                                {({ isSubmitting, values, setFieldValue }) => (
+                                    <FormikForm>
+                                        <div className="card-background">
+                                            <div className="text-heading">
+                                                <h1>{courseDetails?.title || 'Course Title'}</h1>
+                                                <div className="viewProfile-img">
+                                                    <p>{courseDetails?.moduleManager || 'Module Manager'}</p>
+                                                </div>
                                             </div>
 
-                                            <div className="lecture-btns">
-                                                {filteredLectures.map((lecture, index) => (
-                                                    <Button
-                                                        type="button"
-                                                        key={index}
-                                                        className={`btn ${lecture?._id === selectedLecture?._id ? 'active' : 'inactive'} ${lecture?.completedBy?.includes(userInfo?._id) && 'passed-lecture'}`}
-                                                        onClick={() => handleButtonClick(index)}
-                                                        disabled={
-                                                            index > 0 && // Only disable lectures after the first one
-                                                            !filteredLectures[index - 1]?.completedBy?.includes(
-                                                                userInfo?._id
-                                                            ) && // Previous lecture is not completed
-                                                            lecture?.quiz?.mcqs?.length > 0
-                                                        }
-                                                    >
-                                                        <img
-                                                            src={
-                                                                lecture?.completedBy?.includes(userInfo?._id)
-                                                                    ? ActiveIcon
-                                                                    : InactiveIcon
-                                                            }
-                                                            alt="IconLect"
-                                                        />
-                                                        <p>{lecture.name}</p>
-                                                    </Button>
+                                            <div className="category-container">
+                                                {courseDetails?.category?.map((cat) => (
+                                                    <span key={cat._id} className="category-tag">
+                                                        {cat.name}
+                                                    </span>
                                                 ))}
                                             </div>
                                         </div>
-                                    </Col>
-                                    <Col sm={8} md={8} lg={8} xl={9} className="lecture-right">
-                                        {!continueQuiz && selectedLecture && (
-                                            <div className="lecture-curriculum">
-                                                <h2 className="title">{selectedLecture.name}</h2>
-                                                {selectedLecture.file ? (
-                                                    <div className="video">
-                                                        <div className="pdf-viewer">
-                                                            <PdfModal file={selectedLecture.file} />
-                                                        </div>
+                                        <Row className="section-border">
+                                            <Col sm={3} md={4} lg={4} xl={3}>
+                                                <div className="search-lectures">
+                                                    <InputGroup>
+                                                        <InputGroup.Text>
+                                                            <img src={Search} alt="Search" />
+                                                        </InputGroup.Text>
+                                                        <Form.Control
+                                                            className="search-input"
+                                                            type="text"
+                                                            name="Search"
+                                                            label="Search"
+                                                            value={search}
+                                                            onChange={onFilterTextChange}
+                                                            placeholder="Search"
+                                                        />
+                                                    </InputGroup>
+                                                    <div className="title-lecture-btns">
+                                                        <h1>All Lectures</h1>
                                                     </div>
-                                                ) : selectedLecture?.vimeoLink || selectedLecture?.vimeoVideoData ? (
-                                                    <div className="video">
-                                                        <iframe
-                                                            src={
-                                                                selectedLecture?.vimeoLink ||
-                                                                selectedLecture.vimeoVideoData?.player_embed_url
-                                                            }
-                                                            title="Vimeo video player"
-                                                            frameBorder="0"
-                                                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                                                            allowFullScreen
-                                                            className="video-iframe w-100"
-                                                        ></iframe>
+
+                                                    <div className="lecture-btns">
+                                                        {filteredLectures.map((lecture, index) => (
+                                                            <Button
+                                                                type="button"
+                                                                key={index}
+                                                                className={`btn ${lecture?._id === selectedLecture?._id ? 'active' : 'inactive'} ${lecture?.completedBy?.includes(userInfo?._id) && 'passed-lecture'}`}
+                                                                onClick={() => handleButtonClick(index)}
+                                                                disabled={
+                                                                    accessRestricted ||
+                                                                    (index > 0 &&
+                                                                        !filteredLectures[
+                                                                            index - 1
+                                                                        ]?.completedBy?.includes(userInfo?._id) &&
+                                                                        lecture?.quiz?.mcqs?.length > 0)
+                                                                }
+                                                            >
+                                                                <img
+                                                                    src={
+                                                                        lecture?.completedBy?.includes(userInfo?._id)
+                                                                            ? ActiveIcon
+                                                                            : InactiveIcon
+                                                                    }
+                                                                    alt="IconLect"
+                                                                />
+                                                                <p>{lecture.name}</p>
+                                                            </Button>
+                                                        ))}
                                                     </div>
-                                                ) : (
+                                                </div>
+                                            </Col>
+                                            {/* eslint-disable  */}
+                                            <Col sm={8} md={8} lg={8} xl={9} className="lecture-right">
+                                                {!continueQuiz && selectedLecture && (
                                                     <div className="lecture-curriculum">
                                                         <h2 className="title">{selectedLecture.name}</h2>
-                                                        <p className="text-justify text-wrap">
-                                                            {selectedLecture.description}
-                                                        </p>
-                                                    </div>
-                                                )}
-                                                <hr />
-                                                <p
-                                                    className="mb-2"
-                                                    dangerouslySetInnerHTML={{
-                                                        __html: decodeHtmlEntities(selectedLecture.description)
-                                                    }}
-                                                ></p>
-                                            </div>
-                                        )}
-
-                                        {continueQuiz && selectedLecture && (
-                                            <div className="quiz-curriculum">
-                                                {/* <h1 className="text-end">
-                                            Status:{' '}
-                                            {!isPass ? <span className="text-danger"> Fail</span> : <span> Pass</span>}
-                                        </h1> */}
-                                                <h1 className="title">Quiz {selectedLecture.name}:</h1>
-
-                                                {values?.mcqs.length > 0 && (
-                                                    <>
-                                                        <p className="title mb-0 mt-2 fw-bold">
-                                                            Multiple Choice Questions ({values?.mcqs.length}/
-                                                            {values?.mcqs.length}) :
-                                                        </p>
-                                                        {values?.mcqs.map((mcq, index) => (
-                                                            <div className="add-quiz-question" key={index}>
-                                                                <div className="questions">
-                                                                    <Form.Label>{`Q 0${index + 1}: ${mcq.question}`}</Form.Label>
-                                                                    <div className="d-flex flex-wrap">
-                                                                        {mcq.options.map((option, idx) => (
-                                                                            <div
-                                                                                key={`inline-radio-${index}-${idx}`}
-                                                                                className="d-flex selectedLecture.quiz"
-                                                                            >
-                                                                                <Form.Check
-                                                                                    name={`mcqs[${index}].answer`}
-                                                                                    inline
-                                                                                    label={option}
-                                                                                    onChange={(e) => {
-                                                                                        // Set field value in Formik
-                                                                                        setFieldValue(
-                                                                                            `mcqs[${index}].answer`,
-                                                                                            e.target.value
-                                                                                        );
-                                                                                    }}
-                                                                                    type="radio"
-                                                                                    id={`inline-radio-${index}-${idx}`}
-                                                                                    value={option}
-                                                                                />
-                                                                            </div>
-                                                                        ))}
-                                                                    </div>
-                                                                    {/* Render the error message outside of the options loop */}
-                                                                    <ErrorMessage
-                                                                        name={`mcqs[${index}].answer`}
-                                                                        component="div"
-                                                                        className="error"
-                                                                    />
+                                                        {selectedLecture.file ? (
+                                                            <div className="video">
+                                                                <div className="pdf-viewer">
+                                                                    <PdfModal file={selectedLecture.file} />
                                                                 </div>
                                                             </div>
-                                                        ))}
-                                                    </>
+                                                        ) : selectedLecture?.vimeoLink ||
+                                                          selectedLecture?.vimeoVideoData ? (
+                                                            <div className="video">
+                                                                <iframe
+                                                                    src={
+                                                                        selectedLecture?.vimeoLink ||
+                                                                        selectedLecture.vimeoVideoData?.player_embed_url
+                                                                    }
+                                                                    title="Vimeo video player"
+                                                                    frameBorder="0"
+                                                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                                                    allowFullScreen
+                                                                    className="video-iframe w-100"
+                                                                ></iframe>
+                                                            </div>
+                                                        ) : (
+                                                            <div className="lecture-curriculum">
+                                                                <h2 className="title">{selectedLecture.name}</h2>
+                                                                <p className="text-justify text-wrap">
+                                                                    {selectedLecture.description}
+                                                                </p>
+                                                            </div>
+                                                        )}
+                                                        <hr />
+                                                        <p
+                                                            className="mb-2"
+                                                            dangerouslySetInnerHTML={{
+                                                                __html: decodeHtmlEntities(selectedLecture.description)
+                                                            }}
+                                                        ></p>
+                                                    </div>
                                                 )}
-                                            </div>
-                                        )}
-                                    </Col>
-                                </Row>
-                                <div className="viewProgress-footer mx-auto">
-                                    {continueQuiz ? (
-                                        <Button
-                                            className="done-btn"
-                                            type="submit"
-                                            disabled={
-                                                isSubmitting || selectedLecture?.completedBy?.includes(userInfo?._id)
-                                            }
-                                        >
-                                            {retryQuiz ? 'Retry Quiz' : 'Submit Quiz'}
-                                        </Button>
-                                    ) : (
-                                        <>
-                                            {
-                                                /* Continue to Quiz Button */
-                                                selectedLecture?.quiz.mcqs.length !== 0 ? (
-                                                    <Button
-                                                        className="done-btn"
-                                                        type="button"
-                                                        onClick={continueHandler}
-                                                        disabled={
-                                                            isSubmitting ||
-                                                            selectedLecture?.completedBy?.includes(userInfo?._id)
-                                                        }
-                                                    >
-                                                        Continue To Quiz
-                                                    </Button>
-                                                ) : (
-                                                    <Button
-                                                        className="done-btn"
-                                                        type="button"
-                                                        onClick={() => markLectureAsCompleted(selectedLecture?._id)}
-                                                    >
-                                                        Done
-                                                    </Button>
-                                                )
-                                            }
-                                        </>
-                                    )}
-                                </div>
-                            </FormikForm>
-                        )}
-                    </Formik>
+
+                                                {continueQuiz && selectedLecture && (
+                                                    <div className="quiz-curriculum">
+                                                        <h1 className="title">Quiz {selectedLecture.name}:</h1>
+
+                                                        {values?.mcqs.length > 0 && (
+                                                            <>
+                                                                <p className="title mb-0 mt-2 fw-bold">
+                                                                    Multiple Choice Questions ({values?.mcqs.length}/
+                                                                    {values?.mcqs.length}) :
+                                                                </p>
+                                                                {values?.mcqs.map((mcq, index) => (
+                                                                    <div className="add-quiz-question" key={index}>
+                                                                        <div className="questions">
+                                                                            <Form.Label>{`Q 0${index + 1}: ${mcq.question}`}</Form.Label>
+                                                                            <div className="d-flex flex-wrap">
+                                                                                {mcq.options.map((option, idx) => (
+                                                                                    <div
+                                                                                        key={`inline-radio-${index}-${idx}`}
+                                                                                        className="d-flex selectedLecture.quiz"
+                                                                                    >
+                                                                                        <Form.Check
+                                                                                            name={`mcqs[${index}].answer`}
+                                                                                            inline
+                                                                                            label={option}
+                                                                                            onChange={(e) => {
+                                                                                                // Set field value in Formik
+                                                                                                setFieldValue(
+                                                                                                    `mcqs[${index}].answer`,
+                                                                                                    e.target.value
+                                                                                                );
+                                                                                            }}
+                                                                                            type="radio"
+                                                                                            id={`inline-radio-${index}-${idx}`}
+                                                                                            value={option}
+                                                                                        />
+                                                                                    </div>
+                                                                                ))}
+                                                                            </div>
+                                                                            {/* Render the error message outside of the options loop */}
+                                                                            <ErrorMessage
+                                                                                name={`mcqs[${index}].answer`}
+                                                                                component="div"
+                                                                                className="error"
+                                                                            />
+                                                                        </div>
+                                                                    </div>
+                                                                ))}
+                                                            </>
+                                                        )}
+                                                    </div>
+                                                )}
+                                            </Col>
+                                        </Row>
+                                        <div className="viewProgress-footer mx-auto">
+                                            {continueQuiz ? (
+                                                <Button
+                                                    className="done-btn"
+                                                    type="submit"
+                                                    disabled={
+                                                        isSubmitting ||
+                                                        selectedLecture?.completedBy?.includes(userInfo?._id)
+                                                    }
+                                                >
+                                                    {retryQuiz ? 'Retry Quiz' : 'Submit Quiz'}
+                                                </Button>
+                                            ) : (
+                                                <>
+                                                    {
+                                                        /* Continue to Quiz Button */
+                                                        selectedLecture?.quiz.mcqs.length !== 0 ? (
+                                                            <Button
+                                                                className="done-btn"
+                                                                type="button"
+                                                                onClick={continueHandler}
+                                                                disabled={
+                                                                    isSubmitting ||
+                                                                    selectedLecture?.completedBy?.includes(
+                                                                        userInfo?._id
+                                                                    )
+                                                                }
+                                                            >
+                                                                Continue To Quiz
+                                                            </Button>
+                                                        ) : (
+                                                            <Button
+                                                                className="done-btn"
+                                                                type="button"
+                                                                onClick={() =>
+                                                                    markLectureAsCompleted(selectedLecture?._id)
+                                                                }
+                                                            >
+                                                                Done
+                                                            </Button>
+                                                        )
+                                                    }
+                                                </>
+                                            )}
+                                        </div>
+                                    </FormikForm>
+                                )}
+                            </Formik>
+                        </>
+                    )}
                 </>
             )}
         </div>

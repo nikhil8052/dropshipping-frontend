@@ -1,6 +1,6 @@
 /* eslint-disable */
 import { useEffect, useRef, useState } from 'react';
-import { Row, Col, Button } from 'react-bootstrap';
+import { Row, Col, Button, Badge } from 'react-bootstrap';
 import Card from '@components/Card/Card';
 import { StatCard, CashFlowLineChart, LineChart } from '@components/Home';
 import { Helmet } from 'react-helmet';
@@ -29,8 +29,12 @@ const StudentDashboard = () => {
     const [loading, setLoading] = useState(false);
     const role = userInfo?.role;
     const token = useSelector((state) => state?.auth?.userToken);
-
     const [currentFilter, setCurrentFilter] = useState('current_month');
+
+    // New state variables for session data
+    const [availableSessions, setAvailableSessions] = useState(0);
+    const [paymentUpToDate, setPaymentUpToDate] = useState(false);
+    const [nextSessionDate, setNextSessionDate] = useState(null);
 
     useEffect(() => {
         return () => {
@@ -50,6 +54,20 @@ const StudentDashboard = () => {
         }
     }, [currentFilter]);
 
+    // Fetch session info
+    useEffect(() => {
+        fetchSessionInfo();
+    }, [token]);
+
+    const fetchSessionInfo = async () => {
+        const sessionInfo = await axiosWrapper('GET', API_URL.GET_SESSION_INFO, {}, token);
+        const { paymentStatus, remainingSessions, nextSessionAvailableDate } = sessionInfo.data;
+
+        setAvailableSessions(remainingSessions);
+        setPaymentUpToDate(paymentStatus === 'paid');
+        setNextSessionDate(new Date(nextSessionAvailableDate));
+    };
+
     const fetchDashboardData = async (loading = true) => {
         setLoading(loading);
         try {
@@ -64,6 +82,14 @@ const StudentDashboard = () => {
                 {},
                 token
             );
+
+            // New session info fetch
+            // const sessionInfo = await axiosWrapper('GET', API_URL.GET_SESSION_INFO, {}, token);
+            // const { paymentStatus, remainingSessions, nextSessionAvailableDate } = sessionInfo.data;
+
+            // setAvailableSessions(remainingSessions);
+            // setPaymentUpToDate(paymentStatus === 'paid');
+            // setNextSessionDate(new Date(nextSessionAvailableDate));
 
             // Map the data to the format required by the StatCard component
             const amountKeys = ['totalRevenue', 'profitOrLoss'];
@@ -255,6 +281,21 @@ const StudentDashboard = () => {
         coaches: 'Total Coaches'
     };
 
+    // Calculate the countdown timer for the next session
+    const calculateCountdown = () => {
+        if (!nextSessionDate) return null;
+        const now = new Date();
+        const timeLeft = nextSessionDate - now;
+        if (timeLeft <= 0) return 'Available now';
+
+        const days = Math.floor(timeLeft / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((timeLeft % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
+        return `${days}d ${hours}h ${minutes}m`;
+    };
+
+    const countdown = calculateCountdown();
+
     return (
         <div className="dashboard-page">
             <Helmet>
@@ -264,9 +305,90 @@ const StudentDashboard = () => {
                 <Loading centered={true} />
             ) : (
                 <>
-                    <Row>
-                        <Col>
-                            <div className="d-flex justify-content-end">
+                    {userInfo?.paymentType === 'installments' && (
+                        <Row className="my-4 align-items-center">
+                            <Col xs={12}>
+                                <Card header={false} customCardClass="events-card">
+                                    <Row className="align-items-center">
+                                        <Col xs={12} lg={8}>
+                                            <h5>Coaching Sessions</h5>
+                                            {!userInfo?.assignedCoach ? (
+                                                <p className="text-danger">
+                                                    You have not been assigned a coach. Please contact support to get
+                                                    assigned a coach.
+                                                </p>
+                                            ) : (
+                                                <>
+                                                    <p>
+                                                        <Badge
+                                                            bg={paymentUpToDate ? 'success' : 'danger'}
+                                                            className="p-2"
+                                                        >
+                                                            {paymentUpToDate
+                                                                ? `${availableSessions}/${
+                                                                      userInfo.installmentFrequency === 'weekly'
+                                                                          ? '1'
+                                                                          : '4'
+                                                                  } sessions available`
+                                                                : `0/${userInfo.installmentFrequency === 'weekly' ? '1' : '4'} sessions available`}
+                                                        </Badge>
+
+                                                        {paymentUpToDate &&
+                                                            availableSessions > 0 &&
+                                                            nextSessionDate && (
+                                                                <span className="ms-3">
+                                                                    Next session available in:{' '}
+                                                                    <strong>{countdown}</strong>
+                                                                </span>
+                                                            )}
+                                                    </p>
+
+                                                    <p className="text-muted">
+                                                        {paymentUpToDate
+                                                            ? `You are eligible to schedule up to ${availableSessions} coaching session${
+                                                                  availableSessions !== 1 ? 's' : ''
+                                                              } this ${userInfo.installmentFrequency === 'weekly' ? 'week' : 'month'}.`
+                                                            : 'Your payments are not up-to-date. Please complete your payment to access coaching sessions.'}
+                                                    </p>
+                                                </>
+                                            )}
+                                        </Col>
+                                        <Col xs={12} lg={4} className="d-flex justify-content-lg-end mt-3 mt-lg-0">
+                                            {!userInfo?.assignedCoach || !paymentUpToDate || availableSessions === 0 ? (
+                                                <OverlayTrigger
+                                                    placement="top"
+                                                    overlay={
+                                                        <Tooltip id="tooltip-top">
+                                                            {!userInfo?.assignedCoach
+                                                                ? 'You need to be assigned a coach to request a meeting.'
+                                                                : !paymentUpToDate
+                                                                  ? 'Payments are not up-to-date. You cannot schedule a session.'
+                                                                  : 'No available sessions remaining this month.'}
+                                                        </Tooltip>
+                                                    }
+                                                >
+                                                    <Button variant="primary" className="meeting-btn" disabled>
+                                                        Request for meeting
+                                                    </Button>
+                                                </OverlayTrigger>
+                                            ) : (
+                                                <Button
+                                                    variant="primary"
+                                                    className="meeting-btn"
+                                                    onClick={() => navigate('/student/request-meeting')}
+                                                >
+                                                    Request for meeting
+                                                </Button>
+                                            )}
+                                        </Col>
+                                    </Row>
+                                </Card>
+                            </Col>
+                        </Row>
+                    )}
+                    {userInfo?.paymentType === 'one-time' && (
+                        <Row>
+                            <Col className="d-flex justify-content-end">
                                 {!userInfo?.assignedCoach ? (
                                     <OverlayTrigger
                                         placement="top"
@@ -276,27 +398,30 @@ const StudentDashboard = () => {
                                             </Tooltip>
                                         }
                                     >
-                                        <Button
-                                            variant="primary"
-                                            className="meeting-btn me-2"
-                                            disabled={!userInfo?.assignedCoach}
-                                        >
-                                            Request for meeting
-                                        </Button>
+                                        <span className="d-inline-block">
+                                            <Button
+                                                variant="primary"
+                                                className="meeting-btn me-2"
+                                                disabled
+                                                style={{ pointerEvents: 'none' }}
+                                            >
+                                                Request for meeting
+                                            </Button>
+                                        </span>
                                     </OverlayTrigger>
                                 ) : (
                                     <Button
                                         variant="primary"
                                         className="meeting-btn me-2"
                                         onClick={() => navigate('/student/request-meeting')}
-                                        disabled={!userInfo?.assignedCoach}
                                     >
                                         Request for meeting
                                     </Button>
                                 )}
-                            </div>
-                        </Col>
-                    </Row>
+                            </Col>
+                        </Row>
+                    )}
+
                     <Row>
                         {cardStats.map((stat, index) => (
                             <Col key={stat.id} xs={12} sm={12} md={6} lg={4} xl={3}>

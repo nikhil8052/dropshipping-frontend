@@ -1,24 +1,25 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import Table from '@components/Table/Table';
 import { Col, Row, DropdownButton, Dropdown } from 'react-bootstrap';
 import Modal from '@components/Modal/Modal';
 import ProductForm from '@components/Listings/ProductForm/ProductForm';
-import ConfirmationBox from '@components/ConfirmationBox/ConfirmationBox';
 import { Helmet } from 'react-helmet';
 import axiosWrapper from '@utils/api';
-import toast from 'react-hot-toast';
 import TextExpand from '@components/TextExpand/TextExpand';
 import DateRenderer from '@components/DateFormatter/DateFormatter';
-import eyeIcon from '@icons/basil_eye-solid.svg';
-import { paymentsDummyData } from '../../../data/data';
+import { paymentFilters } from '../../../data/data';
 import downArrow from '@icons/down-arrow.svg';
 import '../../../styles/Common.scss';
 import '../../../styles/Payments.scss';
-
+import { API_URL } from '../../../utils/apiUrl';
+import TextItemExpand from '../../../components/TextExpand/TextItemExpand';
+// import { faLink } from '@fortawesome/free-solid-svg-icons';
+import LinkPaymentModal from './LinkPaymentModal';
+// import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 const Payments = () => {
-    const [showDeleteModal, setShowDeleteModal] = useState(false);
     const [selectedRowId, setSelectedRowId] = useState(null);
     const [expanded, setExpanded] = useState(false);
+    const [linkModal, setLinkModal] = useState({ show: false, paymentId: null });
 
     const [studentModal, setStudentModal] = useState({
         show: false,
@@ -26,29 +27,38 @@ const Payments = () => {
         isEditable: false,
         studentId: null
     });
-    const [loading, setLoading] = useState(false);
-    const [loadingCRUD, setLoadingCRUD] = useState(false);
 
-    const [paymentsData, setPaymentsData] = useState(null);
+    const [paymentsData, setPaymentsData] = useState([]);
 
-    const [selectedOption, setSelectedOption] = useState('All');
+    const [selectedOption, setSelectedOption] = useState(paymentFilters[0].label);
 
     useEffect(() => {
-        // Fetch data from API here
-        fetchData();
-    }, []);
+        fetchPayments();
+    }, [selectedOption]);
 
-    const fetchData = async () => {
-        // Later we will replace this with actual API call
-        try {
-            setLoading(true);
+    const fetchPayments = async () => {
+        const filterValue = paymentFilters.find((filter) => filter.value === selectedOption)?.value;
+        const queryParams = [];
 
-            setPaymentsData(paymentsDummyData);
-        } catch (error) {
-            return;
-        } finally {
-            setLoading(false);
+        if (['Paid', 'Overdue'].includes(filterValue)) {
+            queryParams.push(`status=${filterValue}`);
+        } else if (['LOW_TICKET', 'HIGH_TICKET'].includes(filterValue)) {
+            queryParams.push(`trajectory=${filterValue}`);
         }
+
+        const urlWithParams = `${API_URL.GET_ALL_PAYMENTS_BY_ADMIN}?${queryParams.join('&')}`;
+
+        const response = await axiosWrapper('GET', urlWithParams, null, null);
+        const mappedData = response?.data?.data.map((data) => ({
+            ...data,
+            name: data.user?.name || '--',
+            email: data.user?.email || data.customerEmail,
+            avatar: data.user?.avatar || '',
+            paymentIdShort: data.paymentId.split('-')[0] || '--',
+            coachingTrajectory: data.userData?.coachingTrajectory || 'N/A'
+        }));
+
+        setPaymentsData(mappedData || []);
     };
 
     const handleRowClick = (event) => {
@@ -60,28 +70,9 @@ const Payments = () => {
         setSelectedRowId(event.data.id);
     };
 
-    const handleEditClick = (studentId) => {
-        // Handle edit action here
-        setStudentModal({
-            show: true,
-            title: 'Edit Product',
-            isEditable: true,
-            studentId: studentId
-        });
-    };
-
-    const handleDeleteClick = (id) => {
-        // Handle delete action here
-        setSelectedRowId(id);
-        setShowDeleteModal(true);
-    };
-    const handleViewClick = () => {
-        // Later we implement stripe payment here
-        toast.success('Will Be Redirected to Stripe Payment Page later.');
-    };
-
     const handleCloseModal = () => {
         resetProductModal();
+        fetchPayments();
     };
 
     const resetProductModal = () => {
@@ -93,28 +84,8 @@ const Payments = () => {
         });
     };
 
-    const handleCloseDeleteModal = () => {
-        setShowDeleteModal(false);
-    };
-
-    const handleDeleteSubmit = async () => {
-        try {
-            setLoadingCRUD(true);
-            const data = await axiosWrapper(
-                'delete',
-                `${import.meta.env.VITE_JSONPLACEHOLDER}/posts/${selectedRowId}}`
-            );
-            toast.success(data?.message || 'Item deleted successfully');
-        } catch (error) {
-            return;
-        } finally {
-            setLoadingCRUD(false);
-            setShowDeleteModal(false);
-        }
-    };
-
-    const handleEventSelect = (eventKey, coach) => {
-        setSelectedOption(coach);
+    const handleEventSelect = (option) => {
+        setSelectedOption(option);
     };
     const toggleExpand = (event) => {
         // Specifically in this component, we need to prevent the event from propagating to the parent element
@@ -122,18 +93,37 @@ const Payments = () => {
         setExpanded(!expanded);
     };
 
+    const handleLinkPayment = (paymentId) => {
+        setLinkModal({ show: true, paymentId });
+    };
+
+    const handleCloseLinkModal = () => {
+        setLinkModal({ show: false, paymentId: null });
+    };
+
     /*eslint-disable */
-    const ActionsRenderer = (props) => (
-        <React.Fragment>
-            <Row style={{ width: '100%' }}>
-                <Col lg={6} md={6} sm={6} className="d-flex justify-content-center align-items-center">
-                    <div className="btn-light action-button delete-button" onClick={() => props.onViewClick()}>
-                        <img src={eyeIcon} className="action-icon ms-3" alt="action-icon" />
-                    </div>
-                </Col>
-            </Row>
-        </React.Fragment>
+    // const ActionsRenderer = (props) => (
+    //     <React.Fragment>
+    //         <Row style={{ width: '100%' }}>
+    //             <Col lg={6} md={6} sm={6} className="d-flex justify-content-center align-items-center">
+    //                 <div className="btn-light action-button delete-button" onClick={() => props.onViewClick()}>
+    //                     <img src={eyeIcon} className="action-icon ms-3" alt="action-icon" />
+    //                 </div>
+    //             </Col>
+    //         </Row>
+    //     </React.Fragment>
+    // );
+
+    const ActionsRenderer = ({ onLinkClick }) => (
+        <Row style={{ width: '100%' }}>
+            <Col className="d-flex justify-content-center align-items-center">
+                {/* <button className="btn btn-light action-button" onClick={onLinkClick}>
+                    <FontAwesomeIcon icon={faLink} className="action-icon" />
+                </button> */}
+            </Col>
+        </Row>
     );
+
     const NameRenderer = (props) => (
         <div key={props.data.id}>
             <div className="d-flex align-items-center gap-2">
@@ -157,13 +147,13 @@ const Payments = () => {
     const columns = [
         {
             headerName: 'Student Name',
-            field: 'studentName',
+            field: 'name',
             filter: 'agSetColumnFilter',
             sortable: true,
             unSortIcon: true,
             wrapText: true,
             autoHeight: true,
-            cellRenderer: NameRenderer,
+            cellRenderer: TextItemExpand,
             resizable: false
         },
         {
@@ -175,35 +165,39 @@ const Payments = () => {
             wrapText: true,
             autoHeight: true,
             cellRenderer: TextExpand,
+            valueGetter: (params) => params.data.email,
             resizable: false
         },
         {
             headerName: 'Payment ID',
-            field: 'paymentId',
             filter: 'agSetColumnFilter',
             sortable: true,
             unSortIcon: true,
             resizable: false,
-            cellRenderer: ({ data: rowData }) => {
-                const paymentId = rowData.paymentId;
-                return <div key={rowData.id}>{paymentId}</div>;
-            }
+            field: 'paymentId',
+            cellRenderer: ({ data }) => <div>{data.paymentIdShort}</div>
         },
         {
-            headerName: 'Amount Paid ($)',
-            field: 'amountPaid',
+            headerName: 'Payment Status',
             filter: 'agSetColumnFilter',
             sortable: true,
             unSortIcon: true,
             resizable: false,
-            cellRenderer: ({ data: rowData }) => {
-                const amountPaid = rowData.amountPaid;
-                return <div key={rowData.id}>{amountPaid}</div>;
-            }
+            field: 'status',
+            cellRenderer: ({ data }) => <div className={`${data.status} fee-status`}>{data.status || '--'}</div>
+        },
+        {
+            headerName: 'Amount Paid',
+            field: 'amount',
+            cellRenderer: ({ data }) => <div>{data.amount.toFixed(0) || '--'}</div>,
+            filter: 'agSetColumnFilter',
+            sortable: true,
+            unSortIcon: true,
+            resizable: false
         },
         {
             headerName: 'Date & Time',
-            field: 'dateTime',
+            field: 'createdAt',
             filter: 'agSetColumnFilter',
             sortable: true,
             unSortIcon: true,
@@ -215,12 +209,7 @@ const Payments = () => {
         {
             headerName: 'Actions',
             maxWidth: 100,
-            cellRenderer: ActionsRenderer,
-            cellRendererParams: {
-                onEditClick: handleEditClick,
-                onDeleteClick: handleDeleteClick,
-                onViewClick: handleViewClick
-            },
+            cellRenderer: (props) => <ActionsRenderer onLinkClick={() => handleLinkPayment(props.data.paymentId)} />,
             pinned: 'right',
             sortable: false,
             filter: false,
@@ -239,49 +228,55 @@ const Payments = () => {
                     <ProductForm productModal={studentModal} resetModal={resetProductModal} />
                 </Modal>
             )}
-            {showDeleteModal && (
-                <ConfirmationBox
-                    show={showDeleteModal}
-                    onClose={handleCloseDeleteModal}
-                    loading={loadingCRUD}
-                    title="Delete Entry"
-                    body="Are you sure you want to delete this entry?"
-                    onConfirm={handleDeleteSubmit}
-                />
-            )}
+
             <Table
                 columns={columns}
                 tableData={paymentsData}
                 onRowClicked={handleRowClick}
-                loading={loading}
                 children={
                     <div className="payments-button-wrapper">
                         <DropdownButton
                             title={
                                 <div className="d-flex justify-content-between align-items-center gap-2">
-                                    <span>{selectedOption}</span>
+                                    <span>
+                                        {
+                                            paymentFilters.find(
+                                                (s) => s.value === selectedOption || s.label === selectedOption
+                                            ).label
+                                        }
+                                    </span>
                                     <img className="ms-3" src={downArrow} alt="Down arrow" />
                                 </div>
                             }
-                            defaultValue={selectedOption}
+                            defaultValue={paymentFilters[0].label}
                             className="dropdown-button"
                         >
-                            {['Paid', 'Overdue', 'HT', 'LT'].map((events) => (
+                            {paymentFilters.map((events) => (
                                 <Dropdown.Item
-                                    onClick={(e) => handleEventSelect(e, events)}
-                                    key={events}
+                                    onClick={() => handleEventSelect(events.value)}
+                                    key={events.id}
                                     eventKey={events}
                                     className="my-1 ms-2"
                                 >
-                                    <span className="payment-name"> {events}</span>
+                                    <span className="payment-name"> {events.label}</span>
                                 </Dropdown.Item>
                             ))}
                         </DropdownButton>
                     </div>
                 }
             />
+            {linkModal.show && (
+                <LinkPaymentModal
+                    show={linkModal.show}
+                    onClose={handleCloseLinkModal}
+                    paymentId={linkModal.paymentId}
+                />
+            )}
         </div>
     );
 };
 
 export default Payments;
+
+// Payment flow for linking payment when student paid with a different account.
+//

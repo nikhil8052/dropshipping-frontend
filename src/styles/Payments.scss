@@ -17,4 +17,34 @@
     }
 
     // Fee status colors
+    .fee-status {
+        display: inline-block;
+        border-radius: 130px;
+        color: rgba(0, 0, 0);
+        &.Paid {
+            background-color: $success-light-color;
+            color: #ffff;
+            padding: 0px 30px;
+        }
+        &.Unpaid {
+            color: #ffff;
+            padding: 0px 20px;
+            background-color: $danger-light-color;
+        }
+        &.Overdue {
+            color: #ffff;
+            padding: 0px 15px;
+            background-color: rgba(220, 53, 69, 1) !important;
+        }
+        &.Cancelled {
+            color: red;
+            background-color: $warning-color;
+        }
+    }
+    .avatar-image {
+        width: 28px;
+        height: 28px;
+        border-radius: 50%;
+        object-fit: cover;
+    }
 }

@@ -11,6 +11,7 @@ const INVOICE_API_BASE = `${BASE_URL}/api/invoice`;
 const EVENT_API_BASE = `${BASE_URL}/api/event`;
 const DASHBOARD_API_BASE = `${BASE_URL}/api/dashboard`;
 const CATEGORY_API_BASE = `${BASE_URL}/api/category`;
+const PAYMENT_API_BASE = `${BASE_URL}/api/payment`;
 
 export const API_URL = {
     // User API
@@ -24,6 +25,7 @@ export const API_URL = {
     DELETE_ACCOUNT: `${USER_API_BASE}/delete-account`,
     DELETE_USER: `${USER_API_BASE}/delete/:id`,
     DROP_COLLECTION: `${USER_API_BASE}/drop`,
+    GET_UNPAID_STUDENTS: `${USER_API_BASE}/unpaid-students`,
     DECODE_TOKEN: `${USER_API_BASE}/token`,
     SET_COURSES_ROADMAP: `${USER_API_BASE}/set-courses-roadmap/:studentId`,
     GET_USER: `${USER_API_BASE}/:id`,
@@ -37,6 +39,8 @@ export const API_URL = {
     DEACTIVATE_STUDENT: `${STUDENT_API_BASE}/deactivate/:id`,
     ACTIVATE_STUDENT: `${STUDENT_API_BASE}/activate/:id`,
     GET_ALL_STUDENTS_HAVE_NO_COACH: `${STUDENT_API_BASE}/no-coach`,
+    GET_SESSION_INFO: `${STUDENT_API_BASE}/session-info`,
+    GET_STUDENT_SESSION_INFO: `${STUDENT_API_BASE}/:id/session-info`,
 
     // Coaches API
     CREATE_COACH: `${COACH_API_BASE}/create`,
@@ -124,5 +128,13 @@ export const API_URL = {
     UPDATE_CATEGORY: `${CATEGORY_API_BASE}/update/:id`,
     GET_CATEGORY: `${CATEGORY_API_BASE}/:id`,
     GET_ALL_CATEGORIES: `${CATEGORY_API_BASE}/`,
-    DELETE_CATEGORY: `${CATEGORY_API_BASE}/delete/:id`
+    DELETE_CATEGORY: `${CATEGORY_API_BASE}/delete/:id`,
+
+    // Payments API
+    CREATE_PAYMENT_LINK: `${PAYMENT_API_BASE}/create-payment-link`,
+    HANDLE_WEBHOOK: `${PAYMENT_API_BASE}/webhook`,
+    GET_ALL_PAYMENTS: `${PAYMENT_API_BASE}/payments`,
+    GET_ALL_PAYMENTS_BY_ADMIN: `${PAYMENT_API_BASE}/all`,
+    RETRIEVE_PAYMENT_LINK: `${PAYMENT_API_BASE}/retrieve/:paymentLinkId`,
+    LINK_PAYMENT_TO_STUDENT: `${PAYMENT_API_BASE}/link-payment/:paymentId`
 };

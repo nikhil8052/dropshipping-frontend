@@ -534,3 +534,9 @@ const Students = () => {
 };
 
 export default Students;
+
+// Payment flow
+// 1. Add a dropdown to select payment plan (One Time | Installments)
+// 2. When picks up the installments then another dropdown to select (Weekly | Monthly installments)
+// 3. When a student paid one time then he can do anything in the app i mean he can easily access the all the lectures of that courses.
+// 4. When a student paid in installments then we can add a check if he is paying weekly or monthly then we can add a check accordingly.

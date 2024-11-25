@@ -5,7 +5,7 @@ import dropDownArrow from '@icons/drop-down-black.svg';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import ConfirmationBox from '@components/ConfirmationBox/ConfirmationBox';
 import * as Yup from 'yup';
-import { Container, Row, Col, Button, DropdownButton, Dropdown } from 'react-bootstrap';
+import { Container, Row, Col, Button, DropdownButton, Dropdown, Badge } from 'react-bootstrap';
 import 'react-quill/dist/quill.snow.css';
 import { coachingTrajectory, countryList, regions } from '../../../../data/data';
 import toast from 'react-hot-toast';
@@ -22,6 +22,9 @@ import { getFileObjectFromBlobUrl } from '../../../../utils/utils';
 import '../../../../styles/Students.scss';
 import '../../../../styles/Common.scss';
 import PhoneInputField from '../../../../components/Input/PhoneInput';
+import PaymentStatusOneTime from './Payments/PaymentStatusOneTime';
+import PaymentStatusInstallments from './Payments/PaymentStatusInstallments';
+import Card from '@components/Card/Card';
 
 const NewStudent = () => {
     const inputRef = useRef();
@@ -38,7 +41,7 @@ const NewStudent = () => {
     const [studentProducts, setStudentProducts] = useState([]);
     const [loadingCRUD, setLoadingCRUD] = useState(false);
     const [categories, setCategories] = useState([]);
-
+    // Form state
     const [studentData, setStudentData] = useState({
         name: '',
         email: '',
@@ -47,13 +50,24 @@ const NewStudent = () => {
         region: '',
         coachingTrajectory: 'HIGH_TICKET',
         coursesRoadmap: [],
-        category: []
+        category: [],
+        paymentType: '',
+        installmentFrequency: '',
+        installmentCount: 0,
+        paymentHistory: []
     });
+
     const [showModal, setShowModal] = useState({
         show: false,
         title: 'Update Trajectory',
         isEditable: false,
         studentId: null
+    });
+    // Session details
+    const [sessionInfo, setSessionInfo] = useState({
+        paymentStatus: 'unpaid',
+        remainingSessions: 0,
+        nextSessionAvailableDate: null
     });
 
     const schema = Yup.object({
@@ -93,7 +107,13 @@ const NewStudent = () => {
         coursesRoadmap: Yup.array(),
         category: Yup.array()
             .min(1, 'Please select at least one category') // Ensures at least one category is selected
-            .required('Please select a category')
+            .required('Please select a category'),
+        paymentType: Yup.string().required('Please select a payment type'),
+        installmentFrequency: Yup.string().when('paymentType', {
+            is: 'installments',
+            then: () => Yup.string().required('Please select installment frequency'),
+            otherwise: () => Yup.string().nullable()
+        })
     });
 
     useEffect(() => {
@@ -101,6 +121,7 @@ const NewStudent = () => {
             getSingleStudentById(studentId);
             // Get students Products
             getStudentProducts(studentId);
+            getSessionInfo(studentId);
         }
     }, [studentId]);
 
@@ -130,7 +151,11 @@ const NewStudent = () => {
             region: student.region,
             category: mappedCategories,
             coachingTrajectory: student.coachingTrajectory,
-            coursesRoadmap: student.coursesRoadmap.map((c) => c._id)
+            coursesRoadmap: student.coursesRoadmap.map((c) => c._id),
+            paymentType: student.paymentType || 'one-time', // Default to 'one-time' if not present
+            installmentFrequency: student.installmentFrequency || '',
+            installmentCount: student.installmentCount || 0,
+            paymentHistory: student.paymentHistory
         });
         setCourses(coursesRoadmap);
         setStudentPhoto(student.avatar);
@@ -142,6 +167,16 @@ const NewStudent = () => {
         const response = await axiosWrapper('get', url, {}, token);
         const { data } = response;
         setStudentProducts(data);
+    };
+
+    const getSessionInfo = async (id) => {
+        const response = await axiosWrapper('GET', API_URL.GET_STUDENT_SESSION_INFO.replace(':id', id), {}, token);
+        const { paymentStatus, remainingSessions, nextSessionAvailableDate } = response.data;
+        setSessionInfo({
+            paymentStatus,
+            remainingSessions,
+            nextSessionAvailableDate: nextSessionAvailableDate ? new Date(nextSessionAvailableDate) : null
+        });
     };
 
     useEffect(() => {
@@ -202,8 +237,14 @@ const NewStudent = () => {
     };
 
     const handleFormSubmit = async (values, { resetForm, setSubmitting }) => {
-        if (studentId) delete values.email;
-        const formData = { ...values, avatar: studentPhoto, category: values.category.map((cat) => cat.value) };
+        let formData = { ...values, avatar: studentPhoto, category: values.category.map((cat) => cat.value) };
+
+        // If updating an existing student, exclude the email field
+        if (studentId) {
+            const { email, ...rest } = formData;
+            formData = rest;
+        }
+
         const url = studentId ? `${API_URL.UPDATE_STUDENT.replace(':id', studentId)}` : API_URL.CREATE_STUDENT;
         const method = studentId ? 'PUT' : 'POST';
 
@@ -651,7 +692,7 @@ const NewStudent = () => {
                                     </Col>
 
                                     {studentId && (
-                                        <Col md={6} xs={12} className="mt-2">
+                                        <Col md={6} xs={12}>
                                             <Input
                                                 options={courses}
                                                 name="coursesRoadmap"
@@ -690,6 +731,136 @@ const NewStudent = () => {
                                 </Row>
 
                                 <Row>
+                                    <h4 className="my-3 new-student-title">Payment Information</h4>
+                                    <Col md={12} xs={12}>
+                                        <label className="field-label">Payment Type</label>
+                                        <Field
+                                            name="paymentType"
+                                            component={({ field, form }) => {
+                                                const handleSelect = (eventKey) => {
+                                                    form.setFieldValue(field.name, eventKey);
+                                                    // Reset installment frequency when payment type changes
+                                                    if (eventKey !== 'installments') {
+                                                        form.setFieldValue('installmentFrequency', '');
+                                                    }
+                                                };
+
+                                                return (
+                                                    <DropdownButton
+                                                        title={
+                                                            <div className="d-flex justify-content-between align-items-center">
+                                                                <span>
+                                                                    {field.value
+                                                                        ? field.value === 'one-time'
+                                                                            ? 'One-Time'
+                                                                            : 'Installments'
+                                                                        : 'Select Payment Type'}
+                                                                </span>
+                                                                <img src={dropDownArrow} alt="arrow" />
+                                                            </div>
+                                                        }
+                                                        id={field.name}
+                                                        onSelect={handleSelect}
+                                                        className="dropdown-button w-100"
+                                                        disabled={studentId}
+                                                    >
+                                                        <Dropdown.Item eventKey="one-time">One-Time</Dropdown.Item>
+                                                        <Dropdown.Item eventKey="installments">
+                                                            Installments
+                                                        </Dropdown.Item>
+                                                    </DropdownButton>
+                                                );
+                                            }}
+                                        />
+                                        <ErrorMessage name="paymentType" component="div" className="error mt-2" />
+                                    </Col>
+
+                                    {/* Installment Frequency Dropdown (conditional) */}
+                                    {values.paymentType === 'installments' && (
+                                        <>
+                                            <Col md={6} xs={12}>
+                                                <label className="field-label">Installment Frequency</label>
+                                                <Field
+                                                    name="installmentFrequency"
+                                                    component={({ field, form }) => {
+                                                        const handleSelect = (eventKey) => {
+                                                            form.setFieldValue(field.name, eventKey);
+                                                        };
+
+                                                        return (
+                                                            <DropdownButton
+                                                                title={
+                                                                    <div className="d-flex justify-content-between align-items-center">
+                                                                        <span>
+                                                                            {field.value
+                                                                                ? field.value === 'weekly'
+                                                                                    ? 'Weekly'
+                                                                                    : 'Monthly'
+                                                                                : 'Select Frequency'}
+                                                                        </span>
+                                                                        <img src={dropDownArrow} alt="arrow" />
+                                                                    </div>
+                                                                }
+                                                                id={field.name}
+                                                                onSelect={handleSelect}
+                                                                className="dropdown-button w-100"
+                                                                disabled={studentId}
+                                                            >
+                                                                <Dropdown.Item eventKey="weekly">Weekly</Dropdown.Item>
+                                                                <Dropdown.Item eventKey="monthly">
+                                                                    Monthly
+                                                                </Dropdown.Item>
+                                                            </DropdownButton>
+                                                        );
+                                                    }}
+                                                />
+                                                <ErrorMessage
+                                                    name="installmentFrequency"
+                                                    component="div"
+                                                    className="error mt-2"
+                                                />
+                                            </Col>
+                                            <Col md={6} xs={12}>
+                                                <label className="field-label">Number of Installments</label>
+                                                <Field
+                                                    name="installmentCount"
+                                                    type="number"
+                                                    className="field-control"
+                                                    placeholder="Enter number of installments"
+                                                    disabled={studentId}
+                                                />
+                                                <ErrorMessage
+                                                    name="installmentCount"
+                                                    component="div"
+                                                    className="error mt-2"
+                                                />
+                                            </Col>
+                                        </>
+                                    )}
+                                    {studentId && (
+                                        <Col md={12} xs={12}>
+                                            {values.paymentType === 'one-time' && (
+                                                <PaymentStatusOneTime
+                                                    studentName={studentData.name}
+                                                    paymentDate={studentData.paymentHistory?.[0]?.paymentDate}
+                                                    status={
+                                                        studentData.paymentHistory?.[0]?.status === 'paid'
+                                                            ? 'Paid'
+                                                            : 'Unpaid'
+                                                    }
+                                                />
+                                            )}
+                                            {values.paymentType === 'installments' && (
+                                                <PaymentStatusInstallments
+                                                    studentName={studentData.name}
+                                                    paymentHistory={studentData.paymentHistory || []}
+                                                />
+                                            )}
+                                        </Col>
+                                    )}
+                                </Row>
+
+                                <Row>
                                     <Col>
                                         {values.coursesRoadmap?.length > 0 && (
                                             <>
@@ -708,6 +879,39 @@ const NewStudent = () => {
                                         )}
                                     </Col>
                                 </Row>
+                                {/* Session Information */}
+                                {studentId && studentData.paymentType === 'installments' && (
+                                    <>
+                                        <Row>
+                                            <h4 className="my-3 new-student-title">Coaching Session Information</h4>
+                                            <Col md={12} xs={12}>
+                                                <Card className="p-3 events-card">
+                                                    <p>
+                                                        <strong>Payment Status:</strong>{' '}
+                                                        {sessionInfo.paymentStatus === 'paid' ? (
+                                                            <Badge bg="success">Paid</Badge>
+                                                        ) : (
+                                                            <Badge bg="danger">Unpaid</Badge>
+                                                        )}
+                                                    </p>
+                                                    <p>
+                                                        <strong>Remaining Sessions:</strong>{' '}
+                                                        {sessionInfo.remainingSessions}/
+                                                        {studentData.installmentFrequency === 'weekly' ? '1' : '4'}{' '}
+                                                        sessions available
+                                                    </p>
+                                                    {sessionInfo.nextSessionAvailableDate &&
+                                                        !isNaN(sessionInfo.nextSessionAvailableDate.getTime()) && (
+                                                            <p>
+                                                                <strong>Next Session Available On:</strong>{' '}
+                                                                {sessionInfo.nextSessionAvailableDate.toLocaleDateString()}
+                                                            </p>
+                                                        )}
+                                                </Card>
+                                            </Col>
+                                        </Row>
+                                    </>
+                                )}
 
                                 {studentId && (
                                     <>

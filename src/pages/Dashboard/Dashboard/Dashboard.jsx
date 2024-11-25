@@ -223,8 +223,7 @@ const Dashboard = () => {
                 border: {
                     display: false
                 },
-                min: 0, // Minimum value for Y-axis
-                max: 10 // Maximum value for Y-axis
+                min: 0 // Minimum value for Y-axis
             }
         },
         maintainAspectRatio: true,

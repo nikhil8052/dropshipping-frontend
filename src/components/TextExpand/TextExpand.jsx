@@ -1,7 +1,7 @@
 import { useRef, useState, useEffect } from 'react';
 import { OverlayTrigger, Tooltip } from 'react-bootstrap';
 
-const TextExpand = ({ value, width = '150px', className = '' }) => {
+const TextExpand = ({ value = '--', width = '150px', className = '' }) => {
     const textRef = useRef(null);
     const [isOverflowed, setIsOverflowed] = useState(false);
 
