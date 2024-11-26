@@ -13,9 +13,9 @@ import '../../../styles/Common.scss';
 import '../../../styles/Payments.scss';
 import { API_URL } from '../../../utils/apiUrl';
 import TextItemExpand from '../../../components/TextExpand/TextItemExpand';
-// import { faLink } from '@fortawesome/free-solid-svg-icons';
+import { faLink } from '@fortawesome/free-solid-svg-icons';
 import LinkPaymentModal from './LinkPaymentModal';
-// import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 const Payments = () => {
     const [selectedRowId, setSelectedRowId] = useState(null);
     const [expanded, setExpanded] = useState(false);
@@ -99,6 +99,7 @@ const Payments = () => {
 
     const handleCloseLinkModal = () => {
         setLinkModal({ show: false, paymentId: null });
+        fetchPayments();
     };
 
     /*eslint-disable */
@@ -117,9 +118,9 @@ const Payments = () => {
     const ActionsRenderer = ({ onLinkClick }) => (
         <Row style={{ width: '100%' }}>
             <Col className="d-flex justify-content-center align-items-center">
-                {/* <button className="btn btn-light action-button" onClick={onLinkClick}>
+                <button className="btn btn-light action-button" onClick={onLinkClick}>
                     <FontAwesomeIcon icon={faLink} className="action-icon" />
-                </button> */}
+                </button>
             </Col>
         </Row>
     );

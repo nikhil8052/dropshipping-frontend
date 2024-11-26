@@ -29,14 +29,9 @@ const LinkPaymentModal = ({ show, onClose, paymentId }) => {
     };
 
     const handleLinkPayment = async (studentId) => {
-        try {
-            await axiosWrapper('POST', API_URL.LINK_PAYMENT_TO_STUDENT.replace(':paymentId', paymentId), { studentId });
-            toast.success('Payment linked successfully');
-            onClose(); // Close the modal after successful linking
-            // Optionally, refetch payments to reflect the latest changes
-        } catch (error) {
-            toast.error('Error linking payment');
-        }
+        await axiosWrapper('POST', API_URL.LINK_PAYMENT_TO_STUDENT.replace(':paymentId', paymentId), { studentId });
+        onClose(); // Close the modal after successful linking
+        // Optionally, refetch payments to reflect the latest changes
     };
 
     return (
