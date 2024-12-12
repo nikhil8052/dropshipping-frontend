@@ -1,5 +1,5 @@
 import { Card, Badge } from 'react-bootstrap';
-import { formatTimezone } from '../../../../../utils/common';
+import { formatTimezoneWithoutTime } from '../../../../../utils/common';
 
 const PaymentStatusInstallments = ({ studentName, paymentHistory }) => {
     const statusBadgeStyles = { minWidth: '88px', textAlign: 'center' };
@@ -42,7 +42,7 @@ const PaymentStatusInstallments = ({ studentName, paymentHistory }) => {
                             className="d-flex justify-content-between align-items-center p-2 border rounded mb-2"
                             style={{ backgroundColor: '#f8f9fa' }}
                         >
-                            <span>Due Date: {formatTimezone(installment.dueDate)}</span>
+                            <span>Due Date: {formatTimezoneWithoutTime(installment.dueDate)}</span>
                             {getStatusBadge(installment)}
                         </div>
                     ))}
