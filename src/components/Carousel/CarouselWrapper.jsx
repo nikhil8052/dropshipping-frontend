@@ -65,6 +65,7 @@ const CarouselWrapper = ({ items = [], type = 'product' }) => {
         setSelectedItem(item);
         setShowModal(true);
     };
+
     const handleClose = () => {
         setShowModal(false);
         setSelectedItem(null);
@@ -72,7 +73,8 @@ const CarouselWrapper = ({ items = [], type = 'product' }) => {
     return (
         <>
             <Swiper
-                loop={true}
+                loop={false}
+                rewind={false}
                 breakpoints={swiperBreakpoints}
                 navigation={true}
                 modules={[Keyboard, Scrollbar, Navigation, Pagination]}
