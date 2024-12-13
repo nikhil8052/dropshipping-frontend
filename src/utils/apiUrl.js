@@ -41,6 +41,7 @@ export const API_URL = {
     GET_ALL_STUDENTS_HAVE_NO_COACH: `${STUDENT_API_BASE}/no-coach`,
     GET_SESSION_INFO: `${STUDENT_API_BASE}/session-info`,
     GET_STUDENT_SESSION_INFO: `${STUDENT_API_BASE}/:id/session-info`,
+    UPDATE_STUDENT_PAYMENT_DUE_DATE: `${STUDENT_API_BASE}/payment-due-date/:id`,
 
     // Coaches API
     CREATE_COACH: `${COACH_API_BASE}/create`,
