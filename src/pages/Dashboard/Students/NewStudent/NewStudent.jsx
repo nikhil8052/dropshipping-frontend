@@ -41,6 +41,7 @@ const NewStudent = () => {
     const [studentProducts, setStudentProducts] = useState([]);
     const [loadingCRUD, setLoadingCRUD] = useState(false);
     const [categories, setCategories] = useState([]);
+    const [isRefetch, setIsRefetch] = useState(false);
     // Form state
     const [studentData, setStudentData] = useState({
         name: '',
@@ -123,7 +124,7 @@ const NewStudent = () => {
             getStudentProducts(studentId);
             getSessionInfo(studentId);
         }
-    }, [studentId]);
+    }, [studentId, isRefetch]);
 
     const getSingleStudentById = async (id) => {
         const response = await axiosWrapper('GET', API_URL.GET_STUDENT.replace(':id', id), {}, token);
@@ -854,6 +855,8 @@ const NewStudent = () => {
                                                 <PaymentStatusInstallments
                                                     studentName={studentData.name}
                                                     paymentHistory={studentData.paymentHistory || []}
+                                                    id={studentId}
+                                                    setIsRefetch={setIsRefetch}
                                                 />
                                             )}
                                         </Col>

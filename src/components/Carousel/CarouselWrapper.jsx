@@ -57,14 +57,20 @@ const CarouselWrapper = ({ items = [], type = 'product' }) => {
         }
     };
 
-    const handleSlideClick = (e, item) => {
+    const handleSlideClick = (e, item, index) => {
         e.stopPropagation();
         e.preventDefault();
-        if (type === 'product') return;
+        const isProductType = type === 'product';
+        // Check if the slider's pre and next buttons are disabled
+        const isDisabled =
+            e.target.className === 'swiper-slide swiper-slide-next slide-item cursor-pointer' ||
+            ('swiper-slide slide-item cursor-pointer' && index === e.target.swiperSlideIndex);
+        if (isProductType || isDisabled) return;
         // Preview of lectures
         setSelectedItem(item);
         setShowModal(true);
     };
+
     const handleClose = () => {
         setShowModal(false);
         setSelectedItem(null);
@@ -72,16 +78,17 @@ const CarouselWrapper = ({ items = [], type = 'product' }) => {
     return (
         <>
             <Swiper
-                loop={true}
+                loop={false}
+                rewind={false}
                 breakpoints={swiperBreakpoints}
                 navigation={true}
                 modules={[Keyboard, Scrollbar, Navigation, Pagination]}
             >
-                {items.map((item, index) => (
+                {items.map((item, index = 1) => (
                     <SwiperSlide
                         className="slide-item cursor-pointer"
                         key={index}
-                        onClick={(e) => handleSlideClick(e, item)}
+                        onClick={(e) => handleSlideClick(e, item, index)}
                     >
                         {type === 'product' ? (
                             <ProductCard item={item} />

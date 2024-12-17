@@ -104,6 +104,22 @@ export const formatTimezone = (dateStr, timeZoneName = false) => {
     return formattedDate;
 };
 
+export const formatTimezoneWithoutTime = (dateStr, timeZoneName = false) => {
+    const date = new Date(dateStr);
+
+    const options = {
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric',
+        timeZone: 'Europe/Amsterdam',
+        timeZoneName: timeZoneName ? 'longGeneric' : undefined
+    };
+
+    const formattedDate = date.toLocaleString('en-US', { ...options });
+    // return the time zone name from the formatted date and date
+    return formattedDate;
+};
+
 export const convertToUTC = (localDateTimeStr) => {
     const localDate = new Date(localDateTimeStr);
     const utcDate = new Date(localDate.getTime() - localDate.getTimezoneOffset() * 60000);
