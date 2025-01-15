@@ -14,6 +14,7 @@ import '../../../styles/Courses.scss';
 import PdfModal from '../../../components/PdfRenderer/PdfViewer';
 import toast from 'react-hot-toast';
 import { shuffleArray } from '../../../utils/common';
+import bannerImage from '../../../assets/images/publish-background.svg';
 
 const EnrolledCourseDetail = () => {
     const navigate = useNavigate();
@@ -65,7 +66,8 @@ const EnrolledCourseDetail = () => {
         setCourseDetails({
             title: data.title,
             moduleManager: data.createdBy?.name,
-            category: data.category || []
+            category: data.category || [],
+            banner: data?.banner || ''
         });
         // Overall lectures
         setLectures(data.lectures);
@@ -224,7 +226,15 @@ const EnrolledCourseDetail = () => {
                             >
                                 {({ isSubmitting, values, setFieldValue }) => (
                                     <FormikForm>
-                                        <div className="card-background">
+                                        <div
+                                            className="card-background"
+                                            style={{
+                                                backgroundImage: `url(${courseDetails?.banner || bannerImage})`,
+                                                backgroundPosition: 'center',
+                                                backgroundRepeat: 'no-repeat',
+                                                backgroundSize: 'cover'
+                                            }}
+                                        >
                                             <div className="text-heading">
                                                 <h1>{courseDetails?.title || 'Course Title'}</h1>
                                                 <div className="viewProfile-img">

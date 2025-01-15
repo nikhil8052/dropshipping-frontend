@@ -36,6 +36,7 @@ const AddNewCourse = () => {
         category: [],
         createdBy: null,
         thumbnail: '',
+        banner: '',
         trailer: '',
         description: '',
         lectures: []
@@ -109,6 +110,7 @@ const AddNewCourse = () => {
                 category: categories,
                 createdBy: data.createdBy?._id,
                 thumbnail: data.thumbnail,
+                banner: data.banner,
                 trailer: data.trailer,
                 description: description,
                 lectures: updatedLecture

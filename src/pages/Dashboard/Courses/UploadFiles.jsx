@@ -51,11 +51,16 @@ const UploadFiles = ({ onNext, onBack, initialData, setStepComplete, updateCours
 
     const [loadingThum, setLoadingThumb] = useState(false);
     const [loadingVideo, setLoadingVideo] = useState(false);
+    // Course Banner
+    const [loadingBanner, setLoadingBanner] = useState(false);
+    const bannerInputRef = useRef();
+    const [bannerCropping, setBannerCropping] = useState(false);
+    const [bannerImageSrc, setBannerImageSrc] = useState(null);
 
     const [cropping, setCropping] = useState(false);
     const [imageSrc, setImageSrc] = useState(null);
 
-    const { trailer, description, thumbnail } = initialData;
+    const { trailer, description, thumbnail, banner } = initialData;
 
     const handleFileChange = async (e) => {
         const file = e.target.files[0];
@@ -104,6 +109,31 @@ const UploadFiles = ({ onNext, onBack, initialData, setStepComplete, updateCours
             trailer: mediaFile.data[0].path
         });
         setLoadingVideo(false);
+    };
+
+    const handleBannerChange = async (e) => {
+        const file = e.target.files[0];
+        if (!file || !file.type.startsWith('image/')) {
+            toast.error('Invalid file selected. Please choose an image file.');
+            return;
+        }
+
+        const image = URL.createObjectURL(file);
+        setBannerImageSrc(image);
+        setBannerCropping(true);
+    };
+
+    const handleBannerCropComplete = async (croppedImage) => {
+        setLoadingBanner(true);
+        const file = await getFileObjectFromBlobUrl(croppedImage, 'courseBanner.jpeg');
+        const formData = new FormData();
+        formData.append('files', file);
+        formData.append('name', file.name);
+
+        const mediaFile = await axiosWrapper('POST', API_URL.UPLOAD_MEDIA, formData, '', true);
+        updateCourseData({ banner: mediaFile.data[0].path });
+        setLoadingBanner(false);
+        setBannerCropping(false);
     };
 
     const handleCreateClick = () => {
@@ -266,12 +296,14 @@ const UploadFiles = ({ onNext, onBack, initialData, setStepComplete, updateCours
                             initialValues={{
                                 description: description || '',
                                 thumbnail: thumbnail || '',
-                                trailer: trailer || ''
+                                trailer: trailer || '',
+                                banner: banner || ''
                             }}
                             validationSchema={Yup.object({
                                 description: Yup.string().required('Description is required'),
                                 thumbnail: Yup.string().required('Thumbnail is required'),
-                                trailer: Yup.string().optional()
+                                trailer: Yup.string().optional(),
+                                banner: Yup.string().required('Banner is required')
                             })}
                             onSubmit={handleUploadFilesSubmit}
                             enableReinitialize
@@ -463,6 +495,95 @@ const UploadFiles = ({ onNext, onBack, initialData, setStepComplete, updateCours
                                             </Field>
                                         </Col>
                                     </Row>
+                                    {/* Course Banner */}
+                                    <Row className="mb-3">
+                                        <Col xs={12} sm={12} md={12} lg={12}>
+                                            {banner ? <></> : <label className="field-label">Course Banner</label>}
+                                            <Field name="banner">
+                                                {() => (
+                                                    <>
+                                                        <input
+                                                            ref={bannerInputRef}
+                                                            accept=".jpg,.jpeg,.png"
+                                                            type="file"
+                                                            style={{ display: 'none' }}
+                                                            onChange={handleBannerChange}
+                                                        />
+                                                        {loadingBanner ? (
+                                                            <Loading />
+                                                        ) : banner ? (
+                                                            <div className="image-renderer">
+                                                                <img
+                                                                    src={
+                                                                        typeof banner === 'string'
+                                                                            ? banner
+                                                                            : URL.createObjectURL(banner)
+                                                                    }
+                                                                    alt=""
+                                                                    style={{
+                                                                        borderRadius: '8px',
+                                                                        objectFit: 'cover',
+                                                                        height: '128px'
+                                                                    }}
+                                                                />
+                                                                <span>Course Banner</span>
+                                                                <div
+                                                                    className="align-self-start"
+                                                                    style={{ marginLeft: 'auto' }}
+                                                                >
+                                                                    <img
+                                                                        src={cross}
+                                                                        onClick={() => {
+                                                                            updateCourseData({ banner: null });
+                                                                            if (bannerInputRef.current) {
+                                                                                bannerInputRef.current.value = '';
+                                                                            }
+                                                                        }}
+                                                                        className="reset-image"
+                                                                        alt="reset"
+                                                                    />
+                                                                </div>
+                                                            </div>
+                                                        ) : (
+                                                            <>
+                                                                <div className="image-preview">
+                                                                    <img src={courseThumbnail} alt="banner" />
+                                                                    <div className="image-preview-text">
+                                                                        <p>Upload your course Banner here.</p>
+                                                                        <p>
+                                                                            Supported format:
+                                                                            <strong>.jpg, .jpeg, or .png</strong>
+                                                                        </p>
+                                                                        <Button
+                                                                            type="submit"
+                                                                            className="upload-btn"
+                                                                            disabled={isSubmitting}
+                                                                            onClick={(e) => {
+                                                                                e.preventDefault();
+                                                                                bannerInputRef.current.click();
+                                                                            }}
+                                                                        >
+                                                                            Upload{' '}
+                                                                            <img
+                                                                                className="mb-1"
+                                                                                src={UploadSimple}
+                                                                                alt="Upload Btn"
+                                                                            />
+                                                                        </Button>
+                                                                    </div>
+                                                                </div>
+                                                                <ErrorMessage
+                                                                    name="banner"
+                                                                    component="div"
+                                                                    className="error"
+                                                                />
+                                                            </>
+                                                        )}
+                                                    </>
+                                                )}
+                                            </Field>
+                                        </Col>
+                                    </Row>
 
                                     <Row>
                                         <Col>
@@ -554,6 +675,17 @@ const UploadFiles = ({ onNext, onBack, initialData, setStepComplete, updateCours
                                 imageSrc={imageSrc}
                                 onCropComplete={handleCropComplete}
                                 onCancel={resetCropper}
+                            />
+                        )}
+                        {bannerCropping && (
+                            <ImageCropper
+                                imageSrc={bannerImageSrc}
+                                onCropComplete={handleBannerCropComplete}
+                                onCancel={() => {
+                                    setBannerCropping(false);
+                                    setBannerImageSrc(null);
+                                }}
+                                aspect={16 / 10}
                             />
                         )}
                     </div>

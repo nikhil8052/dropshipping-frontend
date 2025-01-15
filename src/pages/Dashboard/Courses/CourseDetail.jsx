@@ -9,6 +9,7 @@ import axiosWrapper from '../../../utils/api';
 import { API_URL } from '../../../utils/apiUrl';
 import '../../../styles/Courses.scss';
 import { textParser } from '../../../utils/utils';
+import bannerImage from '../../../assets/images/publish-background.svg';
 
 const CourseDetail = () => {
     const navigate = useNavigate();
@@ -77,7 +78,15 @@ const CourseDetail = () => {
                 )}
 
                 <div className="publish-course-wrapper">
-                    <div className="card-background">
+                    <div
+                        className="card-background"
+                        style={{
+                            backgroundImage: `url(${course?.banner || bannerImage})`,
+                            backgroundPosition: 'center',
+                            backgroundRepeat: 'no-repeat',
+                            backgroundSize: 'cover'
+                        }}
+                    >
                         <div className="text-heading">
                             <h1>{course?.title || 'Design Conference'}</h1>
                             <p>{course?.createdBy?.name || 'Dropship Academy X'}</p>

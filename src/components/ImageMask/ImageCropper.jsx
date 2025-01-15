@@ -7,7 +7,7 @@ import getCroppedImg from './cropImageHelper'; // Helper function to get the cro
 import Loading from '../Loading/Loading';
 import './imageCropper.scss';
 
-const ImageCropper = ({ imageSrc, onCropComplete, onCancel }) => {
+const ImageCropper = ({ imageSrc, onCropComplete, onCancel, aspect = 4 / 3 }) => {
     const [crop, setCrop] = useState({ x: 0, y: 0 });
     const [zoom, setZoom] = useState(1);
     const [croppedAreaPixels, setCroppedAreaPixels] = useState(null);
@@ -49,7 +49,7 @@ const ImageCropper = ({ imageSrc, onCropComplete, onCancel }) => {
                             image={imageSrc}
                             crop={crop}
                             zoom={zoom}
-                            aspect={4 / 3}
+                            aspect={aspect || 4 / 3}
                             onCropChange={onCropChange}
                             onZoomChange={onZoomChange}
                             onCropComplete={onCropCompleteCallback}

@@ -4,7 +4,7 @@ import Search from '../../../assets/icons/Search.svg';
 import add from '@icons/add_white.svg';
 import downArrow from '@icons/down-arrow.svg';
 import { useNavigate } from 'react-router-dom';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { API_URL } from '../../../utils/apiUrl';
 import axiosWrapper from '../../../utils/api';
 import '../../../styles/Common.scss';
@@ -13,6 +13,8 @@ import { Helmet } from 'react-helmet';
 import GenericCard from '../../../components/GenericCard/GenericCard';
 import { precisionRound } from '../../../utils/common';
 import InfiniteScroll from 'react-infinite-scroll-component';
+import Loading from '../../../components/Loading/Loading';
+import * as types from '../../../redux/actions/actionTypes';
 
 const Courses = () => {
     const [search, setSearch] = useState('');
@@ -23,6 +25,7 @@ const Courses = () => {
     const [hasLoaded, setHasLoaded] = useState(false);
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
+    const dispatch = useDispatch();
     const { userInfo, userToken } = useSelector((state) => state?.auth);
     const role = userInfo?.role;
     const itemsPerBatch = 8; // Number of courses to load per scroll
@@ -54,6 +57,8 @@ const Courses = () => {
     );
 
     const handleCreateClick = () => {
+        dispatch({ type: types.ALL_RECORDS, data: { keyOfData: 'currentCourse', data: null } });
+
         navigate(`/${role?.toLowerCase()}/courses/new`, {
             state: { isEdit: false, courseId: null }
         });
@@ -232,7 +237,7 @@ const Courses = () => {
                     dataLength={displayedCourses.length}
                     next={fetchMoreData}
                     hasMore={hasMore}
-                    loader={<h4 className="text-center">Loading...</h4>}
+                    loader={<Loading />}
                 >
                     {displayedCourses.map((course) => (
                         <GenericCard

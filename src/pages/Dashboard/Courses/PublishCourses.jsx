@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import CarouselWrapper from '../../../components/Carousel/CarouselWrapper';
 import * as types from '../../../redux/actions/actionTypes';
 import '../../../styles/Courses.scss';
+import bannerImage from '../../../assets/images/publish-background.svg';
 
 const PublishCourses = ({ onBack, initialData, setStepComplete, publishCourse }) => {
     const navigate = useNavigate();
@@ -30,8 +31,8 @@ const PublishCourses = ({ onBack, initialData, setStepComplete, publishCourse })
             id: lecture._id,
             title: lecture.name,
             type: lecture.file ? 'pdf' : 'video',
-            description: lecture?.description,
-            thumbnail: lecture?.thumbnail,
+            description: lecture?.description || '',
+            thumbnail: lecture?.thumbnail || '',
             dataType: lecture?.dataType,
             file: lecture?.file || null,
             vimeoLink: lecture?.vimeoLink || '',
@@ -46,7 +47,15 @@ const PublishCourses = ({ onBack, initialData, setStepComplete, publishCourse })
                     <p>Publish Course</p>
                 </div>
                 <div className="publish-course-wrapper">
-                    <div className="card-background">
+                    <div
+                        className="card-background"
+                        style={{
+                            backgroundImage: `url(${initialData?.banner || bannerImage})`,
+                            backgroundPosition: 'center',
+                            backgroundRepeat: 'no-repeat',
+                            backgroundSize: 'cover'
+                        }}
+                    >
                         <div className="text-heading">
                             <h1>{initialData?.title}</h1>
                             <p>{coachName || 'Dropship Academy X'}</p>
