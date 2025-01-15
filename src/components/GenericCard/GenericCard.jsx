@@ -41,7 +41,7 @@ const GenericCard = ({
                 );
             }}
         >
-            <Card.Img variant="top" src={img} className="card-image" />
+            <Card.Img loading="lazy" variant="top" src={img} className="card-image" />
             <Card.Body className="card-body">
                 <Card.Title className="card-title">
                     <TextExpand className="course-title" value={title} width="100%" />

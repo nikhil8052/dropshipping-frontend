@@ -1,41 +1,57 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { InputGroup, Form, Button, DropdownButton, Dropdown } from 'react-bootstrap';
 import Search from '../../../assets/icons/Search.svg';
 import add from '@icons/add_white.svg';
 import downArrow from '@icons/down-arrow.svg';
 import { useNavigate } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
-import Pagination from '../../../components/Pagination/Pagination';
+import { useSelector } from 'react-redux';
 import { API_URL } from '../../../utils/apiUrl';
-import * as types from '../../../redux/actions/actionTypes';
 import axiosWrapper from '../../../utils/api';
 import '../../../styles/Common.scss';
 import '../../../styles/Courses.scss';
 import { Helmet } from 'react-helmet';
 import GenericCard from '../../../components/GenericCard/GenericCard';
 import { precisionRound } from '../../../utils/common';
+import InfiniteScroll from 'react-infinite-scroll-component';
 
 const Courses = () => {
     const [search, setSearch] = useState('');
     const [coursesFilter, setCoursesFilter] = useState('All Courses');
-    const [currentPage, setCurrentPage] = useState(1);
-    const [coursesData, setCoursesData] = useState([]);
-    const dispatch = useDispatch();
-    const [totalPages, setTotalPages] = useState(1);
-
+    const [allCourses, setAllCourses] = useState([]); // Store all fetched courses
+    const [displayedCourses, setDisplayedCourses] = useState([]); // Courses currently displayed
+    const [hasMore, setHasMore] = useState(true);
+    const [hasLoaded, setHasLoaded] = useState(false);
+    const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
     const { userInfo, userToken } = useSelector((state) => state?.auth);
     const role = userInfo?.role;
-    const itemsPerPage = 8;
+    const itemsPerBatch = 8; // Number of courses to load per scroll
+
+    // Debounce search input to prevent excessive API calls
+    const debounce = (func, delay) => {
+        let debounceTimer;
+        return function (...args) {
+            const context = this;
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(() => func.apply(context, args), delay);
+        };
+    };
 
     const onFilterTextChange = (event) => {
-        setSearch(event.target.value);
-        setCurrentPage(1); // Reset to first page on search change
+        const value = event.target.value;
+        debouncedSearch(value);
     };
 
-    const handlePageChange = (page) => {
-        setCurrentPage(page);
-    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    const debouncedSearch = useCallback(
+        debounce((value) => {
+            setSearch(value);
+            setDisplayedCourses([]); // Clear displayed courses
+            setHasMore(true);
+            setHasLoaded(false);
+        }, 500),
+        []
+    );
 
     const handleCreateClick = () => {
         navigate(`/${role?.toLowerCase()}/courses/new`, {
@@ -45,82 +61,106 @@ const Courses = () => {
 
     const handleCoursesFilter = (eventKey, course) => {
         setCoursesFilter(course);
+        setDisplayedCourses([]); // Clear displayed courses
+        setHasMore(true);
+        setHasLoaded(false);
     };
 
     useEffect(() => {
-        // Fetch data from API here
+        // Fetch all courses when search or filter changes
         getAllCourses();
-        dispatch({ type: types.LOGOUT });
-    }, [search, currentPage, coursesFilter]);
+    }, [search, coursesFilter]);
 
     const getAllCourses = async () => {
-        const method = 'GET';
-        let url = `${API_URL.GET_ALL_COURSES}?page=${currentPage}&limit=${itemsPerPage}&search=${search}`;
-        if (role === 'STUDENT') {
-            url = `${url}&isEnrolled=${true}`;
-        }
+        setLoading(true);
+        try {
+            let constructedUrl = `${API_URL.GET_ALL_COURSES}?search=${encodeURIComponent(search)}`;
 
-        if (coursesFilter) {
-            url = `${url}&isActive=${coursesFilter}`;
-        }
-
-        const response = await axiosWrapper(method, url, {}, userToken);
-        const { data, total, limit } = response;
-
-        const formattedData = data.map((course) => {
-            const baseCourseData = {
-                img: course?.thumbnail,
-                title: course?.title,
-                detail: course?.subtitle,
-                lectureNo: `Lectures: ${course?.lectures.length}`,
-                archive: course?.isArchived,
-                coachName: course?.moduleManager?.name,
-                enroll: course?.enrolledStudents.includes(userInfo?._id),
-                _id: course?._id
-            };
-
-            if (role === 'STUDENT' && course?.enrolledStudents.includes(userInfo?._id)) {
-                const progress = calcProgress(course, userInfo?._id);
-                return { ...baseCourseData, progress: precisionRound(progress, 0) };
+            if (role === 'STUDENT') {
+                constructedUrl += '&isEnrolled=true';
             }
 
-            return baseCourseData;
-        });
-        setCoursesData(formattedData);
-        setTotalPages(Math.ceil(total / limit));
+            if (coursesFilter && coursesFilter !== 'All Courses') {
+                const isActive = coursesFilter === 'Active Courses' ? true : false;
+                constructedUrl += `&isActive=${isActive}`;
+            }
+
+            const response = await axiosWrapper('GET', constructedUrl, {}, userToken);
+            const { data } = response; // Assuming response contains all courses without pagination
+
+            // Format the fetched data
+            const formattedData = data.map((course) => {
+                const baseCourseData = {
+                    img: course?.thumbnail,
+                    title: course?.title,
+                    detail: course?.subtitle,
+                    lectureNo: `Lectures: ${course?.lectures.length}`,
+                    archive: course?.isArchived,
+                    coachName: course?.moduleManager?.name,
+                    enroll: course?.enrolledStudents.includes(userInfo?._id),
+                    _id: course?._id
+                };
+
+                if (role === 'STUDENT' && course?.enrolledStudents.includes(userInfo?._id)) {
+                    const progress = calcProgress(course, userInfo?._id);
+                    return { ...baseCourseData, progress: precisionRound(progress, 0) };
+                }
+
+                return baseCourseData;
+            });
+
+            // Remove duplicates if any (optional, as backend should handle it)
+            const uniqueCourses = Array.from(new Map(formattedData.map((item) => [item._id, item])).values());
+
+            setAllCourses(uniqueCourses);
+            setDisplayedCourses(uniqueCourses.slice(0, itemsPerBatch));
+            setHasMore(uniqueCourses.length > itemsPerBatch);
+            setHasLoaded(true);
+        } catch (error) {
+            setHasMore(false);
+            setHasLoaded(true);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const fetchMoreData = () => {
+        if (loading) return; // Prevent multiple fetches
+
+        const currentLength = displayedCourses.length;
+        const moreCourses = allCourses.slice(currentLength, currentLength + itemsPerBatch);
+        if (moreCourses.length === 0) {
+            setHasMore(false);
+            return;
+        }
+
+        setDisplayedCourses((prevCourses) => [...prevCourses, ...moreCourses]);
+        if (currentLength + moreCourses.length >= allCourses.length) {
+            setHasMore(false);
+        }
     };
 
     const handleArchiveChange = async (e, id, archiveStatus) => {
-        const courseIndex = coursesData.findIndex((c) => c._id === id);
-        const copyCourse = [...coursesData];
+        const courseIndex = allCourses.findIndex((c) => c._id === id);
+        const updatedAllCourses = [...allCourses];
 
-        try {
-            e.stopPropagation();
-            const url = archiveStatus
-                ? `${API_URL.UNARCHIVE_COURSE.replace(':id', id)}`
-                : `${API_URL.ARCHIVE_COURSE.replace(':id', id)}`;
-            await axiosWrapper('PUT', url, {}, userToken);
+        e.stopPropagation();
+        const url = archiveStatus
+            ? `${API_URL.UNARCHIVE_COURSE.replace(':id', id)}`
+            : `${API_URL.ARCHIVE_COURSE.replace(':id', id)}`;
+        await axiosWrapper('PUT', url, {}, userToken);
 
-            copyCourse[courseIndex].archive = !archiveStatus;
-            setCoursesData(copyCourse);
-        } catch (error) {
-            copyCourse[courseIndex].archive = archiveStatus;
-            setCoursesData(copyCourse);
+        updatedAllCourses[courseIndex].archive = !archiveStatus;
+        setAllCourses(updatedAllCourses);
+
+        // Update displayedCourses as well
+        const displayedIndex = displayedCourses.findIndex((c) => c._id === id);
+        if (displayedIndex !== -1) {
+            const updatedDisplayedCourses = [...displayedCourses];
+            updatedDisplayedCourses[displayedIndex].archive = !archiveStatus;
+            setDisplayedCourses(updatedDisplayedCourses);
         }
     };
-
-    // Admin | Coach Side
-    // 1. Enroll student to course when creating a new student (DONE)
-    // 2. Keep record of courses Roadmap in student (i.e student can not start other courses before finishing the previous one like proper indexing) (DONE)
-
-    // Student Side
-    // 1. Get All Courses (DONE)
-    // 2. Get All Enrolled Courses (DONE)
-    // Enrolled Courses
-    // a. Get Course Details By Id (Video | PDF) (DONE)
-    // b. Get Lecture Preview (Video | PDF) (disable other lectures until the previous one is completed with quiz completion)
-    // c. Perform a quiz Api (if quiz marks are less than 50% then student can not proceed to the next lecture and have a retry option for the quiz)
-    // d. Update the progress of the lecture (i.e. 1/10 lectures completed)
 
     const calcProgress = (course, studentId) => {
         const lectures = course.lectures || [];
@@ -155,10 +195,7 @@ const Courses = () => {
                         placeholder="Search"
                     />
                 </InputGroup>
-                {role === 'STUDENT' ? (
-                    // Commenting for future reference
-                    <></>
-                ) : (
+                {role !== 'STUDENT' && (
                     <div className="d-flex gap-2 flex-wrap">
                         <DropdownButton
                             title={
@@ -187,36 +224,25 @@ const Courses = () => {
                     </div>
                 )}
             </div>
-            <div className="custom-card-course">
-                {coursesData.length === 0 ? (
-                    <div className="no-data-wrapper">No Data Found.</div>
-                ) : (
-                    <>
-                        {coursesData.map((course, index) => {
-                            const previousCourse = coursesData[index - 1];
-                            const previousCourseProgress = previousCourse ? previousCourse.progress : 100;
-                            // The student can access the current course only if the previous course is completed 100%
-                            const canAccessCourse = previousCourseProgress === 100;
-
-                            return (
-                                <GenericCard
-                                    key={index}
-                                    {...course}
-                                    onChange={(e) => handleArchiveChange(e, course?._id, course?.archive)}
-                                    canAccessCourse={canAccessCourse}
-                                />
-                            );
-                        })}
-                    </>
-                )}
-            </div>
-            {coursesData.length !== 0 && (
-                <Pagination
-                    customClass={coursesData.length < itemsPerPage ? 'card-position' : ''}
-                    currentPage={currentPage}
-                    totalPages={totalPages}
-                    onPageChange={handlePageChange}
-                />
+            {hasLoaded && allCourses.length === 0 ? (
+                <div className="no-data-wrapper">No Data Found.</div>
+            ) : (
+                <InfiniteScroll
+                    className="custom-card-course"
+                    dataLength={displayedCourses.length}
+                    next={fetchMoreData}
+                    hasMore={hasMore}
+                    loader={<h4 className="text-center">Loading...</h4>}
+                >
+                    {displayedCourses.map((course) => (
+                        <GenericCard
+                            key={course._id}
+                            {...course}
+                            onChange={(e) => handleArchiveChange(e, course._id, course.archive)}
+                            canAccessCourse={true} // Adjust logic as needed
+                        />
+                    ))}
+                </InfiniteScroll>
             )}
         </div>
     );
