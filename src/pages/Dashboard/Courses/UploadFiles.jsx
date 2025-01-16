@@ -497,7 +497,7 @@ const UploadFiles = ({ onNext, onBack, initialData, setStepComplete, updateCours
                                     </Row>
                                     {/* Course Banner */}
                                     <Row className="mb-3">
-                                        <Col xs={12} sm={12} md={12} lg={12}>
+                                        <Col xs={12} sm={12} md={12} lg={6}>
                                             {banner ? <></> : <label className="field-label">Course Banner</label>}
                                             <Field name="banner">
                                                 {() => (
