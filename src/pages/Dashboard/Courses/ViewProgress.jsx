@@ -12,6 +12,7 @@ import { API_URL } from '../../../utils/apiUrl';
 import TextExpand from '@components/TextExpand/TextExpand';
 import '../../../styles/Courses.scss';
 import { trimLongText } from '../../../utils/common';
+import bannerImage from '../../../assets/images/publish-background.svg';
 
 const ViewProgress = () => {
     const location = useLocation();
@@ -100,7 +101,15 @@ const ViewProgress = () => {
                 View Progress
             </div>
 
-            <div className="card-background">
+            <div
+                className="card-background"
+                style={{
+                    backgroundImage: `url(${progress?.course?.banner || bannerImage})`,
+                    backgroundPosition: 'center',
+                    backgroundRepeat: 'no-repeat',
+                    backgroundSize: 'cover'
+                }}
+            >
                 <div className="text-heading">
                     <TextExpand className="text-white fw-bold fs-1" value={progress?.course?.title} width="50%" />
 
