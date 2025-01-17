@@ -373,8 +373,9 @@ const UploadFiles = ({ onNext, onBack, initialData, setStepComplete, updateCours
                                                                         <div>
                                                                             <p>Upload your course Thumbnail here.</p>
                                                                             <p>
-                                                                                Supported format:
-                                                                                <strong>.jpg, .jpeg, or .png</strong>
+                                                                                Supported format:{' '}
+                                                                                <strong>.jpg, .jpeg, or .png</strong>{' '}
+                                                                                etc.
                                                                             </p>
                                                                         </div>
 
@@ -460,10 +461,10 @@ const UploadFiles = ({ onNext, onBack, initialData, setStepComplete, updateCours
                                                                     <img src={VideoIcon} alt="" />
                                                                     <div className="image-preview-text">
                                                                         <span>
-                                                                            Upload your course video here.
+                                                                            Upload your course Video here.
                                                                             <br />
-                                                                            Supported formats:{' '}
-                                                                            <strong>MP4, WebM, Ogg,</strong> etc.
+                                                                            Supported format:{' '}
+                                                                            <strong>MP4, WebM, or Ogg</strong> etc.
                                                                         </span>
                                                                         <Button
                                                                             type="submit"
@@ -551,8 +552,8 @@ const UploadFiles = ({ onNext, onBack, initialData, setStepComplete, updateCours
                                                                     <div className="image-preview-text">
                                                                         <p>Upload your course Banner here.</p>
                                                                         <p>
-                                                                            Supported format:
-                                                                            <strong>.jpg, .jpeg, or .png</strong>
+                                                                            Supported format:{' '}
+                                                                            <strong> .jpg, .jpeg, or .png</strong> etc.
                                                                         </p>
                                                                         <Button
                                                                             type="submit"
