@@ -30,7 +30,7 @@ const CarouselWrapper = ({ items = [], type = 'product' }) => {
     };
     return (
         <>
-            <Row>
+            <Row className="gx-4 gy-4">
                 {items?.map((item, index = 1) => {
                     return (
                         <Col key={index} xxl={3} xl={4} lg={4} md={6} sm={12} xs={12}>

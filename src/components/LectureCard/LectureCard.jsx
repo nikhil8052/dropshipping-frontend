@@ -7,7 +7,7 @@ import { stripHtmlTags } from '../../utils/utils';
 
 const LectureCard = ({ item }) => {
     return (
-        <div className="product-card h-100" key={item.id}>
+        <div className="lecture-card h-100" key={item.id}>
             {item.type === 'pdf' ? (
                 <FontAwesomeIcon className="product-image" icon={faFilePdf} color="rgba(200, 202, 216, 1)" />
             ) : (
@@ -23,7 +23,7 @@ const LectureCard = ({ item }) => {
             )}
             <div className="product-details mb-2">
                 <h5>{trimLongText(item.title, 20)}</h5>
-                <p>{trimLongText(stripHtmlTags(item.description), 25)}</p>
+                <p>{trimLongText(stripHtmlTags(item.description), 20)}</p>
             </div>
         </div>
     );

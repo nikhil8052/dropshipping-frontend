@@ -120,13 +120,13 @@ const GenericCard = ({
                     show={showDeleteModal}
                     onClose={handleCloseDeleteModal}
                     onConfirm={handleDeleteSubmit}
-                    title="Confirm Deletion"
+                    title="Delete Course"
                     body="Are you sure you want to delete this course? Data associated with this course will be lost."
                     loading={loadingCRUD}
                     customFooterClass="custom-footer-class" // Optional: adjust based on your styling
                     nonActiveBtn="cancel-button" // Optional: adjust based on your styling
                     activeBtn="delete-button" // Optional: adjust based on your styling
-                    cancelButtonTitle="Cancel" // Optional: customize button text
+                    cancelButtonTitle="No" // Optional: customize button text
                     activeBtnTitle="Delete" // Optional: customize button text
                 />
             )}

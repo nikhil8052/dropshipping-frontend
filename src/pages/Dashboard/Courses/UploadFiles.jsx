@@ -303,7 +303,7 @@ const UploadFiles = ({ onNext, onBack, initialData, setStepComplete, updateCours
                                 description: Yup.string().required('Description is required'),
                                 thumbnail: Yup.string().required('Thumbnail is required'),
                                 trailer: Yup.string().optional(),
-                                banner: Yup.string().required('Banner is required')
+                                banner: Yup.string().optional()
                             })}
                             onSubmit={handleUploadFilesSubmit}
                             enableReinitialize

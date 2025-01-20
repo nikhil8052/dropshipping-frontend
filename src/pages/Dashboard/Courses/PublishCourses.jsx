@@ -72,7 +72,7 @@ const PublishCourses = ({ onBack, initialData, setStepComplete, publishCourse })
                     </div>
                     <div className="lecture-details-wrapper">
                         <div className="lecture-details">
-                            <div className="lecture-detailpdfLecturess-item lecture-details-2">
+                            <div className="lecture-details-item lecture-details-2">
                                 <h1>Lectures</h1>
                                 <p>
                                     {lectures?.length - pdfLectures.length} Video Lectures, {pdfLectures.length}{' '}
@@ -88,7 +88,7 @@ const PublishCourses = ({ onBack, initialData, setStepComplete, publishCourse })
                             <CarouselWrapper items={mapLectures} type="lecture" />
                         </div>
                         <Row>
-                            <div className="mt-3 pb-3 d-flex justify-content-between gap-3">
+                            <div className="pb-3 d-flex justify-content-between gap-3">
                                 <Button type="button" onClick={onBack} className="cancel-btn">
                                     Back
                                 </Button>
