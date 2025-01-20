@@ -180,7 +180,16 @@ const Courses = () => {
         // Calculate the completion percentage for this course
         return totalLectures > 0 ? (completedLectures / totalLectures) * 100 : 0;
     };
-
+    const handleDelete = async (courseId) => {
+        setLoading(true);
+        try {
+            await axiosWrapper('DELETE', `${API_URL.DELETE_COURSE.replace(':id', courseId)}`, {}, userToken);
+            setLoading(false);
+            getAllCourses();
+        } catch (error) {
+            setLoading(false);
+        }
+    };
     return (
         <div className="course-section">
             <Helmet>
@@ -243,6 +252,7 @@ const Courses = () => {
                         <GenericCard
                             key={course._id}
                             {...course}
+                            onDelete={handleDelete}
                             onChange={(e) => handleArchiveChange(e, course._id, course.archive)}
                             canAccessCourse={true} // Adjust logic as needed
                         />

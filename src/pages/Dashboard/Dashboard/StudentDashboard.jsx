@@ -45,8 +45,11 @@ const StudentDashboard = () => {
     }, []);
 
     useEffect(() => {
-        fetchDashboardData();
-    }, [role]);
+        if (token && role) {
+            // Ensure token and role are present
+            fetchDashboardData();
+        }
+    }, [role, token]);
 
     useEffect(() => {
         if (currentFilter) {
@@ -56,7 +59,10 @@ const StudentDashboard = () => {
 
     // Fetch session info
     useEffect(() => {
-        fetchSessionInfo();
+        if (token) {
+            // Ensure token is present
+            fetchSessionInfo();
+        }
     }, [token]);
 
     const fetchSessionInfo = async () => {
