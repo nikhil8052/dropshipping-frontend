@@ -185,7 +185,7 @@ const NewEvent = () => {
     };
     useEffect(() => {
         if (userInfo && token && !isAuthCalled) {
-            if (!userInfo.googleTokens || userInfo.googleTokens.expiry_date <= Date.now()) {
+            if (!userInfo?.googleTokens || userInfo?.googleTokens.expiry_date <= Date.now()) {
                 setIsAuthCalled(true);
                 auth();
             }
@@ -205,7 +205,7 @@ const NewEvent = () => {
                 setEventData((prev) => ({
                     ...prev,
                     typeOfEvent: 'ONLINE',
-                    meetingLink: userInfo.meetingLink
+                    meetingLink: userInfo?.meetingLink
                 }));
             }
         }

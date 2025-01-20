@@ -175,7 +175,7 @@ const Events = () => {
                     <div
                         className="action-button edit-button"
                         onClick={
-                            props.data.createdBy?._id.toString() !== userInfo._id.toString()
+                            props.data.createdBy?._id.toString() !== userInfo?._id.toString()
                                 ? () => toast.error('Only event host can edit events!')
                                 : () => props.onEditClick(props.data._id)
                         }
@@ -187,7 +187,7 @@ const Events = () => {
                     <div
                         className="btn-light action-button delete-button"
                         onClick={
-                            props.data.createdBy?._id.toString() !== userInfo._id.toString()
+                            props.data.createdBy?._id.toString() !== userInfo?._id.toString()
                                 ? () => toast.error('Only event host can delete events!')
                                 : () => props.onDeleteClick(props.data._id)
                         }

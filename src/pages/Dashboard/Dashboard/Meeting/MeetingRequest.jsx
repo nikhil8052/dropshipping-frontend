@@ -122,7 +122,7 @@ const MeetingRequest = () => {
     };
     useEffect(() => {
         if (userInfo && token && !isAuthCalled) {
-            if (!userInfo.googleTokens || userInfo.googleTokens.expiry_date <= Date.now()) {
+            if (!userInfo?.googleTokens || userInfo?.googleTokens.expiry_date <= Date.now()) {
                 setIsAuthCalled(true);
                 auth();
             }

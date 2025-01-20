@@ -325,11 +325,11 @@ const StudentDashboard = () => {
                                                         >
                                                             {paymentUpToDate
                                                                 ? `${availableSessions}/${
-                                                                      userInfo.installmentFrequency === 'weekly'
+                                                                      userInfo?.installmentFrequency === 'weekly'
                                                                           ? '1'
                                                                           : '4'
                                                                   } sessions available`
-                                                                : `0/${userInfo.installmentFrequency === 'weekly' ? '1' : '4'} sessions available`}
+                                                                : `0/${userInfo?.installmentFrequency === 'weekly' ? '1' : '4'} sessions available`}
                                                         </Badge>
 
                                                         {paymentUpToDate &&
@@ -346,7 +346,7 @@ const StudentDashboard = () => {
                                                         {paymentUpToDate
                                                             ? `You are eligible to schedule up to ${availableSessions} coaching session${
                                                                   availableSessions !== 1 ? 's' : ''
-                                                              } this ${userInfo.installmentFrequency === 'weekly' ? 'week' : 'month'}.`
+                                                              } this ${userInfo?.installmentFrequency === 'weekly' ? 'week' : 'month'}.`
                                                             : 'Your payments are not up-to-date. Please complete your payment to access coaching sessions.'}
                                                     </p>
                                                 </>

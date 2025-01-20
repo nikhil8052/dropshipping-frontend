@@ -87,9 +87,9 @@ const EnrolledCourseDetail = () => {
     // Handle eligibility check based on courseAccessUntil
     const checkAccessEligibility = () => {
         const currentDate = new Date();
-        const accessUntilDate = new Date(userInfo.courseAccessUntil);
+        const accessUntilDate = new Date(userInfo?.courseAccessUntil);
 
-        if (userInfo.paymentType === 'installments' && accessUntilDate < currentDate) {
+        if (userInfo?.paymentType === 'installments' && accessUntilDate < currentDate) {
             setAccessRestricted(true);
         } else {
             setAccessRestricted(false);
@@ -97,7 +97,11 @@ const EnrolledCourseDetail = () => {
     };
 
     useEffect(() => {
-        checkAccessEligibility(); // Check eligibility on component load
+        checkAccessEligibility();
+
+        return () => {
+            setAccessRestricted(false);
+        };
     }, [userInfo?.courseAccessUntil]);
 
     const getCurrentLecture = async (id) => {

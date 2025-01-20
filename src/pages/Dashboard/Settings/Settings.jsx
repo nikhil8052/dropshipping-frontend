@@ -50,12 +50,12 @@ const Settings = () => {
     useEffect(() => {
         if (userInfo) {
             setProfileData({
-                name: userInfo.name,
-                email: userInfo.email,
-                phoneNumber: userInfo.phoneNumber,
-                meetingLink: userInfo.meetingLink
+                name: userInfo?.name,
+                email: userInfo?.email,
+                phoneNumber: userInfo?.phoneNumber,
+                meetingLink: userInfo?.meetingLink
             });
-            setProfilePhoto(userInfo.avatar);
+            setProfilePhoto(userInfo?.avatar);
         }
         setPasswordData({
             currentPassword: '',
