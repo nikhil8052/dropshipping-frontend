@@ -13,7 +13,6 @@ import { Helmet } from 'react-helmet';
 import GenericCard from '../../../components/GenericCard/GenericCard';
 import { precisionRound } from '../../../utils/common';
 import InfiniteScroll from 'react-infinite-scroll-component';
-import Loading from '../../../components/Loading/Loading';
 import * as types from '../../../redux/actions/actionTypes';
 
 const Courses = () => {
@@ -246,7 +245,6 @@ const Courses = () => {
                     dataLength={displayedCourses.length}
                     next={fetchMoreData}
                     hasMore={hasMore}
-                    loader={<Loading />}
                 >
                     {displayedCourses.map((course) => (
                         <GenericCard
