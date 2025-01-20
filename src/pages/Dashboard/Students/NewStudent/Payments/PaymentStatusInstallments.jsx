@@ -105,7 +105,7 @@ const PaymentStatusInstallments = ({ studentName, paymentHistory, id, setIsRefet
                         >
                             <div className="d-flex align-items-center gap-2">
                                 <span>Due Date: {formatTimezoneWithoutTime(installment.dueDate)}</span>
-                                {installment.status === 'unpaid' && userInfo.role === 'ADMIN' && (
+                                {installment.status === 'unpaid' && userInfo?.role === 'ADMIN' && (
                                     <img
                                         src={editIcon}
                                         alt="Edit"

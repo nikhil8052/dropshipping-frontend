@@ -163,7 +163,7 @@ const SingleEvent = () => {
                                 </>
                             ) : (
                                 <div className="event-detail-footer">
-                                    {event?.createdBy?._id.toString() === userInfo._id.toString() && (
+                                    {event?.createdBy?._id.toString() === userInfo?._id.toString() && (
                                         <button
                                             type="button"
                                             className="edit"

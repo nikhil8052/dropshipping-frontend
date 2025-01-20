@@ -1,6 +1,4 @@
-import { Keyboard, Navigation, Pagination, Scrollbar } from 'swiper/modules';
 import './CarouselWrapper.scss';
-import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/swiper-bundle.css';
 import 'swiper/css';
 import ProductCard from '../ProductCard/ProductCard';
@@ -9,63 +7,18 @@ import Modal from '../Modal/Modal';
 import { useState } from 'react';
 import PdfModal from '../PdfRenderer/PdfViewer';
 import { stripHtmlTags } from '../../utils/utils';
+import { Col, Row } from 'react-bootstrap';
 
 const CarouselWrapper = ({ items = [], type = 'product' }) => {
     const [showModal, setShowModal] = useState(false);
     const [selectedItem, setSelectedItem] = useState(null);
 
-    const swiperBreakpoints = {
-        320: {
-            slidesPerView: 1,
-            spaceBetween: -30
-        },
-        576: {
-            slidesPerView: 2,
-            spaceBetween: -30
-        },
-        768: {
-            slidesPerView: 2,
-            spaceBetween: -30
-        },
-        992: {
-            slidesPerView: 2,
-            spaceBetween: -30
-        },
-        1200: {
-            slidesPerView: 3,
-            spaceBetween: -30
-        },
-        1440: {
-            slidesPerView: 3,
-            spaceBetween: -30
-        },
-        1680: {
-            slidesPerView: 4,
-            spaceBetween: -30
-        },
-        1920: {
-            slidesPerView: 5,
-            spaceBetween: -30
-        },
-        2560: {
-            slidesPerView: 5,
-            spaceBetween: -30
-        },
-        3600: {
-            slidesPerView: 5,
-            spaceBetween: -30
-        }
-    };
-
-    const handleSlideClick = (e, item, index) => {
+    const handleClick = (e, item) => {
         e.stopPropagation();
         e.preventDefault();
         const isProductType = type === 'product';
-        // Check if the slider's pre and next buttons are disabled
-        const isDisabled =
-            e.target.className === 'swiper-slide swiper-slide-next slide-item cursor-pointer' ||
-            ('swiper-slide slide-item cursor-pointer' && index === e.target.swiperSlideIndex);
-        if (isProductType || isDisabled) return;
+
+        if (isProductType) return;
         // Preview of lectures
         setSelectedItem(item);
         setShowModal(true);
@@ -77,29 +30,27 @@ const CarouselWrapper = ({ items = [], type = 'product' }) => {
     };
     return (
         <>
-            <Swiper
-                loop={false}
-                rewind={false}
-                breakpoints={swiperBreakpoints}
-                navigation={true}
-                modules={[Keyboard, Scrollbar, Navigation, Pagination]}
-            >
-                {items.map((item, index = 1) => (
-                    <SwiperSlide
-                        className="slide-item cursor-pointer"
-                        key={index}
-                        onClick={(e) => handleSlideClick(e, item, index)}
-                    >
-                        {type === 'product' ? (
-                            <ProductCard item={item} />
-                        ) : type === 'lecture' ? (
-                            <LectureCard item={item} />
-                        ) : (
-                            <></>
-                        )}
-                    </SwiperSlide>
-                ))}
-            </Swiper>
+            <Row className="gx-4 gy-4">
+                {items?.map((item, index = 1) => {
+                    return (
+                        <Col key={index} xxl={3} xl={4} lg={4} md={6} sm={12} xs={12}>
+                            <div
+                                className="cursor-pointer d-flex justify-content-center align-items-center"
+                                onClick={(e) => handleClick(e, item, index)}
+                            >
+                                {type === 'product' ? (
+                                    <ProductCard item={item} />
+                                ) : type === 'lecture' ? (
+                                    <LectureCard item={item} />
+                                ) : (
+                                    <></>
+                                )}
+                            </div>
+                        </Col>
+                    );
+                })}
+            </Row>
+
             <Modal
                 size="large" // You can change the size as needed
                 show={showModal}
