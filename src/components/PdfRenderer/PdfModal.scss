@@ -1,0 +1,34 @@
+@import '@constants/colors.scss';
+// PdfModal.scss
+.pdf-viewer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 20px;
+
+    .page-controls {
+        margin-top: 20px;
+        display: flex;
+        justify-content: space-between;
+        width: 100%;
+        max-width: 800px;
+
+        button {
+            @include pagination-gradient;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 59px;
+
+            cursor: pointer;
+
+            &:disabled {
+                background: #ccc;
+            }
+        }
+
+        span {
+            font-size: 16px;
+        }
+    }
+}

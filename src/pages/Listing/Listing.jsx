@@ -5,7 +5,7 @@ import Modal from '@components/Modal/Modal';
 import ProductForm from '@components/Listings/ProductForm/ProductForm';
 import ConfirmationBox from '@components/ConfirmationBox/ConfirmationBox';
 import { Helmet } from 'react-helmet';
-import { formatDate } from '../../utils/common';
+import { formatTimezone } from '../../utils/common';
 import axiosWrapper from '@utils/api';
 import { toast } from 'react-toastify';
 import TextExpand from '@components/TextExpand/TextExpand';
@@ -168,7 +168,7 @@ const Listing = () => {
             filter: 'agSetColumnFilter',
             sortable: true,
             unSortIcon: true,
-            cellRenderer: (params) => formatDate(params.value)
+            cellRenderer: (params) => formatTimezone(params.value)
         },
         {
             headerName: 'Actions',
@@ -188,7 +188,7 @@ const Listing = () => {
     return (
         <div className="listing-page">
             <Helmet>
-                <title>Products | Template</title>
+                <title>Products | Dropship Academy</title>
             </Helmet>
             {productModal.show && (
                 <Modal size="large" show={productModal.show} onClose={handleCloseModal} title={productModal.title}>

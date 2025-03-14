@@ -8,16 +8,41 @@ function Select(props) {
             <ReactSelect
                 options={props.options}
                 name={field.name}
-                value={props.options.find((option) => option.value === field.value)}
+                value={
+                    props.isMulti
+                        ? props.options.filter((option) => field.value.includes(option.value))
+                        : props.options.find((option) => option.value === field.value)
+                }
                 classNamePrefix="custom_select" // class prefix for customization
-                onChange={({ value }) => {
-                    field.onChange({
-                        target: {
-                            name: field.name,
-                            value: value
-                        }
-                    });
+                className={props.className}
+                styles={{
+                    container: (provided) => ({
+                        ...provided,
+                        height: '39px'
+                    })
                 }}
+                isMulti={props.isMulti}
+                onChange={(e) => {
+                    if (props.isMulti) {
+                        const value = e ? e.map((item) => item.value) : [];
+                        field.onChange({
+                            target: {
+                                name: field.name,
+                                value: value
+                            }
+                        });
+                        return;
+                    } else {
+                        const value = e ? e.value : '';
+                        field.onChange({
+                            target: {
+                                name: field.name,
+                                value: value
+                            }
+                        });
+                    }
+                }}
+                components={props.components}
             />
         </div>
     );

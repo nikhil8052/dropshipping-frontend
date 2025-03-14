@@ -7,7 +7,7 @@ function Card(props) {
         return '';
     };
     return (
-        <BootsrapCard className={`${'custom-card'} ${getCardSize(props.cardType)}`}>
+        <BootsrapCard className={`${'custom-card'} ${props.customCardClass} ${getCardSize(props.cardType)}`}>
             {/* render card header only if header props is true */}
             {props.header ? (
                 <BootsrapCard.Header>
@@ -16,9 +16,7 @@ function Card(props) {
                         {/* render time filters only if filter props is true */}
                         {props.filters ? (
                             <Form.Select aria-label="Default select example">
-                                <option value="week">
-                                    Last Week
-                                </option>
+                                <option value="week">Last Week</option>
                                 <option value="month">Last Month</option>
                                 <option value="year">1 Year</option>
                             </Form.Select>

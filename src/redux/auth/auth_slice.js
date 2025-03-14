@@ -24,7 +24,13 @@ const authSlice = createSlice({
         },
         loginWithoutAPI: (state, { payload }) => {
             state.isLoggedIn = true;
-            state.userInfo = { email: payload.email };
+            state.userInfo = { email: payload.email, role: payload.role };
+        },
+        updateUserInfo: (state, { payload }) => {
+            state.userInfo = payload;
+        },
+        updateGoogleTokens: (state, { payload }) => {
+            state.userInfo.googleTokens = payload.googleTokens;
         }
     },
     extraReducers(builder) {
@@ -74,5 +80,5 @@ const authSlice = createSlice({
     }
 });
 
-export const { logoutUser, loginWithoutAPI } = authSlice.actions;
+export const { logoutUser, loginWithoutAPI, updateUserInfo, updateGoogleTokens } = authSlice.actions;
 export default authSlice.reducer;

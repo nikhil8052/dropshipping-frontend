@@ -7,13 +7,38 @@
 
     color-scheme: light dark;
     color: $light-color;
-    background-color: $dark-color;
-
+    background-color: white;
     font-synthesis: none;
     text-rendering: optimizeLegibility;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     -webkit-text-size-adjust: 100%;
+}
+
+a,
+p,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+ul,
+li,
+div,
+span,
+button,
+input,
+label,
+select,
+option,
+textarea,
+table,
+th,
+td,
+input,
+p {
+    font-family: $font-primary;
 }
 
 .wrapper {
@@ -43,6 +68,7 @@ body {
 /* Track */
 ::-webkit-scrollbar-track {
     background-color: $body-bg-color;
+    border-radius: 10px;
 }
 
 /* Handle */
@@ -83,7 +109,7 @@ button:focus-visible {
 @media (prefers-color-scheme: light) {
     :root {
         color: $dark-color;
-        background-color: $light-color;
+        // background-color: $light-color;
     }
     a:hover {
         color: $link-hover-color;
@@ -92,4 +118,89 @@ button:focus-visible {
 
 .ag-center-cols-container {
     min-width: 100%;
+}
+
+input,
+.form-select,
+.form-control {
+    background-color: white !important;
+}
+
+.cursor-pointer {
+    cursor: pointer;
+}
+
+// Fix the globally all dropdowns on Click colors
+.dropdown-item:active {
+    background-color: unset !important;
+}
+// Fix edit button on hover on image change
+
+.image_wrapper {
+    position: relative;
+}
+
+.image-renderer {
+    position: relative;
+}
+
+.img-wrapper {
+    position: relative;
+}
+
+.img-wrapper img {
+    display: block;
+    border-radius: 50%;
+    width: 100%; /* Adjust width as needed */
+    height: auto; /* Adjust height as needed */
+}
+
+.overlay-image {
+    height: 0;
+    width: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+    color: transparent;
+    position: absolute;
+    bottom: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition:
+        height 300ms ease-in-out,
+        color 300ms ease-in-out;
+    cursor: pointer;
+}
+
+.img-wrapper:hover .overlay-image {
+    height: 50%; /* Adjust height as needed */
+    color: white;
+}
+
+/* Chrome, Safari, Edge, Opera */
+input[type='number']::-webkit-outer-spin-button,
+input[type='number']::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+/* Firefox */
+input[type='number'] {
+    -moz-appearance: textfield;
+}
+
+/* General styling for the radio input */
+input[type='radio'] {
+    background-color: $info-color !important;
+    border-color: $info-color !important;
+}
+
+/* Styling for the unchecked state */
+input[type='radio']:not(:checked) {
+    background-color: white !important;
+    border-color: $info-color !important;
+}
+
+/* Styling for the checked state */
+input[type='radio']:checked {
+    background-color: $info-color !important;
+    border-color: white !important;
 }

@@ -6,7 +6,7 @@ const NotFound = () => {
     return (
         <React.Fragment>
             <Helmet>
-                <title>404 Not Found | Template</title>
+                <title>404 Not Found | Dropship Academy</title>
             </Helmet>
 
             <div className="error_boundary">

@@ -1,0 +1,665 @@
+@import '@constants/colors.scss';
+@import '@constants/media.scss';
+@import '@constants/typography.scss';
+@import '@components/MeetingCard/MeetingCard.scss';
+
+.events-page {
+    .btn-wrapper {
+        display: flex;
+        justify-content: end;
+        margin-bottom: 1rem;
+        flex-wrap: wrap;
+        gap: 1rem;
+
+        @media (max-width: $large-screen) {
+            justify-content: start;
+            margin-top: 0.5rem;
+        }
+    }
+
+    .filter-by-text {
+        font-family: Inter;
+        font-size: 16px;
+        font-weight: 400;
+        line-height: 18px;
+        text-align: right;
+    }
+
+    // Fee status colors
+    .fee-status {
+        display: inline-block;
+        border-radius: 130px;
+        color: #ffff;
+        &.Paid {
+            background-color: $success-light-color;
+            padding: 0px 30px;
+        }
+        &.Unpaid {
+            padding: 0px 20px;
+            background-color: $danger-light-color;
+        }
+        &.partial {
+            background-color: $warning-color;
+        }
+    }
+}
+
+// Event Details
+.event-details-section {
+    .event-detail-top {
+        display: flex;
+        gap: 15px;
+        align-items: center;
+        padding-block: 24px;
+        padding-inline: 24px;
+        border-bottom: 0.2px solid #707070;
+        .card-profile-img {
+            padding-block: 21px;
+            padding-inline: 21px;
+            border: 1px solid;
+            font-size: 32px;
+            align-items: center;
+            text-align: center;
+            font-weight: $font-weight-medium;
+            color: #ffffff;
+            background-color: #019fd8;
+            border-radius: 15px;
+        }
+        .meeting-details {
+            display: flex;
+            flex-direction: column;
+            gap: 1px;
+
+            h1 {
+                font-size: $font-size-extra-large;
+                font-weight: $font-weight-medium;
+                color: #000000;
+                margin: 0px;
+            }
+            h2 {
+                color: #a4a4a4;
+                font-weight: $font-size-medium;
+                font-size: $font-size-extra-large;
+                margin: 0px;
+            }
+            p {
+                font-weight: $font-size-medium;
+                font-size: $font-size-extra-large;
+                color: #212121;
+            }
+        }
+    }
+    .meeting-detail-body {
+        display: flex;
+        justify-content: center;
+        flex-direction: column;
+        padding-block: 10px;
+        padding-inline: 24px;
+
+        h1 {
+            font-size: $font-size-medium;
+            font-weight: $font-weight-large;
+        }
+        span {
+            font-size: $font-size-medium;
+            font-weight: $font-weight-regular;
+        }
+        .time-detail {
+            margin-top: 19px;
+            text-align: center;
+            background-color: #f2f8ff;
+            padding-block: 13px;
+            line-height: 14.71px;
+            border-radius: 10px;
+        }
+    }
+
+    // .event-detail-footer {
+    //     display: flex;
+    //     justify-content: end;
+    //     gap: 10px;
+    //     padding-inline: 24px;
+    //     padding-block: 32px;
+    //     border-top: 0.2px solid #707070;
+
+    //     .edit {
+    //         background-color: transparent;
+    //         color: #212121;
+    //         border: 3.3px solid #2f80ed;
+    //         width: 224px;
+    //         height: 45px;
+    //         border-radius: 50px;
+    //     }
+
+    //     .join {
+    //         background-color: #2f80ed;
+    //         color: #ffffff;
+    //         border: 0.3px solid #2f80ed;
+    //         padding-inline: auto;
+    //         border-radius: 50px;
+    //         width: 224px;
+    //         height: 45px;
+    //     }
+    // }
+
+    .main-row-meeting-link {
+        display: flex;
+        justify-content: space-evenly;
+        padding-block: 38px;
+        padding-inline: 24px;
+        flex-wrap: wrap;
+        .icon-stack {
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+            .profile-icon {
+                width: 35px; /* Set a fixed width for each avatar */
+                height: 35px;
+                border-radius: 30px;
+                margin-right: -11px; /* Overlap the next avatar by 50% */
+                transition: margin-right 0.3s ease;
+                background-color: #dfebff;
+                p {
+                    font-size: 12px;
+                    color: #0060ff;
+                    text-align: center;
+                    justify-content: center;
+                }
+            }
+            .profile-icon:last-child {
+                margin-right: 0; /* Remove margin from the last avatar */
+            }
+        }
+    }
+    .meeting-link {
+        display: flex;
+        font-size: $font-size-small;
+        justify-content: space-evenly;
+        align-items: center;
+        background-color: #dfebff;
+        padding-inline: 12px;
+        border-radius: 60.93px;
+        a {
+            padding-left: 10px;
+            margin-left: 10px;
+            border-left: 1px solid;
+            text-wrap: wrap;
+            color: #0060ff;
+        }
+    }
+    .personal-meeting-btn {
+        align-items: center;
+        width: 201.52px;
+        height: 44.32px;
+        justify-content: space-between;
+        border-radius: 45px;
+        background-color: #f6f6f6;
+        align-items: center;
+        padding-inline: 15px;
+        padding-top: 18px;
+        padding-bottom: 12px;
+        .profile-icon {
+            display: flex;
+            gap: 10px;
+            img {
+                width: 30px;
+                height: 30px;
+                border-radius: 50%;
+                object-fit: cover;
+            }
+        }
+        img {
+            width: 30px;
+            height: 30px;
+        }
+        h1 {
+            font-size: $font-size-medium;
+            font-weight: $font-weight-regular;
+            margin-bottom: 0px;
+        }
+        p {
+            font-size: $font-size-medium;
+            font-weight: $font-weight-regular;
+            color: #9e9e9e;
+        }
+        .dotOptions {
+            height: 18px;
+            width: 10px;
+        }
+    }
+
+    @media (min-width: $x-small-screen) and (max-width: $x-large-screen) {
+        .main-row-meeting-link {
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+        }
+    }
+}
+
+.single-event-wrapper {
+    .google-calendar-btn {
+        background: rgba(33, 33, 33, 1) !important;
+        border-radius: 59px;
+        font-weight: 400;
+        white-space: nowrap;
+        border: none !important;
+        font-family: Inter;
+        font-size: 14px;
+        font-weight: 500;
+        line-height: 24px;
+        padding: 10px 20px;
+        text-align: left;
+        margin-bottom: 0.5rem;
+    }
+    .submit-btn,
+    .cancel-btn {
+        border-radius: 59px;
+        font-weight: 400;
+        white-space: nowrap;
+        border: none;
+    }
+    .submit-btn {
+        color: #ffff;
+        padding: 10px 30px;
+        @include pagination-gradient;
+    }
+}
+// Events Listing
+.events-listing-wrapper {
+    .search-input {
+        max-width: 390px;
+        border-radius: 59px;
+        background-color: rgba(245, 248, 249, 1);
+        border: 1px solid rgba(233, 234, 240, 1) !important;
+    }
+    .input-group-text {
+        background: rgb(245, 248, 249) !important;
+        border-radius: 59px;
+    }
+    .search-input:focus-visible {
+        outline-color: rgba(146, 159, 165, 1) !important;
+        border: 1px solid rgba(233, 234, 240, 1) !important;
+        color: rgba(71, 81, 86, 1);
+    }
+    // Adjust the children responsive width
+    @media (max-width: $medium-screen) {
+        .search-input {
+            max-width: 100%;
+        }
+    }
+
+    .google-calendar-btn {
+        background: rgba(33, 33, 33, 1);
+        border-radius: 59px;
+        font-weight: 400;
+        white-space: nowrap;
+        border: none !important;
+        font-family: Inter;
+        font-size: 14px;
+        font-weight: 500;
+        line-height: 24px;
+        text-align: left;
+    }
+
+    // Calender Styles
+    .rbc-month-view {
+        border: none;
+    }
+
+    /* Custom Calendar Styles */
+    .rbc-calendar {
+        font-family: Inter;
+        border: none !important;
+    }
+
+    .rbc-header {
+        border: none;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-family: Inter;
+        font-size: 14px;
+        font-weight: 500;
+        line-height: 20px;
+        text-align: center;
+        color: rgba(32, 32, 32, 1);
+        .rbc-header {
+            border-bottom: 3px solid rgba(245, 246, 247, 1);
+            border-right: none !important;
+        }
+    }
+
+    .rbc-today {
+        background-color: inherit !important;
+    }
+
+    // Two divs with same classes
+    .rbc-row-segment {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .rbc-row-segment > div.rbc-event {
+        color: rgba(32, 32, 32, 1) !important;
+        border-radius: 59px !important;
+        text-align: start !important;
+        background: transparent !important;
+    }
+    .rbc-row-segment .rbc-event {
+        color: rgba(32, 32, 32, 1) !important;
+        border-radius: 59px !important;
+        text-align: center !important;
+    }
+
+    .active-event {
+        background-color: rgba(157, 236, 175, 1) !important;
+        color: rgba(32, 32, 32, 1) !important;
+        border: 1px solid rgb(93, 219, 122) !important;
+        border-radius: 59px !important;
+        text-align: center;
+    }
+    .future-event {
+        background: rgba(240, 248, 255, 1) !important;
+        color: rgba(32, 32, 32, 1) !important;
+        border: 1px solid rgb(99, 167, 231);
+        border-radius: 59px !important;
+        text-align: center;
+    }
+
+    .rbc-event-content p {
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+    }
+
+    // date cell
+    // .rbc-date-cell {
+    //     display: none;
+    // }
+
+    // ToolBar o calendar
+    .rbc-toolbar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 10px;
+
+        @media (max-width: $medium-screen) {
+            flex-direction: unset !important;
+            align-items: flex-start;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+    }
+
+    .rbc-btn-group button,
+    .dropdown button {
+        margin: 0 5px;
+    }
+
+    // Events Modal
+    .event-listing-modal {
+        .avatar {
+            background-color: #007bff !important;
+            color: white;
+            font-weight: bold;
+            padding: 10px;
+            border-radius: 50%;
+            font-size: 20px;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .meeting-details {
+            font-size: 0.8rem;
+            text-align: right;
+            color: #666;
+        }
+    }
+}
+.avatar {
+    width: 40px;
+    height: 40px;
+    margin-right: 0.625rem;
+    border-radius: 50% !important;
+    object-fit: cover;
+}
+
+.new-event-page-wrapper {
+    .title-top {
+        text-align: left;
+        color: rgba(95, 108, 114, 1);
+        font-family: Inter;
+        font-size: 14px;
+        font-weight: 400;
+        line-height: 20px;
+        text-align: left;
+        background: rgba(242, 244, 245, 1);
+        padding: 10px 20px;
+        border-radius: 12px;
+        margin-bottom: 0.5rem;
+        opacity: 0px;
+    }
+    .new-event-page {
+        height: calc(100vh - 14rem);
+        overflow-y: scroll;
+        box-shadow: 0px 0px 14.83px 0px rgba(0, 0, 0, 0.06);
+        border-radius: 9px;
+        .submit-btn,
+        .cancel-btn {
+            border-radius: 59px;
+            font-weight: 400;
+            white-space: nowrap;
+            border: none;
+        }
+        .submit-btn {
+            color: #ffff;
+            padding: 10px 30px;
+            @include pagination-gradient;
+        }
+
+        .cancel-btn {
+            padding: 10px 40px;
+            background-color: transparent !important;
+            color: black;
+            border: 1px solid rgba(233, 234, 240, 1);
+        }
+
+        .new-event-title {
+            font-family: Inter;
+            font-size: 18px;
+            font-weight: 600;
+            line-height: 21.78px;
+            text-align: left;
+            color: rgba(0, 43, 91, 1);
+        }
+
+        .field-label {
+            font-family: Inter;
+            font-size: 14px;
+            font-weight: 400;
+            line-height: 14px;
+            text-align: left;
+            text-transform: capitalize;
+            color: rgba(25, 28, 31, 1);
+        }
+        // Fields
+        .field-control,
+        .field-select-control {
+            font-family: Inter;
+            font-size: 14px;
+            font-weight: 400;
+            line-height: 14px;
+            text-align: left;
+            color: rgba(25, 28, 31, 1);
+            border: 0.8px solid rgba(233, 234, 240, 1);
+            border-radius: 50px;
+            padding: 10px 20px;
+            width: 100%;
+            margin-bottom: 0.5rem;
+        }
+        // on active or focus the border and color should be bold
+        .field-control:focus-visible,
+        .field-select-control:focus-visible {
+            outline-color: rgba(146, 159, 165, 1) !important;
+            border: 0.8px solid rgba(233, 234, 240, 1) !important;
+            color: rgba(71, 81, 86, 1);
+        }
+        .field-control::placeholder,
+        .field-select-control::placeholder {
+            color: rgba(146, 159, 165, 1);
+        }
+        // Select
+        .field-select-control {
+            appearance: none;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            background: url('data:image/svg+xml;utf8,<svg fill="rgba(146, 159, 165, 1)" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path d="M7 10l5 5 5-5z"/></svg>')
+                no-repeat;
+            background-position: right 20px top 50%;
+            background-size: 20px;
+            padding: 12px 20px;
+            cursor: pointer;
+            width: 100%;
+        }
+
+        .custom_select__control {
+            border: 0.8px solid rgba(233, 234, 240, 1);
+            border-radius: 59px;
+        }
+        .custom_select__placeholder {
+            color: rgba(148, 148, 148, 1) !important;
+            padding: 0px 10px;
+        }
+
+        .custom_select__control:focus-visible {
+            outline-color: rgba(146, 159, 165, 1) !important;
+            color: rgba(71, 81, 86, 1);
+        }
+
+        .label-light {
+            font-size: 14px;
+            font-weight: 600;
+            line-height: 13.8px;
+            text-align: left;
+            color: rgba(95, 108, 114, 1);
+        }
+
+        .image-preview {
+            display: flex;
+            justify-content: start;
+            cursor: pointer;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            border: 0.8px solid rgba(233, 234, 240, 1);
+            border-radius: 10px;
+            padding: 20px 10px;
+            color: rgba(110, 116, 133, 1);
+            // Events screen btn
+            .upload-image-btn {
+                border-radius: 59px;
+                font-weight: 400;
+                white-space: nowrap;
+                border: none;
+                padding: 10px 30px;
+                background: rgba(204, 236, 247, 1);
+                color: rgba(1, 158, 216, 1);
+                margin-top: 1rem;
+            }
+        }
+
+        .image-renderer {
+            display: flex;
+            justify-content: start;
+            align-items: center;
+            gap: 1.5rem;
+            padding: 20px 10px;
+            border: 0.8px solid rgba(233, 234, 240, 1);
+            border-radius: 10px;
+            color: rgb(38, 54, 99);
+            img {
+                width: 85px;
+                height: 85px;
+                border-radius: 50%;
+                object-fit: cover;
+            }
+        }
+
+        .error {
+            color: $danger-color;
+            font-size: 12px;
+            font-weight: 400;
+            line-height: 14px;
+            text-align: left;
+        }
+    }
+
+    // student-taught-wrapper
+    .student-taught-wrapper {
+        font-family: Inter;
+        color: rgba(25, 28, 31, 1);
+        border: 0.8px solid rgba(233, 234, 240, 1);
+        border-radius: 16px;
+        padding: 20px;
+        min-height: 116px;
+        margin-bottom: 1rem;
+        .total {
+            color: rgba(28, 28, 28, 0.4);
+            margin-right: 0.5rem;
+        }
+        .data-value {
+            color: rgba(28, 28, 28, 1);
+            //styleName: 14 Regular;
+            font-family: Inter;
+            font-size: 14px;
+            font-weight: 400;
+            line-height: 20px;
+            text-align: center;
+            display: inline-block;
+            background: rgba(248, 248, 248, 1);
+            border-radius: 59px;
+            padding: 10px 20px;
+            margin: 0rem 1rem 1rem 0rem;
+        }
+        .field-label {
+            font-family: Inter;
+            font-size: 14px;
+            font-weight: 400;
+            line-height: 14px;
+            text-align: left;
+            text-transform: capitalize;
+            color: rgba(25, 28, 31, 1);
+        }
+        // Fields
+        .field-control,
+        .field-select-control {
+            font-family: Inter;
+            font-size: 14px;
+            font-weight: 400;
+            line-height: 14px;
+            text-align: left;
+            color: rgba(25, 28, 31, 1);
+            border: 0.8px solid rgba(233, 234, 240, 1);
+            border-radius: 50px;
+            padding: 10px 20px;
+            width: 100%;
+            margin-bottom: 0.5rem;
+        }
+    }
+
+    // Roadmap mapping
+    .course-roadmap-wrapper {
+        font-family: Inter;
+        color: rgba(25, 28, 31, 1);
+        border: 0.8px solid rgba(233, 234, 240, 1);
+        border-radius: 16px;
+        padding: 20px;
+        min-height: 116px;
+        margin-bottom: 1rem;
+    }
+}

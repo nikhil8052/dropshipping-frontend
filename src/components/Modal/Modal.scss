@@ -2,12 +2,19 @@
 @import '@constants/typography.scss';
 @import '@constants/media.scss';
 
-.modal-title{
-   font-size: $text-color;
-   text-transform: capitalize;
-   font-family: $font-primary; 
+.modal-title {
+    font-size: $text-color;
+    text-transform: capitalize;
+    font-family: $font-primary;
 }
-.modal-content{
+.modal-content {
     padding: 20px 20px;
     border: 0px;
+    .modal-header {
+        border-bottom: unset !important;
+    }
+}
+// New class to override text-transform for sentence case
+.sentence-case {
+    text-transform: none !important;
 }

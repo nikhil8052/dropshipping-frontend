@@ -1,26 +1,20 @@
 @import '@constants/colors.scss';
 @import '@constants/typography.scss';
-.top-nav{
-    width: 100%;
-    height: 70px;
-    padding: 20px;
-    background-color: $secondary-light;
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
-    border-bottom: 1px solid $primary-border;
+
+.top-nav-title {
+    padding: 0px 25px;
+    .sub-title {
+        color: $light-info-color;
+        text-transform: capitalize;
+    }
+    .main-title {
+        margin-bottom: 2rem;
+    }
 }
-.nav-right-items{
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-}
-.nav-left-items{
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    .menu-toggler{
+
+.menue-toggler-wrapper {
+    padding: 0px 8px;
+    .menu-toggler {
         background-color: transparent;
         color: $dark-color;
         border: 0px;
