@@ -32,7 +32,8 @@ const EnrolledCourseDetail = () => {
     const [continueQuiz, setContinueQuiz] = useState(false);
     const [courseDetails, setCourseDetails] = useState({});
     const [retryQuiz, setRetryQuiz] = useState(false);
-    const [accessRestricted, setAccessRestricted] = useState(false);
+    // const [accessRestricted, setAccessRestricted] = useState(false);
+    const accessRestricted = false;
 
     const [initialValues, setInitialValues] = useState({
         mcqs: []
@@ -84,25 +85,27 @@ const EnrolledCourseDetail = () => {
             getCurrentLecture(data.lectures[0]?._id);
         }
     };
+
+    // Commenting out for future reference
     // Handle eligibility check based on courseAccessUntil
-    const checkAccessEligibility = () => {
-        const currentDate = new Date();
-        const accessUntilDate = new Date(userInfo?.courseAccessUntil);
+    // const checkAccessEligibility = () => {
+    //     const currentDate = new Date();
+    //     const accessUntilDate = new Date(userInfo?.courseAccessUntil);
 
-        if (userInfo?.paymentType === 'installments' && accessUntilDate < currentDate) {
-            setAccessRestricted(true);
-        } else {
-            setAccessRestricted(false);
-        }
-    };
+    //     if (userInfo?.paymentType === 'installments' && accessUntilDate < currentDate) {
+    //         setAccessRestricted(false);
+    //     } else {
+    //         setAccessRestricted(false);
+    //     }
+    // };
 
-    useEffect(() => {
-        checkAccessEligibility();
+    // useEffect(() => {
+    //     checkAccessEligibility();
 
-        return () => {
-            setAccessRestricted(false);
-        };
-    }, [userInfo?.courseAccessUntil]);
+    //     return () => {
+    //         setAccessRestricted(false);
+    //     };
+    // }, [userInfo?.courseAccessUntil]);
 
     const getCurrentLecture = async (id) => {
         if (!id) return;
