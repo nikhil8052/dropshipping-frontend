@@ -336,22 +336,22 @@ const Students = () => {
                 );
             }
         },
-        {
-            headerName: 'Fee Status',
-            field: 'feeStatus',
-            filter: 'agSetColumnFilter',
-            sortable: true,
-            unSortIcon: true,
-            resizable: false,
-            cellRenderer: ({ data: rowData }) => {
-                const status = rowData.feeStatus || '--';
-                return (
-                    <div className={`${status} fee-status`} key={rowData._id}>
-                        {status}
-                    </div>
-                );
-            }
-        },
+        // {
+        //     headerName: 'Fee Status',
+        //     field: 'feeStatus',
+        //     filter: 'agSetColumnFilter',
+        //     sortable: true,
+        //     unSortIcon: true,
+        //     resizable: false,
+        //     cellRenderer: ({ data: rowData }) => {
+        //         const status = rowData.feeStatus || '--';
+        //         return (
+        //             <div className={`${status} fee-status`} key={rowData._id}>
+        //                 {status}
+        //             </div>
+        //         );
+        //     }
+        // },
         {
             headerName: 'HT / LT',
             field: 'coachingTrajectory',
