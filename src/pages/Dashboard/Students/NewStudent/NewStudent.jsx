@@ -5,7 +5,15 @@ import dropDownArrow from '@icons/drop-down-black.svg';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import ConfirmationBox from '@components/ConfirmationBox/ConfirmationBox';
 import * as Yup from 'yup';
-import { Container, Row, Col, Button, DropdownButton, Dropdown, Badge } from 'react-bootstrap';
+import {
+    Container,
+    Row,
+    Col,
+    Button,
+    DropdownButton,
+    Dropdown
+    //  Badge
+} from 'react-bootstrap';
 import 'react-quill/dist/quill.snow.css';
 import { coachingTrajectory, countryList, regions } from '../../../../data/data';
 import toast from 'react-hot-toast';
@@ -22,9 +30,9 @@ import { getFileObjectFromBlobUrl } from '../../../../utils/utils';
 import '../../../../styles/Students.scss';
 import '../../../../styles/Common.scss';
 import PhoneInputField from '../../../../components/Input/PhoneInput';
-import PaymentStatusOneTime from './Payments/PaymentStatusOneTime';
-import PaymentStatusInstallments from './Payments/PaymentStatusInstallments';
-import Card from '@components/Card/Card';
+// import PaymentStatusOneTime from './Payments/PaymentStatusOneTime';
+// import PaymentStatusInstallments from './Payments/PaymentStatusInstallments';
+// import Card from '@components/Card/Card';
 
 const NewStudent = () => {
     const inputRef = useRef();
@@ -41,7 +49,8 @@ const NewStudent = () => {
     const [studentProducts, setStudentProducts] = useState([]);
     const [loadingCRUD, setLoadingCRUD] = useState(false);
     const [categories, setCategories] = useState([]);
-    const [isRefetch, setIsRefetch] = useState(false);
+    // const [isRefetch, setIsRefetch] = useState(false);
+    const isRefetch = false;
     // Form state
     const [studentData, setStudentData] = useState({
         name: '',
@@ -51,11 +60,11 @@ const NewStudent = () => {
         region: '',
         coachingTrajectory: 'HIGH_TICKET',
         coursesRoadmap: [],
-        category: [],
-        paymentType: '',
-        installmentFrequency: '',
-        installmentCount: 0,
-        paymentHistory: []
+        category: []
+        // paymentType: '',
+        // installmentFrequency: '',
+        // installmentCount: 0,
+        // paymentHistory: []
     });
 
     const [showModal, setShowModal] = useState({
@@ -65,11 +74,11 @@ const NewStudent = () => {
         studentId: null
     });
     // Session details
-    const [sessionInfo, setSessionInfo] = useState({
-        paymentStatus: 'unpaid',
-        remainingSessions: 0,
-        nextSessionAvailableDate: null
-    });
+    // const [sessionInfo, setSessionInfo] = useState({
+    //     paymentStatus: 'unpaid',
+    //     remainingSessions: 0,
+    //     nextSessionAvailableDate: null
+    // });
 
     const schema = Yup.object({
         name: Yup.string()
@@ -108,13 +117,13 @@ const NewStudent = () => {
         coursesRoadmap: Yup.array(),
         category: Yup.array()
             .min(1, 'Please select at least one category') // Ensures at least one category is selected
-            .required('Please select a category'),
-        paymentType: Yup.string().required('Please select a payment type'),
-        installmentFrequency: Yup.string().when('paymentType', {
-            is: 'installments',
-            then: () => Yup.string().required('Please select installment frequency'),
-            otherwise: () => Yup.string().nullable()
-        })
+            .required('Please select a category')
+        // paymentType: Yup.string().required('Please select a payment type'),
+        // installmentFrequency: Yup.string().when('paymentType', {
+        //     is: 'installments',
+        //     then: () => Yup.string().required('Please select installment frequency'),
+        //     otherwise: () => Yup.string().nullable()
+        // })
     });
 
     useEffect(() => {
@@ -122,7 +131,8 @@ const NewStudent = () => {
             getSingleStudentById(studentId);
             // Get students Products
             getStudentProducts(studentId);
-            getSessionInfo(studentId);
+            // Commenting out for future reference
+            // getSessionInfo(studentId);
         }
     }, [studentId, isRefetch]);
 
@@ -152,11 +162,11 @@ const NewStudent = () => {
             region: student.region,
             category: mappedCategories,
             coachingTrajectory: student.coachingTrajectory,
-            coursesRoadmap: student.coursesRoadmap.map((c) => c._id),
-            paymentType: student.paymentType || 'one-time', // Default to 'one-time' if not present
-            installmentFrequency: student.installmentFrequency || '',
-            installmentCount: student.installmentCount || 0,
-            paymentHistory: student.paymentHistory
+            coursesRoadmap: student.coursesRoadmap.map((c) => c._id)
+            // paymentType: student.paymentType || 'one-time', // Default to 'one-time' if not present
+            // installmentFrequency: student.installmentFrequency || '',
+            // installmentCount: student.installmentCount || 0,
+            // paymentHistory: student.paymentHistory
         });
         setCourses(coursesRoadmap);
         setStudentPhoto(student.avatar);
@@ -170,15 +180,15 @@ const NewStudent = () => {
         setStudentProducts(data);
     };
 
-    const getSessionInfo = async (id) => {
-        const response = await axiosWrapper('GET', API_URL.GET_STUDENT_SESSION_INFO.replace(':id', id), {}, token);
-        const { paymentStatus, remainingSessions, nextSessionAvailableDate } = response.data;
-        setSessionInfo({
-            paymentStatus,
-            remainingSessions,
-            nextSessionAvailableDate: nextSessionAvailableDate ? new Date(nextSessionAvailableDate) : null
-        });
-    };
+    // const getSessionInfo = async (id) => {
+    //     const response = await axiosWrapper('GET', API_URL.GET_STUDENT_SESSION_INFO.replace(':id', id), {}, token);
+    //     const { paymentStatus, remainingSessions, nextSessionAvailableDate } = response.data;
+    //     setSessionInfo({
+    //         paymentStatus,
+    //         remainingSessions,
+    //         nextSessionAvailableDate: nextSessionAvailableDate ? new Date(nextSessionAvailableDate) : null
+    //     });
+    // };
 
     useEffect(() => {
         if (studentData.coachingTrajectory) {
@@ -730,10 +740,10 @@ const NewStudent = () => {
                                         />
                                     </Col>
                                 </Row>
-
+                                {/* Commenting out for future reference */}
                                 <Row>
-                                    <h4 className="my-3 new-student-title">Payment Information</h4>
-                                    <Col md={12} xs={12}>
+                                    {/* <h4 className="my-3 new-student-title">Payment Information</h4> */}
+                                    {/* <Col md={12} xs={12}>
                                         <label className="field-label">Payment Type</label>
                                         <Field
                                             name="paymentType"
@@ -774,10 +784,10 @@ const NewStudent = () => {
                                             }}
                                         />
                                         <ErrorMessage name="paymentType" component="div" className="error mt-2" />
-                                    </Col>
+                                    </Col> */}
 
                                     {/* Installment Frequency Dropdown (conditional) */}
-                                    {values.paymentType === 'installments' && (
+                                    {/* {values.paymentType === 'installments' && (
                                         <>
                                             <Col md={6} xs={12}>
                                                 <label className="field-label">Installment Frequency</label>
@@ -837,7 +847,8 @@ const NewStudent = () => {
                                                 />
                                             </Col>
                                         </>
-                                    )}
+                                    )} */}
+                                    {/*                                    
                                     {studentId && (
                                         <Col md={12} xs={12}>
                                             {values.paymentType === 'one-time' && (
@@ -860,7 +871,7 @@ const NewStudent = () => {
                                                 />
                                             )}
                                         </Col>
-                                    )}
+                                    )} */}
                                 </Row>
 
                                 <Row>
@@ -883,7 +894,9 @@ const NewStudent = () => {
                                     </Col>
                                 </Row>
                                 {/* Session Information */}
-                                {studentId && studentData.paymentType === 'installments' && (
+                                {/* Commenting out for future reference */}
+                                {/*
+                                studentId && studentData.paymentType === 'installments' && (
                                     <>
                                         <Row>
                                             <h4 className="my-3 new-student-title">Coaching Session Information</h4>
@@ -914,7 +927,7 @@ const NewStudent = () => {
                                             </Col>
                                         </Row>
                                     </>
-                                )}
+                                ) */}
 
                                 {studentId && (
                                     <>

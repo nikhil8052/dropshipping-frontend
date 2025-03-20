@@ -310,7 +310,7 @@ const StudentDashboard = () => {
                 <Loading centered={true} />
             ) : (
                 <>
-                    {userInfo?.paymentType === 'installments' && (
+                    {/* {userInfo?.paymentType === 'installments' && (
                         <Row className="my-4 align-items-center">
                             <Col xs={12}>
                                 <Card header={false} customCardClass="events-card">
@@ -390,42 +390,44 @@ const StudentDashboard = () => {
                                 </Card>
                             </Col>
                         </Row>
-                    )}
-                    {userInfo?.paymentType === 'one-time' && (
-                        <Row>
-                            <Col className="d-flex justify-content-end">
-                                {!userInfo?.assignedCoach ? (
-                                    <OverlayTrigger
-                                        placement="top"
-                                        overlay={
-                                            <Tooltip id="tooltip-top">
-                                                You need to be assigned a coach to request a meeting
-                                            </Tooltip>
-                                        }
-                                    >
-                                        <span className="d-inline-block">
-                                            <Button
-                                                variant="primary"
-                                                className="meeting-btn me-2"
-                                                disabled
-                                                style={{ pointerEvents: 'none' }}
-                                            >
-                                                Request for meeting
-                                            </Button>
-                                        </span>
-                                    </OverlayTrigger>
-                                ) : (
-                                    <Button
-                                        variant="primary"
-                                        className="meeting-btn me-2"
-                                        onClick={() => navigate('/student/request-meeting')}
-                                    >
-                                        Request for meeting
-                                    </Button>
-                                )}
-                            </Col>
-                        </Row>
-                    )}
+                    )} */}
+
+                    {/* Commenting out for future reference */}
+                    {/* {userInfo?.paymentType === 'one-time' && ( */}
+                    <Row>
+                        <Col className="d-flex justify-content-end">
+                            {!userInfo?.assignedCoach ? (
+                                <OverlayTrigger
+                                    placement="top"
+                                    overlay={
+                                        <Tooltip id="tooltip-top">
+                                            You need to be assigned a coach to request a meeting
+                                        </Tooltip>
+                                    }
+                                >
+                                    <span className="d-inline-block">
+                                        <Button
+                                            variant="primary"
+                                            className="meeting-btn me-2"
+                                            disabled
+                                            style={{ pointerEvents: 'none' }}
+                                        >
+                                            Request for meeting
+                                        </Button>
+                                    </span>
+                                </OverlayTrigger>
+                            ) : (
+                                <Button
+                                    variant="primary"
+                                    className="meeting-btn me-2"
+                                    onClick={() => navigate('/student/request-meeting')}
+                                >
+                                    Request for meeting
+                                </Button>
+                            )}
+                        </Col>
+                    </Row>
+                    {/* )} */}
 
                     <Row>
                         {cardStats.map((stat, index) => (
