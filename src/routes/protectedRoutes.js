@@ -17,6 +17,7 @@ const EventDetails = lazy(() => import('@pages/Dashboard/Events/EventDetails'));
 const SingleEvent = lazy(() => import('@pages/Dashboard/Events/SingleEvent/SingleEvent'));
 const Payment = lazy(() => import('@pages/Dashboard/Payments/Payments'));
 const VisualizeCSV = lazy(() => import('@pages/Dashboard/VisualizeCsv/VisualizeCsv'));
+const Roadmap = lazy(() => import('@pages/Dashboard/Roadmap/Roadmap'));
 const Settings = lazy(() => import('@pages/Dashboard/Settings/Settings'));
 const NewCourse = lazy(() => import('@pages/Dashboard/Courses/AddNewCourse'));
 const CourseDetail = lazy(() => import('@pages/Dashboard/Courses/CourseDetail'));
@@ -371,6 +372,13 @@ export const studentRoutes = [
         exact: true,
         name: 'Data',
         Component: VisualizeCSV,
+        access: 'STUDENT'
+    },
+    {
+        path: 'roadmap',
+        exact: true,
+        name: 'Roadmap',
+        Component: Roadmap,
         access: 'STUDENT'
     },
     {
