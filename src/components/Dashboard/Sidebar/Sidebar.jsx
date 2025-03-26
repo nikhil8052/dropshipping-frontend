@@ -15,6 +15,7 @@ import ConfirmationBox from '../../ConfirmationBox/ConfirmationBox';
 import { logoutUser } from '@redux/auth/auth_slice';
 import { changeLink } from '@redux/sidebar/sidebarSlice';
 import dotBlue from '@icons/dot-blue-2.svg';
+import faRoad from '@icons/coaches.svg';
 
 // import all static icons
 import { adminSidebarItems, coachSidebarItems, studentSidebarItems } from './sidebarData';
@@ -37,7 +38,26 @@ const Sidebar = () => {
     const { activeSidebarItem } = useSelector((state) => state.activeSidebarItem);
 
     useEffect(() => {
-        const items = role === 'ADMIN' ? adminSidebarItems : role === 'COACH' ? coachSidebarItems : studentSidebarItems;
+        const items =
+            role === 'ADMIN' ? adminSidebarItems : role === 'COACH' ? coachSidebarItems : [...studentSidebarItems]; // clone to avoid mutating original array
+
+        // For student role, if a roadMap exists then insert a "Roadmap" item before Settings.
+        if (role === 'STUDENT' && userInfo?.roadMap) {
+            const roadmapItem = {
+                id: 'roadmap', // unique id for the new item
+                name: 'Roadmap',
+                iconLight: faRoad, // using a FontAwesome icon
+                linkTo: '/student/roadmap'
+            };
+
+            // Find index of the "Settings" item.
+            const settingsIndex = items.findIndex((item) => item.name === 'Settings');
+            if (settingsIndex > -1) {
+                items.splice(settingsIndex, 0, roadmapItem);
+            } else {
+                items.push(roadmapItem);
+            }
+        }
         setUpdatedItems(items);
     }, [role, activeSidebarItem]);
 

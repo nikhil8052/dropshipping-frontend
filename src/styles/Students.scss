@@ -237,4 +237,8 @@
         min-height: 116px;
         margin-bottom: 1rem;
     }
+
+    .menu-overflow .dropdown-menu {
+        z-index: 1111 !important;
+    }
 }

@@ -12,6 +12,7 @@ import {
     Button,
     DropdownButton,
     Dropdown
+
     //  Badge
 } from 'react-bootstrap';
 import 'react-quill/dist/quill.snow.css';
@@ -60,7 +61,8 @@ const NewStudent = () => {
         region: '',
         coachingTrajectory: 'HIGH_TICKET',
         coursesRoadmap: [],
-        category: []
+        category: [],
+        roadMap: ''
         // paymentType: '',
         // installmentFrequency: '',
         // installmentCount: 0,
@@ -114,6 +116,7 @@ const NewStudent = () => {
             .oneOf(['HIGH_TICKET', 'LOW_TICKET'])
             .required('Please select a coaching trajectory')
             .matches(/\S/, 'Coaching trajectory cannot be empty or spaces only'),
+        roadMap: Yup.string().trim().oneOf(['ROAD_MAP_ONE', 'ROAD_MAP_TWO']).required('Please select a road map'),
         coursesRoadmap: Yup.array(),
         category: Yup.array()
             .min(1, 'Please select at least one category') // Ensures at least one category is selected
@@ -141,9 +144,9 @@ const NewStudent = () => {
         const student = response.data;
 
         const coursesRoadmap = student.coursesRoadmap.map((course) => ({
-            value: course._id,
-            label: course.title,
-            id: course._id
+            value: course?._id,
+            label: course?.title,
+            id: course?._id
         }));
 
         const mappedCategories = student.category.map((category) => {
@@ -155,18 +158,19 @@ const NewStudent = () => {
 
         setCategories(mappedCategories);
         setStudentData({
-            name: student.name,
-            email: student.email,
-            phoneNumber: student.phoneNumber,
-            country: student.country,
-            region: student.region,
-            category: mappedCategories,
-            coachingTrajectory: student.coachingTrajectory,
-            coursesRoadmap: student.coursesRoadmap.map((c) => c._id)
-            // paymentType: student.paymentType || 'one-time', // Default to 'one-time' if not present
-            // installmentFrequency: student.installmentFrequency || '',
-            // installmentCount: student.installmentCount || 0,
-            // paymentHistory: student.paymentHistory
+            name: student?.name || '',
+            email: student?.email || '',
+            phoneNumber: student?.phoneNumber || '',
+            country: student?.country || '',
+            region: student?.region || '',
+            category: mappedCategories || [],
+            coachingTrajectory: student?.coachingTrajectory || '',
+            roadMap: student?.roadMap || '',
+            coursesRoadmap: student?.coursesRoadmap.map((c) => c?._id)
+            // paymentType: student?.paymentType || 'one-time', // Default to 'one-time' if not present
+            // installmentFrequency: student?.installmentFrequency || '',
+            // installmentCount: student?.installmentCount || 0,
+            // paymentHistory: student?.paymentHistory
         });
         setCourses(coursesRoadmap);
         setStudentPhoto(student.avatar);
@@ -398,6 +402,12 @@ const NewStudent = () => {
         return newCategory;
     };
 
+    // Define your academy dropdown options using your Vite environment variables
+    const academyOptions = [
+        { label: 'Low Ticket Academy', value: 'ROAD_MAP_ONE' },
+        { label: 'Dropship Academy', value: 'ROAD_MAP_TWO' }
+    ];
+
     return (
         <div className="new-student-page-wrapper">
             <div className="title-top">
@@ -580,15 +590,21 @@ const NewStudent = () => {
                                             className="field-select-control"
                                             type="text"
                                             component={({ field, form }) => {
-                                                const handleSelect = (eventKey) => {
-                                                    const currentRegion = regions.find(
-                                                        (r) => r.name === values.country
-                                                    );
+                                                // Try to find the region object based on the selected country.
+                                                const currentRegion = regions.find((r) => r?.name === values?.country);
+                                                // If no matching country is found, fallback to an empty array.
+                                                const regionList = currentRegion ? currentRegion.regions : [];
 
-                                                    const selectedRegion = currentRegion.regions.find(
-                                                        (country) => country.id.toString() === eventKey
+                                                const handleSelect = (eventKey) => {
+                                                    // Find the selected region in our regionList.
+                                                    const selectedRegion = regionList.find(
+                                                        (country) => country?.id.toString() === eventKey
                                                     );
-                                                    form.setFieldValue(field.name, selectedRegion.label);
+                                                    // Set the field value; if not found, set it to an empty string.
+                                                    form.setFieldValue(
+                                                        field.name,
+                                                        selectedRegion ? selectedRegion.label : ''
+                                                    );
                                                 };
 
                                                 return (
@@ -596,27 +612,31 @@ const NewStudent = () => {
                                                         <DropdownButton
                                                             title={
                                                                 <div className="d-flex justify-content-between align-items-center">
-                                                                    <span>{field.value || 'Select a region ...'}</span>
+                                                                    <span>
+                                                                        {field.value ||
+                                                                            (regionList.length > 0
+                                                                                ? 'Select a region ...'
+                                                                                : 'No region available')}
+                                                                    </span>
                                                                     <img src={dropDownArrow} alt="arrow" />
                                                                 </div>
                                                             }
                                                             id={field.name}
                                                             onSelect={handleSelect}
-                                                            className="dropdown-button w-100"
+                                                            className="dropdown-button  menu-overflow w-100"
+                                                            disabled={regionList.length === 0} // disable dropdown if no regions found
                                                         >
-                                                            {regions
-                                                                .find((r) => r.name === values.country)
-                                                                .regions.map((country) => (
-                                                                    <Dropdown.Item
-                                                                        key={country.id}
-                                                                        eventKey={country.id}
-                                                                        className="my-1 ms-2 w-100"
-                                                                    >
-                                                                        <span className="country-name">
-                                                                            {country.label}
-                                                                        </span>
-                                                                    </Dropdown.Item>
-                                                                ))}
+                                                            {regionList.map((country) => (
+                                                                <Dropdown.Item
+                                                                    key={country?.id}
+                                                                    eventKey={country?.id}
+                                                                    className="my-1 ms-2 w-100"
+                                                                >
+                                                                    <span className="country-name">
+                                                                        {country?.label}
+                                                                    </span>
+                                                                </Dropdown.Item>
+                                                            ))}
                                                         </DropdownButton>
                                                         {form.touched[field.name] && form.errors[field.name] && (
                                                             <div className="error mt-2">{form.errors[field.name]}</div>
@@ -624,13 +644,7 @@ const NewStudent = () => {
                                                     </>
                                                 );
                                             }}
-                                        >
-                                            {regions.map((region) => (
-                                                <option key={region.label} value={region.value}>
-                                                    {region.label}
-                                                </option>
-                                            ))}
-                                        </Field>
+                                        />
                                     </Col>
 
                                     <Col md={6} xs={12}>
@@ -740,6 +754,7 @@ const NewStudent = () => {
                                         />
                                     </Col>
                                 </Row>
+
                                 {/* Commenting out for future reference */}
                                 <Row>
                                     {/* <h4 className="my-3 new-student-title">Payment Information</h4> */}
@@ -873,7 +888,56 @@ const NewStudent = () => {
                                         </Col>
                                     )} */}
                                 </Row>
+                                <Row className="mt-3">
+                                    <Col md={12} xs={12}>
+                                        <label className="field-label">Road Map</label>
+                                        <Field
+                                            name="roadMap"
+                                            className="field-select-control"
+                                            type="text"
+                                            component={({ field, form }) => {
+                                                const handleSelect = (eventKey) => {
+                                                    const selected = academyOptions.find(
+                                                        (option) => option.value === eventKey
+                                                    );
+                                                    form.setFieldValue(field.name, selected.value);
+                                                };
 
+                                                return (
+                                                    <>
+                                                        <DropdownButton
+                                                            title={
+                                                                <div className="d-flex justify-content-between align-items-center">
+                                                                    <span>
+                                                                        {academyOptions.find(
+                                                                            (option) => option.value === field.value
+                                                                        )?.label || 'Select a road map...'}
+                                                                    </span>
+                                                                </div>
+                                                            }
+                                                            id={field.name}
+                                                            onSelect={handleSelect}
+                                                            className="dropdown-button w-100"
+                                                        >
+                                                            {academyOptions.map((option) => (
+                                                                <Dropdown.Item
+                                                                    key={option.value}
+                                                                    eventKey={option.value}
+                                                                    className="my-1 ms-2 w-100"
+                                                                >
+                                                                    {option.label}
+                                                                </Dropdown.Item>
+                                                            ))}
+                                                        </DropdownButton>
+                                                        {form.touched[field.name] && form.errors[field.name] && (
+                                                            <div className="error mt-2">{form.errors[field.name]}</div>
+                                                        )}
+                                                    </>
+                                                );
+                                            }}
+                                        />
+                                    </Col>
+                                </Row>
                                 <Row>
                                     <Col>
                                         {values.coursesRoadmap?.length > 0 && (
