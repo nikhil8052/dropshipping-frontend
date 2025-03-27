@@ -30,7 +30,8 @@ const Dashboard = () => {
     const token = useSelector((state) => state?.auth?.userToken);
     const [gridOptionsLabel, setGridOptionsLabel] = useState();
     const [eventsData, setEventsData] = useState([]);
-    const [loading, setLoading] = useState(false);
+    const [loading, setLoading] = useState(true);
+    const [dataLoaded, setDataLoaded] = useState(false);
 
     useEffect(() => {
         return () => {
@@ -46,81 +47,79 @@ const Dashboard = () => {
         }
     }, [chartKey]);
 
-    // Sample data for different time periods
-    const monthlyData = [5000, 22200, 6000, 20000, 7500, 28000, 8500];
-    const weeklyData = [1000, 5000, 3000, 4000, 2000, 7000, 3500];
-    const yearlyData = [12000, 15000, 13000, 19000, 14000, 27000, 15500];
-
     useEffect(() => {
         fetchDashboardData();
     }, [role]);
 
     useEffect(() => {
         if (currentFilter) {
-            fetchDashboardData(false);
+            fetchDashboardData();
         }
     }, [currentFilter]);
 
-    const fetchDashboardData = async (loading = true) => {
+    const fetchDashboardData = async () => {
         try {
-            setLoading(loading);
-            let cardData, graphData, eventData;
-            if (role === 'ADMIN') {
-                cardData = await axiosWrapper('GET', API_URL.GET_ADMIN_CARD_DATA, {}, token);
-                graphData = await axiosWrapper(
-                    'GET',
-                    `${API_URL.GET_ADMIN_GRAPH_DATA}?graphFilter=${currentFilter}`,
-                    {},
-                    token
-                );
-                eventData = await axiosWrapper('GET', API_URL.GET_ADMIN_EVENTS_DATA, {}, token);
-                setDataSet(true);
-            }
+            setLoading(true);
+            setDataLoaded(false);
 
-            if (role === 'COACH') {
-                cardData = await axiosWrapper('GET', API_URL.GET_COACH_CARD_DATA, {}, token);
-                graphData = await axiosWrapper(
-                    'GET',
-                    `${API_URL.GET_COACH_GRAPH_DATA}?graphFilter=${currentFilter}`,
-                    {},
-                    token
+            let cardData, graphData, eventData;
+            const requests = [];
+
+            if (role === 'ADMIN') {
+                requests.push(
+                    axiosWrapper('GET', API_URL.GET_ADMIN_CARD_DATA, {}, token),
+                    axiosWrapper('GET', `${API_URL.GET_ADMIN_GRAPH_DATA}?graphFilter=${currentFilter}`, {}, token),
+                    axiosWrapper('GET', API_URL.GET_ADMIN_EVENTS_DATA, {}, token)
                 );
-                eventData = await axiosWrapper('GET', API_URL.GET_COACH_EVENTS_DATA, {}, token);
+                setDataSet(true);
+            } else if (role === 'COACH') {
+                requests.push(
+                    axiosWrapper('GET', API_URL.GET_COACH_CARD_DATA, {}, token),
+                    axiosWrapper('GET', `${API_URL.GET_COACH_GRAPH_DATA}?graphFilter=${currentFilter}`, {}, token),
+                    axiosWrapper('GET', API_URL.GET_COACH_EVENTS_DATA, {}, token)
+                );
                 setDataSet(false);
             }
-            // Map the data to the format required by the StatCard component
-            const mapCards = Object.entries(cardData?.data).map(([key, value], index) => ({
+
+            // Wait for all requests to complete
+            const [cardResponse, graphResponse, eventResponse] = await Promise.all(requests);
+
+            // Process card data
+            const mapCards = Object.entries(cardResponse?.data).map(([key, value], index) => ({
                 id: index,
                 title: convertCamelCaseToTitle(key),
                 value
             }));
+            setCardStats(mapCards);
 
-            const mappedEvents = eventData?.data?.map((event) => ({
+            // Process events data
+            const mappedEvents = eventResponse?.data?.map((event) => ({
                 id: event?._id,
                 title: event?.topic,
                 start: new Date(event.dateTime),
                 end: new Date(event.dateTime),
                 topic: event?.topic
             }));
-            setCardStats(mapCards);
             setEventsData(mappedEvents);
+
+            // Process graph data
             let data = [];
             if (role === 'ADMIN') {
-                data = generateChartData(graphData?.data, currentFilter);
+                data = generateChartData(graphResponse?.data, currentFilter);
             } else if (role === 'COACH') {
-                data = generateCoachGraphData(graphData?.data, currentFilter);
-            } else {
-                data = [];
+                data = generateCoachGraphData(graphResponse?.data, currentFilter);
             }
             setLineGraphData(data);
+
+            setDataLoaded(true);
         } catch (error) {
-            return;
+            console.error('Error fetching dashboard data:', error);
         } finally {
             setLoading(false);
         }
     };
 
-    // Line Chart data
+    // Rest of your component code remains the same...
     const generateChartData = (data, filter) => {
         let labels = [];
         let datasets = [];
@@ -159,8 +158,8 @@ const Dashboard = () => {
                             label: 'Total Coaches',
                             data: data?.totalCoachesData.flatMap((obj) => Object.values(obj)),
                             fill: true,
-                            backgroundColor: 'rgba(233, 193, 133, 0.5)', // Different color
-                            borderColor: 'rgba(0, 0, 0, 0.4)', // Another color
+                            backgroundColor: 'rgba(233, 193, 133, 0.5)',
+                            borderColor: 'rgba(0, 0, 0, 0.4)',
                             tension: 0.4
                         }
                     ]
@@ -190,9 +189,6 @@ const Dashboard = () => {
                 {
                     label: 'Hours Worked',
                     borderColor: 'rgba(0, 0, 0, 0.4)',
-                    // pointRadius: 0,
-                    // fill: true,
-                    // backgroundColor: 'yellow',
                     lineTension: 0.4,
                     data: datasets,
                     borderWidth: 1
@@ -216,14 +212,14 @@ const Dashboard = () => {
                 }
             },
             y: {
-                beginAtZero: true, // Ensures the scale starts at 0
+                beginAtZero: true,
                 grid: {
                     display: false
                 },
                 border: {
                     display: false
                 },
-                min: 0 // Minimum value for Y-axis
+                min: 0
             }
         },
         maintainAspectRatio: true,
@@ -233,12 +229,12 @@ const Dashboard = () => {
                 display: true
             },
             title: {
-                display: false // Set to true if you want a title, and provide a title text
+                display: false
             }
         },
         elements: {
             line: {
-                fill: true // Controls if the area under the line should be filled
+                fill: true
             }
         }
     };
@@ -256,17 +252,6 @@ const Dashboard = () => {
 
     const handleFilterChange = (filter) => {
         setCurrentFilter(filter);
-
-        let newData;
-        if (filter === 'monthly') {
-            newData = generateChartData(monthlyData);
-        } else if (filter === 'weekly') {
-            newData = generateChartData(weeklyData);
-        } else if (filter === 'yearly') {
-            newData = generateChartData(yearlyData);
-        }
-
-        setLineGraphData(newData);
     };
 
     const getEventDetails = async (id) => {
@@ -284,13 +269,14 @@ const Dashboard = () => {
 
     return (
         <div className="dashboard-page">
-            {loading ? (
+            <Helmet>
+                <title>Dashboard | Dropship Academy</title>
+            </Helmet>
+
+            {loading || !dataLoaded ? (
                 <Loading centered={true} />
             ) : (
                 <>
-                    <Helmet>
-                        <title>Dashboard | Dropship Academy</title>
-                    </Helmet>
                     <Row>
                         {cardStats?.map((stat, index) => (
                             <Col key={stat.id} xs={12} sm={12} md={6} lg={4} xl={3}>

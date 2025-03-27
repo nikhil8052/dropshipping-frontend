@@ -404,8 +404,8 @@ const NewStudent = () => {
 
     // Define your academy dropdown options using your Vite environment variables
     const academyOptions = [
-        { label: 'Low Ticket Academy', value: 'ROAD_MAP_ONE' },
-        { label: 'Dropship Academy', value: 'ROAD_MAP_TWO' }
+        { label: 'Dropship Academy Low offer', value: 'ROAD_MAP_ONE' },
+        { label: 'Dropship Academy Roadmap', value: 'ROAD_MAP_TWO' }
     ];
 
     return (
