@@ -38,7 +38,10 @@ const Settings = () => {
         name: '',
         email: '',
         phoneNumber: '',
-        meetingLink: ''
+        meetingLink: '',
+        accountId: '',
+        clientId: '',
+        clientSecret: ''
     });
 
     const [passwordData, setPasswordData] = useState({
@@ -50,10 +53,13 @@ const Settings = () => {
     useEffect(() => {
         if (userInfo) {
             setProfileData({
-                name: userInfo?.name,
-                email: userInfo?.email,
-                phoneNumber: userInfo?.phoneNumber,
-                meetingLink: userInfo?.meetingLink
+                name: userInfo?.name || '',
+                email: userInfo?.email || '',
+                phoneNumber: userInfo?.phoneNumber || '',
+                meetingLink: userInfo?.meetingLink || '',
+                accountId: userInfo?.accountId || '',
+                clientId: userInfo?.clientId || '',
+                clientSecret: userInfo?.clientSecret || ''
             });
             setProfilePhoto(userInfo?.avatar);
         }
@@ -77,7 +83,10 @@ const Settings = () => {
                       .test('not-only-spaces', 'Meeting link cannot be only spaces', (value) => /\S/.test(value))
                       .test('is-valid-url', 'Please enter a valid URL for the meeting link', (value) =>
                           isValidUrl(value)
-                      )
+                      ),
+        accountId: Yup.string().optional(),
+        clientId: Yup.string().optional(),
+        clientSecret: Yup.string().optional()
     });
 
     const passwordValidationSchema = Yup.object({
@@ -134,7 +143,12 @@ const Settings = () => {
         if (profileData.email) {
             delete profileData.email;
         }
-        const response = await axiosWrapper('PUT', API_URL.UPDATE_PROFILE, { ...profileData }, token);
+        const response = await axiosWrapper(
+            'PUT',
+            API_URL.UPDATE_PROFILE,
+            { ...profileData, avatar: profilePhoto },
+            token
+        );
         // update data in redux
         dispatch(updateUserInfo({ ...response.data, avatar: profilePhoto }));
 
@@ -176,6 +190,8 @@ const Settings = () => {
                     validationSchema={profileValidationSchema}
                     onSubmit={handleProfileSubmit}
                     enableReinitialize
+                    validateOnMount
+                    context={{ isStudent: userInfo?.role === 'STUDENT' }}
                 >
                     {({ isSubmitting, handleSubmit }) => (
                         <Form onSubmit={handleSubmit}>
