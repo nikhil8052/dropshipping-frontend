@@ -1,0 +1,101 @@
+@mixin sidebar-primary-gradient {
+    $primary-gradient: linear-gradient(90.19deg, #00c7cc -0.27%, #009cd8 99.11%);
+    background: $primary-gradient;
+}
+@mixin pagination-gradient {
+    $primary-gradient: linear-gradient(90.19deg, #00c7cc -0.27%, #009cd8 99.11%);
+    background: $primary-gradient;
+}
+
+// Color Palette
+$primary-color: #2da5f3;
+$secondary-color: #6c757d;
+$success-color: #48c95e;
+$success-light-color: rgba(0, 178, 125, 0.75);
+$info-color: #17a2b8;
+$light-info-color: rgba(77, 107, 140, 1);
+$warning-color: #ffc107;
+$danger-color: #dc3545;
+$danger-light-color: rgba(254, 100, 100, 0.75);
+$danger-extra-light-color: rgba(255, 100, 100, 1);
+$light-color: #f8f9fa;
+$medium-light-color: rgba(255, 255, 255, 1);
+$dark-color: rgba(1, 9, 7, 1);
+$light-grey: rgba(177, 182, 191, 1);
+$medium-info-color: rgba(245, 248, 249, 1);
+$medium-info-bold-color: #002b5b;
+$secondary-light: #f4f3ef;
+$primary-border: #d7d7d7;
+// Text Colors
+$text-color: #333;
+$heading-color: #222;
+$link-color: $primary-color;
+$link-hover-color: darken($link-color, 10%);
+
+// Background Colors
+$body-bg-color: #fff;
+$container-bg-color: #fff;
+
+// Button Colors
+$btn-primary-color: $primary-color;
+$btn-primary-bg-color: $primary-color;
+$btn-secondary-color: $secondary-color;
+$btn-secondary-bg-color: $secondary-color;
+$btn-success-color: $success-color;
+$btn-success-bg-color: $success-color;
+$btn-info-color: $info-color;
+$btn-info-bg-color: $info-color;
+$btn-warning-color: $warning-color;
+$btn-warning-bg-color: $warning-color;
+$btn-danger-color: $danger-color;
+$btn-danger-bg-color: $danger-color;
+
+// Form Colors
+$input-border-color: #e4e7e9;
+$input-focus-border-color: $primary-color;
+$input-placeholder-color: #e7dcdc;
+$input-disabled-bg-color: #f8f9fa;
+$input-disabled-color: $secondary-color;
+// Input Colors
+$input-text-color: rgba(233, 234, 240, 1);
+$input-placeholder-color: rgba(140, 148, 163, 1);
+
+// Navbar Colors
+$navbar-bg-color: $primary-color;
+$navbar-text-color: #fff;
+$navbar-link-color: #fff;
+$navbar-link-hover-color: #eee;
+
+// Footer Colors
+$footer-bg-color: $dark-color;
+$footer-text-color: #fff;
+
+// Card Colors
+$card-bg-color: #fff;
+$card-text-color: $text-color;
+$card-link-color: $link-color;
+$card-link-hover-color: $link-hover-color;
+
+// Alert Colors
+$alert-success-bg-color: $success-color;
+$alert-success-text-color: #fff;
+$alert-info-bg-color: $info-color;
+$alert-info-text-color: #fff;
+$alert-warning-bg-color: $warning-color;
+$alert-warning-text-color: #fff;
+$alert-danger-bg-color: $danger-color;
+$alert-danger-text-color: #fff;
+
+// Modal Colors
+$modal-bg-color: $dark-color;
+$modal-text-color: #fff;
+$modal-link-color: $link-color;
+$modal-link-hover-color: $link-hover-color;
+
+// Sidebar Colors
+$sidebar-bg-color: $dark-color;
+$sidebar-profile-color: $light-grey;
+
+// Table Colors
+$table-bg-header: $medium-info-color;
+$table-text-color: $medium-info-bold-color;

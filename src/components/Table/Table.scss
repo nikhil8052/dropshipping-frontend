@@ -1,0 +1,120 @@
+@import '@constants/colors.scss';
+@import '@constants/media.scss';
+
+.custom-table {
+    display: flex;
+    flex-direction: column;
+    padding: 10px;
+    border-radius: 5px;
+    background: rgba(255, 255, 255, 1);
+    box-shadow: 0px 0px 14.83px 0px rgba(0, 0, 0, 0.06);
+    .ag-theme-alpine {
+        height: calc(100vh - 14rem);
+        overflow-y: scroll;
+
+        // Make the cells padding and alignment w.r.t height
+        // Add the text expandable id here
+        // .ag-row
+        //     .ag-cell:not([col-id='coursesRoadmap']):not([col-id='email']):not([col-id='name']):not(
+        //         [col-id='joinLink']
+        //     ):not([col-id='notes']) {
+        //     display: flex;
+        //     justify-content: start;
+        //     align-items: center;
+        // }
+        // .ag-row .ag-cell[col-id='coursesRoadmap'],
+        // .ag-row .ag-cell[col-id='name'],
+        // .ag-row .ag-cell[col-id='email'],
+        // .ag-row .ag-cell[col-id='joinLink'] {
+        //     padding: 10px;
+        // }
+        .ag-row .ag-cell {
+            // padding: 10px;
+            display: flex;
+            justify-content: start;
+            align-items: center;
+        }
+    }
+
+    .search-input {
+        max-width: 390px;
+        border-radius: 59px;
+        background-color: rgba(245, 248, 249, 1);
+        border: 1px solid rgba(233, 234, 240, 1) !important;
+    }
+    .search-input:focus-visible {
+        outline-color: rgba(146, 159, 165, 1) !important;
+        border: 1px solid rgba(233, 234, 240, 1) !important;
+        color: rgba(71, 81, 86, 1);
+    }
+    .input-group-text {
+        background: rgba(245, 248, 249, 1) !important;
+        border-radius: 59px;
+    }
+    .ag-center-cols-clipper {
+        min-height: 450px !important;
+    }
+
+    // Root
+    // Remove the default border and background color of the table
+    .ag-root-wrapper {
+        background-color: transparent;
+        border: unset !important;
+    }
+    // Header
+    .ag-header-cell {
+        color: $table-text-color;
+        text-transform: capitalize;
+    }
+    .ag-header {
+        background-color: $table-bg-header !important;
+        border-bottom: none !important;
+        border-radius: 80px;
+        text-align: start !important;
+    }
+    // Rows
+    .data-table-row {
+        color: rgba(85, 95, 126, 1);
+        border-bottom: 0.89px solid rgba(233, 234, 243, 1);
+    }
+
+    // Rows padding and height
+
+    // Pagination
+    .ag-paging-panel {
+        // Hide extra information
+        .ag-paging-page-size {
+            display: none;
+        }
+        .ag-paging-row-summary-panel {
+            display: none;
+        }
+        .ag-paging-page-summary-panel div:first-child,
+        div:last-child {
+            display: none;
+        }
+        // Apply the color to only active page
+        .ag-paging-page-summary-panel div:not(.ag-disabled) {
+            @include pagination-gradient;
+            padding: 8px;
+            border-radius: 11px;
+            .ag-icon-previous,
+            .ag-icon-next {
+                color: white;
+            }
+        }
+        // Disable Button class
+        .ag-paging-page-summary-panel div.ag-disabled {
+            padding: 8px;
+            border-radius: 11px;
+            background: rgba(253, 253, 253, 1);
+            box-shadow: 0px 0px 14px 0px rgba(0, 0, 0, 0.15);
+        }
+    }
+    // Adjust the children responsive width
+    @media (max-width: $medium-screen) {
+        .search-input {
+            max-width: 100%;
+        }
+    }
+}

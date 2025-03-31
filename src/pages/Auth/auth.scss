@@ -1,0 +1,296 @@
+@import '@constants/colors.scss';
+@import '@constants/typography.scss';
+@import '@constants/media.scss';
+
+.auth-main-wrapper {
+    display: flex;
+    height: 100vh;
+    flex-direction: column;
+    justify-content: center;
+
+    //code for input foield updations
+    .formgroup {
+        position: relative;
+
+        margin: 10px 0px 22px 0px;
+        width: 100%;
+
+        label {
+            font-size: 14px;
+            margin-bottom: 10px;
+            @include respond-to($small-screen) {
+                font-size: 12px;
+            }
+        }
+    }
+
+    input[type='text'],
+    input[type='password'],
+    input[type='number'],
+    textarea,
+    .custom_select__control {
+        border-radius: 50px;
+
+        border: 1.34px solid $input-border-color !important;
+
+        color: $secondary-color;
+
+        border-color: $input-border-color;
+        padding: 20px; //for text padding
+
+        width: 474px;
+
+        height: 55px;
+        @include respond-to($small-screen) {
+            font-size: 12px;
+            width: 270px;
+        }
+        &::placeholder {
+            color: $input-placeholder-color;
+        }
+        &:focus {
+            outline: 1.5px solid $info-color;
+        }
+    }
+    /* Chrome, Safari, Edge, Opera */
+    input[type='number']::-webkit-outer-spin-button,
+    input[type='number']::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
+    /* Firefox */
+    input[type='number'] {
+        -moz-appearance: textfield;
+    }
+}
+//old wrapper code
+
+.auth-logo {
+    width: 202px;
+    height: 44px;
+    object-fit: contain;
+    margin-top: 49px;
+    margin-left: 57px;
+
+    @include respond-to($medium-screen) {
+        width: 150px;
+        height: 40px;
+        margin-bottom: 20px;
+    }
+}
+.auth-title {
+    font-family: $font-secondary;
+    font-size: 28px;
+    color: $heading-color;
+    font-weight: $font-weight-bold;
+    @include respond-to($medium-screen) {
+        font-size: 18px;
+    }
+}
+
+.auth-form-title {
+    font-family: $font-primary;
+    font-size: $font-size-medium;
+    line-height: 26px;
+    color: #8e8e8e;
+    margin-bottom: 20px;
+    @include respond-to($medium-screen) {
+        font-size: 12px;
+    }
+}
+
+.auth-form-wrapper {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+
+    @include respond-to($large-screen) {
+        margin-top: 20px;
+    }
+}
+.footer-static {
+    color: #8a8a8a;
+    position: absolute;
+    bottom: 0;
+    margin-bottom: 40px;
+}
+
+.verification-input {
+    display: flex;
+    flex-direction: column;
+    .formgroup {
+        margin-bottom: 0px;
+        margin-top: 2px;
+    }
+    .resend-code {
+        text-align: end;
+        font-family: $font-primary;
+        font-size: $font-size-medium;
+        font-weight: $font-weight-medium;
+        color: #2da5f3;
+        margin-top: 10px;
+    }
+}
+
+.auth-bottom-text {
+    font-family: $font-secondary;
+    color: $secondary-color;
+    font-size: 18px;
+    display: flex;
+    @include respond-to($large-screen) {
+        font-size: 16px;
+    }
+    @include respond-to($medium-screen) {
+        font-size: 14px;
+    }
+}
+.auth-link {
+    font-size: 18px;
+    font-family: $font-secondary;
+    color: $primary-color;
+    @include respond-to($large-screen) {
+        font-size: 16px;
+    }
+    @include respond-to($medium-screen) {
+        font-size: 14px;
+    }
+}
+
+.auth-form-data {
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+}
+
+.auth-login-button {
+    width: 473px;
+    height: 55px;
+    margin-block: 28px;
+    font-size: 18px;
+    border-radius: 80px;
+    border: none;
+    @include pagination-gradient;
+    @include respond-to($large-screen) {
+        font-size: 16px;
+    }
+    @include respond-to($medium-screen) {
+        font-size: 14px;
+    }
+    @include respond-to($small-screen) {
+        font-size: 14px;
+        width: 270px;
+    }
+}
+.back-btn {
+    background-color: transparent !important;
+    border: none !important;
+    color: #000907 !important;
+    width: 473px;
+    height: 55px;
+}
+.auth-left-bg-column {
+    background-image: url('@images/coaching-dashboard-transparent.png');
+    background-size: cover;
+    background-position: center;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    @include respond-to($medium-screen) {
+        display: none;
+    }
+}
+
+.auth-left-header-mob {
+    display: flex;
+    width: 100%;
+    justify-content: center;
+    display: none;
+    position: absolute;
+    top: 0;
+    background-color: #000907;
+    @include respond-to($medium-screen) {
+        display: block;
+    }
+}
+.auth-left-footer {
+    padding-bottom: 80px;
+}
+.auth-social-logo {
+    width: 34px;
+    height: 34px;
+}
+
+.auth-left-footer {
+    display: flex;
+    gap: 12px;
+}
+
+.input-password-container {
+    position: relative;
+}
+
+.eye-icon-password {
+    position: absolute;
+    top: 67%;
+    right: 4%;
+    transform: translateY(-50%);
+    cursor: pointer;
+}
+
+.submit-btn,
+.cancel-btn {
+    border-radius: 59px;
+    font-weight: 400;
+    white-space: nowrap;
+    border: none;
+}
+.submit-btn {
+    color: #ffff;
+    padding: 10px 20px;
+    @include pagination-gradient;
+}
+//login page additioal css
+// .auth-input-custom-updation {
+//     .formgroup {
+//         position: relative;
+
+//         margin: 10px 0px 22px 0px;
+//         width: 100%;
+
+//         label {
+//             font-size: 14px;
+
+//             @include respond-to($small-screen) {
+//                 font-size: 12px;
+//             }
+//         }
+//     }
+
+//     input[type='text'],
+//     input[type='password'],
+//     textarea,
+//     .custom_select__control {
+//         border-radius: 50px;
+
+//         border: 1.34px solid $input-border-color;
+
+//         color: $secondary-color;
+
+//         border-color: $input-border-color;
+
+//         width: 474px;
+
+//         height: 55px;
+//         @include respond-to($small-screen) {
+//             font-size: 12px;
+//             width: 270px;
+//         }
+//         &::placeholder {
+//             color: $input-placeholder-color;
+//         }
+//     }
+// }

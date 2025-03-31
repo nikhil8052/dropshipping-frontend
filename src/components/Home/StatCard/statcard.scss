@@ -1,0 +1,40 @@
+@import '@constants/colors.scss';
+@import '@constants/typography.scss';
+.stat-card {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    .stat-summary {
+        text-align: left;
+        .stat-description {
+            font-size: 14px;
+            font-family: $font-secondary;
+            color: rgba(28, 28, 28, 1);
+            font-weight: 400;
+            text-transform: capitalize;
+        }
+        .stat-value {
+            font-size: 26px;
+            font-family: $font-primary;
+            color: rgba(0, 0, 0, 1);
+        }
+    }
+}
+.stacked-card-wrapper {
+    .stacked-card {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: center;
+        gap: 20px;
+    }
+    .stat-value {
+        text-align: center;
+        font-size: 26px;
+        font-family: $font-primary;
+        color: rgba(0, 0, 0, 1);
+        padding-top: 5px;
+        margin-top: 5px;
+    }
+}

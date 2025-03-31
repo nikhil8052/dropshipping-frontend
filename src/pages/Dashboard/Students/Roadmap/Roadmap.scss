@@ -1,0 +1,34 @@
+.course-item {
+    display: flex;
+    align-items: center;
+    padding: 15px;
+    margin-bottom: 10px;
+    border-radius: 3px;
+    background-color: #fff; /* White background */
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+}
+
+.course-item img {
+    width: 30px;
+    height: 30px;
+    margin-right: 10px;
+}
+
+.course-item p {
+    flex: 1; /* Allow title to expand to fill remaining space */
+    margin: 0;
+    font-weight: bold;
+}
+
+.progress-bar {
+    /* Styles for the progress bar can be added here */
+    width: 100%; /* Assuming the progress bar fills the entire width of the course item */
+    height: 5px;
+    background-color: #ddd; /* Light gray background for the progress bar track */
+}
+
+.progress-fill {
+    /* Styles for the progress fill can be added here */
+    height: 100%; /* Full height of the progress bar */
+    background-color: #007bff; /* Blue color for the progress fill (replace with desired color) */
+}

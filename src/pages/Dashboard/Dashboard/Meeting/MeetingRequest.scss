@@ -1,0 +1,31 @@
+@import '@constants/colors.scss';
+
+.meeting-request-page-wrapper {
+    .meeting-request-page {
+        height: calc(100vh - 14rem);
+        overflow-y: scroll;
+        box-shadow: 0px 0px 14.83px 0px rgba(0, 0, 0, 0.06);
+        border-radius: 9px;
+
+        .meeting-request-title {
+            font-family: Inter;
+            font-size: 18px;
+            font-weight: 600;
+            line-height: 21.78px;
+            text-align: left;
+            color: rgba(0, 43, 91, 1);
+        }
+        input[type='date'] {
+            padding: 12px 20px;
+        }
+
+        .custom_select__control {
+            border: 0.8px solid rgba(233, 234, 240, 1);
+            border-radius: 59px;
+        }
+        .custom_select__control:focus-visible {
+            outline-color: rgba(146, 159, 165, 1) !important;
+            color: rgba(71, 81, 86, 1);
+        }
+    }
+}

@@ -1,0 +1,244 @@
+@import '@constants/colors.scss';
+@import '@constants/media.scss';
+
+.students-page {
+    .button-wrapper {
+        display: flex;
+        justify-content: end;
+        margin-bottom: 1rem;
+        flex-wrap: wrap;
+        gap: 1rem;
+
+        @media (max-width: $large-screen) {
+            justify-content: start;
+            margin-top: 0.5rem;
+        }
+    }
+
+    .avatar-image {
+        width: 28px;
+        height: 28px;
+        border-radius: 50%;
+        object-fit: cover;
+    }
+
+    // Fee status colors
+    .fee-status {
+        display: inline-block;
+        border-radius: 130px;
+        color: rgba(0, 0, 0);
+        &.Paid {
+            background-color: $success-light-color;
+            color: #ffff;
+            padding: 0px 30px;
+        }
+        &.Unpaid {
+            color: #ffff;
+            padding: 0px 20px;
+            background-color: $danger-light-color;
+        }
+        &.partial {
+            color: #ffff;
+            background-color: $warning-color;
+        }
+    }
+
+    @media (max-width: $small-screen) {
+        .student-btn {
+            margin-top: 0.5rem;
+        }
+    }
+
+    // Courses Modal
+
+    .course {
+        display: flex;
+        align-items: center;
+        justify-content: start;
+        background-color: red;
+    }
+}
+
+.new-student-page-wrapper {
+    .new-student-page {
+        height: calc(100vh - 14rem);
+        overflow-y: scroll;
+        box-shadow: 0px 0px 14.83px 0px rgba(0, 0, 0, 0.06);
+        border-radius: 9px;
+        // Fix the table height
+
+        .new-student-title {
+            font-family: Inter;
+            font-size: 18px;
+            font-weight: 600;
+            line-height: 21.78px;
+            text-align: left;
+            color: rgba(0, 43, 91, 1);
+        }
+
+        .custom-multi-select {
+            .css-13cymwt-control {
+                border: 0.8px solid rgba(233, 234, 240, 1) !important;
+                // border-radius: 50px !important;
+
+                .css-1jqq78o-placeholder {
+                    color: rgba(146, 159, 165, 1);
+                    padding-left: 10px !important;
+                }
+
+                .css-1p3m7a8-multiValue {
+                    border-radius: 60px;
+                    padding: 0px 10px;
+                    background: rgba(242, 248, 255, 1);
+                }
+            }
+        }
+        // Multi Select Field
+        .css-b62m3t-container {
+            // font-family: Inter;
+            // font-size: 14px;
+            // font-weight: 400;
+            // line-height: 14px;
+            // text-align: left;
+            // color: rgba(25, 28, 31, 1);
+            // border: 0.8px solid rgba(233, 234, 240, 1);
+            // border-radius: 50px;
+            // padding: 10px 20px;
+            // width: 100%;
+            // margin-bottom: 0.5rem;
+        }
+
+        .custom_select__control {
+            border: 0.8px solid rgba(233, 234, 240, 1);
+            border-radius: 59px;
+            .custom_select__indicators {
+                display: none;
+            }
+        }
+        .custom_select__control:focus-visible {
+            outline-color: rgba(146, 159, 165, 1) !important;
+            color: rgba(71, 81, 86, 1);
+        }
+        .custom_select__placeholder {
+            color: rgba(148, 148, 148, 1) !important;
+            padding: 0px 10px;
+        }
+
+        .label-light {
+            font-size: 14px;
+            font-weight: 600;
+            line-height: 13.8px;
+            text-align: left;
+            color: rgba(95, 108, 114, 1);
+        }
+
+        .image-preview {
+            display: flex;
+            justify-content: start;
+            cursor: pointer;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 0.5rem;
+            border: 0.8px solid rgba(233, 234, 240, 1);
+            border-radius: 10px;
+            padding: 20px 10px;
+            color: rgba(110, 116, 133, 1);
+            // Events screen btn
+            .upload-image-btn {
+                border-radius: 59px;
+                font-weight: 400;
+                white-space: nowrap;
+                border: none;
+                padding: 10px 30px;
+                background: rgba(204, 236, 247, 1);
+                color: rgba(1, 158, 216, 1);
+                margin-top: 1rem;
+            }
+        }
+
+        .image-renderer {
+            display: flex;
+            justify-content: start;
+            align-items: center;
+            gap: 1.5rem;
+            padding: 20px 10px;
+            border: 0.8px solid rgba(233, 234, 240, 1);
+            border-radius: 10px;
+            color: rgb(38, 54, 99);
+            img {
+                width: 85px;
+                height: 85px;
+                border-radius: 50%;
+                object-fit: cover;
+            }
+        }
+    }
+
+    // student-taught-wrapper
+    .student-taught-wrapper {
+        font-family: Inter;
+        color: rgba(25, 28, 31, 1);
+        border: 0.8px solid rgba(233, 234, 240, 1);
+        border-radius: 16px;
+        padding: 20px;
+        min-height: 116px;
+        margin-bottom: 1rem;
+        .total {
+            color: rgba(28, 28, 28, 0.4);
+            margin-right: 0.5rem;
+        }
+        .data-value {
+            color: rgba(28, 28, 28, 1);
+            //styleName: 14 Regular;
+            font-family: Inter;
+            font-size: 14px;
+            font-weight: 400;
+            line-height: 20px;
+            text-align: center;
+            display: inline-block;
+            background: rgba(248, 248, 248, 1);
+            border-radius: 59px;
+            padding: 10px 20px;
+            margin: 0rem 1rem 1rem 0rem;
+        }
+        .field-label {
+            font-family: Inter;
+            font-size: 14px;
+            font-weight: 400;
+            line-height: 14px;
+            text-align: left;
+            text-transform: capitalize;
+            color: rgba(25, 28, 31, 1);
+        }
+        // Fields
+        .field-control,
+        .field-select-control {
+            font-family: Inter;
+            font-size: 14px;
+            font-weight: 400;
+            line-height: 14px;
+            text-align: left;
+            color: rgba(25, 28, 31, 1);
+            border: 0.8px solid rgba(233, 234, 240, 1);
+            border-radius: 50px;
+            padding: 10px 20px;
+            width: 100%;
+            margin-bottom: 0.5rem;
+        }
+    }
+
+    // Roadmap mapping
+    .course-roadmap-wrapper {
+        font-family: Inter;
+        color: rgba(25, 28, 31, 1);
+        border: 0.8px solid rgba(233, 234, 240, 1);
+        border-radius: 16px;
+        padding: 20px;
+        min-height: 116px;
+        margin-bottom: 1rem;
+    }
+
+    .menu-overflow .dropdown-menu {
+        z-index: 1111 !important;
+    }
+}

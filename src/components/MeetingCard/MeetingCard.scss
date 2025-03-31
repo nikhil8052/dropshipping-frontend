@@ -1,0 +1,251 @@
+@import '@constants/colors.scss';
+@import '@constants/typography.scss';
+
+.card-custom,
+.event-detail-card {
+    border-radius: 30px;
+    box-shadow: 0px 0px 14px 0px rgba(0, 0, 0, 0.07);
+    border: none;
+    padding: 20px 10px;
+    cursor: pointer;
+
+    .card-header-custom {
+        display: flex;
+        align-items: center;
+        border-bottom: none;
+        background-color: transparent;
+        border-bottom: 0.2px solid rgba(112, 112, 112, 0.4);
+        padding: 15px 15px;
+
+        .image-custom {
+            width: 80px;
+            height: 80px;
+            margin-right: 0.625rem;
+            border-radius: 15px !important;
+            object-fit: cover;
+        }
+        .meeting-title {
+            font-family: Inter;
+            font-weight: 500;
+            text-align: left;
+        }
+        .meeting-id {
+            font-family: Inter;
+            font-weight: 400;
+            color: rgba(164, 164, 164, 1);
+            font-size: 12px;
+            text-align: left;
+        }
+        .meeting-password {
+            font-family: Inter;
+            font-weight: 400;
+            color: rgba(33, 33, 33, 1);
+            font-size: 12px;
+            text-align: left;
+        }
+    }
+    .recording-date {
+        font-family: Inter;
+        font-weight: 400;
+        color: rgba(164, 164, 164, 1);
+        font-size: 12px;
+        text-align: left;
+    }
+
+    // Body
+    .topic-detail {
+        font-family: Inter;
+        font-size: 12px;
+        font-weight: 400;
+        text-align: left;
+    }
+    .main-title {
+        font-family: Inter;
+        font-size: 12px;
+        font-weight: 700;
+        text-align: left;
+        color: rgba(0, 43, 91, 1);
+    }
+    .meeting-time {
+        background: rgba(242, 248, 255, 1);
+        border-radius: 7px;
+        padding: 5px 10px;
+
+        font-family: Inter;
+        font-size: 14px;
+        font-weight: 400;
+        text-align: left;
+        span {
+            color: rgba(85, 95, 126, 1);
+        }
+        p {
+            color: rgba(0, 0, 0, 1);
+        }
+    }
+
+    .footer-title {
+        font-family: Inter;
+        font-size: 17.82px;
+        font-weight: 500;
+        line-height: 21.56px;
+        text-align: left;
+        margin-top: 1rem;
+    }
+
+    .card-footer-custom {
+        display: flex;
+        justify-content: end;
+        align-items: center;
+        background-color: transparent;
+        border-top: none !important;
+
+        a {
+            background-color: transparent !important;
+            color: black !important;
+            padding: 5px 30px;
+            border: 2px solid rgba(47, 128, 237, 1);
+            border-radius: 10px;
+        }
+    }
+}
+
+.card-profile-name {
+    padding-block: 21px;
+    padding-inline: 21px;
+    border: 1px solid;
+    font-size: 32px;
+    align-items: center;
+    text-align: center;
+    font-weight: $font-weight-medium;
+    color: #ffffff;
+    background-color: #019fd8;
+    border-radius: 15px;
+}
+
+// Events Detail Card
+.event-detail-card {
+    cursor: auto;
+    .card-profile-img {
+        font-size: 32px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        font-weight: $font-weight-medium;
+        color: #ffffff;
+        background-color: #019fd8;
+        width: 80px;
+        height: 80px;
+        margin-right: 0.625rem;
+        border-radius: 15px !important;
+    }
+    .card-profile-name {
+        padding-block: 21px;
+        padding-inline: 21px;
+        border: 1px solid;
+        font-size: 32px;
+        align-items: center;
+        text-align: center;
+        font-weight: $font-weight-medium;
+        color: #ffffff;
+        background-color: #019fd8;
+        border-radius: 15px;
+    }
+    .zoom-btn {
+        background: rgba(242, 248, 255, 1);
+        color: #ffffff;
+        padding: 10px 20px;
+        border: none !important;
+        color: rgba(0, 96, 255, 1);
+        border-radius: 50px;
+        width: max-content;
+    }
+    .host-btn {
+        background: rgba(246, 246, 246, 1);
+        color: #ffffff;
+        padding: 10px 20px;
+        border: none !important;
+        color: rgba(0, 96, 255, 1);
+        border-radius: 50px;
+    }
+    .avatar {
+        width: 40px;
+        height: 40px;
+        margin-right: 0.625rem;
+        border-radius: 50% !important;
+        object-fit: cover;
+    }
+
+    .personal-meeting-btn {
+        align-items: center;
+        width: 201.52px;
+        height: 44.32px;
+        justify-content: space-between;
+        border-radius: 45px;
+        background-color: #f6f6f6;
+        align-items: center;
+        padding-inline: 15px;
+        padding-top: 18px;
+        padding-bottom: 12px;
+        .profile-icon {
+            display: flex;
+            gap: 10px;
+            img {
+                width: 30px;
+                height: 30px;
+                border-radius: 50%;
+                object-fit: cover;
+            }
+        }
+        img {
+            width: 30px;
+            height: 30px;
+        }
+        h1 {
+            font-size: $font-size-medium;
+            font-weight: $font-weight-regular;
+            margin-bottom: 0px;
+        }
+        p {
+            font-size: $font-size-medium;
+            font-weight: $font-weight-regular;
+            color: #9e9e9e;
+        }
+        .dotOptions {
+            height: 18px;
+            width: 10px;
+        }
+    }
+
+    .video-iframe {
+        width: 100%;
+        border: none;
+        border-radius: 12px;
+        min-height: 400px;
+    }
+
+    .event-detail-footer {
+        display: flex;
+        justify-content: end;
+        gap: 10px;
+        padding-block: 32px;
+        border-top: 0.2px solid rgba(112, 112, 112, 0.4);
+
+        .edit {
+            background-color: transparent;
+            border: 1px solid rgba(233, 234, 240, 1);
+            color: #212121;
+            padding: 10px 80px;
+            border-radius: 50px;
+        }
+
+        .join {
+            @include pagination-gradient;
+            color: #ffffff;
+            border: none;
+            padding-inline: auto;
+            border-radius: 50px;
+            padding: 10px 50px;
+        }
+    }
+}

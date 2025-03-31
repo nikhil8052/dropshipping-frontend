@@ -1,0 +1,375 @@
+@import '@constants/colors.scss';
+@import '@constants/media.scss';
+@import '@constants/typography.scss';
+
+// This is the common styles file that will be used across the application. This file will contain the common styles that will be used across the application.
+
+// Buttons
+.dropdown-button,
+.custom_select__control,
+.dropdown-button-fix {
+    .dropdown-toggle {
+        border-radius: 59px;
+        font-weight: 400;
+        white-space: nowrap;
+        background-color: transparent !important;
+        border: rgba(233, 234, 240, 1) 1px solid !important;
+        background: linear-gradient(180deg, #00C7CC 0%, #009CD8 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        color: transparent;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 5px 20px;
+        border: none;
+        width: 100%;
+        // Add extra height to match the default input
+        height: 100% !important;
+
+        &:active {
+            color: rgba(148, 148, 148, 1);
+        }
+
+        &::after {
+            display: none;
+        }
+
+        & > div {
+            width: 100%;
+        }
+        @media screen and (max-width: 768px) {
+            padding: 5px 8px; 
+        }
+    }
+
+    .dropdown-menu {
+        width: 100%;
+        overflow: hidden;
+        border: none;
+        border-radius: 10px;
+        box-shadow: 0px 0px 54px 0px rgba(0, 0, 0, 0.37);
+        background-color: white !important;
+        max-height: 254px;
+        overflow-y: auto;
+
+        .avatar {
+            width: 20px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-right: 0.5rem;
+        }
+
+        .avatar-student {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-right: 0.5rem;
+        }
+
+        .coach-name,
+        .country-name,
+        .event-name,
+        .payment-name,
+        .category-name,
+        .event-name {
+            font-size: small;
+            color: rgba(85, 95, 126, 1);
+            display: inline-block;
+            max-width: 80px;
+        }
+    }
+
+    .custom_select__multi-value {
+        border-radius: 60px;
+        padding: 0px 10px;
+        // background: rgba(242, 248, 255, 1);
+    }
+}
+
+.custom_select__control {
+    border-radius: unset !important;
+}
+// Action Buttons
+.action-button {
+    width: 30px;
+    height: 30px;
+    cursor: pointer;
+    &:hover {
+        border: none !important;
+    }
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: none;
+    .action-icon {
+        width: 20px;
+        height: 20px;
+    }
+}
+.edit-button {
+    transition: all 0.5s ease-in-out;
+    &:hover {
+        border: 1px solid $info-color;
+    }
+}
+.delete-button {
+    transition: all 0.5s ease-in-out;
+    &:hover {
+        border: 1px solid $danger-color;
+    }
+}
+.add-button {
+    @include pagination-gradient;
+    border-radius: 59px;
+    color: #ffff !important;
+    padding: 5px 20px;
+    font-weight: 400;
+    white-space: nowrap;
+    border: none !important;
+}
+
+.submit-btn,
+.cancel-btn {
+    border-radius: 59px;
+    font-weight: 400;
+    white-space: nowrap;
+    border: none;
+}
+.submit-btn {
+    color: #ffff !important;
+    padding: 10px 30px;
+    @include pagination-gradient;
+}
+.custom-width {
+    padding: 10px 50px;
+}
+
+.cancel-btn {
+    padding: 10px 40px;
+    background-color: transparent !important;
+    color: black !important;
+    border: 1px solid rgba(233, 234, 240, 1) !important;
+}
+.filter-button {
+    background-color: transparent;
+    border-radius: 59px;
+    color: rgba(148, 148, 148, 1);
+    font-weight: 400;
+    white-space: nowrap;
+    border: rgba(148, 148, 148, 1) 1px solid !important;
+}
+
+// Toggle button
+.toggle-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    cursor: pointer;
+    &:hover {
+        border: none !important;
+    }
+    .form-check-input {
+        width: 60px;
+        height: 30px;
+        &:checked {
+            background-color: $info-color !important;
+            border-color: $info-color !important;
+        }
+    }
+}
+
+// Avatar
+.avatar {
+    width: 40px !important;
+    border-radius: 50% !important;
+    object-fit: cover !important;
+}
+
+// Bread crumbs title
+.title-top {
+    text-align: left;
+    color: rgba(95, 108, 114, 1);
+    font-family: Inter;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 20px;
+    text-align: left;
+    background: rgba(242, 244, 245, 1);
+    padding: 10px 20px;
+    border-radius: 12px;
+    margin-bottom: 0.5rem;
+    opacity: 0px;
+}
+
+// Fields, Selects
+
+.field-label {
+    font-family: Inter;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 14px;
+    text-align: left;
+    text-transform: capitalize;
+    // color: rgba(25, 28, 31, 1);
+    color: #fff;
+    margin-bottom: 1rem;
+}
+// Fields
+.field-control,
+.field-select-control {
+    font-family: Inter;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 14px;
+    text-align: left;
+    // color: rgba(25, 28, 31, 1) !important;
+    // border: 0.8px solid rgba(233, 234, 240, 1) !important;
+    border-radius: 50px;
+    padding: 15px 20px;
+    width: 100%;
+    margin-bottom: 2rem;
+    background-color: #0C0C0C !important;
+    border: 1px solid rgb(233, 234, 240) !important;
+    color: #fff;
+}
+.field-control-phone-mask {
+    font-family: Inter;
+    font-size: 14px !important;
+    font-weight: 400;
+    line-height: 14px;
+    text-align: left;
+    color: rgba(25, 28, 31, 1) !important;
+    border: 0.8px solid rgba(233, 234, 240, 1) !important;
+    border-radius: 50px !important;
+    width: 100% !important;
+    height: 39px !important;
+}
+
+.field-control-phone-mask:focus {
+    outline-color: rgba(233, 234, 240, 1) !important;
+    border: 0.8px solid rgba(233, 234, 240, 1) !important;
+    color: rgba(71, 81, 86, 1) !important;
+    box-shadow: none !important;
+}
+
+// on active or focus the border and color should be bold
+.field-control:focus-visible,
+.field-select-control:focus-visible,
+.field-text-area-control:focus-visible {
+    outline-color: rgba(233, 234, 240, 1) !important;
+    border: 0.8px solid rgba(233, 234, 240, 1) !important;
+    color: rgba(71, 81, 86, 1);
+}
+.field-control::placeholder,
+.field-select-control::placeholder,
+.field-text-area-control::placeholder {
+    color: rgba(146, 159, 165, 1) !important;
+}
+// Select
+.field-select-control {
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background: url('data:image/svg+xml;utf8,<svg fill="rgba(146, 159, 165, 1)" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path d="M7 10l5 5 5-5z"/></svg>')
+        no-repeat;
+    background-position: right 20px top 50%;
+    background-size: 20px;
+    padding: 12px 20px;
+    cursor: pointer;
+    width: 100%;
+}
+
+// Text Area
+.field-text-area-control {
+    font-family: Inter;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 14px;
+    text-align: left;
+    color: rgba(25, 28, 31, 1);
+    border: 0.8px solid rgba(233, 234, 240, 1);
+    border-radius: 10px;
+    padding: 10px 20px;
+    width: 100%;
+    margin-bottom: 0.5rem;
+}
+
+// Error of fields
+
+.error {
+    color: $danger-color;
+    font-size: 12px;
+    font-weight: 400;
+    line-height: 14px;
+    text-align: left;
+}
+
+.add-quiz-fields .add-quiz-question .quiz-multiple-choice input[type='text'] {
+    &.correctAnswer {
+        background-color: $success-color !important;
+        color: white !important;
+    }
+    &.correctAnswer::placeholder {
+        color: white !important;
+    }
+}
+
+.correctAnswer {
+    background-color: $success-color !important;
+    color: black !important;
+}
+
+// Media styles
+@media (max-width: $large-screen) {
+    .responsive-btn {
+        margin-top: 0.5rem !important;
+    }
+}
+
+.no-data-wrapper {
+    position: absolute;
+    top: 50%;
+    left: 40%;
+    transform: translate(0, -50%);
+    padding: 10px;
+}
+
+.hr-text {
+    border: 0;
+    line-height: 1em;
+    position: relative;
+    text-align: center;
+    height: 1.5em;
+    font-size: 14px;
+    margin: 20px;
+}
+
+.hr-text::before {
+    content: '';
+    background: linear-gradient(to right, transparent, black, transparent);
+    position: absolute;
+    left: 0;
+    top: 50%;
+    width: 100%;
+    height: 1px;
+}
+
+.hr-text::after {
+    content: attr(data-content);
+    position: relative;
+    padding: 0 7px;
+    line-height: 1.5em;
+    color: black !important;
+    font-weight: 500;
+    background-color: white;
+}
+
+.reset-image {
+    width: 20px !important;
+    height: 20px !important;
+    cursor: pointer !important;
+}
