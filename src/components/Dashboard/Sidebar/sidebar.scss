@@ -2,7 +2,6 @@
 @import '../../../constants/typography.scss';
 .sidebar {
     position: fixed;
-
     border-top-right-radius: 1rem;
     border-bottom-right-radius: 1rem;
     top: 0;
@@ -11,10 +10,11 @@
     width: 260px;
     left: 0;
     z-index: 60;
-    border-right: 1px solid $dark-color;
-    background: $dark-color;
+    // background: $dark-color;
+    background: linear-gradient(146.86deg, #0A2B2C 19.75%, #001720 86.2%);
     transition: all 0.5s cubic-bezier(0.685, 0.0473, 0.346, 1);
     overflow: hidden;
+    box-shadow: 0px 0px 14px 0px #00C7CC inset;
     &::after {
         display: block;
         content: '';
@@ -25,6 +25,7 @@
         top: 0;
         left: 0;
         z-index: -1;
+        
     }
     .btn-collapse-sidebar {
         position: absolute;
@@ -45,7 +46,7 @@
         overflow-y: auto;
         width: 245px;
         z-index: 4;
-        padding-bottom: 100px;
+        padding-bottom: 80px;
 
         .side-nav-scroll {
             display: flex;
@@ -181,9 +182,9 @@
             margin-top: 0.5rem;
             border-radius: 50%;
             .profile-pic {
-                width: 64px;
+                width: 54px;
                 box-shadow: 0px 4px 34px 0px rgba(1, 159, 216, 1);
-                height: 64px;
+                height: 54px;
                 border-radius: 50%;
                 object-fit: cover;
             }

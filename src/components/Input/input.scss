@@ -1,25 +1,32 @@
 @import '@constants/colors.scss';
 @import '@constants/typography.scss';
 @import '@constants/media.scss';
+
 .form-inline {
     label {
         display: inline-block !important;
     }
 }
+
 .formgroup {
     position: relative;
     width: 100%;
+
     label {
         display: block;
         font-family: $font-primary;
         margin-bottom: 2px;
         font-size: 14px;
         text-transform: capitalize;
+        color: #fff;
+        margin-bottom: 1rem;
+
         //handle responsive
         @include respond-to($small-screen) {
             font-size: 14px;
         }
     }
+
     // input type text and password default styles. Please feel free to customize as required
     input[type='text'],
     input[type='password'],
@@ -27,15 +34,21 @@
     .custom_select__control {
         font-size: 16px;
         font-family: $font-secondary;
-        border-radius: 5px;
-        padding: 6px 7px;
+        border-radius: 50px !important;
+        background-color: #0C0C0C !important;
+        border: 1px solid rgb(233, 234, 240) !important;
+        color: #fff;
+        padding: 10px 20px;
+        overflow: hidden;
         border: 1px solid $input-text-color !important;
         color: $light-info-color;
         border-color: $input-text-color;
+
         &::placeholder {
             font-size: 14px;
             color: $input-placeholder-color;
         }
+
         &:focus {
             outline: 1.5px solid $info-color;
         }
@@ -46,39 +59,47 @@
             padding: 4px 5px;
             font-size: 14px;
         }
+
         @include respond-to($x-small-screen) {
             width: 100%;
             padding: 4px 5px;
             font-size: 14px;
         }
     }
+
     /* Chrome, Safari, Edge, Opera */
     input[type='number']::-webkit-outer-spin-button,
     input[type='number']::-webkit-inner-spin-button {
         -webkit-appearance: none;
         margin: 0;
     }
+
     /* Firefox */
     input[type='number'] {
         -moz-appearance: textfield;
     }
+
     //use react select class prefix to select required elements within selector element
     .custom_select__control {
         padding: 0px;
         font-size: 16px;
         color: $info-color !important;
+
         &:hover {
             border-color: $info-color;
         }
     }
+
     // form control radio default styles
     .check-control {
         display: inline-block !important;
         margin-right: 10px;
+
         input {
             margin-right: 5px;
         }
     }
+
     // validation error message style
     .validation-error {
         font-family: $font-secondary;
@@ -88,6 +109,7 @@
         position: absolute;
         bottom: -20px;
         left: 0px;
+
         //handle responsive
         @include respond-to($small-screen) {
             font-size: 12px;
@@ -98,22 +120,27 @@
 .up-menu {
     z-index: 1000;
 }
+
 // Async select select styles
 .custom_select__input {
     background-color: transparent !important;
 }
+
 .field-quill-control {
     .ql-toolbar {
         border: 0.8px solid rgba(233, 234, 240, 1);
         border-radius: 10px 10px 0 0;
     }
+
     .ql-container {
         border: 0.8px solid rgba(233, 234, 240, 1);
         border-radius: 0 0 10px 10px;
     }
+
     .ql-editor {
         min-height: 200px;
     }
+
     .ql-editing {
         left: 0px !important;
     }

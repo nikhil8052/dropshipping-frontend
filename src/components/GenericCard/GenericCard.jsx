@@ -9,10 +9,12 @@ import deleteIcon from '@icons/trash-2.svg';
 import './GenericCard.scss';
 import ConfirmationBox from '../ConfirmationBox/ConfirmationBox';
 import { useState } from 'react';
+import { decode } from 'he';
 
 const GenericCard = ({
     img,
     title,
+    description,
     coachName,
     progress = 0,
     archive,
@@ -56,6 +58,7 @@ const GenericCard = ({
             setShowDeleteModal(false);
         }
     };
+
     return (
         <>
             <Card
@@ -77,11 +80,11 @@ const GenericCard = ({
             >
                 <div className="image-container">
                     <Card.Img loading="lazy" variant="top" src={img} className="card-image" />
-                    {role === 'admin' && (
+                    {/* {role === 'admin' && (
                         <button type="button" className="delete-icon-btn" onClick={handleDeleteClick}>
                             <img src={deleteIcon} alt="Delete" className="delete-icon" />
                         </button>
-                    )}
+                    )} */}
                 </div>
                 <Card.Body className="card-body">
                     <Card.Title className="card-title">
@@ -90,18 +93,26 @@ const GenericCard = ({
                     <Card.Text className="card-coach">
                         <TextExpand className="course-des" value={detail} width="100%" />
                     </Card.Text>
+                    <Card.Text className="card-coach">
+                        <TextExpand
+                            className="course-des"
+                            value={decode(description)?.replace(/<\/?[^>]+(>|$)/g, '') || ''}
+                            width="100%"
+                        />
+                    </Card.Text>
+
                     {role === 'admin' && (
                         <div className="card-archive">
-                            <span>
+                            {/* <span>
                                 <strong>Status:</strong> {archive ? 'Active' : 'Inactive'}
-                            </span>
-                            <Form.Check
+                            </span> */}
+                            {/* <Form.Check
                                 className="archive-toggle-btn"
                                 onChange={onChange}
                                 checked={archive}
                                 type="switch"
                                 id="custom-switch"
-                            />
+                            /> */}
                         </div>
                     )}
                     {role === 'student' && enroll && (

@@ -21,9 +21,9 @@ const LectureCard = ({ item }) => {
                     }}
                 />
             )}
-            <div className="product-details mb-2">
+            <div className="product-details">
                 <h5>{trimLongText(item.title, 20)}</h5>
-                <p>{trimLongText(stripHtmlTags(item.description), 20)}</p>
+                {/* <p>{trimLongText(stripHtmlTags(item.description), 20)}</p> */}
             </div>
         </div>
     );

@@ -97,6 +97,7 @@ const Courses = () => {
                 const baseCourseData = {
                     img: course?.thumbnail,
                     title: course?.title,
+                    description: course?.description,
                     detail: course?.subtitle,
                     lectureNo: `Lectures: ${course?.lectures.length}`,
                     archive: course?.isArchived,
