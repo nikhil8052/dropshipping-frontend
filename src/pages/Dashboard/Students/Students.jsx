@@ -171,6 +171,14 @@ const Students = () => {
             // Delete API call here
             await axiosWrapper('DELETE', API_URL.DELETE_STUDENT.replace(':id', showDeleteModal?.studentId), {}, token);
             fetchData();
+            setSelectedRowId(null);
+            setShowDeleteModal({
+                show: false,
+                title: 'Delete Student',
+                isEditable: false,
+                studentId: null
+            });
+            setLoadingCRUD(false);
             resetModal();
         } catch (error) {
             setLoadingCRUD(false);
@@ -364,19 +372,19 @@ const Students = () => {
                 return <div key={rowData._id}>{coachingTrajectory === COACH.COACH_TYPE.HIGH_TICKET ? 'HT' : 'LT'}</div>;
             }
         },
-        {
-            headerName: 'Courses Roadmap',
-            field: 'coursesRoadmap',
-            filter: 'agSetColumnFilter',
-            sortable: false,
-            wrapText: true,
-            autoHeight: true,
-            resizable: false,
-            cellRenderer: LinkRenderer,
-            cellRendererParams: {
-                onRoadMapClick: handleCoursesRoadMapClick
-            }
-        },
+        // {
+        //     headerName: 'Courses Roadmap',
+        //     field: 'coursesRoadmap',
+        //     filter: 'agSetColumnFilter',
+        //     sortable: false,
+        //     wrapText: true,
+        //     autoHeight: true,
+        //     resizable: false,
+        //     cellRenderer: LinkRenderer,
+        //     cellRendererParams: {
+        //         onRoadMapClick: handleCoursesRoadMapClick
+        //     }
+        // },
         {
             headerName: 'Activate/Deactivate',
             cellRenderer: ToggleRenderer,

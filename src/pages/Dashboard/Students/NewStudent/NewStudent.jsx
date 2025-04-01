@@ -59,7 +59,7 @@ const NewStudent = () => {
         phoneNumber: '',
         country: 'Netherlands',
         region: '',
-        coachingTrajectory: 'HIGH_TICKET',
+        coachingTrajectory: 'LOW_TICKET',
         coursesRoadmap: [],
         category: [],
         roadMap: ''
