@@ -9,7 +9,7 @@ import axiosWrapper from '../../../utils/api';
 import { API_URL } from '../../../utils/apiUrl';
 import '../../../styles/Courses.scss';
 import { textParser, stripHtmlTags } from '../../../utils/utils';
-import bannerImage from '../../../assets/images/publish-background.svg';
+// import bannerImage from '../../../assets/images/publish-background.svg';
 import PdfModal from '../../../components/PdfRenderer/PdfViewer';
 
 const CourseDetail = () => {
@@ -23,16 +23,10 @@ const CourseDetail = () => {
     const role = userInfo?.role;
     const courseId = location.state?.courseId;
     const isDetailPage =
-        location.pathname === '/admin/courses/details' ||
-        location.pathname === '/coach/courses/details';
+        location.pathname === '/admin/courses/details' || location.pathname === '/coach/courses/details';
 
     const getCourseById = async (id) => {
-        const { data } = await axiosWrapper(
-            'GET',
-            `${API_URL.GET_COURSE.replace(':id', id)}`,
-            {},
-            token
-        );
+        const { data } = await axiosWrapper('GET', `${API_URL.GET_COURSE.replace(':id', id)}`, {}, token);
 
         const mapLectures = data.lectures.map((lecture) => {
             const description = textParser(lecture?.description);
@@ -83,10 +77,7 @@ const CourseDetail = () => {
             ) : (
                 <div className="title-top mb-3">
                     {isDetailPage && (
-                        <span
-                            onClick={() => navigate(`/${role?.toLowerCase()}/courses`)}
-                            style={{ cursor: 'pointer' }}
-                        >
+                        <span onClick={() => navigate(`/${role?.toLowerCase()}/courses`)} style={{ cursor: 'pointer' }}>
                             Courses <img src={CaretRight} alt=">" />{' '}
                         </span>
                     )}
@@ -151,40 +142,38 @@ const CourseDetail = () => {
                 </div>
             </div>
             {role !== 'STUDENT' && (
-                    <div
-                        className="publish-added-button-footer"
-                        style={{ display: 'flex', justifyContent: 'space-between' }}
-                    >
-                        {(userInfo?.role === 'ADMIN' ||
-                            course?.createdBy?._id === userInfo?._id) && (
-                            <>
-                                <Button
-                                    onClick={() =>
-                                        navigate(
-                                            `/${role?.toLowerCase()}/courses/all-students`,
-                                            { state: { courseId: course._id } }
-                                        )
-                                    }
-                                    type="button"
-                                    className="publish-btn"
-                                >
-                                    All Students
-                                </Button>
-                                <Button
-                                    onClick={() =>
-                                        navigate(`/${role?.toLowerCase()}/courses/edit`, {
-                                            state: { isEdit: true, courseId: course._id }
-                                        })
-                                    }
-                                    type="button"
-                                    className="edit-btn"
-                                >
-                                    Edit
-                                </Button>
-                            </>
-                        )}
-                    </div>
-                )}
+                <div
+                    className="publish-added-button-footer"
+                    style={{ display: 'flex', justifyContent: 'space-between' }}
+                >
+                    {(userInfo?.role === 'ADMIN' || course?.createdBy?._id === userInfo?._id) && (
+                        <>
+                            <Button
+                                onClick={() =>
+                                    navigate(`/${role?.toLowerCase()}/courses/all-students`, {
+                                        state: { courseId: course._id }
+                                    })
+                                }
+                                type="button"
+                                className="publish-btn"
+                            >
+                                All Students
+                            </Button>
+                            <Button
+                                onClick={() =>
+                                    navigate(`/${role?.toLowerCase()}/courses/edit`, {
+                                        state: { isEdit: true, courseId: course._id }
+                                    })
+                                }
+                                type="button"
+                                className="edit-btn"
+                            >
+                                Edit
+                            </Button>
+                        </>
+                    )}
+                </div>
+            )}
         </div>
     );
 };

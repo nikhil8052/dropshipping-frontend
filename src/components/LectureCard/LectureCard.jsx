@@ -3,7 +3,7 @@ import './LectureCard.scss';
 import { trimLongText } from '../../utils/common';
 import { faFilePdf } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { stripHtmlTags } from '../../utils/utils';
+// import { stripHtmlTags } from '../../utils/utils';
 
 const LectureCard = ({ item }) => {
     return (

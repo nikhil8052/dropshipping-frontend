@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import TextExpand from '@components/TextExpand/TextExpand';
 import enrollIcon from '../../assets/icons/enroll-icon.svg';
 import lockIcon from '../../assets/icons/lock-icon.svg';
-import deleteIcon from '@icons/trash-2.svg';
+// import deleteIcon from '@icons/trash-2.svg';
 import './GenericCard.scss';
 import ConfirmationBox from '../ConfirmationBox/ConfirmationBox';
 import { useState } from 'react';
@@ -34,10 +34,10 @@ const GenericCard = ({
     const [loadingCRUD, setLoadingCRUD] = useState(false);
 
     // Handler to open the delete confirmation modal
-    const handleDeleteClick = (e) => {
-        e.stopPropagation(); // Prevent triggering the card's onClick
-        setShowDeleteModal(true);
-    };
+    // const handleDeleteClick = (e) => {
+    //     e.stopPropagation(); // Prevent triggering the card's onClick
+    //     setShowDeleteModal(true);
+    // };
 
     // Handler to close the delete confirmation modal
     const handleCloseDeleteModal = () => {
