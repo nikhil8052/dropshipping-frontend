@@ -7,7 +7,7 @@
 
     color-scheme: light dark;
     color: $light-color;
-    background-color: white;
+    background-color: $dark-color;
     font-synthesis: none;
     text-rendering: optimizeLegibility;
     -webkit-font-smoothing: antialiased;
@@ -58,7 +58,7 @@ a:hover {
 
 body {
     margin: 0;
-    background-color: $light-color;
+    background-color:#1d2120;
 }
 /* width */
 ::-webkit-scrollbar {
@@ -71,15 +71,15 @@ body {
     border-radius: 10px;
 }
 
-/* Handle */
+// /* Handle */
 ::-webkit-scrollbar-thumb {
-    background: $dark-color;
+    background: #009cd8;
     border-radius: 10px;
 }
 
-/* Handle on hover */
+// /* Handle on hover */
 ::-webkit-scrollbar-thumb:hover {
-    background: $dark-color;
+    background: #009cd8;
 }
 p,
 ul {
@@ -125,7 +125,13 @@ input,
 .form-control {
     background-color: white !important;
 }
-
+.form-control:focus {
+    color: inherit;
+    background-color: inherit;
+    border-color: inherit;
+    outline: 0;
+    box-shadow: none;
+}
 .cursor-pointer {
     cursor: pointer;
 }

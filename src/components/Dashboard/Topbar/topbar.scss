@@ -3,20 +3,37 @@
 
 .top-nav-title {
     padding: 0px 25px;
+    text-align: center;
     .sub-title {
         color: $light-info-color;
         text-transform: capitalize;
     }
     .main-title {
         margin-bottom: 2rem;
+        @media screen and (max-width: 768px) {
+            margin-bottom: 0rem;
+        }
     }
+        .h3, h3 {
+            font-size: 3.6rem;
+            font-weight: 600;
+            background: linear-gradient(180deg, #00C7CC 0%, #009CD8 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            color: transparent;
+            @media screen and (max-width: 768px) {
+                font-size: 2.6rem;
+            }
+        }
+        
 }
 
 .menue-toggler-wrapper {
     padding: 0px 8px;
     .menu-toggler {
         background-color: transparent;
-        color: $dark-color;
+        // color: $dark-color;
         border: 0px;
         font-size: 18px;
     }

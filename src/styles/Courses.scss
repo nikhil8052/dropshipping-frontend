@@ -21,25 +21,34 @@
     .courses-button-wrapper {
         display: flex;
         justify-content: space-between;
-        margin-bottom: 1rem;
+        margin-bottom: 2rem;
         flex-wrap: wrap;
         gap: 1rem;
-
         @media (max-width: $large-screen) {
             justify-content: start;
             margin-top: 0.5rem;
         }
         .input-group {
-            width: 490px !important;
-            max-width: 490px !important;
+            // width: 490px !important;
+            // max-width: 490px !important;
+              width: 470px !important;
+            max-width: 470px !important;
         }
     }
 
     .search-input {
         max-width: 390px;
         border-radius: 59px;
-        background-color: rgba(245, 248, 249, 1) !important;
+        background-color: #0C0C0C !important;
         border: 1px solid rgba(233, 234, 240, 1) !important;
+        color:#fff;
+        padding: 12px;
+        &::placeholder{
+            color: #fff;
+        }
+        @media screen and (max-width: 992px) {
+            padding: 8px 10px;
+        }
     }
     .search-input:focus-visible {
         outline-color: rgba(146, 159, 165, 1) !important;
@@ -47,17 +56,22 @@
         color: rgba(71, 81, 86, 1);
     }
     .input-group-text {
-        background: rgb(245, 248, 249) !important;
+        background: #0C0C0C !important;
         border-radius: 59px;
+        img{
+            filter: invert(1);
+        }
     }
+ 
 
     .custom-card-course {
         display: grid;
-        grid-template-columns: 1fr 1fr 1fr 1fr;
-        gap: 10px;
+        grid-template-columns: 1fr 1fr 1fr;
+        // gap: 10px;
+        gap: 30px;
         // justify-content: space-around;
         @media screen and (min-width: 1660px) and (max-width: 2300px) {
-            grid-template-columns: 1fr 1fr 1fr 1fr;
+            grid-template-columns: 1fr 1fr 1fr;
         }
 
         @media screen and (max-width: 1659px) and (min-width: 993px) {
@@ -66,8 +80,13 @@
 
         @media screen and (max-width: 992px) {
             grid-template-columns: 1fr 1fr;
+            gap: 20px;
         }
-
+        .input-group {
+            width: 300px !important;
+            max-width: 300px !important;
+            
+        }
         @media screen and (max-width: 550px) {
             grid-template-columns: 1fr;
         }
@@ -119,6 +138,9 @@
     .input-group {
         width: 490px !important;
         max-width: 490px !important;
+        @media (max-width: 991px) {
+      
+        }
     }
 }
 
@@ -130,11 +152,14 @@
     font-weight: 400;
     line-height: 20px;
     text-align: left;
-    background: rgba(242, 244, 245, 1);
+    // background: rgba(242, 244, 245, 1);
     padding: 10px 20px;
     border-radius: 12px;
     margin-bottom: 0.5rem;
     opacity: 0px;
+    background-color: rgba(255, 255, 255, 0.1019607843) !important;
+    border: 1px solid rgba(233, 234, 240, 1) !important;
+    color:#fff;
 }
 .nav-tabs {
     &:focus-visible {
@@ -147,8 +172,10 @@
         border: none !important;
         font-family: Inter;
         font-weight: 500;
-        color: rgba(29, 32, 38, 1) !important;
-        box-shadow: 0px -1.6px 0px 0px rgba(1, 158, 216, 1) inset;
+        // color: rgba(29, 32, 38, 1) !important;
+        // box-shadow: 0px -1.6px 0px 0px rgba(1, 158, 216, 1) inset;
+        box-shadow: 0px 0.8px 0px 0px rgba(1,158,216, 1);
+        color:#fff !important;
     }
 
     .nav-link {
@@ -172,8 +199,9 @@
         font-size: $font-size-extra-large;
         font-family: $font-primary;
         font-weight: $font-weight-bold;
-        color: #1d2026;
+        // color: #1d2026;
         padding-block: 16px;
+        color: #fff;
     }
 }
 .add-course-form {
@@ -209,7 +237,7 @@
     .cancel-btn {
         padding: 10px 40px;
         background-color: transparent !important;
-        color: black;
+        color: #fff;
         border: 1px solid rgba(233, 234, 240, 1);
     }
 }
@@ -260,7 +288,6 @@
             font-size: $font-size-small;
             gap: 10px;
             align-items: start;
-
             .upload-btn {
                 border-radius: 50px;
                 padding: 10px 40px;
@@ -290,6 +317,7 @@
         border-radius: 10px;
         color: rgb(38, 54, 99);
         text-wrap: wrap;
+       background-color: rgba(255, 255, 255, 0.1019607843)
         img {
             width: 180px;
             height: 127px;
@@ -374,6 +402,9 @@
     padding: 20px;
     margin-top: 10px;
     border-radius: 10px;
+    background-color: rgba(255, 255, 255, 0.1019607843) !important;
+    border: 1px solid rgb(233, 234, 240) !important;
+    color: #fff;
     .add-lecture-nav {
         display: flex;
         justify-content: space-between;
@@ -388,7 +419,8 @@
         }
     }
     .add-lecture-item {
-        background-color: white;
+        // background-color: white;
+        background-color: rgba(255, 255, 255, 0.1019607843) !important;
         padding: 20px;
         display: flex;
         justify-content: space-between;
@@ -568,7 +600,7 @@
 .cancel-btn {
     padding: 10px 40px;
     background-color: transparent !important;
-    color: black !important;
+    color: #fff !important;
     border: 1px solid rgba(233, 234, 240, 1) !important;
 }
 
@@ -612,8 +644,7 @@
 }
 
 //css Publish Tab
-.section-wrapper {
-}
+
 
 //Css for Publish Course tab
 
@@ -639,6 +670,7 @@
         box-shadow: 0px 0px 14.83px 0px rgba(0, 0, 0, 0.06) !important;
         border-radius: 9px;
         position: relative;
+        margin-top: 3rem;
 
         .card-background {
             // background-image: url('@images/publish-background.svg');
@@ -789,8 +821,8 @@
         }
     }
     .edit-btn {
-        background-color: #000000;
-        color: #ffffff;
+        background-color: #fff;
+        color: #000;
         border-radius: 170px;
         width: 174px;
         height: 42px;
