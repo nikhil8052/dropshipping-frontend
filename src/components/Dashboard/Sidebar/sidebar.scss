@@ -47,7 +47,7 @@
         overflow-y: auto;
         width: 245px;
         z-index: 4;
-        padding-bottom: 80px;
+        padding-bottom: 100px;
 
         .side-nav-scroll {
             display: flex;
@@ -304,6 +304,94 @@
         }
     }
 }
+// .hide-sidebar {
+//     transform: translateX(-100%);
+// }
 .hide-sidebar {
-    transform: translateX(-100%);
+    transform: translateX(0%);
+    width: 80px;
+}
+
+.hide-sidebar.sidebar .side-bar-profile .profile-name {
+    display: none;
+}
+
+.corse-detail-box h3 {
+    margin-bottom: 1rem;
+}
+
+.hide-sidebar.sidebar .brand-logo .main-logo{
+    display: none;
+}
+
+.sidebar .brand-logo .sub-logo{
+    display: none;
+}
+
+.hide-sidebar.sidebar .brand-logo .sub-logo{
+    display: block;
+}
+
+.sidebar .menu-toggler {
+    background: none;
+    border: none;
+    color: #fff;
+    font-size: 1.3rem;
+    cursor: pointer;
+    padding: 0;
+}
+
+.sidebar .btn-collapse-sidebar {
+    DISPLAY: NONE;
+}
+
+.hide-sidebar.sidebar .nav {
+    align-items: center;
+}
+
+.sidebar .brand-logo {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-direction: row-reverse;
+    gap: 5px;
+    margin: 10px;
+}
+
+.sidebar.hide-sidebar .brand-logo {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.sidebar.hide-sidebar .side-bar-profile .profile-wrapper .profile-pic {
+    height: 35px;
+    width: 35px;
+}
+
+.hide-sidebar.sidebar .brand-logo .sub-logo {
+    margin: 0;
+}
+
+.sidebar.hide-sidebar .brand-logo {
+    gap: 10px;
+    margin:20px 0px 40px; 
+}
+
+.sidebar .side-nav-wrapper .sidebar-nav-items a:hover * {
+    color: #009CD8;
+}
+
+.sidebar .side-nav-wrapper .sidebar-nav-items a:hover img.side-nav-icon {
+    filter: brightness(0) saturate(100%) invert(41%) sepia(80%) saturate(2886%) hue-rotate(170deg) brightness(100%) contrast(102%);
+}
+
+.sidebar .side-nav-wrapper .sidebar-nav-items .active-item:hover * {
+    color: #fff;
+}
+
+.sidebar .side-nav-wrapper .sidebar-nav-items .active-item:hover img.side-nav-icon {
+    filter: none;
 }

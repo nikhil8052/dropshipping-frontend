@@ -3,6 +3,7 @@ import { Container, Nav, Card, Button } from 'react-bootstrap';
 import './sidebar.scss';
 import { useNavigate } from 'react-router-dom';
 import logoImg from '@icons/dropship-logo.svg';
+import subImg from '@icons/Logo.svg';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCircleXmark, faCircleUser } from '@fortawesome/free-solid-svg-icons';
 import { useSelector, useDispatch } from 'react-redux';
@@ -16,6 +17,8 @@ import { logoutUser } from '@redux/auth/auth_slice';
 import { changeLink } from '@redux/sidebar/sidebarSlice';
 import dotBlue from '@icons/dot-blue-2.svg';
 import faRoad from '@icons/coaches.svg';
+import { faBarsStaggered } from '@fortawesome/free-solid-svg-icons';
+import { toggleSidebar } from '@redux/theme/theme_slice.js';
 
 // import all static icons
 import { adminSidebarItems, coachSidebarItems, studentSidebarItems } from './sidebarData';
@@ -155,9 +158,16 @@ const Sidebar = () => {
                 )}
 
                 <Container>
-                    <div className="brand-logo">
-                        <img src={logoImg} alt="brand-logo" />
-                    </div>
+                   <div className="brand-logo">
+    {/* Toggle button inside the sidebar */}
+    <button onClick={() => dispatch(toggleSidebar())} className="menu-toggler" type="button">
+        <FontAwesomeIcon icon={faBarsStaggered} />
+    </button>
+    <img src={logoImg} alt="brand-logo" className='main-logo'/>
+    <img src={subImg} alt="brand-logo" className='sub-logo'/>
+</div>
+
+                    
                     <div className="side-nav-wrapper">
                         <div className="side-nav-scroll">
                             <Nav defaultActiveKey="/" className="sidebar-nav-items">
