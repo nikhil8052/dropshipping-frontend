@@ -622,41 +622,80 @@ filter: invert(0);
     padding-bottom: 30px;
 }
 
-.add-lecture-section .add-lecture-item .items-button .quiz-lec-btn {
+.addcourse-section  .add-lecture-section .add-lecture-item .items-button .quiz-lec-btn {
     background-color: #0395c6;
 }
 
-.add-lecture-section .add-lecture-item .items-button .quiz-btn {
+.addcourse-section  .add-lecture-section .add-lecture-item .items-button .quiz-btn {
     background-color: #a2d9dd;
 }
 
-.publish-form-section .publish-course-wrapper .lecture-details-wrapper {
+.addcourse-section  .publish-form-section .publish-course-wrapper .lecture-details-wrapper {
     position: static;
 }
 
-.publish-form-section .publish-course-wrapper .card-background {
+.addcourse-section  .publish-form-section .publish-course-wrapper .card-background {
     z-index: 1;
 }
 
-.publish-form-section .publish-course-wrapper .lecture-details-wrapper .lecture-details {
+.addcourse-section .publish-form-section .publish-course-wrapper .lecture-details-wrapper .lecture-details {
     position: relative;
     z-index: 2;
 }
 
-.publish-form-section .cancel-btn {
+.upload-course-form .publish-form-section .cancel-btn,.upload-course-form .cancel-btn,.main-panel:has(.publish-form-section) .publish-course-wrapper .cancel-btn {
     color: #000 !important;
     border: 1px solid rgb(3 164 194 / 24%) !important;
 }
 
-.add-lecture-section .add-lecture-item p {
+.upload-course-form .add-lecture-section .add-lecture-item p {
     color: #000;
 }
 
-.sidebar .container {
-    height: 100%;
+.upload-course-form .add-lecture-section .add-lecture-nav p,.upload-course-form span{
+    color: #000;
 }
 
-.sidebar .side-nav-wrapper {
-    height: 100%;
-    padding-bottom: 180px;
+.upload-course-form .ql-editor.ql-blank::before {
+    color: #0009;
+}
+
+.new-student-page-wrapper .box-row > div >div {
+    margin-bottom: 2rem;
+}
+
+.publish-added-button-footer {
+    border-top: 0px;
+}
+
+.main-panel .main-content-wrapper {
+    padding-left: 2rem !important;
+}
+
+
+@media only screen and (max-width:767px) {
+    .corse-detail-box {
+        margin-top: 2rem;
+    }
+
+    .main-panel:has(.publish-form-section) .corse-detail-box iframe, .main-panel:has(.publish-form-section) .corse-detail-box .pdf-viewer {
+        padding: 15px;
+    }
+
+    .main-panel:has(.publish-form-section) .publish-course-wrapper {
+        padding: 15px;
+    }
+
+    .main-panel .main-content-wrapper {
+        padding-left: 1rem !important;
+    }
+
+    .add-course-form form div:last-child .col > div {
+        flex-direction: column;
+        margin-top: 3rem !important;
+    }
+
+    .formgroup input[type=text], .formgroup input[type=password], .formgroup textarea, .formgroup .custom_select__control{
+        width: auto !important;
+    }
 }
