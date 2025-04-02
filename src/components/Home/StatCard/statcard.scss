@@ -10,14 +10,16 @@
         .stat-description {
             font-size: 14px;
             font-family: $font-secondary;
-            color: rgba(28, 28, 28, 1);
+            // color: rgba(28, 28, 28, 1);
+            color: #fff;
             font-weight: 400;
             text-transform: capitalize;
         }
         .stat-value {
             font-size: 26px;
             font-family: $font-primary;
-            color: rgba(0, 0, 0, 1);
+            color: #fff;
+            // color: rgba(0, 0, 0, 1);
         }
     }
 }

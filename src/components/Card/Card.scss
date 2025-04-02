@@ -16,10 +16,16 @@
     font-weight: 600;
     text-align: left;
     &.odd {
-        background: rgba(229, 236, 246, 1) !important;
+        // background: rgba(229, 236, 246, 1) !important;
+        background: rgba(31,39,41, 1) !important;
+        border: 1px solid #FFFFFF33;
+        box-shadow: 0px 2px 6px 0px #24AAC780;
     }
     &.even {
-        background: rgba(227, 245, 255, 1) !important;
+        // background: rgba(227, 245, 255, 1) !important;
+        background: rgb(45, 54, 56) !important;
+        border: 1px solid #FFFFFF33;
+        box-shadow: 0px 2px 6px 0px #24AAC780;
     }
 }
 // Events Card
@@ -35,11 +41,14 @@
         }
     }
 }
+
 .custom-card {
     box-shadow: 0 6px 10px -4px rgba(0, 0, 0, 0.15);
-    background-color: $body-bg-color;
+    // background-color: $body-bg-color;
+    background: rgba(31,39,41, 1);
     padding: 10px 20px;
     margin-bottom: 1.5rem;
+    border: 1px solid #FFFFFF33 !important;
     .card-header {
         border-bottom: 0px;
         background-color: inherit;
@@ -52,7 +61,8 @@
                 margin-top: 10px;
                 font-size: 18px;
                 font-family: $font-primary;
-                color: $heading-color;
+                // color: $heading-color;
+                color: #fff;
                 text-transform: capitalize;
             }
             select {
@@ -74,4 +84,27 @@
 // Cash flow card
 .cash-flow-card {
     height: 450px;
+}
+
+.rbc-toolbar button{
+    color: #fff;
+}
+
+.rbc-off-range-bg {
+    background: #0495c63b;
+}
+
+.rbc-calendar *, .rbc-calendar *:before, .rbc-calendar *:after {
+    color: #fff;
+}
+
+.ag-theme-alpine.custom-table{
+    background: rgba(31,39,41, 1);
+    border-radius: 16px;
+    border: 1px solid #fff;
+    padding: 20px;
+}
+
+input.search-input.form-control::placeholder {
+    color: #fff;
 }

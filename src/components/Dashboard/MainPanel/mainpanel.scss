@@ -10,11 +10,12 @@
     background-color: #1d2120;
     .main-content-wrapper {
         padding: 15px 25px;
-        min-height: calc(100vh - 123px);
+        // min-height: calc(100vh - 123px);
         max-width: 2560px;
         margin-left: auto;
         margin-right: auto;
         background-color: #1d2120;
+        margin-top: 50px;
 
         @media (max-width: $medium-screen) {
             & {

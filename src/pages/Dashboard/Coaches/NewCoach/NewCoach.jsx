@@ -258,7 +258,7 @@ const NewCoach = () => {
                 </span>{' '}
                 {coachId ? 'Coach Profile' : 'Add New Coach'}
             </div>
-            <div className="new-coach-page">
+            <div className="new-coach-page new-page">
                 <Container fluid className="p-3">
                     <h4 className="mb-3 new-coach-title">{coachId ? 'Coach Profile' : 'Add New Coach'}</h4>
                     <Formik
@@ -269,7 +269,7 @@ const NewCoach = () => {
                     >
                         {({ isSubmitting, handleSubmit, values }) => (
                             <Form onSubmit={handleSubmit}>
-                                <Row className="mb-3">
+                                <Row>
                                     <Col>
                                         {coachPhoto ? (
                                             <label className="field-label fw-bold">Profile image</label>
@@ -347,181 +347,183 @@ const NewCoach = () => {
                                         </div>
                                     </Col>
                                 </Row>
-                                <Row>
-                                    <Col md={6} xs={12}>
-                                        <label className="field-label">Coach Name</label>
-                                        <Field
-                                            name="name"
-                                            className="field-control"
-                                            type="text"
-                                            placeholder="E.g David Henderson"
-                                        />
-                                        <ErrorMessage name="name" component="div" className="error" />
-                                    </Col>
-                                    <Col md={6} xs={12}>
-                                        <label className="field-label">Coach Email</label>
-                                        <Field
-                                            name="email"
-                                            className="field-control"
-                                            type="email"
-                                            readOnly={coachId}
-                                            placeholder="kevin12345@gmail.com"
-                                        />
-                                        <ErrorMessage name="email" component="div" className="error" />
-                                    </Col>
-                                </Row>
 
-                                <Row className="mb-2">
-                                    <Col md={6} xs={12}>
-                                        <PhoneInputField
-                                            name="phoneNumber"
-                                            label="Phone Number"
-                                            defaultCountry="nl" // Default to Belgium
-                                            countriesAllowed={values.country === 'Netherlands' ? ['nl'] : ['be']}
-                                        />
-                                    </Col>
-                                    <Col md={6} xs={12}>
-                                        <label className="field-label">Country</label>
-                                        {/* eslint-disable */}
-                                        <Field
-                                            name="country"
-                                            className="field-select-control"
-                                            type="text"
-                                            component={({ field, form }) => {
-                                                const handleSelect = (eventKey) => {
-                                                    const selectedCountry = countryList.find(
-                                                        (country) => country.id.toString() === eventKey
-                                                    );
-                                                    form.setFieldValue(field.name, selectedCountry.name);
-                                                    // clear the selected region
-                                                    form.setFieldValue('region', '');
-                                                };
+                                <div className='box-row'>
+                                    <Row>
+                                        <Col md={6} xs={12}>
+                                            <label className="field-label">Coach Name</label>
+                                            <Field
+                                                name="name"
+                                                className="field-control"
+                                                type="text"
+                                                placeholder="E.g David Henderson"
+                                            />
+                                            <ErrorMessage name="name" component="div" className="error" />
+                                        </Col>
+                                        <Col md={6} xs={12}>
+                                            <label className="field-label">Coach Email</label>
+                                            <Field
+                                                name="email"
+                                                className="field-control"
+                                                type="email"
+                                                readOnly={coachId}
+                                                placeholder="kevin12345@gmail.com"
+                                            />
+                                            <ErrorMessage name="email" component="div" className="error" />
+                                        </Col>
+                                    </Row>
+                                    <Row>
+                                        <Col md={6} xs={12}>
+                                            <PhoneInputField
+                                                name="phoneNumber"
+                                                label="Phone Number"
+                                                defaultCountry="nl" // Default to Belgium
+                                                countriesAllowed={values.country === 'Netherlands' ? ['nl'] : ['be']}
+                                            />
+                                        </Col>
+                                        <Col md={6} xs={12}>
+                                            <label className="field-label">Country</label>
+                                            {/* eslint-disable */}
+                                            <Field
+                                                name="country"
+                                                className="field-select-control"
+                                                type="text"
+                                                component={({ field, form }) => {
+                                                    const handleSelect = (eventKey) => {
+                                                        const selectedCountry = countryList.find(
+                                                            (country) => country.id.toString() === eventKey
+                                                        );
+                                                        form.setFieldValue(field.name, selectedCountry.name);
+                                                        // clear the selected region
+                                                        form.setFieldValue('region', '');
+                                                    };
 
-                                                return (
-                                                    <>
-                                                        <DropdownButton
-                                                            title={
-                                                                <div className="d-flex justify-content-between align-items-center">
-                                                                    <span>{field.value || 'Select a country ...'}</span>
-                                                                    <img src={dropDownArrow} alt="arrow" />
-                                                                </div>
-                                                            }
-                                                            id={field.name}
-                                                            onSelect={handleSelect}
-                                                            className="dropdown-button w-100"
-                                                        >
-                                                            {countryList.map((country) => (
-                                                                <Dropdown.Item
-                                                                    key={country.id}
-                                                                    eventKey={country.id}
-                                                                    className="my-1 ms-2 w-100"
-                                                                >
-                                                                    <span className="country-name">{country.name}</span>
-                                                                </Dropdown.Item>
-                                                            ))}
-                                                        </DropdownButton>
-                                                        {form.touched[field.name] && form.errors[field.name] && (
-                                                            <div className="error mt-2">{form.errors[field.name]}</div>
-                                                        )}
-                                                    </>
-                                                );
-                                            }}
-                                        />
-                                    </Col>
-                                </Row>
-                                <Row>
-                                    <Col md={6} xs={12}>
-                                        <label className="field-label">Region/State</label>
-                                        {/* eslint-disable */}
-                                        <Field
-                                            name="region"
-                                            className="field-select-control"
-                                            type="text"
-                                            component={({ field, form }) => {
-                                                const handleSelect = (eventKey) => {
-                                                    const currentRegion = regions.find(
-                                                        (r) => r.name === values.country
-                                                    );
-                                                    const selectedCountry = currentRegion.regions.find(
-                                                        (country) => country.id.toString() === eventKey
-                                                    );
-                                                    form.setFieldValue(field.name, selectedCountry.label);
-                                                };
-
-                                                return (
-                                                    <>
-                                                        <DropdownButton
-                                                            title={
-                                                                <div className="d-flex justify-content-between align-items-center">
-                                                                    <span>{field.value || 'Select a region ...'}</span>
-                                                                    <img src={dropDownArrow} alt="arrow" />
-                                                                </div>
-                                                            }
-                                                            id={field.name}
-                                                            onSelect={handleSelect}
-                                                            className="dropdown-button w-100"
-                                                        >
-                                                            {regions
-                                                                .find((r) => r.name === values.country)
-                                                                .regions.map((country) => (
+                                                    return (
+                                                        <>
+                                                            <DropdownButton
+                                                                title={
+                                                                    <div className="d-flex justify-content-between align-items-center">
+                                                                        <span>{field.value || 'Select a country ...'}</span>
+                                                                        <img src={dropDownArrow} alt="arrow" />
+                                                                    </div>
+                                                                }
+                                                                id={field.name}
+                                                                onSelect={handleSelect}
+                                                                className="dropdown-button w-100"
+                                                            >
+                                                                {countryList.map((country) => (
                                                                     <Dropdown.Item
                                                                         key={country.id}
                                                                         eventKey={country.id}
                                                                         className="my-1 ms-2 w-100"
                                                                     >
-                                                                        <span className="country-name">
-                                                                            {country.label}
-                                                                        </span>
+                                                                        <span className="country-name">{country.name}</span>
                                                                     </Dropdown.Item>
                                                                 ))}
-                                                        </DropdownButton>
-                                                        {form.touched[field.name] && form.errors[field.name] && (
-                                                            <div className="error mt-2">{form.errors[field.name]}</div>
-                                                        )}
-                                                    </>
-                                                );
-                                            }}
-                                        >
-                                            {regions.map((region) => (
-                                                <option key={region.label} value={region.value}>
-                                                    {region.label}
-                                                </option>
-                                            ))}
-                                        </Field>
-                                    </Col>
-                                    <Col md={6} xs={12}>
-                                        <Input
-                                            options={students}
-                                            name="assignedStudents"
-                                            placeholder="Select or search students..."
-                                            label="Assigned Students"
-                                            type="select"
-                                            isMulti={true}
-                                        />
-                                    </Col>
-                                </Row>
+                                                            </DropdownButton>
+                                                            {form.touched[field.name] && form.errors[field.name] && (
+                                                                <div className="error mt-2">{form.errors[field.name]}</div>
+                                                            )}
+                                                        </>
+                                                    );
+                                                }}
+                                            />
+                                        </Col>
+                                    </Row>
+                                    <Row>
+                                        <Col md={6} xs={12}>
+                                            <label className="field-label">Region/State</label>
+                                            {/* eslint-disable */}
+                                            <Field
+                                                name="region"
+                                                className="field-select-control"
+                                                type="text"
+                                                component={({ field, form }) => {
+                                                    const handleSelect = (eventKey) => {
+                                                        const currentRegion = regions.find(
+                                                            (r) => r.name === values.country
+                                                        );
+                                                        const selectedCountry = currentRegion.regions.find(
+                                                            (country) => country.id.toString() === eventKey
+                                                        );
+                                                        form.setFieldValue(field.name, selectedCountry.label);
+                                                    };
 
-                                <Row className="mb-3 mt-2">
-                                    <Col md={6} xs={12}>
-                                        <Input
-                                            name="coachType"
-                                            placeholder="Please Select the Coach Type"
-                                            label="Coach Type"
-                                            type="radio"
-                                            options={[
-                                                {
-                                                    label: 'High Ticket',
-                                                    value: COACH.COACH_TYPE.HIGH_TICKET
-                                                },
-                                                {
-                                                    label: 'Low Ticket',
-                                                    value: COACH.COACH_TYPE.LOW_TICKET
-                                                }
-                                            ]}
-                                        />
-                                    </Col>
-                                    {values.coachType && ticketRender(values.coachType)}
-                                </Row>
+                                                    return (
+                                                        <>
+                                                            <DropdownButton
+                                                                title={
+                                                                    <div className="d-flex justify-content-between align-items-center">
+                                                                        <span>{field.value || 'Select a region ...'}</span>
+                                                                        <img src={dropDownArrow} alt="arrow" />
+                                                                    </div>
+                                                                }
+                                                                id={field.name}
+                                                                onSelect={handleSelect}
+                                                                className="dropdown-button w-100"
+                                                            >
+                                                                {regions
+                                                                    .find((r) => r.name === values.country)
+                                                                    .regions.map((country) => (
+                                                                        <Dropdown.Item
+                                                                            key={country.id}
+                                                                            eventKey={country.id}
+                                                                            className="my-1 ms-2 w-100"
+                                                                        >
+                                                                            <span className="country-name">
+                                                                                {country.label}
+                                                                            </span>
+                                                                        </Dropdown.Item>
+                                                                    ))}
+                                                            </DropdownButton>
+                                                            {form.touched[field.name] && form.errors[field.name] && (
+                                                                <div className="error mt-2">{form.errors[field.name]}</div>
+                                                            )}
+                                                        </>
+                                                    );
+                                                }}
+                                            >
+                                                {regions.map((region) => (
+                                                    <option key={region.label} value={region.value}>
+                                                        {region.label}
+                                                    </option>
+                                                ))}
+                                            </Field>
+                                        </Col>
+                                        <Col md={6} xs={12}>
+                                            <Input
+                                                options={students}
+                                                name="assignedStudents"
+                                                placeholder="Select or search students..."
+                                                label="Assigned Students"
+                                                type="select"
+                                                isMulti={true}
+                                            />
+                                        </Col>
+                                    </Row>
+                                    <Row>
+                                        <Col md={6} xs={12}>
+                                            <Input
+                                                name="coachType"
+                                                placeholder="Please Select the Coach Type"
+                                                label="Coach Type"
+                                                type="radio"
+                                                options={[
+                                                    {
+                                                        label: 'High Ticket',
+                                                        value: COACH.COACH_TYPE.HIGH_TICKET
+                                                    },
+                                                    {
+                                                        label: 'Low Ticket',
+                                                        value: COACH.COACH_TYPE.LOW_TICKET
+                                                    }
+                                                ]}
+                                            />
+                                        </Col>
+                                        {values.coachType && ticketRender(values.coachType)}
+                                    </Row>
+                                </div>
+
                                 <Row>
                                     <Col>
                                         <Input

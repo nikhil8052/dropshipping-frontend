@@ -1274,3 +1274,20 @@
         background-color: red !important;
     }
 }
+
+.corse-detail-box iframe {
+    padding: 30px;
+    border: 1px solid #ffffff80;
+    border-radius: 16px;
+}
+
+.corse-detail-box iframe,.corse-detail-box .pdf-viewer  {
+    padding: 30px;
+    border: 1px solid #ffffff80;
+    border-radius: 16px;
+}
+
+.corse-detail-box canvas {
+    height: 100% !important;
+    width: 100% !important;
+}

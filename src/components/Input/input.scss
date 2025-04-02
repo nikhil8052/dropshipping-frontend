@@ -35,7 +35,7 @@
         font-size: 16px;
         font-family: $font-secondary;
         border-radius: 50px !important;
-        background-color: #0C0C0C !important;
+        background-color: #343837 !important;
         border: 1px solid rgb(233, 234, 240) !important;
         color: #fff;
         padding: 10px 20px;
@@ -144,4 +144,53 @@
     .ql-editing {
         left: 0px !important;
     }
+}
+
+.ag-overlay-no-rows-wrapper span {
+    color: #fff;
+}
+
+.field-control:focus-visible, .field-select-control:focus-visible, .field-text-area-control:focus-visible {
+    outline: 0px !important;
+    border: 1px solid #fff !important;
+    color: #fff !important;
+}
+
+ .new-page .dropdown-button .dropdown-toggle, .new-page  .custom_select__control .dropdown-toggle, .new-page .dropdown-button-fix .dropdown-toggle {
+    padding: 10px 20px;
+    color: #fff;
+    background-color: #fff;
+    background: #343837 !important;
+}
+
+ .new-page .dropdown-button .dropdown-toggle span, .new-page .custom_select__control .dropdown-toggle span, .new-page .dropdown-button-fix .dropdown-toggle span {
+    color: #fff;
+    -webkit-text-fill-color: #fff;
+}
+
+ .new-page .dropdown-button .dropdown-toggle img, .new-page .custom_select__control .dropdown-toggle img, .new-page  .dropdown-button-fix .dropdown-toggle img {
+    filter: invert(1);
+}
+
+
+.new-page .field-control,.new-page .field-select-control{
+    margin-bottom: 0 !important;
+}
+
+.new-page .formgroup label{
+    margin-bottom: 16px;
+}
+
+.box-row > div {
+    margin-bottom: 2rem;
+}
+
+.ql-editor.ql-blank::before {
+    color: #fff;
+}
+.box-row {
+    margin: 2rem 0rem;
+    border: 1px solid #fff;
+    padding: 30px;
+    border-radius: 16px;
 }

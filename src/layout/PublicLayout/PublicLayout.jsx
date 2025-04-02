@@ -24,11 +24,13 @@ const PublicLayout = () => {
     }, [isLoggedIn, role, isRedirectUrl]);
 
     return (
-        <React.Fragment>
+<div className='layout_public'>
+<React.Fragment>
             <Suspense fallback={<Loading centered />}>
                 <Outlet />
             </Suspense>
         </React.Fragment>
+</div>
     );
 };
 

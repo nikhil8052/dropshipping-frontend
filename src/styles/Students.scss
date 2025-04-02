@@ -61,19 +61,23 @@
 
 .new-student-page-wrapper {
     .new-student-page {
-        height: calc(100vh - 14rem);
-        overflow-y: scroll;
+        // height: calc(100vh - 14rem);
+        // overflow-y: scroll;
         box-shadow: 0px 0px 14.83px 0px rgba(0, 0, 0, 0.06);
         border-radius: 9px;
         // Fix the table height
 
         .new-student-title {
             font-family: Inter;
-            font-size: 18px;
+            font-size: 2rem;
             font-weight: 600;
-            line-height: 21.78px;
+            line-height:1.2;
             text-align: left;
-            color: rgba(0, 43, 91, 1);
+            background: linear-gradient(180deg, #00C7CC 0%, #009CD8 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            color: transparent;
         }
 
         .custom-multi-select {
@@ -143,6 +147,10 @@
             border-radius: 10px;
             padding: 20px 10px;
             color: rgba(110, 116, 133, 1);
+
+            span{
+                color: #fff;
+            }
             // Events screen btn
             .upload-image-btn {
                 border-radius: 59px;
@@ -242,3 +250,4 @@
         z-index: 1111 !important;
     }
 }
+
