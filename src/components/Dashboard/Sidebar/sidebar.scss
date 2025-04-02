@@ -43,8 +43,9 @@
     .side-nav-wrapper {
         display: flex;
         flex-direction: column;
-        // height: calc(100vh - 75px);
-        // overflow-y: auto;
+        height: calc(100vh - 75px);
+        overflow-y: auto;
+        overflow-x: hidden;
         width: 245px;
         z-index: 4;
         padding-bottom: 100px;
@@ -53,7 +54,8 @@
             display: flex;
             flex-direction: column;
             height: 100%;
-            // overflow-y: auto;
+            overflow-y: auto;
+            overflow-x: hidden;
             padding-right: 10px;
         }
         .sidebar-nav-items {
