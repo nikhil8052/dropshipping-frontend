@@ -48,7 +48,7 @@
         overflow-x: hidden;
         width: 245px;
         z-index: 4;
-        padding-bottom: 100px;
+        padding-bottom: 70px;
 
         .side-nav-scroll {
             display: flex;
@@ -449,5 +449,14 @@
 }
 
 .sidebar .nav a:last-child {
+    display: none;
+}
+
+.sidebar .logout-btn img {
+    width: 18px;
+    height: 18px;
+}
+
+.sidebar.hide-sidebar .side-bar-btm .active-item.logout-btn span {
     display: none;
 }

@@ -255,7 +255,7 @@ const Sidebar = () => {
                             </div>
                             <button className="logout-btn active-item" onClick={handleLogoutClick}>
                             <img src={logoutIcon} alt="Logout" className="logout-icon" /> 
-                                LOGOUT
+                            <span> LOGOUT</span> 
                             </button>
                         </div>
                     </div>
