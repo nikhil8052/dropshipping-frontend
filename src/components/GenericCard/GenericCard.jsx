@@ -90,9 +90,9 @@ const GenericCard = ({
                     <Card.Title className="card-title">
                         <TextExpand className="course-title" value={title} width="100%" />
                     </Card.Title>
-                    <Card.Text className="card-coach">
+                    {/* <Card.Text className="card-coach">
                         <TextExpand className="course-des" value={detail} width="100%" />
-                    </Card.Text>
+                    </Card.Text> */}
                     <Card.Text className="card-coach">
                         <TextExpand
                             className="course-des"

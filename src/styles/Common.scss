@@ -448,8 +448,8 @@ color: #fff;
     color: #1f2729;
 }
 
-.main-panel:has(.course-section) .generic-card{
-border: 0.5px solid rgb(0 172 212 / 58%);
+.main-panel:has(.course-section) .generic-card {
+    border: 0.5px solid rgb(0 172 212 / 26%);
 }
 
 .main-panel:has(.course-section) .course-section {
@@ -532,8 +532,8 @@ filter: invert(0);
         margin: 0;
     }
 
-    .main-panel:has(.course-section) .generic-card:hover * {
-        color: #fff;
+    .main-panel:has(.course-section) .generic-card:hover  {
+        background: transparent;
     }
 
     .main-panel:has(.course-section) .search-input, .main-panel:has(.course-section) .search-input::placeholder {
@@ -545,6 +545,9 @@ filter: invert(0);
         padding: 0;
     }
 
+    .main-panel:has(.publish-form-section) .active_lec .lecture-card {
+        background-color: #00a7d57d;
+    }
 
 
 
@@ -556,4 +559,3 @@ filter: invert(0);
 
 
 
-    
