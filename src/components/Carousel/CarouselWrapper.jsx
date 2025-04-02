@@ -6,7 +6,7 @@ import ProductCard from '../ProductCard/ProductCard';
 import LectureCard from '../LectureCard/LectureCard';
 
 const CarouselWrapper = ({ items = [], type = 'product', onItemClick }) => {
-    const [activeIndex, setActiveIndex] = useState(null);
+    const [activeIndex, setActiveIndex] = useState(0);
 
     const handleClick = (e, item, index ) => {
         e.currentTarget.classList.add('active_lec');

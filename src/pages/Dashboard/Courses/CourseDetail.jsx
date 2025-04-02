@@ -17,8 +17,8 @@ const CourseDetail = () => {
     const location = useLocation();
     const userInfo = useSelector((state) => state?.auth?.userInfo);
     const token = useSelector((state) => state?.auth?.userToken);
-    const [course, setCourse] = useState({});
-    const [selectedLecture, setSelectedLecture] = useState(null);
+    const [course, setCourse] = useState(0);
+    const [selectedLecture, setSelectedLecture] = useState(0);
 
     const role = userInfo?.role;
     const courseId = location.state?.courseId;

@@ -159,13 +159,12 @@ const Sidebar = () => {
 
                 <Container>
                    <div className="brand-logo">
-    <img src={logoImg} alt="brand-logo" className='main-logo'/>
-    <img src={subImg} alt="brand-logo" className='sub-logo'/>
-    
     {/* Toggle button inside the sidebar */}
     <button onClick={() => dispatch(toggleSidebar())} className="menu-toggler" type="button">
         <FontAwesomeIcon icon={faBarsStaggered} />
     </button>
+    <img src={logoImg} alt="brand-logo" className='main-logo'/>
+    <img src={subImg} alt="brand-logo" className='sub-logo'/>
 </div>
 
                     
