@@ -150,7 +150,8 @@
 .cancel-btn {
     padding: 10px 40px;
     background-color: transparent !important;
-    color: black !important;
+    // color: black !important;
+    color: #fff;
     border: 1px solid rgba(233, 234, 240, 1) !important;
 }
 .filter-button {
@@ -204,7 +205,11 @@
     margin-bottom: 0.5rem;
     opacity: 0px;
 }
-
+.title-top {
+background-color: rgba(255, 255, 255, 0.1019607843) !important;
+border: 1px solid rgb(233, 234, 240) !important;
+color: #fff;
+}
 // Fields, Selects
 
 .field-label {
@@ -232,7 +237,7 @@
     padding: 15px 20px;
     width: 100%;
     margin-bottom: 2rem;
-    background-color: #0C0C0C !important;
+    background-color: #343837!important;
     border: 1px solid rgb(233, 234, 240) !important;
     color: #fff;
 }
@@ -242,11 +247,13 @@
     font-weight: 400;
     line-height: 14px;
     text-align: left;
-    color: rgba(25, 28, 31, 1) !important;
+    color: #fff !important;
+    background-color: #343837!important;
     border: 0.8px solid rgba(233, 234, 240, 1) !important;
     border-radius: 50px !important;
     width: 100% !important;
-    height: 39px !important;
+    padding: 15px 20px;
+    // height: 39px !important;
 }
 
 .field-control-phone-mask:focus {
@@ -373,3 +380,180 @@
     height: 20px !important;
     cursor: pointer !important;
 }
+
+.students-page .edit-button .action-icon {
+    filter: invert(1);
+}
+
+.ag-overlay-no-rows-wrapper span {
+    color: #fff;
+}
+
+.field-control:focus-visible, .field-select-control:focus-visible, .field-text-area-control:focus-visible {
+    outline: 0px !important;
+    border: 1px solid #fff !important;
+    color: #fff !important;
+}
+
+ .new-page .dropdown-button .dropdown-toggle, .new-page  .custom_select__control .dropdown-toggle, .new-page .dropdown-button-fix .dropdown-toggle {
+    padding: 10px 20px;
+    color: #fff;
+    background-color: #fff;
+    background: #343837 !important;
+}
+
+ .new-page .dropdown-button .dropdown-toggle span, .new-page .custom_select__control .dropdown-toggle span, .new-page .dropdown-button-fix .dropdown-toggle span {
+    color: #fff;
+    -webkit-text-fill-color: #fff;
+}
+
+ .new-page .dropdown-button .dropdown-toggle img, .new-page .custom_select__control .dropdown-toggle img, .new-page  .dropdown-button-fix .dropdown-toggle img {
+    filter: invert(1);
+}
+
+
+.new-page .field-control,.new-page .field-select-control{
+    margin-bottom: 0 !important;
+}
+
+.new-page .formgroup label{
+    margin-bottom: 16px;
+}
+
+.box-row > div {
+    margin-bottom: 2rem;
+}
+
+.students-page .box-row > div > div {
+    margin-bottom: 2rem;
+}
+
+.ql-editor.ql-blank::before {
+    color: #fff;
+}
+.box-row {
+    margin: 2rem 0rem;
+    border: 1px solid #fff;
+    padding: 30px;
+    border-radius: 16px;
+}
+
+// new css for coursepage(light)
+.main-panel:has(.publish-form-section), .main-content-wrapper:has(.publish-form-section),.main-panel:has(.course-section),.main-content-wrapper:has(.course-section)
+{
+    background-color: #f8f7f5;
+}
+
+.main-panel:has(.course-section) .generic-card .card-body * {
+    color: #1f2729;
+}
+
+.main-panel:has(.course-section) .generic-card{
+border: 0.5px solid rgb(0 172 212 / 58%);
+}
+
+.main-panel:has(.course-section) .course-section {
+    border: 0.5px solid rgb(0 172 212 / 58%);
+    padding: 30px;
+}
+
+
+.main-panel:has(.course-section) .search-input{
+    background-color: #f8f7f5 !important;
+    border: 1px solid rgb(176 225 235) !important;
+    color: #000;
+}
+
+.main-panel:has(.course-section) .input-group-text{
+    background-color: #f8f7f5 !important;
+    border: 1px solid rgb(176 225 235) !important;
+}
+.main-panel:has(.course-section) .input-group-text img{
+filter: invert(0);
+}
+
+.main-panel:has(.course-section) .search-input::placeholder{
+    color: #000;
+}
+
+.main-panel:has(.publish-form-section) .title-top {
+
+    background-color: #f8f7f5 !important;
+    border: 1px solid rgb(176 225 235) !important;
+    color: #000;
+}
+
+.main-panel:has(.publish-form-section) .publish-course-wrapper{
+    border: 0.5px solid rgb(0 172 212 / 58%);
+    padding: 30px;
+}
+
+.main-panel:has(.publish-form-section) .corse-detail-box *{
+    color: #000;
+}
+
+.main-panel:has(.publish-form-section) .lecture-card * {
+    color: #000 !important;
+}
+
+.main-panel:has(.publish-form-section) .lecture-card {
+    background-color: transparent;
+    border: 1px solid rgb(217 216 215);
+}
+
+.main-panel:has(.publish-form-section) .lecture-card:hover{
+        background-color: #80808042;
+    }
+
+    .main-panel:has(.publish-form-section)   .corse-detail-box iframe,.main-panel:has(.publish-form-section)  .corse-detail-box .pdf-viewer {
+        padding: 30px;
+        border: 1px solid rgb(217 216 215);
+        border-radius: 16px;
+    }
+
+    .main-panel:has(.publish-form-section)  .publish-added-button-footer .edit-btn {
+        border: 1px solid #000;
+    }
+
+    .top-nav-title h3 {
+        margin-bottom: 0rem;
+        display: none;
+    }
+
+    .main-panel .main-content-wrapper {
+        margin-top: 15px;
+    }
+
+    .main-panel:has(.publish-form-section) .lecture-card {
+        background-color: transparent;
+         border:none; 
+        box-shadow: none;
+        padding: 5px 0px;
+        margin: 0;
+    }
+
+    .main-panel:has(.course-section) .generic-card:hover * {
+        color: #fff;
+    }
+
+    .main-panel:has(.course-section) .search-input, .main-panel:has(.course-section) .search-input::placeholder {
+        color: #000 !important;
+    }
+
+    .main-panel:has(.publish-form-section) .publish-course-wrapper .carousel-lecture {
+        width: 100%;
+        padding: 0;
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+    

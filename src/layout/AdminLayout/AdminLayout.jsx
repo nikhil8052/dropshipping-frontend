@@ -15,7 +15,8 @@ const DashboardLayout = () => {
     }, [isLoggedIn, role]);
 
     return (
-        <Container fluid className="p-0">
+      <div className='layout_admin'>
+          <Container fluid className="p-0">
             {/* Collapsible Sidebar */}
             {/* Main Content */}
             <Sidebar />
@@ -25,6 +26,7 @@ const DashboardLayout = () => {
                 </Suspense>
             </MainPanel>
         </Container>
+      </div>
     );
 };
 

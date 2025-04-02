@@ -5,7 +5,8 @@
     padding: 0px 25px;
     text-align: center;
     .sub-title {
-        color: $light-info-color;
+        // color: $light-info-color;
+        color: #fff;
         text-transform: capitalize;
     }
     .main-title {
@@ -15,7 +16,7 @@
         }
     }
         .h3, h3 {
-            font-size: 3.6rem;
+            font-size: 2.4rem;
             font-weight: 600;
             background: linear-gradient(180deg, #00C7CC 0%, #009CD8 100%);
             -webkit-background-clip: text;
