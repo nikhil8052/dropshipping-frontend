@@ -16,6 +16,7 @@ import InfiniteScroll from 'react-infinite-scroll-component';
 import * as types from '../../../redux/actions/actionTypes';
 
 const Courses = () => {
+
     const [search, setSearch] = useState('');
     const [coursesFilter, setCoursesFilter] = useState('All Courses');
     const [allCourses, setAllCourses] = useState([]); // Store all fetched courses
