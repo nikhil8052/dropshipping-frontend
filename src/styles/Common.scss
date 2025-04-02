@@ -454,7 +454,7 @@ color: #fff;
 
 .main-panel:has(.course-section) .course-section {
     border: 0.5px solid rgb(0 172 212 / 58%);
-    padding: 30px;
+    padding: 30px 30px 0px;
 }
 
 
@@ -515,11 +515,6 @@ filter: invert(0);
         border: 1px solid #000;
     }
 
-    .top-nav-title h3 {
-        margin-bottom: 0rem;
-        display: none;
-    }
-
     .main-panel .main-content-wrapper {
         margin-top: 15px;
     }
@@ -561,13 +556,107 @@ filter: invert(0);
     padding: 5px 15px;
 }
 
+.main-panel:has(.publish-form-section)  .top-nav-title h3,.main-panel:has(.course-section)  .top-nav-title h3 {
+    margin-bottom: 0rem;
+    display: none;
+}
 
+// only-for new-course-page
+.addcourse-section .nav-tabs .nav-link.active {
+    color: #000 !important;
+}
 
+.addcourse-section .section-title p {color: #000;}
 
+.addcourse-section .field-label {
+    color: #000;
+}
 
+.addcourse-section .field-control,.addcourse-section  .field-select-control,.upload-course-form .field-control, .upload-course-form .field-select-control {
+    background-color: transparent !important;
+    color: #000;
+    border: 1px solid rgb(3 164 194 / 24%) !important;
+}
 
+.addcourse-section .formgroup input[type=text],.addcourse-section .formgroup input[type=password],.addcourse-section .formgroup textarea,.addcourse-section .formgroup .custom_select__control {
+    background-color: transparent !important;
+    padding: 0px 20px;
+}
 
+.addcourse-section .formgroup label {
+    color: #000;
+}
 
+.addcourse-section .add-course-form .cancel-btn {
+    color: #000 !important;
+ border: 1px solid rgb(3 164 194 / 24%) !important;
+}
 
+.addcourse-section .field-control:focus-visible,.addcourse-section  .field-select-control:focus-visible, 
+.addcourse-section .field-text-area-control:focus-visible {
+    outline: 0px !important;
+    border: 1px solid rgb(3 164 194 / 24%) !important;
+    color: #000 !important;
+}
 
+.addcourse-section .formgroup input[type=text],.addcourse-section  .formgroup input[type=password],
+.addcourse-section  .formgroup textarea,.addcourse-section .formgroup .custom_select__control{
+    border: 1px solid rgb(3 164 194 / 24%) !important;
+}
 
+.upload-course-form .add-quiz-fields .add-quiz-question .quiz-multiple-choice input[type=text].correctAnswer {
+    background-color: #00b9cf !important;
+}
+
+.publish-form-section .publish-course-wrapper .lecture-details-wrapper {
+    border: 1px solid transparent;
+    padding: 0px 30px;
+    width: 100%;
+    position: absolute;
+    gap: 15px;
+    display: flex;
+    flex-direction: column;
+}
+
+.course-section .custom-card-course {
+    padding-bottom: 30px;
+}
+
+.add-lecture-section .add-lecture-item .items-button .quiz-lec-btn {
+    background-color: #0395c6;
+}
+
+.add-lecture-section .add-lecture-item .items-button .quiz-btn {
+    background-color: #a2d9dd;
+}
+
+.publish-form-section .publish-course-wrapper .lecture-details-wrapper {
+    position: static;
+}
+
+.publish-form-section .publish-course-wrapper .card-background {
+    z-index: 1;
+}
+
+.publish-form-section .publish-course-wrapper .lecture-details-wrapper .lecture-details {
+    position: relative;
+    z-index: 2;
+}
+
+.publish-form-section .cancel-btn {
+    color: #000 !important;
+    border: 1px solid rgb(3 164 194 / 24%) !important;
+}
+
+.add-lecture-section .add-lecture-item p {
+    color: #000;
+}
+
+.sidebar .container {
+    height: 100%;
+}
+
+.sidebar .side-nav-wrapper {
+    height: 100%;
+    padding-bottom: 180px;
+}
