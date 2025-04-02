@@ -19,6 +19,9 @@ import dotBlue from '@icons/dot-blue-2.svg';
 import faRoad from '@icons/coaches.svg';
 import { faBarsStaggered } from '@fortawesome/free-solid-svg-icons';
 import { toggleSidebar } from '@redux/theme/theme_slice.js';
+import { faChevronRight } from '@fortawesome/free-solid-svg-icons';
+import logoutIcon from "@icons/logout-light.svg";
+// import { Link } from 'react-router-dom';
 
 // import all static icons
 import { adminSidebarItems, coachSidebarItems, studentSidebarItems } from './sidebarData';
@@ -158,16 +161,16 @@ const Sidebar = () => {
                 )}
 
                 <Container>
-                   <div className="brand-logo">
-    {/* Toggle button inside the sidebar */}
-    <button onClick={() => dispatch(toggleSidebar())} className="menu-toggler" type="button">
-        <FontAwesomeIcon icon={faBarsStaggered} />
-    </button>
-    <img src={logoImg} alt="brand-logo" className='main-logo'/>
-    <img src={subImg} alt="brand-logo" className='sub-logo'/>
-</div>
+                    <div className="brand-logo">
+                        {/* Toggle button inside the sidebar */}
+                        <button onClick={() => dispatch(toggleSidebar())} className="menu-toggler" type="button">
+                            <FontAwesomeIcon icon={collapsed ? faChevronRight : faBarsStaggered} />
+                        </button>
+                        <img src={logoImg} alt="brand-logo" className='main-logo' />
+                        <img src={subImg} alt="brand-logo" className='sub-logo' />
+                    </div>
 
-                    
+
                     <div className="side-nav-wrapper">
                         <div className="side-nav-scroll">
                             <Nav defaultActiveKey="/" className="sidebar-nav-items">
@@ -178,6 +181,7 @@ const Sidebar = () => {
                                             item={item}
                                             selectedItemId={activeSidebarItem}
                                             handleSideBarClick={handleSideBarClick}
+
                                         />
                                     ) : (
                                         <SidebarItem
@@ -185,6 +189,7 @@ const Sidebar = () => {
                                             item={item}
                                             selectedItemId={activeSidebarItem}
                                             handleSideBarClick={handleSideBarClick}
+
                                         />
                                     )
                                 )}
@@ -227,23 +232,31 @@ const Sidebar = () => {
                             )}
                         </div>
 
-                        <div className={`side-bar-profile ${sideBarStudentEventModal ? 'remove-auto' : ''}`}>
-                            <div className="profile-wrapper">
-                                {userInfo?.avatar ? (
-                                    <img src={userInfo?.avatar} className="profile-pic" alt="nav-icon" />
-                                ) : (
-                                    <FontAwesomeIcon
-                                        className="profile-pic"
-                                        size="2xl"
-                                        icon={faCircleUser}
-                                        color="rgba(200, 202, 216, 1)"
-                                    />
-                                )}
+                        <div className={`side-bar-btm ${sideBarStudentEventModal ? 'remove-auto' : ''}`}
+                        >
+                            
+                            <div className='side-bar-profile'>
+                                <div className="profile-wrapper">
+                                    {userInfo?.avatar ? (
+                                        <img src={userInfo?.avatar} className="profile-pic" alt="nav-icon" />
+                                    ) : (
+                                        <FontAwesomeIcon
+                                            className="profile-pic"
+                                            size="2xl"
+                                            icon={faCircleUser}
+                                            color="rgba(200, 202, 216, 1)"
+                                        />
+                                    )}
+                                </div>
+                                <div className="profile-name">
+                                    <p>{userInfo?.name?.split(' ')[0]}</p>
+                                    <span>{userInfo?.role}</span>
+                                </div>
                             </div>
-                            <div className="profile-name">
-                                <p>{userInfo?.name?.split(' ')[0]}</p>
-                                <span>{userInfo?.role}</span>
-                            </div>
+                            <button className="logout-btn active-item" onClick={handleLogoutClick}>
+                            <img src={logoutIcon} alt="Logout" className="logout-icon" /> 
+                            <span> LOGOUT</span> 
+                            </button>
                         </div>
                     </div>
                 </Container>

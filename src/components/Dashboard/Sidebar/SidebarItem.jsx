@@ -2,6 +2,7 @@ import { collapseSidebar } from '@redux/theme/theme_slice.js';
 import { Link } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 
+
 const SidebarItem = ({ item, selectedItemId, handleSideBarClick }) => {
     const dispatch = useDispatch();
 
@@ -35,6 +36,7 @@ const SidebarItem = ({ item, selectedItemId, handleSideBarClick }) => {
                     to={item.linkTo}
                     className={item.id === selectedItemId ? 'active-item' : ''}
                     onClick={changeRoute}
+                    
                 >
                     <img src={item.iconLight} className="side-nav-icon" alt="nav-icon" />
                     <span>{item.name}</span>
