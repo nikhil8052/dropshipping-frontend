@@ -16,9 +16,7 @@
     color: #fff;
     overflow: hidden;
     &:hover {
-        box-shadow: 0px 0px 20px 0px #00c9cc86;
-        background: linear-gradient(212.77deg, #29BDC1 3.31%, #1C8ED0 122.34%);
-
+            box-shadow: rgb(0 161 215 / 55%) 0px 1px 2px, rgb(1 162 216 / 49%) 0px 2px 6px, rgb(0 159 214 / 57%) 0px 1px 8px;
     }
     .card-image {
         object-fit: cover;
