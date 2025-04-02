@@ -1,7 +1,7 @@
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faBarsStaggered } from '@fortawesome/free-solid-svg-icons';
+// import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+// import { faBarsStaggered } from '@fortawesome/free-solid-svg-icons';
 import { useDispatch, useSelector } from 'react-redux';
-import { toggleSidebar } from '@redux/theme/theme_slice.js';
+// import { toggleSidebar } from '@redux/theme/theme_slice.js';
 import { adminSidebarItems, coachSidebarItems, studentSidebarItems } from '../Sidebar/sidebarData';
 import { useLocation } from 'react-router-dom';
 import { useEffect, useState } from 'react';
@@ -44,11 +44,11 @@ const Topbar = () => {
 
     return (
         <>
-            <div className="menue-toggler-wrapper">
+            {/* <div className="menue-toggler-wrapper">
                 <button onClick={() => dispatch(toggleSidebar())} className="menu-toggler" type="button">
                     <FontAwesomeIcon icon={faBarsStaggered} />
                 </button>
-            </div>
+            </div> */}
             <div className="top-nav-title">
                 {title === 'Dashboard' ? (
                     <div>

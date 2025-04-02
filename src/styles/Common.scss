@@ -549,6 +549,18 @@ filter: invert(0);
         background-color: #00a7d57d;
     }
 
+    .sidebar .brand-logo {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        justify-content: space-between;
+    }
+
+    button.menu-toggler {
+    background-color: transparent;
+    padding: 5px 15px;
+}
+
 
 
 

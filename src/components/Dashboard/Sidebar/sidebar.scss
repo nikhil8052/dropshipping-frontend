@@ -304,6 +304,46 @@
         }
     }
 }
+// .hide-sidebar {
+//     transform: translateX(-100%);
+// }
 .hide-sidebar {
-    transform: translateX(-100%);
+    transform: translateX(0%);
+    width: 130px;
+}
+
+.hide-sidebar.sidebar .side-bar-profile .profile-name {
+    display: none;
+}
+
+.corse-detail-box h3 {
+    margin-bottom: 1rem;
+}
+
+.hide-sidebar.sidebar .brand-logo .main-logo{
+    display: none;
+}
+
+.sidebar .brand-logo .sub-logo{
+    display: none;
+}
+
+.hide-sidebar.sidebar .brand-logo .sub-logo{
+    display: block;
+}
+
+.sidebar .menu-toggler {
+    background: none;
+    border: none;
+    color: #fff;
+    font-size: 1.5rem;
+    cursor: pointer;
+}
+
+.sidebar .btn-collapse-sidebar {
+    DISPLAY: NONE;
+}
+
+.hide-sidebar.sidebar .nav {
+    align-items: center;
 }
