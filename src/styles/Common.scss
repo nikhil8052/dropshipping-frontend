@@ -672,6 +672,16 @@ filter: invert(0);
     padding-left: 2rem !important;
 }
 
+.top-nav-title .h3, .top-nav-title h3{
+    display: none;
+}
+
+.layout_admin .top-nav-title .sub-title {
+    text-align: right;
+    margin-top: 8px;
+}
+
+
 
 @media only screen and (max-width:767px) {
     .corse-detail-box {
