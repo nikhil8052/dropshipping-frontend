@@ -37,8 +37,8 @@ const Sidebar = () => {
     const [updatedItems, setUpdatedItems] = useState([]);
 
     // Later we change this to actual role
-
     const role = userInfo?.role;
+    console.log( userInfo.roadmapAccess, "ROPD" )
 
     const [modalShow, setModalShow] = useState(false);
     const { activeSidebarItem } = useSelector((state) => state.activeSidebarItem);
@@ -48,7 +48,7 @@ const Sidebar = () => {
             role === 'ADMIN' ? adminSidebarItems : role === 'COACH' ? coachSidebarItems : [...studentSidebarItems]; // clone to avoid mutating original array
 
         // For student role, if a roadMap exists then insert a "Roadmap" item before Settings.
-        if (role === 'STUDENT' && userInfo?.roadMap) {
+        if (role === 'STUDENT' && userInfo?.roadMap && userInfo?.roadmapAccess==true ) {
             const roadmapItem = {
                 id: 'roadmap', // unique id for the new item
                 name: 'Roadmap',
