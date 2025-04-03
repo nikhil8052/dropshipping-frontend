@@ -170,7 +170,7 @@ const NewStudent = () => {
             coachingTrajectory: student?.coachingTrajectory || '',
             roadMap: student?.roadMap || '',
             coursesRoadmap: student?.coursesRoadmap.map((c) => c?._id),
-            roadmapAccess:String(student?.roadmapAccess || false), 
+            roadmapAccess:String(student?.roadmapAccess || ''), 
             // paymentType: student?.paymentType || 'one-time', // Default to 'one-time' if not present
             // installmentFrequency: student?.installmentFrequency || '',
             // installmentCount: student?.installmentCount || 0,
