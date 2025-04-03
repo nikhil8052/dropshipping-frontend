@@ -16,7 +16,7 @@ import ConfirmationBox from '../../ConfirmationBox/ConfirmationBox';
 import { logoutUser } from '@redux/auth/auth_slice';
 import { changeLink } from '@redux/sidebar/sidebarSlice';
 import dotBlue from '@icons/dot-blue-2.svg';
-import faRoad from '@icons/coaches.svg';
+import faRoad from '@icons/roadmap.svg';
 import { faBarsStaggered } from '@fortawesome/free-solid-svg-icons';
 import { toggleSidebar } from '@redux/theme/theme_slice.js';
 import { faChevronRight } from '@fortawesome/free-solid-svg-icons';
