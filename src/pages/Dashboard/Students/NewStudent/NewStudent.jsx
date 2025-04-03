@@ -45,6 +45,7 @@ const NewStudent = () => {
     const role = userInfo?.role?.toLowerCase();
     const navigate = useNavigate();
     const [cropping, setCropping] = useState(false);
+    const [roadmapAccess, setRoadmapAccess] = useState(false);
     const [imageSrc, setImageSrc] = useState(null);
     const [courses, setCourses] = useState([]);
     const [studentProducts, setStudentProducts] = useState([]);
@@ -62,7 +63,8 @@ const NewStudent = () => {
         coachingTrajectory: 'LOW_TICKET',
         coursesRoadmap: [],
         category: [],
-        roadMap: ''
+        roadMap: '',
+        roadmapAccess:'' 
         // paymentType: '',
         // installmentFrequency: '',
         // installmentCount: 0,
@@ -143,6 +145,7 @@ const NewStudent = () => {
         const response = await axiosWrapper('GET', API_URL.GET_STUDENT.replace(':id', id), {}, token);
         const student = response.data;
 
+        console.log(student)
         const coursesRoadmap = student.coursesRoadmap.map((course) => ({
             value: course?._id,
             label: course?.title,
@@ -166,7 +169,8 @@ const NewStudent = () => {
             category: mappedCategories || [],
             coachingTrajectory: student?.coachingTrajectory || '',
             roadMap: student?.roadMap || '',
-            coursesRoadmap: student?.coursesRoadmap.map((c) => c?._id)
+            coursesRoadmap: student?.coursesRoadmap.map((c) => c?._id),
+            roadmapAccess:String(student?.roadmapAccess || false), 
             // paymentType: student?.paymentType || 'one-time', // Default to 'one-time' if not present
             // installmentFrequency: student?.installmentFrequency || '',
             // installmentCount: student?.installmentCount || 0,
@@ -252,7 +256,9 @@ const NewStudent = () => {
     };
 
     const handleFormSubmit = async (values, { resetForm, setSubmitting }) => {
-        let formData = { ...values, avatar: studentPhoto, category: values.category.map((cat) => cat.value) };
+        let formData = { ...values,
+            avatar: studentPhoto,
+            category: values.category.map((cat) => cat.value) };
 
         // If updating an existing student, exclude the email field
         if (studentId) {
@@ -406,6 +412,11 @@ const NewStudent = () => {
     const academyOptions = [
         { label: 'Dropship Academy Low offer', value: 'ROAD_MAP_ONE' },
         { label: 'Dropship Academy Roadmap', value: 'ROAD_MAP_TWO' }
+    ];
+
+    const roadmapAccessOptions = [
+        { label: 'Yes', value: 'true' },
+        { label: 'No', value: 'false' }
     ];
 
     return (
@@ -903,7 +914,7 @@ const NewStudent = () => {
                                     )} */}
                                     </Row>
                                     <Row>
-                                        <Col md={12} xs={12}>
+                                        <Col md={6} xs={6}>
                                             <label className="field-label">Road Map</label>
                                             <Field
                                                 name="roadMap"
@@ -934,6 +945,57 @@ const NewStudent = () => {
                                                                 className="dropdown-button w-100"
                                                             >
                                                                 {academyOptions.map((option) => (
+                                                                    <Dropdown.Item
+                                                                        key={option.value}
+                                                                        eventKey={option.value}
+                                                                        className="my-1 ms-2 w-100"
+                                                                    >
+                                                                        {option.label}
+                                                                    </Dropdown.Item>
+                                                                ))}
+                                                            </DropdownButton>
+                                                            {form.touched[field.name] && form.errors[field.name] && (
+                                                                <div className="error mt-2">
+                                                                    {form.errors[field.name]}
+                                                                </div>
+                                                            )}
+                                                        </>
+                                                    );
+                                                }}
+                                            />
+                                        </Col>
+                                        {/* Road Map access  */}
+                                        <Col md={6} xs={6} >
+                                           <label className="field-label">Roadmap Access</label>
+                                           <Field
+                                                name="roadmapAccess"
+                                                className="field-select-control"
+                                                type="text"
+                                                component={({ field, form }) => {
+                                                    const handleSelect = (eventKey) => {
+                                                        const selected = roadmapAccessOptions.find(
+                                                            (option) => option.value === eventKey
+                                                        );
+                                                        form.setFieldValue(field.name, selected.value);
+                                                    };
+
+                                                    return (
+                                                        <>
+                                                            <DropdownButton
+                                                                title={
+                                                                    <div className="d-flex justify-content-between align-items-center">
+                                                                        <span>
+                                                                            {roadmapAccessOptions.find(
+                                                                                (option) => option.value === field.value
+                                                                            )?.label || 'Select roadmap access...'}
+                                                                        </span>
+                                                                    </div>
+                                                                }
+                                                                id={field.name}
+                                                                onSelect={handleSelect}
+                                                                className="dropdown-button w-100"
+                                                            >
+                                                                {roadmapAccessOptions.map((option) => (
                                                                     <Dropdown.Item
                                                                         key={option.value}
                                                                         eventKey={option.value}
