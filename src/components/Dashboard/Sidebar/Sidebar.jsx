@@ -54,9 +54,9 @@ const Sidebar = () => {
                 iconLight: faRoad, // using a FontAwesome icon
                 linkTo: '/student/roadmap'
             };
-
+        
             // Find index of the "Settings" item.
-            const settingsIndex = items.findIndex((item) => item.name === 'Settings');
+            const settingsIndex = items.findIndex((item) => item.name === 'Logout');
             if (settingsIndex > -1) {
                 items.splice(settingsIndex, 0, roadmapItem);
             } else {
