@@ -38,7 +38,6 @@ const Sidebar = () => {
 
     // Later we change this to actual role
     const role = userInfo?.role;
-    console.log( userInfo.roadmapAccess, "ROPD" )
 
     const [modalShow, setModalShow] = useState(false);
     const { activeSidebarItem } = useSelector((state) => state.activeSidebarItem);
