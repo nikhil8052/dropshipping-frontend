@@ -64,7 +64,7 @@ const NewStudent = () => {
         coursesRoadmap: [],
         category: [],
         roadMap: '',
-        roadmapAccess:'' 
+        roadmapAccess:'false' 
         // paymentType: '',
         // installmentFrequency: '',
         // installmentCount: 0,
@@ -145,7 +145,6 @@ const NewStudent = () => {
         const response = await axiosWrapper('GET', API_URL.GET_STUDENT.replace(':id', id), {}, token);
         const student = response.data;
 
-        console.log(student)
         const coursesRoadmap = student.coursesRoadmap.map((course) => ({
             value: course?._id,
             label: course?.title,
@@ -170,7 +169,7 @@ const NewStudent = () => {
             coachingTrajectory: student?.coachingTrajectory || '',
             roadMap: student?.roadMap || '',
             coursesRoadmap: student?.coursesRoadmap.map((c) => c?._id),
-            roadmapAccess:String(student?.roadmapAccess || ''), 
+            roadmapAccess:String(student?.roadmapAccess || 'false'), 
             // paymentType: student?.paymentType || 'one-time', // Default to 'one-time' if not present
             // installmentFrequency: student?.installmentFrequency || '',
             // installmentCount: student?.installmentCount || 0,
