@@ -86,25 +86,38 @@
     height: 450px;
 }
 
-.rbc-toolbar button{
-    color: #fff;
+.main-panel .main-content-wrapper .rbc-toolbar button{
+    color: rgba(255, 255, 255, 0.5019607843);
+    background-color: transparent;
+    background: transparent;
 }
 
-.rbc-off-range-bg {
+.main-panel .main-content-wrapper .rbc-off-range-bg {
     background: #0495c63b;
 }
 
-.rbc-calendar *, .rbc-calendar *:before, .rbc-calendar *:after {
-    color: #fff;
+.main-panel .main-content-wrapper .rbc-calendar *, .main-panel .main-content-wrapper .rbc-calendar *:before,.main-panel .main-content-wrapper .rbc-calendar *:after {
+    color: rgba(255, 255, 255, 0.5019607843);
 }
 
-.ag-theme-alpine.custom-table{
+.main-panel .main-content-wrapper .ag-theme-alpine.custom-table{
     background: rgba(31,39,41, 1);
     border-radius: 16px;
-    border: 1px solid #fff;
+    border: 1px solid rgba(255, 255, 255, 0.5019607843);
     padding: 20px;
 }
 
-input.search-input.form-control::placeholder {
+.main-panel .main-content-wrapper input.search-input.form-control::placeholder {
     color: #fff;
+}
+
+
+.layout_student .custom-card.events-card.card {
+    background: #f8f7f5;
+}
+
+.main-panel .btn-check:checked+.btn, .main-panel .btn.active,.main-panel  .btn.show,.main-panel  .btn:first-child:active,.main-panel :not(.btn-check)+.btn:active {
+    color: var(--bs-btn-active-color);
+    background-color: #173b47;
+    border-color: #173b47;
 }
