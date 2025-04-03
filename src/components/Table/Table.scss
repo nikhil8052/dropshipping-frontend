@@ -131,6 +131,9 @@
     border: 1px solid #ffffff80 !important;
     padding: 30px;
     border-radius: 16px;
+    @media only screen and (max-width:991px) {
+        padding: 15px;
+    }
 }
 
 .ag-theme-alpine.custom-table .ag-icon-none,.ag-theme-alpine.custom-table .ag-icon-menu,.ag-theme-alpine.custom-table .ag-icon-asc  {

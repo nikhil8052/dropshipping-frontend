@@ -194,3 +194,21 @@
     padding: 30px;
     border-radius: 16px;
 }
+
+ .formgroup input[type=text] {
+    border: 0px !important;
+}
+
+.css-1i837h3-ValueContainer2 {
+    max-height: 35px;
+    overflow-y: scroll;
+}
+
+@media only screen and (max-width:767px) {
+    .box-row > div {
+        margin-bottom: 0rem;
+    }
+    .new-page .formgroup label {
+        margin-bottom: 10px;
+    }
+    }

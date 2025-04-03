@@ -121,7 +121,7 @@
             align-items: center;
             flex-wrap: wrap;
             gap: 0.5rem;
-            border: 0.8px solid rgba(233, 234, 240, 1);
+            border: 1px solid rgba(255, 255, 255, 0.5019607843)!important;
             border-radius: 10px;
             padding: 20px 10px;
             color: rgba(110, 116, 133, 1);
@@ -211,4 +211,9 @@
         margin-bottom: 1rem;
     }
 }
+@media only screen and (max-width:767px) {
+.new-coach-page-wrapper .new-coach-page .new-coach-title{
+    font-size: 1.6rem;
+}
 
+}

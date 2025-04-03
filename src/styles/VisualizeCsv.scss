@@ -251,3 +251,41 @@
         text-decoration: underline !important;
     }
 }
+
+.visualize-csv-tabs .title-top {
+    background-color: rgba(255, 255, 255, 0.1019607843) !important;
+    border: 1px solid rgb(233, 234, 240) !important;
+    color: #fff;
+}
+
+.visualize-csv-tabs .nav-tabs .nav-link.active {
+    color: #fff !important;
+}
+
+.students-product-page .field-control, .students-product-page .field-select-control {
+    color: #fff;
+    margin-bottom: 0px;
+}
+
+.students-product-page span {
+    color: #fff;
+}
+
+.visualize-csv-tabs .cancel-btn{
+    color: #fff !important;
+}
+
+.visualize-csv-tabs .custom-table .ag-paging-panel .ag-paging-page-summary-panel div.ag-disabled span{
+    color: #000;
+}
+
+@media only screen and (max-width:991px) {
+
+.visualize-csv-tabs .custom-table .search-input {
+    max-width: 100%;
+}
+
+.visualize-csv-tabs .input-group {
+    margin-bottom: 10px;
+}
+}

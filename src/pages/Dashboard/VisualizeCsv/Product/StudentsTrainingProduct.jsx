@@ -260,7 +260,7 @@ const StudentsTrainingProduct = ({ studentId }) => {
                         loading={loading}
                         children={
                             <Row className={`mb-3 g-2 ${studentId ? 'justify-content-end' : ''}`}>
-                                <Col md={12} lg={6} xl={6} xxl={3}>
+                                <Col md={12} lg={6} xl={6}>
                                     <div className=" d-flex justify-content-even align-items-center from-filter ">
                                         <span className="me-2"> From: </span>
                                         <input

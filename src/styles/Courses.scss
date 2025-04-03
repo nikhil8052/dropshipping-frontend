@@ -24,6 +24,7 @@
         margin-bottom: 2rem;
         flex-wrap: wrap;
         gap: 1rem;
+        
         @media (max-width: $large-screen) {
             justify-content: start;
             margin-top: 0.5rem;
@@ -158,8 +159,9 @@
     margin-bottom: 0.5rem;
     opacity: 0px;
     background-color: rgba(255, 255, 255, 0.1019607843) !important;
-    border: 1px solid rgba(233, 234, 240, 1) !important;
+    // border: 1px solid rgba(233, 234, 240, 1) !important;
     color:#fff;
+   border: 1px solid rgba(255, 255, 255, 0.5019607843)!important;
 }
 .nav-tabs {
     &:focus-visible {
@@ -317,7 +319,8 @@
         border-radius: 10px;
         color: rgb(38, 54, 99);
         text-wrap: wrap;
-       background-color: rgba(255, 255, 255, 0.1019607843)
+       background-color: rgba(255, 255, 255, 0.1019607843);
+       flex-wrap: wrap;
         img {
             width: 180px;
             height: 127px;
@@ -425,7 +428,9 @@
         display: flex;
         justify-content: space-between;
         align-items: center;
-
+        @media only screen and (max-width:991px) {
+            padding: 20px 0px;
+        }
         @include respond-to($large-screen) {
             display: flex;
             flex-direction: column;
@@ -1290,4 +1295,36 @@
 .corse-detail-box canvas {
     height: 100% !important;
     width: 100% !important;
+}
+.add-course-form {
+    margin-top: 20px;
+}
+
+.modal-content {
+    padding: 10px;
+}
+
+.upload-course-form .image-renderer {
+    position: relative;
+}
+
+.upload-course-form .image-renderer > div:last-child {
+    position: absolute;
+    top: 0;
+    right: 10px;
+}
+@media only screen and (max-width:767px) {
+.upload-course-form .image-renderer {
+    margin-bottom: 20px;
+}
+.upload-form-section {
+    padding: 0px 15px;
+}
+
+.publish-form-section .publish-course-wrapper .card-background .text-heading {
+    margin-left: 15px;
+}
+.publish-form-section .publish-course-wrapper .card-background {
+    min-height: 180px;
+}
 }
