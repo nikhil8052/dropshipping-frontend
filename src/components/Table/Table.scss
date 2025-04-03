@@ -43,12 +43,12 @@
         max-width: 390px;
         border-radius: 59px;
         background-color: rgba(245, 248, 249, 1);
-        border: 1px solid rgba(233, 234, 240, 1) !important;
+        border: 1px solid rgba(255, 255, 255, 0.5019607843) !important;
         color: #fff !important;
     }
     .search-input:focus-visible {
         outline-color: rgba(146, 159, 165, 1) !important;
-        border: 1px solid rgba(233, 234, 240, 1) !important;
+        border: 1px solid rgba(255, 255, 255, 0.5019607843) !important;
         color: rgba(71, 81, 86, 1);
     }
     .input-group-text {

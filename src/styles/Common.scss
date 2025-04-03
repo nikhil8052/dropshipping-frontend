@@ -709,6 +709,14 @@ filter: invert(0);
     color: #fff;
 }
 
+.roadmap-wrapper iframe html, .roadmap-wrapper iframe body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    overflow: hidden;
+}
+
+
 @media only screen and (max-width:767px) {
     .corse-detail-box {
         margin-top: 2rem;

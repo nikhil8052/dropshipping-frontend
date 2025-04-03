@@ -67,6 +67,11 @@
 .main-panel {
     height: 100vh;
 }
+
+.main-panel .main-content-wrapper > div {
+    max-width: 1400px;
+    margin: auto;
+}
 @media only screen and (max-width:767px) {
     .main-panel,.full-width-panel {
         width: 100%;
