@@ -6,8 +6,9 @@
     box-shadow: 0px 0px 14.83px 0px rgba(0, 0, 0, 0.06);
     border-radius: 9px;
     padding: 10px 20px;
-    height: calc(100vh - 10rem);
-    overflow-y: scroll;
+    // height: calc(100vh - 10rem);
+    // overflow-y: scroll;
+    border: 1px solid rgba(255, 255, 255, 0.2) !important;
     box-shadow: 0px 0px 14.83px 0px rgba(0, 0, 0, 0.06);
     border-radius: 9px;
     .submit-btn {
@@ -112,4 +113,66 @@
         cursor: pointer;
         fill: rgba(200, 202, 216, 1) !important;
     }
+}
+
+
+.settings-page .field-control {
+    color: #fff;
+    border: rgb(233, 234, 240) 1px solid !important;
+    border-radius: 50px !important;
+    padding: 15px 20px;
+}
+
+.settings-page .field-control::placeholder
+{
+    color: #fff;
+}
+
+.settings-page .field-label{
+    color: #fff;
+}
+
+.settings-page .row > div {
+    margin-bottom: 1rem;
+}
+
+
+.settings-page .profile-title {
+    font-size: 1.5rem;
+}
+
+.settings-page .profile-title {
+    background: linear-gradient(180deg, #00C7CC 0%, #009CD8 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    color: transparent;
+}
+
+@media only screen and (max-width:767px) {
+.settings-page .profile-image {
+    height: 70px;
+    width: 70px;
+}
+
+.settings-page .col-6:has(.profile-image) {
+    margin: 15px 0px !important;
+}
+
+.settings-page form .row {
+    margin-bottom: 0px !important;
+}
+
+.settings-page {
+    padding: 0px;
+}
+
+.settings-page .field-control {
+    padding: 10px;
+}
+
+.settings-page .upload-image-btn {
+    padding: 5px 10px;
+    margin-top: 0rem;
+}
 }

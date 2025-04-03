@@ -433,7 +433,7 @@ color: #fff;
 }
 .box-row {
     margin: 2rem 0rem;
-    border: 1px solid #fff;
+    border: 1px solid rgba(255, 255, 255, 0.5019607843)!important;
     padding: 30px;
     border-radius: 16px;
 }
@@ -681,7 +681,33 @@ filter: invert(0);
     margin-top: 8px;
 }
 
+.new-coach-page-wrapper .cancel-btn {
+    color: #fff;
+}
 
+.box-row > div:not(:has(div)) {
+    margin-bottom: 0;
+}
+
+.addcourse-section .formgroup input[type=text]{
+    border: 0px !important;
+}
+
+
+.publish-form-section .publish-course-wrapper .lecture-details-wrapper .lecture-details > div {
+    width: 50%;
+    text-align: center;
+    justify-content: center;
+    align-items: center;
+}
+
+.publish-form-section .publish-course-wrapper .lecture-details-wrapper .lecture-details .lecture-details-2 {
+    align-items: center;
+}
+
+.events-page .btn-wrapper span {
+    color: #fff;
+}
 
 @media only screen and (max-width:767px) {
     .corse-detail-box {
@@ -707,5 +733,33 @@ filter: invert(0);
 
     .formgroup input[type=text], .formgroup input[type=password], .formgroup textarea, .formgroup .custom_select__control{
         width: auto !important;
+    }
+    .box-row > div > div {
+        margin-bottom: 1rem;
+    }
+    .box-row > div{
+        margin-bottom: 0px;
+    }
+    .new-student-page-wrapper .box-row > div > div {
+        margin-bottom: 1rem;
+    }
+    .main-panel .main-content-wrapper {
+        padding: 10px 10px !important;
+    }
+    .field-control, .field-select-control {
+        padding: 10px;
+        margin-bottom: 1rem;
+    }
+
+    .publish-form-section .publish-course-wrapper .lecture-details-wrapper {
+        padding: 0px 10px;
+    }
+
+    .box-row {
+        margin: 1rem 0rem;
+        padding: 15px;
+    }
+    .main-panel:has(.course-section) .course-section {
+        padding: 15px;
     }
 }
