@@ -97,7 +97,7 @@ export const adminRoutes = [
         access: 'ADMIN'
     },
     {
-        path: 'courses/details',
+        path: 'courses/details/:name?',
         exact: true,
         name: 'Courses',
         Component: CourseDetail,
@@ -340,7 +340,7 @@ export const studentRoutes = [
         access: 'STUDENT'
     },
     {
-        path: 'courses/enrolled-course',
+        path: 'courses/enrolled-course/:name?',
         exact: true,
         name: 'Courses',
         Component: EnrolledCourseDetail,
