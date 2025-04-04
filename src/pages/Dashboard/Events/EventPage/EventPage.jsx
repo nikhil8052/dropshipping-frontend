@@ -7,6 +7,9 @@ import { API_URL } from '@utils/apiUrl';
 import Loading from '../../../../components/Loading/Loading';
 import { useSelector } from 'react-redux';
 import '../../../../styles/Events.scss';
+import Underconst from '@images/underconst.png';
+
+
 
 function EventPage() {
     const [showModal, setShowModal] = useState(false);
@@ -17,6 +20,18 @@ function EventPage() {
     const handleEventClick = (event) => {
         getEventDetails(event.id);
     };
+
+
+    return (
+        <>
+        <div className='under-const'>
+            <div>
+                <h1>In onderhoud</h1>
+            </div>
+        <img src={Underconst} alt="Under construction" />
+        </div>
+        </>
+    )
 
     const handleGoogleCalendarClick = () => {};
 

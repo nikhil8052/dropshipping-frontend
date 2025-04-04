@@ -153,3 +153,40 @@
         border: none;
     }
 }
+
+.under-const {
+    flex-direction: column;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    max-width: 950px !important;
+    padding: 15px;
+    position: relative;
+}
+
+.under-const img {
+    height: 100%;
+    width: 100%;
+    object-fit: cover;
+}
+
+.under-const h1{
+    color: #fff;
+    font-size: 2rem;
+    font-weight: 600;
+
+    @media only screen and  (max-width:767px){
+        font-size: 1.6rem;
+    }
+}
+
+.under-const > div:first-child {
+    position: absolute;
+    top: 8%;
+    left: 0;
+    right: 0;
+    width: 100%;
+    text-align: center;
+}
