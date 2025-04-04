@@ -25,6 +25,7 @@ const CourseDetail = () => {
     const isDetailPage =
         location.pathname === '/admin/courses/details' || location.pathname === '/coach/courses/details';
 
+    
     const getCourseById = async (id) => {
         const { data } = await axiosWrapper('GET', `${API_URL.GET_COURSE.replace(':id', id)}`, {}, token);
 
@@ -49,9 +50,23 @@ const CourseDetail = () => {
         }, 0);
 
         setCourse({ ...data, lectures: mapLectures, pdfLectures, totalQuestions });
+
+        if(data.lectures.length > 0 ){
+            var name = data.lectures[0].name;
+            const slug = createSlug(name);
+            let segments = location.pathname.split("/").filter(Boolean);
+            const lastSegment = segments[segments.length - 1]; 
+            if (lastSegment !== slug) {
+                segments.push(slug); 
+                const newUrl = `/${segments.join("/")}`;
+                navigate(newUrl, { replace: true }); // Ensure leading slash & avoid history stacking
+            }
+        }
+
         // Optionally set the first lecture as selected
         if (mapLectures.length > 0) {
             setSelectedLecture(mapLectures[0]);
+            
         }
     };
 
@@ -61,7 +76,28 @@ const CourseDetail = () => {
         }
     }, [courseId]);
 
+    const createSlug = (title) => {
+        return title.toLowerCase().replace(/\s+/g, "-").replace(/[^a-z0-9-]/g, "");
+    };
+
     const handleLectureSelect = (lecture) => {
+        var name = lecture?.title;
+        if( lecture ){
+            const slug = createSlug(name);
+            // Get URL segments
+            let segments = location.pathname.split("/").filter(Boolean); // Remove empty segments
+            const lastSegment = segments[segments.length - 1]; // Get last part of the URL
+            if (lastSegment !== slug) {
+                // Replace last segment with the new slug
+                if (segments.length > 1) {
+                segments[segments.length - 1] = slug; // Replace last segment
+                } else {
+                segments.push(slug); // If only one segment, just add it
+                }
+                const newUrl = `/${segments.join("/")}`;
+                navigate(newUrl, { replace: true }); // Ensure leading slash
+            }
+        }
         setSelectedLecture(lecture);
     };
 

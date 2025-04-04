@@ -145,13 +145,49 @@ const EnrolledCourseDetail = () => {
             });
             setFilteredLectures(filtered);
         } else {
+            if(lectures.length > 0 ){
+                var name = lectures[0].name;
+                const slug = createSlug(name);
+                let segments = location.pathname.split("/").filter(Boolean);
+                const lastSegment = segments[segments.length - 1]; 
+                if (lastSegment !== slug) {
+                    segments.push(slug); 
+                    const newUrl = `/${segments.join("/")}`;
+                    navigate(newUrl, { replace: true }); // Ensure leading slash & avoid history stacking
+                }
+            }
             setFilteredLectures(lectures);
         }
     }, [search, lectures]);
 
+    const createSlug = (title) => {
+        return title.toLowerCase().replace(/\s+/g, "-").replace(/[^a-z0-9-]/g, "");
+    };
+
     const handleButtonClick = (index, fetchLecture = true) => {
+       
         setActiveIndex(index);
         if (fetchLecture) getCurrentLecture(lectures[index]?._id);
+       
+        if( lectures[index] ){
+            if (lectures[index] && lectures[index].name) {
+                const slug = createSlug(lectures[index].name);
+                // Get URL segments
+                let segments = location.pathname.split("/").filter(Boolean); // Remove empty segments
+                const lastSegment = segments[segments.length - 1]; // Get last part of the URL
+                if (lastSegment !== slug) {
+                  // Replace last segment with the new slug
+                  if (segments.length > 1) {
+                    segments[segments.length - 1] = slug; // Replace last segment
+                  } else {
+                    segments.push(slug); // If only one segment, just add it
+                  }
+                  const newUrl = `/${segments.join("/")}`;
+                  navigate(newUrl, { replace: true }); // Ensure leading slash
+                }
+              }
+
+        }
         setContinueQuiz(false);
     };
 
