@@ -716,6 +716,23 @@ filter: invert(0);
     overflow: hidden;
 }
 
+.course-section .load-more {
+    margin-bottom: 20px;
+}
+
+.load-more button {
+    color: rgb(255, 255, 255);
+    text-decoration: none;
+    text-transform: capitalize;
+    cursor: pointer !important;
+    font-size: 16px;
+    padding: 10px 30px;
+    font-weight: 500;
+    white-space: nowrap;   
+    background: linear-gradient(90.19deg, #00c7cc -0.27%, #009cd8 99.11%);
+    border-radius: 50px;
+    white-space: nowrap;
+}
 
 @media only screen and (max-width:767px) {
     .corse-detail-box {
