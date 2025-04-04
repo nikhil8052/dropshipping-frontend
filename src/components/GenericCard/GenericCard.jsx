@@ -39,6 +39,11 @@ const GenericCard = ({
     //     setShowDeleteModal(true);
     // };
 
+    const createSlug = (title) => {
+        return title.toLowerCase().replace(/\s+/g, "-").replace(/[^a-z0-9-]/g, "");
+    };
+
+
     // Handler to close the delete confirmation modal
     const handleCloseDeleteModal = () => {
         setShowDeleteModal(false);
@@ -68,8 +73,8 @@ const GenericCard = ({
                     if (isToggleClick) return;
                     navigate(
                         role === 'student' && enroll && canAccessCourse
-                            ? `/${role}/courses/enrolled-course`
-                            : `/${role}/courses/details`,
+                            ? `/${role}/courses/enrolled-course/${createSlug(title)}`
+                            : `/${role}/courses/details/${createSlug(title)}`,
                         {
                             state: {
                                 courseId: rest?._id
