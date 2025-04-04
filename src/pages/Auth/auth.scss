@@ -84,11 +84,11 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    width: 100%;
 }
 .footer-static {
     color: #fff;
     margin-top:40px;
+    text-align: center;
 }
 
 .verification-input {
@@ -294,6 +294,7 @@
     flex-direction: column;
     opacity: 70%;
     background-blend-mode: overlay;
+    min-height: 100vh;
 }
 
 .auth-form-data {
@@ -362,7 +363,11 @@
     padding: 30px 20px;
 }
 .footer-static {
-    margin: 20px;
+    margin-top: 20px;
     font-size: 14px;
+}
+
+.auth-form-data{
+    padding-left: 15px;
 }
 }
