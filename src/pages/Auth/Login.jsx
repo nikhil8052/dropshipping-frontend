@@ -74,11 +74,11 @@ const Login = () => {
                     <div className="login-page">
                         <LoginLeftSec />
                         <div className='login-center'>
-                            <div className="auth-form-wrapper row ">
-                                <div className='left-img col-md-6'>
+                            <div className="auth-form-wrapper">
+                                {/* <div className='left-img col-md-6'>
                                  <img src={Rightloginimg} alt="" />
-                                </div>
-                                <div className="auth-form-data col-md-6">
+                                </div> */}
+                                <div className="auth-form-data">
                                     <h1 className="auth-title ">Login</h1>
                                     <h3 className="auth-form-title">Please enter your account details.</h3>
                                     <Formik

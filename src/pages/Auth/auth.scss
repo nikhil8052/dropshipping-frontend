@@ -81,9 +81,6 @@
 
 .auth-form-wrapper {
     height: 100%;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
 }
 .footer-static {
     color: #fff;
@@ -259,7 +256,7 @@
 .top-bar {
     width: 100%;
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
     align-items: center;
     margin-bottom: 30px;
 }
@@ -271,13 +268,15 @@
 
 .login-center {
     background-color: #00000099;
-    padding: 30px;
+    padding: 40px;
     box-shadow: 0px 0px 14px 0px #00C7CC inset;
-    border-radius: 40px;
+    border-radius: 20px;
     background-image: url('@images/login-center.png');
     background-position: center;
     background-repeat: no-repeat;
     background-size: cover;
+    min-width: 500px;
+    margin: auto;
 }
 
 .login-center img {
@@ -297,9 +296,9 @@
     min-height: 100vh;
 }
 
-.auth-form-data {
-    padding-left: 60px;
-}
+// .auth-form-data {
+//     padding-left: 60px;
+// }
 
 .auth-form-data * {
     color: #fff;
@@ -310,9 +309,6 @@
 }
 
 @media only screen and (max-width:1199px) {
-    .auth-form-data {
-        padding-left: 30px;
-    }
     .login-center {
         border-radius: 20px;
     } 
@@ -368,7 +364,10 @@
     font-size: 14px;
 }
 
-.auth-form-data{
-    padding-left: 15px;
+}
+
+@media only screen and (max-width:575px) {
+.login-center {
+    min-width: 100%;
 }
 }

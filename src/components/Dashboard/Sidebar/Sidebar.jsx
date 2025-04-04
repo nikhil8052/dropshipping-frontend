@@ -56,12 +56,13 @@ const Sidebar = () => {
             };
         
             // Find index of the "Settings" item.
-            const settingsIndex = items.findIndex((item) => item.name === 'Logout');
+            const settingsIndex = items.findIndex((item) => item.name === 'Settings');
             if (settingsIndex > -1) {
-                items.splice(settingsIndex, 0, roadmapItem);
+                items.splice(settingsIndex, 0, roadmapItem); 
             } else {
                 items.push(roadmapItem);
             }
+            
         }
         setUpdatedItems(items);
     }, [role, activeSidebarItem]);

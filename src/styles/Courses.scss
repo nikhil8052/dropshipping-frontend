@@ -935,8 +935,8 @@
 .view-progress-section {
     box-shadow: 0px 0px 14.83px 0px rgba(0, 0, 0, 0.06);
     border-radius: 9px;
-    height: calc(100vh - 12rem);
-    overflow-y: auto;
+    // height: calc(100vh - 12rem);
+    // overflow-y: auto;
     overflow-x: hidden;
 
     .search-input {
@@ -1522,6 +1522,33 @@
     color: #000;
     font-weight: 600;
 }
+
+.pdf-viewer, .pdf-viewer  div {
+    height: 100%;
+    width: 100%;
+    min-width: 100% !important;
+    margin: 0 !important;
+}
+
+.pdf-viewer, .pdf-viewer div canvas {
+    height: 100% !important;
+    width: 100% !important;
+}
+
+.EnrolledCourseDetail .lecture-curriculum > div {
+    border: 1px solid #00bcd447;
+    padding: 20px;
+    border-radius: 10px;
+}
+
+.EnrolledCourseDetail .pdf-viewer .page-controls{
+    margin-top: 20px !important;
+}
+
+.view-progress-section .search-lectures input::placeholder {
+    color: #000 !important;
+}
+
 @media only screen and (max-width:767px) {
     .upload-course-form .image-renderer {
         margin-bottom: 20px;
