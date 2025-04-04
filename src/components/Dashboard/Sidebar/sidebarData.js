@@ -175,13 +175,13 @@ export const coachSidebarItems = [
 ];
 
 export const studentSidebarItems = [
-    {
-        id: 1,
-        name: 'Dashboard',
-        iconLight: dashboardLight, // Replace with your icon
-        linkTo: '/student',
-        pathCombinations: ['/student/request-meeting']
-    },
+    // {
+    //     id: 1,
+    //     name: 'Dashboard',
+    //     iconLight: dashboardLight, // Replace with your icon
+    //     linkTo: '/student',
+    //     pathCombinations: ['/student/request-meeting']
+    // },
     {
         id: 2,
         name: 'Courses',
@@ -189,18 +189,18 @@ export const studentSidebarItems = [
         linkTo: '/student/courses',
         pathCombinations: ['/student/courses', '/student/courses/details']
     },
-    {
-        id: 3,
-        name: 'Events',
-        iconLight: events, // Replace with your icon
-        linkTo: '/student/events'
-    },
-    {
-        id: 4,
-        name: 'Data',
-        iconLight: csv, // Replace with your icon (optional)
-        linkTo: '/student/visualize-csv'
-    },
+    // {
+    //     id: 3,
+    //     name: 'Events',
+    //     iconLight: events, // Replace with your icon
+    //     linkTo: '/student/events'
+    // },
+    // {
+    //     id: 4,
+    //     name: 'Data',
+    //     iconLight: csv, // Replace with your icon (optional)
+    //     linkTo: '/student/visualize-csv'
+    // },
     {
         id: 5,
         name: 'Settings',
