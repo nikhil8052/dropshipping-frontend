@@ -63,7 +63,7 @@ const NewStudent = () => {
         coachingTrajectory: 'LOW_TICKET',
         coursesRoadmap: [],
         category: [],
-        roadMap: '',
+        roadMap: 'ROAD_MAP_ONE',
         roadmapAccess:'false' 
         // paymentType: '',
         // installmentFrequency: '',
@@ -145,6 +145,8 @@ const NewStudent = () => {
         const response = await axiosWrapper('GET', API_URL.GET_STUDENT.replace(':id', id), {}, token);
         const student = response.data;
 
+        console.log( student , " DD ")
+        // return 
         const coursesRoadmap = student.coursesRoadmap.map((course) => ({
             value: course?._id,
             label: course?.title,
@@ -167,7 +169,7 @@ const NewStudent = () => {
             region: student?.region || '',
             category: mappedCategories || [],
             coachingTrajectory: student?.coachingTrajectory || '',
-            roadMap: student?.roadMap || '',
+            roadMap: student?.roadMap || 'ROAD_MAP_ONE',
             coursesRoadmap: student?.coursesRoadmap.map((c) => c?._id),
             roadmapAccess:String(student?.roadmapAccess || 'false'), 
             // paymentType: student?.paymentType || 'one-time', // Default to 'one-time' if not present
@@ -259,6 +261,9 @@ const NewStudent = () => {
             avatar: studentPhoto,
             category: values.category.map((cat) => cat.value) };
 
+
+            // console.log(formData, "DD ");
+            // return 
         // If updating an existing student, exclude the email field
         if (studentId) {
             const { email, ...rest } = formData;
@@ -741,7 +746,7 @@ const NewStudent = () => {
                                             </Field>
                                         </Col>
 
-                                        {studentId && (
+                                        {/* {studentId && (
                                             <Col md={6} xs={12}>
                                                 <Input
                                                     options={courses}
@@ -761,7 +766,7 @@ const NewStudent = () => {
                                                     </div>
                                                 )}
                                             </Col>
-                                        )}
+                                        )} */}
 
                                         <Col>
                                             <Input
@@ -913,7 +918,7 @@ const NewStudent = () => {
                                     )} */}
                                     </Row>
                                     <Row>
-                                        <Col md={6} xs={6}>
+                                        {/* <Col md={6} xs={6}>
                                             <label className="field-label">Road Map</label>
                                             <Field
                                                 name="roadMap"
@@ -962,9 +967,9 @@ const NewStudent = () => {
                                                     );
                                                 }}
                                             />
-                                        </Col>
+                                        </Col> */}
                                         {/* Road Map access  */}
-                                        <Col md={6} xs={6} >
+                                        <Col md={12} xs={12} >
                                            <label className="field-label">Roadmap Access</label>
                                            <Field
                                                 name="roadmapAccess"
