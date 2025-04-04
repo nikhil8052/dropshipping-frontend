@@ -22,7 +22,7 @@ const LectureCard = ({ item }) => {
                 />
             )}
             <div className="product-details">
-                <h5>{trimLongText(item.title, 20)}</h5>
+                <h5>{item.title}</h5>
                 {/* <p>{trimLongText(stripHtmlTags(item.description), 20)}</p> */}
             </div>
         </div>

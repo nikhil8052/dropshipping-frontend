@@ -72,7 +72,7 @@ const Login = () => {
                 <div className="login-page-section">
                     <Row className=" g-0">
                         <LoginLeftSec />
-                        <Col xs={12} sm={12} md={12} lg={6}>
+                        <Col>
                             <div className="auth-form-wrapper ">
                                 <div className="auth-form-data ">
                                     <h1 className="auth-title ">Login</h1>

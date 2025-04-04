@@ -13,7 +13,7 @@ const CarouselWrapper = ({ items = [], type = 'product', onItemClick }) => {
         e.stopPropagation();
         setActiveIndex(index); 
         e.preventDefault();
-        if (type === 'product') return; // No preview for products
+        if (type === 'product') return;
         if (onItemClick) {
             onItemClick(item);
         }

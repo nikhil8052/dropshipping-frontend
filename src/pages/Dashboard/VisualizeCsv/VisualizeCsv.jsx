@@ -6,7 +6,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import CaretRight from '@icons/CaretRight.svg';
 import { useSelector } from 'react-redux';
 import '../../../styles/VisualizeCsv.scss';
-
+import Underconst from '@images/underconst.png';
 function VisualizeCsv() {
     const location = useLocation();
     const navigate = useNavigate();
@@ -14,6 +14,18 @@ function VisualizeCsv() {
     const role = userInfo?.role;
     const studentId = location.state?.studentId;
     const studentName = location.state?.studentName;
+
+     
+         return (
+             <>
+             <div className='under-const'>
+                 <div>
+                     <h1>In onderhoud</h1>
+                 </div>
+             <img src={Underconst} alt="Under construction" />
+             </div>
+             </>
+         )
 
     return (
         <div className="visualize-csv-tabs">

@@ -15,6 +15,7 @@ import { API_URL } from '../../../utils/apiUrl';
 import { OverlayTrigger, Tooltip } from 'react-bootstrap';
 import '../../../styles/Dashboard.scss';
 import { convertCamelCaseToTitle, formatNumberWithCommas } from '../../../utils/common';
+import Underconst from '@images/underconst.png';
 
 const StudentDashboard = () => {
     const navigate = useNavigate();
@@ -36,6 +37,17 @@ const StudentDashboard = () => {
     const [paymentUpToDate, setPaymentUpToDate] = useState(false);
     const [nextSessionDate, setNextSessionDate] = useState(null);
 
+
+    return (
+        <>
+        <div className='under-const'>
+            <div>
+                <h1>In onderhoud</h1>
+            </div>
+        <img src={Underconst} alt="Under construction" />
+        </div>
+        </>
+    )
     useEffect(() => {
         return () => {
             if (chartRef.current) {
