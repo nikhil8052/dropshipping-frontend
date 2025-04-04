@@ -28,7 +28,7 @@ const Courses = () => {
     const dispatch = useDispatch();
     const { userInfo, userToken } = useSelector((state) => state?.auth);
     const role = userInfo?.role;
-    const itemsPerBatch = 8; // Number of courses to load per scroll
+    const itemsPerBatch = 12; // Number of courses to load per scroll
 
     // Debounce search input to prevent excessive API calls
     const debounce = (func, delay) => {
