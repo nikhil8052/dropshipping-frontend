@@ -12,6 +12,7 @@ import Footer from './Footer';
 import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import './auth.scss';
+import Rightloginimg from '@images/rightimg2.png'
 
 const Login = () => {
     const dispatch = useDispatch();
@@ -70,11 +71,14 @@ const Login = () => {
             </Helmet>
             <div className="auth-main-wrapper">
                 <div className="login-page-section">
-                    <Row className=" g-0">
+                    <div className="login-page">
                         <LoginLeftSec />
-                        <Col>
-                            <div className="auth-form-wrapper ">
-                                <div className="auth-form-data ">
+                        <div className='login-center'>
+                            <div className="auth-form-wrapper row ">
+                                <div className='left-img col-md-6'>
+                                 <img src={Rightloginimg} alt="" />
+                                </div>
+                                <div className="auth-form-data col-md-6">
                                     <h1 className="auth-title ">Login</h1>
                                     <h3 className="auth-form-title">Please enter your account details.</h3>
                                     <Formik
@@ -125,11 +129,14 @@ const Login = () => {
                                             </FormikForm>
                                         )}
                                     </Formik>
-                                    <Footer />
+                                    
                                 </div>
                             </div>
-                        </Col>
-                    </Row>
+                        </div>
+                        <div className='copyright'>
+                        <Footer />
+                        </div>
+                    </div>
                 </div>
             </div>
         </React.Fragment>
