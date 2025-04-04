@@ -240,25 +240,31 @@ const Courses = () => {
                 )}
             </div>
             {hasLoaded && allCourses.length === 0 ? (
-                <div className="no-data-wrapper">No Data Found.</div>
-            ) : (
-                <InfiniteScroll
-                    className="custom-card-course"
-                    dataLength={displayedCourses.length}
-                    next={fetchMoreData}
-                    hasMore={hasMore}
-                >
-                    {displayedCourses.map((course) => (
-                        <GenericCard
-                            key={course._id}
-                            {...course}
-                            onDelete={handleDelete}
-                            onChange={(e) => handleArchiveChange(e, course._id, course.archive)}
-                            canAccessCourse={true} // Adjust logic as needed
-                        />
-                    ))}
-                </InfiniteScroll>
-            )}
+    <div className="no-data-wrapper">No Data Found.</div>
+) : (
+    <>
+        <div className="custom-card-course">
+            {displayedCourses.map((course) => (
+                <GenericCard
+                    key={course._id}
+                    {...course}
+                    onDelete={handleDelete}
+                    onChange={(e) => handleArchiveChange(e, course._id, course.archive)}
+                    canAccessCourse={true}
+                />
+            ))}
+        </div>
+
+        {hasMore && (
+            <div className="load-more d-flex justify-content-center">
+                <Button onClick={fetchMoreData} disabled={loading}>
+                    {loading ? 'Loading...' : 'Load More'}
+                </Button>
+            </div>
+        )}
+    </>
+)}
+
         </div>
     );
 };
