@@ -1205,13 +1205,14 @@
         }
 
         .passed-lecture {
-            color: #fff !important;
-
-            img{
-                    filter: brightness(0) saturate(100%) invert(100%) sepia(100%) saturate(0%) hue-rotate(193deg) brightness(102%) contrast(102%);
+            position: relative;  
+            img {
+              filter: brightness(0) saturate(100%) invert(0%) sepia(0%) saturate(7482%) hue-rotate(39deg) brightness(91%) contrast(105%);
             }
-        }
-
+          }
+          
+        
+        
         .inactive {
             background-color: transparent;
             color: #1c1c1c;
@@ -1547,6 +1548,36 @@
 
 .view-progress-section .search-lectures input::placeholder {
     color: #000 !important;
+}
+
+.checkimg[src=""],
+.checkimg:not([src]) {
+    display: none !important;
+}
+
+.EnrolledCourseDetail .search-lectures .passed-lecture img.checkimg {
+    max-width: 16px;
+    display: block;
+    filter: none;
+}
+
+.EnrolledCourseDetail .search-lectures .btn {
+    justify-content: space-between;
+}
+
+.EnrolledCourseDetail .search-lectures .btn div {
+    display: flex;
+    gap: 8px;
+}
+
+.EnrolledCourseDetail .lecture-curriculum .title {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.EnrolledCourseDetail .lecture-curriculum .title img {
+    max-width: 18px;
 }
 
 @media only screen and (max-width:767px) {
