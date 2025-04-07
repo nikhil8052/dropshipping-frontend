@@ -1,6 +1,7 @@
 import { useRef, useState } from 'react';
 import '../../../styles/Courses.scss';
-import { Button, Col, Row, Container } from 'react-bootstrap';
+import { Button, Col, Row, Container, Dropdown } from 'react-bootstrap';
+
 import courseThumbnail from '../../../assets/icons/Thumbnail.svg';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import 'react-quill/dist/quill.snow.css';
@@ -13,6 +14,7 @@ import trashIconRed from '../../../assets/icons/Trash-rename.svg';
 import PencilLine from '../../../assets/icons/PencilLine.svg';
 import CoursesModal from './CoursesModal/CoursesModal';
 import AddLectureModal from './AddLectureModal';
+import AddTopicModal from './CoursesModal/AddTopicModal';
 import { FORMATS, TOOLBAR_CONFIG } from '../../../utils/common';
 import { getFileObjectFromBlobUrl } from '../../../utils/utils';
 import UploadSimple from '@icons/UploadSimple.svg';
@@ -39,6 +41,7 @@ const UploadFiles = ({ onNext, onBack, initialData, setStepComplete, updateCours
         lectureId: null,
         initialValues: null
     });
+
     const token = useSelector((state) => state?.auth?.userToken);
     const [loadingCRUD, setLoadingCRUD] = useState(false);
     const [lectureModal, setLectureModal] = useState({
@@ -49,6 +52,13 @@ const UploadFiles = ({ onNext, onBack, initialData, setStepComplete, updateCours
         initialValues: null
     });
 
+    const [topicModal, setTopicModal] = useState({
+        show: false,
+        title: '',
+        isEditable: false,
+        initialValues: null
+    });
+
     const [loadingThum, setLoadingThumb] = useState(false);
     const [loadingVideo, setLoadingVideo] = useState(false);
     // Course Banner
@@ -56,12 +66,9 @@ const UploadFiles = ({ onNext, onBack, initialData, setStepComplete, updateCours
     const bannerInputRef = useRef();
     const [bannerCropping, setBannerCropping] = useState(false);
     const [bannerImageSrc, setBannerImageSrc] = useState(null);
-
     const [cropping, setCropping] = useState(false);
     const [imageSrc, setImageSrc] = useState(null);
-
     const { trailer, description, thumbnail, banner } = initialData;
-
     const handleFileChange = async (e) => {
         const file = e.target.files[0];
         if (!file || !file.type.startsWith('image/')) {
@@ -69,7 +76,6 @@ const UploadFiles = ({ onNext, onBack, initialData, setStepComplete, updateCours
             toast.error('Invalid file selected. Please choose an image file.');
             return;
         }
-
         const image = URL.createObjectURL(file);
         setImageSrc(image);
         setCropping(true);
@@ -136,7 +142,18 @@ const UploadFiles = ({ onNext, onBack, initialData, setStepComplete, updateCours
         setBannerCropping(false);
     };
 
-    const handleCreateClick = () => {
+    const handleCreateClick = ($param) => {
+
+        if($param=="topic"){
+            setTopicModal({
+                show: true,
+                title: 'Add Folder',
+                isEditable: false,
+                courseId: currentCourse,
+            });
+            return ;
+        }
+
         setLectureModal({
             show: true,
             title: 'Add Lecture',
@@ -230,6 +247,16 @@ const UploadFiles = ({ onNext, onBack, initialData, setStepComplete, updateCours
         });
     };
 
+    const resetTopicModal = () => {
+        setTopicModal({
+            show: false,
+            title: '',
+            isEditable: false,
+            initialValues: null
+        });
+    };
+
+
     const handleUploadFilesSubmit = async (values, { resetForm, setSubmitting }) => {
         setSubmitting(true);
         const formData = { ...values };
@@ -284,6 +311,21 @@ const UploadFiles = ({ onNext, onBack, initialData, setStepComplete, updateCours
                     activeBtnTitle="Delete"
                 />
             )}
+
+            {topicModal.show && (
+                <CoursesModal
+                    size="small"
+                    show={topicModal.show}
+                    onClose={resetTopicModal}
+                    title={topicModal.title}
+                >
+                <AddTopicModal
+                    topicModal={topicModal}
+                    resetModal={resetTopicModal}
+                />
+                </CoursesModal>
+            )}
+
             {loading ? (
                 <Loading />
             ) : (
@@ -431,8 +473,8 @@ const UploadFiles = ({ onNext, onBack, initialData, setStepComplete, updateCours
                                                                             typeof initialData?.trailer === 'string'
                                                                                 ? initialData?.trailer
                                                                                 : URL.createObjectURL(
-                                                                                      initialData?.trailer
-                                                                                  )
+                                                                                    initialData?.trailer
+                                                                                )
                                                                         }
                                                                     />
                                                                     Your browser does not support the video tag.
@@ -610,14 +652,25 @@ const UploadFiles = ({ onNext, onBack, initialData, setStepComplete, updateCours
                                                         <img src={menuIcon} alt="menu" />
                                                         <p>Add Lectures</p>
                                                     </div>
-                                                    <div className="d-flex gap-2">
+                                                    <Dropdown>
+                                                        <Dropdown.Toggle variant="success" id="dropdown-basic">
+                                                            Add Item
+                                                        </Dropdown.Toggle>
+
+                                                        <Dropdown.Menu>
+                                                            <Dropdown.Item onClick={() => handleCreateClick('lecture')} >Lecture </Dropdown.Item>
+                                                            <Dropdown.Item onClick={() => handleCreateClick('topic')}> Topic/Folder</Dropdown.Item>
+                                                        </Dropdown.Menu>
+                                                    </Dropdown>
+
+                                                    {/* <div className="d-flex gap-2">
                                                         <img
                                                             className="cursor-pointer"
                                                             src={plusIcon}
                                                             alt="menu"
                                                             onClick={handleCreateClick}
                                                         />
-                                                    </div>
+                                                    </div> */}
                                                 </div>
                                                 {initialData?.lectures?.map((lecture) => (
                                                     <div key={lecture._id} className="add-lecture-item mb-3">

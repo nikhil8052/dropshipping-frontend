@@ -137,12 +137,13 @@ export const shuffleArray = (array) => {
 };
 
 // Toolbar constants
-export const TEXT_FORMATTING = ['bold', 'italic', 'underline', 'strike'];
+export const TEXT_FORMATTING = ['bold', 'italic', 'underline', 'strike', 'header'];
 export const LINK = ['link'];
 export const LISTS = [{ list: 'ordered' }, { list: 'bullet' }];
+export const HEADING_FORMATTING = [{ header: [1, 2, 3, false] }];
 
 // Aggregated toolbar configuration
-export const TOOLBAR_CONFIG = [TEXT_FORMATTING, LINK, LISTS];
+export const TOOLBAR_CONFIG = [TEXT_FORMATTING, LINK, LISTS,HEADING_FORMATTING];
 
 // Formats constants
 export const FORMATS = ['bold', 'italic', 'underline', 'strike', 'link', 'list', 'bullet'];
