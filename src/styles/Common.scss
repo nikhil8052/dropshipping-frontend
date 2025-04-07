@@ -772,9 +772,8 @@ filter: invert(0);
     .view-progress-section .search-lectures .inactive{
         background-color: #80808042;
     }
-.view-progress-section .search-lectures .inactive{
-    background-color: #00a7d57d !important;
-    }
+
+
 
 @media only screen and (max-width:767px) {
     .corse-detail-box {
@@ -839,5 +838,8 @@ filter: invert(0);
     }
     .main-panel:has(.course-section) .course-section {
         padding: 15px;
+    }
+    .box-row > div > div {
+        width: 100%;
     }
 }

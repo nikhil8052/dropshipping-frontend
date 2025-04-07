@@ -507,4 +507,8 @@
     .sidebar .side-nav-wrapper {
         padding-bottom: 15px;
     }
+
+    .sidebar.hide-sidebar {
+        z-index: 99999;
+    }
 }

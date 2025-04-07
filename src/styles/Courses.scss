@@ -841,8 +841,7 @@
                 margin-top: -45px;
 
                 @include respond-to($small-screen) {
-                    width: 85%;
-                    margin-inline: 20px;
+                    margin-inline:auto;
                 }
 
                 .lecture-details-item {
@@ -1549,6 +1548,19 @@
     color: #000 !important;
 }
 
+.view-progress-section .search-lectures .btn {
+    padding: 5px 25px;
+}
+
+.search-lectures .input-group-text {
+    background-color: transparent;
+    border: 1px solid rgb(176, 225, 235) !important;
+}
+
+.view-progress-section .search-lectures .btn {
+    width: 100%;
+}
+
 @media only screen and (max-width:767px) {
     .upload-course-form .image-renderer {
         margin-bottom: 20px;
@@ -1584,4 +1596,12 @@
         gap: 10px;
     }
 
+    .view-progress-section .search-lectures {
+        padding-inline: 15px;
+    }
+
+
+    .box-row > div > div {
+        width: 100%;
+    }
 }
