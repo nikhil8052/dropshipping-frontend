@@ -369,9 +369,11 @@ const EnrolledCourseDetail = () => {
                                                     <div className="lecture-curriculum">
                                                         <h2 className="title">
                                                             {selectedLecture.name}
-                                                                {selectedLecture.completedBy?.some(user => user._id === userInfo?._id) ?  <img className='checkimg' src={checkicon} /> : <img className='checkimg'   onClick={() =>
+                                                                {selectedLecture.completedBy?.some(user => user._id === userInfo?._id) ?  <img className='checkimg' src={checkicon}   alt="Already completed"
+    title="Already completed" /> : <img className='checkimg'   onClick={() =>
                                                                     markLectureAsCompleted(selectedLecture?._id)
-                                                                }  src={checkicon2}/>}
+                                                                }  src={checkicon2}  alt="Mark lecture as completed."
+                                                                title="Mark lecture as completed."/>}
                                                         </h2>
                                                         {selectedLecture.file ? (
                                                             <div className="video">
