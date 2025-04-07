@@ -26,7 +26,8 @@ const EnrolledCourseDetail = () => {
     const token = useSelector((state) => state?.auth?.userToken);
     const courseId = location.state?.courseId;
     const role = userInfo?.role?.toLowerCase();
-
+   
+    const [currentCourseID, setCurrentCourseID] = useState('');
     const [search, setSearch] = useState('');
     const [lectures, setLectures] = useState([]);
     const [filteredLectures, setFilteredLectures] = useState([]);
@@ -35,6 +36,7 @@ const EnrolledCourseDetail = () => {
     const [continueQuiz, setContinueQuiz] = useState(false);
     const [courseDetails, setCourseDetails] = useState({});
     const [retryQuiz, setRetryQuiz] = useState(false);
+    const [slugOnce, setSlugOnce] = useState(false);
     // const [accessRestricted, setAccessRestricted] = useState(false);
     const accessRestricted = false;
 
@@ -65,7 +67,8 @@ const EnrolledCourseDetail = () => {
 
     const getCourseById = async (id, nextLecture) => {
         const { data } = await axiosWrapper('GET', `${API_URL.GET_COURSE.replace(':id', id)}`, {}, token);
-
+ 
+        setCurrentCourseID(id);
         // Higher Level info
         setCourseDetails({
             title: data.title,
@@ -148,13 +151,14 @@ const EnrolledCourseDetail = () => {
             });
             setFilteredLectures(filtered);
         } else {
-            if (lectures.length > 0) {
+            if (lectures.length > 0 && slugOnce==false) {
                 var name = lectures[0].name;
                 const slug = createSlug(name);
                 let segments = location.pathname.split("/").filter(Boolean);
                 const lastSegment = segments[segments.length - 1];
                 if (lastSegment !== slug) {
                     segments.push(slug);
+                    setSlugOnce(true)
                     const newUrl = `/${segments.join("/")}`;
                     navigate(newUrl, { replace: true }); // Ensure leading slash & avoid history stacking
                 }
@@ -172,7 +176,7 @@ const EnrolledCourseDetail = () => {
         setActiveIndex(index);
         if (fetchLecture) getCurrentLecture(lectures[index]?._id);
 
-        if (lectures[index]) {
+        if (lectures[index] ) {
             if (lectures[index] && lectures[index].name) {
                 const slug = createSlug(lectures[index].name);
                 // Get URL segments
@@ -212,7 +216,8 @@ const EnrolledCourseDetail = () => {
             if (data.pass) {
                 // Proceed to next lecture if pass
                 handleButtonClick(activeIndex + 1, false);
-                getCourseById(courseId, lectures[activeIndex + 1]?._id); // Refresh course data
+                getCourseById(courseId, lectures[activeIndex + 1]?._id); 
+                setCourseId(courseId)// Refresh course data
                 toast.success('You have passed the quiz. Proceeding to the next lecture.');
                 setRetryQuiz(false);
             } else {
@@ -229,9 +234,10 @@ const EnrolledCourseDetail = () => {
     };
 
     const markLectureAsCompleted = async (lectureId) => {
-        await axiosWrapper('PUT', `${API_URL.MARK_LECTURE_COMPLETED.replace(':id', lectureId)}`, {}, token);
+        const URL=`${API_URL.MARK_LECTURE_COMPLETED.replace(':id', lectureId)}`;
+        await axiosWrapper('PUT', URL, {}, token);
         // Refresh course data
-        getCourseById(courseId, lectures[activeIndex + 1]?._id);
+        getCourseById(currentCourseID, lectures[activeIndex + 1]?._id);
     };
 
     return (
