@@ -10,6 +10,8 @@ import './GenericCard.scss';
 import ConfirmationBox from '../ConfirmationBox/ConfirmationBox';
 import { useState } from 'react';
 import { decode } from 'he';
+import { useLocation } from 'react-router-dom';
+
 
 const GenericCard = ({
     img,
@@ -25,9 +27,11 @@ const GenericCard = ({
     onDelete,
     ...rest
 }) => {
+
     const { userInfo } = useSelector((state) => state?.auth);
     const role = userInfo?.role?.toLowerCase();
     const navigate = useNavigate();
+    const location = useLocation();
 
     // State to manage modal visibility and loading state
     const [showDeleteModal, setShowDeleteModal] = useState(false);

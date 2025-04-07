@@ -15,6 +15,9 @@ import PdfModal from '../../../components/PdfRenderer/PdfViewer';
 import toast from 'react-hot-toast';
 import { shuffleArray } from '../../../utils/common';
 import bannerImage from '../../../assets/images/publish-background.svg';
+import checkicon from '../../../assets/images/Check.svg';
+import checkicon2 from '../../../assets/images/check2.svg';
+
 
 const EnrolledCourseDetail = () => {
     const navigate = useNavigate();
@@ -23,7 +26,8 @@ const EnrolledCourseDetail = () => {
     const token = useSelector((state) => state?.auth?.userToken);
     const courseId = location.state?.courseId;
     const role = userInfo?.role?.toLowerCase();
-
+   
+    const [currentCourseID, setCurrentCourseID] = useState('');
     const [search, setSearch] = useState('');
     const [lectures, setLectures] = useState([]);
     const [filteredLectures, setFilteredLectures] = useState([]);
@@ -32,6 +36,7 @@ const EnrolledCourseDetail = () => {
     const [continueQuiz, setContinueQuiz] = useState(false);
     const [courseDetails, setCourseDetails] = useState({});
     const [retryQuiz, setRetryQuiz] = useState(false);
+    const [slugOnce, setSlugOnce] = useState(false);
     // const [accessRestricted, setAccessRestricted] = useState(false);
     const accessRestricted = false;
 
@@ -62,7 +67,8 @@ const EnrolledCourseDetail = () => {
 
     const getCourseById = async (id, nextLecture) => {
         const { data } = await axiosWrapper('GET', `${API_URL.GET_COURSE.replace(':id', id)}`, {}, token);
-
+ 
+        setCurrentCourseID(id);
         // Higher Level info
         setCourseDetails({
             title: data.title,
@@ -145,13 +151,14 @@ const EnrolledCourseDetail = () => {
             });
             setFilteredLectures(filtered);
         } else {
-            if(lectures.length > 0 ){
+            if (lectures.length > 0 && slugOnce==false) {
                 var name = lectures[0].name;
                 const slug = createSlug(name);
                 let segments = location.pathname.split("/").filter(Boolean);
-                const lastSegment = segments[segments.length - 1]; 
+                const lastSegment = segments[segments.length - 1];
                 if (lastSegment !== slug) {
-                    segments.push(slug); 
+                    segments.push(slug);
+                    setSlugOnce(true)
                     const newUrl = `/${segments.join("/")}`;
                     navigate(newUrl, { replace: true }); // Ensure leading slash & avoid history stacking
                 }
@@ -165,27 +172,27 @@ const EnrolledCourseDetail = () => {
     };
 
     const handleButtonClick = (index, fetchLecture = true) => {
-       
+
         setActiveIndex(index);
         if (fetchLecture) getCurrentLecture(lectures[index]?._id);
-       
-        if( lectures[index] ){
+
+        if (lectures[index] ) {
             if (lectures[index] && lectures[index].name) {
                 const slug = createSlug(lectures[index].name);
                 // Get URL segments
                 let segments = location.pathname.split("/").filter(Boolean); // Remove empty segments
                 const lastSegment = segments[segments.length - 1]; // Get last part of the URL
                 if (lastSegment !== slug) {
-                  // Replace last segment with the new slug
-                  if (segments.length > 1) {
-                    segments[segments.length - 1] = slug; // Replace last segment
-                  } else {
-                    segments.push(slug); // If only one segment, just add it
-                  }
-                  const newUrl = `/${segments.join("/")}`;
-                  navigate(newUrl, { replace: true }); // Ensure leading slash
+                    // Replace last segment with the new slug
+                    if (segments.length > 1) {
+                        segments[segments.length - 1] = slug; // Replace last segment
+                    } else {
+                        segments.push(slug); // If only one segment, just add it
+                    }
+                    const newUrl = `/${segments.join("/")}`;
+                    navigate(newUrl, { replace: true }); // Ensure leading slash
                 }
-              }
+            }
 
         }
         setContinueQuiz(false);
@@ -209,7 +216,8 @@ const EnrolledCourseDetail = () => {
             if (data.pass) {
                 // Proceed to next lecture if pass
                 handleButtonClick(activeIndex + 1, false);
-                getCourseById(courseId, lectures[activeIndex + 1]?._id); // Refresh course data
+                getCourseById(courseId, lectures[activeIndex + 1]?._id); 
+                setCourseId(courseId)// Refresh course data
                 toast.success('You have passed the quiz. Proceeding to the next lecture.');
                 setRetryQuiz(false);
             } else {
@@ -226,9 +234,10 @@ const EnrolledCourseDetail = () => {
     };
 
     const markLectureAsCompleted = async (lectureId) => {
-        await axiosWrapper('PUT', `${API_URL.MARK_LECTURE_COMPLETED.replace(':id', lectureId)}`, {}, token);
+        const URL=`${API_URL.MARK_LECTURE_COMPLETED.replace(':id', lectureId)}`;
+        await axiosWrapper('PUT', URL, {}, token);
         // Refresh course data
-        getCourseById(courseId, lectures[activeIndex + 1]?._id);
+        getCourseById(currentCourseID, lectures[activeIndex + 1]?._id);
     };
 
     return (
@@ -330,15 +339,25 @@ const EnrolledCourseDetail = () => {
                                                                         lecture?.quiz?.mcqs?.length > 0)
                                                                 }
                                                             >
-                                                                <img
+                                                                <div>
+                                                                    <img
+                                                                        src={
+                                                                            lecture?.completedBy?.includes(userInfo?._id)
+                                                                                ? ActiveIcon
+                                                                                : InactiveIcon
+                                                                        }
+                                                                        alt="IconLect"
+                                                                    />
+                                                                    <p>{lecture.name}</p>
+                                                                </div>
+                                                                <img className='checkimg'
                                                                     src={
                                                                         lecture?.completedBy?.includes(userInfo?._id)
-                                                                            ? ActiveIcon
-                                                                            : InactiveIcon
+                                                                            ? checkicon
+                                                                            : ""
                                                                     }
                                                                     alt="IconLect"
                                                                 />
-                                                                <p>{lecture.name}</p>
                                                             </Button>
                                                         ))}
                                                     </div>
@@ -348,7 +367,12 @@ const EnrolledCourseDetail = () => {
                                             <Col sm={8} md={8} lg={8} xl={9} className="lecture-right">
                                                 {!continueQuiz && selectedLecture && (
                                                     <div className="lecture-curriculum">
-                                                        <h2 className="title">{selectedLecture.name}</h2>
+                                                        <h2 className="title">
+                                                            {selectedLecture.name}
+                                                                {selectedLecture.completedBy?.some(user => user._id === userInfo?._id) ?  <img className='checkimg' src={checkicon} /> : <img className='checkimg'   onClick={() =>
+                                                                    markLectureAsCompleted(selectedLecture?._id)
+                                                                }  src={checkicon2}/>}
+                                                        </h2>
                                                         {selectedLecture.file ? (
                                                             <div className="video">
                                                                 <div className="pdf-viewer">
@@ -356,7 +380,7 @@ const EnrolledCourseDetail = () => {
                                                                 </div>
                                                             </div>
                                                         ) : selectedLecture?.vimeoLink ||
-                                                          selectedLecture?.vimeoVideoData ? (
+                                                            selectedLecture?.vimeoVideoData ? (
                                                             <div className="video">
                                                                 <iframe
                                                                     src={
@@ -372,7 +396,12 @@ const EnrolledCourseDetail = () => {
                                                             </div>
                                                         ) : (
                                                             <div className="lecture-curriculum">
-                                                                <h2 className="title">{selectedLecture.name}</h2>
+                                                                <div>
+                                                                    <h2 className="title">
+                                                                        {selectedLecture.name}
+                                                                            <img className="checkimg" src={checkicon} alt="Check icon" />
+                                                                    </h2>
+                                                                </div>
                                                                 <p className="text-justify text-wrap">
                                                                     {selectedLecture.description}
                                                                 </p>

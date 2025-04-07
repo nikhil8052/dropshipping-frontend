@@ -204,6 +204,12 @@
     overflow-y: scroll;
 }
 
+.field-control:focus-visible, .field-select-control:focus-visible, .field-text-area-control:focus-visible {
+    outline: 0px !important;
+    border: 1px solid rgba(3, 164, 194, 0.24) !important;
+    color: inherit !important;
+}
+
 @media only screen and (max-width:767px) {
     .box-row > div {
         margin-bottom: 0rem;
