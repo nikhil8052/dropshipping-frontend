@@ -127,6 +127,7 @@ const CourseDetail = () => {
                         <div className="carousel-lecture">
                             <CarouselWrapper
                                 items={course?.lectures || []}
+                                courseId={course._id}
                                 type="lecture"
                                 onItemClick={handleLectureSelect}
                             />

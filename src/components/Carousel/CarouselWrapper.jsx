@@ -5,7 +5,7 @@ import 'swiper/css';
 import ProductCard from '../ProductCard/ProductCard';
 import LectureCard from '../LectureCard/LectureCard';
 
-const CarouselWrapper = ({ items = [], type = 'product', onItemClick }) => {
+const CarouselWrapper = ({ items = [], type = 'product', onItemClick, courseId=null }) => {
     const [activeIndex, setActiveIndex] = useState(0);
 
     const handleClick = (e, item, index ) => {
@@ -32,7 +32,7 @@ const CarouselWrapper = ({ items = [], type = 'product', onItemClick }) => {
                         {type === 'product' ? (
                             <ProductCard item={item} />
                         ) : type === 'lecture' ? (
-                            <LectureCard item={item} />
+                            <LectureCard item={item} courseId={courseId} />
                         ) : null}
                     </div>
                 </div>
