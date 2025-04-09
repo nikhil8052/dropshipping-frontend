@@ -3,16 +3,33 @@ import { Form as FormikForm, Formik, Field, ErrorMessage } from 'formik';
 import { Row, Col, Button } from 'react-bootstrap';
 
 import Loading from '@components/Loading/Loading';
+import axiosWrapper from '../../../../utils/api';
+import { API_URL } from '../../../../utils/apiUrl';
+import { useSelector } from 'react-redux';
 
-const AddTopicModal = ({ topicModal, resetModal }) => {
+const AddTopicModal = ({ topicModal, resetModal, onSave }) => {
+
     const [loading, setLoading] = useState(false);
     const [initialValues, setInitialValues] = useState({
         topicName: '',
     });
+    const token = useSelector((state) => state?.auth?.userToken);
+    const courseId = topicModal?.courseId;
 
-    const handleSubmit = (values) => {
-        console.log("Form Submitted:", values);
+    const handleSubmit = async (values, {setSubmitting}) => {
         // You can also do any API call here
+        setLoading(true);
+        setSubmitting(true);
+        const url= API_URL.COURSE_ADD_FOLDER.replace(':id', courseId)
+        const method = 'POST';
+        const response = await axiosWrapper(method, url, values, token);
+        setLoading(false);
+
+        resetModal();
+        setSubmitting(false);
+        onSave();
+
+
     };
 
     return (

@@ -63,10 +63,8 @@ const CourseDetail = () => {
             }
         }
 
-        // Optionally set the first lecture as selected
         if (mapLectures.length > 0) {
             setSelectedLecture(mapLectures[0]);
-            
         }
     };
 

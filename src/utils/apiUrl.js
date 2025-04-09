@@ -69,6 +69,7 @@ export const API_URL = {
     GET_ENROLLED_COURSES: `${COURSE_API_BASE}/enrolled`,
     GET_COURSE_PREVIEW: `${COURSE_API_BASE}/preview/:id`,
     PUBLISH_COURSE: `${COURSE_API_BASE}/publish/:id`,
+    COURSE_ADD_FOLDER: `${COURSE_API_BASE}/add-folder/:id`,
 
     // Lectures API
     ADD_LECTURE: `${LECTURE_API_BASE}/add`,

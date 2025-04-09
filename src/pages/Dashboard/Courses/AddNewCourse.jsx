@@ -39,7 +39,9 @@ const AddNewCourse = () => {
         banner: '',
         trailer: '',
         description: '',
-        lectures: []
+        lectures: [],
+        topics: [],
+        topicsWithLectures:[]
     });
     const [stepsCompleted, setStepsCompleted] = useState({
         step1: false,
@@ -90,6 +92,7 @@ const AddNewCourse = () => {
         try {
             const { data } = await axiosWrapper('GET', `${API_URL.GET_COURSE.replace(':id', id)}`, {}, token);
 
+      
             const description = textParser(data.description);
 
             // Map categories to { label, value } format
@@ -104,6 +107,14 @@ const AddNewCourse = () => {
                     description: description
                 };
             });
+            const updatedTopics = data.topics.map((top) => {
+                const title = textParser(top.title);
+                return {
+                    ...top,
+                    title: title
+                };
+            });
+
             updateCourseData({
                 title: data.title,
                 subtitle: data.subtitle,
@@ -113,7 +124,11 @@ const AddNewCourse = () => {
                 banner: data.banner,
                 trailer: data.trailer,
                 description: description,
-                lectures: updatedLecture
+                lectures: updatedLecture,
+                topics: updatedTopics,
+                topicsWithLectures: data.topicsWithLectures,
+                ungroupedLectures: data.ungroupedLectures
+
             });
 
             dispatch({ type: types.ALL_RECORDS, data: { keyOfData: 'currentCourseUpdate', data: false } });
@@ -188,6 +203,8 @@ const AddNewCourse = () => {
             getLectures(currentCourse);
         }
     }, [lectureUpdate]);
+
+
 
     useEffect(() => {
         if (courseId) {

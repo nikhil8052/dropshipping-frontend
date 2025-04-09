@@ -27,13 +27,17 @@ import * as types from '../../../redux/actions/actionTypes';
 import { useDispatch, useSelector } from 'react-redux';
 import cross from '@icons/red-cross.svg';
 import Input from '../../../components/Input/Input';
+import Accordion from 'react-bootstrap/Accordion';
 
 const UploadFiles = ({ onNext, onBack, initialData, setStepComplete, updateCourseData }) => {
+
+    console.log(initialData, " INIT DATA ")
     const inputRef = useRef();
     const videoinputRef = useRef();
     const dispatch = useDispatch();
     const [loading, setLoading] = useState(false);
     const currentCourse = useSelector((state) => state?.root?.currentCourse);
+
     const [showDeleteModal, setShowDeleteModal] = useState({
         show: false,
         title: '',
@@ -41,7 +45,6 @@ const UploadFiles = ({ onNext, onBack, initialData, setStepComplete, updateCours
         lectureId: null,
         initialValues: null
     });
-
     const token = useSelector((state) => state?.auth?.userToken);
     const [loadingCRUD, setLoadingCRUD] = useState(false);
     const [lectureModal, setLectureModal] = useState({
@@ -49,7 +52,7 @@ const UploadFiles = ({ onNext, onBack, initialData, setStepComplete, updateCours
         title: '',
         isEditable: false,
         lectureId: null,
-        initialValues: null
+        initialValues: null,
     });
 
     const [topicModal, setTopicModal] = useState({
@@ -143,22 +146,24 @@ const UploadFiles = ({ onNext, onBack, initialData, setStepComplete, updateCours
     };
 
     const handleCreateClick = ($param) => {
-
-        if($param=="topic"){
+        if ($param == "topic") {
+            dispatch({ type: types.ALL_RECORDS, data: { keyOfData: 'currentCourseUpdate', data: false } });
             setTopicModal({
                 show: true,
                 title: 'Add Folder',
                 isEditable: false,
                 courseId: currentCourse,
             });
-            return ;
+            return;
         }
+
 
         setLectureModal({
             show: true,
             title: 'Add Lecture',
             isEditable: false,
             courseId: currentCourse,
+            topics: initialData.topics,
             lectureId: null,
             initialValues: {
                 name: '',
@@ -237,6 +242,13 @@ const UploadFiles = ({ onNext, onBack, initialData, setStepComplete, updateCours
         resetLectureModal();
     };
 
+    const handleSaveTopic = () => {
+        dispatch({ type: types.ALL_RECORDS, data: { keyOfData: 'currentCourseUpdate', data: true } });
+        resetTopicModal();
+    };
+
+ 
+    
     const resetLectureModal = () => {
         setLectureModal({
             show: false,
@@ -318,11 +330,12 @@ const UploadFiles = ({ onNext, onBack, initialData, setStepComplete, updateCours
                     show={topicModal.show}
                     onClose={resetTopicModal}
                     title={topicModal.title}
+                    onSave={handleSaveTopic}
                 >
-                <AddTopicModal
-                    topicModal={topicModal}
-                    resetModal={resetTopicModal}
-                />
+                    <AddTopicModal
+                        topicModal={topicModal}
+                        resetModal={resetTopicModal}
+                    />
                 </CoursesModal>
             )}
 
@@ -647,8 +660,8 @@ const UploadFiles = ({ onNext, onBack, initialData, setStepComplete, updateCours
                                     <Row>
                                         <Container>
                                             <div className="add-lecture-section">
-                                                <div className="add-lecture-nav">
-                                                    <div className="d-flex gap-2">
+                                                <div className="add-lecture-nav ">
+                                                    <div className="d-flex w-100 gap-2">
                                                         <img src={menuIcon} alt="menu" />
                                                         <p>Add Lectures</p>
                                                     </div>
@@ -672,7 +685,8 @@ const UploadFiles = ({ onNext, onBack, initialData, setStepComplete, updateCours
                                                         />
                                                     </div> */}
                                                 </div>
-                                                {initialData?.lectures?.map((lecture) => (
+                                                {/* SHOW ALL LECTURES  */}
+                                                {/* {initialData?.lectures?.map((lecture) => (
                                                     <div key={lecture._id} className="add-lecture-item mb-3">
                                                         <div className="items-text d-flex gap-2">
                                                             <img src={menuIcon} alt="menu" />
@@ -700,7 +714,92 @@ const UploadFiles = ({ onNext, onBack, initialData, setStepComplete, updateCours
                                                             />
                                                         </div>
                                                     </div>
+                                                ))} */}
+                                                {/* TOPIC WITH LECTURES  */}
+                                                <Accordion defaultActiveKey="0">
+                                                    {initialData?.topicsWithLectures?.map((topic, index) => (
+                                                        <Accordion.Item eventKey={index.toString()} key={topic._id}>
+                                                            <Accordion.Header>
+                                                                <div className="d-flex align-items-center gap-2">
+                                                                    <img src={menuIcon} alt="menu" />
+                                                                    <span className="fw-bold">{topic.title}</span>
+                                                                </div>
+                                                            </Accordion.Header>
+                                                            <Accordion.Body>
+                                                                {topic.lectures && topic.lectures.length > 0 ? (
+                                                                    <div className="lectures-list card pb-0 mb-0">
+                                                                        {topic.lectures.map((lecture) => (
+                                                                           <div key={lecture._id} className="add-lecture-item border-bottom">
+                                                                           <div className="items-text d-flex gap-2">
+                                                                               <img src={menuIcon} alt="menu" />
+                   
+                                                                               <p className="items-text-title">{lecture.name}</p>
+                                                                           </div>
+                                                                           <div className="items-button">
+                                                                               <Button type="button" className="quiz-btn">
+                                                                                   {lecture.quiz.mcqs.length} Questions Added
+                                                                               </Button>
+                                                                               <Button type="button" className="quiz-lec-btn">
+                                                                                   Lecture {lecture?.file ? 'File' : 'Video'}
+                                                                               </Button>
+                                                                               <img
+                                                                                   className="cursor-pointer"
+                                                                                   src={PencilLine}
+                                                                                   alt="Edit"
+                                                                                   onClick={() => handleEditClick(lecture._id)}
+                                                                               />
+                                                                               <img
+                                                                                   className="cursor-pointer"
+                                                                                   src={trashIconRed}
+                                                                                   alt="Delete"
+                                                                                   onClick={() => handleDeleteClick(lecture._id)}
+                                                                               />
+                                                                           </div>
+                                                                       </div>
+                                                                        ))}
+                                                                    </div>
+                                                                ) : (
+                                                                    <p className="text-muted">No lectures in this topic.</p>
+                                                                )}
+                                                            </Accordion.Body>
+                                                        </Accordion.Item>
+                                                    ))}
+                                                </Accordion>
+                                                <div className='card mt-2'>
+                                                    <div class="card-body">
+                                                    <h5 class="card-title">Ungrouped Lectures </h5>
+                                                  </div>
+                                                {initialData?.ungroupedLectures?.map((lecture) => (
+                                                    <div key={lecture._id} className="add-lecture-item border-top border-bottom">
+                                                        <div className="items-text d-flex gap-2">
+                                                            <img src={menuIcon} alt="menu" />
+
+                                                            <p className="items-text-title">{lecture.name}</p>
+                                                        </div>
+                                                        <div className="items-button">
+                                                            <Button type="button" className="quiz-btn">
+                                                                {lecture.quiz.mcqs.length} Questions Added
+                                                            </Button>
+                                                            <Button type="button" className="quiz-lec-btn">
+                                                                Lecture {lecture?.file ? 'File' : 'Video'}
+                                                            </Button>
+                                                            <img
+                                                                className="cursor-pointer"
+                                                                src={PencilLine}
+                                                                alt="Edit"
+                                                                onClick={() => handleEditClick(lecture._id)}
+                                                            />
+                                                            <img
+                                                                className="cursor-pointer"
+                                                                src={trashIconRed}
+                                                                alt="Delete"
+                                                                onClick={() => handleDeleteClick(lecture._id)}
+                                                            />
+                                                        </div>
+                                                    </div>
                                                 ))}
+                                                </div>
+
                                             </div>
                                         </Container>
                                     </Row>

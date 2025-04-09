@@ -22,6 +22,8 @@ import '../../../styles/Courses.scss';
 import Input from '@components/Input/Input';
 
 const AddLectureModal = ({ lectureModal, resetModal, onSave }) => {
+
+   
     const [loading, setLoading] = useState(false);
     const [uploading, setUploading] = useState(false);
     const [uploadProgress, setUploadProgress] = useState(0);
@@ -41,6 +43,9 @@ const AddLectureModal = ({ lectureModal, resetModal, onSave }) => {
         lectureModal.initialValues || {
             name: '',
             description: '',
+            isTopic:false,
+            topicId: '',
+            topics: [],
             quiz: {
                 mcqs: [
                     {
@@ -240,6 +245,7 @@ const AddLectureModal = ({ lectureModal, resetModal, onSave }) => {
             // Get the appropriate API URL
             const url = getApiUrl(lectureModal.isEditable, lectureModal.lectureId, query);
             const method = lectureModal.isEditable ? 'PUT' : 'POST';
+
             // Make the API call
             const response = await axiosWrapper(method, url, formData, token);
 
@@ -456,6 +462,45 @@ const AddLectureModal = ({ lectureModal, resetModal, onSave }) => {
                     >
                         {({ isSubmitting, values, setFieldValue }) => (
                             <FormikForm>
+                                <Row className="mt-3">
+                                    <Col md={12} xs={12}>
+=                                        <div className="form-check mb-3">
+                                            <Field
+                                                type="checkbox"
+                                                name="isTopic"
+                                                id="isTopic"
+                                                checked={values.isTopic}
+                                                onChange={(e) => {
+                                                  setFieldValue('isTopic', e.target.checked);
+                                                }}
+                                            />
+                                            <label className="form-check-label" >
+                                                Add to folder
+                                            </label>
+                                        </div>
+                                    </Col>
+                                </Row>
+                                {values.isTopic && (
+                                    <Col md={12} xs={12}>
+                                    <label htmlFor="topicSelect" className="form-label">
+                                        Select Folder
+                                    </label>
+                                    <select
+                                        id="topicSelect"
+                                        name="topicId"
+                                      
+                                        value={values.topicId}
+                                        onChange={(e) => setFieldValue('topicId', e.target.value)}
+                                    >
+                                        <option value="">-- Select Folder --</option>
+                                        {lectureModal.topics.map((topic) => (
+                                            <option key={topic._id} value={topic._id}>
+                                            {topic.title}
+                                            </option>
+                                        ))}
+                                    </select>
+                                    </Col>
+                                )}
                                 <Row className="mt-3">
                                     <Col md={12} xs={12}>
                                         <Field
@@ -775,7 +820,7 @@ const AddLectureModal = ({ lectureModal, resetModal, onSave }) => {
                                             <h4>Uploaded Lecture</h4>
                                             <div className="uploaded-lecture">
                                                 {initialValues?.vimeoVideoData?.status !== 'available' ||
-                                                initialValues?.vimeoVideoData?.transcode?.status !== 'complete' ? (
+                                                    initialValues?.vimeoVideoData?.transcode?.status !== 'complete' ? (
                                                     <p>
                                                         Lecture is still being processed. Please check back later or
                                                         upload a new lecture
