@@ -147,9 +147,9 @@ const BasicInformation = ({ initialData, setStepComplete, createOrUpdateCourse, 
         return newCategory;
     };
 
+    // Delete Course Function 
     const deleteCourse = async () => {
         try{
-
             if( currentCourse ){
                 const url = `${API_URL.DELETE_COURSE.replace(':id', currentCourse)}`
                const  response = await axiosWrapper(
@@ -159,10 +159,7 @@ const BasicInformation = ({ initialData, setStepComplete, createOrUpdateCourse, 
                     userToken
                 );
                 navigate(`/${role}/courses`);
-         
             }
-            
-    
         }catch(error){
             console.log(error);
         }
@@ -176,12 +173,12 @@ const BasicInformation = ({ initialData, setStepComplete, createOrUpdateCourse, 
                 <div className="add-course-form-section">
                     <div className="section-title">
                         <p>Basic Information</p>
-                        {
+                        {/* {
                             currentCourse && (
 
                                 <button type="button" className='btn btn-secondary' onClick={deleteCourse}> Delete </button>
                             )
-                        }
+                        } */}
                     </div>
                     <div className="add-course-form">
                         <Formik

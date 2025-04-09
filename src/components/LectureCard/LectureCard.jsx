@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import './LectureCard.scss';
 import { trimLongText } from '../../utils/common';
@@ -6,17 +6,32 @@ import { faFilePdf } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 // import { stripHtmlTags } from '../../utils/utils';
 import { faCopy } from '@fortawesome/free-solid-svg-icons';
+import axiosWrapper from '../../utils/api';
+import { API_URL } from '../../utils/apiUrl';
+import { useSelector } from 'react-redux';
 
-const LectureCard = ({ item , courseId}) => {
+const LectureCard = ({ item , courseId, courseSlug }) => {
    
+    const token = useSelector((state) => state?.auth?.userToken);
+
     const [copied, setCopied] = useState(false);
-    const handleCopy = () => {
+    const createSlug = (title) => {
+        return title.toLowerCase().replace(/\s+/g, "-").replace(/[^a-z0-9-]/g, "");
+    };
+
+    const handleCopy = async () => {
+        const { data } = await axiosWrapper('GET', `${API_URL.GET_COURSE.replace(':id', courseId)}`, {}, token);
+        const courseSlug= createSlug(data.title);
+        const slug = createSlug(item.title);
         const baseUrl= import.meta.env.VITE__APP_URL;
-        const link=`${baseUrl}/student/courses/enrolled-course/roadmap-4-product-research/tiktok-creative-center?m=direct&cid=${courseId}&lid=${item.id}`;
+        const link=`${baseUrl}/student/courses/enrolled-course/${courseSlug}/${slug}?m=direct&cid=${courseId}&lid=${item.id}`;
+        console.log( link , " LINK ")
         navigator.clipboard.writeText(link);
         setCopied(true);
-        alert("Link has been copued to clipboard");
+        alert("Link has been clipboard");
       };
+
+
 
     return (
         <div className="lecture-card h-100" key={item.id}>
