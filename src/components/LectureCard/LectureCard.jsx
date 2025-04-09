@@ -15,7 +15,7 @@ const LectureCard = ({ item , courseId}) => {
         const link=`${baseUrl}/student/courses/enrolled-course/roadmap-4-product-research/tiktok-creative-center?m=direct&cid=${courseId}&lid=${item.id}`;
         navigator.clipboard.writeText(link);
         setCopied(true);
-        setTimeout(() => setCopied(false), 2000);
+        alert("Link has been copued to clipboard");
       };
 
     return (
