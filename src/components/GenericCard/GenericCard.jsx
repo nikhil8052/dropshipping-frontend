@@ -1,4 +1,4 @@
-import { Card, Form } from 'react-bootstrap';
+import { Card, Form, Dropdown } from 'react-bootstrap';
 import CustomProgressBar from '../CustomProgressBar/CustomProgressBar';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
@@ -11,6 +11,7 @@ import ConfirmationBox from '../ConfirmationBox/ConfirmationBox';
 import { useState } from 'react';
 import { decode } from 'he';
 import { useLocation } from 'react-router-dom';
+import Edit from '../../assets/icons/edit2.svg';
 
 
 const GenericCard = ({
@@ -38,15 +39,14 @@ const GenericCard = ({
     const [loadingCRUD, setLoadingCRUD] = useState(false);
 
     // Handler to open the delete confirmation modal
-    // const handleDeleteClick = (e) => {
-    //     e.stopPropagation(); // Prevent triggering the card's onClick
-    //     setShowDeleteModal(true);
-    // };
+    const handleDeleteClick = (e) => {
+        e.stopPropagation(); 
+        setShowDeleteModal(true);
+    };
 
     const createSlug = (title) => {
         return title.toLowerCase().replace(/\s+/g, "-").replace(/[^a-z0-9-]/g, "");
     };
-
 
     // Handler to close the delete confirmation modal
     const handleCloseDeleteModal = () => {
@@ -71,8 +71,16 @@ const GenericCard = ({
     return (
         <>
             <Card
-                className="generic-card cursor-pointer"
-                onClick={(e) => {
+                className="generic-card">
+                <Dropdown>
+                    <Dropdown.Toggle  id="dropdown-basic" className='edit-icon'>
+                            <img src={Edit} alt="" />
+                    </Dropdown.Toggle>
+                    <Dropdown.Menu>
+                        <Dropdown.Item href="#/action-3" onClick={handleDeleteClick}>Delete Course</Dropdown.Item>
+                    </Dropdown.Menu>
+                </Dropdown>
+                <div className='image-box cursor-pointer' onClick={(e) => {
                     const isToggleClick = e.target.className === 'form-check-input';
                     if (isToggleClick) return;
                     navigate(
@@ -85,8 +93,7 @@ const GenericCard = ({
                             }
                         }
                     );
-                }}
-            >
+                }}>
                 <div className="image-container">
                     <Card.Img loading="lazy" variant="top" src={img} className="card-image" />
                     {/* {role === 'admin' && (
@@ -134,6 +141,7 @@ const GenericCard = ({
                         </>
                     )}
                 </Card.Body>
+                </div>
             </Card>
             {showDeleteModal && (
                 <ConfirmationBox
