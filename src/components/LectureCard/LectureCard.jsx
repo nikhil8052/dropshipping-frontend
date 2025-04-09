@@ -28,7 +28,7 @@ const LectureCard = ({ item , courseId, courseSlug }) => {
         console.log( link , " LINK ")
         navigator.clipboard.writeText(link);
         setCopied(true);
-        alert("Link has been copued to clipboard");
+        alert("Link has been clipboard");
       };
 
 
