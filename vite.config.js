@@ -38,7 +38,7 @@ export default defineConfig({
 
     // Specify the directory for the built files.
     build: {
-        outDir: 'dist',
+        outDir: 'build',
         sourcemap: false,
         minify: true
     },
