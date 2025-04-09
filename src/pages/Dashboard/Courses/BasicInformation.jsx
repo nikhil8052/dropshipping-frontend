@@ -178,7 +178,6 @@ const BasicInformation = ({ initialData, setStepComplete, createOrUpdateCourse, 
                         <p>Basic Information</p>
                         {
                             currentCourse && (
-
                                 <button type="button" className='btn btn-secondary' onClick={deleteCourse}> Delete </button>
                             )
                         }
