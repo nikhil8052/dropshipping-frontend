@@ -33,7 +33,7 @@ const LectureCard = ({ item , courseId}) => {
                     }}
                 />
             )}
-            <div className="product-details d-flex flex-column justify-content-between">
+            <div className="product-details d-flex  justify-content-between">
                 <h5>{item.title}</h5>
                 <div>
                     <FontAwesomeIcon icon={faCopy} onClick={handleCopy}  />

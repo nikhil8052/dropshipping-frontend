@@ -126,7 +126,6 @@ const EnrolledCourseDetail = () => {
         if (!id) return;
         const { data } = await axiosWrapper('GET', `${API_URL.GET_LECTURE.replace(':id', id)}`, {}, token);
 
-        console.log( data , "Lec data ")
         setSelectedLecture(data);
 
         const mcqs = data.quiz?.mcqs;
