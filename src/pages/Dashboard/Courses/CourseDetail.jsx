@@ -18,8 +18,9 @@ const CourseDetail = () => {
     const userInfo = useSelector((state) => state?.auth?.userInfo);
     const token = useSelector((state) => state?.auth?.userToken);
     const [course, setCourse] = useState(0);
+    const [courseSlug, setCourseSlug] = useState('developer');
     const [selectedLecture, setSelectedLecture] = useState(0);
-
+    
     const role = userInfo?.role;
     const courseId = location.state?.courseId;
     const isDetailPage =
@@ -28,7 +29,9 @@ const CourseDetail = () => {
     
     const getCourseById = async (id) => {
         const { data } = await axiosWrapper('GET', `${API_URL.GET_COURSE.replace(':id', id)}`, {}, token);
-
+        const courseSlug=createSlug(data.title);
+        setCourseSlug(courseSlug);
+    
         const mapLectures = data.lectures.map((lecture) => {
             const description = textParser(lecture?.description);
             return {
@@ -128,6 +131,7 @@ const CourseDetail = () => {
                             <CarouselWrapper
                                 items={course?.lectures || []}
                                 courseId={course._id}
+                                courseSlug={courseSlug}
                                 type="lecture"
                                 onItemClick={handleLectureSelect}
                             />
