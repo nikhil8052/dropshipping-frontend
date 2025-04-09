@@ -88,18 +88,7 @@ const EnrolledCourseDetail = () => {
         });
         // Overall lectures
         setLectures(data.lectures);
-     
-        if (lid != null) {
-            for (let idx = 0; idx < data.lectures.length; idx++) {
-                const lec = data.lectures[idx];
-                if (lec._id == lid) {
-                    setActiveIndex(idx);
-                    getCurrentLecture(lec._id);
-                    break; 
-                }
-            }
-        }
-
+       
         // Handle search results
         setFilteredLectures(data.lectures);
         const incompleteLectureIndex = data.lectures.find((lec) => !lec.completedBy?.includes(userInfo?._id));
@@ -111,8 +100,22 @@ const EnrolledCourseDetail = () => {
         } else {
             getCurrentLecture(data.lectures[0]?._id);
         }
+
     };
 
+
+    useEffect(()=>{
+        if (lid != null) {
+            for (let idx = 0; idx < lectures.length; idx++) {
+                const lec = lectures[idx];
+                if (lec._id == lid) {
+                    setActiveIndex(idx);
+                    getCurrentLecture(lec._id);
+                    break; 
+                }
+            }
+        }
+    })
     // Commenting out for future reference
     // Handle eligibility check based on courseAccessUntil
     // const checkAccessEligibility = () => {
@@ -162,6 +165,9 @@ const EnrolledCourseDetail = () => {
         }
     }, [courseId]);
 
+   
+
+
     useEffect(() => {
         if (search) {
             const filtered = lectures.filter((lecture, idx ) => {
@@ -171,6 +177,8 @@ const EnrolledCourseDetail = () => {
             setFilteredLectures(filtered);
 
         } else {
+
+
             if (lectures.length > 0 && slugOnce==false && medium==null  ) {
                 var name = lectures[0].name;
                 const slug = createSlug(name);
