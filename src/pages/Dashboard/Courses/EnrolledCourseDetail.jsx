@@ -77,6 +77,7 @@ const EnrolledCourseDetail = () => {
     const getCourseById = async (id, nextLecture) => {
         const { data } = await axiosWrapper('GET', `${API_URL.GET_COURSE.replace(':id', id)}`, {}, token);
  
+     
         setCurrentCourseID(id);
         // Higher Level info
         setCourseDetails({
@@ -87,6 +88,17 @@ const EnrolledCourseDetail = () => {
         });
         // Overall lectures
         setLectures(data.lectures);
+     
+        if (lid != null) {
+            for (let idx = 0; idx < data.lectures.length; idx++) {
+                const lec = data.lectures[idx];
+                if (lec._id == lid) {
+                    setActiveIndex(idx);
+                    getCurrentLecture(lec._id);
+                    break; 
+                }
+            }
+        }
 
         // Handle search results
         setFilteredLectures(data.lectures);
@@ -125,9 +137,7 @@ const EnrolledCourseDetail = () => {
     const getCurrentLecture = async (id) => {
         if (!id) return;
         const { data } = await axiosWrapper('GET', `${API_URL.GET_LECTURE.replace(':id', id)}`, {}, token);
-
         setSelectedLecture(data);
-
         const mcqs = data.quiz?.mcqs;
 
         const initialValues = {
@@ -154,11 +164,12 @@ const EnrolledCourseDetail = () => {
 
     useEffect(() => {
         if (search) {
-            const filtered = lectures.filter((lecture) => {
+            const filtered = lectures.filter((lecture, idx ) => {
                 const searchCriteria = lecture.name.toLowerCase() || lecture.description.toLowerCase();
                 return searchCriteria.includes(search.toLowerCase());
             });
             setFilteredLectures(filtered);
+
         } else {
             if (lectures.length > 0 && slugOnce==false && medium==null  ) {
                 var name = lectures[0].name;
@@ -182,6 +193,7 @@ const EnrolledCourseDetail = () => {
 
     const handleButtonClick = (index, fetchLecture = true) => {
         setActiveIndex(index);
+
         if (fetchLecture) getCurrentLecture(lectures[index]?._id);
 
         if (lectures[index] ) {
