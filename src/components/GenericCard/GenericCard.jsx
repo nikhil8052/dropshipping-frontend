@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import TextExpand from '@components/TextExpand/TextExpand';
 import enrollIcon from '../../assets/icons/enroll-icon.svg';
 import lockIcon from '../../assets/icons/lock-icon.svg';
-// import deleteIcon from '@icons/trash-2.svg';
+import deleteIcon from '@icons/trash-2.svg';
 import './GenericCard.scss';
 import ConfirmationBox from '../ConfirmationBox/ConfirmationBox';
 import { useState } from 'react';
@@ -72,14 +72,11 @@ const GenericCard = ({
         <>
             <Card
                 className="generic-card">
-                <Dropdown>
-                    <Dropdown.Toggle  id="dropdown-basic" className='edit-icon'>
-                            <img src={Edit} alt="" />
-                    </Dropdown.Toggle>
-                    <Dropdown.Menu>
-                        <Dropdown.Item href="#/action-3" onClick={handleDeleteClick}>Delete Course</Dropdown.Item>
-                    </Dropdown.Menu>
-                </Dropdown>
+                    <div className='delete-box'>
+                    <button type="button" className="delete-icon-btn" onClick={handleDeleteClick} >
+                            <img src={deleteIcon} alt="Delete" className="delete-icon" />
+                        </button>
+                    </div>
                 <div className='image-box cursor-pointer' onClick={(e) => {
                     const isToggleClick = e.target.className === 'form-check-input';
                     if (isToggleClick) return;
