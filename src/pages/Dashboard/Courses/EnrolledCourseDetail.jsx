@@ -24,9 +24,14 @@ const EnrolledCourseDetail = () => {
     const location = useLocation();
     const userInfo = useSelector((state) => state?.auth?.userInfo);
     const token = useSelector((state) => state?.auth?.userToken);
-    const courseId = location.state?.courseId;
+    var courseId = location.state?.courseId;
     const role = userInfo?.role?.toLowerCase();
-   
+  
+    const queryParams = new URLSearchParams(location.search);
+    const cid = queryParams.get('cid'); 
+    const lid = queryParams.get('lid'); 
+    const medium = queryParams.get('m'); 
+
     const [currentCourseID, setCurrentCourseID] = useState('');
     const [search, setSearch] = useState('');
     const [lectures, setLectures] = useState([]);
@@ -43,6 +48,10 @@ const EnrolledCourseDetail = () => {
     const [initialValues, setInitialValues] = useState({
         mcqs: []
     });
+
+    if(medium=="direct"){
+        courseId=cid;
+    }
 
     const validationSchema = Yup.object().shape({
         mcqs: Yup.array()
@@ -151,7 +160,7 @@ const EnrolledCourseDetail = () => {
             });
             setFilteredLectures(filtered);
         } else {
-            if (lectures.length > 0 && slugOnce==false) {
+            if (lectures.length > 0 && slugOnce==false && medium==null  ) {
                 var name = lectures[0].name;
                 const slug = createSlug(name);
                 let segments = location.pathname.split("/").filter(Boolean);
@@ -172,7 +181,6 @@ const EnrolledCourseDetail = () => {
     };
 
     const handleButtonClick = (index, fetchLecture = true) => {
-
         setActiveIndex(index);
         if (fetchLecture) getCurrentLecture(lectures[index]?._id);
 
