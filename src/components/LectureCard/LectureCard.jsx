@@ -23,7 +23,7 @@ const LectureCard = ({ item , courseId, courseSlug }) => {
         const { data } = await axiosWrapper('GET', `${API_URL.GET_COURSE.replace(':id', courseId)}`, {}, token);
         const courseSlug= createSlug(data.title);
         const slug = createSlug(item.title);
-        const baseUrl= import.meta.env.VITE_APP_URL;
+        const baseUrl= import.meta.env.VITE__APP_URL;
         
         
         const link=`${baseUrl}/student/courses/enrolled-course/${courseSlug}/${slug}?m=direct&cid=${courseId}&lid=${item.id}`;
