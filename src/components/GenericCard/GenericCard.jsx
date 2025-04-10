@@ -12,6 +12,8 @@ import { useState } from 'react';
 import { decode } from 'he';
 import { useLocation } from 'react-router-dom';
 import Edit from '../../assets/icons/edit2.svg';
+import 'react-tooltip/dist/react-tooltip.css'
+import { Tooltip } from 'react-tooltip'
 
 
 const GenericCard = ({
@@ -72,11 +74,13 @@ const GenericCard = ({
         <>
             <Card
                 className="generic-card">
+                     {role === 'admin' && (
                     <div className='delete-box'>
-                    <button type="button" className="delete-icon-btn" onClick={handleDeleteClick} >
+                    <button type="button" className="delete-icon-btn" onClick={handleDeleteClick} data-tooltip-id="my-tooltip" data-tooltip-content="Delete Course" >
                             <img src={deleteIcon} alt="Delete" className="delete-icon" />
                         </button>
                     </div>
+                      )}
                 <div className='image-box cursor-pointer' onClick={(e) => {
                     const isToggleClick = e.target.className === 'form-check-input';
                     if (isToggleClick) return;
@@ -140,6 +144,7 @@ const GenericCard = ({
                 </Card.Body>
                 </div>
             </Card>
+            <Tooltip id="my-tooltip" />
             {showDeleteModal && (
                 <ConfirmationBox
                     show={showDeleteModal}

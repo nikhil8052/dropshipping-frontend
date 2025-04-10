@@ -17,6 +17,8 @@ import { shuffleArray } from '../../../utils/common';
 import bannerImage from '../../../assets/images/publish-background.svg';
 import checkicon from '../../../assets/images/Check.svg';
 import checkicon2 from '../../../assets/images/check2.svg';
+import 'react-tooltip/dist/react-tooltip.css';
+import { Tooltip } from 'react-tooltip'
 
 
 const EnrolledCourseDetail = () => {
@@ -378,10 +380,10 @@ const EnrolledCourseDetail = () => {
                                                         <h2 className="title">
                                                             {selectedLecture.name}
                                                                 {selectedLecture.completedBy?.some(user => user._id === userInfo?._id) ?  <img className='checkimg' src={checkicon}   alt="Already completed"
-    title="Already completed" /> : <img className='checkimg'   onClick={() =>
+    data-tooltip-id="my-tooltip2" data-tooltip-place="top"  data-tooltip-content="Already completed"/> : <img className='checkimg'   onClick={() =>
                                                                     markLectureAsCompleted(selectedLecture?._id)
                                                                 }  src={checkicon2}  alt="Mark lecture as completed."
-                                                                title="Mark lecture as completed."/>}
+                                                                data-tooltip-id="my-tooltip2"   data-tooltip-place="top" data-tooltip-content="Mark lecture as completed."/>}
                                                         </h2>
                                                         {selectedLecture.file ? (
                                                             <div className="video">
@@ -480,6 +482,7 @@ const EnrolledCourseDetail = () => {
                                                 )}
                                             </Col>
                                         </Row>
+                                        <Tooltip id="my-tooltip2" />
                                         <div className="viewProgress-footer mx-auto">
                                             {continueQuiz ? (
                                                 <Button

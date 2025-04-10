@@ -38,7 +38,7 @@
         align-items: center;
         justify-content: center;
         transition: background 0.3s;
-        width: 100%;
+        width: auto;
         display: flex;
         justify-content: right;
         padding: 10px 10px 0px 0px;
@@ -153,4 +153,9 @@
     border-color: none;
     outline: 0;
     box-shadow: none;
+}
+
+.delete-box {
+    display: flex;
+    justify-content: right;
 }
