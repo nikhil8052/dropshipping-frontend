@@ -44,21 +44,23 @@ const EnrolledCourseDetail = () => {
     // const [accessRestricted, setAccessRestricted] = useState(false);
     const accessRestricted = false;
 
-    var courseId;
+    var courseId=location.state?.courseId;
+
     const [initialValues, setInitialValues] = useState({
         mcqs: []
     });
 
+    if(medium=="direct"){
+        courseId=cid;
+        // setCurrentCourseID(cid);
+    }
 
-    useEffect(()=>{
-        if(medium=="direct"){
-            courseId=cid;
-            setCurrentCourseID(cid);
-        }else {
-            courseId = location.state?.courseId;
-
-        }
-    },[])
+    // useEffect(()=>{
+    //     if(medium=="direct"){
+    //         courseId=cid;
+    //         setCurrentCourseID(cid);
+    //     }
+    // },[])
 
 
     const validationSchema = Yup.object().shape({
@@ -122,7 +124,7 @@ const EnrolledCourseDetail = () => {
                 }
             }
         }
-    },[])
+    },[lectures,medium,cid])
     // Commenting out for future reference
     // Handle eligibility check based on courseAccessUntil
     // const checkAccessEligibility = () => {
