@@ -24,6 +24,8 @@ const LectureCard = ({ item , courseId, courseSlug }) => {
         const courseSlug= createSlug(data.title);
         const slug = createSlug(item.title);
         const baseUrl= import.meta.env.VITE__APP_URL;
+        
+        
         const link=`${baseUrl}/student/courses/enrolled-course/${courseSlug}/${slug}?m=direct&cid=${courseId}&lid=${item.id}`;
         console.log( link , " LINK ")
         navigator.clipboard.writeText(link);

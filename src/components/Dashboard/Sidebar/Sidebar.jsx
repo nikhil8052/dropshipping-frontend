@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Container, Nav, Card, Button } from 'react-bootstrap';
 import './sidebar.scss';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import logoImg from '@icons/dropship-logo.svg';
 import subImg from '@icons/Logo.svg';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -41,7 +41,7 @@ const Sidebar = () => {
 
     const [modalShow, setModalShow] = useState(false);
     const { activeSidebarItem } = useSelector((state) => state.activeSidebarItem);
-
+    const location = useLocation();
     useEffect(() => {
         const items =
             role === 'ADMIN' ? adminSidebarItems : role === 'COACH' ? coachSidebarItems : [...studentSidebarItems]; // clone to avoid mutating original array
@@ -74,7 +74,8 @@ const Sidebar = () => {
     const selectActiveItem = () => {
         const findActiveItem = (items) => {
             for (const item of items) {
-                if (window.location.pathname === item.linkTo) {
+                // Check if current path starts with item's linkTo (to handle nested routes)
+                if (window.location.pathname.startsWith(item.linkTo)) {
                     return item;
                 }
                 if (item.child) {
@@ -84,12 +85,23 @@ const Sidebar = () => {
             }
             return null;
         };
-
+    
         const activeItem = findActiveItem(updatedItems);
-        if (activeItem) {
+        
+        // If we're on a course lecture page but Roadmap is active, force switch to Courses
+        if (window.location.pathname.includes('/courses/') && activeSidebarItem === 'roadmap') {
+            const coursesItem = updatedItems.find(item => item.name === 'Courses');
+            if (coursesItem) {
+                dispatch(changeLink(coursesItem.id));
+                return;
+            }
+        }
+    
+        if (activeItem && activeItem.id !== activeSidebarItem) {
             dispatch(changeLink(activeItem.id));
         }
     };
+    
 
     const handleSideBarClick = (item) => {
         dispatch(changeLink(item.id)); // Dispatch the selected item to update the activeLink
@@ -120,9 +132,10 @@ const Sidebar = () => {
     }, []);
 
     useEffect(() => {
-        selectActiveItem();
-        // This effect should ideally depend on the pathname to update active items on route change
-    }, [location.pathname, updatedItems]);
+        if (updatedItems.length > 0) {
+            selectActiveItem();
+        }
+    }, [location.pathname, updatedItems, activeSidebarItem]);
 
     const handleLogoutClick = () => {
         setModalShow(!modalShow);
