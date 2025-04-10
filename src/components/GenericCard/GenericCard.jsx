@@ -1,16 +1,19 @@
-import { Card, Form } from 'react-bootstrap';
+import { Card, Form, Dropdown } from 'react-bootstrap';
 import CustomProgressBar from '../CustomProgressBar/CustomProgressBar';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import TextExpand from '@components/TextExpand/TextExpand';
 import enrollIcon from '../../assets/icons/enroll-icon.svg';
 import lockIcon from '../../assets/icons/lock-icon.svg';
-// import deleteIcon from '@icons/trash-2.svg';
+import deleteIcon from '@icons/trash-2.svg';
 import './GenericCard.scss';
 import ConfirmationBox from '../ConfirmationBox/ConfirmationBox';
 import { useState } from 'react';
 import { decode } from 'he';
 import { useLocation } from 'react-router-dom';
+import Edit from '../../assets/icons/edit2.svg';
+import 'react-tooltip/dist/react-tooltip.css'
+import { Tooltip } from 'react-tooltip'
 
 
 const GenericCard = ({
@@ -38,15 +41,14 @@ const GenericCard = ({
     const [loadingCRUD, setLoadingCRUD] = useState(false);
 
     // Handler to open the delete confirmation modal
-    // const handleDeleteClick = (e) => {
-    //     e.stopPropagation(); // Prevent triggering the card's onClick
-    //     setShowDeleteModal(true);
-    // };
+    const handleDeleteClick = (e) => {
+        e.stopPropagation(); 
+        setShowDeleteModal(true);
+    };
 
     const createSlug = (title) => {
         return title.toLowerCase().replace(/\s+/g, "-").replace(/[^a-z0-9-]/g, "");
     };
-
 
     // Handler to close the delete confirmation modal
     const handleCloseDeleteModal = () => {
@@ -71,8 +73,15 @@ const GenericCard = ({
     return (
         <>
             <Card
-                className="generic-card cursor-pointer"
-                onClick={(e) => {
+                className="generic-card">
+                     {role === 'admin' && (
+                    <div className='delete-box'>
+                    <button type="button" className="delete-icon-btn" onClick={handleDeleteClick} data-tooltip-id="my-tooltip" data-tooltip-content="Delete Course" >
+                            <img src={deleteIcon} alt="Delete" className="delete-icon" />
+                        </button>
+                    </div>
+                      )}
+                <div className='image-box cursor-pointer' onClick={(e) => {
                     const isToggleClick = e.target.className === 'form-check-input';
                     if (isToggleClick) return;
                     navigate(
@@ -85,8 +94,7 @@ const GenericCard = ({
                             }
                         }
                     );
-                }}
-            >
+                }}>
                 <div className="image-container">
                     <Card.Img loading="lazy" variant="top" src={img} className="card-image" />
                     {/* {role === 'admin' && (
@@ -134,7 +142,9 @@ const GenericCard = ({
                         </>
                     )}
                 </Card.Body>
+                </div>
             </Card>
+            <Tooltip id="my-tooltip" />
             {showDeleteModal && (
                 <ConfirmationBox
                     show={showDeleteModal}
