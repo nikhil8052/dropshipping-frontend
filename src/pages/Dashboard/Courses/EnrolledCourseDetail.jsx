@@ -24,7 +24,6 @@ const EnrolledCourseDetail = () => {
     const location = useLocation();
     const userInfo = useSelector((state) => state?.auth?.userInfo);
     const token = useSelector((state) => state?.auth?.userToken);
-    var courseId = location.state?.courseId;
     const role = userInfo?.role?.toLowerCase();
   
     const queryParams = new URLSearchParams(location.search);
@@ -45,13 +44,22 @@ const EnrolledCourseDetail = () => {
     // const [accessRestricted, setAccessRestricted] = useState(false);
     const accessRestricted = false;
 
+    var courseId;
     const [initialValues, setInitialValues] = useState({
         mcqs: []
     });
 
-    if(medium=="direct"){
-        courseId=cid;
-    }
+
+    useEffect(()=>{
+        if(medium=="direct"){
+            courseId=cid;
+            setCurrentCourseID(cid);
+        }else {
+            courseId = location.state?.courseId;
+
+        }
+    },[])
+
 
     const validationSchema = Yup.object().shape({
         mcqs: Yup.array()
@@ -77,7 +85,6 @@ const EnrolledCourseDetail = () => {
     const getCourseById = async (id, nextLecture) => {
         const { data } = await axiosWrapper('GET', `${API_URL.GET_COURSE.replace(':id', id)}`, {}, token);
  
-     
         setCurrentCourseID(id);
         // Higher Level info
         setCourseDetails({
@@ -115,7 +122,7 @@ const EnrolledCourseDetail = () => {
                 }
             }
         }
-    })
+    },[])
     // Commenting out for future reference
     // Handle eligibility check based on courseAccessUntil
     // const checkAccessEligibility = () => {
@@ -264,8 +271,8 @@ const EnrolledCourseDetail = () => {
     const markLectureAsCompleted = async (lectureId) => {
         const URL=`${API_URL.MARK_LECTURE_COMPLETED.replace(':id', lectureId)}`;
         await axiosWrapper('PUT', URL, {}, token);
-        // Refresh course data
-        getCourseById(currentCourseID, lectures[activeIndex + 1]?._id);
+        setSlugOnce(true);
+        getCourseById(currentCourseID, lectures[activeIndex]?._id);
     };
 
     return (
