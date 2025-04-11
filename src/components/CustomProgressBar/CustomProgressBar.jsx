@@ -11,9 +11,9 @@ const CustomProgressBar = ({ progress }) => {
             ></div>
             <div
                 className="progress-bar-label"
-                style={{
-                    '--progress': `${progress}%`
-                }}
+                // style={{
+                //     '--progress': `${progress}%`
+                // }}
             >
                 {progress}%
             </div>
