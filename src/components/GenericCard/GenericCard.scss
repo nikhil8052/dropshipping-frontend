@@ -6,7 +6,7 @@
     width: 100%;
     display: flex;
     flex-direction: column;
-     border-radius: 15px;
+     border-radius: 10px;
     justify-content: space-between;
     border: none;
     position: relative;
@@ -15,7 +15,8 @@
     background-color: #FFFFFF1A;
     color: #fff;
     &:hover {
-            box-shadow: rgb(0 161 215 / 55%) 0px 1px 2px, rgb(1 162 216 / 49%) 0px 2px 6px, rgb(0 159 214 / 57%) 0px 1px 8px;
+            // box-shadow: rgb(0 161 215 / 55%) 0px 1px 2px, rgb(1 162 216 / 49%) 0px 2px 6px, rgb(0 159 214 / 57%) 0px 1px 8px;
+            box-shadow: rgb(0 161 215 / 16%) 0px 9px 25px;
     }
     .card-image {
         object-fit: cover;
@@ -166,4 +167,13 @@
     top: 0px;
     right: 0px;
     z-index: 9;
+}
+
+.main-panel .course-section .progress-bar-label {
+    text-align: center;
+    width: 100%;
+    display: block;
+    position: static;
+    transform: none;
+    background-color: transparent;
 }

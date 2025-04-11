@@ -303,12 +303,30 @@ const EnrolledCourseDetail = () => {
                         </div>
                     ) : (
                         <>
-                            <div className="title-top">
+                        <div className='row'>
+                        <div className="title-top col-md-8">
                                 <span onClick={() => navigate(`/${role}/courses`)} style={{ cursor: 'pointer' }}>
                                     Courses <img src={CaretRight} alt=">" />
                                 </span>{' '}
                                 Enrolled Course Details <img src={CaretRight} alt=">" /> Lecture {activeIndex + 1}
                             </div>
+                            <div className='col-md-4'>
+                            <InputGroup>
+                                                        <InputGroup.Text>
+                                                            <img src={Search} alt="Search" />
+                                                        </InputGroup.Text>
+                                                        <Form.Control
+                                                            className="search-input"
+                                                            type="text"
+                                                            name="Search"
+                                                            label="Search"
+                                                            value={search}
+                                                            onChange={onFilterTextChange}
+                                                            placeholder="Search"
+                                                        />
+                            </InputGroup>
+                            </div>
+                        </div>
                             <Formik
                                 enableReinitialize
                                 initialValues={initialValues}
@@ -342,24 +360,10 @@ const EnrolledCourseDetail = () => {
                                             </div>
                                         </div>
                                         <Row className="section-border">
-                                            <Col sm={3} md={4} lg={4} xl={3}>
-                                                <div className="search-lectures">
-                                                    <InputGroup>
-                                                        <InputGroup.Text>
-                                                            <img src={Search} alt="Search" />
-                                                        </InputGroup.Text>
-                                                        <Form.Control
-                                                            className="search-input"
-                                                            type="text"
-                                                            name="Search"
-                                                            label="Search"
-                                                            value={search}
-                                                            onChange={onFilterTextChange}
-                                                            placeholder="Search"
-                                                        />
-                                                    </InputGroup>
+                                            <Col sm={12} md={6} lg={4} xl={3}>
+                                                <div className="search-lectures lec-left">
                                                     <div className="title-lecture-btns">
-                                                        <h1>All Lectures</h1>
+                                                        <h1>{courseDetails?.title}</h1>
                                                     </div>
 
                                                     <div className="lecture-btns">
@@ -379,14 +383,14 @@ const EnrolledCourseDetail = () => {
                                                                 }
                                                             >
                                                                 <div>
-                                                                    <img
+                                                                    {/* <img
                                                                         src={
                                                                             lecture?.completedBy?.includes(userInfo?._id)
                                                                                 ? ActiveIcon
                                                                                 : InactiveIcon
                                                                         }
                                                                         alt="IconLect"
-                                                                    />
+                                                                    /> */}
                                                                     <p>{lecture.name}</p>
                                                                 </div>
                                                                 <img className='checkimg'
@@ -403,8 +407,9 @@ const EnrolledCourseDetail = () => {
                                                 </div>
                                             </Col>
                                             {/* eslint-disable  */}
-                                            <Col sm={8} md={8} lg={8} xl={9} className="lecture-right">
-                                                {!continueQuiz && selectedLecture && (
+                                            <Col sm={12} md={6} lg={8} xl={9}>
+                                            <div className="lecture-right">
+                                            {!continueQuiz && selectedLecture && (
                                                     <div className="lecture-curriculum">
                                                         <h2 className="title">
                                                             {selectedLecture.name}
@@ -509,6 +514,7 @@ const EnrolledCourseDetail = () => {
                                                         )}
                                                     </div>
                                                 )}
+                                            </div>
                                             </Col>
                                         </Row>
                                         <Tooltip id="my-tooltip2" />
