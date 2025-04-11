@@ -1580,8 +1580,12 @@
     background-color: #fff;
 }
 
-.EnrolledCourseDetail .search-lectures{
+.EnrolledCourseDetail .search-lectures,.carousel-lecture {
     height: 100%;
+}
+
+.EnrolledCourseDetail .search-input::placeholder {
+    color: #000 !important;
 }
 
 @media only screen and (max-width:767px) {
