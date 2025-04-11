@@ -29,6 +29,7 @@ const AddNewCourse = () => {
     const currentCourse = useSelector((state) => state?.root?.currentCourse);
     const currentCourseUpdate = useSelector((state) => state?.root?.currentCourseUpdate);
     const lectureUpdate = useSelector((state) => state?.root?.lectureUpdate);
+    const [loading, setLoading] = useState(false);
 
     const [courseData, setCourseData] = useState({
         title: '',
@@ -48,6 +49,17 @@ const AddNewCourse = () => {
     });
 
     // //////////////////////////////Handlers////////////////////////
+   
+    const handleDelete = async (courseId) => {
+        setLoading(true);
+        try {
+            await axiosWrapper('DELETE', `${API_URL.DELETE_COURSE.replace(':id', courseId)}`, {}, token);
+            setLoading(false);
+            // getAllCourses();
+        } catch (error) {
+            setLoading(false);
+        }
+    };
     const handleTabChange = (key) => {
         if (courseId) {
             setActiveKey(key);
@@ -248,6 +260,10 @@ const AddNewCourse = () => {
                         onNext={() => handleTabChange('upload-files')}
                         createOrUpdateCourse={createOrUpdateCourse}
                         updateCourseData={updateCourseData}
+                        onDelete={handleDelete}
+                        {...courseData}
+                        _id={courseId}
+
                     />
                 </Tab>
                 <Tab

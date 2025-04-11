@@ -74,13 +74,13 @@ const GenericCard = ({
         <>
             <Card
                 className="generic-card">
-                     {role === 'admin' && (
+                     {/* {role === 'admin' && (
                     <div className='delete-box'>
                     <button type="button" className="delete-icon-btn" onClick={handleDeleteClick} data-tooltip-id="my-tooltip" data-tooltip-content="Delete Course" >
                             <img src={deleteIcon} alt="Delete" className="delete-icon" />
                         </button>
                     </div>
-                      )}
+                      )} */}
                 <div className='image-box cursor-pointer' onClick={(e) => {
                     const isToggleClick = e.target.className === 'form-check-input';
                     if (isToggleClick) return;
