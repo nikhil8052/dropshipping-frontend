@@ -10,14 +10,25 @@ import Loading from '@components/Loading/Loading';
 import '../../../styles/Common.scss';
 import '../../../styles/Courses.scss';
 import Input from '../../../components/Input/Input';
+import deleteIcon from '@icons/trash-2.svg';
+import ConfirmationBox from '@components/ConfirmationBox/ConfirmationBox';
+import 'react-tooltip/dist/react-tooltip.css'
+import { Tooltip } from 'react-tooltip'
 
-const BasicInformation = ({ initialData, setStepComplete, createOrUpdateCourse, resetStep }) => {
+
+
+// const BasicInformation = ({ initialData, setStepComplete, createOrUpdateCourse, resetStep }) => {
+    const BasicInformation = ({ initialData, setStepComplete, createOrUpdateCourse, resetStep, onDelete,...rest }) => {
+
     const { userInfo, userToken } = useSelector((state) => state?.auth);
     const role = userInfo?.role?.toLowerCase();
     const [categories, setCategories] = useState([]);
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
     const currentCourse = useSelector((state) => state?.root?.currentCourse);
+
+    const [showDeleteModal, setShowDeleteModal] = useState(false);
+    const [loadingCRUD, setLoadingCRUD] = useState(false);
 
     const schema = Yup.object({
         title: Yup.string().required('Please enter the course title'),
@@ -41,6 +52,33 @@ const BasicInformation = ({ initialData, setStepComplete, createOrUpdateCourse, 
             setLoading(false);
             resetStep();
         }
+    };
+
+
+    const handleDeleteClick = (e) => {
+        e.stopPropagation(); 
+        setShowDeleteModal(true);
+    };
+    // Handler to close the delete confirmation modal
+    const handleCloseDeleteModal = () => {
+        setShowDeleteModal(false);
+    };
+
+    // Handler to confirm deletion
+    const handleDeleteSubmit = async () => {
+        setLoadingCRUD(true);
+        try {
+            if (onDelete) {
+                await onDelete(rest?._id); 
+            }
+            setShowDeleteModal(false);
+            setLoadingCRUD(false);
+            navigate(`/${role}/courses`);
+        } catch (error) {
+            setLoadingCRUD(false);
+            setShowDeleteModal(false);
+        }
+       
     };
     useEffect(() => {
         if (initialData?.category) {
@@ -171,15 +209,28 @@ const BasicInformation = ({ initialData, setStepComplete, createOrUpdateCourse, 
                 <Loading />
             ) : (
                 <div className="add-course-form-section">
-                    <div className="section-title">
+                    <div
+                        className="section-title"
+                        style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}
+                        >
                         <p>Basic Information</p>
-                        {/* {
-                            currentCourse && (
 
-                                <button type="button" className='btn btn-secondary' onClick={deleteCourse}> Delete </button>
-                            )
-                        } */}
-                    </div>
+                        {role === 'admin' && (
+                            <div className="delete-boxs">
+                            <button
+                                type="button"
+                                className="delete-icon-btn"
+                                onClick={handleDeleteClick}
+                                data-tooltip-id="my-tooltip2"
+                                data-tooltip-content="Delete Course"
+                                style={{ background: 'transparent', border: 'none' }}
+                            >
+                                <img src={deleteIcon} alt="Delete" className="delete-icon" />
+                            </button>
+                            </div>
+                        )}
+                        </div>
+
                     <div className="add-course-form">
                         <Formik
                             initialValues={{
@@ -255,7 +306,24 @@ const BasicInformation = ({ initialData, setStepComplete, createOrUpdateCourse, 
                         </Formik>
                     </div>
                 </div>
+                
             )}
+            {showDeleteModal && (
+                <ConfirmationBox
+                    show={showDeleteModal}
+                    onClose={handleCloseDeleteModal}
+                    onConfirm={handleDeleteSubmit}
+                    title="Delete Course"
+                    body="Are you sure you want to delete this course? Data associated with this course will be lost."
+                    loading={loadingCRUD}
+                    customFooterClass="custom-footer-class" // Optional: adjust based on your styling
+                    nonActiveBtn="cancel-button" // Optional: adjust based on your styling
+                    activeBtn="delete-button" // Optional: adjust based on your styling
+                    cancelButtonTitle="No" // Optional: customize button text
+                    activeBtnTitle="Delete" // Optional: customize button text
+                />
+            )}
+            <Tooltip id="my-tooltip2" />
         </>
     );
 };
