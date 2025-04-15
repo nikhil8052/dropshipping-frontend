@@ -53,18 +53,18 @@ const Categories = () => {
         }
         setSelectedRowId(event.data?._id);
         if (!isChecked) {
-            navigate('/admin/categories/edit', {
+            navigate('/admin/category/edit', {
                 state: { categoryId: event.data?._id }
             });
         }
     };
 
     const handleCreateClick = () => {
-        navigate('/admin/categories/new');
+        navigate('/admin/category/new');
     };
 
     const handleEditClick = (categoryId) => {
-        navigate('/admin/categories/edit', {
+        navigate('/admin/category/edit', {
             state: { categoryId }
         });
     };
@@ -183,44 +183,31 @@ const Categories = () => {
             sortable: true,
             cellRenderer: TextItemExpand,
             resizable: false,
-            flex: 1, // Add flex property for even distribution
-            minWidth: 150 // Minimum width for Name column
-        },
-        {
-            headerName: 'Description',
-            field: 'description',
-            filter: 'agSetColumnFilter',
-            sortable: true,
-            cellRenderer: DescriptionRenderer,
-            resizable: false,
-            flex: 2, // Give description more space
-            minWidth: 200 // Minimum width for Description column
-        },        
-        {
-            headerName: 'Status',
-            field: 'isActive',
-            cellRenderer: ToggleRenderer,
-            cellRendererParams: {
-                onToggleClick: handleToggleClick,
-                loading: loadingCRUD
-            },
-            sortable: false,
-            filter: false,
-            resizable: false,
-            cellClass: ['d-flex', 'align-items-center'],
-            width: 150, // Fixed width for Status column
-            suppressSizeToFit: true // Prevent auto-resizing
         },
         // {
-        //     headerName: 'Actions',
-        //     cellRenderer: ActionsRenderer,
-        //     width: 100, // Fixed width for Actions column
-        //     pinned: 'right',
+        //     headerName: 'Description',
+        //     field: 'description',
+        //     filter: 'agSetColumnFilter',
+        //     sortable: true,
+        //     cellRenderer: DescriptionRenderer,
+        //     resizable: false,
+        //     flex: 2, // Give description more space
+        //     minWidth: 200 // Minimum width for Description column
+        // },        
+        // {
+        //     headerName: 'Status',
+        //     field: 'isActive',
+        //     cellRenderer: ToggleRenderer,
+        //     cellRendererParams: {
+        //         onToggleClick: handleToggleClick,
+        //         loading: loadingCRUD
+        //     },
         //     sortable: false,
         //     filter: false,
         //     resizable: false,
-        //     suppressSizeToFit: true, // Prevent auto-resizing
-        //     cellClass: ['d-flex', 'align-items-center', 'justify-content-center']
+        //     cellClass: ['d-flex', 'align-items-center'],
+        //     width: 150, // Fixed width for Status column
+        //     suppressSizeToFit: true // Prevent auto-resizing
         // },
         {
             headerName: 'Actions',

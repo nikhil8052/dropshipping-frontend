@@ -81,23 +81,23 @@ export const adminRoutes = [
 // FOR CATEGORY Categories
 
     {
-        path: 'categories',
+        path: 'category',
         exact: true,
-        name: 'Categories',
+        name: 'Category',
         Component: Categories,
         access: 'ADMIN'
     },
     {
-        path: 'categories/new',
+        path: 'category/new',
         exact: true,
-        name: 'Categories',
+        name: 'Category',
         Component: NewCategory,
         access: 'ADMIN'
     },
     {
-        path: 'categories/edit',
+        path: 'category/edit',
         exact: true,
-        name: 'Categories',
+        name: 'Category',
         Component: NewCategory,
         access: 'ADMIN'
     },

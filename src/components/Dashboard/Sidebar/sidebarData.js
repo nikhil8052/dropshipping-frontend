@@ -120,9 +120,9 @@ export const adminSidebarItems = [
             },
             {
                 id: '4-2',
-                name: 'Categories',
+                name: 'Category',
                 iconLight: categories, // Replace with,
-                linkTo: '/admin/categories'
+                linkTo: '/admin/category'
             }
         ]
     },
