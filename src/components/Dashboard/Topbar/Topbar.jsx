@@ -14,7 +14,7 @@ const Topbar = () => {
     const [title, setTitle] = useState('');
 
     const role = userInfo?.role;
-    const name = userInfo?.name?.split(' ')[0];
+    const name = userInfo?.role?.split(' ')[0];
     const items = role === 'ADMIN' ? adminSidebarItems : role === 'COACH' ? coachSidebarItems : studentSidebarItems;
 
     const getTopTitle = (path) => {
