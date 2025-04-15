@@ -448,9 +448,18 @@
     gap: 10px;
 }
 
-.sidebar .nav a:last-child {
-    display: none;
+// .sidebar .nav a:last-child {
+//     display: none;
+// }
+.nested-nav-container button.nested-item-toggler {
+    margin: 0 !important;
 }
+.nested-nav-items.collapse-ddn a:hover {
+    text-decoration: none;
+    color: #2da5f3;
+    background-color:transparent !important;
+}
+
 
 .sidebar .logout-btn img {
     width: 18px;
