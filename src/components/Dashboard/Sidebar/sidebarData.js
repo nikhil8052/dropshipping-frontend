@@ -3,6 +3,7 @@ import dashboardLight from '@icons/home-white.svg';
 import coaches from '@icons/coaches.svg';
 import student from '@icons/student.svg';
 import courses from '@icons/courses.svg';
+import categories from '@icons/categories.svg';
 import events from '@icons/events.svg';
 import payment from '@icons/currency_exchange.svg';
 import settings from '@icons/settings.svg';
@@ -99,10 +100,48 @@ export const adminSidebarItems = [
     {
         id: 4,
         name: 'Courses',
-        iconLight: courses, // Replace with,
+        iconLight: courses,
         linkTo: '/admin/courses',
-        pathCombinations: ['/admin/courses', '/admin/courses/new', '/admin/courses/edit', '/admin/courses/details']
+        pathCombinations: [
+            '/admin/courses',
+            '/admin/courses/new',
+            '/admin/courses/edit',
+            '/admin/courses/details',
+            '/admin/categories',
+            '/admin/categories/new',
+            '/admin/categories/edit'
+        ],
+        child: [  
+            {
+                id: '4-1',
+                name: 'All Courses',
+                iconLight: courses,
+                linkTo: '/admin/courses'
+            },
+            {
+                id: '4-2',
+                name: 'Categories',
+                iconLight: categories, // Replace with,
+                linkTo: '/admin/categories'
+            }
+        ]
     },
+    
+    // {
+    //     id: 4,
+    //     name: 'Courses',
+    //     iconLight: courses, // Replace with,
+    //     linkTo: '/admin/courses',
+    //     pathCombinations: ['/admin/courses', '/admin/courses/new', '/admin/courses/edit', '/admin/courses/details']
+    // },
+    // {
+    //     id: 9,
+    //     name: 'Courses Categories',
+    //     iconLight: categories, // Replace with,
+    //     linkTo: '/admin/categories',
+    //     pathCombinations: ['/admin/categories', '/admin/categories/new', '/admin/categories/edit']
+
+    // },
     {
         id: 5,
         name: 'Events',

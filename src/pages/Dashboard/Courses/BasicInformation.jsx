@@ -1,6 +1,6 @@
 import { Form, Formik, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
-import { Button, Row, Col } from 'react-bootstrap';
+import { Button, Row, Col, Modal } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import axiosWrapper from '../../../utils/api';
@@ -15,11 +15,7 @@ import ConfirmationBox from '@components/ConfirmationBox/ConfirmationBox';
 import 'react-tooltip/dist/react-tooltip.css'
 import { Tooltip } from 'react-tooltip'
 
-
-
-// const BasicInformation = ({ initialData, setStepComplete, createOrUpdateCourse, resetStep }) => {
-    const BasicInformation = ({ initialData, setStepComplete, createOrUpdateCourse, resetStep, onDelete,...rest }) => {
-
+const BasicInformation = ({ initialData, setStepComplete, createOrUpdateCourse, resetStep, onDelete,...rest }) => {
     const { userInfo, userToken } = useSelector((state) => state?.auth);
     const role = userInfo?.role?.toLowerCase();
     const [categories, setCategories] = useState([]);
@@ -29,6 +25,11 @@ import { Tooltip } from 'react-tooltip'
 
     const [showDeleteModal, setShowDeleteModal] = useState(false);
     const [loadingCRUD, setLoadingCRUD] = useState(false);
+    
+    // New state for category creation modal
+    const [showCategoryModal, setShowCategoryModal] = useState(false);
+    const [newCategoryName, setNewCategoryName] = useState('');
+    const [isCreatingCategory, setIsCreatingCategory] = useState(false);
 
     const schema = Yup.object({
         title: Yup.string().required('Please enter the course title'),
@@ -54,17 +55,15 @@ import { Tooltip } from 'react-tooltip'
         }
     };
 
-
     const handleDeleteClick = (e) => {
         e.stopPropagation(); 
         setShowDeleteModal(true);
     };
-    // Handler to close the delete confirmation modal
+
     const handleCloseDeleteModal = () => {
         setShowDeleteModal(false);
     };
 
-    // Handler to confirm deletion
     const handleDeleteSubmit = async () => {
         setLoadingCRUD(true);
         try {
@@ -78,8 +77,8 @@ import { Tooltip } from 'react-tooltip'
             setLoadingCRUD(false);
             setShowDeleteModal(false);
         }
-       
     };
+
     useEffect(() => {
         if (initialData?.category) {
             setCategories((prevCategories) => {
@@ -128,7 +127,7 @@ import { Tooltip } from 'react-tooltip'
             // Format the categories for react-select
             const mappedCategories = filteredCategories.map((category) => ({
                 label: category.name,
-                value: category._id // Assuming _id is the unique identifier for categories
+                value: category._id
             }));
 
             setCategories((prevCategories) => {
@@ -148,44 +147,48 @@ import { Tooltip } from 'react-tooltip'
         }
     };
 
-    const createCategory = async (newCategoryName) => {
+    const createCategory = async (categoryName) => {
         try {
             const response = await axiosWrapper(
                 'POST',
                 `${API_URL.CREATE_CATEGORY}`,
-                { name: newCategoryName, createdBy: userInfo?._id },
+                { name: categoryName, createdBy: userInfo?._id },
                 userToken
             );
 
-            const createdCategory = response?.data; // Assuming API returns the created category
-
-            const newCategoryOption = {
+            const createdCategory = response?.data;
+            return {
                 label: createdCategory.name,
                 value: createdCategory._id
             };
-
-            // Update the category list with the new category without duplicates
-            setCategories((prevCategories) => {
-                return [...prevCategories, newCategoryOption];
-            });
-
-            return newCategoryOption;
         } catch (error) {
             return null;
         }
     };
 
-    const handleCreateCategory = async (inputValue, setFieldValue, currentValues) => {
-        const newCategory = await createCategory(inputValue);
-        if (newCategory) {
-            const newSelectedValues = [...(currentValues || []), newCategory];
-            setFieldValue('category', newSelectedValues);
+    const handleAddNewCategory = async () => {
+        if (!newCategoryName.trim()) return;
+        
+        setIsCreatingCategory(true);
+        try {
+            const newCategory = await createCategory(newCategoryName);
+            if (newCategory) {
+                setCategories(prev => [...prev, newCategory]);
+                setShowCategoryModal(false);
+                setNewCategoryName('');
+            }
+        } catch (error) {
+            console.error('Error creating category:', error);
+        } finally {
+            setIsCreatingCategory(false);
         }
-
-        return newCategory;
     };
 
-    // Delete Course Function 
+    const noOptionsMessage = ({ inputValue }) => {
+        return inputValue ? 'No categories found' : 'Type to search categories';
+    };
+
+
     const deleteCourse = async () => {
         try{
             if( currentCourse ){
@@ -268,20 +271,32 @@ import { Tooltip } from 'react-tooltip'
 
                                     <Row>
                                         <Col md={12} xs={12}>
+                                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                                                <label style={{ marginBottom: '5px', fontWeight: '500' }}>Course Category</label>
+                                                <Button 
+                                                    variant="text-dark" 
+                                                    size="sm" 
+                                                    style={{ padding: 0, fontSize: '0.875rem' }}
+                                                    onClick={() => setShowCategoryModal(true)}
+                                                >
+                                                    + New Category
+                                                </Button>
+                                            </div>
+
                                             <Input
                                                 name="category"
-                                                label="Course Category"
                                                 component={Input}
                                                 type="asyncSelect"
                                                 loadOptions={loadCategories}
                                                 placeholder="Select a category ..."
                                                 options={categories}
                                                 isMulti={true}
-                                                onCreateOption={(inputValue) => {
-                                                    handleCreateCategory(inputValue, setFieldValue, values.category);
-                                                }}
+                                                noOptionsMessage={noOptionsMessage}
+                                                formatCreateLabel={(inputValue) => `No categories found`} 
+                                                isValidNewOption={() => false}
                                             />
                                         </Col>
+
                                     </Row>
 
                                     <Row>
@@ -306,8 +321,9 @@ import { Tooltip } from 'react-tooltip'
                         </Formik>
                     </div>
                 </div>
-                
             )}
+            
+            {/* Delete Confirmation Modal */}
             {showDeleteModal && (
                 <ConfirmationBox
                     show={showDeleteModal}
@@ -316,13 +332,54 @@ import { Tooltip } from 'react-tooltip'
                     title="Delete Course"
                     body="Are you sure you want to delete this course? Data associated with this course will be lost."
                     loading={loadingCRUD}
-                    customFooterClass="custom-footer-class" // Optional: adjust based on your styling
-                    nonActiveBtn="cancel-button" // Optional: adjust based on your styling
-                    activeBtn="delete-button" // Optional: adjust based on your styling
-                    cancelButtonTitle="No" // Optional: customize button text
-                    activeBtnTitle="Delete" // Optional: customize button text
+                    customFooterClass="custom-footer-class"
+                    nonActiveBtn="cancel-button"
+                    activeBtn="delete-button"
+                    cancelButtonTitle="No"
+                    activeBtnTitle="Delete"
                 />
             )}
+            
+            {/* Add New Category Modal */}
+            <Modal 
+                show={showCategoryModal} 
+                onHide={() => setShowCategoryModal(false)} 
+                centered
+                >
+                    <Modal.Header closeButton>
+                        <Modal.Title>Add New Category</Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body>
+                        <div className="form-group">
+                            <label>Category Name</label>
+                            <input
+                                type="text"
+                                className="field-control my-3 white-important-bg"
+                                value={newCategoryName}
+                                onChange={(e) => setNewCategoryName(e.target.value)}
+                                placeholder="Enter category name"
+                            />
+                        </div>
+                    </Modal.Body>
+                    <Modal.Footer>
+                        <Button 
+                            className="text-black" 
+                            onClick={() => setShowCategoryModal(false)}
+                        >
+                            Cancel
+                        </Button>
+
+                        <Button 
+                            className="submit-btn" 
+                            onClick={handleAddNewCategory}
+                            disabled={!newCategoryName.trim() || isCreatingCategory}
+                        >
+                            {isCreatingCategory ? 'Creating...' : 'Create Category'}
+                        </Button>
+                    </Modal.Footer>
+            </Modal>
+
+            
             <Tooltip id="my-tooltip2" />
         </>
     );

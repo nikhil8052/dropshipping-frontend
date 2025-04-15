@@ -9,6 +9,7 @@ const NewStudent = lazy(() => import('@pages/Dashboard/Students/NewStudent/NewSt
 const Students = lazy(() => import('@pages/Dashboard/Students/Students'));
 const EnrolledCourseDetail = lazy(() => import('@pages/Dashboard/Courses/EnrolledCourseDetail'));
 const Courses = lazy(() => import('@pages/Dashboard/Courses/Courses'));
+const Categories = lazy(() => import('@pages/Dashboard/Categories/Categories'));
 const Events = lazy(() => import('@pages/Dashboard/Events/Events'));
 const EventsListing = lazy(() => import('@pages/Dashboard/Events/EventsListing/EventsListing'));
 const EventPage = lazy(() => import('@pages/Dashboard/Events/EventPage/EventPage'));
@@ -20,6 +21,7 @@ const VisualizeCSV = lazy(() => import('@pages/Dashboard/VisualizeCsv/VisualizeC
 const Roadmap = lazy(() => import('@pages/Dashboard/Roadmap/Roadmap'));
 const Settings = lazy(() => import('@pages/Dashboard/Settings/Settings'));
 const NewCourse = lazy(() => import('@pages/Dashboard/Courses/AddNewCourse'));
+const NewCategory = lazy(() => import('@pages/Dashboard/Categories/AddNewCategory'));
 const CourseDetail = lazy(() => import('@pages/Dashboard/Courses/CourseDetail'));
 const AllStudents = lazy(() => import('@pages/Dashboard/Courses/AllStudents'));
 const ViewProgress = lazy(() => import('@pages/Dashboard/Courses/ViewProgress'));
@@ -73,6 +75,30 @@ export const adminRoutes = [
         exact: true,
         name: 'Students',
         Component: NewStudent,
+        access: 'ADMIN'
+    },
+
+// FOR CATEGORY Categories
+
+    {
+        path: 'categories',
+        exact: true,
+        name: 'Categories',
+        Component: Categories,
+        access: 'ADMIN'
+    },
+    {
+        path: 'categories/new',
+        exact: true,
+        name: 'Categories',
+        Component: NewCategory,
+        access: 'ADMIN'
+    },
+    {
+        path: 'categories/edit',
+        exact: true,
+        name: 'Categories',
+        Component: NewCategory,
         access: 'ADMIN'
     },
     {

@@ -54,11 +54,11 @@ const SidebarItemCollapse = ({ item, selectedItemId, handleSideBarClick }) => {
                 {item.child.map((childItem) => (
                     <Link
                         key={childItem.id}
-                        className={childItem.id === selectedItemId ? 'active-item-nested' : ''}
+                        className={childItem.id === selectedItemId ? 'active-item-nested ' : ''}
                         to={childItem.linkTo}
                         onClick={changeRoute}
                     >
-                        <img src={childItem.iconLight} className="side-nav-icon" alt="nav-icon" />
+                        {/* <img src={childItem.iconLight} className="side-nav-icon" alt="nav-icon" /> */}
                         {childItem.name}
                     </Link>
                 ))}
