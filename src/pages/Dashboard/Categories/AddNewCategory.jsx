@@ -84,9 +84,9 @@ const NewCategory = () => {
             const response = await axiosWrapper(method, url, payload, token);
             
             if (response?.data) {
-                toast.success(categoryId ? 'Category updated!' : 'Category created!');
+                // toast.success(categoryId ? 'Category updated!' : 'Category created!');
+                navigate(`/${role}/category`);
                 resetForm();
-                navigate(`/${role}/categories`);
                 
                 if (!categoryId) {
                     return {
