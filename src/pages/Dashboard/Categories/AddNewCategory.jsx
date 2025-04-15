@@ -40,12 +40,12 @@ const NewCategory = () => {
             setLoading(true);
             const response = await axiosWrapper('GET', API_URL.GET_CATEGORY.replace(':id', id), {}, token);
             const category = response.data;
-            const parser = new DOMParser();
-            const htmlDoc = parser.parseFromString(category.description, 'text/html');
-            const description = htmlDoc.body.textContent;
+            // const parser = new DOMParser();
+            // const htmlDoc = parser.parseFromString(category.description, 'text/html');
+            // const description = htmlDoc.body.textContent;
             setCategoryData({
                 name: category.name,
-                description: description
+                // description: description
             });
         } catch (error) {
             console.error('Error fetching category:', error);
@@ -59,9 +59,9 @@ const NewCategory = () => {
             .required('Category name is required')
             .trim('Name cannot include leading or trailing spaces')
             .strict(true),
-        description: Yup.string()
-            .trim('Description cannot include leading or trailing spaces')
-            .strict(true)
+        // description: Yup.string()
+        //     .trim('Description cannot include leading or trailing spaces')
+        //     .strict(true)
     });
 
     const handleFormSubmit = async (values, { resetForm, setSubmitting }) => {
@@ -71,7 +71,7 @@ const NewCategory = () => {
             
             const payload = {
                 name: values.name,
-                description: values.description,
+                // description: values.description,
                 createdBy: userInfo?._id
             };
 
@@ -107,7 +107,7 @@ const NewCategory = () => {
     return (
         <div className="new-coach-page-wrapper">
             <div className="title-top">
-                <span onClick={() => navigate(`/${role}/categories`)} style={{ cursor: 'pointer' }}>
+                <span onClick={() => navigate(`/${role}/category`)} style={{ cursor: 'pointer' }}>
                     Categories <img src={CaretRight} alt=">" />
                 </span>{' '}
                 {categoryId ? 'Edit Category' : 'Add New Category'}
@@ -136,7 +136,7 @@ const NewCategory = () => {
                                         <ErrorMessage name="name" component="div" className="error" />
                                     </Col>
                                 </Row>
-                                <Row>
+                                {/* <Row>
                                     <Col md={12}>
                                         <Input
                                             className="field-quill-control"
@@ -150,13 +150,13 @@ const NewCategory = () => {
                                             formats={FORMATS}
                                         />
                                     </Col>
-                                </Row>
+                                </Row> */}
                                 <Row>
                                     <Col>
                                         <div className="mt-3 d-flex justify-content-end gap-3">
                                             <Button
                                                 type="button"
-                                                onClick={() => navigate(`/${role}/categories`)}
+                                                onClick={() => navigate(`/${role}/category`)}
                                                 className="cancel-btn"
                                                 disabled={isSubmitting}
                                             >
