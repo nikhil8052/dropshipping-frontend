@@ -435,3 +435,215 @@ span.slect_span.selected {
 .main-Category.active .down-icon {
     rotate: 177deg;
 }
+
+// NT 17aprl 25
+
+.thumbnail-block {
+    background-color: #FFFFFF;
+    margin-top: 20px;
+    padding: 7px 10px;
+
+    .upload-course-form {
+        margin: 0;
+
+        .image-renderer {
+            display: block;
+            width: auto;
+            padding: 7px 10px;
+            border: 0;
+
+            span {
+                display: block;
+                font-size: 14px;
+                font-weight: 400;
+                color: #1D2026;
+                margin-bottom: 10px;
+            }
+
+            >img {
+                background-color: #F5F7FA;
+                padding: 10px;
+                border-radius: 4px;
+            }
+        }
+    }
+
+    label {
+        font-size: 14px;
+        font-weight: 400;
+    }
+
+    .image-preview {
+        padding-top: 0;
+
+        .image-preview-text {
+            max-width: 270px;
+        }
+
+        p {
+            color: #6E7485;
+            font-weight: 400;
+            font-size: 12px;
+        }
+
+        strong {
+            color: #1D2026;
+        }
+
+        button {
+            border-radius: 4px !important;
+            padding: 8px 17px !important;
+            font-size: 11px !important;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+    }
+}
+
+
+.cancel-btn:hover,
+.submit-btn {
+    background: linear-gradient(181.32deg, #00c7cc 1.14%, #009CD8 98.89%);
+    border-radius: 4px;
+    border: 0.8px solid #E9EAF0;
+}
+
+.submit-btn:hover {
+    background: #fff;
+    color: #000;
+    border: 0.8px solid #E9EAF0 !important
+}
+
+.cancel-btn {
+    border: 0.8px solid #E9EAF0 !important;
+    color: #6E7485 !important;
+    border-radius: 4px !important;
+}
+
+.cancel-btn:hover {
+    color: #fff !important;
+}
+
+.publish-popup .modal-content {
+    padding: 56px;
+    border-radius: 20px;
+
+    h5 {
+        font-weight: 600;
+        font-size: 29px;
+        line-height: 1.2;
+        text-align: center;
+    }
+
+    .modal-header {
+        padding: 0;
+        border: 0;
+        justify-content: center;
+    }
+
+    .modal-footer {
+        justify-content: center;
+        border: 0;
+        padding-bottom: 0;
+    }
+}
+
+.modal-backdrop.show {
+    opacity: 0 !important;
+    display: none;
+}
+
+.publish-popup::after {
+    position: fixed;
+    content: "";
+    z-index: -1;
+    height: 100vh;
+    width: 100%;
+    background: #80808030;
+    top: 0;
+    left: 0;
+}
+
+.subhead {
+    font-weight: 600;
+    font-size: 14px;
+    color: #1D2026;
+}
+
+.course-left-top {
+    justify-content: space-between;
+    display: flex;
+    align-items: center;
+}
+
+.course-left .dropdown-toggle {
+    background-color: transparent !important;
+    border: 0;
+    padding: 0;
+}
+
+.course-left .dropdown-toggle::after {
+    display: none;
+}
+
+.course-left .toggle-icon {
+    color: #8C94A3;
+    width: 13px;
+}
+
+
+.course-left .dropdown-menu {
+    border: 1px solid #E9EAF0;
+    box-shadow: 0px 0px 14.86px 0px #0000000F;
+}
+
+.course-left .dropdown-item {
+    color: #6E7485;
+    padding: 8px 20px;
+}
+
+.folder-detail {
+    margin-top: 30px;
+
+    .drop-box {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    h3 {
+        font-weight: 600;
+        font-size: 12px;
+        line-height: 1.2;
+        color: #1D2026;
+    }
+}
+
+.folder-dropdown img {
+    transition: transform 0.3s ease;
+    transform: rotate(180deg);
+  }
+  
+  .folder-dropdown.rotated img {
+    transform: none;
+  }
+  
+  .detail-box{
+    margin-top: 10px;
+    li{
+        list-style: none;
+     a {
+    font-weight: 500;
+    font-size: 11px;
+    text-transform: capitalize;
+    color: #019ED8;
+    background-color: #CCECF7;
+    width: 100%;
+    display: inline-block;
+    padding: 13px 16px;
+    border-radius: 4px;
+    margin-bottom: 8px;
+}
+    }
+  }

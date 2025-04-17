@@ -1,11 +1,15 @@
 import { useEffect, useState } from 'react';
-import PublishCourses from './PublishCourses';
-import BasicInformation from './BasicInformation';
-import UploadFiles from './UploadFiles';
-import ClipboardText from '@icons/ClipboardText.svg';
-import Stack from '@icons/Stack.svg';
-import taskAlt from '@icons/task_alt.svg';
-import CaretRight from '@icons/CaretRight.svg';
+import CourseAccessType from './CourseAccessType';
+import CourseCategory from './CourseCategory';
+import UploadThumbnail from './CourseThumbnail';
+import AddLecture from './AddLecture';
+// import PublishCourses from './PublishCourses';
+// import BasicInformation from './BasicInformation';
+// import UploadFiles from './UploadFiles';
+// import ClipboardText from '@icons/ClipboardText.svg';
+// import Stack from '@icons/Stack.svg';
+// import taskAlt from '@icons/task_alt.svg';
+// import CaretRight from '@icons/CaretRight.svg';
 import Tab from 'react-bootstrap/Tab';
 import Tabs from 'react-bootstrap/Tabs';
 import { useLocation, useNavigate } from 'react-router-dom';
@@ -16,13 +20,8 @@ import axiosWrapper from '../../../utils/api';
 import * as types from '../../../redux/actions/actionTypes';
 import { API_URL } from '../../../utils/apiUrl';
 import { textParser } from '../../../utils/utils';
-import Box from '@mui/material/Box';
+// import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
-
-import CourseAccessType from './CourseAccessType';
-import CourseCategory from './CourseCategory';
-
-// import CourseThumbnail from './CourseThumbnail'
 
 const AddNewCourse = () => {
     const location = useLocation();
@@ -222,52 +221,70 @@ const AddNewCourse = () => {
     return (
         <>
             <div className="addcourse-section">
-                <div className="title-top">
-                    <span onClick={() => navigate(`/${role}/courses-supabase`)} style={{ cursor: 'pointer' }}>
-                        Add Course
-                        {/* <img src={CaretRight} alt=">" />{' '} */}
-                    </span>
-                    {/* {editMode ? 'Edit New Course' : 'Add New Course'} */}
+                <Tabs id="add-course-tabs"
+                    activeKey={activeKey}
+                    onSelect={(k) => handleTabChange(k)}>
+                    <Tab eventKey="basic-information" >
+                        <div className="title-top">
+                            <span onClick={() => navigate(`/${role}/courses-supabase`)} style={{ cursor: 'pointer' }}>
+                                Add Course
+                                {/* <img src={CaretRight} alt=">" />{' '} */}
+                            </span>
+                            {/* {editMode ? 'Edit New Course' : 'Add New Course'} */}
 
-                    <div className="toggle-wrapper">
-                        <span className="toggle-label">{isPublished ? 'Published' : 'Unpublished'}</span>
-                        <div className="switch">
-                            <input
-                                type="checkbox"
-                                id="switch"
-                                checked={isPublished}
-                                onChange={toggleSwitch}
-                            />
-                            <label htmlFor="switch"></label>
+                            <div className="toggle-wrapper">
+                                <span className="toggle-label">{isPublished ? 'Published' : 'Unpublished'}</span>
+                                <div className="switch">
+                                    <input
+                                        type="checkbox"
+                                        id="switch"
+                                        checked={isPublished}
+                                        onChange={toggleSwitch}
+                                    />
+                                    <label htmlFor="switch"></label>
+                                </div>
+                            </div>
+
+
+
                         </div>
-                    </div>
+                        <div className='Course-form'>
+                            <div className='form-group'>
+                                <TextField id="Title-basic" label="Title" variant="outlined" />
+                            </div>
+                            <div className='form-group'>
+                                <TextField id="SubTitle-basic" label="Subtitle" variant="outlined" />
+                            </div>
+                            <div className='form-group'>
+                                <TextField
+                                    id="Description-basic"
+                                    label="Course Description"
+                                    variant="outlined"
+                                    multiline
+                                    rows={7}
+                                />
+                            </div>
 
-
-
-                </div>
-
-                <div className='Course-form'>
-                    <div className='form-group'>
-                        <TextField id="Title-basic" label="Title" variant="outlined" />
-                    </div>
-                    <div className='form-group'>
-                        <TextField id="SubTitle-basic" label="Subtitle" variant="outlined" />   
-                    </div>
-                    <div className='form-group'>
-                        <TextField
-                            id="Description-basic"
-                            label="Course Description"
-                            variant="outlined"
-                            multiline
-                            rows={7}
+                        </div>
+                        <CourseAccessType />
+                        <CourseCategory />
+                        <UploadThumbnail
+                            setStepComplete={completeStep}
+                            resetStep={resetStep}
+                            initialData={courseData}
+                            onNext={() => handleTabChange('upload-files')}
+                            updateCourseData={updateCourseData}
                         />
-                    </div>
+                    </Tab>
+                    <Tab eventKey="upload-files" >
+                        <AddLecture setStepComplete={completeStep}
+                        onBack={() => handleTabChange('basic-information')}
+                        updateCourseData={updateCourseData}
+                        initialData={courseData}/>
 
-                </div>
+                    </Tab>
 
-                <CourseAccessType />
-                <CourseCategory />
-                {/* <CourseThumbnail /> */}
+                </Tabs>
             </div>
         </>
     );

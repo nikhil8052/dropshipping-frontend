@@ -1,133 +1,286 @@
-import React, { useState } from 'react';
-import { Button, Row, Col, Form } from 'react-bootstrap';
-import { ErrorMessage } from 'formik';
-import { ReactComponent as CrossIcon } from '../../assets/icons/cross.svg'; // Adjust the path to your actual file
-import { ReactComponent as UploadIcon } from '../../assets/icons/upload-simple.svg'; // Adjust the path to your actual file
-import Loading from '../../components/Loading'; // Adjust the path to your actual component
+import { useRef, useState } from 'react';
+import '../../../styles/Courses.scss';
+import { Button, Col, Row } from 'react-bootstrap';
+import courseThumbnail from '../../../assets/icons/Thumbnail.svg';
+import { Formik, Form, Field, ErrorMessage } from 'formik';
+import 'react-quill/dist/quill.snow.css';
+import * as Yup from 'yup';
+import toast from 'react-hot-toast';
+import { getFileObjectFromBlobUrl } from '../../../utils/utils';
+import UploadSimple from '@icons/UploadSimple.svg';
+import Loading from '@components/Loading/Loading';
+import ImageCropper from '../../../components/ImageMask/ImageCropper';
+import axiosWrapper from '../../../utils/api';
+import { API_URL } from '../../../utils/apiUrl';
+import * as types from '../../../redux/actions/actionTypes';
+import { useDispatch, useSelector } from 'react-redux';
+import cross from '@icons/red-cross.svg';
+import 'bootstrap/dist/js/bootstrap.bundle.min';
 
-const CourseThumbnail = ({ isSubmitting, handleSubmit, onBack, imageSrc, bannerImageSrc, cropping, bannerCropping, handleCropComplete, handleBannerCropComplete, resetCropper }) => {
+
+const UploadThumbnail = ({ onNext, updateCourseData, onBack, initialData, setStepComplete, resetStep }) => {
+  const inputRef = useRef();
+  const dispatch = useDispatch();
+  const [loading, setLoading] = useState(false);
+  const currentCourse = useSelector((state) => state?.root?.currentCourse);
+  const token = useSelector((state) => state?.auth?.userToken);
+  const [loadingThum, setLoadingThumb] = useState(false);
+  const [bannerCropping, setBannerCropping] = useState(false);
+  const [bannerImageSrc, setBannerImageSrc] = useState(null);
+
+  const [cropping, setCropping] = useState(false);
+  const [imageSrc, setImageSrc] = useState(null);
+  const { thumbnail } = initialData || {};
+
+  const handleFileChange = async (e) => {
+    const file = e.target.files[0];
+    if (!file || !file.type.startsWith('image/')) {
+      // Display an error or handle the invalid file selection
+      toast.error('Invalid file selected. Please choose an image file.');
+      return;
+    }
+
+    const image = URL.createObjectURL(file);
+    setImageSrc(image);
+    setCropping(true);
+  };
+
+  const handleCropComplete = async (croppedImage) => {
+    setLoadingThumb(true);
+    const file = await getFileObjectFromBlobUrl(croppedImage, 'courseThumbnail.jpeg');
+    const formData = new FormData();
+    formData.append('files', file);
+    formData.append('name', file.name);
+
+    const mediaFile = await axiosWrapper('POST', API_URL.UPLOAD_MEDIA, formData, '', true);
+    updateCourseData({
+      thumbnail: mediaFile.data[0].path
+    });
+    setCropping(false);
+    setLoadingThumb(false);
+  };
+
+  const handleUploadFilesSubmit = async (values, { resetForm, setSubmitting }) => {
+    setSubmitting(true);
+    const formData = { ...values };
+    if (currentCourse) {
+      await axiosWrapper('PUT', `${API_URL.UPDATE_COURSE.replace(':id', currentCourse)}`, formData, token);
+      // Handle next
+      dispatch({ type: types.ALL_RECORDS, data: { keyOfData: 'currentCourseUpdate', data: true } });
+      setStepComplete('step2');
+      setSubmitting(false);
+      setLoading(false);
+      onNext();
+      resetForm();
+    }
+  };
+  const handleSubmit = async (values, { resetForm, setSubmitting }) => {
+    try {
+        setLoading(true);
+        // Create the course
+        const formData = { ...values, category: values.category.map((cat) => cat.value) };
+        await createOrUpdateCourse(formData);
+
+        setStepComplete('step1');
+        setSubmitting(false);
+        setLoading(false);
+        resetForm();
+    } catch (error) {
+        setSubmitting(false);
+        setLoading(false);
+        resetStep();
+    }
+};
+
+  const resetCropper = () => {
+    setCropping(false);
+    updateCourseData({
+      thumbnail: ''
+    });
+    setImageSrc(null);
+    inputRef.current.value = null;
+  };
+
   return (
     <>
-      <div className="course-thumbnail">
-        <Row>
-          <Col>
-            <Form onSubmit={handleSubmit}>
-              <Row>
-                <Col>
-                  <div className="upload-thumbnail-section">
-                    <Button
-                      type="submit"
-                      className="upload-btn"
-                      disabled={isSubmitting}
-                      onClick={(e) => {
-                        e.preventDefault();
-                        document.getElementById('thumbnailInput').click(); // Trigger file input click
-                      }}
-                    >
-                      Upload <UploadIcon className="mb-1" />
-                    </Button>
-                    <input
-                      type="file"
-                      id="thumbnailInput"
-                      style={{ display: 'none' }}
-                      accept="image/*"
-                    />
-                    <ErrorMessage name="thumbnail" component="div" className="error" />
+    <>
+  {/* Confirmation Modal */}
+  <div
+    className="modal fade publish-popup"
+    id="confirmModal"
+    tabIndex="-1"
+    aria-labelledby="confirmModalLabel"
+    aria-hidden="true"
+  >
+    <div className="modal-dialog modal-dialog-centered">
+      <div className="modal-content">
+        <div className="modal-header">
+          <h5 className="modal-title" id="confirmModalLabel">Publish your course!</h5>
+        </div>
+        <div className="modal-footer">
+          <button type="button" className="btn btn-secondary cancel-btn" data-bs-dismiss="modal">
+            Cancel
+          </button>
+          <button
+  type="button"
+  className="btn btn-primary submit-btn"
+  onClick={() => {
+    onNext();
+  }}
+>
+  Proceed
+</button>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</>
+
+      {loading ? (
+        <Loading />
+      ) : (
+        <div className="upload-form-section thumbnail-block">
+          <div className="upload-course-form">
+            <Formik
+              validationSchema={Yup.object({
+                thumbnail: Yup.string().required('Thumbnail is required'),
+              })}
+              onSubmit={handleUploadFilesSubmit}
+              enableReinitialize
+            >
+              {({ isSubmitting, handleSubmit }) => (
+                <Form onSubmit={handleSubmit}>
+                  <div className="thumbnail">
+                    {thumbnail ? (
+                      <></>
+                    ) : (
+                      <label htmlFor="" >Course Thumbnail</label>
+                    )}
+                    <Field name="thumbnail">
+                      {() => (
+                        <>
+                          <input
+                            ref={inputRef}
+                            accept=".jpg,.jpeg,.png"
+                            type="file"
+                            style={{ display: 'none' }}
+                            onChange={handleFileChange}
+                          />
+                          {loadingThum ? (
+                            <Loading />
+                          ) : thumbnail ? (
+                            <div className="image-renderer">
+                              <span>Course Thumbnail</span>
+                              <img
+                                src={
+                                  typeof thumbnail === 'string'
+                                    ? thumbnail
+                                    : URL.createObjectURL(thumbnail)
+                                }
+                                alt=""
+                                style={{
+                                  borderRadius: '50%',
+                                  objectFit: 'cover',
+                                  width: '200px',
+                                  height: '128px'
+                                }}
+                              />
+
+                              <div
+                                className="align-self-start"
+                                style={{
+                                  marginLeft: 'auto'
+                                }}
+                              >
+                                <img
+                                  src={cross}
+                                  onClick={() => {
+                                    updateCourseData({ thumbnail: null });
+                                    if (inputRef.current) {
+                                      inputRef.current.value = '';
+                                    }
+                                  }}
+                                  className="reset-image"
+                                  alt="reset"
+                                />
+                              </div>
+                            </div>
+                          ) : (
+                            <>
+                              <div className="image-preview">
+                                <img src={courseThumbnail} alt="thumbnail" />
+                                <div className="image-preview-text">
+                                  <div>
+                                    <p>
+                                      Upload your course Thumbnail here. <strong>Important guidelines: </strong> 1200x800 pixels or 12:8 Ratio. Supported format: <strong>.jpg, .jpeg, or .png</strong>
+                                    </p>
+                                  </div>
+
+                                  <Button
+                                    type="submit"
+                                    className="upload-btn"
+                                    disabled={isSubmitting}
+                                    onClick={(e) => {
+                                      e.preventDefault();
+                                      inputRef.current.click();
+                                    }}
+                                  >
+                                    Upload Image{' '}
+                                    <img
+                                      className="mb-1"
+                                      src={UploadSimple}
+                                      alt="Upload Btn"
+                                    />
+                                  </Button>
+                                </div>
+                              </div>
+                              <ErrorMessage
+                                name="thumbnail"
+                                component="div"
+                                className="error"
+                              />
+                            </>
+                          )}
+                        </>
+                      )}
+                    </Field>
                   </div>
-                </Col>
-              </Row>
-
-              <Row>
-                <Col>
-                  <div className="banner-upload-section">
-                    <Button
-                      type="submit"
-                      className="upload-btn"
-                      disabled={isSubmitting}
-                      onClick={(e) => {
-                        e.preventDefault();
-                        document.getElementById('bannerInput').click(); // Trigger banner file input click
-                      }}
-                    >
-                      Upload Banner <UploadIcon className="mb-1" />
-                    </Button>
-                    <input
-                      type="file"
-                      id="bannerInput"
-                      style={{ display: 'none' }}
-                      accept="image/*"
-                    />
-                    <ErrorMessage name="banner" component="div" className="error" />
-                  </div>
-                </Col>
-              </Row>
-
-              <Row>
-                <Col>
-                  <div className="add-lecture-section">
-                    <div className="add-lecture-nav">
-                      <div className="d-flex gap-2">
-                        <CrossIcon className="cursor-pointer" />
-                        <p>Add Lectures</p>
-                      </div>
-                      <div className="d-flex gap-2">
-                        <Button className="add-lecture-btn">+ Add Lecture</Button>
-                      </div>
-                    </div>
-
-                    {/* Add your logic for displaying the list of lectures */}
-                  </div>
-                </Col>
-              </Row>
-
-              <Row>
-                <Col>
-                  <div className="action-buttons">
+                  <div className="mt-5 d-flex gap-3 flex-wrap tab-buttons">
                     <Button
                       type="button"
                       className="cancel-btn"
                       disabled={isSubmitting}
                       onClick={onBack}
                     >
-                      Back
+                      Cancel
                     </Button>
                     <Button
-                      type="submit"
-                      className="submit-btn"
-                      disabled={isSubmitting}
-                    >
-                      Save & Next
-                    </Button>
+  type="button"
+  className="submit-btn"
+  disabled={isSubmitting}
+  data-bs-toggle="modal"
+  data-bs-target="#confirmModal"
+>
+  Save & Next
+</Button>
+
                   </div>
-                </Col>
-              </Row>
-            </Form>
-          </Col>
-        </Row>
-
-        {/* Conditional rendering for cropping */}
-        {cropping && (
-          <Loading
-            imageSrc={imageSrc}
-            onCropComplete={handleCropComplete}
-            onCancel={resetCropper}
-          />
-        )}
-
-        {bannerCropping && (
-          <Loading
-            imageSrc={bannerImageSrc}
-            onCropComplete={handleBannerCropComplete}
-            onCancel={() => {
-              setBannerCropping(false);
-              setBannerImageSrc(null);
-            }}
-            aspect={16 / 10}
-          />
-        )}
-      </div>
+                </Form>
+              )}
+            </Formik>
+            {cropping && (
+              <ImageCropper
+                imageSrc={imageSrc}
+                onCropComplete={handleCropComplete}
+                onCancel={resetCropper}
+              />
+            )}
+          </div>
+        </div>
+      )}
     </>
   );
 };
 
-export default CourseThumbnail;
+export default UploadThumbnail;
