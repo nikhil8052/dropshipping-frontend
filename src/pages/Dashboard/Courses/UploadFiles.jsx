@@ -289,7 +289,7 @@ const UploadFiles = ({ onNext, onBack, initialData, setStepComplete, updateCours
             ) : (
                 <div className="upload-form-section">
                     <div className="section-title">
-                        <p>Upload Files</p>
+                        <p>Upload Files12</p>
                     </div>
                     <div className="upload-course-form">
                         <Formik

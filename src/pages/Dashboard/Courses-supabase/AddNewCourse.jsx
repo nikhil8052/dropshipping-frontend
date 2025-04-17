@@ -10,11 +10,19 @@ import Tab from 'react-bootstrap/Tab';
 import Tabs from 'react-bootstrap/Tabs';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import '../../../styles/Courses.scss';
+// import '../../../styles/Courses.scss';
+import './CourseNew.scss';
 import axiosWrapper from '../../../utils/api';
 import * as types from '../../../redux/actions/actionTypes';
 import { API_URL } from '../../../utils/apiUrl';
 import { textParser } from '../../../utils/utils';
+import Box from '@mui/material/Box';
+import TextField from '@mui/material/TextField';
+
+import CourseAccessType from './CourseAccessType';
+import CourseCategory from './CourseCategory';
+
+// import CourseThumbnail from './CourseThumbnail'
 
 const AddNewCourse = () => {
     const location = useLocation();
@@ -30,6 +38,7 @@ const AddNewCourse = () => {
     const currentCourseUpdate = useSelector((state) => state?.root?.currentCourseUpdate);
     const lectureUpdate = useSelector((state) => state?.root?.lectureUpdate);
     const [loading, setLoading] = useState(false);
+    const [isPublished, setIsPublished] = useState(false);
 
     const [courseData, setCourseData] = useState({
         title: '',
@@ -49,7 +58,7 @@ const AddNewCourse = () => {
     });
 
     // //////////////////////////////Handlers////////////////////////
-   
+
     const handleDelete = async (courseId) => {
         setLoading(true);
         try {
@@ -207,99 +216,62 @@ const AddNewCourse = () => {
             getCourseById(courseId);
         }
     }, [courseId]);
-
-    // Steps for creating a new course
-    // 1. Basic Information Module
-    // Create a new course in the db with just title, subtitle, module manger, category
-    // Save the course Id to redux state so we can call it every time during each steps
-    // create a complete state for the course in this module so we can update it every time when course is updated
-    // Handle the Add Lecture step for Both PDF and video upload (We can keep this at the end of the course)
-    // At the end of third step we just publish the new course.
-
-    // Api's call
-    // 1. Create a new course
-    // 2. Update the course
-    // 3. Get Course information By Id
-    // 4. Get All Coaches
-    // 5. Create a new Lecture
-    // 6. Update a lecture (if video then replace it with a new one else if pdf then replace it with a new pdf but first remove it on the DB)
-    // 7. Get Lecture By Id
-    // 8. Delete a lecture Both from Vimeo and DataBase
-    // 9. Create Helpers for Data Mapping of lectures
-    // 10. Publish a New Course Api
-    // 11. Get All Courses of User that created by this user
-    // 12. Use Best practices and move the state in the parent component to handle it properly
-
+    const toggleSwitch = () => {
+        setIsPublished(!isPublished);
+    };
     return (
-        <div className="addcourse-section">
-            <div className="title-top">
-                <span onClick={() => navigate(`/${role}/courses-supabase`)} style={{ cursor: 'pointer' }}>
-                    Courses <img src={CaretRight} alt=">" />{' '}
-                </span>
-                {editMode ? 'Edit New Course' : 'Add New Course'}
-            </div>
-            <Tabs
-                fill
-                activeKey={activeKey}
-                onSelect={(k) => handleTabChange(k)}
-                id="controlled-tab-example"
-                className="mb-3"
-            >
-                <Tab
-                    eventKey="basic-information"
-                    title={
-                        <span className="tab-span">
-                            <img src={Stack} alt="course-icon" /> Basic Information
-                        </span>
-                    }
-                >
-                    <BasicInformation
-                        setStepComplete={completeStep}
-                        resetStep={resetStep}
-                        initialData={courseData}
-                        onNext={() => handleTabChange('upload-files')}
-                        createOrUpdateCourse={createOrUpdateCourse}
-                        updateCourseData={updateCourseData}
-                        onDelete={handleDelete}
-                        {...courseData}
-                        _id={courseId}
+        <>
+            <div className="addcourse-section">
+                <div className="title-top">
+                    <span onClick={() => navigate(`/${role}/courses-supabase`)} style={{ cursor: 'pointer' }}>
+                        Add Course
+                        {/* <img src={CaretRight} alt=">" />{' '} */}
+                    </span>
+                    {/* {editMode ? 'Edit New Course' : 'Add New Course'} */}
 
-                    />
-                </Tab>
-                <Tab
-                    eventKey="upload-files"
-                    title={
-                        <span className="tab-span">
-                            <img src={ClipboardText} alt="course-icon" /> Upload Files
-                        </span>
-                    }
-                >
-                    <UploadFiles
-                        setStepComplete={completeStep}
-                        onNext={() => handleTabChange('publish-course')}
-                        onBack={() => handleTabChange('basic-information')}
-                        updateCourseData={updateCourseData}
-                        initialData={courseData}
-                    />
-                </Tab>
-                <Tab
-                    eventKey="publish-course"
-                    title={
-                        <span className="tab-span">
-                            <img src={taskAlt} alt="course-icon" /> Publish Course
-                        </span>
-                    }
-                >
-                    <PublishCourses
-                        onBack={() => handleTabChange('upload-files')}
-                        initialData={courseData}
-                        setStepComplete={completeStep}
-                        publishCourse={handlePublishCourse}
-                    />
-                </Tab>
-            </Tabs>
-        </div>
+                    <div className="toggle-wrapper">
+                        <span className="toggle-label">{isPublished ? 'Published' : 'Unpublished'}</span>
+                        <div className="switch">
+                            <input
+                                type="checkbox"
+                                id="switch"
+                                checked={isPublished}
+                                onChange={toggleSwitch}
+                            />
+                            <label htmlFor="switch"></label>
+                        </div>
+                    </div>
+
+
+
+                </div>
+
+                <div className='Course-form'>
+                    <div className='form-group'>
+                        <TextField id="Title-basic" label="Title" variant="outlined" />
+                    </div>
+                    <div className='form-group'>
+                        <TextField id="SubTitle-basic" label="Subtitle" variant="outlined" />   
+                    </div>
+                    <div className='form-group'>
+                        <TextField
+                            id="Description-basic"
+                            label="Course Description"
+                            variant="outlined"
+                            multiline
+                            rows={7}
+                        />
+                    </div>
+
+                </div>
+
+                <CourseAccessType />
+                <CourseCategory />
+                {/* <CourseThumbnail /> */}
+            </div>
+        </>
     );
 };
+
 
 export default AddNewCourse;
