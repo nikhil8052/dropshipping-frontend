@@ -69,6 +69,8 @@ const AddNewCourse = () => {
         }
     };
     const handleTabChange = (key) => {
+
+        // console.log( key , " THI IS THEKLEY")
         if (courseId) {
             setActiveKey(key);
         } else {
@@ -77,6 +79,8 @@ const AddNewCourse = () => {
                 (key === 'upload-files' && stepsCompleted.step1) ||
                 (key === 'publish-course' && stepsCompleted.step1 && stepsCompleted.step2)
             ) {
+
+               
                 setActiveKey(key);
             }
         }

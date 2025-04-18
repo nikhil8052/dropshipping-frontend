@@ -511,7 +511,7 @@ span.slect_span.selected {
 
 .submit-btn:hover {
     background: #fff;
-    color: #000;
+    color: #000 !important;
     border: 0.8px solid #E9EAF0 !important
 }
 
@@ -633,7 +633,6 @@ span.slect_span.selected {
     margin-top: 10px;
     li{
         list-style: none;
-     a {
     font-weight: 500;
     font-size: 11px;
     text-transform: capitalize;
@@ -644,6 +643,80 @@ span.slect_span.selected {
     padding: 13px 16px;
     border-radius: 4px;
     margin-bottom: 8px;
-}
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
     }
   }
+
+
+.res {
+    background-color: #fff;
+    margin-top: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+    border-radius: 4px;
+ .dropdown-toggle{
+    background-color: #CCECF7;
+    border: 0;
+    display: flex;
+    align-items: center;
+    color: #019ED8;
+    font-family: Inter;
+    font-weight: 500;
+    font-size: 11px;
+    line-height: 1.2;
+    border-radius: 50px;
+    padding: 12px 20px;
+}
+
+h2.subhead {
+    margin: 0;
+    font-weight: 500;
+}
+}
+
+body:has(.course-detail-tab) {
+    overflow: visible !important;
+    padding: 0 !important;
+}
+
+.res  .add-btn{
+    background-color: #CCECF7;
+    border: 0;
+    display: flex;
+    align-items: center;
+    color: #019ED8;
+    font-family: Inter;
+    font-weight: 500;
+    font-size: 11px;
+    line-height: 1.2;
+    border-radius: 50px;
+    padding: 12px 20px;
+
+}
+
+.course-left .folder-detail .dropdown-menu {
+    border: 1px solid #019ED8;
+    box-shadow: 0px 0px 14.86px 0px #0000000F;
+}
+
+.folder-detail .drop-box .dropdown img {
+    filter: brightness(0) saturate(100%) invert(44%) sepia(90%) saturate(728%) hue-rotate(158deg) brightness(92%) contrast(103%);
+}
+
+.folder-detail .detail-box .drop-box {
+    height: 25px;
+    width: 25px;
+    background-color: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 50%;
+}
+
+.course-left-top img {
+    filter: brightness(0) saturate(100%) invert(72%) sepia(2%) saturate(2588%) hue-rotate(178deg) brightness(84%) contrast(69%);
+}

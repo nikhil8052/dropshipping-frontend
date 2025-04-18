@@ -126,19 +126,23 @@ const RichTextEditor = (props) => {
                             <img src="https://dropship-api.ropstam.dev/uploads/1736169674625-courseThumbnail.jpeg" alt="Resource Image" class="resource-image" />
                             <div class="resource-title">This is the Resource Title</div>
                         </div>
+                        <div class="resource-card mt-3">
+                            <img src="https://dropship-api.ropstam.dev/uploads/1736169674625-courseThumbnail.jpeg" alt="Resource Image" class="resource-image" />
+                            <div class="resource-title">This is the Resource Title</div>
+                        </div>
                     </div>
 
 
                 </div>
             </div>
-            <div className="card mt-4">
+            {/* <div className="card mt-4">
                 <div className="card-body d-flex justify-content-between">
                     <h4>Add Resource </h4>
                     <button type="button" className="btn btn-primary btn-sm fr" id="add-resource-btn">
                         Add
                     </button>
                 </div>
-            </div>
+            </div> */}
         </div>
     );
 };

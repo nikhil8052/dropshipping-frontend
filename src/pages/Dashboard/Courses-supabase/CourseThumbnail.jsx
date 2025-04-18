@@ -76,21 +76,21 @@ const UploadThumbnail = ({ onNext, updateCourseData, onBack, initialData, setSte
   };
   const handleSubmit = async (values, { resetForm, setSubmitting }) => {
     try {
-        setLoading(true);
-        // Create the course
-        const formData = { ...values, category: values.category.map((cat) => cat.value) };
-        await createOrUpdateCourse(formData);
+      setLoading(true);
+      // Create the course
+      const formData = { ...values, category: values.category.map((cat) => cat.value) };
+      await createOrUpdateCourse(formData);
 
-        setStepComplete('step1');
-        setSubmitting(false);
-        setLoading(false);
-        resetForm();
+      setStepComplete('step1');
+      setSubmitting(false);
+      setLoading(false);
+      resetForm();
     } catch (error) {
-        setSubmitting(false);
-        setLoading(false);
-        resetStep();
+      setSubmitting(false);
+      setLoading(false);
+      resetStep();
     }
-};
+  };
 
   const resetCropper = () => {
     setCropping(false);
@@ -103,39 +103,39 @@ const UploadThumbnail = ({ onNext, updateCourseData, onBack, initialData, setSte
 
   return (
     <>
-    <>
-  {/* Confirmation Modal */}
-  <div
-    className="modal fade publish-popup"
-    id="confirmModal"
-    tabIndex="-1"
-    aria-labelledby="confirmModalLabel"
-    aria-hidden="true"
-  >
-    <div className="modal-dialog modal-dialog-centered">
-      <div className="modal-content">
-        <div className="modal-header">
-          <h5 className="modal-title" id="confirmModalLabel">Publish your course!</h5>
-        </div>
-        <div className="modal-footer">
-          <button type="button" className="btn btn-secondary cancel-btn" data-bs-dismiss="modal">
-            Cancel
-          </button>
-          <button
-  type="button"
-  className="btn btn-primary submit-btn"
-  onClick={() => {
-    onNext();
-  }}
->
-  Proceed
-</button>
+      <>
+        {/* Confirmation Modal */}
+        <div
+          className="modal fade publish-popup"
+          id="confirmModal"
+          tabIndex="-1"
+          aria-labelledby="confirmModalLabel"
+          aria-hidden="true"
+        >
+          <div className="modal-dialog modal-dialog-centered">
+            <div className="modal-content">
+              <div className="modal-header">
+                <h5 className="modal-title" id="confirmModalLabel">Publish your course!</h5>
+              </div>
+              <div className="modal-footer">
+                <button type="button" className="btn btn-secondary cancel-btn" data-bs-dismiss="modal">
+                  Cancel
+                </button>
+                <button
+                  type="button"
+                  className="btn btn-primary submit-btn"
+                  onClick={() => {
+                    onNext();
+                  }}
+                >
+                  Proceed
+                </button>
 
+              </div>
+            </div>
+          </div>
         </div>
-      </div>
-    </div>
-  </div>
-</>
+      </>
 
       {loading ? (
         <Loading />
@@ -256,14 +256,14 @@ const UploadThumbnail = ({ onNext, updateCourseData, onBack, initialData, setSte
                       Cancel
                     </Button>
                     <Button
-  type="button"
-  className="submit-btn"
-  disabled={isSubmitting}
-  data-bs-toggle="modal"
-  data-bs-target="#confirmModal"
->
-  Save & Next
-</Button>
+                      type="button"
+                      className="submit-btn"
+                      disabled={isSubmitting}
+                      data-bs-toggle="modal"
+                      data-bs-target="#confirmModal"
+                    >
+                      Save & Next
+                    </Button>
 
                   </div>
                 </Form>
