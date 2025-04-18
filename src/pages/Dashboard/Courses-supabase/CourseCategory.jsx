@@ -6,6 +6,7 @@ import { API_URL } from '../../../utils/apiUrl';
 import { useSelector } from 'react-redux';
 import { faChevronDown } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import SearchIcon from '../../../assets/images/search.png'
 
 
 const CourseCategory = () => {
@@ -94,13 +95,15 @@ const CourseCategory = () => {
               {/* Toggle Area */}
               {showCategoryList && (
                 <>
-                  <input
+                <div className="search-bar">
+                <input
                     type="text"
                     placeholder="Search"
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
                   />
-
+                  <img src={SearchIcon} alt="" />
+                </div>
                   <div>
                     <div className='select-label'>
                       {filteredCategories.map((category) => (

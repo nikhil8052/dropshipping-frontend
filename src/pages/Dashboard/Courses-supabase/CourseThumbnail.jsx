@@ -25,11 +25,9 @@ const UploadThumbnail = ({ onNext, updateCourseData, onBack, initialData, setSte
   const currentCourse = useSelector((state) => state?.root?.currentCourse);
   const token = useSelector((state) => state?.auth?.userToken);
   const [loadingThum, setLoadingThumb] = useState(false);
-  const [bannerCropping, setBannerCropping] = useState(false);
-  const [bannerImageSrc, setBannerImageSrc] = useState(null);
-
   const [cropping, setCropping] = useState(false);
   const [imageSrc, setImageSrc] = useState(null);
+  
   const { thumbnail } = initialData || {};
 
   const handleFileChange = async (e) => {
@@ -100,6 +98,7 @@ const UploadThumbnail = ({ onNext, updateCourseData, onBack, initialData, setSte
     setImageSrc(null);
     inputRef.current.value = null;
   };
+  const [showTranscriptEditor, setShowTranscriptEditor] = useState(false);
 
   return (
     <>

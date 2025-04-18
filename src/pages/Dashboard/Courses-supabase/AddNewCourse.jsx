@@ -38,6 +38,9 @@ const AddNewCourse = () => {
     const lectureUpdate = useSelector((state) => state?.root?.lectureUpdate);
     const [loading, setLoading] = useState(false);
     const [isPublished, setIsPublished] = useState(false);
+    const [title, setTitle] = useState('');
+    const [subtitle, setSubtitle] = useState('');
+    const [description, setDescription] = useState('');
 
     const [courseData, setCourseData] = useState({
         title: '',
@@ -80,7 +83,7 @@ const AddNewCourse = () => {
                 (key === 'publish-course' && stepsCompleted.step1 && stepsCompleted.step2)
             ) {
 
-               
+
                 setActiveKey(key);
             }
         }
@@ -254,10 +257,20 @@ const AddNewCourse = () => {
                         </div>
                         <div className='Course-form'>
                             <div className='form-group'>
-                                <TextField id="Title-basic" label="Title" variant="outlined" />
+                                <TextField id="Title-basic" label="Title" variant="outlined" onChange={(e) => {
+                                    if (e.target.value.length <= 80) setTitle(e.target.value);
+                                }}
+                                    inputProps={{ maxLength: 80 }}
+                                    helperText={`${title.length}/80`}
+                                    fullWidth />
                             </div>
                             <div className='form-group'>
-                                <TextField id="SubTitle-basic" label="Subtitle" variant="outlined" />
+                                <TextField id="SubTitle-basic" label="Subtitle" variant="outlined" onChange={(e) => {
+                                    if (e.target.value.length <= 120) setSubtitle(e.target.value);
+                                }}
+                                    inputProps={{ maxLength: 120 }}
+                                    helperText={`${subtitle.length}/120`}
+                                    fullWidth />
                             </div>
                             <div className='form-group'>
                                 <TextField
@@ -266,6 +279,12 @@ const AddNewCourse = () => {
                                     variant="outlined"
                                     multiline
                                     rows={7}
+                                    onChange={(e) => {
+                                        if (e.target.value.length <= 500) setDescription(e.target.value);
+                                      }}
+                                      inputProps={{ maxLength: 500 }}
+                                      helperText={`${description.length}/500`}
+                                      fullWidth
                                 />
                             </div>
 
@@ -282,9 +301,9 @@ const AddNewCourse = () => {
                     </Tab>
                     <Tab eventKey="upload-files" >
                         <AddLecture setStepComplete={completeStep}
-                        onBack={() => handleTabChange('basic-information')}
-                        updateCourseData={updateCourseData}
-                        initialData={courseData}/>
+                            onBack={() => handleTabChange('basic-information')}
+                            updateCourseData={updateCourseData}
+                            initialData={courseData} />
 
                     </Tab>
 
