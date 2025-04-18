@@ -24,10 +24,10 @@ const CourseCategory = () => {
 
   const getAllCategories = async () => {
     try {
-      const response = await axiosWrapper('GET', `${API_URL.GET_ALL_CATEGORIES}`, {}, userToken);
+      const response = await axiosWrapper('GET', `${API_URL.SUPABASE_GET_ALL_CATEGORIES}`, {}, userToken);
       const mapped = response?.data?.map((cat) => ({
         label: cat.name,
-        value: cat._id,
+        value: cat.id,
       }));
       setAllCategories(mapped);
     } catch (error) {

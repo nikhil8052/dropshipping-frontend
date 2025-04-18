@@ -3,6 +3,8 @@ import CourseAccessType from './CourseAccessType';
 import CourseCategory from './CourseCategory';
 import UploadThumbnail from './CourseThumbnail';
 import AddLecture from './AddLecture';
+import { Button, Col, Row } from 'react-bootstrap';
+
 // import PublishCourses from './PublishCourses';
 // import BasicInformation from './BasicInformation';
 // import UploadFiles from './UploadFiles';
@@ -22,6 +24,9 @@ import { API_URL } from '../../../utils/apiUrl';
 import { textParser } from '../../../utils/utils';
 // import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
+import ConfirmationBox from '../../../components/ConfirmationBox/ConfirmationBox';
+import Loading from '@components/Loading/Loading';
+import FirstBasicInformation from './FirstFormStep';
 
 const AddNewCourse = () => {
     const location = useLocation();
@@ -38,7 +43,8 @@ const AddNewCourse = () => {
     const lectureUpdate = useSelector((state) => state?.root?.lectureUpdate);
     const [loading, setLoading] = useState(false);
     const [isPublished, setIsPublished] = useState(false);
-
+    const [publishCourseModel, setPublishCourseModel] = useState(false);
+    const [loadingCRUD, setLoadingCRUD] = useState(false);
     const [courseData, setCourseData] = useState({
         title: '',
         subtitle: '',
@@ -161,8 +167,10 @@ const AddNewCourse = () => {
     };
 
     const createOrUpdateCourse = async (formData) => {
+        console.log(formData);
+        return false;
         if (currentCourse) {
-            await axiosWrapper('PUT', `${API_URL.UPDATE_COURSE.replace(':id', currentCourse)}`, formData, token);
+            await axiosWrapper('PUT', `${API_URL.SUPABASE_UPDATE_COURSE.replace(':id', currentCourse)}`, formData, token);
 
             getCourseById(currentCourse);
 
@@ -177,7 +185,7 @@ const AddNewCourse = () => {
             //     lectures: course?.data?.lectures
             // });
         } else {
-            const course = await axiosWrapper('POST', API_URL.CREATE_COURSE, formData, token);
+            const course = await axiosWrapper('POST', API_URL.SUPABASE_CREATE_COURSE, formData, token);
 
             dispatch({ type: types.ALL_RECORDS, data: { keyOfData: 'currentCourse', data: course?.data?._id } });
         }
@@ -222,6 +230,33 @@ const AddNewCourse = () => {
     const toggleSwitch = () => {
         setIsPublished(!isPublished);
     };
+
+    // for Confirmation model :
+    const handlePublishCourseModal = () => {
+        setPublishCourseModel(false);
+    };
+    const setShowConfirmModal = (e) => {
+        e.stopPropagation(); 
+        setPublishCourseModel(true);
+    };
+    const handleSubmit = async (values, { resetForm, setSubmitting }) => {
+        try {
+            setLoading(true);
+            // Create the course
+            const formData = { ...values, category: values.category.map((cat) => cat.value) };
+            await createOrUpdateCourse(formData);
+
+            setStepComplete('step1');
+            setSubmitting(false);
+            setLoading(false);
+            resetForm();
+        } catch (error) {
+            setSubmitting(false);
+            setLoading(false);
+            resetStep();
+        }
+    };
+
     return (
         <>
             <div className="addcourse-section">
@@ -255,6 +290,7 @@ const AddNewCourse = () => {
                         <div className='Course-form'>
                             <div className='form-group'>
                                 <TextField id="Title-basic" label="Title" variant="outlined" />
+                                
                             </div>
                             <div className='form-group'>
                                 <TextField id="SubTitle-basic" label="Subtitle" variant="outlined" />
@@ -271,6 +307,8 @@ const AddNewCourse = () => {
 
                         </div>
                         <CourseAccessType />
+                        {/* <FirstBasicInformation /> */}
+                      
                         <CourseCategory />
                         <UploadThumbnail
                             setStepComplete={completeStep}
@@ -279,6 +317,30 @@ const AddNewCourse = () => {
                             onNext={() => handleTabChange('upload-files')}
                             updateCourseData={updateCourseData}
                         />
+                        <div className=''>
+                            <div className="mt-5 d-flex gap-3 flex-wrap tab-buttons">
+                                    <Button
+                                    type="button"
+                                    className="cancel-btn"
+                                    onClick={() => navigate(`/${role}/courses-supabase`)}
+                                    // disabled={isSubmitting}
+                                    // onClick={onBack}
+                                    >
+                                    Cancel
+                                    </Button>
+                                    <Button
+                                    type="button"
+                                    className="submit-btn"
+                                    // disabled={isSubmitting}
+                                    // data-bs-toggle="modal"
+                                    // data-bs-target="#confirmModal"
+                                    onClick={() => setPublishCourseModel(true)}
+                                    >
+                                    Save & Next
+                                    </Button>
+
+                                </div>
+                        </div>
                     </Tab>
                     <Tab eventKey="upload-files" >
                         <AddLecture setStepComplete={completeStep}
@@ -287,9 +349,29 @@ const AddNewCourse = () => {
                         initialData={courseData}/>
 
                     </Tab>
-
+                   
                 </Tabs>
             </div>
+             <>
+                   
+                    {/* confirmation model : default */}
+            
+                    {publishCourseModel && (
+                            <ConfirmationBox
+                                show={publishCourseModel}
+                                onClose={handlePublishCourseModal}
+                                onConfirm={handleSubmit}
+                                title="Publish your course!"
+                                // body="Are you sure you want to delete this course? Data associated with this course will be lost."
+                                loading={loadingCRUD}
+                                customFooterClass="custom-footer-class"
+                                nonActiveBtn="cancel-btn"
+                                activeBtn="submit-btn"
+                                cancelButtonTitle="Cancel"
+                                activeBtnTitle="Proceed"
+                            />
+                        )}
+                  </>
         </>
     );
 };

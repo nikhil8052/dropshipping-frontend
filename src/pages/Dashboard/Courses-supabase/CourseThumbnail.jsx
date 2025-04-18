@@ -1,6 +1,7 @@
 import { useRef, useState } from 'react';
 import '../../../styles/Courses.scss';
 import { Button, Col, Row } from 'react-bootstrap';
+import { useNavigate } from 'react-router-dom';
 import courseThumbnail from '../../../assets/icons/Thumbnail.svg';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import 'react-quill/dist/quill.snow.css';
@@ -16,6 +17,7 @@ import * as types from '../../../redux/actions/actionTypes';
 import { useDispatch, useSelector } from 'react-redux';
 import cross from '@icons/red-cross.svg';
 import 'bootstrap/dist/js/bootstrap.bundle.min';
+import ConfirmationBox from '../../../components/ConfirmationBox/ConfirmationBox';
 
 
 const UploadThumbnail = ({ onNext, updateCourseData, onBack, initialData, setStepComplete, resetStep }) => {
@@ -31,7 +33,9 @@ const UploadThumbnail = ({ onNext, updateCourseData, onBack, initialData, setSte
   const [cropping, setCropping] = useState(false);
   const [imageSrc, setImageSrc] = useState(null);
   const { thumbnail } = initialData || {};
-
+  const [publishCourseModel, setPublishCourseModel] = useState(false);
+  const [loadingCRUD, setLoadingCRUD] = useState(false);
+  const navigate = useNavigate();
   const handleFileChange = async (e) => {
     const file = e.target.files[0];
     if (!file || !file.type.startsWith('image/')) {
@@ -100,6 +104,30 @@ const UploadThumbnail = ({ onNext, updateCourseData, onBack, initialData, setSte
     setImageSrc(null);
     inputRef.current.value = null;
   };
+  // for Confirmation model :
+  const handlePublishCourseModal = () => {
+      setPublishCourseModel(false);
+  };
+  const setShowConfirmModal = (e) => {
+      e.stopPropagation(); 
+      setPublishCourseModel(true);
+  };
+  
+
+  const handleCourseSubmit = async () => {
+    setLoadingCRUD(true);
+    try {
+        // if (onDelete) {
+        //     await onDelete(rest?._id); 
+        // }
+        // setShowDeleteModal(false);
+        // setLoadingCRUD(false);
+        // navigate(`/${role}/courses-supabase`);
+    } catch (error) {
+        // setLoadingCRUD(false);
+        // setShowDeleteModal(false);
+    }
+};
 
   return (
     <>
@@ -135,6 +163,25 @@ const UploadThumbnail = ({ onNext, updateCourseData, onBack, initialData, setSte
             </div>
           </div>
         </div>
+
+
+        {/* confirmation model : default */}
+
+        {publishCourseModel && (
+                <ConfirmationBox
+                    show={publishCourseModel}
+                    onClose={handlePublishCourseModal}
+                    onConfirm={handleSubmit}
+                    title="Publish your course!"
+                    // body="Are you sure you want to delete this course? Data associated with this course will be lost."
+                    loading={loadingCRUD}
+                    customFooterClass="custom-footer-class"
+                    nonActiveBtn="cancel-btn"
+                    activeBtn="submit-btn"
+                    cancelButtonTitle="Cancel"
+                    activeBtnTitle="Proceed"
+                />
+            )}
       </>
 
       {loading ? (
@@ -246,12 +293,13 @@ const UploadThumbnail = ({ onNext, updateCourseData, onBack, initialData, setSte
                       )}
                     </Field>
                   </div>
-                  <div className="mt-5 d-flex gap-3 flex-wrap tab-buttons">
+                  {/* <div className="mt-5 d-flex gap-3 flex-wrap tab-buttons">
                     <Button
                       type="button"
                       className="cancel-btn"
+                      onClick={() => navigate(`/${role}/courses-supabase`)}
                       disabled={isSubmitting}
-                      onClick={onBack}
+                      // onClick={onBack}
                     >
                       Cancel
                     </Button>
@@ -259,13 +307,14 @@ const UploadThumbnail = ({ onNext, updateCourseData, onBack, initialData, setSte
                       type="button"
                       className="submit-btn"
                       disabled={isSubmitting}
-                      data-bs-toggle="modal"
-                      data-bs-target="#confirmModal"
+                      // data-bs-toggle="modal"
+                      // data-bs-target="#confirmModal"
+                      onClick={() => setPublishCourseModel(true)}
                     >
                       Save & Next
                     </Button>
 
-                  </div>
+                  </div> */}
                 </Form>
               )}
             </Formik>

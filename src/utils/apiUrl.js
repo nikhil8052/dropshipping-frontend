@@ -4,6 +4,7 @@ const STUDENT_API_BASE = `${BASE_URL}/api/student`;
 const COACH_API_BASE = `${BASE_URL}/api/coach`;
 const MEDIA_API_BASE = `${BASE_URL}/api/media`;
 const COURSE_API_BASE = `${BASE_URL}/api/course`;
+const SUPABASE_COURSE_API_BASE = `${BASE_URL}/api/supabase/course`;
 const LECTURE_API_BASE = `${BASE_URL}/api/lecture`;
 const PRODUCT_API_BASE = `${BASE_URL}/api/product`;
 const DAILY_FINANCE_API_BASE = `${BASE_URL}/api/dailyFinance`;
@@ -11,6 +12,7 @@ const INVOICE_API_BASE = `${BASE_URL}/api/invoice`;
 const EVENT_API_BASE = `${BASE_URL}/api/event`;
 const DASHBOARD_API_BASE = `${BASE_URL}/api/dashboard`;
 const CATEGORY_API_BASE = `${BASE_URL}/api/category`;
+const SUPABASE_CATEGORY_API_BASE = `${BASE_URL}/api/supabase/category`;
 const PAYMENT_API_BASE = `${BASE_URL}/api/payment`;
 
 export const API_URL = {
@@ -69,6 +71,22 @@ export const API_URL = {
     GET_ENROLLED_COURSES: `${COURSE_API_BASE}/enrolled`,
     GET_COURSE_PREVIEW: `${COURSE_API_BASE}/preview/:id`,
     PUBLISH_COURSE: `${COURSE_API_BASE}/publish/:id`,
+
+    // supabase course api :::SUPABASE_COURSE_API_BASE
+    SUPABASE_CREATE_COURSE: `${SUPABASE_COURSE_API_BASE}/create`,
+    SUPABASE_UPDATE_COURSE: `${SUPABASE_COURSE_API_BASE}/update/:id`,
+    SUPABASE_GET_COURSE: `${SUPABASE_COURSE_API_BASE}/:id`,
+    SUPABASE_GET_ALL_COURSES: `${SUPABASE_COURSE_API_BASE}/`,
+    SUPABASE_DELETE_COURSE: `${SUPABASE_COURSE_API_BASE}/delete/:id`,
+    SUPABASE_ARCHIVE_COURSE: `${SUPABASE_COURSE_API_BASE}/archive/:id`,
+    SUPABASE_UNARCHIVE_COURSE: `${SUPABASE_COURSE_API_BASE}/unarchive/:id`,
+    SUPABASE_GET_ALL_STUDENTS_IN_COURSE: `${SUPABASE_COURSE_API_BASE}/students/:courseId`,
+    SUPABASE_GET_STUDENT_PROGRESS: `${SUPABASE_COURSE_API_BASE}/progress/:courseId/:studentId`,
+    SUPABASE_GET_ENROLLED_COURSES: `${SUPABASE_COURSE_API_BASE}/enrolled`,
+    SUPABASE_GET_COURSE_PREVIEW: `${SUPABASE_COURSE_API_BASE}/preview/:id`,
+    SUPABASE_PUBLISH_COURSE: `${SUPABASE_COURSE_API_BASE}/publish/:id`,
+
+
 
     // Lectures API
     ADD_LECTURE: `${LECTURE_API_BASE}/add`,
@@ -130,6 +148,14 @@ export const API_URL = {
     GET_CATEGORY: `${CATEGORY_API_BASE}/:id`,
     GET_ALL_CATEGORIES: `${CATEGORY_API_BASE}/`,
     DELETE_CATEGORY: `${CATEGORY_API_BASE}/delete/:id`,
+
+      // supabase categories api :::
+    SUPABASE_CREATE_CATEGORY: `${SUPABASE_CATEGORY_API_BASE}/create`,
+    SUPABASE_UPDATE_CATEGORY: `${SUPABASE_CATEGORY_API_BASE}/update/:id`,
+    SUPABASE_GET_CATEGORY: `${SUPABASE_CATEGORY_API_BASE}/:id`,
+    SUPABASE_GET_ALL_CATEGORIES: `${SUPABASE_CATEGORY_API_BASE}/`,
+    SUPABASE_DELETE_CATEGORY: `${SUPABASE_CATEGORY_API_BASE}/delete/:id`,
+
 
     // Payments API
     CREATE_PAYMENT_LINK: `${PAYMENT_API_BASE}/create-payment-link`,
