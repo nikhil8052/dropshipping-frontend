@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect } from 'react';
 
 const accessOptions = [
   { id: 'open', title: 'Open', description: 'All members can access.', status: 'archived' },
@@ -8,8 +8,15 @@ const accessOptions = [
   { id: 'category', title: 'Category', description: 'Members you select can access.', status: 'published' },
 ];
 
-const CourseAccessType = () => {
-  const [selected, setSelected] = useState('category');
+const CourseAccessType = ({ value, onChange }) => {
+  useEffect(() => {
+    if (!value) {
+      const defaultOption = accessOptions.find(option => option.status === 'published');
+      if (defaultOption) {
+        onChange(defaultOption.id);
+      }
+    }
+  }, [value, onChange]);
 
   return (
     <div className="access-container">
@@ -18,9 +25,9 @@ const CourseAccessType = () => {
         return (
           <div
             key={option.id}
-            className={`access-option ${selected === option.id ? 'selected' : ''} ${isDisabled ? 'disabled' : ''}`}
+            className={`access-option ${value === option.id ? 'selected' : ''} ${isDisabled ? 'disabled' : ''}`}
             onClick={() => {
-              if (!isDisabled) setSelected(option.id);
+              if (!isDisabled) onChange(option.id);
             }}
             style={{
               opacity: isDisabled ? 0.8 : 1,

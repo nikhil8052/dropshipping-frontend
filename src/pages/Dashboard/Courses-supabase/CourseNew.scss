@@ -293,7 +293,7 @@ label#courseCategory-label {
     gap: 7px;
 }
 
-form.category_details label {
+.category_details label {
     margin-bottom: 10px;
     font-family: Inter;
     font-weight: 400;
@@ -338,7 +338,7 @@ label.custom_check span {
 }
 
 
-form.category_details input {
+.category_details input {
     border: 1px solid #E9EAF0;
     background-color: #F5F8F9 !important;
     width: 100%;
@@ -719,4 +719,12 @@ body:has(.course-detail-tab) {
 
 .course-left-top img {
     filter: brightness(0) saturate(100%) invert(72%) sepia(2%) saturate(2588%) hue-rotate(178deg) brightness(84%) contrast(69%);
+}
+
+.add-course-form .field-control {
+    border: 0 !important;
+}
+
+.Course-form .row > div {
+    margin-bottom: 20px;
 }

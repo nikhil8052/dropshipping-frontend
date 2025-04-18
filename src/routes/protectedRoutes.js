@@ -22,7 +22,7 @@ const VisualizeCSV = lazy(() => import('@pages/Dashboard/VisualizeCsv/VisualizeC
 const Roadmap = lazy(() => import('@pages/Dashboard/Roadmap/Roadmap'));
 const Settings = lazy(() => import('@pages/Dashboard/Settings/Settings'));
 const NewCourse = lazy(() => import('@pages/Dashboard/Courses/AddNewCourse'));
-const NewCourseSupabase = lazy(() => import('@pages/Dashboard/Courses-supabase/AddNewCourse'));
+const NewCourseSupabase = lazy(() => import('@pages/Dashboard/Courses-supabase/AddCourse'));
 const NewCategory = lazy(() => import('@pages/Dashboard/Categories/AddNewCategory'));
 const CourseDetail = lazy(() => import('@pages/Dashboard/Courses/CourseDetail'));
 const CourseDetailSupabase = lazy(() => import('@pages/Dashboard/Courses-supabase/CourseDetail'));
