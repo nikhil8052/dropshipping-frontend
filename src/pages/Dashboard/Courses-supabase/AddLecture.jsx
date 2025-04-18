@@ -10,19 +10,77 @@ import { Formik, Form } from 'formik';
 import ConfirmationBox from '@components/ConfirmationBox/ConfirmationBox';
 
 const AddNewLecture = () => {
-  const [isOpen, setIsOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState({});
   const [modalShow, setModalShow] = useState(false);
   const [showTranscriptEditor, setShowTranscriptEditor] = useState(false);
+  const [topics, setTopics] = useState([
+    {
+      name: "Folder 1",
+      lectures: ["Video 1", "Video 2"],
+    }
+  ]);
+  const [showMovePopup, setShowMovePopup] = useState(false);
+  const [selectedLecture, setSelectedLecture] = useState({ topicIndex: null, lectureIndex: null });
+  const [unassignedLectures, setUnassignedLectures] = useState([]);
 
-  const toggleFolder = () => {
-    setIsOpen(!isOpen);
+
+  const toggleFolder = (index) => {
+    setIsOpen((prevState) => ({
+      ...prevState,
+      [index]: !prevState[index]
+    }));
   };
 
   const handlePopupClick = () => {
     setModalShow(!modalShow);
   };
 
+  const addUnassignedLecture = () => {
+    setUnassignedLectures([
+      ...unassignedLectures,
+      `New Video ${unassignedLectures.length + 1}`
+    ]);
+  };
+
+  const addNewTopic = () => {
+    let topic = {
+      name: `Folder ${topics.length + 1}`,
+      lectures: ["New Video 1", "New Video 2"],
+    };
+    setTopics([...topics, topic]);
+  };
+
+  // addNewTopic();
+
+  const duplicateLecture = (topicIndex, lectureIndex) => {
+    const updatedTopics = [...topics];
+    const lectureToDuplicate = updatedTopics[topicIndex].lectures[lectureIndex];
+
+    // Insert the duplicated lecture after the clicked one
+    updatedTopics[topicIndex].lectures.splice(lectureIndex + 1, 0, lectureToDuplicate + " (Copy)");
+
+    setTopics(updatedTopics);
+  };
+
   const { description } = {};
+
+  const moveLecture = (targetTopicIndex) => {
+    const updatedTopics = [...topics];
+    const { topicIndex, lectureIndex } = selectedLecture;
+
+    // Take the lecture
+    const lectureToMove = updatedTopics[topicIndex].lectures[lectureIndex];
+
+    // Remove from current topic
+    updatedTopics[topicIndex].lectures.splice(lectureIndex, 1);
+
+    // Add to new topic
+    updatedTopics[targetTopicIndex].lectures.push(lectureToMove);
+
+    setTopics(updatedTopics);
+    setShowMovePopup(false);
+    setSelectedLecture({ topicIndex: null, lectureIndex: null });
+  };
 
   return (
     <>
@@ -93,47 +151,76 @@ const AddNewLecture = () => {
                       </Dropdown.Toggle>
                       <Dropdown.Menu>
                         <Dropdown.Item href="javascript:void(0)">Edit Course</Dropdown.Item>
-                        <Dropdown.Item href="javascript:void(0)">Add Folder</Dropdown.Item>
-                        <Dropdown.Item href="javascript:void(0)">Add Page</Dropdown.Item>
+                        <Dropdown.Item onClick={addNewTopic}>Add Folder</Dropdown.Item>
+                        {/* <button onClick={addUnassignedLecture}>Add Video </button> */}
                         <Dropdown.Item href="javascript:void(0)">Move</Dropdown.Item>
                         <Dropdown.Item href="javascript:void(0)">Delete</Dropdown.Item>
+
                       </Dropdown.Menu>
                     </Dropdown>
                   </div>
                 </div>
-
-                <div className="folder-detail">
-                  <div className="drop-box" onClick={toggleFolder} style={{ cursor: 'pointer' }}>
-                    <h3>Folder 1</h3>
-                    <div className={`folder-dropdown ${isOpen ? 'rotated' : ''}`}>
-                      <img src={Drop} alt="" />
+                
+                {topics.map((topic, topicIndex) => (
+                  <div className="folder-detail" key={topicIndex}>
+                    <div className="drop-box" onClick={() => toggleFolder(topicIndex)} style={{ cursor: 'pointer' }}>
+                      <h3>{topic.name}</h3>
+                      <div className={`folder-dropdown ${isOpen[topicIndex] ? 'rotated' : ''}`}>
+                        <img src={Drop} alt="" />
+                      </div>
                     </div>
+
+                    {showMovePopup && (
+                      <div className="popup-backdrop">
+                        <div className="popup">
+                          <h3>Move to Folder</h3>
+                          <ul>
+                            {topics.map((topic, index) => (
+                              <li key={index} onClick={() => moveLecture(index)}>
+                                {topic.name}
+                              </li>
+                            ))}
+                          </ul>
+                          <button className='btn btn-primary' onClick={() => setShowMovePopup(false)}>Cancel</button>
+                        </div>
+                      </div>
+                    )}
+
+                    {isOpen[topicIndex] && (
+                      <div className="detail-box">
+                        <ul>
+                          {topic.lectures.map((lecture, lectureIndex) => (
+                            <li key={lectureIndex}>
+                              <a href="javascript:void(0)">{lecture}</a>
+                              <div className="drop-box">
+                                <Dropdown>
+                                  <Dropdown.Toggle id="dropdown-basic">
+                                    <div className="toggle-icon">
+                                      <img src={Ellips} alt="" />
+                                    </div>
+                                  </Dropdown.Toggle>
+                                  <Dropdown.Menu>
+                                    <Dropdown.Item href="javascript:void(0)">Edit</Dropdown.Item>
+                                    {/* <Dropdown.Item href="javascript:void(0)">Copy</Dropdown.Item> */}
+                                    <Dropdown.Item onClick={() => duplicateLecture(topicIndex, lectureIndex)}>Duplicate</Dropdown.Item>
+                                    <Dropdown.Item onClick={() => {
+                                      setSelectedLecture({ topicIndex, lectureIndex });
+                                      setShowMovePopup(true);
+                                    }}>
+                                      Move
+                                    </Dropdown.Item>
+                                  </Dropdown.Menu>
+                                </Dropdown>
+                              </div>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    )}
                   </div>
+                ))}
 
-                  {isOpen && (
-                    <div className="detail-box">
-                      <ul>
-                        <li>
-                          <a href="javascript:void(0)">Video 1</a>
-                          <div className="drop-box">
-                            <Dropdown>
-                              <Dropdown.Toggle id="dropdown-basic">
-                                <div className="toggle-icon">
-                                  <img src={Ellips} alt="" />
-                                </div>
-                              </Dropdown.Toggle>
-                              <Dropdown.Menu>
-                                <Dropdown.Item href="javascript:void(0)">Edit</Dropdown.Item>
-                                <Dropdown.Item href="javascript:void(0)">Copy</Dropdown.Item>
-                                <Dropdown.Item href="javascript:void(0)">Duplicate</Dropdown.Item>
-                              </Dropdown.Menu>
-                            </Dropdown>
-                          </div>
-                        </li>
-                      </ul>
-                    </div>
-                  )}
-                </div>
+
               </div>
             </div>
 
@@ -191,7 +278,7 @@ const AddNewLecture = () => {
                       </div>
 
                       <div className="res">
-                          <h2 className="subhead">Add Transcript</h2>
+                        <h2 className="subhead">Add Transcript</h2>
                         <div className="transc">
                           <div className="drop-box">
                             {!showTranscriptEditor ? (
