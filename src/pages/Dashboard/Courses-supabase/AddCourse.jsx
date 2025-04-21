@@ -102,14 +102,14 @@ const AddNewCourse = () => {
     // ///////////////// APi Calls ///////////////
     const getCourseById = async (id) => {
         try {
-            const { data } = await axiosWrapper('GET', `${API_URL.GET_COURSE.replace(':id', id)}`, {}, token);
+            const { data } = await axiosWrapper('GET', `${API_URL.SUPABASE_GET_COURSE.replace(':id', id)}`, {}, token);
 
             const description = textParser(data.description);
 
             // Map categories to { label, value } format
             const categories = data.category.map((cat) => ({
                 label: cat.name,
-                value: cat._id
+                value: cat.id
             }));
             const updatedLecture = data.lectures.map((lec) => {
                 const description = textParser(lec.description);
@@ -122,7 +122,7 @@ const AddNewCourse = () => {
                 title: data.title,
                 subtitle: data.subtitle,
                 category: categories,
-                createdBy: data.createdBy?._id,
+                createdBy: data.createdBy?.id,
                 thumbnail: data.thumbnail,
                 banner: data.banner,
                 trailer: data.trailer,
@@ -160,7 +160,7 @@ const AddNewCourse = () => {
             //     title: course?.data?.title,
             //     subtitle: course?.data?.subtitle,
             //     category: course?.data?.category,
-            //     createdBy: course?.data?.createdBy?._id,
+            //     createdBy: course?.data?.createdBy?.id,
             //     thumbnail: course?.data?.thumbnail,
             //     trailer: course?.data?.trailer,
             //     description: course?.data?.description,
@@ -169,7 +169,7 @@ const AddNewCourse = () => {
         } else {
             const course = await axiosWrapper('POST', API_URL.SUPABASE_CREATE_COURSE, formData, token);
 
-            dispatch({ type: types.ALL_RECORDS, data: { keyOfData: 'currentCourse', data: course?.data?._id } });
+            dispatch({ type: types.ALL_RECORDS, data: { keyOfData: 'currentCourse', data: course?.data?.id } });
         }
 
         // Call the get Course By Id so we can have updated state of part one
@@ -256,7 +256,7 @@ const AddNewCourse = () => {
                         updateCourseData={updateCourseData}
                         onDelete={handleDelete}
                         {...courseData}
-                        _id={courseId}
+                        id={courseId}
 
                     />
                 </Tab>

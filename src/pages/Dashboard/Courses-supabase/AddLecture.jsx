@@ -9,7 +9,9 @@ import { FORMATS, TOOLBAR_CONFIG } from '../../../utils/common';
 import { Formik, Form } from 'formik';
 import ConfirmationBox from '@components/ConfirmationBox/ConfirmationBox';
 
-const AddNewLecture = () => {
+// const AddNewLecture = () => {
+  const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCourseData }) => {
+
   const [isOpen, setIsOpen] = useState({});
   const [modalShow, setModalShow] = useState(false);
   const [showTranscriptEditor, setShowTranscriptEditor] = useState(false);
