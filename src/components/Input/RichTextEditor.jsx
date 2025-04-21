@@ -91,7 +91,7 @@ const RichTextEditor = (props) => {
 
     return (
         <div className="quill-editor">
-            <div id="toolbar" >
+            <div id={`${props.id}`} >
                 <button className="ql-header" value="1">H1</button>
                 <button className="ql-header" value="2">H2</button>
                 <button className="ql-header" value="3">H3</button>
@@ -112,29 +112,32 @@ const RichTextEditor = (props) => {
                 ref={quillRef}
                 value={field.value}
                 onChange={handleChange}
-                modules={{ toolbar: { container: '#toolbar' } }}
+                modules={{ toolbar: { container: `#${props.id}` } }}
                 className="field-quill-control"
                 formats={FORMATS}
                 placeholder={props.placeholder}
             />
-            <div className='card new-resource-main-card'>
-                <div className='card-body d-flex flex-column' >
-                    <h5 className='card-title'>Resources</h5>
 
-                    <div id="all_resources" >
-                        <div class="resource-card">
-                            <img src="https://dropship-api.ropstam.dev/uploads/1736169674625-courseThumbnail.jpeg" alt="Resource Image" class="resource-image" />
-                            <div class="resource-title">This is the Resource Title</div>
-                        </div>
-                        <div class="resource-card mt-3">
-                            <img src="https://dropship-api.ropstam.dev/uploads/1736169674625-courseThumbnail.jpeg" alt="Resource Image" class="resource-image" />
-                            <div class="resource-title">This is the Resource Title</div>
-                        </div>
-                    </div>
-
-
+{props.showResources && (
+    <div className='card new-resource-main-card'>
+        <div className='card-body d-flex flex-column'>
+            <h5 className='card-title'>Resources</h5>
+            <div id="all_resources">
+                <div className="resource-card">
+                    <img src="https://dropship-api.ropstam.dev/uploads/1736169674625-courseThumbnail.jpeg" alt="Resource Image" className="resource-image" />
+                    <div className="resource-title">This is the Resource Title</div>
+                </div>
+                <div className="resource-card mt-3">
+                    <img src="https://dropship-api.ropstam.dev/uploads/1736169674625-courseThumbnail.jpeg" alt="Resource Image" className="resource-image" />
+                    <div className="resource-title">This is the Resource Title</div>
                 </div>
             </div>
+        </div>
+    </div>
+)}
+
+
+
             {/* <div className="card mt-4">
                 <div className="card-body d-flex justify-content-between">
                     <h4>Add Resource </h4>

@@ -1,8 +1,7 @@
 import { useEffect, useState } from 'react';
 import { faChevronDown } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import axiosWrapper from '../../../utils/api';
-import { API_URL } from '../../../utils/apiUrl';
+import SearchIcon from '../../../assets/images/search.png'
 
 const CourseCategory = ({ value = [], onChange, token }) => {
   const [allCategories, setAllCategories] = useState([]);
@@ -87,25 +86,40 @@ const CourseCategory = ({ value = [], onChange, token }) => {
                 <div>Loading categories...</div>
               ) : (
                 <>
-                  {filteredCategories.map((category) => (
-                    <label
-                      className='custom_check'
-                      key={category.value}
-                      style={{ display: 'block', marginBottom: '5px' }}
-                    >
-                      <input
-                        type="checkbox"
-                        checked={value.some(cat => cat.value === category.value)}
-                        onChange={(e) => handleCheckboxChange(e, category.value)}
-                      />
-                      <div className='custom_ckeck_wrap'>
-                        <span></span> {category.label}
-                      </div>
-                    </label>
-                  ))}
-                  {filteredCategories.length === 0 && (
-                    <div style={{ color: 'gray' }}>No categories found</div>
-                  )}
+                <div className="search-bar">
+                <input
+                    type="text"
+                    placeholder="Search"
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                  />
+                  <img src={SearchIcon} alt="" />
+                </div>
+                  <div>
+                    <div className='select-label'>
+                      {filteredCategories.map((category) => (
+                        <label
+                          className='custom_check'
+                          key={category.value}
+                          style={{ display: 'block', marginBottom: '5px' }}
+                        >
+                          <input
+                            type="checkbox"
+                            value={category.value}
+                            checked={values.category.includes(category.value)}
+                            onChange={(e) => handleCheckboxChange(e, category.value)}
+                          />
+                          <div className='custom_ckeck_wrap'>
+                            <span></span> {category.label}
+                          </div>
+                        </label>
+                      ))}
+                    </div>
+
+                    {filteredCategories.length === 0 && (
+                      <div style={{ color: 'gray' }}>No categories found</div>
+                    )}
+                  </div>
                 </>
               )}
             </div>

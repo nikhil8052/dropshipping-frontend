@@ -87,7 +87,7 @@ const AddNewCourse = () => {
                 (key === 'publish-course' && stepsCompleted.step1 && stepsCompleted.step2)
             ) {
 
-               
+
                 setActiveKey(key);
             }
         }
@@ -293,10 +293,14 @@ const AddNewCourse = () => {
                         <div className='Course-form'>
                             <div className='form-group'>
                                 <TextField id="Title-basic" label="Title" variant="outlined" />
-                                
                             </div>
                             <div className='form-group'>
-                                <TextField id="SubTitle-basic" label="Subtitle" variant="outlined" />
+                                <TextField id="SubTitle-basic" label="Subtitle" variant="outlined" onChange={(e) => {
+                                    if (e.target.value.length <= 120) setSubtitle(e.target.value);
+                                }}
+                                    inputProps={{ maxLength: 120 }}
+                                    helperText={`${subtitle.length}/120`}
+                                    fullWidth />
                             </div>
                             <div className='form-group'>
                                 <TextField
@@ -305,6 +309,12 @@ const AddNewCourse = () => {
                                     variant="outlined"
                                     multiline
                                     rows={7}
+                                    onChange={(e) => {
+                                        if (e.target.value.length <= 500) setDescription(e.target.value);
+                                      }}
+                                      inputProps={{ maxLength: 500 }}
+                                      helperText={`${description.length}/500`}
+                                      fullWidth
                                 />
                             </div>
 
@@ -346,9 +356,9 @@ const AddNewCourse = () => {
                     </Tab>
                     <Tab eventKey="upload-files" >
                         <AddLecture setStepComplete={completeStep}
-                        onBack={() => handleTabChange('basic-information')}
-                        updateCourseData={updateCourseData}
-                        initialData={courseData}/>
+                            onBack={() => handleTabChange('basic-information')}
+                            updateCourseData={updateCourseData}
+                            initialData={courseData} />
 
                     </Tab>
                    
