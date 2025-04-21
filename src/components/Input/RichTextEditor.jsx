@@ -17,6 +17,8 @@ Quill.register(CustomHeader, true);
 const RichTextEditor = (props) => {
     const [field, , helpers] = useField(props.name);
     const quillRef = useRef(null);
+    const resourceList = props.resources || [];
+
     const TOOLBAR_CONFIG = {
         container: [
             ['bold', 'italic', 'underline', 'strike', 'code-block'],
@@ -118,7 +120,7 @@ const RichTextEditor = (props) => {
                 placeholder={props.placeholder}
             />
 
-{props.showResources && (
+{/* {props.showResources && (
     <div className='card new-resource-main-card'>
         <div className='card-body d-flex flex-column'>
             <h5 className='card-title'>Resources</h5>
@@ -134,6 +136,21 @@ const RichTextEditor = (props) => {
             </div>
         </div>
     </div>
+)} */}
+{props.showResources && (
+  <div className='card new-resource-main-card'>
+    <div className='card-body d-flex flex-column'>
+      <h5 className='card-title'>Resources</h5>
+      <div id="all_resources">
+        {resourceList.map((resource, index) => (
+          <div key={resource.id} className={`resource-card ${index !== 0 ? 'mt-3' : ''}`}>
+            <img src={resource.image} alt="Resource" className="resource-image" />
+            <div className="resource-title">{resource.title}</div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </div>
 )}
 
 

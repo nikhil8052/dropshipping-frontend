@@ -13,13 +13,21 @@ import ConfirmationBox from '@components/ConfirmationBox/ConfirmationBox';
 import bluePlus from '@icons/blue-plus.svg';
 import { faMinus } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { useDispatch, useSelector } from 'react-redux';
+import { faPen } from '@fortawesome/free-solid-svg-icons';
 
-const AddNewLecture = () => {
-  const [isOpen, setIsOpen] = useState(false);
+const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCourseData }) => {
+  const [isOpen, setIsOpen] = useState(true);
   const [modalShow, setModalShow] = useState(false);
   const [showTranscriptEditor, setShowTranscriptEditor] = useState(false);
   const [showQuizModal, setShowQuizModal] = useState(false);
   
+  const currentCourse = useSelector((state) => state?.root?.currentCourse);
+  const token = useSelector((state) => state?.auth?.userToken);
+  console.warn(initialData);
+  const { title, thumbnail, banner } = initialData; 
+  const [isEditing, setIsEditing] = useState(false); // Add edit mode state
+
   const quizInitialValues = {
     quiz: {
       mcqs: [
@@ -52,7 +60,11 @@ const AddNewLecture = () => {
           )
       })
   });
-
+  const hasLectures = currentCourse?.lectures && currentCourse?.lectures?.length > 0;
+// console.log(hasLectures);
+//   useEffect(() => {
+//     if (!hasLectures) setIsEditing(true);
+//   }, [hasLectures]);
   const handleQuizSubmit = (values) => {
     console.log('Quiz submitted:', values);
     // Here you would typically save the quiz data
@@ -244,7 +256,7 @@ const AddNewLecture = () => {
             <div className="col-md-3">
               <div className="course-left">
                 <div className="course-left-top">
-                  <h2 className="subhead">Course Name</h2>
+                  <h2 className="subhead">{ title }</h2>
                   <div className="drop-box">
                     <Dropdown>
                       <Dropdown.Toggle id="dropdown-basic">
@@ -263,7 +275,7 @@ const AddNewLecture = () => {
                   </div>
                 </div>
 
-                <div className="folder-detail">
+                {/* <div className="folder-detail">
                   <div className="drop-box" onClick={toggleFolder} style={{ cursor: 'pointer' }}>
                     <h3>Folder 1</h3>
                     <div className={`folder-dropdown ${isOpen ? 'rotated' : ''}`}>
@@ -294,13 +306,180 @@ const AddNewLecture = () => {
                       </ul>
                     </div>
                   )}
-                </div>
+                </div> */}
+                
+               
+                 {hasLectures ? ( 
+                    <div className="folder-detail">
+                    <>
+                      <div className="drop-box" onClick={toggleFolder} style={{ cursor: 'pointer' }}>
+                        <h3>Folder 1</h3>
+                        <div className={`folder-dropdown ${isOpen ? 'rotated' : ''}`}>
+                          <img src={Drop} alt="" />
+                        </div>
+                      </div>
+                      {isOpen && (
+                        <div className="detail-box">
+                          <ul>
+                            <li>
+                              <a href="javascript:void(0)">Video 1</a>
+                              {/* ... existing dropdown ... */}
+                            </li>
+                          </ul>
+                        </div>
+                      )}
+                    </>
+                    </div>
+                   ) : ( 
+                    
+                    <div className="detail-box">
+                    <ul>
+                      <li>
+                        <a href="javascript:void(0)">New Page</a>
+                        {/* ... existing dropdown ... */}
+                      </li>
+                    </ul>
+                  </div>
+                   )} 
+
+
+
               </div>
             </div>
 
             <div className="col-md-9">
               <div className="course-right">
-                <Formik
+                {/* new code  */}
+                  {!hasLectures && !isEditing ? (
+                    <div className="new-page-view">
+                      <div className="course-right-header">
+                        <h2 className="subhead">New Page</h2>
+                        <Button onClick={() => setIsEditing(true)} className="edit-btn" variant="outlined">
+                          <FontAwesomeIcon icon={faPen} style={{ marginRight: 8 }} />
+                          
+                        </Button>
+                      </div>
+                    </div>
+                  
+                  
+                  ) : (
+                  <Formik
+                  initialValues={{
+                    description: description || '',
+                    transcript: '',
+                  }}
+                >
+                  {() => (
+                    <Form>
+                      <Row>
+                        <Col>
+                          <Input
+                            className="field-quill-control"
+                            type="richTextEditor"
+                            name="description"
+                            id="course_description"
+                            placeholder="Enter Course Description"
+                            showResources={true}
+                            resources={[
+                              {
+                                id: 1,
+                                title: 'This is the First Resource Title',
+                                image: 'https://dropship-api.ropstam.dev/uploads/1736169674625-courseThumbnail.jpeg'
+                              },
+                              {
+                                id: 2,
+                                title: 'Another Resource',
+                                image: 'https://dropship-api.ropstam.dev/uploads/1736169674625-courseThumbnail.jpeg'
+                              }
+                            ]}
+                            modules={{ toolbar: TOOLBAR_CONFIG }}
+                            formats={FORMATS}
+                          />
+                        </Col>
+                      </Row>
+
+                      <div className="res">
+                        <h2 className="subhead">Add Resources</h2>
+                        <div className="drop-box">
+                          <Dropdown>
+                            <Dropdown.Toggle id="dropdown-basic">
+                              <div className="toggle-icon">Add</div>
+                            </Dropdown.Toggle>
+                            <Dropdown.Menu>
+                              <Dropdown.Item href="javascript:void(0)" onClick={handlePopupClick}>
+                                Add resource link
+                              </Dropdown.Item>
+                              <Dropdown.Item href="javascript:void(0)" onClick={handlePopupClick}>
+                                Add resource file
+                              </Dropdown.Item>
+                            </Dropdown.Menu>
+                          </Dropdown>
+                        </div>
+                      </div>
+
+                      <div className="res">
+                        <h2 className="subhead">Add Quiz</h2>
+                        <div className="drop-box">
+                          <div className="add-btn">
+                            <a href="javascript:void(0)" onClick={handleQuizPopupClick}>Add New</a>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className={`res trans-res ${showTranscriptEditor ? 'showing-transcript' : ''}`}>
+                        <h2 className="subhead">Add Transcript</h2>
+                        <div className="transc">
+                          <div className="drop-box">
+                            {!showTranscriptEditor ? (
+                              <div className="add-btn">
+                                <a href="javascript:void(0)" onClick={() => setShowTranscriptEditor(true)}>
+                                  Add New
+                                </a>
+                              </div>
+                            ) : null}
+                          </div>
+
+                          <div
+                            className={`transcript-section ${showTranscriptEditor ? '' : 'd-none'}`}
+                          >
+                            <Input
+                              className="field-quill-control"
+                              type="richTextEditor"
+                              name="transcript"
+                              id="transcript"
+                              placeholder="Add Transcript"
+                              showResources={false}
+                              modules={{ toolbar: TOOLBAR_CONFIG }}
+                              formats={FORMATS}
+                            />
+                            <div className="mt-3 cancel-tans">
+                              <button
+                                type="button"
+                                className="cancel-btnn"
+                                onClick={() => setShowTranscriptEditor(false)}
+                              >
+                                Cancel
+                              </button>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="mt-5 d-flex gap-3 flex-wrap tab-buttons">
+                        <Button type="button" className="cancel-btn" onClick={onBack} >
+                          Cancel
+                        </Button>
+                        <Button type="submit" className="submit-btn">
+                          Save & Next
+                        </Button>
+                      </div>
+                      
+                    </Form>
+                  )}
+                  </Formik> 
+                  )}
+                {/* new code end */}
+                {/* <Formik
                   initialValues={{
                     description: description || '',
                     transcript: '',
@@ -391,16 +570,17 @@ const AddNewLecture = () => {
                       </div>
 
                       <div className="mt-5 d-flex gap-3 flex-wrap tab-buttons">
-                        <Button type="button" className="cancel-btn">
+                        <Button type="button" className="cancel-btn" onClick={onBack} >
                           Cancel
                         </Button>
                         <Button type="submit" className="submit-btn">
                           Save & Next
                         </Button>
                       </div>
+                      
                     </Form>
                   )}
-                </Formik>
+                </Formik> */}
               </div>
             </div>
           </div>

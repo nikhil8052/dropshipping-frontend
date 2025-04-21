@@ -1627,3 +1627,19 @@
 .white-important-bg {
     background-color: white !important;
 }
+
+.course-right-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px; 
+    border: 1px solid #ccc; 
+    border-radius:10px;
+  }
+  
+  .edit-btn {
+    text-transform: none;
+    font-weight: 500;
+    font-size: 14px;
+  }
+  

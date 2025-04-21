@@ -16,6 +16,7 @@ import * as types from '../../../redux/actions/actionTypes';
 import { API_URL } from '../../../utils/apiUrl';
 import { textParser } from '../../../utils/utils';
 import AddLecture from './AddLecture';
+import AddLectureModel from './AddLectureModal';
 
 const AddNewCourse = () => {
     const location = useLocation();
@@ -78,6 +79,7 @@ const AddNewCourse = () => {
 
     // Function to update course data from child components
     const updateCourseData = (newData) => {
+        console.log(courseData);
         setCourseData((prevData) => ({
             ...prevData,
             ...newData
@@ -102,32 +104,33 @@ const AddNewCourse = () => {
     // ///////////////// APi Calls ///////////////
     const getCourseById = async (id) => {
         try {
-            const { data } = await axiosWrapper('GET', `${API_URL.GET_COURSE.replace(':id', id)}`, {}, token);
+            const { data } = await axiosWrapper('GET', `${API_URL.SUPABASE_GET_COURSE.replace(':id', id)}`, {}, token);
+            console.log(data);
 
             const description = textParser(data.description);
 
             // Map categories to { label, value } format
             const categories = data.category.map((cat) => ({
                 label: cat.name,
-                value: cat._id
+                value: cat.id
             }));
-            const updatedLecture = data.lectures.map((lec) => {
-                const description = textParser(lec.description);
-                return {
-                    ...lec,
-                    description: description
-                };
-            });
+            // const updatedLecture = data.lectures.map((lec) => {
+            //     const description = textParser(lec.description);
+            //     return {
+            //         ...lec,
+            //         description: description
+            //     };
+            // });
             updateCourseData({
                 title: data.title,
                 subtitle: data.subtitle,
                 category: categories,
-                createdBy: data.createdBy?._id,
+                createdBy: data.createdBy?.id,
                 thumbnail: data.thumbnail,
                 banner: data.banner,
                 trailer: data.trailer,
                 description: description,
-                lectures: updatedLecture
+                // lectures: updatedLecture
             });
 
             dispatch({ type: types.ALL_RECORDS, data: { keyOfData: 'currentCourseUpdate', data: false } });
@@ -160,7 +163,7 @@ const AddNewCourse = () => {
             //     title: course?.data?.title,
             //     subtitle: course?.data?.subtitle,
             //     category: course?.data?.category,
-            //     createdBy: course?.data?.createdBy?._id,
+            //     createdBy: course?.data?.createdBy?.id,
             //     thumbnail: course?.data?.thumbnail,
             //     trailer: course?.data?.trailer,
             //     description: course?.data?.description,
@@ -169,7 +172,7 @@ const AddNewCourse = () => {
         } else {
             const course = await axiosWrapper('POST', API_URL.SUPABASE_CREATE_COURSE, formData, token);
 
-            dispatch({ type: types.ALL_RECORDS, data: { keyOfData: 'currentCourse', data: course?.data?._id } });
+            dispatch({ type: types.ALL_RECORDS, data: { keyOfData: 'currentCourse', data: course?.data?.id } });
         }
 
         // Call the get Course By Id so we can have updated state of part one
@@ -256,7 +259,7 @@ const AddNewCourse = () => {
                         updateCourseData={updateCourseData}
                         onDelete={handleDelete}
                         {...courseData}
-                        _id={courseId}
+                        id={courseId}
 
                     />
                 </Tab>
