@@ -51,6 +51,7 @@ const CourseThumbnail = ({ value, onChange }) => {
     setImageSrc(null);
     if (inputRef.current) inputRef.current.value = null;
   };
+  const [showTranscriptEditor, setShowTranscriptEditor] = useState(false);
 
   return (
     <div className="upload-form-section thumbnail-block">

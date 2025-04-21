@@ -44,8 +44,10 @@ const AddNewCourse = () => {
     const lectureUpdate = useSelector((state) => state?.root?.lectureUpdate);
     const [loading, setLoading] = useState(false);
     const [isPublished, setIsPublished] = useState(false);
-    const [publishCourseModel, setPublishCourseModel] = useState(false);
-    const [loadingCRUD, setLoadingCRUD] = useState(false);
+    const [title, setTitle] = useState('');
+    const [subtitle, setSubtitle] = useState('');
+    const [description, setDescription] = useState('');
+
     const [courseData, setCourseData] = useState({
         title: '',
         subtitle: '',
@@ -292,7 +294,12 @@ const AddNewCourse = () => {
                         
                         <div className='Course-form'>
                             <div className='form-group'>
-                                <TextField id="Title-basic" label="Title" variant="outlined" />
+                                <TextField id="Title-basic" label="Title" variant="outlined" onChange={(e) => {
+                                    if (e.target.value.length <= 80) setTitle(e.target.value);
+                                }}
+                                    inputProps={{ maxLength: 80 }}
+                                    helperText={`${title.length}/80`}
+                                    fullWidth />
                             </div>
                             <div className='form-group'>
                                 <TextField id="SubTitle-basic" label="Subtitle" variant="outlined" onChange={(e) => {
