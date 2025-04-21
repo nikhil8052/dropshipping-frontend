@@ -3,9 +3,8 @@
 @import '@constants/typography.scss';
 
 .course-section {
-    box-shadow: 0px 0px 14.83px 0px rgba(0, 0, 0, 0.06);
+    // box-shadow: 0px 0px 14.83px 0px rgba(0, 0, 0, 0.06);
     border-radius: 9px;
-    padding: 10px 20px;
     height: auto;
     min-height: 100vh;
     position: relative;
@@ -26,25 +25,27 @@
         gap: 1rem;
 
         @media (max-width: $large-screen) {
-            justify-content: start;
             margin-top: 0.5rem;
+
+            @media only screen and (max-width:767px) {
+                justify-content:center;
+            }
         }
 
         .input-group {
-            // width: 490px !important;
-            // max-width: 490px !important;
-            width: 470px !important;
-            max-width: 470px !important;
+            // width: 470px !important;
+            // max-width: 470px !important;
+            width: auto !important;
         }
     }
 
     .search-input {
-        max-width: 390px;
+        max-width: 220px;
         border-radius: 10px;
         background-color: #0C0C0C !important;
         border: 1px solid rgba(233, 234, 240, 1) !important;
         color: #fff;
-        padding: 12px;
+            padding: .375rem .75rem;
 
         &::placeholder {
             color: #fff;
@@ -57,7 +58,7 @@
 
     .search-input:focus-visible {
         outline-color: rgba(146, 159, 165, 1) !important;
-        border: 1px solid rgba(233, 234, 240, 1) !important;
+        border:1px solid rgb(176, 225, 235)  !important;
         color: rgba(71, 81, 86, 1);
     }
 
@@ -75,7 +76,7 @@
         display: grid;
         grid-template-columns: 1fr 1fr 1fr 1fr;
         // gap: 10px;
-        gap: 20px;
+        gap: 15px;
 
         // justify-content: space-around;
         @media screen and (min-width: 1600px) and (max-width: 2300px) {
@@ -1586,6 +1587,18 @@
 
 .EnrolledCourseDetail .search-input::placeholder {
     color: #000 !important;
+}
+
+.courses-button-wrapper * {
+    font-size: 12px;
+}
+
+.add-button {
+    padding: 5px 10px;
+}
+
+.main-panel .main-content-wrapper {
+    margin-top: 0px;
 }
 
 @media only screen and (max-width:767px) {
