@@ -15,8 +15,11 @@ import { faMinus } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useDispatch, useSelector } from 'react-redux';
 import { faPen } from '@fortawesome/free-solid-svg-icons';
+import Loading from '@components/Loading/Loading';
 
 const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCourseData }) => {
+  const [loading, setLoading] = useState(false);
+  
   const [isOpen, setIsOpen] = useState(true);
   const [modalShow, setModalShow] = useState(false);
   const [showTranscriptEditor, setShowTranscriptEditor] = useState(false);
@@ -61,10 +64,10 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
       })
   });
   const hasLectures = currentCourse?.lectures && currentCourse?.lectures?.length > 0;
-// console.log(hasLectures);
-//   useEffect(() => {
-//     if (!hasLectures) setIsEditing(true);
-//   }, [hasLectures]);
+console.log(hasLectures);
+  // useEffect(() => {
+  //   if (!hasLectures) setIsEditing(true);
+  // }, [hasLectures]);
   const handleQuizSubmit = (values) => {
     console.log('Quiz submitted:', values);
     // Here you would typically save the quiz data
@@ -87,6 +90,11 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
 
   return (
     <>
+    {loading ? (
+                    <Loading />
+                ) : (
+
+                  <>
       {modalShow && (
         <ConfirmationBox
           className="add-link-modal"
@@ -586,6 +594,8 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
           </div>
         </div>
       </div>
+      </>
+    )}
     </>
   );
 };

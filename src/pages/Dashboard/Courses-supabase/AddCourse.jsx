@@ -158,27 +158,40 @@ const AddNewCourse = () => {
             await axiosWrapper('PUT', `${API_URL.SUPABASE_UPDATE_COURSE.replace(':id', currentCourse)}`, formData, token);
 
             getCourseById(currentCourse);
-
-            // updateCourseData({
-            //     title: course?.data?.title,
-            //     subtitle: course?.data?.subtitle,
-            //     category: course?.data?.category,
-            //     createdBy: course?.data?.createdBy?.id,
-            //     thumbnail: course?.data?.thumbnail,
-            //     trailer: course?.data?.trailer,
-            //     description: course?.data?.description,
-            //     lectures: course?.data?.lectures
-            // });
         } else {
+            
             const course = await axiosWrapper('POST', API_URL.SUPABASE_CREATE_COURSE, formData, token);
-
-            dispatch({ type: types.ALL_RECORDS, data: { keyOfData: 'currentCourse', data: course?.data?.id } });
+            const courseId = course?.data?.id; 
+            console.log(courseId);
+            // const newCategory = await createLectore(courseId);
+            // const formData = {
+            //     name: "New Lecture",
+            //     description: null,
+            //     courseId: courseId,
+            // };
+            // const lectureData = await axiosWrapper('POST', API_URL.SUPABASE_ADD_LECTURE, formData, token);
+            dispatch({ type: types.ALL_RECORDS, data: { keyOfData: 'currentCourse', data: courseId } }); 
         }
+        
+            // Call the get Course By Id so we can have updated state of part one
+            dispatch({ type: types.ALL_RECORDS, data: { keyOfData: 'currentCourseUpdate', data: true } });
+        };
 
-        // Call the get Course By Id so we can have updated state of part one
-        dispatch({ type: types.ALL_RECORDS, data: { keyOfData: 'currentCourseUpdate', data: true } });
-    };
-
+        const createLectore = async (courseId) => {
+            try {
+                const response = await axiosWrapper(
+                    'POST',
+                    `${API_URL.SUPABASE_ADD_LECTURE}`,
+                    { name: 'New Lecture', courseId: courseId },
+                    userToken
+                );
+        
+                const createdCategory = response?.data;
+               
+            } catch (error) {
+                return null;
+            }
+        };
     const handlePublishCourse = async () => {
         await axiosWrapper('PUT', `${API_URL.PUBLISH_COURSE.replace(':id', currentCourse)}`, {}, token);
         // Call the get Course By Id so we can have updated state of part one
@@ -194,6 +207,7 @@ const AddNewCourse = () => {
         }
     }, [stepsCompleted]);
 
+  
     useEffect(() => {
         if (currentCourseUpdate) {
             getCourseById(currentCourse);
