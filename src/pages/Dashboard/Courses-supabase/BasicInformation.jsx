@@ -96,41 +96,68 @@ const BasicInformation = ({ initialData, setStepComplete, createOrUpdateCourse, 
                         >
                             {({ isSubmitting, handleSubmit, setFieldValue, values }) => (
                                 <Form onSubmit={handleSubmit}>
-                                    <Row>
-                                            <Col md={12} xs={12}>
-                                                <Field
-                                                    as={TextField}
-                                                    name="title"
-                                                    label="Title"
-                                                    className="field-control"
-                                                    variant="outlined"
-                                                    id="Title-basic"
-                                                    type="text"
-                                                />
-                                                <ErrorMessage name="title" component="div" className="error" />
-                                            </Col>   
-                                            <Col md={12} xs={12}>
-                                                <Field
-                                                    name="subtitle"
-                                                    as={TextField}
-                                                    label="Subtitle"
-                                                    className="field-control"
-                                                    variant="outlined"
-                                                    type="text"
-                                                />
-                                                <ErrorMessage name="subtitle" component="div" className="error" />
-                                            </Col>   
-                                            <Col md={12} xs={12}>
-                                                <Field
-                                                    name="description"
-                                                    as={TextField}
-                                                    label="Course Description"
-                                                    className="field-control"
-                                                    variant="outlined"
-                                                    multiline
-                                                    rows={7}
-                                                />
-                                            </Col> 
+                                      <Row>
+                                        <Col md={12} xs={12} className='form-group'>
+                                            <TextField
+                                            name="title"
+                                            label="Title"
+                                            className="field-control"
+                                            variant="outlined"
+                                            id="Title-basic"
+                                            type="text"
+                                            value={values.title}
+                                            onChange={(e) => {
+                                                if (e.target.value.length <= 100) {
+                                                setFieldValue('title', e.target.value);
+                                                }
+                                            }}
+                                            helperText={`${values.title?.length || 0}/100`}
+                                            inputProps={{ maxLength: 100 }}
+                                            fullWidth
+                                            />
+                                            <ErrorMessage name="title" component="div" className="error" />
+                                        </Col>
+
+                                        <Col md={12} xs={12} className='form-group'>
+                                            <TextField
+                                            name="subtitle"
+                                            label="Subtitle"
+                                            className="field-control"
+                                            variant="outlined"
+                                            value={values.subtitle}
+                                            onChange={(e) => {
+                                                if (e.target.value.length <= 120) {
+                                                setFieldValue('subtitle', e.target.value);
+                                                }
+                                            }}
+                                            helperText={`${values.subtitle?.length || 0}/120`}
+                                            inputProps={{ maxLength: 120 }}
+                                            fullWidth
+                                            />
+                                            <ErrorMessage name="subtitle" component="div" className="error" />
+                                        </Col>
+
+                                        <Col md={12} xs={12} className='form-group'>
+                                            <TextField
+                                            name="description"
+                                            label="Course Description"
+                                            className="field-control"
+                                            variant="outlined"
+                                            multiline
+                                            id="Description-basic"
+                                            rows={7}
+                                            value={values.description}
+                                            onChange={(e) => {
+                                                if (e.target.value.length <= 500) {
+                                                setFieldValue('description', e.target.value);
+                                                }
+                                            }}
+                                            helperText={`${values.description?.length || 0}/500`}
+                                            inputProps={{ maxLength: 500 }}
+                                            fullWidth
+                                            />
+                                            <ErrorMessage name="description" component="div" className="error" />
+                                        </Col>
                                     </Row>
                                     <Row>
                                         <Col md={12} xs={12}>
