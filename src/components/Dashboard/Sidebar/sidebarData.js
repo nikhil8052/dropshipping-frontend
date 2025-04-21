@@ -161,6 +161,13 @@ export const adminSidebarItems = [
         iconLight: settings, // Replace with
         linkTo: '/admin/settings'
     },
+     {
+        id: 9,
+        name: 'Courses Supabase',
+        iconLight: courses, 
+        linkTo: '/admin/courses-supabase',
+        pathCombinations: ['/admin/courses-supabase', '/admin/courses-supabase/new', '/admin/courses-supabase/edit', '/admin/courses-supabase/details']
+    },
     {
         id: 8,
         name: 'Logout',

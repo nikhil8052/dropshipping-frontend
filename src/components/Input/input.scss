@@ -188,6 +188,12 @@
 .ql-editor.ql-blank::before {
     color: #fff;
 }
+
+.quill-editor {
+    box-shadow: 0px 0px 14.86px 0px #0000000F;
+    border-radius: 5px;
+}
+
 .box-row {
     margin: 2rem 0rem;
     border: 1px solid #fff;
@@ -210,6 +216,95 @@
     color: inherit !important;
 }
 
+
+.ql-header[value="1"],
+.ql-header[value="2"],
+.ql-header[value="3"],
+.ql-header[value="4"] {
+    color: #444 !important;
+    font-weight: bold !important; 
+    fill: #444 !important;
+}
+
+
+.ql-header[value="1"]:hover,
+.ql-header[value="2"]:hover,
+.ql-header[value="3"]:hover,
+.ql-header[value="4"]:hover {
+   color: blue;  /* Light background on hover */
+}
+
+.ql-toolbar{
+    background-color: white !important;
+    border: none !important;
+    border-bottom: 1px solid #E8EAF0 !important;
+    padding: 17px;
+}
+.ql-container.ql-snow{
+ border: none !important;
+}
+
+.resource-card {
+    display: flex;
+    align-items: center;
+    background: #ffffff;
+    transition: all 0.3s ease;
+    gap: 10px;
+  }
+  
+  .fr{
+    float: right !important;
+  }
+
+  .resource-image {
+    object-fit: cover;
+    height: 25px;
+    width: 25px;
+    border-radius: 2px;
+
+  }
+  
+  .resource-title {
+    font-size: 12px;
+    font-weight: 500;
+    color: #333;
+  }
+
+.quill.field-quill-control{
+    background: white !important;
+    border: none !important;
+}
+.new-resource-main-card{
+    border:none !important
+}
+
+.transcript-wrapper.active .subhead {
+    transform: translateY(-10px);
+  }
+
+  .quill-editor {
+    box-shadow: 0px 0px 14.86px 0px #0000000F;
+    border-radius: 5px;
+}
+
+.field-quill-control .ql-editor {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 17px 30px 0px;
+}
+.new-resource-main-card{
+    padding: 0px 30px 30px;
+
+    .card-body{
+        padding: 0;
+    }
+}
+
+.course-right .formgroup label {
+    display: none;
+}
+
 @media only screen and (max-width:767px) {
     .box-row > div {
         margin-bottom: 0rem;
@@ -218,3 +313,6 @@
         margin-bottom: 10px;
     }
     }
+
+
+    
