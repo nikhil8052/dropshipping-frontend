@@ -177,3 +177,8 @@
     transform: none;
     background-color: transparent;
 }
+
+.generic-card * {
+    cursor: inherit !important;
+  }
+  

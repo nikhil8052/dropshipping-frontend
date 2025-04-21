@@ -25,7 +25,7 @@ import {
     arrayMove,
     SortableContext,
     useSortable,
-    verticalListSortingStrategy,
+    rectSortingStrategy,
 } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 
@@ -70,18 +70,27 @@ const Courses = () => {
     const itemsPerBatch = 12; // Number of courses to load per scroll
 
 
-    function SortableItem({ course, id , onDelete}) {
+    function SortableItem({ course, id, onDelete }) {
         const {
             attributes,
             listeners,
             setNodeRef,
             transform,
             transition,
+            isDragging,
         } = useSortable({ id });
-
-
+    
+        const style = {
+            transform: CSS.Transform.toString(transform),
+            transition: isDragging ? 'none' : 'transform 300ms ease', // Animate only others
+            cursor: isDragging ? 'grabbing' : 'grab',
+            zIndex: isDragging ? 999 : 'auto',
+            opacity: isDragging ? 0.7 : 1,
+            boxShadow: isDragging ? '0 8px 20px rgba(0, 161, 215, 0.16)' : 'none',
+        };
+    
         return (
-            <div ref={setNodeRef}  {...attributes} {...listeners}>
+            <div  ref={setNodeRef} style={style} {...attributes} {...listeners}>
                 <GenericCard
                     key={course._id}
                     {...course}
@@ -92,6 +101,7 @@ const Courses = () => {
             </div>
         );
     }
+    
 
     // Debounce search input to prevent excessive API calls
     const debounce = (func, delay) => {
@@ -318,7 +328,7 @@ const Courses = () => {
                 <div className="no-data-wrapper">No Data Found.</div>
             ) : (
                 <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
-                <SortableContext items={displayedCourses.map(c => c._id)} strategy={verticalListSortingStrategy}>
+                <SortableContext items={displayedCourses.map(c => c._id)}   strategy={rectSortingStrategy}>
                     <InfiniteScroll
                         className="custom-card-course"
                         dataLength={displayedCourses.length}
