@@ -884,6 +884,7 @@ label.form-label {
 
 
 
+
   .popup-backdrop {
     position: fixed;
     top: 0;
@@ -911,3 +912,35 @@ label.form-label {
     cursor: pointer;
     margin: 10px 0;
   }
+
+  .showing-transcript{
+    border: 1px solid #019ED8;
+    padding: 0;
+    display: block;
+    position: relative;
+}
+
+.showing-transcript .subhead {
+    background-color: #fff;
+    transform: translate(25px, -14px);
+    display: inline-block;
+}
+
+.trans-res  .ql-toolbar.ql-snow {
+    padding: 20px;
+    border-bottom: 1px solid #019ED8 !important;
+}
+
+.cancel-tans {
+    position: absolute;
+    top: 0;
+    right: 10px;
+    background-color: #F5F8F9;
+}
+
+.cancel-btnn {
+    color: #8C94A3;
+    background-color: #F5F8F9;
+    border: 0;
+}
+
