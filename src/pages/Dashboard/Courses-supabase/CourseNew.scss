@@ -710,11 +710,11 @@ body:has(.course-detail-tab) {
     box-shadow: 0px 0px 14.86px 0px #0000000F;
 }
 
-.folder-detail .drop-box .dropdown img {
+ .drop-box .dropdown img {
     filter: brightness(0) saturate(100%) invert(44%) sepia(90%) saturate(728%) hue-rotate(158deg) brightness(92%) contrast(103%);
 }
 
-.folder-detail .detail-box .drop-box {
+ .detail-box .drop-box {
     height: 25px;
     width: 25px;
     background-color: #fff;
@@ -725,7 +725,7 @@ body:has(.course-detail-tab) {
 }
 
 .course-left-top img {
-    filter: brightness(0) saturate(100%) invert(72%) sepia(2%) saturate(2588%) hue-rotate(178deg) brightness(84%) contrast(69%);
+    filter: brightness(0) saturate(100%) invert(72%) sepia(2%) saturate(2588%) hue-rotate(178deg) brightness(84%) contrast(69%) !important;
 }
 
 .add-course-form .field-control {

@@ -15,18 +15,29 @@ import { faMinus } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useDispatch, useSelector } from 'react-redux';
 import { faPen } from '@fortawesome/free-solid-svg-icons';
+import axiosWrapper from '../../../utils/api';
+import { API_URL } from '../../../utils/apiUrl';
 
 const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCourseData }) => {
   const [isOpen, setIsOpen] = useState(true);
   const [modalShow, setModalShow] = useState(false);
   const [showTranscriptEditor, setShowTranscriptEditor] = useState(false);
   const [showQuizModal, setShowQuizModal] = useState(false);
-  
+  const [showMovePopup, setShowMovePopup] = useState(false);
   const currentCourse = useSelector((state) => state?.root?.currentCourse);
+
   const token = useSelector((state) => state?.auth?.userToken);
-  console.warn(initialData);
-  const { title, thumbnail, banner } = initialData; 
+  const { title, thumbnail, banner } = initialData;
   const [isEditing, setIsEditing] = useState(false); // Add edit mode state
+  const [selectedLecture, setSelectedLecture] = useState({ topicIndex: null, lectureIndex: null });
+  const [unassignedLectures, setUnassignedLectures] = useState([]);
+
+  const [topics, setTopics] = useState([
+    {
+      name: "Folder 1",
+      lectures: ["Video 1", "Video 2"],
+    }
+  ]);
 
   const quizInitialValues = {
     quiz: {
@@ -38,6 +49,80 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
       ]
     }
   };
+
+  const toggleFolder = (index) => {
+    setIsOpen((prevState) => ({
+      ...prevState,
+      [index]: !prevState[index]
+    }));
+  };
+
+
+  const addUnassignedLecture = () => {
+    setUnassignedLectures([
+      ...unassignedLectures,
+      `New Video ${unassignedLectures.length + 1}`
+    ]);
+
+    // console.log(unassignedLectures, " ALl UNsigned lectues ")
+
+  };
+
+
+
+
+  const addNewTopic = async () => {
+    let topic = {
+      name: `Folder ${topics.length + 1}`,
+      lectures: [],
+    };
+
+    const method = 'POST';
+    const url = API_URL.SUPABASE_CREATE_COURSE_FOLDER.replace(':id', currentCourse);
+    const formData = {
+      "name": "Folder Name",
+      "order_id": 0,
+    }
+    console.log(url, " URL")
+    // Make the API call
+    const response = await axiosWrapper(method, url, formData, token);
+
+    console.log(response, " THIS IS THE RESPONSE ")
+
+
+    setTopics([...topics, topic]);
+  };
+
+
+  // addNewTopic();
+
+  const duplicateLecture = (topicIndex, lectureIndex) => {
+    const updatedTopics = [...topics];
+    const lectureToDuplicate = updatedTopics[topicIndex].lectures[lectureIndex];
+
+    // Insert the duplicated lecture after the clicked one
+    updatedTopics[topicIndex].lectures.splice(lectureIndex + 1, 0, lectureToDuplicate + " (Copy)");
+
+    setTopics(updatedTopics);
+  };
+
+
+  const moveUnassignedLecture = (unassignedIndex, targetTopicIndex) => {
+    const lectureToMove = unassignedLectures[unassignedIndex];
+  
+    // Add lecture to target topic
+    const updatedTopics = [...topics];
+    updatedTopics[targetTopicIndex].lectures.push(lectureToMove.name);
+  
+    // Remove lecture from unassigned
+    const updatedUnassignedLectures = unassignedLectures.filter((_, idx) => idx !== unassignedIndex);
+  
+    // Update state
+    setTopics(updatedTopics);
+    setUnassignedLectures(updatedUnassignedLectures);
+    setShowMovePopup(false);
+  };
+
 
   const quizValidationSchema = Yup.object().shape({
     quiz: Yup.object()
@@ -61,10 +146,13 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
       })
   });
   const hasLectures = currentCourse?.lectures && currentCourse?.lectures?.length > 0;
-// console.log(hasLectures);
-//   useEffect(() => {
-//     if (!hasLectures) setIsEditing(true);
-//   }, [hasLectures]);
+
+
+
+  // console.log(hasLectures);
+  //   useEffect(() => {
+  //     if (!hasLectures) setIsEditing(true);
+  //   }, [hasLectures]);
   const handleQuizSubmit = (values) => {
     console.log('Quiz submitted:', values);
     // Here you would typically save the quiz data
@@ -74,9 +162,23 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
   const handleQuizPopupClick = () => {
     setShowQuizModal(!showQuizModal);
   };
-  
-  const toggleFolder = () => {
-    setIsOpen(!isOpen);
+
+  const moveLecture = (targetTopicIndex) => {
+    const updatedTopics = [...topics];
+    const { topicIndex, lectureIndex } = selectedLecture;
+
+    // Take the lecture
+    const lectureToMove = updatedTopics[topicIndex].lectures[lectureIndex];
+
+    // Remove from current topic
+    updatedTopics[topicIndex].lectures.splice(lectureIndex, 1);
+
+    // Add to new topic
+    updatedTopics[targetTopicIndex].lectures.push(lectureToMove);
+
+    setTopics(updatedTopics);
+    setShowMovePopup(false);
+    setSelectedLecture({ topicIndex: null, lectureIndex: null });
   };
 
   const handlePopupClick = () => {
@@ -138,8 +240,8 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
         />
       )}
 
-      <Modal 
-        show={showQuizModal} 
+      <Modal
+        show={showQuizModal}
         onHide={handleQuizPopupClick}
         size="lg"
         centered
@@ -256,7 +358,7 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
             <div className="col-md-3">
               <div className="course-left">
                 <div className="course-left-top">
-                  <h2 className="subhead">{ title }</h2>
+                  <h2 className="subhead">{title}</h2>
                   <div className="drop-box">
                     <Dropdown>
                       <Dropdown.Toggle id="dropdown-basic">
@@ -266,7 +368,8 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
                       </Dropdown.Toggle>
                       <Dropdown.Menu>
                         <Dropdown.Item href="javascript:void(0)">Edit Course</Dropdown.Item>
-                        <Dropdown.Item href="javascript:void(0)">Add Folder</Dropdown.Item>
+                        <Dropdown.Item onClick={addNewTopic}>Add Folder</Dropdown.Item>
+                        <Dropdown.Item onClick={addUnassignedLecture}>Add Lecture</Dropdown.Item>
                         <Dropdown.Item href="javascript:void(0)">Add Page</Dropdown.Item>
                         <Dropdown.Item href="javascript:void(0)">Move</Dropdown.Item>
                         <Dropdown.Item href="javascript:void(0)">Delete</Dropdown.Item>
@@ -275,72 +378,129 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
                   </div>
                 </div>
 
-                {/* <div className="folder-detail">
-                  <div className="drop-box" onClick={toggleFolder} style={{ cursor: 'pointer' }}>
-                    <h3>Folder 1</h3>
-                    <div className={`folder-dropdown ${isOpen ? 'rotated' : ''}`}>
-                      <img src={Drop} alt="" />
-                    </div>
-                  </div>
 
-                  {isOpen && (
-                    <div className="detail-box">
-                      <ul>
-                        <li>
-                          <a href="javascript:void(0)">Video 1</a>
-                          <div className="drop-box">
-                            <Dropdown>
-                              <Dropdown.Toggle id="dropdown-basic">
-                                <div className="toggle-icon">
-                                  <img src={Ellips} alt="" />
-                                </div>
-                              </Dropdown.Toggle>
-                              <Dropdown.Menu>
-                                <Dropdown.Item href="javascript:void(0)">Edit</Dropdown.Item>
-                                <Dropdown.Item href="javascript:void(0)">Copy</Dropdown.Item>
-                                <Dropdown.Item href="javascript:void(0)">Duplicate</Dropdown.Item>
-                              </Dropdown.Menu>
-                            </Dropdown>
+
+
+                {!hasLectures ? (
+                  <>
+                    {topics.map((topic, topicIndex) => (
+                      <div className="folder-detail" key={topicIndex}>
+                        <div className="drop-box" onClick={() => toggleFolder(topicIndex)} style={{ cursor: 'pointer' }}>
+                          <h3>{topic.name}</h3>
+                          <div className={`folder-dropdown ${isOpen[topicIndex] ? 'rotated' : ''}`}>
+                            <img src={Drop} alt="" />
                           </div>
-                        </li>
-                      </ul>
-                    </div>
-                  )}
-                </div> */}
-                
-               
-                 {hasLectures ? ( 
-                    <div className="folder-detail">
-                    <>
-                      <div className="drop-box" onClick={toggleFolder} style={{ cursor: 'pointer' }}>
-                        <h3>Folder 1</h3>
-                        <div className={`folder-dropdown ${isOpen ? 'rotated' : ''}`}>
-                          <img src={Drop} alt="" />
                         </div>
+
+                        {showMovePopup && (
+                          <div className="popup-backdrop">
+                            <div className="popup">
+                              <h3>Move to Folder</h3>
+                              <ul>
+                                {topics.map((topic, index) => (
+                                  <li key={index} onClick={() => moveLecture(index)}>
+                                    {topic.name}
+                                  </li>
+                                ))}
+                              </ul>
+                              <button className='btn btn-primary' onClick={() => setShowMovePopup(false)}>Cancel</button>
+                            </div>
+                          </div>
+                        )}
+
+                        {isOpen[topicIndex] && (
+                          <div className="detail-box">
+                            <ul>
+                              {topic.lectures.map((lecture, lectureIndex) => (
+                                <li key={lectureIndex}>
+                                  <a href="javascript:void(0)">{lecture}</a>
+                                  <div className="drop-box">
+                                    <Dropdown>
+                                      <Dropdown.Toggle id="dropdown-basic">
+                                        <div className="toggle-icon">
+                                          <img src={Ellips} alt="" />
+                                        </div>
+                                      </Dropdown.Toggle>
+                                      <Dropdown.Menu>
+                                        <Dropdown.Item href="javascript:void(0)">Edit</Dropdown.Item>
+                                        {/* <Dropdown.Item href="javascript:void(0)">Copy</Dropdown.Item> */}
+                                        <Dropdown.Item onClick={() => duplicateLecture(topicIndex, lectureIndex)}>Duplicate</Dropdown.Item>
+                                        <Dropdown.Item onClick={() => {
+                                          setSelectedLecture({ topicIndex, lectureIndex });
+                                          setShowMovePopup(true);
+                                        }}>
+                                          Move
+                                        </Dropdown.Item>
+                                      </Dropdown.Menu>
+                                    </Dropdown>
+                                  </div>
+                                </li>
+                              ))}
+                            </ul>
+                          </div>
+                        )}
                       </div>
-                      {isOpen && (
+                    ))}
+
+                    {unassignedLectures.map((lecture, index) => (
+                      <div className="drop-box" key={`unassigned-${index}`}>
                         <div className="detail-box">
                           <ul>
                             <li>
-                              <a href="javascript:void(0)">Video 1</a>
-                              {/* ... existing dropdown ... */}
+                              <a href="javascript:void(0)">{lecture}</a>
+                              <div className="drop-box">
+                                <Dropdown>
+                                  <Dropdown.Toggle id="dropdown-basic">
+                                    <div className="toggle-icon">
+                                      <img src={Ellips} alt="" />
+                                    </div>
+                                  </Dropdown.Toggle>
+                                  <Dropdown.Menu>
+                                    <Dropdown.Item href="javascript:void(0)">Edit</Dropdown.Item>
+                                    <Dropdown.Item onClick={() => {
+                                      setSelectedLecture({ topicIndex: null, lectureIndex: index }); // null because it's unassigned
+                                      setShowMovePopup(true);
+                                    }}>
+                                      Move
+                                    </Dropdown.Item>
+                                  </Dropdown.Menu>
+                                </Dropdown>
+                              </div>
                             </li>
                           </ul>
                         </div>
-                      )}
-                    </>
-                    </div>
-                   ) : ( 
-                    
-                    <div className="detail-box">
+                      </div>
+                    ))}
+
+                    {/* Show the Move Popup for unassigned lectures */}
+                    {showMovePopup && selectedLecture && selectedLecture.topicIndex === null && (
+                      <div className="popup-backdrop">
+                        <div className="popup">
+                          <h3>Move to Folder</h3>
+                          <ul>
+                            {topics.map((topic, index) => (
+                              <li key={`move-to-${index}`} onClick={() => moveUnassignedLecture(selectedLecture.lectureIndex, index)}>
+                                {topic.name}
+                              </li>
+                            ))}
+                          </ul>
+                          <button className="btn btn-primary" onClick={() => setShowMovePopup(false)}>Cancel</button>
+                        </div>
+                      </div>
+                    )}
+                  </>
+                ) : (
+
+                  <div className="detail-box">
                     <ul>
                       <li>
                         <a href="javascript:void(0)">New Page</a>
                         {/* ... existing dropdown ... */}
+
                       </li>
                     </ul>
                   </div>
-                   )} 
+                )}
 
 
 
@@ -350,134 +510,134 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
             <div className="col-md-9">
               <div className="course-right">
                 {/* new code  */}
-                  {!hasLectures && !isEditing ? (
-                    <div className="new-page-view">
-                      <div className="course-right-header">
-                        <h2 className="subhead">New Page</h2>
-                        <Button onClick={() => setIsEditing(true)} className="edit-btn" variant="outlined">
-                          <FontAwesomeIcon icon={faPen} style={{ marginRight: 8 }} />
-                          
-                        </Button>
-                      </div>
+                {!hasLectures && !isEditing ? (
+                  <div className="new-page-view">
+                    <div className="course-right-header">
+                      <h2 className="subhead">New Page</h2>
+                      <Button onClick={() => setIsEditing(true)} className="edit-btn" variant="outlined">
+                        <FontAwesomeIcon icon={faPen} style={{ marginRight: 8 }} />
+
+                      </Button>
                     </div>
-                  
-                  
-                  ) : (
+                  </div>
+
+
+                ) : (
                   <Formik
-                  initialValues={{
-                    description: description || '',
-                    transcript: '',
-                  }}
-                >
-                  {() => (
-                    <Form>
-                      <Row>
-                        <Col>
-                          <Input
-                            className="field-quill-control"
-                            type="richTextEditor"
-                            name="description"
-                            id="course_description"
-                            placeholder="Enter Course Description"
-                            showResources={true}
-                            resources={[
-                              {
-                                id: 1,
-                                title: 'This is the First Resource Title',
-                                image: 'https://dropship-api.ropstam.dev/uploads/1736169674625-courseThumbnail.jpeg'
-                              },
-                              {
-                                id: 2,
-                                title: 'Another Resource',
-                                image: 'https://dropship-api.ropstam.dev/uploads/1736169674625-courseThumbnail.jpeg'
-                              }
-                            ]}
-                            modules={{ toolbar: TOOLBAR_CONFIG }}
-                            formats={FORMATS}
-                          />
-                        </Col>
-                      </Row>
-
-                      <div className="res">
-                        <h2 className="subhead">Add Resources</h2>
-                        <div className="drop-box">
-                          <Dropdown>
-                            <Dropdown.Toggle id="dropdown-basic">
-                              <div className="toggle-icon">Add</div>
-                            </Dropdown.Toggle>
-                            <Dropdown.Menu>
-                              <Dropdown.Item href="javascript:void(0)" onClick={handlePopupClick}>
-                                Add resource link
-                              </Dropdown.Item>
-                              <Dropdown.Item href="javascript:void(0)" onClick={handlePopupClick}>
-                                Add resource file
-                              </Dropdown.Item>
-                            </Dropdown.Menu>
-                          </Dropdown>
-                        </div>
-                      </div>
-
-                      <div className="res">
-                        <h2 className="subhead">Add Quiz</h2>
-                        <div className="drop-box">
-                          <div className="add-btn">
-                            <a href="javascript:void(0)" onClick={handleQuizPopupClick}>Add New</a>
-                          </div>
-                        </div>
-                      </div>
-
-                      <div className={`res trans-res ${showTranscriptEditor ? 'showing-transcript' : ''}`}>
-                        <h2 className="subhead">Add Transcript</h2>
-                        <div className="transc">
-                          <div className="drop-box">
-                            {!showTranscriptEditor ? (
-                              <div className="add-btn">
-                                <a href="javascript:void(0)" onClick={() => setShowTranscriptEditor(true)}>
-                                  Add New
-                                </a>
-                              </div>
-                            ) : null}
-                          </div>
-
-                          <div
-                            className={`transcript-section ${showTranscriptEditor ? '' : 'd-none'}`}
-                          >
+                    initialValues={{
+                      description: description || '',
+                      transcript: '',
+                    }}
+                  >
+                    {() => (
+                      <Form>
+                        <Row>
+                          <Col>
                             <Input
                               className="field-quill-control"
                               type="richTextEditor"
-                              name="transcript"
-                              id="transcript"
-                              placeholder="Add Transcript"
-                              showResources={false}
+                              name="description"
+                              id="course_description"
+                              placeholder="Enter Course Description"
+                              showResources={true}
+                              resources={[
+                                {
+                                  id: 1,
+                                  title: 'This is the First Resource Title',
+                                  image: 'https://dropship-api.ropstam.dev/uploads/1736169674625-courseThumbnail.jpeg'
+                                },
+                                {
+                                  id: 2,
+                                  title: 'Another Resource',
+                                  image: 'https://dropship-api.ropstam.dev/uploads/1736169674625-courseThumbnail.jpeg'
+                                }
+                              ]}
                               modules={{ toolbar: TOOLBAR_CONFIG }}
                               formats={FORMATS}
                             />
-                            <div className="mt-3 cancel-tans">
-                              <button
-                                type="button"
-                                className="cancel-btnn"
-                                onClick={() => setShowTranscriptEditor(false)}
-                              >
-                                Cancel
-                              </button>
+                          </Col>
+                        </Row>
+
+                        <div className="res">
+                          <h2 className="subhead">Add Resources</h2>
+                          <div className="drop-box">
+                            <Dropdown>
+                              <Dropdown.Toggle id="dropdown-basic">
+                                <div className="toggle-icon">Add</div>
+                              </Dropdown.Toggle>
+                              <Dropdown.Menu>
+                                <Dropdown.Item href="javascript:void(0)" onClick={handlePopupClick}>
+                                  Add resource link
+                                </Dropdown.Item>
+                                <Dropdown.Item href="javascript:void(0)" onClick={handlePopupClick}>
+                                  Add resource file
+                                </Dropdown.Item>
+                              </Dropdown.Menu>
+                            </Dropdown>
+                          </div>
+                        </div>
+
+                        <div className="res">
+                          <h2 className="subhead">Add Quiz</h2>
+                          <div className="drop-box">
+                            <div className="add-btn">
+                              <a href="javascript:void(0)" onClick={handleQuizPopupClick}>Add New</a>
                             </div>
                           </div>
                         </div>
-                      </div>
 
-                      <div className="mt-5 d-flex gap-3 flex-wrap tab-buttons">
-                        <Button type="button" className="cancel-btn" onClick={onBack} >
-                          Cancel
-                        </Button>
-                        <Button type="submit" className="submit-btn">
-                          Save & Next
-                        </Button>
-                      </div>
-                      
-                    </Form>
-                  )}
-                  </Formik> 
-                  )}
+                        <div className={`res trans-res ${showTranscriptEditor ? 'showing-transcript' : ''}`}>
+                          <h2 className="subhead">Add Transcript</h2>
+                          <div className="transc">
+                            <div className="drop-box">
+                              {!showTranscriptEditor ? (
+                                <div className="add-btn">
+                                  <a href="javascript:void(0)" onClick={() => setShowTranscriptEditor(true)}>
+                                    Add New
+                                  </a>
+                                </div>
+                              ) : null}
+                            </div>
+
+                            <div
+                              className={`transcript-section ${showTranscriptEditor ? '' : 'd-none'}`}
+                            >
+                              <Input
+                                className="field-quill-control"
+                                type="richTextEditor"
+                                name="transcript"
+                                id="transcript"
+                                placeholder="Add Transcript"
+                                showResources={false}
+                                modules={{ toolbar: TOOLBAR_CONFIG }}
+                                formats={FORMATS}
+                              />
+                              <div className="mt-3 cancel-tans">
+                                <button
+                                  type="button"
+                                  className="cancel-btnn"
+                                  onClick={() => setShowTranscriptEditor(false)}
+                                >
+                                  Cancel
+                                </button>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+
+                        <div className="mt-5 d-flex gap-3 flex-wrap tab-buttons">
+                          <Button type="button" className="cancel-btn" onClick={onBack} >
+                            Cancel
+                          </Button>
+                          <Button type="submit" className="submit-btn">
+                            Save & Next
+                          </Button>
+                        </div>
+
+                      </Form>
+                    )}
+                  </Formik>
+                )}
                 {/* new code end */}
                 {/* <Formik
                   initialValues={{
