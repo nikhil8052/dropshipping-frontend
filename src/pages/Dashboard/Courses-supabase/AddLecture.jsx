@@ -18,6 +18,7 @@ import { faPen } from '@fortawesome/free-solid-svg-icons';
 import axiosWrapper from '../../../utils/api';
 import { API_URL } from '../../../utils/apiUrl';
 import Loading from '@components/Loading/Loading';
+import {  stripHtmlTags } from '../../../utils/utils';
 
 const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCourseData }) => {
   const [loading, setLoading] = useState(false);
@@ -43,6 +44,8 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
 
   useEffect(() => {
     console.log(initialData);
+    console.log(initialData.lecturess);
+    setUnassignedLectures([]);
     if (initialData?.lecturess) {
       const newLectures = initialData.lecturess.map(lecture => ({
         name: lecture.name,
@@ -131,6 +134,7 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
       topic.courseId = currentCourse;
     }
     setTopics([...topics, topic]);
+    dispatch({ type: types.ALL_RECORDS, data: { keyOfData: 'currentCourseUpdate', data: true } });
   };
 
 
@@ -282,12 +286,23 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
   }
 
   const handleEditClick = async (id) => {
-    console.log(id);
+    console.warn(currentCourse);
+  console.log('trigger');
     // const lecture = initialData?.lecturess?.find((lec) => lec.id === id);
     const lecture = await getLectureData(id);
-    console.log(lecture);
-
-    setEditingLecture(lecture?.data);
+    console.log(lecture.data?.courseId);
+    // stripHtmlTags
+    const description = stripHtmlTags(lecture.data?.description);
+    const transcript = stripHtmlTags(lecture.data?.transcript);
+    
+    const lectureDetail = {
+        name: lecture.data?.name,
+        description: description,
+        transcript: transcript,
+        id: lecture.data?.id,
+        courseId: lecture.data?.courseId,
+    };
+    setEditingLecture(lectureDetail);
     setIsEditing(true);
   };
 
@@ -299,11 +314,11 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
 
   const prepareFormData = (values) => {
 
-    let formData = { ...values, courseId: editingLecture?.id };
+  let formData = { ...values, courseId: editingLecture?.courseId };
 
-    console.log(formData);
-    return formData;
-  };
+  console.log(formData);
+  return formData;
+};
 
   const handleSubmit = async (values, { setSubmitting, resetForm, ...formikHelpers }) => {
     setSubmitting(true);
@@ -312,21 +327,25 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
 
     try {
       const formData = prepareFormData(values);
+      console.log(editingLecture);
       const url = getApiUrl(isEditing, editingLecture?.id);
       const method = isEditing ? 'PUT' : 'POST';
+
       await axiosWrapper(method, url, formData, token);
-      toast.success(`${action === 'update' ? 'Updated' : 'Saved'} successfully!`);
-      if (action === 'save') {
-        // handle next step navigation
-      }
+
+    toast.success(`${action === 'update' ? 'Updated' : 'Saved'} successfully!`);
+
+    if (action === 'save') {
+      // handle next step navigation
+    }
     } catch (err) {
       // handleError(err);
       console.log(err);
     } finally {
       setSubmitting(false);
     }
-  };
 
+    };
 
   const resourceFileChanged = async (e)=>{
     const file = e.target.files[0];
@@ -571,8 +590,8 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
                               <div className="detail-box">
                                 <ul>
                                   {topic.lectures.map((lecture, lectureIndex) => (
-                                    <li key={lectureIndex} onClick={() => loadLectureData(lecture)}>
-                                      <a href="javascript:void(0)">{lecture.name ?? "ERROR"}</a>
+                                    <li key={lectureIndex} >
+                                      <a href="javascript:void(0)" onClick={() => loadLectureData(lecture)} >{lecture.name ?? "ERROR"}</a>
                                       <div className="drop-box">
                                         <Dropdown>
                                           <Dropdown.Toggle id="dropdown-basic">
@@ -581,7 +600,7 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
                                             </div>
                                           </Dropdown.Toggle>
                                           <Dropdown.Menu>
-                                            <Dropdown.Item href="javascript:void(0)">Edit</Dropdown.Item>
+                                            <Dropdown.Item href="javascript:void(0)"  onClick={() => handleEditClick(lecture.id)}>Edit</Dropdown.Item>
                                             {/* <Dropdown.Item href="javascript:void(0)">Copy</Dropdown.Item> */}
                                             <Dropdown.Item onClick={() => duplicateLecture(topicIndex, lectureIndex)}>Duplicate</Dropdown.Item>
                                             <Dropdown.Item onClick={() => {
@@ -685,6 +704,7 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
                       <Formik
                         enableReinitialize
                         initialValues={{
+                          // description: stripHtmlTags(editingLecture?.description) || '',
                           description: editingLecture?.description || '',
                           transcript: editingLecture?.transcript || '',
                           id: editingLecture?.id || '',
