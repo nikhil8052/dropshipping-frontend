@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Button, Row, Col, Modal } from 'react-bootstrap';
 import '../../../styles/Courses.scss';
 import Dropdown from 'react-bootstrap/Dropdown';
@@ -34,9 +34,23 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
   const token = useSelector((state) => state?.auth?.userToken);
   const { title, thumbnail, banner } = initialData;
   const [isEditing, setIsEditing] = useState(false); // Add edit mode state
+  const [editingLecture, setEditingLecture] = useState(null);
+
   const [selectedLecture, setSelectedLecture] = useState({ topicIndex: null, lectureIndex: null });
   const [unassignedLectures, setUnassignedLectures] = useState([]);
 
+  useEffect(() => {
+    console.log(initialData);
+    if (initialData?.lecturess) {
+      const newLectures = initialData.lecturess.map(lecture => ({
+        name: lecture.name,
+        id: lecture.id
+      }));
+  
+      setUnassignedLectures(prev => [...prev, ...newLectures]);
+    }
+  }, [initialData]);
+  
   const [topics, setTopics] = useState([]);
 
   const quizInitialValues = {
@@ -257,6 +271,56 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
     console.log( lecData, " This is the lecture data ")
     console.log( lecture , " Current lecture where the user has clicked " )
   }
+
+  const handleEditClick = async (id) => {
+    console.log(id);
+    // const lecture = initialData?.lecturess?.find((lec) => lec.id === id);
+    const lecture = await getLectureData(id);
+    console.log(lecture);
+
+    setEditingLecture(lecture?.data);
+    setIsEditing(true);
+};
+
+const getApiUrl = (isEditable, lectureId) => {
+  return isEditable
+      ? `${API_URL.SUPABASE_UPDATE_LECTURE.replace(':id', lectureId)}`
+      : `${API_URL.SUPABASE_ADD_LECTURE}`;
+};
+
+const prepareFormData = (values) => {
+
+let formData = { ...values, courseId: editingLecture?.id };
+
+console.log(formData);
+return formData;
+};
+
+const handleSubmit = async (values, { setSubmitting, resetForm, ...formikHelpers }) => {
+setSubmitting(true);
+
+const action = formikHelpers?.event?.nativeEvent?.submitter?.value;
+
+try {
+const formData = prepareFormData(values);
+const url = getApiUrl(isEditing, editingLecture?.id);
+const method = isEditing ? 'PUT' : 'POST';
+
+await axiosWrapper(method, url, formData, token);
+
+toast.success(`${action === 'update' ? 'Updated' : 'Saved'} successfully!`);
+
+if (action === 'save') {
+// handle next step navigation
+}
+} catch (err) {
+// handleError(err);
+console.log(err);
+} finally {
+setSubmitting(false);
+}
+
+};
 
 
 
@@ -534,7 +598,7 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
                                         </div>
                                       </Dropdown.Toggle>
                                       <Dropdown.Menu>
-                                        <Dropdown.Item href="javascript:void(0)">Edit</Dropdown.Item>
+                                        <Dropdown.Item href="javascript:void(0)" onClick={() => handleEditClick(lecture.id)}>Edit</Dropdown.Item>
                                         <Dropdown.Item onClick={() => {
                                           setSelectedLecture({ topicIndex: null, lectureIndex: index }); // null because it's unassigned
                                           setShowMovePopup(true);
@@ -568,16 +632,16 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
                         )}
                       </>
                     ) : (
+                      <></>
+                      // <div className="detail-box">
+                      //   <ul>
+                      //     <li>
+                      //       <a href="javascript:void(0)">New Page</a>
+                      //       {/* ... existing dropdown ... */}
 
-                      <div className="detail-box">
-                        <ul>
-                          <li>
-                            <a href="javascript:void(0)">New Page</a>
-                            {/* ... existing dropdown ... */}
-
-                          </li>
-                        </ul>
-                      </div>
+                      //     </li>
+                      //   </ul>
+                      // </div>
                     )}
 
 
@@ -602,12 +666,16 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
 
                     ) : (
                       <Formik
+                        enableReinitialize
                         initialValues={{
-                          description: description || '',
-                          transcript: '',
+                          description: editingLecture?.description || '',
+                          transcript: editingLecture?.transcript || '',
+                          id: editingLecture?.id || '',
                         }}
+                        onSubmit={handleSubmit}
                       >
-                        {() => (
+                        {({ isSubmitting, values, setFieldValue }) => (
+
                           <Form>
                             <Row>
                               <Col>
@@ -707,9 +775,15 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
                               <Button type="button" className="cancel-btn" onClick={onBack} >
                                 Cancel
                               </Button>
-                              <Button type="submit" className="submit-btn">
+                              <Button type="submit" className="submit-btn"
+                              // onClick={() => handleSubmit()}
+                              >
                                 Save & Next
                               </Button>
+                              <Button type="submit" className="submit-btn" disabled={isSubmitting}>
+                                {isEditing ? 'Update' : 'Save & Next'}
+                              </Button>
+
                             </div>
 
                           </Form>

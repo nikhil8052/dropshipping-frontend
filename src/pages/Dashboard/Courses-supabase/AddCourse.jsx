@@ -108,17 +108,17 @@ const AddNewCourse = () => {
             console.log(data);
             // console.log(data.id);
             // console.log(data.lectures);
-            // if(data.id  && data.lectures == null){
-            //     const newLecture = await axiosWrapper(
-            //         'POST',
-            //         API_URL.SUPABASE_ADD_LECTURE,
-            //         {
-            //           name: 'New Page',
-            //           courseId: data.id
-            //         },
-            //         token
-            //       );  
-            // }
+            if(data.id  && data.lectures.length == 0){
+                const newLecture = await axiosWrapper(
+                    'POST',
+                    API_URL.SUPABASE_ADD_LECTURE,
+                    {
+                      name: 'New Page',
+                      courseId: data.id
+                    },
+                    token
+                  );  
+            }
             const description = textParser(data.description);
 
             // Map categories to { label, value } format
@@ -142,7 +142,7 @@ const AddNewCourse = () => {
                 banner: data.banner,
                 trailer: data.trailer,
                 description: description,
-                // lectures: updatedLecture
+                lecturess: data.lectures
             });
 
             dispatch({ type: types.ALL_RECORDS, data: { keyOfData: 'currentCourseUpdate', data: false } });
