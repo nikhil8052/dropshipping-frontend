@@ -19,6 +19,7 @@ import axiosWrapper from '../../../utils/api';
 import { API_URL } from '../../../utils/apiUrl';
 import Loading from '@components/Loading/Loading';
 import {  stripHtmlTags } from '../../../utils/utils';
+import PencilLine from '../../../assets/icons/PencilLine.svg';
 
 const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCourseData }) => {
   const [loading, setLoading] = useState(false);
@@ -42,9 +43,10 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
   const [resourceFileUrl, setResourceFileUrl] = useState('');
   const [label, setLabel] = useState('');
 
+  console.warn(initialData);
   useEffect(() => {
-    console.log(initialData);
-    console.log(initialData.lecturess);
+    // console.log(initialData);
+    // console.log(initialData.lecturess);
     setUnassignedLectures([]);
     if (initialData?.lecturess) {
       const newLectures = initialData.lecturess.map(lecture => ({
@@ -689,7 +691,8 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
                   <div className="course-right">
                     {/* new code  */}
                     {!hasLectures && !isEditing ? (
-                      <div className="new-page-view">
+                      <>
+                      {/* <div className="new-page-view">
                         <div className="course-right-header">
                           <h2 className="subhead">New Page</h2>
                           <Button onClick={() => setIsEditing(true)} className="edit-btn" variant="outlined">
@@ -697,8 +700,25 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
 
                           </Button>
                         </div>
-                      </div>
+                      </div> */}
+                      {initialData?.lecturess?.map((lecture) => (
+                        <div className="new-page-view">
+                          <div className="course-right-header">
+                            <h2 className="subhead">{lecture?.name}</h2>
+                            {/* <Button onClick={() => setIsEditing(true)} className="edit-btn" variant="outlined">
+                              <FontAwesomeIcon icon={faPen} style={{ marginRight: 8 }} />
 
+                            </Button> */}
+                            <img
+                                className="cursor-pointer"
+                                src={PencilLine}
+                                alt="Edit"
+                                onClick={() => handleEditClick(lecture.id)}
+                            />
+                          </div>
+                      </div>
+                      ))}
+                    </>
 
                     ) : (
                       <Formik
@@ -798,18 +818,23 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
                             </div>
 
                             <div className="mt-5 d-flex gap-3 flex-wrap tab-buttons">
-                              <Button type="button" className="cancel-btn" onClick={onBack} >
-                                Cancel
-                              </Button>
-                              <Button type="submit" className="submit-btn"
-                              // onClick={() => handleSubmit()}
-                              >
-                                Save & Next
-                              </Button>
-                              <Button type="submit" className="submit-btn" disabled={isSubmitting}>
-                                {isEditing ? 'Update' : 'Save & Next'}
-                              </Button>
-
+                              <div>
+                                <Button type="button" className="cancel-btn" onClick={onBack} >
+                                  Cancel
+                                </Button>
+                                
+                                <Button type="submit" className="submit-btn" disabled={isSubmitting}>
+                                  {isEditing ? 'Update Lecture' : 'Save & Next'}
+                                </Button>
+                              
+                              </div>
+                              <div>
+                                <Button type="submit" className="submit-btn"
+                                // onClick={() => handleSubmit()}
+                                >
+                                  Save & Next
+                                </Button>
+                              </div>
                             </div>
 
                           </Form>

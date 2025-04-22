@@ -40,6 +40,7 @@ const BasicInformation = ({ initialData, setStepComplete, createOrUpdateCourse, 
         description: Yup.string().optional(),
         access_type: Yup.string().required('Please select an access type'),
         category: Yup.array().optional(),
+        thumbnail: Yup.string().optional(),
         // category: Yup.array().min(1, 'Please select at least one category'),
     });
 
@@ -52,8 +53,6 @@ const BasicInformation = ({ initialData, setStepComplete, createOrUpdateCourse, 
                 category: values.category.map((cat) => typeof cat === 'object' ? cat.value : cat),
                 status:'draft',
             };
-            // console.log(formData);
-            // return false;
             await createOrUpdateCourse(formData);
            
             setStepComplete('step1');
@@ -88,9 +87,23 @@ const BasicInformation = ({ initialData, setStepComplete, createOrUpdateCourse, 
                             initialValues={{
                                 title: initialData?.title || '',
                                 subtitle: initialData?.subtitle || '',
-                                category: initialData?.category || []
+                                // thumbnail: initialData?.thumbnail || '',
+                                access_type: initialData?.access_type || 'category',
+                                category: initialData?.category || [],
+                                // description: initialData?.description || '',
                             }}
-                            validationSchema={schema}
+                            validationSchema={Yup.object({
+                                title: Yup.string().required('Please enter the course title'),
+                                subtitle: Yup.string().optional(),
+                                // description: Yup.string().optional(),
+                                access_type: Yup.string().required('Please select an access type'),
+                                category: Yup.array().optional(),
+                                // thumbnail: Yup.string().optional(),
+                                description: Yup.string().nullable(),
+                                thumbnail: Yup.mixed().nullable(),
+
+                            })}
+                            // validationSchema={schema}
                             onSubmit={handleSubmit}
                             enableReinitialize
                         >

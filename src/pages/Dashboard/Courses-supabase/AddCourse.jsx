@@ -106,23 +106,24 @@ const AddNewCourse = () => {
         try {
             const { data } = await axiosWrapper('GET', `${API_URL.SUPABASE_GET_COURSE.replace(':id', id)}`, {}, token);
             console.log(data);
+            console.log('data');
             // console.log(data.id);
             // console.log(data.lectures);
-            if(data.id  && data.lectures.length == 0){
-                const newLecture = await axiosWrapper(
-                    'POST',
-                    API_URL.SUPABASE_ADD_LECTURE,
-                    {
-                      name: 'New Page',
-                      courseId: data.id
-                    },
-                    token
-                  );  
-            }
+            // if(data.id  && data.lectures.length == 0){
+            //     const newLecture = await axiosWrapper(
+            //         'POST',
+            //         API_URL.SUPABASE_ADD_LECTURE,
+            //         {
+            //           name: 'New Page',
+            //           courseId: data.id
+            //         },
+            //         token
+            //       );  
+            // }
             const description = textParser(data.description);
 
             // Map categories to { label, value } format
-            const categories = data.category.map((cat) => ({
+            const categories = data.categoryDetails.map((cat) => ({
                 label: cat.name,
                 value: cat.id
             }));
@@ -139,6 +140,7 @@ const AddNewCourse = () => {
                 category: categories,
                 createdBy: data.createdBy?.id,
                 thumbnail: data.thumbnail,
+                access_type:data.access_type,
                 banner: data.banner,
                 trailer: data.trailer,
                 description: description,
@@ -166,6 +168,15 @@ const AddNewCourse = () => {
     };
     const createOrUpdateCourse = async (formData) => {
        
+        //   if (currentCourse) {
+        //     console.log(currentCourse);
+
+        //   }else{
+        //     console.log('currentCourse');
+
+        //   }
+        //   return false;
+
           
         try {
           if (currentCourse) {
@@ -173,23 +184,19 @@ const AddNewCourse = () => {
             getCourseById(currentCourse);
           } else {
             const course = await axiosWrapper('POST', API_URL.SUPABASE_CREATE_COURSE, formData, token);
-            const courseId = course?.data?.id;
-      
-            if (!courseId) {
-              console.error('Course ID not returned');
-              return;
-            }
-      
-            // const newLecture = await axiosWrapper(
-            //     'POST',
-            //     API_URL.SUPABASE_ADD_LECTURE,
-            //     {
-            //       name: 'New Page',
-            //       courseId: courseId
-            //     },
-            //     token
-            //   );      
-            dispatch({ type: types.ALL_RECORDS, data: { keyOfData: 'currentCourse', data: courseId } });
+            console.warn(course);
+            const newLecture = await axiosWrapper(
+                'POST',
+                API_URL.SUPABASE_ADD_LECTURE,
+                {
+                  name: 'New Page',
+                  courseId: course.data.id
+                },
+                token
+              );  
+            console.warn(newLecture);
+
+            dispatch({ type: types.ALL_RECORDS, data: { keyOfData: 'currentCourse', data: course.data.id } });
           }
       
           dispatch({ type: types.ALL_RECORDS, data: { keyOfData: 'currentCourseUpdate', data: true } });
