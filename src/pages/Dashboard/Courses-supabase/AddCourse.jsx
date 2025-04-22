@@ -106,7 +106,19 @@ const AddNewCourse = () => {
         try {
             const { data } = await axiosWrapper('GET', `${API_URL.SUPABASE_GET_COURSE.replace(':id', id)}`, {}, token);
             console.log(data);
-
+            // console.log(data.id);
+            // console.log(data.lectures);
+            // if(data.id  && data.lectures == null){
+            //     const newLecture = await axiosWrapper(
+            //         'POST',
+            //         API_URL.SUPABASE_ADD_LECTURE,
+            //         {
+            //           name: 'New Page',
+            //           courseId: data.id
+            //         },
+            //         token
+            //       );  
+            // }
             const description = textParser(data.description);
 
             // Map categories to { label, value } format
@@ -152,33 +164,84 @@ const AddNewCourse = () => {
             dispatch({ type: types.ALL_RECORDS, data: { keyOfData: 'lectureUpdate', data: false } });
         }
     };
-
     const createOrUpdateCourse = async (formData) => {
-        if (currentCourse) {
+       
+          
+        try {
+          if (currentCourse) {
             await axiosWrapper('PUT', `${API_URL.SUPABASE_UPDATE_COURSE.replace(':id', currentCourse)}`, formData, token);
-
             getCourseById(currentCourse);
-
-            // updateCourseData({
-            //     title: course?.data?.title,
-            //     subtitle: course?.data?.subtitle,
-            //     category: course?.data?.category,
-            //     createdBy: course?.data?.createdBy?.id,
-            //     thumbnail: course?.data?.thumbnail,
-            //     trailer: course?.data?.trailer,
-            //     description: course?.data?.description,
-            //     lectures: course?.data?.lectures
-            // });
-        } else {
+          } else {
             const course = await axiosWrapper('POST', API_URL.SUPABASE_CREATE_COURSE, formData, token);
-
-            dispatch({ type: types.ALL_RECORDS, data: { keyOfData: 'currentCourse', data: course?.data?.id } });
+            const courseId = course?.data?.id;
+      
+            if (!courseId) {
+              console.error('Course ID not returned');
+              return;
+            }
+      
+            // const newLecture = await axiosWrapper(
+            //     'POST',
+            //     API_URL.SUPABASE_ADD_LECTURE,
+            //     {
+            //       name: 'New Page',
+            //       courseId: courseId
+            //     },
+            //     token
+            //   );      
+            dispatch({ type: types.ALL_RECORDS, data: { keyOfData: 'currentCourse', data: courseId } });
+          }
+      
+          dispatch({ type: types.ALL_RECORDS, data: { keyOfData: 'currentCourseUpdate', data: true } });
+        } catch (error) {
+          console.error('Error in createOrUpdateCourse:', error);
         }
+      };
+      
+    // const createOrUpdateCourse = async (formData) => {
+        
+    //     if (currentCourse) {
+    //         await axiosWrapper('PUT', `${API_URL.SUPABASE_UPDATE_COURSE.replace(':id', currentCourse)}`, formData, token);
 
-        // Call the get Course By Id so we can have updated state of part one
-        dispatch({ type: types.ALL_RECORDS, data: { keyOfData: 'currentCourseUpdate', data: true } });
-    };
+    //         getCourseById(currentCourse);
+    //     } else {
+            
+    //         const course = await axiosWrapper('POST', API_URL.SUPABASE_CREATE_COURSE, formData, token);
+    //         const courseId = course?.data?.id; 
+    //         console.log(courseId);
+    //         const newLecture = await createLectore(courseId);
+    //         // const newLecture = await createLectore(courseId);
+    //         // console.log(newLecture);
+    //         // const formData = {
+    //         //     name: "New Lecture",
+    //         //     description: null,
+    //         //     courseId: courseId,
+    //         // };
+    //         // const lectureData = await axiosWrapper('POST', API_URL.SUPABASE_ADD_LECTURE, formData, token);
+    //         dispatch({ type: types.ALL_RECORDS, data: { keyOfData: 'currentCourse', data: courseId } }); 
+    //     }
+        
+    //         // Call the get Course By Id so we can have updated state of part one
+    //         dispatch({ type: types.ALL_RECORDS, data: { keyOfData: 'currentCourseUpdate', data: true } });
+    //     };
 
+        // const createLecture = async (courseId) => {
+        //     try {
+        //         const response = await axiosWrapper(
+        //             'POST',
+        //             `${API_URL.SUPABASE_ADD_LECTURE}`,
+        //             // { name: 'New Lecture', courseId: courseId },
+        //             formData,
+        //             token
+        //         );
+        
+        //         const createdLecture = response?.data;
+        //         return createdLecture;
+               
+        //     } catch (error) {
+        //         return null;
+        //     }
+        // };
     const handlePublishCourse = async () => {
         await axiosWrapper('PUT', `${API_URL.PUBLISH_COURSE.replace(':id', currentCourse)}`, {}, token);
         // Call the get Course By Id so we can have updated state of part one
@@ -194,6 +257,7 @@ const AddNewCourse = () => {
         }
     }, [stepsCompleted]);
 
+  
     useEffect(() => {
         if (currentCourseUpdate) {
             getCourseById(currentCourse);

@@ -3,13 +3,22 @@ import { faChevronDown } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import axiosWrapper from '../../../utils/api';
 import { API_URL } from '../../../utils/apiUrl';
+import ConfirmationBox from '@components/ConfirmationBox/ConfirmationBox';
+import Loading from '@components/Loading/Loading';
+import { Button, Row, Col, Modal } from 'react-bootstrap';
+import { useSelector } from 'react-redux';
 
 const CourseCategory = ({ value = [], onChange, token }) => {
+  const { userInfo, userToken } = useSelector((state) => state?.auth);
+  const role = userInfo?.role?.toLowerCase();
   const [allCategories, setAllCategories] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [showCategoryList, setShowCategoryList] = useState(false);
   const [loading, setLoading] = useState(false);
-
+    // New state for category creation modal
+    const [showCategoryModal, setShowCategoryModal] = useState(false);
+    const [newCategoryName, setNewCategoryName] = useState('');
+    const [isCreatingCategory, setIsCreatingCategory] = useState(false);
   useEffect(() => {
     getAllCategories();
   }, []);
@@ -46,9 +55,57 @@ const CourseCategory = ({ value = [], onChange, token }) => {
     onChange(updated);
   };
 
+  const createCategory = async (categoryName) => {
+    try {
+        const response = await axiosWrapper(
+            'POST',
+            `${API_URL.SUPABASE_CREATE_CATEGORY}`,
+            { name: categoryName, createdBy: userInfo?._id },
+            userToken
+        );
+
+        const createdCategory = response?.data;
+        return {
+            label: createdCategory.name,
+            value: createdCategory.id
+        };
+    } catch (error) {
+        return null;
+    }
+};
+
+  const handleAddNewCategory = async () => {
+    if (!newCategoryName.trim()) return;
+    
+    setIsCreatingCategory(true);
+    try {
+        const newCategory = await createCategory(newCategoryName);
+        if (newCategory) {
+           setAllCategories(prev => [...prev, newCategory]);
+            setShowCategoryModal(false);
+            setNewCategoryName('');
+        }
+    } catch (error) {
+        console.error('Error creating category:', error);
+    } finally {
+        setIsCreatingCategory(false);
+    }
+};
   return (
+    <>
     <div className='category_details'>
-      <label htmlFor="">Course Category</label>
+      {/* <label htmlFor="">Course Category</label> */}
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <label style={{ marginBottom: '5px', fontWeight: '500' }}>Course Category</label>
+          <Button 
+              variant="text-dark" 
+              size="sm" 
+              style={{ padding: 0, fontSize: '0.875rem' }}
+              onClick={() => setShowCategoryModal(true)}
+          >
+              + New Category
+          </Button>
+      </div>
       <div className={`main-Category ${showCategoryList ? 'active' : ''}`}>
         {/* Selected Categories */}
         <div>
@@ -113,6 +170,45 @@ const CourseCategory = ({ value = [], onChange, token }) => {
         )}
       </div>
     </div>
+    {/* Add New Category Modal */}
+    <Modal 
+                show={showCategoryModal} 
+                onHide={() => setShowCategoryModal(false)} 
+                centered
+                >
+                    <Modal.Header closeButton>
+                        <Modal.Title>Add New Category</Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body>
+                        <div className="form-group">
+                            <label>Category Name</label>
+                            <input
+                                type="text"
+                                className="field-control my-3 white-important-bg"
+                                value={newCategoryName}
+                                onChange={(e) => setNewCategoryName(e.target.value)}
+                                placeholder="Enter category name"
+                            />
+                        </div>
+                    </Modal.Body>
+                    <Modal.Footer>
+                        <Button 
+                            className="text-black" 
+                            onClick={() => setShowCategoryModal(false)}
+                        >
+                            Cancel
+                        </Button>
+
+                        <Button 
+                            className="submit-btn" 
+                            onClick={handleAddNewCategory}
+                            disabled={!newCategoryName.trim() || isCreatingCategory}
+                        >
+                            {isCreatingCategory ? 'Creating...' : 'Create Category'}
+                        </Button>
+                    </Modal.Footer>
+            </Modal>
+    </>
   );
 };
 

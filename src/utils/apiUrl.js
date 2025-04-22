@@ -6,6 +6,7 @@ const MEDIA_API_BASE = `${BASE_URL}/api/media`;
 const COURSE_API_BASE = `${BASE_URL}/api/course`;
 const SUPABASE_COURSE_API_BASE = `${BASE_URL}/api/supabase/course`;
 const LECTURE_API_BASE = `${BASE_URL}/api/lecture`;
+const SUPABASE_LECTURE_API_BASE = `${BASE_URL}/api/supabase/lecture`;
 const PRODUCT_API_BASE = `${BASE_URL}/api/product`;
 const DAILY_FINANCE_API_BASE = `${BASE_URL}/api/dailyFinance`;
 const INVOICE_API_BASE = `${BASE_URL}/api/invoice`;
@@ -96,6 +97,16 @@ export const API_URL = {
     PERFORM_QUIZ: `${LECTURE_API_BASE}/quiz/:id`,
     GET_LECTURE: `${LECTURE_API_BASE}/:id`,
     GET_ALL_LECTURES: `${LECTURE_API_BASE}/`,
+
+    // SUPABASE_LECTURE_API_BASE
+
+    SUPABASE_ADD_LECTURE: `${SUPABASE_LECTURE_API_BASE}/add`,
+    SUPABASE_UPDATE_LECTURE: `${SUPABASE_LECTURE_API_BASE}/update/:id`,
+    SUPABASE_DELETE_LECTURE: `${SUPABASE_LECTURE_API_BASE}/delete/:id`,
+    SUPABASE_MARK_LECTURE_COMPLETED: `${SUPABASE_LECTURE_API_BASE}/mark-completed/:id`,
+    SUPABASE_PERFORM_QUIZ: `${SUPABASE_LECTURE_API_BASE}/quiz/:id`,
+    SUPABASE_GET_LECTURE: `${SUPABASE_LECTURE_API_BASE}/:id`,
+    SUPABASE_GET_ALL_LECTURES: `${SUPABASE_LECTURE_API_BASE}/`,
 
     // Products API
     UPLOAD_PRODUCTS_CSV: `${PRODUCT_API_BASE}/upload-csv`,

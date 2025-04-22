@@ -55,7 +55,7 @@ const BasicInformation = ({ initialData, setStepComplete, createOrUpdateCourse, 
             // console.log(formData);
             // return false;
             await createOrUpdateCourse(formData);
-
+           
             setStepComplete('step1');
             setSubmitting(false);
             setLoading(false);
