@@ -18,7 +18,7 @@ import { faPen } from '@fortawesome/free-solid-svg-icons';
 import axiosWrapper from '../../../utils/api';
 import { API_URL } from '../../../utils/apiUrl';
 import Loading from '@components/Loading/Loading';
-
+import PencilLine from '../../../assets/icons/PencilLine.svg';
 const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCourseData }) => {
   const [loading, setLoading] = useState(false);
   
@@ -30,11 +30,12 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
   const currentCourse = useSelector((state) => state?.root?.currentCourse);
 
   const token = useSelector((state) => state?.auth?.userToken);
-  const { title, thumbnail, banner } = initialData;
+  const { title, thumbnail, banner , lecturess} = initialData;
   const [isEditing, setIsEditing] = useState(false); // Add edit mode state
+  const [editingLecture, setEditingLecture] = useState(null);
   const [selectedLecture, setSelectedLecture] = useState({ topicIndex: null, lectureIndex: null });
   const [unassignedLectures, setUnassignedLectures] = useState([]);
-
+  
   const [topics, setTopics] = useState([
     {
       name: "Folder 1",
@@ -73,7 +74,7 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
 
 
 
-
+console.log(initialData);
   const addNewTopic = async () => {
     let topic = {
       name: `Folder ${topics.length + 1}`,
@@ -148,9 +149,9 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
           )
       })
   });
-  const hasLectures = currentCourse?.lectures && currentCourse?.lectures?.length > 0;
+  const hasLectures = initialData?.lecturess && initialData?.lecturess?.length > 1;
 
-
+console.table(hasLectures);
 
   // console.log(hasLectures);
   //   useEffect(() => {
@@ -191,6 +192,66 @@ console.log(hasLectures);
   const handlePopupClick = () => {
     setModalShow(!modalShow);
   };
+
+  // New fucntion ::: 
+
+  const handleEditClick = (id) => {
+    const lecture = initialData?.lecturess?.find((lec) => lec.id === id);
+    setEditingLecture(lecture);
+    setIsEditing(true);
+    // setLectureModal({
+    //     show: true,
+    //     title: 'Edit Lecture',
+    //     isEditable: true,
+    //     lectureId: id,
+    //     initialValues: lecture
+    // });
+};
+
+    const getApiUrl = (isEditable, lectureId) => {
+        return isEditable
+            ? `${API_URL.SUPABASE_UPDATE_LECTURE.replace(':id', lectureId)}`
+            : `${API_URL.SUPABASE_ADD_LECTURE}`;
+    };
+
+const prepareFormData = (values) => {
+
+  let formData = { ...values, courseId: editingLecture?.id };
+
+console.log(formData);
+  return formData;
+};
+
+const handleSubmit = async (values, { setSubmitting, resetForm, ...formikHelpers }) => {
+  setSubmitting(true);
+
+  const action = formikHelpers?.event?.nativeEvent?.submitter?.value;
+
+  try {
+    const formData = prepareFormData(values);
+    const url = getApiUrl(isEditing, editingLecture?.id);
+    const method = isEditing ? 'PUT' : 'POST';
+
+    await axiosWrapper(method, url, formData, token);
+
+    toast.success(`${action === 'update' ? 'Updated' : 'Saved'} successfully!`);
+
+    if (action === 'save') {
+      // handle next step navigation
+    }
+  } catch (err) {
+    // handleError(err);
+    console.log(err);
+  } finally {
+    setSubmitting(false);
+  }
+};
+
+    
+  // end new functions
+
+
+
 
   const { description } = {};
 
@@ -393,7 +454,7 @@ console.log(hasLectures);
 
 
 
-                {!hasLectures ? (
+                {hasLectures ? (
                   <>
                     {topics.map((topic, topicIndex) => (
                       <div className="folder-detail" key={topicIndex}>
@@ -503,15 +564,48 @@ console.log(hasLectures);
                   </>
                 ) : (
 
-                  <div className="detail-box">
-                    <ul>
-                      <li>
-                        <a href="javascript:void(0)">New Page</a>
-                        {/* ... existing dropdown ... */}
+                  // <div className="detail-box">
+                  //   <ul>
+                  //     <li>
+                  //       <a href="javascript:void(0)">New Page</a>
+                  //       {/* ... existing dropdown ... */}
 
-                      </li>
-                    </ul>
-                  </div>
+                  //     </li>
+                  //   </ul>
+                  // </div>
+                  <>
+                  {initialData?.lecturess?.map((lecture) => (
+                    <div key={lecture.id} className="drop-box">
+                      <div className="detail-box">
+                        <ul>
+                          <li>
+                            <a href="javascript:void(0)">{lecture.name}</a>
+                            <div className="drop-box">
+                              <Dropdown>
+                                <Dropdown.Toggle>
+                                  <div className="toggle-icon">
+                                    <img src={Ellips} alt="" />
+                                  </div>
+                                </Dropdown.Toggle>
+                                <Dropdown.Menu>
+                                  <Dropdown.Item 
+                                  // onClick={() => setIsEditing(true)}
+                                    onClick={() => handleEditClick(lecture.id)}
+                                    >
+                                    
+
+                                    Edit
+                                  </Dropdown.Item>
+                                </Dropdown.Menu>
+                              </Dropdown>
+                            </div>
+                          </li>
+                        </ul>
+                      </div>
+                    </div>
+                  ))}
+                  
+                  </>
                 )}
 
 
@@ -523,6 +617,7 @@ console.log(hasLectures);
               <div className="course-right">
                 {/* new code  */}
                 {!hasLectures && !isEditing ? (
+                  <>
                   <div className="new-page-view">
                     <div className="course-right-header">
                       <h2 className="subhead">New Page</h2>
@@ -532,16 +627,45 @@ console.log(hasLectures);
                       </Button>
                     </div>
                   </div>
+                  {initialData?.lecturess?.map((lecture) => (
+                    <div  key={lecture.id} className="new-page-view">
+                      <div className="course-right-header">
+                        <h2 className="subhead">New Page</h2>
+                        {/* <Button onClick={() => setIsEditing(true)} className="edit-btn" variant="outlined">
+                          <FontAwesomeIcon icon={faPen} style={{ marginRight: 8 }} />
 
+                        </Button> */}
+                        <img
+                            className="cursor-pointer"
+                            src={PencilLine}
+                            alt="Edit"
+                            onClick={() => handleEditClick(lecture.id)}
+                        />
+                      </div>
+                    </div>
+                ))}
+
+                
+                </>
 
                 ) : (
+                  // <Formik
+                  //   initialValues={{
+                  //     description: description || '',
+                  //     transcript: '',
+                  //   }}
+                  // >
                   <Formik
+                    enableReinitialize
                     initialValues={{
-                      description: description || '',
-                      transcript: '',
+                      description: editingLecture?.description || '',
+                      transcript: editingLecture?.transcript || '',
+                      id: editingLecture?.id || '',
                     }}
+                    onSubmit={handleSubmit}
                   >
-                    {() => (
+                    {({ isSubmitting, values, setFieldValue }) => (
+
                       <Form>
                         <Row>
                           <Col>
@@ -641,9 +765,15 @@ console.log(hasLectures);
                           <Button type="button" className="cancel-btn" onClick={onBack} >
                             Cancel
                           </Button>
-                          <Button type="submit" className="submit-btn">
+                          <Button type="submit" className="submit-btn"
+                          // onClick={() => handleSubmit()}
+                          >
                             Save & Next
                           </Button>
+                          <Button type="submit" className="submit-btn" disabled={isSubmitting}>
+                            {isEditing ? 'Update' : 'Save & Next'}
+                          </Button>
+
                         </div>
 
                       </Form>
