@@ -18,6 +18,7 @@ import { faPen } from '@fortawesome/free-solid-svg-icons';
 import axiosWrapper from '../../../utils/api';
 import { API_URL } from '../../../utils/apiUrl';
 import Loading from '@components/Loading/Loading';
+import {  stripHtmlTags } from '../../../utils/utils';
 
 const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCourseData }) => {
   const [loading, setLoading] = useState(false);
@@ -41,6 +42,8 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
 
   useEffect(() => {
     console.log(initialData);
+    console.log(initialData.lecturess);
+    setUnassignedLectures([]);
     if (initialData?.lecturess) {
       const newLectures = initialData.lecturess.map(lecture => ({
         name: lecture.name,
@@ -122,6 +125,7 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
       topic.courseId = currentCourse;
     }
     setTopics([...topics, topic]);
+    dispatch({ type: types.ALL_RECORDS, data: { keyOfData: 'currentCourseUpdate', data: true } });
   };
 
 
@@ -273,12 +277,23 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
   }
 
   const handleEditClick = async (id) => {
-    console.log(id);
+    console.warn(currentCourse);
+  
     // const lecture = initialData?.lecturess?.find((lec) => lec.id === id);
     const lecture = await getLectureData(id);
-    console.log(lecture);
-
-    setEditingLecture(lecture?.data);
+    console.log(lecture.data?.courseId);
+    // stripHtmlTags
+    const description = stripHtmlTags(lecture.data?.description);
+    const typescript = stripHtmlTags(lecture.data?.description);
+    
+    const lectureDetail = {
+        name: lecture.data?.name,
+        description: description,
+        description: typescript,
+        id: lecture.data?.id,
+        courseId: lecture.data?.courseId,
+    };
+    setEditingLecture(lectureDetail);
     setIsEditing(true);
 };
 
@@ -290,37 +305,38 @@ const getApiUrl = (isEditable, lectureId) => {
 
 const prepareFormData = (values) => {
 
-let formData = { ...values, courseId: editingLecture?.id };
+  let formData = { ...values, courseId: editingLecture?.courseId };
 
-console.log(formData);
-return formData;
+  console.log(formData);
+  return formData;
 };
 
-const handleSubmit = async (values, { setSubmitting, resetForm, ...formikHelpers }) => {
-setSubmitting(true);
+  const handleSubmit = async (values, { setSubmitting, resetForm, ...formikHelpers }) => {
+    setSubmitting(true);
 
-const action = formikHelpers?.event?.nativeEvent?.submitter?.value;
+    const action = formikHelpers?.event?.nativeEvent?.submitter?.value;
 
-try {
-const formData = prepareFormData(values);
-const url = getApiUrl(isEditing, editingLecture?.id);
-const method = isEditing ? 'PUT' : 'POST';
+    try {
+      const formData = prepareFormData(values);
+      console.log(editingLecture);
+      const url = getApiUrl(isEditing, editingLecture?.id);
+      const method = isEditing ? 'PUT' : 'POST';
 
-await axiosWrapper(method, url, formData, token);
+      await axiosWrapper(method, url, formData, token);
 
-toast.success(`${action === 'update' ? 'Updated' : 'Saved'} successfully!`);
+    toast.success(`${action === 'update' ? 'Updated' : 'Saved'} successfully!`);
 
-if (action === 'save') {
-// handle next step navigation
-}
-} catch (err) {
-// handleError(err);
-console.log(err);
-} finally {
-setSubmitting(false);
-}
+    if (action === 'save') {
+      // handle next step navigation
+    }
+    } catch (err) {
+      // handleError(err);
+      console.log(err);
+    } finally {
+      setSubmitting(false);
+    }
 
-};
+    };
 
 
 
@@ -668,6 +684,7 @@ setSubmitting(false);
                       <Formik
                         enableReinitialize
                         initialValues={{
+                          // description: stripHtmlTags(editingLecture?.description) || '',
                           description: editingLecture?.description || '',
                           transcript: editingLecture?.transcript || '',
                           id: editingLecture?.id || '',
