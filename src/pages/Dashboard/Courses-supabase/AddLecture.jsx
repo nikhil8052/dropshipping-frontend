@@ -21,8 +21,10 @@ import Loading from '@components/Loading/Loading';
 
 const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCourseData }) => {
   const [loading, setLoading] = useState(false);
-  
+
   const [isOpen, setIsOpen] = useState(true);
+  const [currentActiveLectureID, setCurrentActiveLectureID] = useState(null);
+  const [currentActiveLecture, setCurrentActiveLecture] = useState(true);
   const [modalShow, setModalShow] = useState(false);
   const [showTranscriptEditor, setShowTranscriptEditor] = useState(false);
   const [showQuizModal, setShowQuizModal] = useState(false);
@@ -35,12 +37,7 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
   const [selectedLecture, setSelectedLecture] = useState({ topicIndex: null, lectureIndex: null });
   const [unassignedLectures, setUnassignedLectures] = useState([]);
 
-  const [topics, setTopics] = useState([
-    {
-      name: "Folder 1",
-      lectures: ["Video 1", "Video 2"],
-    }
-  ]);
+  const [topics, setTopics] = useState([]);
 
   const quizInitialValues = {
     quiz: {
@@ -61,13 +58,31 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
   };
 
 
-  const addUnassignedLecture = () => {
+  // Add New Lecture which is unassinged 
+  const addUnassignedLecture = async () => {
+    const newLec = {
+      'name': `New Lecture`,
+      courseId:currentCourse 
+    };
+
+
+    const response  = await axiosWrapper(
+      'POST',
+      API_URL.SUPABASE_ADD_LECTURE,
+      newLec,
+      token
+    );
+    
+    if( response.data ){
+       const lec_id = response.data[0].id;
+       newLec.id=lec_id;
+       newLec.courseId = currentCourse;
+    }
+
     setUnassignedLectures([
       ...unassignedLectures,
-      `New Video ${unassignedLectures.length + 1}`
+      newLec
     ]);
-
-    // console.log(unassignedLectures, " ALl UNsigned lectues ")
 
   };
 
@@ -79,25 +94,22 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
       name: `Folder ${topics.length + 1}`,
       lectures: [],
     };
-
     const method = 'POST';
     const url = API_URL.SUPABASE_CREATE_COURSE_FOLDER.replace(':id', currentCourse);
     const formData = {
-      "name": "Folder Name",
-      "order_id": 0,
+      "name": topic.name,
+      "order_id": topics.length + 1,
     }
-    console.log(url, " URL")
-    // Make the API call
     const response = await axiosWrapper(method, url, formData, token);
-
-    console.log(response, " THIS IS THE RESPONSE ")
-
-
+    console.log(response, " FOlder Hit api Data  ")
+    if(response.data ){
+      const fid = response.data.id;
+      topic.id=fid;
+      topic.courseId = currentCourse;
+    }
     setTopics([...topics, topic]);
   };
 
-
-  // addNewTopic();
 
   const duplicateLecture = (topicIndex, lectureIndex) => {
     const updatedTopics = [...topics];
@@ -110,18 +122,47 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
   };
 
 
-  const moveUnassignedLecture = (unassignedIndex, targetTopicIndex) => {
+  const moveUnassignedLecture = async (unassignedIndex, targetTopicIndex) => {
+
+    console.log('unassignedIndex', unassignedIndex, 'targetTopicIndex', targetTopicIndex);
     const lectureToMove = unassignedLectures[unassignedIndex];
-  
+
+    console.log( lectureToMove , " Move this lecture to the other folder ");
+
     // Add lecture to target topic
     const updatedTopics = [...topics];
-    updatedTopics[targetTopicIndex].lectures.push(lectureToMove.name);
-  
+
+    console.log( updatedTopics, " These are the updated topics which we have currently..");
+
+    updatedTopics[targetTopicIndex].lectures.push(lectureToMove);
+
     // Remove lecture from unassigned
     const updatedUnassignedLectures = unassignedLectures.filter((_, idx) => idx !== unassignedIndex);
-  
+
+
+    var formData  = {
+      // "name": lectureToMove.name,
+      // "lecture_id": lectureToMove.id, 
+      "folder_id": updatedTopics[targetTopicIndex].id,
+      "courseId": currentCourse,
+    };
+
+    const url = API_URL.SUPABASE_UPDATE_LECTURE_FOLDER.replace(':id', lectureToMove.id);
+
+    console.log( url , " This si the url to hit for the lecture move");
+    // Request the API and change the DB 
+    const response  = await axiosWrapper(
+      'POST',
+      url,
+      formData,
+      token
+    );
+    
+
     // Update state
     setTopics(updatedTopics);
+
+    console.log( updatedTopics , " These are the updated topics ")
     setUnassignedLectures(updatedUnassignedLectures);
     setShowMovePopup(false);
   };
@@ -156,7 +197,7 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
   //   useEffect(() => {
   //     if (!hasLectures) setIsEditing(true);
   //   }, [hasLectures]);
-console.log(hasLectures);
+  console.log(hasLectures);
   // useEffect(() => {
   //   if (!hasLectures) setIsEditing(true);
   // }, [hasLectures]);
@@ -194,238 +235,297 @@ console.log(hasLectures);
 
   const { description } = {};
 
+
+  const getLectureData = async (id)=> {
+
+    const url = API_URL.SUPABASE_GET_LECTURE.replace(':id', id);
+
+    const response  = await axiosWrapper(
+      'GET',
+      url,
+      {},
+      token
+    );
+
+    return response ; 
+  }
+
+  const loadLectureData = async (lecture )=>{
+    setCurrentActiveLectureID(lecture.id);
+    setCurrentActiveLecture(lecture);
+    const lecData = await  getLectureData(currentActiveLectureID);
+    console.log( lecData, " This is the lecture data ")
+    console.log( lecture , " Current lecture where the user has clicked " )
+  }
+
+
+
   return (
     <>
-    {loading ? (
-                    <Loading />
-                ) : (
+      {loading ? (
+        <Loading />
+      ) : (
 
-                  <>
-      {modalShow && (
-        <ConfirmationBox
-          className="add-link-modal"
-          show={modalShow}
-          onClose={handlePopupClick}
-          loading={false}
-          title="Add Link"
-          body={
-            <div className="add-link-form">
-              <div className="form-group">
-                <label htmlFor="labelInput">Label</label>
-                <input
-                  type="text"
-                  id="labelInput"
-                  className="form-control"
-                  placeholder="Google Document"
-                  required
-                />
-                <div className="error-message">* Field is required</div>
-              </div>
-              <div className="form-group">
-                <label htmlFor="urlInput">URL</label>
-                <input
-                  type="text"
-                  id="urlInput"
-                  className="form-control"
-                  placeholder="Enter URL"
-                />
-              </div>
-              <div className="divider-or">
-                <span>OR</span>
-              </div>
-              <div className="form-group res-file">
-                <label htmlFor="fileUpload">Add File</label>
-                <input
-                  type="file"
-                  id="fileUpload"
-                  className="form-control"
-                  accept=".pdf,.doc,.docx,.png,.jpg,.jpeg,.mp4,.mov,.avi"
-                />
-              </div>
-            </div>
-          }
-          customFooterClass="custom-footer-class"
-          nonActiveBtn="cancel-btn"
-          activeBtn="submit-btn"
-          cancelButtonTitle="Cancel"
-          activeBtnTitle="Add"
-        />
-      )}
+        <>
+          {modalShow && (
+            <ConfirmationBox
+              className="add-link-modal"
+              show={modalShow}
+              onClose={handlePopupClick}
+              loading={false}
+              title="Add Link"
+              body={
+                <div className="add-link-form">
+                  <div className="form-group">
+                    <label htmlFor="labelInput">Label</label>
+                    <input
+                      type="text"
+                      id="labelInput"
+                      className="form-control"
+                      placeholder="Google Document"
+                      required
+                    />
+                    <div className="error-message">* Field is required</div>
+                  </div>
+                  <div className="form-group">
+                    <label htmlFor="urlInput">URL</label>
+                    <input
+                      type="text"
+                      id="urlInput"
+                      className="form-control"
+                      placeholder="Enter URL"
+                    />
+                  </div>
+                  <div className="divider-or">
+                    <span>OR</span>
+                  </div>
+                  <div className="form-group res-file">
+                    <label htmlFor="fileUpload">Add File</label>
+                    <input
+                      type="file"
+                      id="fileUpload"
+                      className="form-control"
+                      accept=".pdf,.doc,.docx,.png,.jpg,.jpeg,.mp4,.mov,.avi"
+                    />
+                  </div>
+                </div>
+              }
+              customFooterClass="custom-footer-class"
+              nonActiveBtn="cancel-btn"
+              activeBtn="submit-btn"
+              cancelButtonTitle="Cancel"
+              activeBtnTitle="Add"
+            />
+          )}
 
-      <Modal
-        show={showQuizModal}
-        onHide={handleQuizPopupClick}
-        size="lg"
-        centered
-      >
-        <Modal.Body>
-          <Formik
-            initialValues={quizInitialValues}
-            validationSchema={quizValidationSchema}
-            onSubmit={handleQuizSubmit}
+          <Modal
+            show={showQuizModal}
+            onHide={handleQuizPopupClick}
+            size="lg"
+            centered
           >
-            {({ isSubmitting, values }) => (
-              <Form>
-                <div className="quiz-wrapper">
-                  <div className="add-quiz-title">
-                    <p>Add Quiz</p>
-                  </div>
-                  <div className="quiz-fields-container">
-                    <FieldArray name="quiz.mcqs">
-                      {({ push, remove }) => (
-                        <div className="add-quiz-fields">
-                          <div className="add-quiz-label mb-2">
-                            <p>
-                              Please Insert MCQs for Student's personal assessments.
-                            </p>
-                            <span
-                              onClick={() =>
-                                push({
-                                  question: '',
-                                  options: ['', '', '', ''],
-                                  correctAnswer: ''
-                                })
-                              }
-                            >
-                              <img src={bluePlus} alt="bluePlus" /> Add new
-                            </span>
-                          </div>
-                          {values.quiz.mcqs.map((_, index) => (
-                            <div key={index} className="add-quiz-question">
-                              <div className="d-flex align-items-center">
-                                <Field
-                                  name={`quiz.mcqs[${index}].question`}
-                                  className="field-control"
-                                  type="text"
-                                  placeholder="Please Type Question Here..."
-                                />
-                                <Button
-                                  type="button"
-                                  className="btn btn-link minus-btn"
-                                  onClick={() => {
-                                    remove(index);
-                                  }}
+            <Modal.Body>
+              <Formik
+                initialValues={quizInitialValues}
+                validationSchema={quizValidationSchema}
+                onSubmit={handleQuizSubmit}
+              >
+                {({ isSubmitting, values }) => (
+                  <Form>
+                    <div className="quiz-wrapper">
+                      <div className="add-quiz-title">
+                        <p>Add Quiz</p>
+                      </div>
+                      <div className="quiz-fields-container">
+                        <FieldArray name="quiz.mcqs">
+                          {({ push, remove }) => (
+                            <div className="add-quiz-fields">
+                              <div className="add-quiz-label mb-2">
+                                <p>
+                                  Please Insert MCQs for Student's personal assessments.
+                                </p>
+                                <span
+                                  onClick={() =>
+                                    push({
+                                      question: '',
+                                      options: ['', '', '', ''],
+                                      correctAnswer: ''
+                                    })
+                                  }
                                 >
-                                  <FontAwesomeIcon icon={faMinus} color="black" />
-                                </Button>
+                                  <img src={bluePlus} alt="bluePlus" /> Add new
+                                </span>
                               </div>
-                              <div className="d-flex align-items-center mb-2">
-                                <ErrorMessage
-                                  name={`quiz.mcqs[${index}].question`}
-                                  component="div"
-                                  className="error"
-                                />
-                              </div>
-                              <div className="quiz-multiple-choice">
-                                {['option1', 'option2', 'option3', 'option4'].map(
-                                  (option, optIndex) => (
+                              {values.quiz.mcqs.map((_, index) => (
+                                <div key={index} className="add-quiz-question">
+                                  <div className="d-flex align-items-center">
                                     <Field
-                                      key={optIndex}
-                                      name={`quiz.mcqs[${index}].options[${optIndex}]`}
-                                      className={`field-control ${optIndex === 3 ? 'correctAnswer' : ''}`}
+                                      name={`quiz.mcqs[${index}].question`}
+                                      className="field-control"
                                       type="text"
-                                      placeholder={
-                                        optIndex === 3
-                                          ? 'Correct option'
-                                          : `Type option ${optIndex + 1}`
-                                      }
+                                      placeholder="Please Type Question Here..."
                                     />
-                                  )
-                                )}
+                                    <Button
+                                      type="button"
+                                      className="btn btn-link minus-btn"
+                                      onClick={() => {
+                                        remove(index);
+                                      }}
+                                    >
+                                      <FontAwesomeIcon icon={faMinus} color="black" />
+                                    </Button>
+                                  </div>
+                                  <div className="d-flex align-items-center mb-2">
+                                    <ErrorMessage
+                                      name={`quiz.mcqs[${index}].question`}
+                                      component="div"
+                                      className="error"
+                                    />
+                                  </div>
+                                  <div className="quiz-multiple-choice">
+                                    {['option1', 'option2', 'option3', 'option4'].map(
+                                      (option, optIndex) => (
+                                        <Field
+                                          key={optIndex}
+                                          name={`quiz.mcqs[${index}].options[${optIndex}]`}
+                                          className={`field-control ${optIndex === 3 ? 'correctAnswer' : ''}`}
+                                          type="text"
+                                          placeholder={
+                                            optIndex === 3
+                                              ? 'Correct option'
+                                              : `Type option ${optIndex + 1}`
+                                          }
+                                        />
+                                      )
+                                    )}
+                                  </div>
+                                  <ErrorMessage
+                                    name={`quiz.mcqs[${index}].options`}
+                                    component="div"
+                                    className="error"
+                                  />
+                                </div>
+                              ))}
+                            </div>
+                          )}
+                        </FieldArray>
+                      </div>
+                    </div>
+                    <div className="mt-3 d-flex justify-content-end gap-3">
+                      <Button
+                        type="button"
+                        onClick={handleQuizPopupClick}
+                        className="cancel-btn"
+                        disabled={isSubmitting}
+                      >
+                        Cancel
+                      </Button>
+                      <Button type="submit" className="submit-btn" disabled={isSubmitting}>
+                        Save Quiz
+                      </Button>
+                    </div>
+                  </Form>
+                )}
+              </Formik>
+            </Modal.Body>
+          </Modal>
+
+          <div className="course-detail-tab">
+            <div className="course-detail-row">
+              <div className="row">
+                <div className="col-md-3">
+                  <div className="course-left">
+                    <div className="course-left-top">
+                      <h2 className="subhead">{title}</h2>
+                      <div className="drop-box">
+                        <Dropdown>
+                          <Dropdown.Toggle id="dropdown-basic">
+                            <div className="toggle-icon">
+                              <img src={Ellips} alt="" />
+                            </div>
+                          </Dropdown.Toggle>
+                          <Dropdown.Menu>
+                            <Dropdown.Item href="javascript:void(0)">Edit Course</Dropdown.Item>
+                            <Dropdown.Item onClick={addNewTopic}>Add Folder</Dropdown.Item>
+                            <Dropdown.Item onClick={addUnassignedLecture}>Add Lecture</Dropdown.Item>
+                            <Dropdown.Item href="javascript:void(0)">Add Page</Dropdown.Item>
+                            <Dropdown.Item href="javascript:void(0)">Move</Dropdown.Item>
+                            <Dropdown.Item href="javascript:void(0)">Delete</Dropdown.Item>
+                          </Dropdown.Menu>
+                        </Dropdown>
+                      </div>
+                    </div>
+
+
+
+
+                    {!hasLectures ? (
+                      <>
+                        {topics.map((topic, topicIndex) => (
+                          <div className="folder-detail" key={topicIndex}>
+                            <div className="drop-box" onClick={() => toggleFolder(topicIndex)} style={{ cursor: 'pointer' }}>
+                              <h3>{topic.name}</h3>
+                              <div className={`folder-dropdown ${isOpen[topicIndex] ? 'rotated' : ''}`}>
+                                <img src={Drop} alt="" />
                               </div>
-                              <ErrorMessage
-                                name={`quiz.mcqs[${index}].options`}
-                                component="div"
-                                className="error"
-                              />
                             </div>
-                          ))}
-                        </div>
-                      )}
-                    </FieldArray>
-                  </div>
-                </div>
-                <div className="mt-3 d-flex justify-content-end gap-3">
-                  <Button
-                    type="button"
-                    onClick={handleQuizPopupClick}
-                    className="cancel-btn"
-                    disabled={isSubmitting}
-                  >
-                    Cancel
-                  </Button>
-                  <Button type="submit" className="submit-btn" disabled={isSubmitting}>
-                    Save Quiz
-                  </Button>
-                </div>
-              </Form>
-            )}
-          </Formik>
-        </Modal.Body>
-      </Modal>
 
-      <div className="course-detail-tab">
-        <div className="course-detail-row">
-          <div className="row">
-            <div className="col-md-3">
-              <div className="course-left">
-                <div className="course-left-top">
-                  <h2 className="subhead">{title}</h2>
-                  <div className="drop-box">
-                    <Dropdown>
-                      <Dropdown.Toggle id="dropdown-basic">
-                        <div className="toggle-icon">
-                          <img src={Ellips} alt="" />
-                        </div>
-                      </Dropdown.Toggle>
-                      <Dropdown.Menu>
-                        <Dropdown.Item href="javascript:void(0)">Edit Course</Dropdown.Item>
-                        <Dropdown.Item onClick={addNewTopic}>Add Folder</Dropdown.Item>
-                        <Dropdown.Item onClick={addUnassignedLecture}>Add Lecture</Dropdown.Item>
-                        <Dropdown.Item href="javascript:void(0)">Add Page</Dropdown.Item>
-                        <Dropdown.Item href="javascript:void(0)">Move</Dropdown.Item>
-                        <Dropdown.Item href="javascript:void(0)">Delete</Dropdown.Item>
-                      </Dropdown.Menu>
-                    </Dropdown>
-                  </div>
-                </div>
+                            {showMovePopup && (
+                              <div className="popup-backdrop">
+                                <div className="popup">
+                                  <h3>Move to Folder</h3>
+                                  <ul>
+                                    {topics.map((topic, index) => (
+                                      <li key={index} onClick={() => moveLecture(index)}>
+                                        {topic.name}
+                                      </li>
+                                    ))}
+                                  </ul>
+                                  <button className='btn btn-primary' onClick={() => setShowMovePopup(false)}>Cancel</button>
+                                </div>
+                              </div>
+                            )}
 
-
-
-
-                {!hasLectures ? (
-                  <>
-                    {topics.map((topic, topicIndex) => (
-                      <div className="folder-detail" key={topicIndex}>
-                        <div className="drop-box" onClick={() => toggleFolder(topicIndex)} style={{ cursor: 'pointer' }}>
-                          <h3>{topic.name}</h3>
-                          <div className={`folder-dropdown ${isOpen[topicIndex] ? 'rotated' : ''}`}>
-                            <img src={Drop} alt="" />
+                            {isOpen[topicIndex] && (
+                              <div className="detail-box">
+                                <ul>
+                                  {topic.lectures.map((lecture, lectureIndex) => (
+                                    <li key={lectureIndex} onClick={()=>loadLectureData(lecture)}>
+                                      <a href="javascript:void(0)">{lecture.name ?? "ERROR"}</a>
+                                      <div className="drop-box">
+                                        <Dropdown>
+                                          <Dropdown.Toggle id="dropdown-basic">
+                                            <div className="toggle-icon">
+                                              <img src={Ellips} alt="" />
+                                            </div>
+                                          </Dropdown.Toggle>
+                                          <Dropdown.Menu>
+                                            <Dropdown.Item href="javascript:void(0)">Edit</Dropdown.Item>
+                                            {/* <Dropdown.Item href="javascript:void(0)">Copy</Dropdown.Item> */}
+                                            <Dropdown.Item onClick={() => duplicateLecture(topicIndex, lectureIndex)}>Duplicate</Dropdown.Item>
+                                            <Dropdown.Item onClick={() => {
+                                              setSelectedLecture({ topicIndex, lectureIndex });
+                                              setShowMovePopup(true);
+                                            }}>
+                                              Move
+                                            </Dropdown.Item>
+                                          </Dropdown.Menu>
+                                        </Dropdown>
+                                      </div>
+                                    </li>
+                                  ))}
+                                </ul>
+                              </div>
+                            )}
                           </div>
-                        </div>
+                        ))}
 
-                        {showMovePopup && (
-                          <div className="popup-backdrop">
-                            <div className="popup">
-                              <h3>Move to Folder</h3>
+                        {unassignedLectures.map((lecture, index) => (
+                          <div className="drop-box" key={`unassigned-${index}`}>
+                            <div className="detail-box">
                               <ul>
-                                {topics.map((topic, index) => (
-                                  <li key={index} onClick={() => moveLecture(index)}>
-                                    {topic.name}
-                                  </li>
-                                ))}
-                              </ul>
-                              <button className='btn btn-primary' onClick={() => setShowMovePopup(false)}>Cancel</button>
-                            </div>
-                          </div>
-                        )}
-
-                        {isOpen[topicIndex] && (
-                          <div className="detail-box">
-                            <ul>
-                              {topic.lectures.map((lecture, lectureIndex) => (
-                                <li key={lectureIndex}>
-                                  <a href="javascript:void(0)">{lecture}</a>
+                                <li>
+                                  <a href="javascript:void(0)">{lecture.name}</a>
                                   <div className="drop-box">
                                     <Dropdown>
                                       <Dropdown.Toggle id="dropdown-basic">
@@ -435,10 +535,8 @@ console.log(hasLectures);
                                       </Dropdown.Toggle>
                                       <Dropdown.Menu>
                                         <Dropdown.Item href="javascript:void(0)">Edit</Dropdown.Item>
-                                        {/* <Dropdown.Item href="javascript:void(0)">Copy</Dropdown.Item> */}
-                                        <Dropdown.Item onClick={() => duplicateLecture(topicIndex, lectureIndex)}>Duplicate</Dropdown.Item>
                                         <Dropdown.Item onClick={() => {
-                                          setSelectedLecture({ topicIndex, lectureIndex });
+                                          setSelectedLecture({ topicIndex: null, lectureIndex: index }); // null because it's unassigned
                                           setShowMovePopup(true);
                                         }}>
                                           Move
@@ -447,211 +545,179 @@ console.log(hasLectures);
                                     </Dropdown>
                                   </div>
                                 </li>
-                              ))}
-                            </ul>
+                              </ul>
+                            </div>
+                          </div>
+                        ))}
+
+                        {/* Show the Move Popup for unassigned lectures */}
+                        {showMovePopup && selectedLecture && selectedLecture.topicIndex === null && (
+                          <div className="popup-backdrop">
+                            <div className="popup">
+                              <h3>Move to Folder</h3>
+                              <ul>
+                                {topics.map((topic, index) => (
+                                  <li key={`move-to-${index}`} onClick={() => moveUnassignedLecture(selectedLecture.lectureIndex, index)}>
+                                    {topic.name}
+                                  </li>
+                                ))}
+                              </ul>
+                              <button className="btn btn-primary" onClick={() => setShowMovePopup(false)}>Cancel</button>
+                            </div>
                           </div>
                         )}
-                      </div>
-                    ))}
+                      </>
+                    ) : (
 
-                    {unassignedLectures.map((lecture, index) => (
-                      <div className="drop-box" key={`unassigned-${index}`}>
-                        <div className="detail-box">
-                          <ul>
-                            <li>
-                              <a href="javascript:void(0)">{lecture}</a>
+                      <div className="detail-box">
+                        <ul>
+                          <li>
+                            <a href="javascript:void(0)">New Page</a>
+                            {/* ... existing dropdown ... */}
+
+                          </li>
+                        </ul>
+                      </div>
+                    )}
+
+
+
+                  </div>
+                </div>
+
+                <div className="col-md-9">
+                  <div className="course-right">
+                    {/* new code  */}
+                    {!hasLectures && !isEditing ? (
+                      <div className="new-page-view">
+                        <div className="course-right-header">
+                          <h2 className="subhead">New Page</h2>
+                          <Button onClick={() => setIsEditing(true)} className="edit-btn" variant="outlined">
+                            <FontAwesomeIcon icon={faPen} style={{ marginRight: 8 }} />
+
+                          </Button>
+                        </div>
+                      </div>
+
+
+                    ) : (
+                      <Formik
+                        initialValues={{
+                          description: description || '',
+                          transcript: '',
+                        }}
+                      >
+                        {() => (
+                          <Form>
+                            <Row>
+                              <Col>
+                                <Input
+                                  className="field-quill-control"
+                                  type="richTextEditor"
+                                  name="description"
+                                  id="course_description"
+                                  placeholder="Enter Course Description"
+                                  showResources={true}
+                                  resources={[
+                                    {
+                                      id: 1,
+                                      title: 'This is the First Resource Title',
+                                      image: 'https://dropship-api.ropstam.dev/uploads/1736169674625-courseThumbnail.jpeg'
+                                    },
+                                    {
+                                      id: 2,
+                                      title: 'Another Resource',
+                                      image: 'https://dropship-api.ropstam.dev/uploads/1736169674625-courseThumbnail.jpeg'
+                                    }
+                                  ]}
+                                  modules={{ toolbar: TOOLBAR_CONFIG }}
+                                  formats={FORMATS}
+                                />
+                              </Col>
+                            </Row>
+
+                            <div className="res">
+                              <h2 className="subhead">Add Resources</h2>
                               <div className="drop-box">
                                 <Dropdown>
                                   <Dropdown.Toggle id="dropdown-basic">
-                                    <div className="toggle-icon">
-                                      <img src={Ellips} alt="" />
-                                    </div>
+                                    <div className="toggle-icon">Add</div>
                                   </Dropdown.Toggle>
                                   <Dropdown.Menu>
-                                    <Dropdown.Item href="javascript:void(0)">Edit</Dropdown.Item>
-                                    <Dropdown.Item onClick={() => {
-                                      setSelectedLecture({ topicIndex: null, lectureIndex: index }); // null because it's unassigned
-                                      setShowMovePopup(true);
-                                    }}>
-                                      Move
+                                    <Dropdown.Item href="javascript:void(0)" onClick={handlePopupClick}>
+                                      Add resource link
+                                    </Dropdown.Item>
+                                    <Dropdown.Item href="javascript:void(0)" onClick={handlePopupClick}>
+                                      Add resource file
                                     </Dropdown.Item>
                                   </Dropdown.Menu>
                                 </Dropdown>
                               </div>
-                            </li>
-                          </ul>
-                        </div>
-                      </div>
-                    ))}
-
-                    {/* Show the Move Popup for unassigned lectures */}
-                    {showMovePopup && selectedLecture && selectedLecture.topicIndex === null && (
-                      <div className="popup-backdrop">
-                        <div className="popup">
-                          <h3>Move to Folder</h3>
-                          <ul>
-                            {topics.map((topic, index) => (
-                              <li key={`move-to-${index}`} onClick={() => moveUnassignedLecture(selectedLecture.lectureIndex, index)}>
-                                {topic.name}
-                              </li>
-                            ))}
-                          </ul>
-                          <button className="btn btn-primary" onClick={() => setShowMovePopup(false)}>Cancel</button>
-                        </div>
-                      </div>
-                    )}
-                  </>
-                ) : (
-
-                  <div className="detail-box">
-                    <ul>
-                      <li>
-                        <a href="javascript:void(0)">New Page</a>
-                        {/* ... existing dropdown ... */}
-
-                      </li>
-                    </ul>
-                  </div>
-                )}
-
-
-
-              </div>
-            </div>
-
-            <div className="col-md-9">
-              <div className="course-right">
-                {/* new code  */}
-                {!hasLectures && !isEditing ? (
-                  <div className="new-page-view">
-                    <div className="course-right-header">
-                      <h2 className="subhead">New Page</h2>
-                      <Button onClick={() => setIsEditing(true)} className="edit-btn" variant="outlined">
-                        <FontAwesomeIcon icon={faPen} style={{ marginRight: 8 }} />
-
-                      </Button>
-                    </div>
-                  </div>
-
-
-                ) : (
-                  <Formik
-                    initialValues={{
-                      description: description || '',
-                      transcript: '',
-                    }}
-                  >
-                    {() => (
-                      <Form>
-                        <Row>
-                          <Col>
-                            <Input
-                              className="field-quill-control"
-                              type="richTextEditor"
-                              name="description"
-                              id="course_description"
-                              placeholder="Enter Course Description"
-                              showResources={true}
-                              resources={[
-                                {
-                                  id: 1,
-                                  title: 'This is the First Resource Title',
-                                  image: 'https://dropship-api.ropstam.dev/uploads/1736169674625-courseThumbnail.jpeg'
-                                },
-                                {
-                                  id: 2,
-                                  title: 'Another Resource',
-                                  image: 'https://dropship-api.ropstam.dev/uploads/1736169674625-courseThumbnail.jpeg'
-                                }
-                              ]}
-                              modules={{ toolbar: TOOLBAR_CONFIG }}
-                              formats={FORMATS}
-                            />
-                          </Col>
-                        </Row>
-
-                        <div className="res">
-                          <h2 className="subhead">Add Resources</h2>
-                          <div className="drop-box">
-                            <Dropdown>
-                              <Dropdown.Toggle id="dropdown-basic">
-                                <div className="toggle-icon">Add</div>
-                              </Dropdown.Toggle>
-                              <Dropdown.Menu>
-                                <Dropdown.Item href="javascript:void(0)" onClick={handlePopupClick}>
-                                  Add resource link
-                                </Dropdown.Item>
-                                <Dropdown.Item href="javascript:void(0)" onClick={handlePopupClick}>
-                                  Add resource file
-                                </Dropdown.Item>
-                              </Dropdown.Menu>
-                            </Dropdown>
-                          </div>
-                        </div>
-
-                        <div className="res">
-                          <h2 className="subhead">Add Quiz</h2>
-                          <div className="drop-box">
-                            <div className="add-btn">
-                              <a href="javascript:void(0)" onClick={handleQuizPopupClick}>Add New</a>
                             </div>
-                          </div>
-                        </div>
 
-                        <div className={`res trans-res ${showTranscriptEditor ? 'showing-transcript' : ''}`}>
-                          <h2 className="subhead">Add Transcript</h2>
-                          <div className="transc">
-                            <div className="drop-box">
-                              {!showTranscriptEditor ? (
+                            <div className="res">
+                              <h2 className="subhead">Add Quiz</h2>
+                              <div className="drop-box">
                                 <div className="add-btn">
-                                  <a href="javascript:void(0)" onClick={() => setShowTranscriptEditor(true)}>
-                                    Add New
-                                  </a>
+                                  <a href="javascript:void(0)" onClick={handleQuizPopupClick}>Add New</a>
                                 </div>
-                              ) : null}
-                            </div>
-
-                            <div
-                              className={`transcript-section ${showTranscriptEditor ? '' : 'd-none'}`}
-                            >
-                              <Input
-                                className="field-quill-control"
-                                type="richTextEditor"
-                                name="transcript"
-                                id="transcript"
-                                placeholder="Add Transcript"
-                                showResources={false}
-                                modules={{ toolbar: TOOLBAR_CONFIG }}
-                                formats={FORMATS}
-                              />
-                              <div className="mt-3 cancel-tans">
-                                <button
-                                  type="button"
-                                  className="cancel-btnn"
-                                  onClick={() => setShowTranscriptEditor(false)}
-                                >
-                                  Cancel
-                                </button>
                               </div>
                             </div>
-                          </div>
-                        </div>
 
-                        <div className="mt-5 d-flex gap-3 flex-wrap tab-buttons">
-                          <Button type="button" className="cancel-btn" onClick={onBack} >
-                            Cancel
-                          </Button>
-                          <Button type="submit" className="submit-btn">
-                            Save & Next
-                          </Button>
-                        </div>
+                            <div className={`res trans-res ${showTranscriptEditor ? 'showing-transcript' : ''}`}>
+                              <h2 className="subhead">Add Transcript</h2>
+                              <div className="transc">
+                                <div className="drop-box">
+                                  {!showTranscriptEditor ? (
+                                    <div className="add-btn">
+                                      <a href="javascript:void(0)" onClick={() => setShowTranscriptEditor(true)}>
+                                        Add New
+                                      </a>
+                                    </div>
+                                  ) : null}
+                                </div>
 
-                      </Form>
+                                <div
+                                  className={`transcript-section ${showTranscriptEditor ? '' : 'd-none'}`}
+                                >
+                                  <Input
+                                    className="field-quill-control"
+                                    type="richTextEditor"
+                                    name="transcript"
+                                    id="transcript"
+                                    placeholder="Add Transcript"
+                                    showResources={false}
+                                    modules={{ toolbar: TOOLBAR_CONFIG }}
+                                    formats={FORMATS}
+                                  />
+                                  <div className="mt-3 cancel-tans">
+                                    <button
+                                      type="button"
+                                      className="cancel-btnn"
+                                      onClick={() => setShowTranscriptEditor(false)}
+                                    >
+                                      Cancel
+                                    </button>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+
+                            <div className="mt-5 d-flex gap-3 flex-wrap tab-buttons">
+                              <Button type="button" className="cancel-btn" onClick={onBack} >
+                                Cancel
+                              </Button>
+                              <Button type="submit" className="submit-btn">
+                                Save & Next
+                              </Button>
+                            </div>
+
+                          </Form>
+                        )}
+                      </Formik>
                     )}
-                  </Formik>
-                )}
-                {/* new code end */}
-                {/* <Formik
+                    {/* new code end */}
+                    {/* <Formik
                   initialValues={{
                     description: description || '',
                     transcript: '',
@@ -753,13 +819,13 @@ console.log(hasLectures);
                     </Form>
                   )}
                 </Formik> */}
+                  </div>
+                </div>
               </div>
             </div>
           </div>
-        </div>
-      </div>
-      </>
-    )}
+        </>
+      )}
     </>
   );
 };
