@@ -18,7 +18,7 @@ import { faPen } from '@fortawesome/free-solid-svg-icons';
 import axiosWrapper from '../../../utils/api';
 import { API_URL } from '../../../utils/apiUrl';
 import Loading from '@components/Loading/Loading';
-import {  stripHtmlTags } from '../../../utils/utils';
+import { stripHtmlTags } from '../../../utils/utils';
 
 const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCourseData }) => {
   const [loading, setLoading] = useState(false);
@@ -105,14 +105,28 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
 
   };
 
-  const addResource = () => {
-    const resource={
+  const addResource = async () => {
+
+    const formData={
+      'model_id': currentActiveLectureID,
+      'model_type': 'lecture',
+      'name': label,
+      'type':'file',
+      'file_link': resourceFileUrl
+    }
+
+    const url = API_URL.SUPABASE_UPDATE_LECTURE_RESOURCE.replace(':id', currentActiveLectureID);
+    const response = await axiosWrapper('POST', url, formData, token);
+
+    const resource = {
       image: resourceFileUrl,
       url: url,
-      title:label
+      title: label,
     }
+
     setResources([...resources, resource]);
     setModalShow(false);
+    
   }
 
   const addNewTopic = async () => {
@@ -184,7 +198,6 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
       formData,
       token
     );
-
 
     // Update state
     setTopics(updatedTopics);
@@ -286,24 +299,37 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
   }
 
   const handleEditClick = async (id) => {
-    console.warn(currentCourse);
-  console.log('trigger');
+    // console.warn(currentCourse);
+    // console.log('trigger');
     // const lecture = initialData?.lecturess?.find((lec) => lec.id === id);
     const lecture = await getLectureData(id);
-    console.log(lecture.data?.courseId);
+    console.log( lecture, " lect data")
+    // console.log(lecture.data?.courseId);
     // stripHtmlTags
     const description = stripHtmlTags(lecture.data?.description);
     const transcript = stripHtmlTags(lecture.data?.transcript);
-    
+    setCurrentActiveLectureID(id);
     const lectureDetail = {
-        name: lecture.data?.name,
-        description: description,
-        transcript: transcript,
-        id: lecture.data?.id,
-        courseId: lecture.data?.courseId,
+      name: lecture.data?.name,
+      description: description,
+      transcript: transcript,
+      id: lecture.data?.id,
+      courseId: lecture.data?.courseId,
     };
+
     setEditingLecture(lectureDetail);
     setIsEditing(true);
+    // Get the resouces of the lecture
+    var lecResources = lecture.data.resources ?? [];
+    var resources = lecResources.map((lec)=>{
+      return {
+        image: lec.file_link,
+        url: lec.file_link,
+        title: lec.name,
+      }
+    })
+    setResources(resources);
+    
   };
 
   const getApiUrl = (isEditable, lectureId) => {
@@ -314,11 +340,11 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
 
   const prepareFormData = (values) => {
 
-  let formData = { ...values, courseId: editingLecture?.courseId };
+    let formData = { ...values, courseId: editingLecture?.courseId };
 
-  console.log(formData);
-  return formData;
-};
+    console.log(formData);
+    return formData;
+  };
 
   const handleSubmit = async (values, { setSubmitting, resetForm, ...formikHelpers }) => {
     setSubmitting(true);
@@ -333,11 +359,11 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
 
       await axiosWrapper(method, url, formData, token);
 
-    toast.success(`${action === 'update' ? 'Updated' : 'Saved'} successfully!`);
+      toast.success(`${action === 'update' ? 'Updated' : 'Saved'} successfully!`);
 
-    if (action === 'save') {
-      // handle next step navigation
-    }
+      if (action === 'save') {
+        // handle next step navigation
+      }
     } catch (err) {
       // handleError(err);
       console.log(err);
@@ -345,9 +371,9 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
       setSubmitting(false);
     }
 
-    };
+  };
 
-  const resourceFileChanged = async (e)=>{
+  const resourceFileChanged = async (e) => {
     const file = e.target.files[0];
     const formData = new FormData();
     formData.append('files', file);
@@ -406,7 +432,7 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
                       id="fileUpload"
                       className="form-control"
                       accept=".pdf,.doc,.docx,.png,.jpg,.jpeg,.mp4,.mov,.avi"
-                      onChange={(e) => resourceFileChanged(e)}                    />
+                      onChange={(e) => resourceFileChanged(e)} />
                   </div>
                 </div>
               }
@@ -545,20 +571,16 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
                             </div>
                           </Dropdown.Toggle>
                           <Dropdown.Menu>
-                            <Dropdown.Item href="javascript:void(0)">Edit Course</Dropdown.Item>
+                            {/* <Dropdown.Item href="javascript:void(0)">Edit Course</Dropdown.Item> */}
                             <Dropdown.Item onClick={addNewTopic}>Add Folder</Dropdown.Item>
                             <Dropdown.Item onClick={addUnassignedLecture}>Add Lecture</Dropdown.Item>
-                            <Dropdown.Item href="javascript:void(0)">Add Page</Dropdown.Item>
-                            <Dropdown.Item href="javascript:void(0)">Move</Dropdown.Item>
+                            {/* <Dropdown.Item href="javascript:void(0)">Add Page</Dropdown.Item> */}
+                            {/* <Dropdown.Item href="javascript:void(0)">Move</Dropdown.Item> */}
                             <Dropdown.Item href="javascript:void(0)">Delete</Dropdown.Item>
                           </Dropdown.Menu>
                         </Dropdown>
                       </div>
                     </div>
-
-
-
-
                     {!hasLectures ? (
                       <>
                         {topics.map((topic, topicIndex) => (
@@ -600,7 +622,7 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
                                             </div>
                                           </Dropdown.Toggle>
                                           <Dropdown.Menu>
-                                            <Dropdown.Item href="javascript:void(0)"  onClick={() => handleEditClick(lecture.id)}>Edit</Dropdown.Item>
+                                            <Dropdown.Item href="javascript:void(0)" onClick={() => handleEditClick(lecture.id)}>Edit</Dropdown.Item>
                                             {/* <Dropdown.Item href="javascript:void(0)">Copy</Dropdown.Item> */}
                                             <Dropdown.Item onClick={() => duplicateLecture(topicIndex, lectureIndex)}>Duplicate</Dropdown.Item>
                                             <Dropdown.Item onClick={() => {

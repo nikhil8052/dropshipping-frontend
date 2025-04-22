@@ -138,7 +138,7 @@ const RichTextEditor = (props) => {
     </div>
 )} */}
             {props.showResources && resourceList.length>0 && (
-                <div className='card new-resource-main-card'>
+                <div className='card new-resource-main-card '>
                     <div className='card-body d-flex flex-column'>
                         <h5 className='card-title'>Resources</h5>
                         <div id="all_resources">
