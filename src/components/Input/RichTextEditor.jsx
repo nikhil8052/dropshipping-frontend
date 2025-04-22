@@ -73,7 +73,7 @@ const RichTextEditor = (props) => {
                             <div class="resource-title">This is the Resource Title</div>
                         </div>
             `;
-         
+
             document.getElementById('all_resources').innerHTML += html;
 
         };
@@ -120,7 +120,7 @@ const RichTextEditor = (props) => {
                 placeholder={props.placeholder}
             />
 
-{/* {props.showResources && (
+            {/* {props.showResources && (
     <div className='card new-resource-main-card'>
         <div className='card-body d-flex flex-column'>
             <h5 className='card-title'>Resources</h5>
@@ -137,21 +137,21 @@ const RichTextEditor = (props) => {
         </div>
     </div>
 )} */}
-{props.showResources && (
-  <div className='card new-resource-main-card'>
-    <div className='card-body d-flex flex-column'>
-      <h5 className='card-title'>Resources</h5>
-      <div id="all_resources">
-        {resourceList.map((resource, index) => (
-          <div key={resource.id} className={`resource-card ${index !== 0 ? 'mt-3' : ''}`}>
-            <img src={resource.image} alt="Resource" className="resource-image" />
-            <div className="resource-title">{resource.title}</div>
-          </div>
-        ))}
-      </div>
-    </div>
-  </div>
-)}
+            {props.showResources && resourceList.length>0 && (
+                <div className='card new-resource-main-card'>
+                    <div className='card-body d-flex flex-column'>
+                        <h5 className='card-title'>Resources</h5>
+                        <div id="all_resources">
+                            {resourceList.map((resource, index) => (
+                                <div key={resource.id} className={`resource-card ${index !== 0 ? 'mt-3' : ''}`}>
+                                    <img src={resource.image} alt="Resource" className="resource-image" />
+                                    <div className="resource-title">{resource.title}</div>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                </div>
+            )}
 
 
 

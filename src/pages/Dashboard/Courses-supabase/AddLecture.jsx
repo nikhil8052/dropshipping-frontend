@@ -30,14 +30,16 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
   const [showQuizModal, setShowQuizModal] = useState(false);
   const [showMovePopup, setShowMovePopup] = useState(false);
   const currentCourse = useSelector((state) => state?.root?.currentCourse);
-
   const token = useSelector((state) => state?.auth?.userToken);
   const { title, thumbnail, banner } = initialData;
   const [isEditing, setIsEditing] = useState(false); // Add edit mode state
   const [editingLecture, setEditingLecture] = useState(null);
-
   const [selectedLecture, setSelectedLecture] = useState({ topicIndex: null, lectureIndex: null });
   const [unassignedLectures, setUnassignedLectures] = useState([]);
+  const [resources, setResources] = useState([]);
+  const [url, setUrl] = useState('');
+  const [resourceFileUrl, setResourceFileUrl] = useState('');
+  const [label, setLabel] = useState('');
 
   useEffect(() => {
     console.log(initialData);
@@ -46,11 +48,11 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
         name: lecture.name,
         id: lecture.id
       }));
-  
+
       setUnassignedLectures(prev => [...prev, ...newLectures]);
     }
   }, [initialData]);
-  
+
   const [topics, setTopics] = useState([]);
 
   const quizInitialValues = {
@@ -76,21 +78,21 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
   const addUnassignedLecture = async () => {
     const newLec = {
       'name': `New Lecture`,
-      courseId:currentCourse 
+      courseId: currentCourse
     };
 
 
-    const response  = await axiosWrapper(
+    const response = await axiosWrapper(
       'POST',
       API_URL.SUPABASE_ADD_LECTURE,
       newLec,
       token
     );
-    
-    if( response.data ){
-       const lec_id = response.data[0].id;
-       newLec.id=lec_id;
-       newLec.courseId = currentCourse;
+
+    if (response.data) {
+      const lec_id = response.data[0].id;
+      newLec.id = lec_id;
+      newLec.courseId = currentCourse;
     }
 
     setUnassignedLectures([
@@ -100,8 +102,15 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
 
   };
 
-
-
+  const addResource = () => {
+    const resource={
+      image: resourceFileUrl,
+      url: url,
+      title:label
+    }
+    setResources([...resources, resource]);
+    setModalShow(false);
+  }
 
   const addNewTopic = async () => {
     let topic = {
@@ -116,9 +125,9 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
     }
     const response = await axiosWrapper(method, url, formData, token);
     console.log(response, " FOlder Hit api Data  ")
-    if(response.data ){
+    if (response.data) {
       const fid = response.data.id;
-      topic.id=fid;
+      topic.id = fid;
       topic.courseId = currentCourse;
     }
     setTopics([...topics, topic]);
@@ -141,12 +150,12 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
     console.log('unassignedIndex', unassignedIndex, 'targetTopicIndex', targetTopicIndex);
     const lectureToMove = unassignedLectures[unassignedIndex];
 
-    console.log( lectureToMove , " Move this lecture to the other folder ");
+    console.log(lectureToMove, " Move this lecture to the other folder ");
 
     // Add lecture to target topic
     const updatedTopics = [...topics];
 
-    console.log( updatedTopics, " These are the updated topics which we have currently..");
+    console.log(updatedTopics, " These are the updated topics which we have currently..");
 
     updatedTopics[targetTopicIndex].lectures.push(lectureToMove);
 
@@ -154,7 +163,7 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
     const updatedUnassignedLectures = unassignedLectures.filter((_, idx) => idx !== unassignedIndex);
 
 
-    var formData  = {
+    var formData = {
       // "name": lectureToMove.name,
       // "lecture_id": lectureToMove.id, 
       "folder_id": updatedTopics[targetTopicIndex].id,
@@ -163,20 +172,20 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
 
     const url = API_URL.SUPABASE_UPDATE_LECTURE_FOLDER.replace(':id', lectureToMove.id);
 
-    console.log( url , " This si the url to hit for the lecture move");
+    console.log(url, " This si the url to hit for the lecture move");
     // Request the API and change the DB 
-    const response  = await axiosWrapper(
+    const response = await axiosWrapper(
       'POST',
       url,
       formData,
       token
     );
-    
+
 
     // Update state
     setTopics(updatedTopics);
 
-    console.log( updatedTopics , " These are the updated topics ")
+    console.log(updatedTopics, " These are the updated topics ")
     setUnassignedLectures(updatedUnassignedLectures);
     setShowMovePopup(false);
   };
@@ -250,26 +259,26 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
   const { description } = {};
 
 
-  const getLectureData = async (id)=> {
+  const getLectureData = async (id) => {
 
     const url = API_URL.SUPABASE_GET_LECTURE.replace(':id', id);
 
-    const response  = await axiosWrapper(
+    const response = await axiosWrapper(
       'GET',
       url,
       {},
       token
     );
 
-    return response ; 
+    return response;
   }
 
-  const loadLectureData = async (lecture )=>{
+  const loadLectureData = async (lecture) => {
     setCurrentActiveLectureID(lecture.id);
     setCurrentActiveLecture(lecture);
-    const lecData = await  getLectureData(currentActiveLectureID);
-    console.log( lecData, " This is the lecture data ")
-    console.log( lecture , " Current lecture where the user has clicked " )
+    const lecData = await getLectureData(currentActiveLectureID);
+    console.log(lecData, " This is the lecture data ")
+    console.log(lecture, " Current lecture where the user has clicked ")
   }
 
   const handleEditClick = async (id) => {
@@ -280,48 +289,53 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
 
     setEditingLecture(lecture?.data);
     setIsEditing(true);
-};
+  };
 
-const getApiUrl = (isEditable, lectureId) => {
-  return isEditable
+  const getApiUrl = (isEditable, lectureId) => {
+    return isEditable
       ? `${API_URL.SUPABASE_UPDATE_LECTURE.replace(':id', lectureId)}`
       : `${API_URL.SUPABASE_ADD_LECTURE}`;
-};
+  };
 
-const prepareFormData = (values) => {
+  const prepareFormData = (values) => {
 
-let formData = { ...values, courseId: editingLecture?.id };
+    let formData = { ...values, courseId: editingLecture?.id };
 
-console.log(formData);
-return formData;
-};
+    console.log(formData);
+    return formData;
+  };
 
-const handleSubmit = async (values, { setSubmitting, resetForm, ...formikHelpers }) => {
-setSubmitting(true);
+  const handleSubmit = async (values, { setSubmitting, resetForm, ...formikHelpers }) => {
+    setSubmitting(true);
 
-const action = formikHelpers?.event?.nativeEvent?.submitter?.value;
+    const action = formikHelpers?.event?.nativeEvent?.submitter?.value;
 
-try {
-const formData = prepareFormData(values);
-const url = getApiUrl(isEditing, editingLecture?.id);
-const method = isEditing ? 'PUT' : 'POST';
+    try {
+      const formData = prepareFormData(values);
+      const url = getApiUrl(isEditing, editingLecture?.id);
+      const method = isEditing ? 'PUT' : 'POST';
+      await axiosWrapper(method, url, formData, token);
+      toast.success(`${action === 'update' ? 'Updated' : 'Saved'} successfully!`);
+      if (action === 'save') {
+        // handle next step navigation
+      }
+    } catch (err) {
+      // handleError(err);
+      console.log(err);
+    } finally {
+      setSubmitting(false);
+    }
+  };
 
-await axiosWrapper(method, url, formData, token);
 
-toast.success(`${action === 'update' ? 'Updated' : 'Saved'} successfully!`);
-
-if (action === 'save') {
-// handle next step navigation
-}
-} catch (err) {
-// handleError(err);
-console.log(err);
-} finally {
-setSubmitting(false);
-}
-
-};
-
+  const resourceFileChanged = async (e)=>{
+    const file = e.target.files[0];
+    const formData = new FormData();
+    formData.append('files', file);
+    formData.append('name', file.name);
+    const mediaFile = await axiosWrapper('POST', API_URL.UPLOAD_MEDIA, formData, '', true);
+    setResourceFileUrl(mediaFile.data[0].path);
+  }
 
 
   return (
@@ -336,6 +350,7 @@ setSubmitting(false);
               className="add-link-modal"
               show={modalShow}
               onClose={handlePopupClick}
+              onConfirm={() => addResource()}
               loading={false}
               title="Add Link"
               body={
@@ -348,6 +363,7 @@ setSubmitting(false);
                       className="form-control"
                       placeholder="Google Document"
                       required
+                      onChange={(e) => setLabel(e.target.value)}
                     />
                     <div className="error-message">* Field is required</div>
                   </div>
@@ -358,6 +374,7 @@ setSubmitting(false);
                       id="urlInput"
                       className="form-control"
                       placeholder="Enter URL"
+                      onChange={(e) => setUrl(e.target.value)}
                     />
                   </div>
                   <div className="divider-or">
@@ -370,7 +387,7 @@ setSubmitting(false);
                       id="fileUpload"
                       className="form-control"
                       accept=".pdf,.doc,.docx,.png,.jpg,.jpeg,.mp4,.mov,.avi"
-                    />
+                      onChange={(e) => resourceFileChanged(e)}                    />
                   </div>
                 </div>
               }
@@ -554,7 +571,7 @@ setSubmitting(false);
                               <div className="detail-box">
                                 <ul>
                                   {topic.lectures.map((lecture, lectureIndex) => (
-                                    <li key={lectureIndex} onClick={()=>loadLectureData(lecture)}>
+                                    <li key={lectureIndex} onClick={() => loadLectureData(lecture)}>
                                       <a href="javascript:void(0)">{lecture.name ?? "ERROR"}</a>
                                       <div className="drop-box">
                                         <Dropdown>
@@ -686,18 +703,7 @@ setSubmitting(false);
                                   id="course_description"
                                   placeholder="Enter Course Description"
                                   showResources={true}
-                                  resources={[
-                                    {
-                                      id: 1,
-                                      title: 'This is the First Resource Title',
-                                      image: 'https://dropship-api.ropstam.dev/uploads/1736169674625-courseThumbnail.jpeg'
-                                    },
-                                    {
-                                      id: 2,
-                                      title: 'Another Resource',
-                                      image: 'https://dropship-api.ropstam.dev/uploads/1736169674625-courseThumbnail.jpeg'
-                                    }
-                                  ]}
+                                  resources={resources}
                                   modules={{ toolbar: TOOLBAR_CONFIG }}
                                   formats={FORMATS}
                                 />
@@ -713,11 +719,11 @@ setSubmitting(false);
                                   </Dropdown.Toggle>
                                   <Dropdown.Menu>
                                     <Dropdown.Item href="javascript:void(0)" onClick={handlePopupClick}>
-                                      Add resource link
+                                      Add resource
                                     </Dropdown.Item>
-                                    <Dropdown.Item href="javascript:void(0)" onClick={handlePopupClick}>
+                                    {/* <Dropdown.Item href="javascript:void(0)" onClick={handlePopupClick}>
                                       Add resource file
-                                    </Dropdown.Item>
+                                    </Dropdown.Item> */}
                                   </Dropdown.Menu>
                                 </Dropdown>
                               </div>
