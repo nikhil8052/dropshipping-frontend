@@ -643,12 +643,31 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
                                             <Dropdown.Item href="javascript:void(0)" onClick={() => handleEditClick(lecture.id)}>Edit</Dropdown.Item>
                                             {/* <Dropdown.Item href="javascript:void(0)">Copy</Dropdown.Item> */}
                                             <Dropdown.Item onClick={() => duplicateLecture(topicIndex, lectureIndex)}>Duplicate</Dropdown.Item>
-                                            <Dropdown.Item onClick={() => {
-                                              setSelectedLecture({ topicIndex, lectureIndex });
-                                              setShowMovePopup(true);
-                                            }}>
-                                              Move
-                                            </Dropdown.Item>
+                                            <Dropdown drop="right" as="div">
+                                              {/* wrapper as a div so we get the submenu in the same "menu" */}
+                                              <Dropdown.Toggle
+                                                as="span"
+                                                className="dropdown-item"
+                                                style={{ cursor: 'pointer' }}
+                                              >
+                                                Move
+                                              </Dropdown.Toggle>
+                                              <Dropdown.Menu className='move-drop'>
+                                                {topics.map((topic, i) => (
+                                                  <Dropdown.Item
+                                                    key={i}
+                                                    onClick={() =>
+                                                      moveUnassignedLecture(
+                                                        index,
+                                                        i
+                                                      )
+                                                    }
+                                                  >
+                                                    {topic.name}
+                                                  </Dropdown.Item>
+                                                ))}
+                                              </Dropdown.Menu>
+                                            </Dropdown>
                                           </Dropdown.Menu>
                                         </Dropdown>
                                       </div>
@@ -675,12 +694,31 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
                                       </Dropdown.Toggle>
                                       <Dropdown.Menu>
                                         <Dropdown.Item href="javascript:void(0)" onClick={() => handleEditClick(lecture.id)}>Edit</Dropdown.Item>
-                                        <Dropdown.Item onClick={() => {
-                                          setSelectedLecture({ topicIndex: null, lectureIndex: index }); // null because it's unassigned
-                                          setShowMovePopup(true);
-                                        }}>
-                                          Move
-                                        </Dropdown.Item>
+                                        <Dropdown drop="right" as="div">
+                                          {/* wrapper as a div so we get the submenu in the same "menu" */}
+                                          <Dropdown.Toggle
+                                            as="span"
+                                            className="dropdown-item"
+                                            style={{ cursor: 'pointer' }}
+                                          >
+                                            Move
+                                          </Dropdown.Toggle>
+                                          <Dropdown.Menu className='move-drop'>
+                                            {topics.map((topic, i) => (
+                                              <Dropdown.Item
+                                                key={i}
+                                                onClick={() =>
+                                                  moveUnassignedLecture(
+                                                    index,
+                                                    i
+                                                  )
+                                                }
+                                              >
+                                                {topic.name}
+                                              </Dropdown.Item>
+                                            ))}
+                                          </Dropdown.Menu>
+                                        </Dropdown>
                                       </Dropdown.Menu>
                                     </Dropdown>
                                   </div>
@@ -834,7 +872,6 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
                                     type="richTextEditor"
                                     name="transcript"
                                     id="transcript"
-                                    placeholder="Add Transcript"
                                     showResources={false}
                                     modules={{ toolbar: TOOLBAR_CONFIG }}
                                     formats={FORMATS}

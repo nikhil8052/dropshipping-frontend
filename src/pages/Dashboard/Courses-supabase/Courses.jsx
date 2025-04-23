@@ -97,6 +97,7 @@ const Courses = () => {
             const response = await axiosWrapper('GET', constructedUrl, {}, userToken);
             const { data } = response; // Assuming response contains all courses without pagination
 
+            console.log( data , " All Courses ")
             // Format the fetched data
             const formattedData = data.map((course) => {
                 const baseCourseData = {

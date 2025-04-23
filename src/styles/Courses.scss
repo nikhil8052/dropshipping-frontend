@@ -528,11 +528,11 @@
 
 // add lecture modal form css
 
-.quiz-wrapper {
-    border: 0.8px solid rgba(233, 234, 240, 1);
-    padding: 10px 20px;
-    border-radius: 10px;
-}
+// .quiz-wrapper {
+//     border: 0.8px solid rgba(233, 234, 240, 1);
+//     padding: 10px 20px;
+//     border-radius: 10px;
+// }
 
 .minus-btn {
     background-color: transparent !important;
@@ -904,8 +904,8 @@
     }
 
     .edit-btn {
-        background-color: #fff;
-        color: #000;
+        background-color: #fff !important;
+        color: #000 !important;
         border-radius: 170px;
         width: 174px;
         height: 42px;
@@ -1642,3 +1642,18 @@
     font-size: 14px;
   }
   
+
+  .quiz-wrapper input {
+    background-color: #fff !important;
+    margin-bottom: 0;
+    padding: 10px;
+}
+
+.add-quiz-fields .add-quiz-question .quiz-multiple-choice {
+    margin: 20px 0px;
+}
+
+.add-quiz-fields .add-quiz-question .quiz-multiple-choice input[type=text].correctAnswer {
+    background: linear-gradient(181.32deg, #00c7cc 1.14%, #009CD8 98.89%);
+    background-color: transparent !important;
+}

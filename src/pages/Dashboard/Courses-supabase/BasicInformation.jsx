@@ -40,7 +40,7 @@ const BasicInformation = ({ initialData, setStepComplete, createOrUpdateCourse, 
         description: Yup.string().optional(),
         access_type: Yup.string().required('Please select an access type'),
         category: Yup.array().optional(),
-        thumbnail: Yup.string().optional(),
+        thumbnail: Yup.string().required('Please enter the thumbnail.'),
         // category: Yup.array().min(1, 'Please select at least one category'),
     });
 
@@ -98,9 +98,9 @@ const BasicInformation = ({ initialData, setStepComplete, createOrUpdateCourse, 
                                 // description: Yup.string().optional(),
                                 access_type: Yup.string().required('Please select an access type'),
                                 category: Yup.array().optional(),
-                                // thumbnail: Yup.string().optional(),
+                                thumbnail: Yup.string().required('Please upload the thumbnail.'),
                                 description: Yup.string().nullable(),
-                                thumbnail: Yup.mixed().nullable(),
+                                // thumbnail: Yup.mixed().nullable(),
 
                             })}
                             // validationSchema={schema}

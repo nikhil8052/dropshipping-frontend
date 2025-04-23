@@ -35,6 +35,9 @@ const AddNewCourse = () => {
     const [isPublished, setIsPublished] = useState(false);
     const courseId = useSelector((state) => state?.root?.currentCourse);
 
+    console.log( courseId, "COURSE ID ")
+    console.log( currentCourse, " CURRENT COURSE ")
+    
     const [courseData, setCourseData] = useState({
         title: '',
         subtitle: '',
@@ -107,7 +110,7 @@ const AddNewCourse = () => {
         try {
             const { data } = await axiosWrapper('GET', `${API_URL.SUPABASE_GET_COURSE.replace(':id', id)}`, {}, token);
             
-            console.log( data, "COURSE DATA ")
+            // console.log( data, "COURSE DATA ")
             // if(data.id  && data.lectures.length == 0){
             //     const newLecture = await axiosWrapper(
             //         'POST',
@@ -167,9 +170,7 @@ const AddNewCourse = () => {
         }
     };
     const createOrUpdateCourse = async (formData) => {
-       
 
-          
         try {
           if (currentCourse) {
             await axiosWrapper('PUT', `${API_URL.SUPABASE_UPDATE_COURSE.replace(':id', currentCourse)}`, formData, token);
