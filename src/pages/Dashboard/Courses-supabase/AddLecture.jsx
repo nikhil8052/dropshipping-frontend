@@ -22,660 +22,715 @@ import { stripHtmlTags } from '../../../utils/utils';
 import PencilLine from '../../../assets/icons/PencilLine.svg';
 
 const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCourseData }) => {
-  const [loading, setLoading] = useState(false);
+    const [loading, setLoading] = useState(false);
 
-  const [isOpen, setIsOpen] = useState(true);
-  const [currentActiveLectureID, setCurrentActiveLectureID] = useState(null);
-  const [currentActiveLecture, setCurrentActiveLecture] = useState(true);
-  const [modalShow, setModalShow] = useState(false);
-  const [showTranscriptEditor, setShowTranscriptEditor] = useState(false);
-  const [showQuizModal, setShowQuizModal] = useState(false);
-  const [showMovePopup, setShowMovePopup] = useState(false);
-  const currentCourse = useSelector((state) => state?.root?.currentCourse);
-  const token = useSelector((state) => state?.auth?.userToken);
-  const { title, thumbnail, banner } = initialData;
-  const [isEditing, setIsEditing] = useState(false); // Add edit mode state
-  const [editingLecture, setEditingLecture] = useState(null);
-  const [selectedLecture, setSelectedLecture] = useState({ topicIndex: null, lectureIndex: null });
-  const [unassignedLectures, setUnassignedLectures] = useState([]);
-  const [resources, setResources] = useState([]);
-  const [url, setUrl] = useState('');
-  const [resourceFileUrl, setResourceFileUrl] = useState('');
-  const [label, setLabel] = useState('');
+    const [isOpen, setIsOpen] = useState(true);
+    const [currentActiveLectureID, setCurrentActiveLectureID] = useState(null);
+    const [currentActiveLecture, setCurrentActiveLecture] = useState(true);
+    const [modalShow, setModalShow] = useState(false);
+    const [showTranscriptEditor, setShowTranscriptEditor] = useState(false);
+    const [showQuizModal, setShowQuizModal] = useState(false);
+    const [showMovePopup, setShowMovePopup] = useState(false);
+    const currentCourse = useSelector((state) => state?.root?.currentCourse);
+    const token = useSelector((state) => state?.auth?.userToken);
+    const { title, thumbnail, banner } = initialData;
+    const [isEditing, setIsEditing] = useState(false); // Add edit mode state
+    const [editingLecture, setEditingLecture] = useState(null);
+    const [selectedLecture, setSelectedLecture] = useState({ topicIndex: null, lectureIndex: null });
+    const [unassignedLectures, setUnassignedLectures] = useState([]);
+    const [resources, setResources] = useState([]);
+    const [url, setUrl] = useState('');
+    const [resourceFileUrl, setResourceFileUrl] = useState('');
+    const [label, setLabel] = useState('');
 
-  console.warn(initialData);
-  useEffect(() => {
-    // console.log(initialData);
-    // console.log(initialData.lecturess);
-    setUnassignedLectures([]);
-    if (initialData?.lecturess) {
-      const newLectures = initialData.lecturess.map(lecture => ({
-        name: lecture.name,
-        id: lecture.id
-      }));
+    console.warn(initialData);
+    useEffect(() => {
+        // console.log(initialData);
+        // console.log(initialData.lecturess);
+        setUnassignedLectures([]);
+        if (initialData?.lecturess) {
+            const newLectures = initialData.lecturess.map((lecture) => ({
+                name: lecture.name,
+                id: lecture.id
+            }));
 
-      setUnassignedLectures(prev => [...prev, ...newLectures]);
-    }
-  }, [initialData]);
-
-  const [topics, setTopics] = useState([]);
-
-  const quizInitialValues = {
-    quiz: {
-      mcqs: [
-        {
-          question: '',
-          options: ['', '', '', '']
+            setUnassignedLectures((prev) => [...prev, ...newLectures]);
         }
-      ]
-    }
-  };
+    }, [initialData]);
 
-  const toggleFolder = (index) => {
-    setIsOpen((prevState) => ({
-      ...prevState,
-      [index]: !prevState[index]
-    }));
-  };
+    const [topics, setTopics] = useState([]);
 
-
-  // Add New Lecture which is unassinged 
-  const addUnassignedLecture = async () => {
-    const newLec = {
-      'name': `New Lecture`,
-      courseId: currentCourse
-    };
-    const response = await axiosWrapper(
-      'POST',
-      API_URL.SUPABASE_ADD_LECTURE,
-      newLec,
-      token
-    );
-
-    if (response.data) {
-      const lec_id = response.data[0].id;
-      newLec.id = lec_id;
-      newLec.courseId = currentCourse;
-    }
-
-    setUnassignedLectures([
-      ...unassignedLectures,
-      newLec
-    ]);
-
-
-    
-  };
-
-  const addResource = async () => {
-
-    const formData = {
-      'model_id': currentActiveLectureID,
-      'model_type': 'lecture',
-      'name': label,
-      'type': 'file',
-      'file_link': resourceFileUrl
-    }
-
-    const url = API_URL.SUPABASE_UPDATE_LECTURE_RESOURCE.replace(':id', currentActiveLectureID);
-    const response = await axiosWrapper('POST', url, formData, token);
-
-    const resource = {
-      image: resourceFileUrl,
-      url: url,
-      title: label,
-    }
-
-    setResources([...resources, resource]);
-    setModalShow(false);
-
-  }
-
-  const addNewTopic = async () => {
-    let topic = {
-      name: `Folder ${topics.length + 1}`,
-      lectures: [],
-    };
-    const method = 'POST';
-    const url = API_URL.SUPABASE_CREATE_COURSE_FOLDER.replace(':id', currentCourse);
-    const formData = {
-      "name": topic.name,
-      "order_id": topics.length + 1,
-    }
-    const response = await axiosWrapper(method, url, formData, token);
-    console.log(response, " FOlder Hit api Data  ")
-    if (response.data) {
-      const fid = response.data.id;
-      topic.id = fid;
-      topic.courseId = currentCourse;
-    }
-    setTopics([...topics, topic]);
-    dispatch({ type: types.ALL_RECORDS, data: { keyOfData: 'currentCourseUpdate', data: true } });
-  };
-
-
-  const duplicateLecture = (topicIndex, lectureIndex) => {
-    const updatedTopics = [...topics];
-    const lectureToDuplicate = updatedTopics[topicIndex].lectures[lectureIndex];
-
-    // Insert the duplicated lecture after the clicked one
-    updatedTopics[topicIndex].lectures.splice(lectureIndex + 1, 0, lectureToDuplicate + " (Copy)");
-
-    setTopics(updatedTopics);
-  };
-
-
-  const moveUnassignedLecture = async (unassignedIndex, targetTopicIndex) => {
-
-    console.log('unassignedIndex', unassignedIndex, 'targetTopicIndex', targetTopicIndex);
-    const lectureToMove = unassignedLectures[unassignedIndex];
-
-    console.log(lectureToMove, " Move this lecture to the other folder ");
-
-    // Add lecture to target topic
-    const updatedTopics = [...topics];
-
-    console.log(updatedTopics, " These are the updated topics which we have currently..");
-
-    updatedTopics[targetTopicIndex].lectures.push(lectureToMove);
-
-    // Remove lecture from unassigned
-    const updatedUnassignedLectures = unassignedLectures.filter((_, idx) => idx !== unassignedIndex);
-
-
-    var formData = {
-      // "name": lectureToMove.name,
-      // "lecture_id": lectureToMove.id, 
-      "folder_id": updatedTopics[targetTopicIndex].id,
-      "courseId": currentCourse,
+    const quizInitialValues = {
+        quiz: {
+            mcqs: [
+                {
+                    question: '',
+                    options: ['', '', '', '']
+                }
+            ]
+        }
     };
 
-    const url = API_URL.SUPABASE_UPDATE_LECTURE_FOLDER.replace(':id', lectureToMove.id);
+    const toggleFolder = (index) => {
+        setIsOpen((prevState) => ({
+            ...prevState,
+            [index]: !prevState[index]
+        }));
+    };
 
-    console.log(url, " This si the url to hit for the lecture move");
-    // Request the API and change the DB 
-    const response = await axiosWrapper(
-      'POST',
-      url,
-      formData,
-      token
-    );
+    // Add New Lecture which is unassinged
+    const addUnassignedLecture = async () => {
+        const newLec = {
+            name: `New Lecture`,
+            courseId: currentCourse
+        };
+        const response = await axiosWrapper('POST', API_URL.SUPABASE_ADD_LECTURE, newLec, token);
 
-    // Update state
-    setTopics(updatedTopics);
+        if (response.data) {
+            const lec_id = response.data[0].id;
+            newLec.id = lec_id;
+            newLec.courseId = currentCourse;
+        }
 
-    console.log(updatedTopics, " These are the updated topics ")
-    setUnassignedLectures(updatedUnassignedLectures);
-    setShowMovePopup(false);
-  };
+        setUnassignedLectures([...unassignedLectures, newLec]);
+    };
 
+    const addResource = async () => {
+        const formData = {
+            model_id: currentActiveLectureID,
+            model_type: 'lecture',
+            name: label,
+            type: 'file',
+            file_link: resourceFileUrl
+        };
 
-  const quizValidationSchema = Yup.object().shape({
-    quiz: Yup.object()
-      .shape({
-        mcqs: Yup.array()
-          .of(
-            Yup.object().shape({
-              question: Yup.string().when('options', {
-                is: (options) => options && options.length > 0,
-                then: () => Yup.string().required('Question is required when options are provided'),
-                otherwise: () => Yup.string().optional()
-              }),
-              options: Yup.array()
-                .of(Yup.string().optional())
-                .test('unique-options', 'Options must be unique', (options) => {
-                  const uniqueOptions = new Set(options.map((option) => option?.toLowerCase()));
-                  return uniqueOptions.size === options.length;
+        const url = API_URL.SUPABASE_UPDATE_LECTURE_RESOURCE.replace(':id', currentActiveLectureID);
+        const response = await axiosWrapper('POST', url, formData, token);
+
+        const resource = {
+            image: resourceFileUrl,
+            url: url,
+            title: label
+        };
+
+        setResources([...resources, resource]);
+        setModalShow(false);
+    };
+
+    const addNewTopic = async () => {
+        let topic = {
+            name: `Folder ${topics.length + 1}`,
+            lectures: []
+        };
+        const method = 'POST';
+        const url = API_URL.SUPABASE_CREATE_COURSE_FOLDER.replace(':id', currentCourse);
+        const formData = {
+            name: topic.name,
+            order_id: topics.length + 1
+        };
+        const response = await axiosWrapper(method, url, formData, token);
+        console.log(response, ' FOlder Hit api Data  ');
+        if (response.data) {
+            const fid = response.data.id;
+            topic.id = fid;
+            topic.courseId = currentCourse;
+        }
+        setTopics([...topics, topic]);
+        dispatch({ type: types.ALL_RECORDS, data: { keyOfData: 'currentCourseUpdate', data: true } });
+    };
+
+    const duplicateLecture = (topicIndex, lectureIndex) => {
+        const updatedTopics = [...topics];
+        const lectureToDuplicate = updatedTopics[topicIndex].lectures[lectureIndex];
+
+        // Insert the duplicated lecture after the clicked one
+        updatedTopics[topicIndex].lectures.splice(lectureIndex + 1, 0, lectureToDuplicate + ' (Copy)');
+
+        setTopics(updatedTopics);
+    };
+
+    const moveUnassignedLecture = async (unassignedIndex, targetTopicIndex) => {
+        console.log('unassignedIndex', unassignedIndex, 'targetTopicIndex', targetTopicIndex);
+        const lectureToMove = unassignedLectures[unassignedIndex];
+
+        console.log(lectureToMove, ' Move this lecture to the other folder ');
+
+        // Add lecture to target topic
+        const updatedTopics = [...topics];
+
+        console.log(updatedTopics, ' These are the updated topics which we have currently..');
+
+        updatedTopics[targetTopicIndex].lectures.push(lectureToMove);
+
+        // Remove lecture from unassigned
+        const updatedUnassignedLectures = unassignedLectures.filter((_, idx) => idx !== unassignedIndex);
+
+        var formData = {
+            // "name": lectureToMove.name,
+            // "lecture_id": lectureToMove.id,
+            folder_id: updatedTopics[targetTopicIndex].id,
+            courseId: currentCourse
+        };
+
+        const url = API_URL.SUPABASE_UPDATE_LECTURE_FOLDER.replace(':id', lectureToMove.id);
+
+        console.log(url, ' This si the url to hit for the lecture move');
+        // Request the API and change the DB
+        const response = await axiosWrapper('POST', url, formData, token);
+
+        // Update state
+        setTopics(updatedTopics);
+
+        console.log(updatedTopics, ' These are the updated topics ');
+        setUnassignedLectures(updatedUnassignedLectures);
+        setShowMovePopup(false);
+    };
+
+    const quizValidationSchema = Yup.object().shape({
+        quiz: Yup.object().shape({
+            mcqs: Yup.array().of(
+                Yup.object().shape({
+                    question: Yup.string().when('options', {
+                        is: (options) => options && options.length > 0,
+                        then: () => Yup.string().required('Question is required when options are provided'),
+                        otherwise: () => Yup.string().optional()
+                    }),
+                    options: Yup.array()
+                        .of(Yup.string().optional())
+                        .test('unique-options', 'Options must be unique', (options) => {
+                            const uniqueOptions = new Set(options.map((option) => option?.toLowerCase()));
+                            return uniqueOptions.size === options.length;
+                        })
                 })
-            })
-          )
-      })
-  });
-  const hasLectures = currentCourse?.lectures && currentCourse?.lectures?.length > 0;
+            )
+        })
+    });
+    const hasLectures = currentCourse?.lectures && currentCourse?.lectures?.length > 0;
 
-
-
-  // console.log(hasLectures);
-  //   useEffect(() => {
-  //     if (!hasLectures) setIsEditing(true);
-  //   }, [hasLectures]);
-  console.log(hasLectures);
-  // useEffect(() => {
-  //   if (!hasLectures) setIsEditing(true);
-  // }, [hasLectures]);
-  const handleQuizSubmit = (values) => {
-    console.log('Quiz submitted:', values);
-    // Here you would typically save the quiz data
-    setShowQuizModal(false);
-  };
-
-  const handleQuizPopupClick = () => {
-    setShowQuizModal(!showQuizModal);
-  };
-
-  const moveLecture = (targetTopicIndex) => {
-    const updatedTopics = [...topics];
-    const { topicIndex, lectureIndex } = selectedLecture;
-
-    // Take the lecture
-    const lectureToMove = updatedTopics[topicIndex].lectures[lectureIndex];
-
-    // Remove from current topic
-    updatedTopics[topicIndex].lectures.splice(lectureIndex, 1);
-
-    // Add to new topic
-    updatedTopics[targetTopicIndex].lectures.push(lectureToMove);
-
-    setTopics(updatedTopics);
-    setShowMovePopup(false);
-    setSelectedLecture({ topicIndex: null, lectureIndex: null });
-  };
-
-  const handlePopupClick = () => {
-    setModalShow(!modalShow);
-  };
-
-  const { description } = {};
-
-
-  const getLectureData = async (id) => {
-
-    const url = API_URL.SUPABASE_GET_LECTURE.replace(':id', id);
-
-    const response = await axiosWrapper(
-      'GET',
-      url,
-      {},
-      token
-    );
-
-    return response;
-  }
-
-  const loadLectureData = async (lecture) => {
-    setCurrentActiveLectureID(lecture.id);
-    setCurrentActiveLecture(lecture);
-    const lecData = await getLectureData(currentActiveLectureID);
-    console.log(lecData, " This is the lecture data ")
-    console.log(lecture, " Current lecture where the user has clicked ")
-  }
-
-  const handleEditClick = async (id) => {
-    // console.warn(currentCourse);
-    // console.log('trigger');
-    // const lecture = initialData?.lecturess?.find((lec) => lec.id === id);
-    const lecture = await getLectureData(id);
-    console.log(lecture, " lect data")
-    // console.log(lecture.data?.courseId);
-    // stripHtmlTags
-    const description = stripHtmlTags(lecture.data?.description);
-    const transcript = stripHtmlTags(lecture.data?.transcript);
-    setCurrentActiveLectureID(id);
-    const lectureDetail = {
-      name: lecture.data?.name,
-      description: description,
-      transcript: transcript,
-      id: lecture.data?.id,
-      courseId: lecture.data?.courseId,
+    // console.log(hasLectures);
+    //   useEffect(() => {
+    //     if (!hasLectures) setIsEditing(true);
+    //   }, [hasLectures]);
+    console.log(hasLectures);
+    // useEffect(() => {
+    //   if (!hasLectures) setIsEditing(true);
+    // }, [hasLectures]);
+    const handleQuizSubmit = (values) => {
+        console.log('Quiz submitted:', values);
+        // Here you would typically save the quiz data
+        setShowQuizModal(false);
     };
 
-    setEditingLecture(lectureDetail);
-    setIsEditing(true);
-    // Get the resouces of the lecture
-    var lecResources = lecture.data.resources ?? [];
-    var resources = lecResources.map((lec) => {
-      return {
-        image: lec.file_link,
-        url: lec.file_link,
-        title: lec.name,
-      }
-    })
-    setResources(resources);
+    const handleQuizPopupClick = () => {
+        setShowQuizModal(!showQuizModal);
+    };
 
-  };
+    const moveLecture = (targetTopicIndex) => {
+        const updatedTopics = [...topics];
+        const { topicIndex, lectureIndex } = selectedLecture;
 
-  const getApiUrl = (isEditable, lectureId) => {
-    return isEditable
-      ? `${API_URL.SUPABASE_UPDATE_LECTURE.replace(':id', lectureId)}`
-      : `${API_URL.SUPABASE_ADD_LECTURE}`;
-  };
+        // Take the lecture
+        const lectureToMove = updatedTopics[topicIndex].lectures[lectureIndex];
 
-  const prepareFormData = (values) => {
+        // Remove from current topic
+        updatedTopics[topicIndex].lectures.splice(lectureIndex, 1);
 
-    let formData = { ...values, courseId: editingLecture?.courseId };
+        // Add to new topic
+        updatedTopics[targetTopicIndex].lectures.push(lectureToMove);
 
-    console.log(formData);
-    return formData;
-  };
+        setTopics(updatedTopics);
+        setShowMovePopup(false);
+        setSelectedLecture({ topicIndex: null, lectureIndex: null });
+    };
 
-  const handleSubmit = async (values, { setSubmitting, resetForm, ...formikHelpers }) => {
-    setSubmitting(true);
+    const handlePopupClick = () => {
+        setModalShow(!modalShow);
+    };
 
-    const action = formikHelpers?.event?.nativeEvent?.submitter?.value;
+    const { description } = {};
 
-    try {
-      const formData = prepareFormData(values);
-      console.log(editingLecture);
-      const url = getApiUrl(isEditing, editingLecture?.id);
-      const method = isEditing ? 'PUT' : 'POST';
+    const getLectureData = async (id) => {
+        const url = API_URL.SUPABASE_GET_LECTURE.replace(':id', id);
 
-      await axiosWrapper(method, url, formData, token);
+        const response = await axiosWrapper('GET', url, {}, token);
 
-      toast.success(`${action === 'update' ? 'Updated' : 'Saved'} successfully!`);
+        return response;
+    };
 
-      if (action === 'save') {
-        // handle next step navigation
-      }
-    } catch (err) {
-      // handleError(err);
-      console.log(err);
-    } finally {
-      setSubmitting(false);
-    }
+    const loadLectureData = async (lecture) => {
+        setCurrentActiveLectureID(lecture.id);
+        setCurrentActiveLecture(lecture);
+        const lecData = await getLectureData(currentActiveLectureID);
+        console.log(lecData, ' This is the lecture data ');
+        console.log(lecture, ' Current lecture where the user has clicked ');
+    };
 
-  };
+    const handleEditClick = async (id) => {
+        // console.warn(currentCourse);
+        // console.log('trigger');
+        // const lecture = initialData?.lecturess?.find((lec) => lec.id === id);
+        const lecture = await getLectureData(id);
+        console.log(lecture, ' lect data');
+        // console.log(lecture.data?.courseId);
+        // stripHtmlTags
+        const description = stripHtmlTags(lecture.data?.description);
+        const transcript = stripHtmlTags(lecture.data?.transcript);
+        setCurrentActiveLectureID(id);
+        const lectureDetail = {
+            name: lecture.data?.name,
+            description: description,
+            transcript: transcript,
+            id: lecture.data?.id,
+            courseId: lecture.data?.courseId
+        };
 
-  const resourceFileChanged = async (e) => {
-    const file = e.target.files[0];
-    const formData = new FormData();
-    formData.append('files', file);
-    formData.append('name', file.name);
-    const mediaFile = await axiosWrapper('POST', API_URL.UPLOAD_MEDIA, formData, '', true);
-    setResourceFileUrl(mediaFile.data[0].path);
-  }
+        setEditingLecture(lectureDetail);
+        setIsEditing(true);
+        // Get the resouces of the lecture
+        var lecResources = lecture.data.resources ?? [];
+        var resources = lecResources.map((lec) => {
+            return {
+                image: lec.file_link,
+                url: lec.file_link,
+                title: lec.name
+            };
+        });
+        setResources(resources);
+    };
 
+    const getApiUrl = (isEditable, lectureId) => {
+        return isEditable
+            ? `${API_URL.SUPABASE_UPDATE_LECTURE.replace(':id', lectureId)}`
+            : `${API_URL.SUPABASE_ADD_LECTURE}`;
+    };
 
-  return (
-    <>
-      {loading ? (
-        <Loading />
-      ) : (
+    const prepareFormData = (values) => {
+        let formData = { ...values, courseId: editingLecture?.courseId };
 
+        console.log(formData);
+        return formData;
+    };
+
+    const handleSubmit = async (values, { setSubmitting, resetForm, ...formikHelpers }) => {
+        setSubmitting(true);
+
+        const action = formikHelpers?.event?.nativeEvent?.submitter?.value;
+
+        try {
+            const formData = prepareFormData(values);
+            console.log(editingLecture);
+            const url = getApiUrl(isEditing, editingLecture?.id);
+            const method = isEditing ? 'PUT' : 'POST';
+
+            await axiosWrapper(method, url, formData, token);
+
+            toast.success(`${action === 'update' ? 'Updated' : 'Saved'} successfully!`);
+
+            if (action === 'save') {
+                // handle next step navigation
+            }
+        } catch (err) {
+            // handleError(err);
+            console.log(err);
+        } finally {
+            setSubmitting(false);
+        }
+    };
+
+    const resourceFileChanged = async (e) => {
+        const file = e.target.files[0];
+        const formData = new FormData();
+        formData.append('files', file);
+        formData.append('name', file.name);
+        const mediaFile = await axiosWrapper('POST', API_URL.UPLOAD_MEDIA, formData, '', true);
+        setResourceFileUrl(mediaFile.data[0].path);
+    };
+
+    return (
         <>
-          {modalShow && (
-            <ConfirmationBox
-              className="add-link-modal"
-              show={modalShow}
-              onClose={handlePopupClick}
-              onConfirm={() => addResource()}
-              loading={false}
-              title="Add Link"
-              body={
-                <div className="add-link-form">
-                  <div className="form-group">
-                    <label htmlFor="labelInput">Label</label>
-                    <input
-                      type="text"
-                      id="labelInput"
-                      className="form-control"
-                      placeholder="Google Document"
-                      required
-                      onChange={(e) => setLabel(e.target.value)}
-                    />
-                    <div className="error-message">* Field is required</div>
-                  </div>
-                  <div className="form-group">
-                    <label htmlFor="urlInput">URL</label>
-                    <input
-                      type="text"
-                      id="urlInput"
-                      className="form-control"
-                      placeholder="Enter URL"
-                      onChange={(e) => setUrl(e.target.value)}
-                    />
-                  </div>
-                  <div className="divider-or">
-                    <span>OR</span>
-                  </div>
-                  <div className="form-group res-file">
-                    <label htmlFor="fileUpload">Add File</label>
-                    <input
-                      type="file"
-                      id="fileUpload"
-                      className="form-control"
-                      accept=".pdf,.doc,.docx,.png,.jpg,.jpeg,.mp4,.mov,.avi"
-                      onChange={(e) => resourceFileChanged(e)} />
-                  </div>
-                </div>
-              }
-              customFooterClass="custom-footer-class"
-              nonActiveBtn="cancel-btn"
-              activeBtn="submit-btn"
-              cancelButtonTitle="Cancel"
-              activeBtnTitle="Add"
-            />
-          )}
-
-          <Modal
-            show={showQuizModal}
-            onHide={handleQuizPopupClick}
-            size="lg"
-            centered
-          >
-            <Modal.Body>
-              <Formik
-                initialValues={quizInitialValues}
-                validationSchema={quizValidationSchema}
-                onSubmit={handleQuizSubmit}
-              >
-                {({ isSubmitting, values }) => (
-                  <Form>
-                    <div className="quiz-wrapper">
-                      <div className="add-quiz-title">
-                        <p>Add Quiz</p>
-                      </div>
-                      <div className="quiz-fields-container">
-                        <FieldArray name="quiz.mcqs">
-                          {({ push, remove }) => (
-                            <div className="add-quiz-fields">
-                              <div className="add-quiz-label mb-2">
-                                <p>
-                                  Please Insert MCQs for Student's personal assessments.
-                                </p>
-                                <span
-                                  onClick={() =>
-                                    push({
-                                      question: '',
-                                      options: ['', '', '', ''],
-                                      correctAnswer: ''
-                                    })
-                                  }
-                                >
-                                  <img src={bluePlus} alt="bluePlus" /> Add new
-                                </span>
-                              </div>
-                              {values.quiz.mcqs.map((_, index) => (
-                                <div key={index} className="add-quiz-question">
-                                  <div className="d-flex align-items-center">
-                                    <Field
-                                      name={`quiz.mcqs[${index}].question`}
-                                      className="field-control"
-                                      type="text"
-                                      placeholder="Please Type Question Here..."
-                                    />
-                                    <Button
-                                      type="button"
-                                      className="btn btn-link minus-btn"
-                                      onClick={() => {
-                                        remove(index);
-                                      }}
-                                    >
-                                      <FontAwesomeIcon icon={faMinus} color="black" />
-                                    </Button>
-                                  </div>
-                                  <div className="d-flex align-items-center mb-2">
-                                    <ErrorMessage
-                                      name={`quiz.mcqs[${index}].question`}
-                                      component="div"
-                                      className="error"
-                                    />
-                                  </div>
-                                  <div className="quiz-multiple-choice">
-                                    {['option1', 'option2', 'option3', 'option4'].map(
-                                      (option, optIndex) => (
-                                        <Field
-                                          key={optIndex}
-                                          name={`quiz.mcqs[${index}].options[${optIndex}]`}
-                                          className={`field-control ${optIndex === 3 ? 'correctAnswer' : ''}`}
-                                          type="text"
-                                          placeholder={
-                                            optIndex === 3
-                                              ? 'Correct option'
-                                              : `Type option ${optIndex + 1}`
-                                          }
+            {loading ? (
+                <Loading />
+            ) : (
+                <>
+                    {modalShow && (
+                        <ConfirmationBox
+                            className="add-link-modal"
+                            show={modalShow}
+                            onClose={handlePopupClick}
+                            onConfirm={() => addResource()}
+                            loading={false}
+                            title="Add Link"
+                            body={
+                                <div className="add-link-form">
+                                    <div className="form-group">
+                                        <label htmlFor="labelInput">Label</label>
+                                        <input
+                                            type="text"
+                                            id="labelInput"
+                                            className="form-control"
+                                            placeholder="Google Document"
+                                            required
+                                            onChange={(e) => setLabel(e.target.value)}
                                         />
-                                      )
-                                    )}
-                                  </div>
-                                  <ErrorMessage
-                                    name={`quiz.mcqs[${index}].options`}
-                                    component="div"
-                                    className="error"
-                                  />
+                                        <div className="error-message">* Field is required</div>
+                                    </div>
+                                    <div className="form-group">
+                                        <label htmlFor="urlInput">URL</label>
+                                        <input
+                                            type="text"
+                                            id="urlInput"
+                                            className="form-control"
+                                            placeholder="Enter URL"
+                                            onChange={(e) => setUrl(e.target.value)}
+                                        />
+                                    </div>
+                                    <div className="divider-or">
+                                        <span>OR</span>
+                                    </div>
+                                    <div className="form-group res-file">
+                                        <label htmlFor="fileUpload">Add File</label>
+                                        <input
+                                            type="file"
+                                            id="fileUpload"
+                                            className="form-control"
+                                            accept=".pdf,.doc,.docx,.png,.jpg,.jpeg,.mp4,.mov,.avi"
+                                            onChange={(e) => resourceFileChanged(e)}
+                                        />
+                                    </div>
                                 </div>
-                              ))}
-                            </div>
-                          )}
-                        </FieldArray>
-                      </div>
-                    </div>
-                    <div className="mt-3 d-flex justify-content-end gap-3">
-                      <Button
-                        type="button"
-                        onClick={handleQuizPopupClick}
-                        className="cancel-btn"
-                        disabled={isSubmitting}
-                      >
-                        Cancel
-                      </Button>
-                      <Button type="submit" className="submit-btn" disabled={isSubmitting}>
-                        Save Quiz
-                      </Button>
-                    </div>
-                  </Form>
-                )}
-              </Formik>
-            </Modal.Body>
-          </Modal>
+                            }
+                            customFooterClass="custom-footer-class"
+                            nonActiveBtn="cancel-btn"
+                            activeBtn="submit-btn"
+                            cancelButtonTitle="Cancel"
+                            activeBtnTitle="Add"
+                        />
+                    )}
 
-          <div className="course-detail-tab">
-            <div className="course-detail-row">
-              <div className="row">
-                <div className="col-md-3">
-                  <div className="course-left">
-                    <div className="course-left-top">
-                      <h2 className="subhead">{title}</h2>
-                      <div className="drop-box">
-                        <Dropdown>
-                          <Dropdown.Toggle id="dropdown-basic">
-                            <div className="toggle-icon">
-                              <img src={Ellips} alt="" />
-                            </div>
-                          </Dropdown.Toggle>
-                          <Dropdown.Menu>
-                            {/* <Dropdown.Item href="javascript:void(0)">Edit Course</Dropdown.Item> */}
-                            <Dropdown.Item onClick={addNewTopic}>Add Folder</Dropdown.Item>
-                            <Dropdown.Item onClick={addUnassignedLecture}>Add Lecture</Dropdown.Item>
-                            {/* <Dropdown.Item href="javascript:void(0)">Add Page</Dropdown.Item> */}
-                            {/* <Dropdown.Item href="javascript:void(0)">Move</Dropdown.Item> */}
-                            <Dropdown.Item href="javascript:void(0)">Delete</Dropdown.Item>
-                          </Dropdown.Menu>
-                        </Dropdown>
-                      </div>
-                    </div>
-                    {!hasLectures ? (
-                      <>
-                        {topics.map((topic, topicIndex) => (
-                          <div className="folder-detail" key={topicIndex}>
-                            <div className="drop-box" onClick={() => toggleFolder(topicIndex)} style={{ cursor: 'pointer' }}>
-                              <h3>{topic.name}</h3>
-                              <div className={`folder-dropdown ${isOpen[topicIndex] ? 'rotated' : ''}`}>
-                                <img src={Drop} alt="" />
-                              </div>
-                            </div>
-
-                            {showMovePopup && (
-                              <div className="popup-backdrop">
-                                <div className="popup">
-                                  <h3>Move to Folder</h3>
-                                  <ul>
-                                    {topics.map((topic, index) => (
-                                      <li key={index} onClick={() => moveLecture(index)}>
-                                        {topic.name}
-                                      </li>
-                                    ))}
-                                  </ul>
-                                  <button className='btn btn-primary' onClick={() => setShowMovePopup(false)}>Cancel</button>
-                                </div>
-                              </div>
-                            )}
-
-                            {isOpen[topicIndex] && (
-                              <div className="detail-box">
-                                <ul>
-                                  {topic.lectures.map((lecture, lectureIndex) => (
-                                    <li key={lectureIndex} >
-                                      <a href="javascript:void(0)" onClick={() => loadLectureData(lecture)} >{lecture.name ?? "ERROR"}</a>
-                                      <div className="drop-box">
-                                        <Dropdown>
-                                          <Dropdown.Toggle id="dropdown-basic">
-                                            <div className="toggle-icon">
-                                              <img src={Ellips} alt="" />
+                    <Modal
+                        show={showQuizModal}
+                        onHide={handleQuizPopupClick}
+                        size="lg"
+                        centered
+                        className="coursemodal"
+                    >
+                        <Modal.Body>
+                            <Formik
+                                initialValues={quizInitialValues}
+                                validationSchema={quizValidationSchema}
+                                onSubmit={handleQuizSubmit}
+                            >
+                                {({ isSubmitting, values }) => (
+                                    <Form>
+                                        <div className="quiz-wrapper">
+                                            <div className="add-quiz-title">
+                                                <p>Add Quiz</p>
                                             </div>
-                                          </Dropdown.Toggle>
-                                          <Dropdown.Menu>
-                                            <Dropdown.Item href="javascript:void(0)" onClick={() => handleEditClick(lecture.id)}>Edit</Dropdown.Item>
-                                            {/* <Dropdown.Item href="javascript:void(0)">Copy</Dropdown.Item> */}
-                                            <Dropdown.Item onClick={() => duplicateLecture(topicIndex, lectureIndex)}>Duplicate</Dropdown.Item>
-                                            <Dropdown.Item onClick={() => {
-                                              setSelectedLecture({ topicIndex, lectureIndex });
-                                              setShowMovePopup(true);
-                                            }}>
-                                              Move
-                                            </Dropdown.Item>
-                                          </Dropdown.Menu>
-                                        </Dropdown>
-                                      </div>
-                                    </li>
-                                  ))}
-                                </ul>
-                              </div>
-                            )}
-                          </div>
-                        ))}
-
-                        {unassignedLectures.map((lecture, index) => (
-                          <div className="drop-box" key={`unassigned-${index}`}>
-                            <div className="detail-box">
-                              <ul>
-                                <li>
-                                  <a href="javascript:void(0)">{lecture.name}</a>
-                                  <div className="drop-box">
-                                    <Dropdown>
-                                      <Dropdown.Toggle id="dropdown-basic">
-                                        <div className="toggle-icon">
-                                          <img src={Ellips} alt="" />
+                                            <div className="quiz-fields-container">
+                                                <FieldArray name="quiz.mcqs">
+                                                    {({ push, remove }) => (
+                                                        <div className="add-quiz-fields">
+                                                            <div className="add-quiz-label mb-2">
+                                                                <p>
+                                                                    Please Insert MCQs for Student's personal
+                                                                    assessments.
+                                                                </p>
+                                                                <span
+                                                                    onClick={() =>
+                                                                        push({
+                                                                            question: '',
+                                                                            options: ['', '', '', ''],
+                                                                            correctAnswer: ''
+                                                                        })
+                                                                    }
+                                                                >
+                                                                    <img src={bluePlus} alt="bluePlus" /> Add new
+                                                                </span>
+                                                            </div>
+                                                            {values.quiz.mcqs.map((_, index) => (
+                                                                <div key={index} className="add-quiz-question">
+                                                                    <div className="d-flex align-items-center">
+                                                                        <Field
+                                                                            name={`quiz.mcqs[${index}].question`}
+                                                                            className="field-control"
+                                                                            type="text"
+                                                                            placeholder="Please Type Question Here..."
+                                                                        />
+                                                                        <Button
+                                                                            type="button"
+                                                                            className="btn btn-link minus-btn"
+                                                                            onClick={() => {
+                                                                                remove(index);
+                                                                            }}
+                                                                        >
+                                                                            <FontAwesomeIcon
+                                                                                icon={faMinus}
+                                                                                color="black"
+                                                                            />
+                                                                        </Button>
+                                                                    </div>
+                                                                    <div className="d-flex align-items-center mb-2">
+                                                                        <ErrorMessage
+                                                                            name={`quiz.mcqs[${index}].question`}
+                                                                            component="div"
+                                                                            className="error"
+                                                                        />
+                                                                    </div>
+                                                                    <div className="quiz-multiple-choice">
+                                                                        {[
+                                                                            'option1',
+                                                                            'option2',
+                                                                            'option3',
+                                                                            'option4'
+                                                                        ].map((option, optIndex) => (
+                                                                            <Field
+                                                                                key={optIndex}
+                                                                                name={`quiz.mcqs[${index}].options[${optIndex}]`}
+                                                                                className={`field-control ${optIndex === 3 ? 'correctAnswer' : ''}`}
+                                                                                type="text"
+                                                                                placeholder={
+                                                                                    optIndex === 3
+                                                                                        ? 'Correct option'
+                                                                                        : `Type option ${optIndex + 1}`
+                                                                                }
+                                                                            />
+                                                                        ))}
+                                                                    </div>
+                                                                    <ErrorMessage
+                                                                        name={`quiz.mcqs[${index}].options`}
+                                                                        component="div"
+                                                                        className="error"
+                                                                    />
+                                                                </div>
+                                                            ))}
+                                                        </div>
+                                                    )}
+                                                </FieldArray>
+                                            </div>
                                         </div>
-                                      </Dropdown.Toggle>
-                                      <Dropdown.Menu>
-                                        <Dropdown.Item href="javascript:void(0)" onClick={() => handleEditClick(lecture.id)}>Edit</Dropdown.Item>
-                                        <Dropdown.Item onClick={() => {
-                                          setSelectedLecture({ topicIndex: null, lectureIndex: index }); // null because it's unassigned
-                                          setShowMovePopup(true);
-                                        }}>
-                                          Move
-                                        </Dropdown.Item>
-                                      </Dropdown.Menu>
-                                    </Dropdown>
-                                  </div>
-                                </li>
-                              </ul>
-                            </div>
-                          </div>
-                        ))}
+                                        <div className="mt-3 d-flex justify-content-end gap-3">
+                                            <Button
+                                                type="button"
+                                                onClick={handleQuizPopupClick}
+                                                className="cancel-btn"
+                                                disabled={isSubmitting}
+                                            >
+                                                Cancel
+                                            </Button>
+                                            <Button type="submit" className="submit-btn" disabled={isSubmitting}>
+                                                Save Quiz
+                                            </Button>
+                                        </div>
+                                    </Form>
+                                )}
+                            </Formik>
+                        </Modal.Body>
+                    </Modal>
 
-                        {/* Show the Move Popup for unassigned lectures */}
-                        {showMovePopup && selectedLecture && selectedLecture.topicIndex === null && (
+                    <div className="course-detail-tab">
+                        <div className="course-detail-row">
+                            <div className="row">
+                                <div className="col-md-3">
+                                    <div className="course-left">
+                                        <div className="course-left-top">
+                                            <h2 className="subhead">{title}</h2>
+                                            <div className="drop-box">
+                                                <Dropdown>
+                                                    <Dropdown.Toggle id="dropdown-basic">
+                                                        <div className="toggle-icon">
+                                                            <img src={Ellips} alt="" />
+                                                        </div>
+                                                    </Dropdown.Toggle>
+                                                    <Dropdown.Menu>
+                                                        {/* <Dropdown.Item href="javascript:void(0)">Edit Course</Dropdown.Item> */}
+                                                        <Dropdown.Item onClick={addNewTopic}>Add Folder</Dropdown.Item>
+                                                        <Dropdown.Item onClick={addUnassignedLecture}>
+                                                            Add Lecture
+                                                        </Dropdown.Item>
+                                                        {/* <Dropdown.Item href="javascript:void(0)">Add Page</Dropdown.Item> */}
+                                                        {/* <Dropdown.Item href="javascript:void(0)">Move</Dropdown.Item> */}
+                                                        <Dropdown.Item href="javascript:void(0)">Delete</Dropdown.Item>
+                                                    </Dropdown.Menu>
+                                                </Dropdown>
+                                            </div>
+                                        </div>
+                                        {!hasLectures ? (
+                                            <>
+                                                {topics.map((topic, topicIndex) => (
+                                                    <div className="folder-detail" key={topicIndex}>
+                                                        <div
+                                                            className="drop-box"
+                                                            onClick={() => toggleFolder(topicIndex)}
+                                                            style={{ cursor: 'pointer' }}
+                                                        >
+                                                            <h3>{topic.name}</h3>
+                                                            <div
+                                                                className={`folder-dropdown ${isOpen[topicIndex] ? 'rotated' : ''}`}
+                                                            >
+                                                                <img src={Drop} alt="" />
+                                                            </div>
+                                                        </div>
+
+                                                        {showMovePopup && (
+                                                            <div className="popup-backdrop">
+                                                                <div className="popup">
+                                                                    <h3>Move to Folder</h3>
+                                                                    <ul>
+                                                                        {topics.map((topic, index) => (
+                                                                            <li
+                                                                                key={index}
+                                                                                onClick={() => moveLecture(index)}
+                                                                            >
+                                                                                {topic.name}
+                                                                            </li>
+                                                                        ))}
+                                                                    </ul>
+                                                                    <button
+                                                                        className="btn btn-primary"
+                                                                        onClick={() => setShowMovePopup(false)}
+                                                                    >
+                                                                        Cancel
+                                                                    </button>
+                                                                </div>
+                                                            </div>
+                                                        )}
+
+                                                        {isOpen[topicIndex] && (
+                                                            <div className="detail-box">
+                                                                <ul>
+                                                                    {topic.lectures.map((lecture, lectureIndex) => (
+                                                                        <li key={lectureIndex}>
+                                                                            <a
+                                                                                href="javascript:void(0)"
+                                                                                onClick={() => loadLectureData(lecture)}
+                                                                            >
+                                                                                {lecture.name ?? 'ERROR'}
+                                                                            </a>
+                                                                            <div className="drop-box">
+                                                                                <Dropdown>
+                                                                                    <Dropdown.Toggle id="dropdown-basic">
+                                                                                        <div className="toggle-icon">
+                                                                                            <img src={Ellips} alt="" />
+                                                                                        </div>
+                                                                                    </Dropdown.Toggle>
+                                                                                    <Dropdown.Menu>
+                                                                                        <Dropdown.Item
+                                                                                            href="javascript:void(0)"
+                                                                                            onClick={() =>
+                                                                                                handleEditClick(
+                                                                                                    lecture.id
+                                                                                                )
+                                                                                            }
+                                                                                        >
+                                                                                            Edit
+                                                                                        </Dropdown.Item>
+                                                                                        {/* <Dropdown.Item href="javascript:void(0)">Copy</Dropdown.Item> */}
+                                                                                        <Dropdown.Item
+                                                                                            onClick={() =>
+                                                                                                duplicateLecture(
+                                                                                                    topicIndex,
+                                                                                                    lectureIndex
+                                                                                                )
+                                                                                            }
+                                                                                        >
+                                                                                            Duplicate
+                                                                                        </Dropdown.Item>
+                                                                                        <Dropdown drop="right" as="div">
+                                                                                    {/* wrapper as a div so we get the submenu in the same "menu" */}
+                                                                                    <Dropdown.Toggle
+                                                                                        as="span"
+                                                                                        className="dropdown-item"
+                                                                                        style={{ cursor: 'pointer' }}
+                                                                                    >
+                                                                                        Move
+                                                                                    </Dropdown.Toggle>
+                                                                                    <Dropdown.Menu className='move-drop'>
+                                                                                        {topics.map((topic, i) => (
+                                                                                            <Dropdown.Item
+                                                                                                key={i}
+                                                                                                onClick={() =>
+                                                                                                    moveUnassignedLecture(
+                                                                                                        index,
+                                                                                                        i
+                                                                                                    )
+                                                                                                }
+                                                                                            >
+                                                                                                {topic.name}
+                                                                                            </Dropdown.Item>
+                                                                                        ))}
+                                                                                    </Dropdown.Menu>
+                                                                                </Dropdown>
+                                                                                    </Dropdown.Menu>
+                                                                                </Dropdown>
+                                                                            </div>
+                                                                        </li>
+                                                                    ))}
+                                                                </ul>
+                                                            </div>
+                                                        )}
+                                                    </div>
+                                                ))}
+
+                                                {unassignedLectures.map((lecture, index) => (
+                                                    <div className="drop-box" key={`unassigned-${index}`}>
+                                                        <div className="detail-box">
+                                                            <ul>
+                                                                <li>
+                                                                    <a href="javascript:void(0)">{lecture.name}</a>
+                                                                    <div className="drop-box">
+                                                                        <Dropdown>
+                                                                            <Dropdown.Toggle id="dropdown-basic">
+                                                                                <div className="toggle-icon">
+                                                                                    <img src={Ellips} alt="" />
+                                                                                </div>
+                                                                            </Dropdown.Toggle>
+
+                                                                            <Dropdown.Menu>
+                                                                                <Dropdown.Item
+                                                                                    onClick={() =>
+                                                                                        handleEditClick(lecture.id)
+                                                                                    }
+                                                                                >
+                                                                                    Edit
+                                                                                </Dropdown.Item>
+
+                                                                                {/* ─── MOVE AS A SUBMENU ─── */}
+                                                                                <Dropdown drop="right" as="div">
+                                                                                    {/* wrapper as a div so we get the submenu in the same "menu" */}
+                                                                                    <Dropdown.Toggle
+                                                                                        as="span"
+                                                                                        className="dropdown-item"
+                                                                                        style={{ cursor: 'pointer' }}
+                                                                                    >
+                                                                                        Move
+                                                                                    </Dropdown.Toggle>
+                                                                                    <Dropdown.Menu className='move-drop'>
+                                                                                        {topics.map((topic, i) => (
+                                                                                            <Dropdown.Item
+                                                                                                key={i}
+                                                                                                onClick={() =>
+                                                                                                    moveUnassignedLecture(
+                                                                                                        index,
+                                                                                                        i
+                                                                                                    )
+                                                                                                }
+                                                                                            >
+                                                                                                {topic.name}
+                                                                                            </Dropdown.Item>
+                                                                                        ))}
+                                                                                    </Dropdown.Menu>
+                                                                                </Dropdown>
+                                                                            </Dropdown.Menu>
+                                                                        </Dropdown>
+                                                                    </div>
+                                                                </li>
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                ))}
+
+                                                {/* Show the Move Popup for unassigned lectures */}
+                                                {/* {showMovePopup && selectedLecture && selectedLecture.topicIndex === null && (
                           <div className="popup-backdrop">
                             <div className="popup">
                               <h3>Move to Folder</h3>
@@ -689,32 +744,29 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
                               <button className="btn btn-primary" onClick={() => setShowMovePopup(false)}>Cancel</button>
                             </div>
                           </div>
-                        )}
-                      </>
-                    ) : (
-                      <></>
-                      // <div className="detail-box">
-                      //   <ul>
-                      //     <li>
-                      //       <a href="javascript:void(0)">New Page</a>
-                      //       {/* ... existing dropdown ... */}
+                        )} */}
+                                            </>
+                                        ) : (
+                                            <></>
+                                            // <div className="detail-box">
+                                            //   <ul>
+                                            //     <li>
+                                            //       <a href="javascript:void(0)">New Page</a>
+                                            //       {/* ... existing dropdown ... */}
 
-                      //     </li>
-                      //   </ul>
-                      // </div>
-                    )}
+                                            //     </li>
+                                            //   </ul>
+                                            // </div>
+                                        )}
+                                    </div>
+                                </div>
 
-
-
-                  </div>
-                </div>
-
-                <div className="col-md-9">
-                  <div className="course-right">
-                    {/* new code  */}
-                    {!hasLectures && !isEditing ? (
-                      <>
-                        {/* <div className="new-page-view">
+                                <div className="col-md-9">
+                                    <div className="course-right">
+                                        {/* new code  */}
+                                        {!hasLectures && !isEditing ? (
+                                            <>
+                                                {/* <div className="new-page-view">
                         <div className="course-right-header">
                           <h2 className="subhead">New Page</h2>
                           <Button onClick={() => setIsEditing(true)} className="edit-btn" variant="outlined">
@@ -723,147 +775,170 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
                           </Button>
                         </div>
                       </div> */}
-                        {initialData?.lecturess?.map((lecture) => (
-                          <div className="new-page-view">
-                            <div className="course-right-header">
-                              <h2 className="subhead">{lecture?.name}</h2>
-                              {/* <Button onClick={() => setIsEditing(true)} className="edit-btn" variant="outlined">
+                                                {initialData?.lecturess?.map((lecture) => (
+                                                    <div className="new-page-view">
+                                                        <div className="course-right-header">
+                                                            <h2 className="subhead">{lecture?.name}</h2>
+                                                            {/* <Button onClick={() => setIsEditing(true)} className="edit-btn" variant="outlined">
                               <FontAwesomeIcon icon={faPen} style={{ marginRight: 8 }} />
 
                             </Button> */}
-                              <img
-                                className="cursor-pointer"
-                                src={PencilLine}
-                                alt="Edit"
-                                onClick={() => handleEditClick(lecture.id)}
-                              />
-                            </div>
-                          </div>
-                        ))}
-                      </>
+                                                            <img
+                                                                className="cursor-pointer"
+                                                                src={PencilLine}
+                                                                alt="Edit"
+                                                                onClick={() => handleEditClick(lecture.id)}
+                                                            />
+                                                        </div>
+                                                    </div>
+                                                ))}
+                                            </>
+                                        ) : (
+                                            <Formik
+                                                enableReinitialize
+                                                initialValues={{
+                                                    // description: stripHtmlTags(editingLecture?.description) || '',
+                                                    description: editingLecture?.description || '',
+                                                    transcript: editingLecture?.transcript || '',
+                                                    id: editingLecture?.id || ''
+                                                }}
+                                                onSubmit={handleSubmit}
+                                            >
+                                                {({ isSubmitting, values, setFieldValue }) => (
+                                                    <Form>
+                                                        <Row>
+                                                            <Col>
+                                                                <Input
+                                                                    className="field-quill-control"
+                                                                    type="richTextEditor"
+                                                                    name="description"
+                                                                    id="course_description"
+                                                                    placeholder="Enter Course Description"
+                                                                    showResources={true}
+                                                                    resources={resources}
+                                                                    modules={{ toolbar: TOOLBAR_CONFIG }}
+                                                                    formats={FORMATS}
+                                                                />
+                                                            </Col>
+                                                        </Row>
 
-                    ) : (
-                      <Formik
-                        enableReinitialize
-                        initialValues={{
-                          // description: stripHtmlTags(editingLecture?.description) || '',
-                          description: editingLecture?.description || '',
-                          transcript: editingLecture?.transcript || '',
-                          id: editingLecture?.id || '',
-                        }}
-                        onSubmit={handleSubmit}
-                      >
-                        {({ isSubmitting, values, setFieldValue }) => (
-
-                          <Form>
-                            <Row>
-                              <Col>
-                                <Input
-                                  className="field-quill-control"
-                                  type="richTextEditor"
-                                  name="description"
-                                  id="course_description"
-                                  placeholder="Enter Course Description"
-                                  showResources={true}
-                                  resources={resources}
-                                  modules={{ toolbar: TOOLBAR_CONFIG }}
-                                  formats={FORMATS}
-                                />
-                              </Col>
-                            </Row>
-
-                            <div className="res">
-                              <h2 className="subhead">Add Resources</h2>
-                              <div className="drop-box">
-                                <Dropdown>
-                                  <Dropdown.Toggle id="dropdown-basic">
-                                    <div className="toggle-icon">Add</div>
-                                  </Dropdown.Toggle>
-                                  <Dropdown.Menu>
-                                    <Dropdown.Item href="javascript:void(0)" onClick={handlePopupClick}>
-                                      Add resource
-                                    </Dropdown.Item>
-                                    {/* <Dropdown.Item href="javascript:void(0)" onClick={handlePopupClick}>
+                                                        <div className="res">
+                                                            <h2 className="subhead">Add Resources</h2>
+                                                            <div className="drop-box">
+                                                                <Dropdown>
+                                                                    <Dropdown.Toggle id="dropdown-basic">
+                                                                        <div className="toggle-icon">Add</div>
+                                                                    </Dropdown.Toggle>
+                                                                    <Dropdown.Menu>
+                                                                        <Dropdown.Item
+                                                                            href="javascript:void(0)"
+                                                                            onClick={handlePopupClick}
+                                                                        >
+                                                                            Add resource
+                                                                        </Dropdown.Item>
+                                                                        {/* <Dropdown.Item href="javascript:void(0)" onClick={handlePopupClick}>
                                       Add resource file
                                     </Dropdown.Item> */}
-                                  </Dropdown.Menu>
-                                </Dropdown>
-                              </div>
-                            </div>
+                                                                    </Dropdown.Menu>
+                                                                </Dropdown>
+                                                            </div>
+                                                        </div>
 
-                            <div className="res">
-                              <h2 className="subhead">Add Quiz</h2>
-                              <div className="drop-box">
-                                <div className="add-btn">
-                                  <a href="javascript:void(0)" onClick={handleQuizPopupClick}>Add New</a>
-                                </div>
-                              </div>
-                            </div>
+                                                        <div className="res">
+                                                            <h2 className="subhead">Add Quiz</h2>
+                                                            <div className="drop-box">
+                                                                <div className="add-btn">
+                                                                    <a
+                                                                        href="javascript:void(0)"
+                                                                        onClick={handleQuizPopupClick}
+                                                                    >
+                                                                        Add New
+                                                                    </a>
+                                                                </div>
+                                                            </div>
+                                                        </div>
 
-                            <div className={`res trans-res ${showTranscriptEditor ? 'showing-transcript' : ''}`}>
-                              <h2 className="subhead">Add Transcript</h2>
-                              <div className="transc">
-                                <div className="drop-box">
-                                  {!showTranscriptEditor ? (
-                                    <div className="add-btn">
-                                      <a href="javascript:void(0)" onClick={() => setShowTranscriptEditor(true)}>
-                                        Add New
-                                      </a>
-                                    </div>
-                                  ) : null}
-                                </div>
+                                                        <div
+                                                            className={`res trans-res ${showTranscriptEditor ? 'showing-transcript' : ''}`}
+                                                        >
+                                                            <h2 className="subhead">Add Transcript</h2>
+                                                            <div className="transc">
+                                                                <div className="drop-box">
+                                                                    {!showTranscriptEditor ? (
+                                                                        <div className="add-btn">
+                                                                            <a
+                                                                                href="javascript:void(0)"
+                                                                                onClick={() =>
+                                                                                    setShowTranscriptEditor(true)
+                                                                                }
+                                                                            >
+                                                                                Add New
+                                                                            </a>
+                                                                        </div>
+                                                                    ) : null}
+                                                                </div>
 
-                                <div
-                                  className={`transcript-section ${showTranscriptEditor ? '' : 'd-none'}`}
-                                >
-                                  <Input
-                                    className="field-quill-control"
-                                    type="richTextEditor"
-                                    name="transcript"
-                                    id="transcript"
-                                    placeholder="Add Transcript"
-                                    showResources={false}
-                                    modules={{ toolbar: TOOLBAR_CONFIG }}
-                                    formats={FORMATS}
-                                  />
-                                  <div className="mt-3 cancel-tans">
-                                    <button
-                                      type="button"
-                                      className="cancel-btnn"
-                                      onClick={() => setShowTranscriptEditor(false)}
-                                    >
-                                      Cancel
-                                    </button>
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
+                                                                <div
+                                                                    className={`transcript-section ${showTranscriptEditor ? '' : 'd-none'}`}
+                                                                >
+                                                                    <Input
+                                                                        className="field-quill-control"
+                                                                        type="richTextEditor"
+                                                                        name="transcript"
+                                                                        id="transcript"
+                                                                        showResources={false}
+                                                                        modules={{ toolbar: TOOLBAR_CONFIG }}
+                                                                        formats={FORMATS}
+                                                                    />
+                                                                    <div className="mt-3 cancel-tans">
+                                                                        <button
+                                                                            type="button"
+                                                                            className="cancel-btnn"
+                                                                            onClick={() =>
+                                                                                setShowTranscriptEditor(false)
+                                                                            }
+                                                                        >
+                                                                            Cancel
+                                                                        </button>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
 
-                            <div className="mt-5 d-flex gap-3 flex-wrap tab-buttons justify-content-between">
-                              <div className='gap-3 d-flex'>
-                                <Button type="button" className="cancel-btn" onClick={onBack} >
-                                  Cancel
-                                </Button>
+                                                        <div className="mt-5 d-flex gap-3 flex-wrap tab-buttons justify-content-between">
+                                                            <div className="gap-3 d-flex">
+                                                                <Button
+                                                                    type="button"
+                                                                    className="cancel-btn"
+                                                                    onClick={onBack}
+                                                                >
+                                                                    Cancel
+                                                                </Button>
 
-                                <Button type="submit" className="submit-btn" disabled={isSubmitting}>
-                                  {isEditing ? 'Update Lecture' : 'Save & Next'}
-                                </Button>
-                              </div>
-                              <div>
-                                <Button type="submit" className="submit-btn"
-                                // onClick={() => handleSubmit()}
-                                >
-                                  Save & Next
-                                </Button>
-                              </div>
-                            </div>
-
-                          </Form>
-                        )}
-                      </Formik>
-                    )}
-                    {/* new code end */}
-                    {/* <Formik
+                                                                <Button
+                                                                    type="submit"
+                                                                    className="submit-btn"
+                                                                    disabled={isSubmitting}
+                                                                >
+                                                                    {isEditing ? 'Update Lecture' : 'Save & Next'}
+                                                                </Button>
+                                                            </div>
+                                                            <div>
+                                                                <Button
+                                                                    type="submit"
+                                                                    className="submit-btn"
+                                                                    // onClick={() => handleSubmit()}
+                                                                >
+                                                                    Save & Next
+                                                                </Button>
+                                                            </div>
+                                                        </div>
+                                                    </Form>
+                                                )}
+                                            </Formik>
+                                        )}
+                                        {/* new code end */}
+                                        {/* <Formik
                   initialValues={{
                     description: description || '',
                     transcript: '',
@@ -965,15 +1040,15 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
                     </Form>
                   )}
                 </Formik> */}
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </>
+            )}
         </>
-      )}
-    </>
-  );
+    );
 };
 
 export default AddNewLecture;

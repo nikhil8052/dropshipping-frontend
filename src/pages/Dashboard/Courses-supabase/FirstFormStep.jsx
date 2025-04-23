@@ -203,7 +203,7 @@ const BasicInformation = ({ initialData, setStepComplete, createOrUpdateCourse, 
                                             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                                                 <label style={{ marginBottom: '5px', fontWeight: '500' }}>Course Category</label>
                                                 <Button 
-                                                    variant="text-dark" 
+                                                    variant="text-dark" className='nwcat'
                                                     size="sm" 
                                                     style={{ padding: 0, fontSize: '0.875rem' }}
                                                     onClick={() => setShowCategoryModal(true)}

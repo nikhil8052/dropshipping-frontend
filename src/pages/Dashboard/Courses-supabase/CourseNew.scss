@@ -29,7 +29,7 @@
 }
 
 .Course-form {
-    padding-top: 62px;
+    padding-top: 46px;
 
     input , textarea{
         background-color: #FFFFFF !important;
@@ -43,8 +43,8 @@
         color: #1D2026;
         font-family: Inter;
         font-weight: 400;
-        font-size: 14px;
-        line-height: 17.61px;
+        font-family: 14px;
+        line-height: 1.4;
     }
 
     .css-zsp0bh-MuiInputBase-root-MuiOutlinedInput-root {
@@ -75,6 +75,8 @@ fieldset {
 .form-group {
     margin-bottom: 16px;
 }
+
+
 
 .toggle-wrapper {
     display: flex;
@@ -389,14 +391,11 @@ span.slect_span.selected {
 }
 
 .select-label {
-    display: flex;
-    flex-wrap: wrap;
-    width: 390px;
+    display: grid;
+    width: max-content;
     padding-top: 16px;
-}
-
-.select-label label.custom_check {
-    width: 50%;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0px 50px;
 }
 
 .main-Category {
@@ -510,12 +509,12 @@ span.slect_span.selected {
 .submit-btn {
     background: linear-gradient(181.32deg, #00c7cc 1.14%, #009CD8 98.89%);
     border-radius: 4px !important;
-    border: 0.8px solid #E9EAF0;
+    border: 0.8px solid #E9EAF0 !important;
 }
 
 .submit-btn:hover {
     background: #fff;
-    color: #000 !important;
+    color: #6E7485 !important;
     border: 0.8px solid #E9EAF0 !important
 }
 
@@ -523,6 +522,7 @@ span.slect_span.selected {
     border: 0.8px solid #E9EAF0 !important;
     color: #6E7485 !important;
     border-radius: 4px !important;
+    background-color: #fff;
 }
 
 .cancel-btn:hover {
@@ -580,6 +580,7 @@ span.slect_span.selected {
     justify-content: space-between;
     display: flex;
     align-items: center;
+    margin-bottom: 30px;
 }
 
 .course-left .dropdown-toggle {
@@ -609,8 +610,10 @@ span.slect_span.selected {
 }
 
 .folder-detail {
-    margin-top: 30px;
-
+        margin-bottom: 15px;
+        box-shadow: 0px 0px 14.86px 0px #0000000F;
+        padding: 10px;
+        border-radius: 4px;
     .drop-box {
         display: flex;
         justify-content: space-between;
@@ -622,6 +625,7 @@ span.slect_span.selected {
         font-size: 12px;
         line-height: 1.2;
         color: #1D2026;
+        margin: 0;
     }
 }
 
@@ -949,3 +953,215 @@ label.form-label {
     border: 0;
 }
 
+.nwcat {
+    border: 0 !important;
+    font-size: 12px;
+    margin-bottom: 6px;
+}
+
+.coursemodal .modal-footer {
+    border: 0;
+    padding: 0;
+    justify-content: center;
+}
+
+.modal-backdrop {
+    --bs-backdrop-bg: #00000042;
+}
+
+.coursemodal .modal-content {
+    border-radius: 20px;
+    padding: 40px;
+}
+
+.coursemodal .modal-body{
+    padding: 0;
+}
+.coursemodal .form-group {
+    position: relative;
+  }
+  
+  .coursemodal .form-group .floating-label {
+    display: block;
+    position: relative;
+    cursor: text;
+  }
+  
+  .coursemodal .form-group input {
+    width: 100%;
+    border-radius: 4px;
+    border: 1px solid #fff;
+  }
+  
+  .coursemodal .form-group .floating-label span {
+    position: absolute;
+    top: 40%;
+    left: 10px;
+    transition: all 0.2s ease;
+    color: #1D2026 !important;
+    z-index: 1;
+    pointer-events: none;
+    background-color: #fff;
+    padding: 0 4px;
+    font-size: 12px;
+  }
+  
+  .coursemodal .form-group input:focus + span {
+    top: 8px;
+    font-size: 0.8em;
+  }
+  
+  .coursemodal .form-group input:focus{
+    border: 1px solid #B1B6BF !important;
+  }
+
+  .coursemodal .modal-header .modal-title {
+    font-weight: 600;
+    font-size: 29px;
+    line-height: 1.2;
+    color: #1D2026;
+    margin-bottom: 20px;
+}
+
+.coursemodal .modal-header {
+    padding: 0;
+    border: 0;
+    justify-content: center;
+}
+
+.coursemodal .modal-header .btn-close {
+    display: none;
+}
+
+.publishcourse .modal-content{
+    padding: 60px;
+}
+
+.addcourse-section .add-course-form .tab-buttons .cancel-btn:hover{
+color: #fff !important;
+}
+
+.addcourse-section .add-course-form .tab-buttons .btn {
+    padding: 14px 24px;
+    font-weight: 600;
+    font-size: 14px;
+    line-height: 1.2;
+}
+
+.course-left .dropdown-item {
+    font-weight: 400;
+    font-size: 12px;
+    line-height: 1.4;
+    padding: 6px 15px;
+}
+
+.course-left .dropdown-menu.move-drop {
+    border: 1px solid rgba(128, 128, 128, 0.164) !important;
+      top: 0;
+      left: 100%;
+      margin-top: -6px;
+      margin-left: -1px;
+      max-height: 120px;
+      overflow-y: scroll;
+      box-shadow:0px 0px 14.86px 0px rgb(57 60 61 / 68%);
+    .dropdown-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      
+      &::after {
+        content: "→";
+        margin-left: 10px;
+      }
+    }
+  }
+
+  .new-page-view {
+    margin-bottom: 20px;
+}
+
+.detail-box .drop-box .dropdown-menu{
+    border: 1px solid #019ED8
+}
+
+.Course-form .row > div:has(.thumbnail-block),.Course-form .row:has(.thumbnail-block) {
+    margin-bottom: 0 !important;
+}
+
+.course-detail-row  .ql-snow.ql-toolbar button, .ql-snow .ql-toolbar button {
+    height: 35px;
+    padding: 8px 8px;
+    display: inline-block;
+    width: 35px;
+}
+
+.course-detail-row .ql-snow .ql-tooltip.ql-flip {
+    left: 0;
+    right: 0;
+    width: max-content;
+    margin: auto;
+    padding: 10px;
+    border-radius: 6px;
+    box-shadow: 0px 0px 14.86px 0px #0000000F;
+    transform: none;
+    z-index: 2;
+}
+
+.course-detail-row .ql-action {
+    width: max-content;
+    padding: 5px 20px;
+    background: linear-gradient(183.91deg, #00C7CC 3.24%, #009CD8 96.84%);
+    color: #fff;
+    border-radius: 5px;
+    line-height: 1.2;
+}
+
+.course-detail-row .ql-action::after,.course-detail-row  .ql-snow .ql-tooltip::before {
+    margin: 0 !important;
+}
+
+.course-detail-row  .ql-snow .ql-tooltip.ql-editing input {
+    display: inline-block;
+    border-radius: 4px !important;
+    border: 1px solid #B1B6BF !important;
+    margin: 0px 10px !important;
+}
+
+.course-detail-row  .ql-snow .ql-tooltip.ql-editing input:focus{
+    outline: 0;
+}
+
+// .ql-tooltip.ql-editing.ql-flip::after {
+//     position: fixed;
+//     top: 0;
+//     content: "";
+//     left: 0;
+//     right: 0;
+//     height: 100vh;
+//     width: 100vw;
+//     background-color: #00000042;
+//     margin: auto;
+//     z-index: -1;
+//     pointer-events: auto;
+// }
+
+.course-right .quill-editor .card-title {
+    font-weight: 600;
+    font-size: 14px;
+    line-height: 1.2;
+}
+
+.new-resource-main-card {
+    padding-top: 50px;
+}
+
+.res .dropdown-item {
+    font-size: 10px;
+    padding: 5px 10px;
+}
+
+.res .dropdown-menu {
+    box-shadow: 0px 0px 14.86px 0px #0000000F;
+    border-radius: 4px;
+    border: 1px solid #E9EAF0;
+}

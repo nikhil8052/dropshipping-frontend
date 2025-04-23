@@ -205,9 +205,9 @@
 
 // css for Add New Course
 
-.add-course-form-section {
-    padding: 0px 30px;
-}
+// .add-course-form-section {
+//     padding: 0px 30px;
+// }
 
 .section-title {
     border-bottom: 1px solid #e9eaf0;
@@ -257,7 +257,6 @@
 
     .cancel-btn {
         padding: 10px 40px;
-        background-color: transparent !important;
         color: #fff;
         border: 1px solid rgba(233, 234, 240, 1);
     }
@@ -670,7 +669,7 @@
 
 .cancel-btn {
     padding: 10px 40px;
-    background-color: transparent !important;
+    background-color: #fff!important;
     color: #fff !important;
     border: 1px solid rgba(233, 234, 240, 1) !important;
 }
@@ -1437,7 +1436,7 @@
 }
 
 .add-course-form {
-    margin-top: 20px;
+    margin-top: 0px;
 }
 
 .modal-content {

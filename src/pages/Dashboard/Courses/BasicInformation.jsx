@@ -273,10 +273,10 @@ const BasicInformation = ({ initialData, setStepComplete, createOrUpdateCourse, 
                                         <Col md={12} xs={12}>
                                             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                                                 <label style={{ marginBottom: '5px', fontWeight: '500' }}>Course Category</label>
-                                                <Button 
+                                                <Button className='nw-cat'
                                                     variant="text-dark" 
                                                     size="sm" 
-                                                    style={{ padding: 0, fontSize: '0.875rem' }}
+                                                    style={{ padding: 0 }}
                                                     onClick={() => setShowCategoryModal(true)}
                                                 >
                                                     + New Category
@@ -344,26 +344,24 @@ const BasicInformation = ({ initialData, setStepComplete, createOrUpdateCourse, 
             <Modal 
                 show={showCategoryModal} 
                 onHide={() => setShowCategoryModal(false)} 
-                centered
+                centered className='coursemodal'
                 >
-                    <Modal.Header closeButton>
-                        <Modal.Title>Add New Category</Modal.Title>
-                    </Modal.Header>
+
                     <Modal.Body>
                         <div className="form-group">
-                            <label>Category Name</label>
                             <input
                                 type="text"
                                 className="field-control my-3 white-important-bg"
                                 value={newCategoryName}
                                 onChange={(e) => setNewCategoryName(e.target.value)}
-                                placeholder="Enter category name"
                             />
+                               <label className="floating-label">Category Name</label>
+                               <span>Category Name</span>
                         </div>
                     </Modal.Body>
                     <Modal.Footer>
                         <Button 
-                            className="text-black" 
+                            className="text-black cancel-btn" 
                             onClick={() => setShowCategoryModal(false)}
                         >
                             Cancel
