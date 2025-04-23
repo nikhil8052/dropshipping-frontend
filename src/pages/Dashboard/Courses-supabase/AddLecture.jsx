@@ -22,13 +22,8 @@ import { stripHtmlTags } from '../../../utils/utils';
 import PencilLine from '../../../assets/icons/PencilLine.svg';
 
 const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCourseData }) => {
-
-
-
-
   console.log(initialData, " THis is the initial data ")
   const [loading, setLoading] = useState(false);
-
   const [isOpen, setIsOpen] = useState(true);
   const [currentActiveLectureID, setCurrentActiveLectureID] = useState(null);
   const [currentActiveLecture, setCurrentActiveLecture] = useState(true);
