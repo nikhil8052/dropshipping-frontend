@@ -668,11 +668,11 @@ span.slect_span.selected {
     padding: 20px;
     border-radius: 4px;
  .dropdown-toggle {
-        background-color: #CCECF7;
+        background-color: #CCECF7 !important;
         border: 0;
         display: flex;
         align-items: center;
-        color: #019ED8;
+        color: #019ED8 !important;
         font-family: Inter;
         font-weight: 500;
         font-size: 11px;
@@ -1157,7 +1157,7 @@ color: #fff !important;
 
 .res .dropdown-item {
     font-size: 10px;
-    padding: 5px 10px;
+    padding: 0px 10px;
 }
 
 .res .dropdown-menu {

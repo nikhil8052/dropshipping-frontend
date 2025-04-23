@@ -363,15 +363,15 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
                             body={
                                 <div className="add-link-form">
                                     <div className="form-group">
-                                        <label htmlFor="labelInput">Label</label>
                                         <input
                                             type="text"
                                             id="labelInput"
                                             className="form-control"
-                                            placeholder="Google Document"
                                             required
                                             onChange={(e) => setLabel(e.target.value)}
                                         />
+                                        <label htmlFor="labelInput" className='floating-label'>Google Document</label>
+                                        <span>Google Document</span>
                                         <div className="error-message">* Field is required</div>
                                     </div>
                                     <div className="form-group">
@@ -444,7 +444,7 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
                                                                         })
                                                                     }
                                                                 >
-                                                                    <img src={bluePlus} alt="bluePlus" /> Add new
+                                                                    <img src={bluePlus} alt="bluePlus" />  Add new
                                                                 </span>
                                                             </div>
                                                             {values.quiz.mcqs.map((_, index) => (
@@ -852,7 +852,7 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
                                                                         href="javascript:void(0)"
                                                                         onClick={handleQuizPopupClick}
                                                                     >
-                                                                        Add New
+                                                                       + Add New
                                                                     </a>
                                                                 </div>
                                                             </div>
@@ -872,7 +872,7 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
                                                                                     setShowTranscriptEditor(true)
                                                                                 }
                                                                             >
-                                                                                Add New
+                                                                               + Add New
                                                                             </a>
                                                                         </div>
                                                                     ) : null}
