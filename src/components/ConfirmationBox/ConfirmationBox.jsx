@@ -16,10 +16,11 @@ const ConfirmationBox = ({
     disableBtn = false,
     activeBtn,
     cancelButtonTitle = 'No',
-    activeBtnTitle = 'Yes'
+    activeBtnTitle = 'Yes',
+    modalClassName
 }) => {
     return (
-        <Modal show={show} onHide={onClose} centered className="confirmation-modal">
+        <Modal show={show} onHide={onClose} centered className={`confirmation-modal ${modalClassName || ''}` }>
             <Modal.Header closeButton>
                 <Modal.Title>{title}</Modal.Title>
             </Modal.Header>

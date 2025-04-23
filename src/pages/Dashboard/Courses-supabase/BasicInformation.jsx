@@ -270,6 +270,7 @@ const BasicInformation = ({ initialData, setStepComplete, createOrUpdateCourse, 
                                             activeBtn="submit-btn"
                                             cancelButtonTitle="Cancel"
                                             activeBtnTitle="Proceed"
+                                             modalClassName="coursemodal publishcourse"
                                         />
                                     )}
                                 </Form>

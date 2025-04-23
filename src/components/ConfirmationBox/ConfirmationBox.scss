@@ -3,8 +3,8 @@
 
 .confirmation-modal {
     .custom-button {
-        min-width: 100px;
-        height: 35px;
+        // min-width: 100px;
+        // height: 35px;
         display: flex;
         justify-content: center;
         align-items: center;
@@ -23,13 +23,13 @@
         .custom-button {
             border-radius: 59px;
             font-weight: 400;
-            padding: 20px 24px;
+            padding: 15px 33px;
             white-space: nowrap;
             border: none;
             font-family: Inter;
             font-size: 14px;
             font-weight: 600;
-            line-height: 48px;
+            line-height: 1.2;
             letter-spacing: -0.008em;
             text-align: center;
         }

@@ -243,7 +243,6 @@ const AddNewCourse = () => {
                 activeKey={activeKey}
                 onSelect={(k) => handleTabChange(k)}
                 id="controlled-tab-example"
-                className="mb-3"
             >
                 <Tab
                     eventKey="basic-information"
