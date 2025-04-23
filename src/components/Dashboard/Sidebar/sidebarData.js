@@ -168,11 +168,11 @@ export const adminSidebarItems = [
         linkTo: '/admin/courses-supabase',
         pathCombinations: ['/admin/courses-supabase', '/admin/courses-supabase/new', '/admin/courses-supabase/edit', '/admin/courses-supabase/details']
     },
-    {
-        id: 8,
-        name: 'Logout',
-        iconLight: logout // Replace with
-    }
+    // {
+    //     id: 8,
+    //     name: 'Logout',
+    //     iconLight: logout // Replace with
+    // }
 ];
 export const coachSidebarItems = [
     {

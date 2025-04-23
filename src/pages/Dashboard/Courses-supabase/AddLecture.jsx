@@ -22,6 +22,11 @@ import { stripHtmlTags } from '../../../utils/utils';
 import PencilLine from '../../../assets/icons/PencilLine.svg';
 
 const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCourseData }) => {
+
+
+
+
+  console.log(initialData, " THis is the initial data ")
   const [loading, setLoading] = useState(false);
 
   const [isOpen, setIsOpen] = useState(true);
@@ -42,8 +47,9 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
   const [url, setUrl] = useState('');
   const [resourceFileUrl, setResourceFileUrl] = useState('');
   const [label, setLabel] = useState('');
+  const [topics, setTopics] = useState([]);
 
-  console.warn(initialData);
+  // console.warn(initialData);
   useEffect(() => {
     // console.log(initialData);
     // console.log(initialData.lecturess);
@@ -56,9 +62,24 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
 
       setUnassignedLectures(prev => [...prev, ...newLectures]);
     }
+
+
+    console.log(initialData.folders, " Folders ");
+
+    // set the folders and the topic well 
+    if (initialData?.folders) {
+      const updatedTopics = initialData.folders.map(folder => ({
+        name: folder.name,
+        id: folder.id,
+        lectures: folder.lectures
+      }));
+      setTopics(updatedTopics);
+    }
+
+
+
   }, [initialData]);
 
-  const [topics, setTopics] = useState([]);
 
   const quizInitialValues = {
     quiz: {
@@ -104,7 +125,7 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
     ]);
 
 
-    
+
   };
 
   const addResource = async () => {
@@ -185,7 +206,7 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
 
     var formData = {
       // "name": lectureToMove.name,
-      // "lecture_id": lectureToMove.id, 
+      "lecture_id": lectureToMove.id,
       "folder_id": updatedTopics[targetTopicIndex].id,
       "courseId": currentCourse,
     };
@@ -703,9 +724,6 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
                       //   </ul>
                       // </div>
                     )}
-
-
-
                   </div>
                 </div>
 

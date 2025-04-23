@@ -80,7 +80,10 @@ const Courses = () => {
     const getAllCourses = async () => {
         setLoading(true);
         try {
-            let constructedUrl = `${API_URL.GET_ALL_COURSES}?search=${encodeURIComponent(search)}`;
+            // const page = Math.floor(displayedCourses.length / itemsPerBatch) + 1;
+            // let constructedUrl = `${API_URL.SUPABASE_GET_ALL_COURSES}?search=${encodeURIComponent(search)}&page=${page}&limit=${itemsPerBatch}`;
+
+            let constructedUrl = `${API_URL.SUPABASE_GET_ALL_COURSES}?search=${encodeURIComponent(search)}`;
 
             if (role === 'STUDENT') {
                 constructedUrl += '&isEnrolled=true';
@@ -101,11 +104,14 @@ const Courses = () => {
                     title: course?.title,
                     description: course?.description,
                     detail: course?.subtitle,
-                    lectureNo: `Lectures: ${course?.lectures.length}`,
+                    // lectureNo: `Lectures: ${course?.lectures.length}`,
+                    lectureNo: `Lectures: 0`,
                     archive: course?.isArchived,
-                    coachName: course?.moduleManager?.name,
-                    enroll: course?.enrolledStudents.includes(userInfo?._id),
-                    _id: course?._id
+                    coachName: course?.moduleManager,
+                    // coachName: course?.moduleManager?.name,
+                    
+                    // enroll: course?.enrolledStudents.includes(userInfo?._id),
+                    _id: course?.id
                 };
 
                 if (role === 'STUDENT' && course?.enrolledStudents.includes(userInfo?._id)) {

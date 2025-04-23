@@ -87,10 +87,10 @@ const BasicInformation = ({ initialData, setStepComplete, createOrUpdateCourse, 
                             initialValues={{
                                 title: initialData?.title || '',
                                 subtitle: initialData?.subtitle || '',
-                                // thumbnail: initialData?.thumbnail || '',
+                                thumbnail: initialData?.thumbnail || '',
                                 access_type: initialData?.access_type || 'category',
                                 category: initialData?.category || [],
-                                // description: initialData?.description || '',
+                                description: initialData?.description || '',
                             }}
                             validationSchema={Yup.object({
                                 title: Yup.string().required('Please enter the course title'),

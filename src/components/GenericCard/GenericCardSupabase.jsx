@@ -47,7 +47,8 @@ const GenericCard = ({
     };
 
     const createSlug = (title) => {
-        return title.toLowerCase().replace(/\s+/g, "-").replace(/[^a-z0-9-]/g, "");
+        // return title.toLowerCase().replace(/\s+/g, "-").replace(/[^a-z0-9-]/g, "");
+        return " TEst ";
     };
 
     // Handler to close the delete confirmation modal
@@ -113,7 +114,9 @@ const GenericCard = ({
                     <Card.Text className="card-coach">
                         <TextExpand
                             className="course-des"
-                            value={decode(description)?.replace(/<\/?[^>]+(>|$)/g, '') || ''}
+                            // value={decode(description)?.replace(/<\/?[^>]+(>|$)/g, '') || ''}
+                            value={description || ''}
+
                             width="100%"
                         />
                     </Card.Text>

@@ -30,6 +30,7 @@ import Loading from '@components/Loading/Loading';
 import BasicInformation from './FirstFormStep';
 
 const AddNewCourse = () => {
+
     const location = useLocation();
     const navigate = useNavigate();
     const dispatch = useDispatch();
@@ -48,6 +49,7 @@ const AddNewCourse = () => {
     const [subtitle, setSubtitle] = useState('');
     const [description, setDescription] = useState('');
 
+  
     const [courseData, setCourseData] = useState({
         title: '',
         subtitle: '',
@@ -121,7 +123,9 @@ const AddNewCourse = () => {
     // ///////////////// APi Calls ///////////////
     const getCourseById = async (id) => {
         try {
-            const { data } = await axiosWrapper('GET', `${API_URL.GET_COURSE.replace(':id', id)}`, {}, token);
+
+            // return
+            const { data } = await axiosWrapper('GET', `${API_URL.SUPABASE_GET_COURSE.replace(':id', id)}`, {}, token);
 
             const description = textParser(data.description);
 

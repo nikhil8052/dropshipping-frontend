@@ -28,7 +28,7 @@ const CourseDetail = () => {
 
     
     const getCourseById = async (id) => {
-        const { data } = await axiosWrapper('GET', `${API_URL.GET_COURSE.replace(':id', id)}`, {}, token);
+        const { data } = await axiosWrapper('GET', `${API_URL.SUPABASE_GET_COURSE.replace(':id', id)}`, {}, token);
         const courseSlug=createSlug(data.title);
         setCourseSlug(courseSlug);
     

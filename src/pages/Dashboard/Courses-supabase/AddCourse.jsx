@@ -26,13 +26,14 @@ const AddNewCourse = () => {
     const token = useSelector((state) => state?.auth?.userToken);
     const role = userInfo?.role?.toLowerCase();
     const editMode = location.state?.isEdit || false;
-    const courseId = location.state?.courseId;
+    // const courseId = location.state?.courseId;
     const [activeKey, setActiveKey] = useState('basic-information');
     const currentCourse = useSelector((state) => state?.root?.currentCourse);
     const currentCourseUpdate = useSelector((state) => state?.root?.currentCourseUpdate);
     const lectureUpdate = useSelector((state) => state?.root?.lectureUpdate);
     const [loading, setLoading] = useState(false);
     const [isPublished, setIsPublished] = useState(false);
+    const courseId = useSelector((state) => state?.root?.currentCourse);
 
     const [courseData, setCourseData] = useState({
         title: '',
@@ -79,7 +80,6 @@ const AddNewCourse = () => {
 
     // Function to update course data from child components
     const updateCourseData = (newData) => {
-        console.log(courseData);
         setCourseData((prevData) => ({
             ...prevData,
             ...newData
@@ -103,12 +103,11 @@ const AddNewCourse = () => {
 
     // ///////////////// APi Calls ///////////////
     const getCourseById = async (id) => {
+       
         try {
             const { data } = await axiosWrapper('GET', `${API_URL.SUPABASE_GET_COURSE.replace(':id', id)}`, {}, token);
-            console.log(data);
-            console.log('data');
-            // console.log(data.id);
-            // console.log(data.lectures);
+            
+            console.log( data, "COURSE DATA ")
             // if(data.id  && data.lectures.length == 0){
             //     const newLecture = await axiosWrapper(
             //         'POST',
@@ -144,7 +143,8 @@ const AddNewCourse = () => {
                 banner: data.banner,
                 trailer: data.trailer,
                 description: description,
-                lecturess: data.lectures
+                lecturess: data.unassignedLectures,
+                folders:data.folders
             });
 
             dispatch({ type: types.ALL_RECORDS, data: { keyOfData: 'currentCourseUpdate', data: false } });
@@ -168,14 +168,6 @@ const AddNewCourse = () => {
     };
     const createOrUpdateCourse = async (formData) => {
        
-        //   if (currentCourse) {
-        //     console.log(currentCourse);
-
-        //   }else{
-        //     console.log('currentCourse');
-
-        //   }
-        //   return false;
 
           
         try {
@@ -215,10 +207,9 @@ const AddNewCourse = () => {
             
     //         const course = await axiosWrapper('POST', API_URL.SUPABASE_CREATE_COURSE, formData, token);
     //         const courseId = course?.data?.id; 
-    //         console.log(courseId);
+    //        
     //         const newLecture = await createLectore(courseId);
     //         // const newLecture = await createLectore(courseId);
-    //         // console.log(newLecture);
     //         // const formData = {
     //         //     name: "New Lecture",
     //         //     description: null,
