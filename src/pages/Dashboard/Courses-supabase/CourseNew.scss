@@ -4,7 +4,16 @@
     .main-content-wrapper {
         background-color: #F3F4F6;
         padding: 44px 60px !important;
+    @media only screen and (max-width:1199px) {
+        padding: 40px !important;
     }
+    @media only screen and (max-width:767px) {
+        padding: 30px !important;
+    }
+    @media only screen and (max-width:575px) {
+        padding: 20px !important;
+    }
+}
 }
 
 .title-top {
@@ -1103,9 +1112,10 @@ color: #fff !important;
     margin: auto;
     padding: 10px;
     border-radius: 6px;
-    box-shadow: 0px 0px 14.86px 0px #0000000F;
+    box-shadow:    0px 0px 14.86px 0px rgb(0 0 0 / 56%);
     transform: none;
     z-index: 2;
+    top: 0% !important;
 }
 
 .course-detail-row .ql-action {
@@ -1132,20 +1142,6 @@ color: #fff !important;
     outline: 0;
 }
 
-// .ql-tooltip.ql-editing.ql-flip::after {
-//     position: fixed;
-//     top: 0;
-//     content: "";
-//     left: 0;
-//     right: 0;
-//     height: 100vh;
-//     width: 100vw;
-//     background-color: #00000042;
-//     margin: auto;
-//     z-index: -1;
-//     pointer-events: auto;
-// }
-
 .course-right .quill-editor .card-title {
     font-weight: 600;
     font-size: 14px;
@@ -1153,7 +1149,7 @@ color: #fff !important;
 }
 
 .new-resource-main-card {
-    padding-top: 50px;
+    padding-top: 50px !important;
 }
 
 .res .dropdown-item {
@@ -1165,4 +1161,165 @@ color: #fff !important;
     box-shadow: 0px 0px 14.86px 0px #0000000F;
     border-radius: 4px;
     border: 1px solid #E9EAF0;
+}
+
+.slect-input {
+    flex-wrap: wrap;
+}
+
+
+@media only screen and (max-width:991px) {
+    .access-container {
+        flex-wrap: wrap;
+    }
+    
+    .access-option {
+        flex: 0 0 50%;
+        border: 1px solid #e0e0e0;
+    }
+    
+    .access-option:first-child,.access-option:nth-child(2) {
+        border-bottom: 0;
+    }
+    
+    .access-option:first-child, .access-option:nth-child(3) {
+        border-right: 0;
+    } 
+    .Course-form {
+        padding-top: 20px;
+    }
+    .select-label {
+        gap: 0px 30px;
+    }
+
+    .select-label {
+        width: 100%;
+        max-height: 200px;
+        overflow-y: scroll;
+    }
+    .course-left-top {
+        margin-bottom: 20px;
+    }
+
+    .submit-btn, .cancel-btn {
+        font-size: 14px;
+        padding: 10px 20px !important;
+    }
+
+    .detail-box li {
+        padding: 8px 10px;
+    }
+    .confirmation-modal:has(.add-link-form) .modal-title.h4 {
+        font-size: 20px;
+        margin-bottom: 10px;
+    }
+    .confirmation-modal:has(.add-link-form) .form-group.res-file label {
+        font-size: 18px;
+    }
+    .res {
+        background-color: #fff;
+        padding: 10px 20px;
+    }
+
+    .res .dropdown-toggle {
+        padding: 10px 15px;
+        padding-right: 25px;
+    }
+
+    .res .add-btn {
+        padding: 10px 15px;
+    }
+
+    .showing-transcript .subhead {
+        transform: translate(0px, -24px);
+    }
+
+    .course-detail-row .ql-snow.ql-toolbar button, .ql-snow .ql-toolbar button {
+        height: 24px;
+        padding: 3px 5px;
+        display: inline-block;
+        width: 28px;
+    }
+
+    .trans-res .ql-toolbar.ql-snow {
+        padding: 25px 0px 10px;
+    }
+
+    .field-quill-control .ql-editor {
+        padding: 15px 15px 0px;
+    }
+    
+    .new-resource-main-card {
+        padding: 0px 15px 20px;
+    }
+}
+
+@media only screen and (max-width:767px) {
+.coursemodal .modal-content {
+    padding: 40px;
+    max-width: 401px;
+    margin: auto;
+    border-radius: 15px;
+}
+.confirmation-modal:has(.add-link-form) .modal-content {
+    padding: 20px;
+    border-radius: 15px;
+}
+
+.confirmation-modal:has(.add-link-form) .form-control {
+    padding: 11px;
+}
+
+.coursemodal .modal-header .modal-title {
+    font-size: 24px;
+    margin-bottom: 15px;
+}
+
+.confirmation-modal .custom-footer-class .custom-button {
+    padding: 10px 25px;
+}
+
+.select-label {
+    grid-template-columns: repeat(2, 1fr);
+}
+.coursemodal .modal-footer button {
+    font-size: 12px;
+}
+
+.course-right {
+    margin-top: 50px;
+}
+
+.custom-radio {
+    height: 18px;
+    width: 18px;
+    min-width: 18px;
+}
+
+.access-option.selected .custom-radio:after {
+    height: 10px;
+    width: 10px;
+}
+.course-detail-row .ql-snow .ql-tooltip.ql-editing input {
+    display: block;
+    margin: 10px 0px !important;
+}
+}
+
+
+@media only screen and (max-width:575px) {
+.select-label {
+    grid-template-columns: repeat(1, 1fr);
+}
+
+.confirmation-modal:has(.add-link-form) .modal-title.h4 {
+    font-size: 16px;
+}
+.confirmation-modal:has(.add-link-form) .form-group.res-file label {
+    font-size: 16px;
+}
+
+.tab-buttons {
+    justify-content: center !important;
+}
 }
