@@ -7,6 +7,7 @@ import ConfirmationBox from '@components/ConfirmationBox/ConfirmationBox';
 import Loading from '@components/Loading/Loading';
 import { Button, Row, Col, Modal } from 'react-bootstrap';
 import { useSelector } from 'react-redux';
+import TextField from '@mui/material/TextField';
 
 const CourseCategory = ({ value = [], onChange, token }) => {
   const { userInfo, userToken } = useSelector((state) => state?.auth);
@@ -180,15 +181,31 @@ const CourseCategory = ({ value = [], onChange, token }) => {
                         <Modal.Title>Add New Category</Modal.Title>
                     </Modal.Header>
                     <Modal.Body>
+                    <div className='Course-form' style={{ paddingTop: '0px' }}>
                         <div className="form-group">
-                            <label>Category Name</label>
-                            <input
+                            {/* <label>Category Name</label> */}
+                            {/* <input
                                 type="text"
                                 className="field-control my-3 white-important-bg"
                                 value={newCategoryName}
                                 onChange={(e) => setNewCategoryName(e.target.value)}
                                 placeholder="Enter category name"
+                            /> */}
+                            <TextField
+                                name="newCategoryName"
+                                label="Category Name"
+                                className="field-control white-important-bg"
+                                variant="outlined"
+                                type="text"
+                                value={newCategoryName}
+                                onChange={(e) => setNewCategoryName(e.target.value)}
+                                placeholder="category name"
+                                inputProps={{ maxLength: 80 }}
+                                helperText={`${newCategoryName.length || 0}/80`}
+                                fullWidth
                             />
+
+                        </div>
                         </div>
                     </Modal.Body>
                     <Modal.Footer>

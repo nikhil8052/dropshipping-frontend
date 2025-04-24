@@ -20,6 +20,7 @@ import { API_URL } from '../../../utils/apiUrl';
 import Loading from '@components/Loading/Loading';
 import { stripHtmlTags } from '../../../utils/utils';
 import PencilLine from '../../../assets/icons/PencilLine.svg';
+import trashIconRed from '../../../assets/icons/Trash-rename.svg';
 
 const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCourseData }) => {
   const [loading, setLoading] = useState(false);
@@ -28,6 +29,17 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
   const [currentActiveLectureID, setCurrentActiveLectureID] = useState(null);
   const [currentActiveLecture, setCurrentActiveLecture] = useState(true);
   const [modalShow, setModalShow] = useState(false);
+  const [modalShowRename, setModalShowRename] = useState(false);
+  const [selectedLectureId, setSelectedLectureId] = useState(null);
+  const [lectureLabel, setLectureLabel] = useState('');
+  
+  const [publishLectureModel, setPublishLectureModel] = useState(false);
+  const [pendingLectureId, setPendingLectureId] = useState(null);
+
+  
+  const [modalShowSave, setModalShowSave] = useState(false);
+  const [loadingCRUD, setLoadingCRUD] = useState(false);
+
   const [showTranscriptEditor, setShowTranscriptEditor] = useState(false);
   const [showQuizModal, setShowQuizModal] = useState(false);
   const [showMovePopup, setShowMovePopup] = useState(false);
@@ -42,6 +54,73 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
   const [url, setUrl] = useState('');
   const [resourceFileUrl, setResourceFileUrl] = useState('');
   const [label, setLabel] = useState('');
+  const [lectureQuizzes, setLectureQuizzes] = useState([]);
+  const [editQuiz, setEditQuiz] = useState(null); // null = add mode
+  const [showDeleteModal, setShowDeleteModal] = useState({
+      show: false,
+      title: '',
+      isEditable: false,
+      quizId: null,
+      initialValues: null
+  });
+
+  const handleQuizSubmit = async (values, { setSubmitting, resetForm }) => {
+    setSubmitting(true);
+    const { question, options, correctAnswer } = values.quiz;
+
+    const payload = {
+      lecture_id: currentActiveLectureID,
+      title: question,
+      option1: options[0],
+      option2: options[1],
+      option3: options[2],
+      option4: options[3],
+      correct_answer: correctAnswer,
+    };
+
+    try {
+      let response;
+      if (editQuiz?.id) {
+        const url = API_URL.SUPABASE_UPDATE_QUIZ.replace(':id', editQuiz.id);
+        response = await axiosWrapper('PUT', url, payload, token);
+        if (response.data) {
+          const updatedQuizzes = lectureQuizzes.map((quiz) =>
+            quiz.id === editQuiz.id ? response.data : quiz
+          );
+          setLectureQuizzes(updatedQuizzes);
+        }
+      } else {
+        response = await axiosWrapper('POST', API_URL.SUPABASE_ADD_QUIZ, payload, token);
+        if (response.data) {
+          setLectureQuizzes([...lectureQuizzes, response.data]);
+        }
+      }
+      setShowQuizModal(false);
+      setEditQuiz(null);
+      resetForm();
+    } catch (error) {
+      console.error('Error saving quiz:', error);
+      toast.error('Failed to save quiz');
+    } finally {
+      setSubmitting(false);
+    }
+  };
+  
+
+
+  // useEffect(() => {
+  //   const fetchQuizzes = async () => {
+  //     console.warn(currentActiveLectureID);
+  //     if (currentActiveLectureID) {
+  //       const url = API_URL.SUPABASE_GET_QUIZZES.replace(':id', currentActiveLectureID);
+  //       const response = await axiosWrapper('GET', url, {}, token);
+  //       console.log(response.data);
+  //       setLectureQuizzes(response.data || []);
+  //     }
+  //   };
+  //   fetchQuizzes();
+  // }, [currentActiveLectureID]);
+  
 
   console.warn(initialData);
   useEffect(() => {
@@ -211,25 +290,17 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
 
 
   const quizValidationSchema = Yup.object().shape({
-    quiz: Yup.object()
-      .shape({
-        mcqs: Yup.array()
-          .of(
-            Yup.object().shape({
-              question: Yup.string().when('options', {
-                is: (options) => options && options.length > 0,
-                then: () => Yup.string().required('Question is required when options are provided'),
-                otherwise: () => Yup.string().optional()
-              }),
-              options: Yup.array()
-                .of(Yup.string().optional())
-                .test('unique-options', 'Options must be unique', (options) => {
-                  const uniqueOptions = new Set(options.map((option) => option?.toLowerCase()));
-                  return uniqueOptions.size === options.length;
-                })
-            })
-          )
-      })
+    quiz: Yup.object().shape({
+      question: Yup.string().required('Question is required'),
+      options: Yup.array()
+        .of(Yup.string().required('Option is required'))
+        .min(4, 'Four options are required')
+        .test('unique-options', 'Options must be unique', (options) => {
+          const uniqueOptions = new Set(options.map((option) => option?.toLowerCase()));
+          return uniqueOptions.size === options.length;
+        }),
+      correctAnswer: Yup.string().required('Correct answer is required'),
+    }),
   });
   const hasLectures = currentCourse?.lectures && currentCourse?.lectures?.length > 0;
 
@@ -243,16 +314,91 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
   // useEffect(() => {
   //   if (!hasLectures) setIsEditing(true);
   // }, [hasLectures]);
-  const handleQuizSubmit = (values) => {
-    console.log('Quiz submitted:', values);
-    // Here you would typically save the quiz data
-    setShowQuizModal(false);
-  };
+  // const handleQuizSubmit = (values) => {
+  //   console.log('Quiz submitted:', values);
+  //   // Here you would typically save the quiz data
+  //   setShowQuizModal(false);
+  // };
 
-  const handleQuizPopupClick = () => {
+  const handleQuizPopupClick = (quizz) => {
+    setEditQuiz(quizz);
     setShowQuizModal(!showQuizModal);
   };
+  const handleDeleteQuizClick = (id) => {
+    console.log(id);
+      setShowDeleteModal({
+          show: true,
+          title: 'Delete Quiz',
+          isEditable: false,
+          quizId: id,
+          initialValues: null
+      });
+  };
+  //  const handleDeleteSubmit = async () => {
+  //   console.log(showDeleteModal.quizId);
+  //         try {
+  //             setLoadingCRUD(true);
+  //             await axiosWrapper(
+  //                 'DELETE',
+  //                 `${API_URL.SUPABASE_DELETE_QUIZ.replace(':id', showDeleteModal.quizId)}`,
+  //                 {},
+  //                 token
+  //             );
+  //             // dispatch({ type: types.ALL_RECORDS, data: { keyOfData: 'currentCourseUpdate', data: true } });
+  //         } catch (error) {
+  //             return;
+  //         } finally {
+  //             setLoadingCRUD(false);
+  //             setShowDeleteModal({
+  //                 show: false,
+  //                 title: 'Delete Lecture',
+  //                 isEditable: false,
+  //                 quizId: null,
+  //                 initialValues: null
+  //             });
+  //         }
+  //     };
 
+
+    const handleDeleteSubmit = async () => {
+        const deletedQuizId = showDeleteModal.quizId;      
+        try {
+          setLoadingCRUD(true);
+          await axiosWrapper(
+            'DELETE',
+            `${API_URL.SUPABASE_DELETE_QUIZ.replace(':id', deletedQuizId)}`,
+            {},
+            token
+          );
+      
+          setLectureQuizzes((prevQuizzes) =>
+            prevQuizzes.filter((quiz) => quiz.id !== deletedQuizId)
+          );
+        } catch (error) {
+          console.error('Error deleting quiz:', error);
+          return;
+        } finally {
+          setLoadingCRUD(false);
+          setShowDeleteModal({
+            show: false,
+            title: 'Delete Lecture',
+            isEditable: false,
+            quizId: null,
+            initialValues: null
+          });
+        }
+      };
+      
+    
+      const handleCloseDeleteModal = () => {
+        setShowDeleteModal({
+            show: false,
+            title: 'Delete Quiz',
+            isEditable: false,
+            quizId: null,
+            initialValues: null
+        });
+    };
   const moveLecture = (targetTopicIndex) => {
     const updatedTopics = [...topics];
     const { topicIndex, lectureIndex } = selectedLecture;
@@ -273,6 +419,9 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
 
   const handlePopupClick = () => {
     setModalShow(!modalShow);
+  };
+  const handlePopupClickRename = () =>{
+    setModalShowRename(!modalShowRename);
   };
 
   const { description } = {};
@@ -317,8 +466,10 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
       transcript: transcript,
       id: lecture.data?.id,
       courseId: lecture.data?.courseId,
+      quizzes: lecture?.data?.quizzes,
     };
-
+    setLectureQuizzes(lecture?.data?.quizzes || []);
+    console.table(lectureQuizzes);
     setEditingLecture(lectureDetail);
     setIsEditing(true);
     // Get the resouces of the lecture
@@ -348,6 +499,15 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
     return formData;
   };
 
+  const modelPopAction= () => {
+    if(pendingLectureId){
+      handleEditClick(pendingLectureId);
+      setPublishLectureModel(false);
+      setPendingLectureId(null);
+    }
+    // setSubmitting(false);
+
+  }
   const handleSubmit = async (values, { setSubmitting, resetForm, ...formikHelpers }) => {
     setSubmitting(true);
 
@@ -361,20 +521,68 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
 
       await axiosWrapper(method, url, formData, token);
 
-      toast.success(`${action === 'update' ? 'Updated' : 'Saved'} successfully!`);
+      // toast.success(`${action === 'update' ? 'Updated' : 'Saved'} successfully!`);
 
-      if (action === 'save') {
-        // handle next step navigation
-      }
+      // if (action === 'save') {
+      //   // handle next step navigation
+      // }
+      
     } catch (err) {
       // handleError(err);
       console.log(err);
     } finally {
       setSubmitting(false);
+      modelPopAction();
     }
 
   };
 
+  const renameLecture = async (id, newTitle) => {
+    if (!id || !newTitle) {
+      console.warn('Lecture ID and new title are required to rename.');
+      return;
+    }
+  
+    try {
+      const payload = {
+        name: newTitle,
+      };
+  
+      const url = API_URL.SUPABASE_UPDATE_LECTURE.replace(':id', id);
+  
+      const response = await axiosWrapper('PUT', url, payload, token);
+      console.log('Lecture renamed:', response.data);
+      return response.data;
+    } catch (error) {
+      console.error('Failed to rename lecture:', error);
+      // toast.error('Failed to rename lecture');
+      return null;
+    }
+  };
+  const handleRenameLecture = async () => {
+    if (!lectureLabel?.trim() || !selectedLectureId) {
+      return;
+    }
+  console.log(selectedLectureId);
+    const updated = await renameLecture(selectedLectureId, lectureLabel.trim());
+    
+    if (updated) {
+      setUnassignedLectures((prevLectures) =>
+        prevLectures.map((lecture) =>
+          lecture.id === selectedLectureId
+            ? { ...lecture, name: lectureLabel.trim() }
+            : lecture
+        )
+      );
+    
+      // Close modal and reset form
+      setModalShowRename(false);
+      setLectureLabel('');
+      setSelectedLectureId(null);
+    }
+    
+  };
+  
   const resourceFileChanged = async (e) => {
     const file = e.target.files[0];
     const formData = new FormData();
@@ -384,9 +592,64 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
     setResourceFileUrl(mediaFile.data[0].path);
   }
 
-
+  const handlePublishCourseModal = () => {
+      setPublishLectureModel(false);
+  };
+  
   return (
     <>
+      {showDeleteModal.show && (
+          <ConfirmationBox
+              show={showDeleteModal.show}
+              onClose={handleCloseDeleteModal}
+              loading={loadingCRUD}
+              title="Delete Quiz"
+              body="Are you sure you want to delete this Quiz?"
+              onConfirm={handleDeleteSubmit}
+              customFooterClass="custom-footer-class"
+              nonActiveBtn="cancel-button"
+              activeBtn="delete-button"
+              activeBtnTitle="Delete"
+          />
+      )}
+
+      {/* rename model ::: */}
+      {modalShowRename && (
+        <ConfirmationBox
+          className="add-link-modal"
+          show={modalShowRename}
+          onClose={() => setModalShowRename(false)}
+          onConfirm={() => handleRenameLecture()} // 👈 rename logic
+          loading={false}
+          title="Lecture Name"
+          body={
+            <div className="add-link-form">
+              <div className="form-group">
+                <label htmlFor="labelInput">Name</label>
+                <input
+                  type="text"
+                  id="labelInput"
+                  className="form-control"
+                  placeholder="Lecture Name"
+                  value={lectureLabel}
+                  required
+                  onChange={(e) => setLectureLabel(e.target.value)}
+                />
+                {!lectureLabel?.trim() && (
+                  <div className="error-message">* Field is required</div>
+                )}
+              </div>
+            </div>
+          }
+          customFooterClass="custom-footer-class"
+          nonActiveBtn="cancel-btn"
+          activeBtn="submit-btn"
+          cancelButtonTitle="Cancel"
+          activeBtnTitle="Update"
+        />
+      )}
+
+
       {loading ? (
         <Loading />
       ) : (
@@ -446,15 +709,21 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
             />
           )}
 
-          <Modal
-            show={showQuizModal}
-            onHide={handleQuizPopupClick}
-            size="lg"
-            centered
-          >
+        <Modal show={showQuizModal} onHide={() => setShowQuizModal(false)} size="lg" centered>
             <Modal.Body>
               <Formik
-                initialValues={quizInitialValues}
+                initialValues={{
+                  quiz: {
+                    question: editQuiz?.title || '',
+                    options: [
+                      editQuiz?.option1 || '',
+                      editQuiz?.option2 || '',
+                      editQuiz?.option3 || '',
+                      editQuiz?.option4 || '',
+                    ],
+                    correctAnswer: editQuiz?.correct_answer || '',
+                  },
+                }}
                 validationSchema={quizValidationSchema}
                 onSubmit={handleQuizSubmit}
               >
@@ -462,94 +731,83 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
                   <Form>
                     <div className="quiz-wrapper">
                       <div className="add-quiz-title">
-                        <p>Add Quiz</p>
+                        <p>{editQuiz ? 'Edit Quiz' : 'Add Quiz'}</p>
                       </div>
                       <div className="quiz-fields-container">
-                        <FieldArray name="quiz.mcqs">
-                          {({ push, remove }) => (
-                            <div className="add-quiz-fields">
-                              <div className="add-quiz-label mb-2">
-                                <p>
-                                  Please Insert MCQs for Student's personal assessments.
-                                </p>
-                                <span
-                                  onClick={() =>
-                                    push({
-                                      question: '',
-                                      options: ['', '', '', ''],
-                                      correctAnswer: ''
-                                    })
-                                  }
-                                >
-                                  <img src={bluePlus} alt="bluePlus" /> Add new
-                                </span>
-                              </div>
-                              {values.quiz.mcqs.map((_, index) => (
-                                <div key={index} className="add-quiz-question">
-                                  <div className="d-flex align-items-center">
-                                    <Field
-                                      name={`quiz.mcqs[${index}].question`}
-                                      className="field-control"
-                                      type="text"
-                                      placeholder="Please Type Question Here..."
-                                    />
-                                    <Button
-                                      type="button"
-                                      className="btn btn-link minus-btn"
-                                      onClick={() => {
-                                        remove(index);
-                                      }}
-                                    >
-                                      <FontAwesomeIcon icon={faMinus} color="black" />
-                                    </Button>
-                                  </div>
-                                  <div className="d-flex align-items-center mb-2">
-                                    <ErrorMessage
-                                      name={`quiz.mcqs[${index}].question`}
-                                      component="div"
-                                      className="error"
-                                    />
-                                  </div>
-                                  <div className="quiz-multiple-choice">
-                                    {['option1', 'option2', 'option3', 'option4'].map(
-                                      (option, optIndex) => (
-                                        <Field
-                                          key={optIndex}
-                                          name={`quiz.mcqs[${index}].options[${optIndex}]`}
-                                          className={`field-control ${optIndex === 3 ? 'correctAnswer' : ''}`}
-                                          type="text"
-                                          placeholder={
-                                            optIndex === 3
-                                              ? 'Correct option'
-                                              : `Type option ${optIndex + 1}`
-                                          }
-                                        />
-                                      )
-                                    )}
-                                  </div>
+                        <div className="add-quiz-fields">
+                          <div className="add-quiz-label mb-2">
+                            <p>Please Insert MCQ for Student's personal assessment.</p>
+                          </div>
+                          <div className="add-quiz-question">
+                            <div className="d-flex align-items-center">
+                              <Field
+                                name="quiz.question"
+                                className="field-control"
+                                type="text"
+                                placeholder="Please Type Question Here..."
+                              />
+                            </div>
+                            <ErrorMessage
+                              name="quiz.question"
+                              component="div"
+                              className="error"
+                            />
+                            <div className="quiz-multiple-choice">
+                              {values.quiz.options.map((_, optIndex) => (
+                                <div key={optIndex}>
+                                  <Field
+                                    name={`quiz.options[${optIndex}]`}
+                                    className="field-control"
+                                    type="text"
+                                    placeholder={`Type option ${optIndex + 1}`}
+                                  />
                                   <ErrorMessage
-                                    name={`quiz.mcqs[${index}].options`}
+                                    name={`quiz.options[${optIndex}]`}
                                     component="div"
                                     className="error"
                                   />
                                 </div>
                               ))}
                             </div>
-                          )}
-                        </FieldArray>
+                            <div className="add-quiz-label mb-2">
+                              <p>Select Correct Answer</p>
+                            </div>
+                            <Field
+                              as="select"
+                              name="quiz.correctAnswer"
+                              className="field-control"
+                            >
+                              <option value="">Select correct answer</option>
+                              {values.quiz.options.map((option, index) => (
+                                <option key={index} value={option}>
+                                  {option || `Option ${index + 1}`}
+                                </option>
+                              ))}
+                            </Field>
+                            <ErrorMessage
+                              name="quiz.correctAnswer"
+                              component="div"
+                              className="error"
+                            />
+                          </div>
+                        </div>
                       </div>
                     </div>
                     <div className="mt-3 d-flex justify-content-end gap-3">
                       <Button
                         type="button"
-                        onClick={handleQuizPopupClick}
+                        onClick={() => setShowQuizModal(false)}
                         className="cancel-btn"
                         disabled={isSubmitting}
                       >
                         Cancel
                       </Button>
-                      <Button type="submit" className="submit-btn" disabled={isSubmitting}>
-                        Save Quiz
+                      <Button
+                        type="submit"
+                        className="submit-btn"
+                        disabled={isSubmitting}
+                      >
+                        {editQuiz ? 'Update Quiz' : 'Save Quiz'}
                       </Button>
                     </div>
                   </Form>
@@ -557,6 +815,7 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
               </Formik>
             </Modal.Body>
           </Modal>
+
 
           <div className="course-detail-tab">
             <div className="course-detail-row">
@@ -574,6 +833,7 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
                           </Dropdown.Toggle>
                           <Dropdown.Menu>
                             {/* <Dropdown.Item href="javascript:void(0)">Edit Course</Dropdown.Item> */}
+                            <Dropdown.Item onClick={onBack}>Edit Course</Dropdown.Item>
                             <Dropdown.Item onClick={addNewTopic}>Add Folder</Dropdown.Item>
                             <Dropdown.Item onClick={addUnassignedLecture}>Add Lecture</Dropdown.Item>
                             {/* <Dropdown.Item href="javascript:void(0)">Add Page</Dropdown.Item> */}
@@ -624,7 +884,20 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
                                             </div>
                                           </Dropdown.Toggle>
                                           <Dropdown.Menu>
-                                            <Dropdown.Item href="javascript:void(0)" onClick={() => handleEditClick(lecture.id)}>Edit</Dropdown.Item>
+                                            {/* <Dropdown.Item href="javascript:void(0)" 
+                                            onClick={() => handleEditClick(lecture.id)}
+                                              >Edit</Dropdown.Item> */}
+                                            {isEditing && ( 
+                                            <Dropdown.Item
+                                              href="javascript:void(0)"
+                                              onClick={() => {
+                                                setPendingLectureId(lecture.id); // store the ID
+                                                setPublishLectureModel(true); // show modal
+                                              }}
+                                            >
+                                              Edit
+                                            </Dropdown.Item>
+                                            )}
                                             {/* <Dropdown.Item href="javascript:void(0)">Copy</Dropdown.Item> */}
                                             <Dropdown.Item onClick={() => duplicateLecture(topicIndex, lectureIndex)}>Duplicate</Dropdown.Item>
                                             <Dropdown.Item onClick={() => {
@@ -658,14 +931,41 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
                                         </div>
                                       </Dropdown.Toggle>
                                       <Dropdown.Menu>
-                                        <Dropdown.Item href="javascript:void(0)" onClick={() => handleEditClick(lecture.id)}>Edit</Dropdown.Item>
+                                        {/* <Dropdown.Item href="javascript:void(0)" onClick={() => handleEditClick(lecture.id)}>Edit</Dropdown.Item> */}
+                                        {isEditing && ( 
+                                        <Dropdown.Item
+                                              href="javascript:void(0)"
+                                              onClick={() => {
+                                                setPendingLectureId(lecture.id); // store the ID
+                                                setPublishLectureModel(true); // show modal
+                                              }}
+                                            >
+                                              Edit
+                                        </Dropdown.Item>
+                                        )}
                                         <Dropdown.Item onClick={() => {
                                           setSelectedLecture({ topicIndex: null, lectureIndex: index }); // null because it's unassigned
                                           setShowMovePopup(true);
                                         }}>
                                           Move
                                         </Dropdown.Item>
+                                      {/* <Dropdown.Item 
+                                        // onClick={() => renameLecture(lecture.id)}
+                                        onClick={() => setModalShowRename(true)}
+                                          
+                                          >Rename</Dropdown.Item> */}
+                                      <Dropdown.Item 
+                                        onClick={() => {
+                                          setSelectedLectureId(lecture.id);
+                                          setLectureLabel(lecture.title);
+                                          setModalShowRename(true);
+                                        }}
+                                      >
+                                        Rename
+                                      </Dropdown.Item>
                                       </Dropdown.Menu>
+                                      
+
                                     </Dropdown>
                                   </div>
                                 </li>
@@ -750,10 +1050,13 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
                           description: editingLecture?.description || '',
                           transcript: editingLecture?.transcript || '',
                           id: editingLecture?.id || '',
+                          // quizzes: editingLecture?.quizzes || [],
+                          // quizzes: lectureQuizzes || [],
                         }}
                         onSubmit={handleSubmit}
                       >
-                        {({ isSubmitting, values, setFieldValue }) => (
+                        {/* {({ isSubmitting, values, setFieldValue }) => ( */}
+                        {({ isSubmitting, handleSubmit, setFieldValue, values }) => (
 
                           <Form>
                             <Row>
@@ -769,6 +1072,18 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
                                   modules={{ toolbar: TOOLBAR_CONFIG }}
                                   formats={FORMATS}
                                 />
+                                {/* <Input
+                                    className="field-quill-control"
+                                    type="richTextEditor"
+                                    name="description"
+                                    id="course_description"
+                                    placeholder="Enter Course Description"
+                                    showResources={true}
+                                    resources={resources}
+                                    modules={modules} 
+                                    formats={FORMATS}
+                                /> */}
+
                               </Col>
                             </Row>
 
@@ -793,12 +1108,41 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
 
                             <div className="res">
                               <h2 className="subhead">Add Quiz</h2>
-                              <div className="drop-box">
-                                <div className="add-btn">
-                                  <a href="javascript:void(0)" onClick={handleQuizPopupClick}>Add New</a>
+
+                                <div className="drop-box">
+                                  <div className="add-btn">
+                                    <a href="javascript:void(0)" onClick={handleQuizPopupClick}>Add New</a>
+                                  </div>
+                                </div>
+                            </div>
+                                {/* Display quizzes if available */}
+                              {lectureQuizzes.length > 0 && (
+                                <div className="res">
+                               <div className="quizz-wrap" style={{ width: '100%' }}>
+
+                                  {lectureQuizzes.map((quiz, index) => (
+                                    <div className="course-right-header border-0" key={quiz.id}>
+                                      <h2 className="subhead border-0">{quiz.title}</h2>
+                                      <div className="items-text d-flex gap-2">
+                                        <img
+                                          className="cursor-pointer"
+                                          src={PencilLine}
+                                          alt="Edit"
+                                          onClick={() => handleQuizPopupClick(quiz)}
+                                        />
+                                        <img
+                                            className="cursor-pointer"
+                                            src={trashIconRed}
+                                            alt="Delete"
+                                            onClick={() => handleDeleteQuizClick(quiz.id)}
+                                        />
+                                      </div>
+                                    </div>
+                                  ))}
                                 </div>
                               </div>
-                            </div>
+                              )}
+
 
                             <div className={`res trans-res ${showTranscriptEditor ? 'showing-transcript' : ''}`}>
                               <h2 className="subhead">Add Transcript</h2>
@@ -858,6 +1202,22 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
                               </div>
                             </div>
 
+                            {publishLectureModel && (
+                              <ConfirmationBox
+                                  show={publishLectureModel}
+                                  onClose={modelPopAction}
+                                  onConfirm={handleSubmit}
+                                  title="Save Your lecture data ..."
+                                  body="You have unsaved changes. Would you like to save them before editing, or continue without saving?"
+                                  loading={loadingCRUD}
+                                  customFooterClass="custom-footer-class"
+                                  nonActiveBtn="cancel-btn"
+                                  activeBtn="submit-btn"
+                                  cancelButtonTitle="Proceed without Saving"
+                                  activeBtnTitle=" Save & Proceed"
+                              />
+                            )}
+                           
                           </Form>
                         )}
                       </Formik>
