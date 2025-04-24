@@ -241,6 +241,26 @@ color: #fff;
     border: 1px solid rgb(233, 234, 240) !important;
     color: #fff;
 }
+
+.modal-body .field-control,
+.field-select-control {
+    font-family: Inter;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 14px;
+    text-align: left;
+    // color: rgba(25, 28, 31, 1) !important;
+    // border: 0.8px solid rgba(233, 234, 240, 1) !important;
+    border-radius: 10px;
+    padding: 15px 20px;
+    width: 100%;
+    margin-bottom: 2rem;
+    background-color: #fff!important;
+    border: 1px solid rgb(233, 234, 240) !important;
+    color: #343837;
+}
+
+
 .field-control-phone-mask {
     font-family: Inter;
     font-size: 14px !important;
