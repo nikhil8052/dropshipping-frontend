@@ -507,7 +507,7 @@ const AddLectureModal = ({ lectureModal, resetModal, onSave }) => {
                                                                 })
                                                             }
                                                         >
-                                                            <img src={bluePlus} alt="bluePlus" /> + Add new
+                                                            <img src={bluePlus} alt="bluePlus" /> Add new
                                                         </span>
                                                     </div>
                                                     {values.quiz.mcqs.map((_, index) => (

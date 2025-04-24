@@ -343,7 +343,6 @@ color: #fff;
 .white-important-bg{
 background-color: transparent !important;
     color: #000 !important;
-    border: 1px solid rgba(3, 164, 194, 0.24) !important;
 }
 // Media styles
 @media (max-width: $large-screen) {
@@ -633,8 +632,7 @@ filter: invert(0);
 }
 
 .addcourse-section .add-course-form .cancel-btn {
-    color: #000 !important;
- border: 1px solid rgb(3 164 194 / 24%) !important;
+    color: #6E7485 !important;
 }
 
 .addcourse-section .field-control:focus-visible,.addcourse-section  .field-select-control:focus-visible, 

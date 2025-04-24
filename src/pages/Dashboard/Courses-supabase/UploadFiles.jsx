@@ -289,7 +289,7 @@ const UploadFiles = ({ onNext, onBack, initialData, setStepComplete, updateCours
             ) : (
                 <div className="upload-form-section">
                     <div className="section-title">
-                        <p>Upload Files12</p>
+                        <p>Upload Files</p>
                     </div>
                     <div className="upload-course-form">
                         <Formik
@@ -614,7 +614,7 @@ const UploadFiles = ({ onNext, onBack, initialData, setStepComplete, updateCours
                                                         <img
                                                             className="cursor-pointer"
                                                             src={plusIcon}
-                                                            alt="menu" 
+                                                            alt="menu"
                                                             onClick={handleCreateClick}
                                                         />
                                                     </div>

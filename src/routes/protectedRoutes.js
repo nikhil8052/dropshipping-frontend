@@ -9,6 +9,7 @@ const NewStudent = lazy(() => import('@pages/Dashboard/Students/NewStudent/NewSt
 const Students = lazy(() => import('@pages/Dashboard/Students/Students'));
 const EnrolledCourseDetail = lazy(() => import('@pages/Dashboard/Courses/EnrolledCourseDetail'));
 const Courses = lazy(() => import('@pages/Dashboard/Courses/Courses'));
+const CourseSupabase = lazy(() => import('@pages/Dashboard/Courses-supabase/Courses'));
 const Categories = lazy(() => import('@pages/Dashboard/Categories/Categories'));
 const Events = lazy(() => import('@pages/Dashboard/Events/Events'));
 const EventsListing = lazy(() => import('@pages/Dashboard/Events/EventsListing/EventsListing'));
@@ -21,9 +22,12 @@ const VisualizeCSV = lazy(() => import('@pages/Dashboard/VisualizeCsv/VisualizeC
 const Roadmap = lazy(() => import('@pages/Dashboard/Roadmap/Roadmap'));
 const Settings = lazy(() => import('@pages/Dashboard/Settings/Settings'));
 const NewCourse = lazy(() => import('@pages/Dashboard/Courses/AddNewCourse'));
+const NewCourseSupabase = lazy(() => import('@pages/Dashboard/Courses-supabase/AddCourse'));
 const NewCategory = lazy(() => import('@pages/Dashboard/Categories/AddNewCategory'));
 const CourseDetail = lazy(() => import('@pages/Dashboard/Courses/CourseDetail'));
+const CourseDetailSupabase = lazy(() => import('@pages/Dashboard/Courses-supabase/CourseDetail'));
 const AllStudents = lazy(() => import('@pages/Dashboard/Courses/AllStudents'));
+const AllStudentsSupabase = lazy(() => import('@pages/Dashboard/Courses-supabase/AllStudents'));
 const ViewProgress = lazy(() => import('@pages/Dashboard/Courses/ViewProgress'));
 const CallBack = lazy(() => import('@pages/Auth/Callback'));
 
@@ -143,6 +147,50 @@ export const adminRoutes = [
         Component: ViewProgress,
         access: 'ADMIN'
     },
+    // course-supabase
+    {
+        path: 'courses-supabase',
+        exact: true,
+        name: 'Courses',
+        Component: CourseSupabase,
+        access: 'ADMIN'
+    },
+    {
+        path: 'courses-supabase/new',
+        exact: true,
+        name: 'Courses',
+        Component: NewCourseSupabase,
+        access: 'ADMIN'
+    },
+    {
+        path: 'courses-supabase/edit',
+        exact: true,
+        name: 'Courses',
+        Component: NewCourseSupabase,
+        access: 'ADMIN'
+    },
+    {
+        path: 'courses-supabase/details/:name?/:lec_name?',
+        exact: true,
+        name: 'Courses',
+        Component: CourseDetailSupabase,
+        access: 'ADMIN'
+    },
+    {
+        path: 'courses-supabase/all-students',
+        exact: true,
+        name: 'Courses',
+        Component: AllStudentsSupabase,
+        access: 'ADMIN'
+    },
+    {
+        path: 'courses-supabase/view-progress',
+        exact: true,
+        name: 'Courses',
+        Component: ViewProgress,
+        access: 'ADMIN'
+    },
+    // course-supabase end
     {
         path: 'events',
         exact: true,

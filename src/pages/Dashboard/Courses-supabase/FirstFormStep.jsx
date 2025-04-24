@@ -14,6 +14,7 @@ import deleteIcon from '@icons/trash-2.svg';
 import ConfirmationBox from '@components/ConfirmationBox/ConfirmationBox';
 import 'react-tooltip/dist/react-tooltip.css'
 import { Tooltip } from 'react-tooltip'
+import CourseAccessType from './CourseAccessType';
 
 const BasicInformation = ({ initialData, setStepComplete, createOrUpdateCourse, resetStep, onDelete,...rest }) => {
     const { userInfo, userToken } = useSelector((state) => state?.auth);
@@ -55,29 +56,7 @@ const BasicInformation = ({ initialData, setStepComplete, createOrUpdateCourse, 
         }
     };
 
-    const handleDeleteClick = (e) => {
-        e.stopPropagation(); 
-        setShowDeleteModal(true);
-    };
 
-    const handleCloseDeleteModal = () => {
-        setShowDeleteModal(false);
-    };
-
-    const handleDeleteSubmit = async () => {
-        setLoadingCRUD(true);
-        try {
-            if (onDelete) {
-                await onDelete(rest?._id); 
-            }
-            setShowDeleteModal(false);
-            setLoadingCRUD(false);
-            navigate(`/${role}/courses`);
-        } catch (error) {
-            setLoadingCRUD(false);
-            setShowDeleteModal(false);
-        }
-    };
 
     useEffect(() => {
         if (initialData?.category) {
@@ -147,64 +126,14 @@ const BasicInformation = ({ initialData, setStepComplete, createOrUpdateCourse, 
         }
     };
 
-    const createCategory = async (categoryName) => {
-        try {
-            const response = await axiosWrapper(
-                'POST',
-                `${API_URL.CREATE_CATEGORY}`,
-                { name: categoryName, createdBy: userInfo?._id },
-                userToken
-            );
 
-            const createdCategory = response?.data;
-            return {
-                label: createdCategory.name,
-                value: createdCategory._id
-            };
-        } catch (error) {
-            return null;
-        }
-    };
-
-    const handleAddNewCategory = async () => {
-        if (!newCategoryName.trim()) return;
-        
-        setIsCreatingCategory(true);
-        try {
-            const newCategory = await createCategory(newCategoryName);
-            if (newCategory) {
-                setCategories(prev => [...prev, newCategory]);
-                setShowCategoryModal(false);
-                setNewCategoryName('');
-            }
-        } catch (error) {
-            console.error('Error creating category:', error);
-        } finally {
-            setIsCreatingCategory(false);
-        }
-    };
 
     const noOptionsMessage = ({ inputValue }) => {
         return inputValue ? 'No categories found' : 'Type to search categories';
     };
 
 
-    const deleteCourse = async () => {
-        try{
-            if( currentCourse ){
-                const url = `${API_URL.DELETE_COURSE.replace(':id', currentCourse)}`
-               const  response = await axiosWrapper(
-                    'DELETE',
-                     url,
-                    {},
-                    userToken
-                );
-                navigate(`/${role}/courses`);
-            }
-        }catch(error){
-            console.log(error);
-        }
-    };
+
 
     return (
         <>
@@ -268,15 +197,15 @@ const BasicInformation = ({ initialData, setStepComplete, createOrUpdateCourse, 
                                             <ErrorMessage name="subtitle" component="div" className="error" />
                                         </Col>
                                     </Row>
-
+                                    {/* <CourseAccessType /> */}
                                     <Row>
                                         <Col md={12} xs={12}>
                                             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                                                 <label style={{ marginBottom: '5px', fontWeight: '500' }}>Course Category</label>
-                                                <Button className='nw-cat'
-                                                    variant="text-dark" 
+                                                <Button 
+                                                    variant="text-dark" className='nwcat'
                                                     size="sm" 
-                                                    style={{ padding: 0 }}
+                                                    style={{ padding: 0, fontSize: '0.875rem' }}
                                                     onClick={() => setShowCategoryModal(true)}
                                                 >
                                                     + New Category
@@ -304,7 +233,7 @@ const BasicInformation = ({ initialData, setStepComplete, createOrUpdateCourse, 
                                             <div className="mt-3 d-flex justify-content-between gap-3">
                                                 <Button
                                                     type="button"
-                                                    onClick={() => navigate(`/${role}/courses`)}
+                                                    onClick={() => navigate(`/${role}/courses-supabase`)}
                                                     className="cancel-btn"
                                                     disabled={isSubmitting}
                                                 >
@@ -323,60 +252,7 @@ const BasicInformation = ({ initialData, setStepComplete, createOrUpdateCourse, 
                 </div>
             )}
             
-            {/* Delete Confirmation Modal */}
-            {showDeleteModal && (
-                <ConfirmationBox
-                    show={showDeleteModal}
-                    onClose={handleCloseDeleteModal}
-                    onConfirm={handleDeleteSubmit}
-                    title="Delete Course"
-                    body="Are you sure you want to delete this course? Data associated with this course will be lost."
-                    loading={loadingCRUD}
-                    customFooterClass="custom-footer-class"
-                    nonActiveBtn="cancel-button"
-                    activeBtn="delete-button"
-                    cancelButtonTitle="No"
-                    activeBtnTitle="Delete"
-                />
-            )}
-            
-            {/* Add New Category Modal */}
-            <Modal 
-                show={showCategoryModal} 
-                onHide={() => setShowCategoryModal(false)} 
-                centered className='coursemodal'
-                >
-
-                    <Modal.Body>
-                        <div className="form-group">
-                            <input
-                                type="text"
-                                className="field-control my-3 white-important-bg"
-                                value={newCategoryName}
-                                onChange={(e) => setNewCategoryName(e.target.value)}
-                            />
-                               <label className="floating-label">Category Name</label>
-                               <span>Category Name</span>
-                        </div>
-                    </Modal.Body>
-                    <Modal.Footer>
-                        <Button 
-                            className="text-black cancel-btn" 
-                            onClick={() => setShowCategoryModal(false)}
-                        >
-                            Cancel
-                        </Button>
-
-                        <Button 
-                            className="submit-btn" 
-                            onClick={handleAddNewCategory}
-                            disabled={!newCategoryName.trim() || isCreatingCategory}
-                        >
-                            {isCreatingCategory ? 'Creating...' : 'Create Category'}
-                        </Button>
-                    </Modal.Footer>
-            </Modal>
-
+           
             
             <Tooltip id="my-tooltip2" />
         </>

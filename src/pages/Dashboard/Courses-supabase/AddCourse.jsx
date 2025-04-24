@@ -15,6 +15,8 @@ import axiosWrapper from '../../../utils/api';
 import * as types from '../../../redux/actions/actionTypes';
 import { API_URL } from '../../../utils/apiUrl';
 import { textParser } from '../../../utils/utils';
+import AddLecture from './AddLecture';
+import AddLectureModel from './AddLectureModal';
 
 const AddNewCourse = () => {
     const location = useLocation();
@@ -24,13 +26,18 @@ const AddNewCourse = () => {
     const token = useSelector((state) => state?.auth?.userToken);
     const role = userInfo?.role?.toLowerCase();
     const editMode = location.state?.isEdit || false;
-    const courseId = location.state?.courseId;
+    // const courseId = location.state?.courseId;
     const [activeKey, setActiveKey] = useState('basic-information');
     const currentCourse = useSelector((state) => state?.root?.currentCourse);
     const currentCourseUpdate = useSelector((state) => state?.root?.currentCourseUpdate);
     const lectureUpdate = useSelector((state) => state?.root?.lectureUpdate);
     const [loading, setLoading] = useState(false);
+    const [isPublished, setIsPublished] = useState(false);
+    const courseId = useSelector((state) => state?.root?.currentCourse);
 
+    console.log( courseId, "COURSE ID ")
+    console.log( currentCourse, " CURRENT COURSE ")
+    
     const [courseData, setCourseData] = useState({
         title: '',
         subtitle: '',
@@ -99,33 +106,48 @@ const AddNewCourse = () => {
 
     // ///////////////// APi Calls ///////////////
     const getCourseById = async (id) => {
+       
         try {
-            const { data } = await axiosWrapper('GET', `${API_URL.GET_COURSE.replace(':id', id)}`, {}, token);
-
+            const { data } = await axiosWrapper('GET', `${API_URL.SUPABASE_GET_COURSE.replace(':id', id)}`, {}, token);
+            
+            // console.log( data, "COURSE DATA ")
+            // if(data.id  && data.lectures.length == 0){
+            //     const newLecture = await axiosWrapper(
+            //         'POST',
+            //         API_URL.SUPABASE_ADD_LECTURE,
+            //         {
+            //           name: 'New Page',
+            //           courseId: data.id
+            //         },
+            //         token
+            //       );  
+            // }
             const description = textParser(data.description);
 
             // Map categories to { label, value } format
-            const categories = data.category.map((cat) => ({
+            const categories = data.categoryDetails.map((cat) => ({
                 label: cat.name,
-                value: cat._id
+                value: cat.id
             }));
-            const updatedLecture = data.lectures.map((lec) => {
-                const description = textParser(lec.description);
-                return {
-                    ...lec,
-                    description: description
-                };
-            });
+            // const updatedLecture = data.lectures.map((lec) => {
+            //     const description = textParser(lec.description);
+            //     return {
+            //         ...lec,
+            //         description: description
+            //     };
+            // });
             updateCourseData({
                 title: data.title,
                 subtitle: data.subtitle,
                 category: categories,
-                createdBy: data.createdBy?._id,
+                createdBy: data.createdBy?.id,
                 thumbnail: data.thumbnail,
+                access_type:data.access_type,
                 banner: data.banner,
                 trailer: data.trailer,
                 description: description,
-                lectures: updatedLecture
+                lecturess: data.unassignedLectures,
+                folders:data.folders
             });
 
             dispatch({ type: types.ALL_RECORDS, data: { keyOfData: 'currentCourseUpdate', data: false } });
@@ -147,33 +169,78 @@ const AddNewCourse = () => {
             dispatch({ type: types.ALL_RECORDS, data: { keyOfData: 'lectureUpdate', data: false } });
         }
     };
-
     const createOrUpdateCourse = async (formData) => {
-        if (currentCourse) {
-            await axiosWrapper('PUT', `${API_URL.UPDATE_COURSE.replace(':id', currentCourse)}`, formData, token);
 
+        try {
+          if (currentCourse) {
+            await axiosWrapper('PUT', `${API_URL.SUPABASE_UPDATE_COURSE.replace(':id', currentCourse)}`, formData, token);
             getCourseById(currentCourse);
+          } else {
+            const course = await axiosWrapper('POST', API_URL.SUPABASE_CREATE_COURSE, formData, token);
+            console.warn(course);
+            const newLecture = await axiosWrapper(
+                'POST',
+                API_URL.SUPABASE_ADD_LECTURE,
+                {
+                  name: 'New Page',
+                  courseId: course.data.id
+                },
+                token
+              );  
+            console.warn(newLecture);
 
-            // updateCourseData({
-            //     title: course?.data?.title,
-            //     subtitle: course?.data?.subtitle,
-            //     category: course?.data?.category,
-            //     createdBy: course?.data?.createdBy?._id,
-            //     thumbnail: course?.data?.thumbnail,
-            //     trailer: course?.data?.trailer,
-            //     description: course?.data?.description,
-            //     lectures: course?.data?.lectures
-            // });
-        } else {
-            const course = await axiosWrapper('POST', API_URL.CREATE_COURSE, formData, token);
-
-            dispatch({ type: types.ALL_RECORDS, data: { keyOfData: 'currentCourse', data: course?.data?._id } });
+            dispatch({ type: types.ALL_RECORDS, data: { keyOfData: 'currentCourse', data: course.data.id } });
+          }
+      
+          dispatch({ type: types.ALL_RECORDS, data: { keyOfData: 'currentCourseUpdate', data: true } });
+        } catch (error) {
+          console.error('Error in createOrUpdateCourse:', error);
         }
+      };
+      
+    // const createOrUpdateCourse = async (formData) => {
+        
+    //     if (currentCourse) {
+    //         await axiosWrapper('PUT', `${API_URL.SUPABASE_UPDATE_COURSE.replace(':id', currentCourse)}`, formData, token);
 
-        // Call the get Course By Id so we can have updated state of part one
-        dispatch({ type: types.ALL_RECORDS, data: { keyOfData: 'currentCourseUpdate', data: true } });
-    };
+    //         getCourseById(currentCourse);
+    //     } else {
+            
+    //         const course = await axiosWrapper('POST', API_URL.SUPABASE_CREATE_COURSE, formData, token);
+    //         const courseId = course?.data?.id; 
+    //        
+    //         const newLecture = await createLectore(courseId);
+    //         // const newLecture = await createLectore(courseId);
+    //         // const formData = {
+    //         //     name: "New Lecture",
+    //         //     description: null,
+    //         //     courseId: courseId,
+    //         // };
+    //         // const lectureData = await axiosWrapper('POST', API_URL.SUPABASE_ADD_LECTURE, formData, token);
+    //         dispatch({ type: types.ALL_RECORDS, data: { keyOfData: 'currentCourse', data: courseId } }); 
+    //     }
+        
+    //         // Call the get Course By Id so we can have updated state of part one
+    //         dispatch({ type: types.ALL_RECORDS, data: { keyOfData: 'currentCourseUpdate', data: true } });
+    //     };
 
+        // const createLecture = async (courseId) => {
+        //     try {
+        //         const response = await axiosWrapper(
+        //             'POST',
+        //             `${API_URL.SUPABASE_ADD_LECTURE}`,
+        //             // { name: 'New Lecture', courseId: courseId },
+        //             formData,
+        //             token
+        //         );
+        
+        //         const createdLecture = response?.data;
+        //         return createdLecture;
+               
+        //     } catch (error) {
+        //         return null;
+        //     }
+        // };
     const handlePublishCourse = async () => {
         await axiosWrapper('PUT', `${API_URL.PUBLISH_COURSE.replace(':id', currentCourse)}`, {}, token);
         // Call the get Course By Id so we can have updated state of part one
@@ -189,6 +256,7 @@ const AddNewCourse = () => {
         }
     }, [stepsCompleted]);
 
+  
     useEffect(() => {
         if (currentCourseUpdate) {
             getCourseById(currentCourse);
@@ -207,50 +275,43 @@ const AddNewCourse = () => {
             getCourseById(courseId);
         }
     }, [courseId]);
-
-    // Steps for creating a new course
-    // 1. Basic Information Module
-    // Create a new course in the db with just title, subtitle, module manger, category
-    // Save the course Id to redux state so we can call it every time during each steps
-    // create a complete state for the course in this module so we can update it every time when course is updated
-    // Handle the Add Lecture step for Both PDF and video upload (We can keep this at the end of the course)
-    // At the end of third step we just publish the new course.
-
-    // Api's call
-    // 1. Create a new course
-    // 2. Update the course
-    // 3. Get Course information By Id
-    // 4. Get All Coaches
-    // 5. Create a new Lecture
-    // 6. Update a lecture (if video then replace it with a new one else if pdf then replace it with a new pdf but first remove it on the DB)
-    // 7. Get Lecture By Id
-    // 8. Delete a lecture Both from Vimeo and DataBase
-    // 9. Create Helpers for Data Mapping of lectures
-    // 10. Publish a New Course Api
-    // 11. Get All Courses of User that created by this user
-    // 12. Use Best practices and move the state in the parent component to handle it properly
-
+    const toggleSwitch = () => {
+        setIsPublished(!isPublished);
+    };
     return (
         <div className="addcourse-section">
             <div className="title-top">
-                <span onClick={() => navigate(`/${role}/courses`)} style={{ cursor: 'pointer' }}>
-                    Courses <img src={CaretRight} alt=">" />{' '}
+                <span onClick={() => navigate(`/${role}/courses-supabase`)} style={{ cursor: 'pointer' }}>
+                    Add Course
                 </span>
-                {editMode ? 'Edit New Course' : 'Add New Course'}
+                {/* {editMode ? 'Edit New Course' : 'Add New Course'} */}
+                <div className="toggle-wrapper">
+                    <span className="toggle-label">{isPublished ? 'Published' : 'Unpublished'}</span>
+                    <div className="switch">
+                        <input
+                            type="checkbox"
+                            id="switch"
+                            checked={isPublished}
+                            onChange={toggleSwitch}
+                        />
+                        <label htmlFor="switch"></label>
+                    </div>
+                </div>
             </div>
             <Tabs
                 fill
                 activeKey={activeKey}
                 onSelect={(k) => handleTabChange(k)}
                 id="controlled-tab-example"
+                className="mb-3"
             >
                 <Tab
                     eventKey="basic-information"
-                    title={
-                        <span className="tab-span">
-                            <img src={Stack} alt="course-icon" /> Basic Information
-                        </span>
-                    }
+                    // title={
+                    //     <span className="tab-span">
+                    //         Add Course
+                    //     </span>
+                    // }
                 >
                     <BasicInformation
                         setStepComplete={completeStep}
@@ -261,17 +322,23 @@ const AddNewCourse = () => {
                         updateCourseData={updateCourseData}
                         onDelete={handleDelete}
                         {...courseData}
-                        _id={courseId}
+                        id={courseId}
 
                     />
                 </Tab>
+                <Tab eventKey="upload-files" >
+                    <AddLecture setStepComplete={completeStep}
+                    onBack={() => handleTabChange('basic-information')}
+                    updateCourseData={updateCourseData}
+                    initialData={courseData}/>
+                </Tab>
                 <Tab
-                    eventKey="upload-files"
-                    title={
-                        <span className="tab-span">
-                            <img src={ClipboardText} alt="course-icon" /> Upload Files
-                        </span>
-                    }
+                    eventKey="upload-filess"
+                    // title={
+                    //     <span className="tab-span">
+                    //         <img src={ClipboardText} alt="course-icon" /> Upload Files
+                    //     </span>
+                    // }
                 >
                     <UploadFiles
                         setStepComplete={completeStep}
@@ -283,11 +350,11 @@ const AddNewCourse = () => {
                 </Tab>
                 <Tab
                     eventKey="publish-course"
-                    title={
-                        <span className="tab-span">
-                            <img src={taskAlt} alt="course-icon" /> Publish Course
-                        </span>
-                    }
+                    // title={
+                    //     <span className="tab-span">
+                    //         <img src={taskAlt} alt="course-icon" /> Publish Course
+                    //     </span>
+                    // }
                 >
                     <PublishCourses
                         onBack={() => handleTabChange('upload-files')}

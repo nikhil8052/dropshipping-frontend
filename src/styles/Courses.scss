@@ -206,9 +206,9 @@
 
 // css for Add New Course
 
-.add-course-form-section {
-    padding: 0px 30px;
-}
+// .add-course-form-section {
+//     padding: 0px 30px;
+// }
 
 .section-title {
     border-bottom: 1px solid #e9eaf0;
@@ -258,7 +258,6 @@
 
     .cancel-btn {
         padding: 10px 40px;
-        background-color: transparent !important;
         color: #fff;
         border: 1px solid rgba(233, 234, 240, 1);
     }
@@ -530,11 +529,11 @@
 
 // add lecture modal form css
 
-.quiz-wrapper {
-    border: 0.8px solid rgba(233, 234, 240, 1);
-    padding: 10px 20px;
-    border-radius: 10px;
-}
+// .quiz-wrapper {
+//     border: 0.8px solid rgba(233, 234, 240, 1);
+//     padding: 10px 20px;
+//     border-radius: 10px;
+// }
 
 .minus-btn {
     background-color: transparent !important;
@@ -671,7 +670,7 @@
 
 .cancel-btn {
     padding: 10px 40px;
-    background-color: transparent !important;
+    background-color: #fff!important;
     color: #fff !important;
     border: 1px solid rgba(233, 234, 240, 1) !important;
 }
@@ -906,8 +905,8 @@
     }
 
     .edit-btn {
-        background-color: #fff;
-        color: #000;
+        background-color: #fff !important;
+        color: #000 !important;
         border-radius: 170px;
         width: 174px;
         height: 42px;
@@ -1438,7 +1437,7 @@
 }
 
 .add-course-form {
-    margin-top: 20px;
+    margin-top: 0px;
 }
 
 .modal-content {
@@ -1639,4 +1638,35 @@
 }
 .white-important-bg {
     background-color: white !important;
+}
+
+.course-right-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px; 
+    border: 1px solid #ccc; 
+    border-radius:10px;
+  }
+  
+  .edit-btn {
+    text-transform: none;
+    font-weight: 500;
+    font-size: 14px;
+  }
+  
+
+  .quiz-wrapper input {
+    background-color: #fff !important;
+    margin-bottom: 0;
+    padding: 10px;
+}
+
+.add-quiz-fields .add-quiz-question .quiz-multiple-choice {
+    margin: 20px 0px;
+}
+
+.add-quiz-fields .add-quiz-question .quiz-multiple-choice input[type=text].correctAnswer {
+    background: linear-gradient(181.32deg, #00c7cc 1.14%, #009CD8 98.89%);
+    background-color: transparent !important;
 }
