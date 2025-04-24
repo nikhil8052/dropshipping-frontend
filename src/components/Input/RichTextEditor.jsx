@@ -3,6 +3,8 @@ import 'react-quill/dist/quill.snow.css';
 import { useField } from 'formik';
 import { useRef, useEffect, useState } from 'react';
 import './input.scss';
+import ImageResize from 'quill-image-resize-module-react';
+Quill.register('modules/imageResize', ImageResize);
 
 
 const Block = Quill.import('blots/block');
@@ -46,7 +48,14 @@ const RichTextEditor = (props) => {
             },
         }
     };
-
+    const modules = {
+        toolbar: { container: `#${props.id}` },
+        // imageResize: {
+        //     parchment: Quill.import('parchment'),
+        //     modules: ['Resize', 'DisplaySize','Toolbar'],
+        // },
+        
+    }; 
     const FORMATS = [
         'header',
         'bold', 'italic', 'underline', 'strike',
@@ -56,13 +65,56 @@ const RichTextEditor = (props) => {
         'link', 'image', 'video'
     ];
 
+    // const handleChange = (value) => {
+    //     helpers.setValue(value);
+    //     if (props.onChange) {
+    //         props.onChange(value);
+    //     }
+    // };
+    // const handleChange = (value) => {
+    //     console.log(value);
+    //     helpers.setValue(value); // This value is full HTML
+    //     if (props.onChange) {
+    //         props.onChange(value);
+    //     }
+    // };
     const handleChange = (value) => {
-        helpers.setValue(value);
-        if (props.onChange) {
-            props.onChange(value);
-        }
-    };
+        if (!quillRef.current || !quillRef.current.getEditor) return;
+    
+        const quill = quillRef.current.getEditor();
+        const editor = quill.root;
+    
+        // Ensure all image widths and heights are inlined
+        editor.querySelectorAll('img').forEach(img => {
+            const width = img.width;
+            const mainWidth = img.data-width;
+            const inlineWidth = img.style.width;
 
+            const height = img.height;
+            console.log(width);
+            // console.log(height);
+            // if (width) img.setAttribute('width', width);
+            // if(width) img.style.setProperty('width', width + 'px');
+            // if(width) img.style.setProperty('width', '');
+            if (width) img.setAttribute('width', width);
+            // if (width) img.setAttribute('data-width', width);
+            
+            // if (height) img.setAttribute('height', height);
+            // if(width) img.style.setProperty('width', width + 'px');
+            if (width) img.style.removeProperty('width');
+
+            console.log(img);
+        });
+    
+        const finalHTML = editor.innerHTML;
+        // console.warn(finalHTML);
+        helpers.setValue(finalHTML); // Save clean value
+        if (props.onChange) props.onChange(finalHTML);
+    };
+    
+    
+    
+    
     useEffect(() => {
         const quill = quillRef.current.getEditor();
 
@@ -90,7 +142,7 @@ const RichTextEditor = (props) => {
             }
         };
     }, []);
-
+    
     return (
         <div className="quill-editor">
             <div id={`${props.id}`} >
@@ -110,7 +162,7 @@ const RichTextEditor = (props) => {
                 <button className="ql-image"></button>
                 <button className="ql-video"></button>
             </div>
-            <ReactQuill
+            {/* <ReactQuill
                 ref={quillRef}
                 value={field.value}
                 onChange={handleChange}
@@ -118,7 +170,17 @@ const RichTextEditor = (props) => {
                 className="field-quill-control"
                 formats={FORMATS}
                 placeholder={props.placeholder}
+            /> */}
+            <ReactQuill
+                ref={quillRef}
+                value={field.value}
+                onChange={handleChange}
+                modules={modules}
+                className="field-quill-control"
+                formats={FORMATS}
+                placeholder={props.placeholder}
             />
+
 
             {/* {props.showResources && (
     <div className='card new-resource-main-card'>

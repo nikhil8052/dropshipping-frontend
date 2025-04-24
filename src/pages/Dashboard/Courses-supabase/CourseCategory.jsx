@@ -7,6 +7,7 @@ import ConfirmationBox from '@components/ConfirmationBox/ConfirmationBox';
 import Loading from '@components/Loading/Loading';
 import { Button, Row, Col, Modal } from 'react-bootstrap';
 import { useSelector } from 'react-redux';
+import TextField from '@mui/material/TextField';
 
 const CourseCategory = ({ value = [], onChange, token }) => {
     const { userInfo, userToken } = useSelector((state) => state?.auth);
@@ -170,10 +171,15 @@ const CourseCategory = ({ value = [], onChange, token }) => {
             </div>
             {/* Add New Category Modal */}
             <Modal show={showCategoryModal} onHide={() => setShowCategoryModal(false)} centered className="coursemodal">
-                <Modal.Body>
-                    <div className="form-group">
-                        <label className="floating-label">
-                            <input
+               
+                    <Modal.Header closeButton>
+                        <Modal.Title>Add New Category</Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body>
+                    <div className='Course-form' style={{ paddingTop: '0px' }}>
+                        <div className="form-group">
+                            {/* <label>Category Name</label> */}
+                            {/* <input
                                 type="text"
                                 className="field-control my-3 white-important-bg"
                                 value={newCategoryName}
@@ -187,6 +193,32 @@ const CourseCategory = ({ value = [], onChange, token }) => {
                     <Button className="text-black cancel-btn" onClick={() => setShowCategoryModal(false)}>
                         Cancel
                     </Button>
+                                placeholder="Enter category name"
+                            /> */}
+                            <TextField
+                                name="newCategoryName"
+                                label="Category Name"
+                                className="field-control white-important-bg"
+                                variant="outlined"
+                                type="text"
+                                value={newCategoryName}
+                                onChange={(e) => setNewCategoryName(e.target.value)}
+                                placeholder="category name"
+                                inputProps={{ maxLength: 80 }}
+                                helperText={`${newCategoryName.length || 0}/80`}
+                                fullWidth
+                            />
+
+                        </div>
+                        </div>
+                    </Modal.Body>
+                    <Modal.Footer>
+                        <Button 
+                            className="text-black" 
+                            onClick={() => setShowCategoryModal(false)}
+                        >
+                            Cancel
+                        </Button>
 
                     <Button
                         className="submit-btn"
