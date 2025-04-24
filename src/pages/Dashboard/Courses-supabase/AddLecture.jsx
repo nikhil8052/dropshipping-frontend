@@ -198,7 +198,7 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
       newLec
     ]);
 
-
+    // setEditingLecture(true);
 
   };
 
@@ -1081,14 +1081,11 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
                           </Button>
                         </div>
                       </div> */}
-                        {initialData?.lecturess?.map((lecture) => (
-                          <div className="new-page-view">
+                      {initialData?.lecturess?.length > 0 ? (
+                        initialData.lecturess.map((lecture) => (
+                          <div className="new-page-view" key={lecture.id}>
                             <div className="course-right-header">
                               <h2 className="subhead">{lecture?.name}</h2>
-                              {/* <Button onClick={() => setIsEditing(true)} className="edit-btn" variant="outlined">
-                              <FontAwesomeIcon icon={faPen} style={{ marginRight: 8 }} />
-
-                            </Button> */}
                               <img
                                 className="cursor-pointer"
                                 src={PencilLine}
@@ -1097,7 +1094,18 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
                               />
                             </div>
                           </div>
-                        ))}
+                        ))
+                      ) : (
+                        <p className="no-lectures-message">
+                        You don’t have any lectures yet.{' '}
+                          <span onClick={() => addUnassignedLecture()} style={{ cursor: 'pointer', color: '#007bff' }}>
+                            Add
+                          </span>{' '}
+                          a new lecture to get started.
+                        </p>
+                      
+                      )}
+
                       </>
 
                     ) : (
