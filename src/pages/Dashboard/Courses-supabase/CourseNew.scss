@@ -4,16 +4,19 @@
     .main-content-wrapper {
         background-color: #F3F4F6;
         padding: 44px 60px !important;
-    @media only screen and (max-width:1199px) {
-        padding: 40px !important;
+
+        @media only screen and (max-width:1199px) {
+            padding: 40px !important;
+        }
+
+        @media only screen and (max-width:767px) {
+            padding: 30px !important;
+        }
+
+        @media only screen and (max-width:575px) {
+            padding: 20px !important;
+        }
     }
-    @media only screen and (max-width:767px) {
-        padding: 30px !important;
-    }
-    @media only screen and (max-width:575px) {
-        padding: 20px !important;
-    }
-}
 }
 
 .title-top {
@@ -40,7 +43,8 @@
 .Course-form {
     padding-top: 46px;
 
-    input , textarea{
+    input,
+    textarea {
         background-color: #FFFFFF !important;
         border: 0px !important;
         height: 100%;
@@ -568,16 +572,16 @@ span.slect_span.selected {
 //     }
 
 
-.publish-popup::after,.confirmation-modal.show::after {
-    position: fixed;
-    content: "";
-    z-index: -1;
-    height: 100vh;
-    width: 100%;
-    background: #80808030;
-    top: 0;
-    left: 0;
-}
+// .publish-popup::after,.confirmation-modal.show::after {
+//     position: fixed;
+//     content: "";
+//     z-index: -1;
+//     height: 100vh;
+//     width: 100%;
+//     background: #80808030;
+//     top: 0;
+//     left: 0;
+// }
 
 .subhead {
     font-weight: 600;
@@ -619,10 +623,11 @@ span.slect_span.selected {
 }
 
 .folder-detail {
-        margin-bottom: 15px;
-        box-shadow: 0px 0px 14.86px 0px #0000000F;
-        padding: 10px;
-        border-radius: 4px;
+    margin-bottom: 15px;
+    box-shadow: 0px 0px 14.86px 0px #0000000F;
+    padding: 10px;
+    border-radius: 4px;
+
     .drop-box {
         display: flex;
         justify-content: space-between;
@@ -641,31 +646,32 @@ span.slect_span.selected {
 .folder-dropdown img {
     transition: transform 0.3s ease;
     transform: rotate(180deg);
-  }
-  
-  .folder-dropdown.rotated img {
+}
+
+.folder-dropdown.rotated img {
     transform: none;
-  }
-  
-  .detail-box{
+}
+
+.detail-box {
     margin-top: 10px;
-    li{
+
+    li {
         list-style: none;
-    font-weight: 500;
-    font-size: 11px;
-    text-transform: capitalize;
-    color: #019ED8;
-    background-color: #CCECF7;
-    width: 100%;
-    display: inline-block;
-    padding: 13px 16px;
-    border-radius: 4px;
-    margin-bottom: 8px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+        font-weight: 500;
+        font-size: 11px;
+        text-transform: capitalize;
+        color: #019ED8;
+        background-color: #CCECF7;
+        width: 100%;
+        display: inline-block;
+        padding: 13px 16px;
+        border-radius: 4px;
+        margin-bottom: 8px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
     }
-  }
+}
 
 
 .res {
@@ -676,7 +682,8 @@ span.slect_span.selected {
     align-items: center;
     padding: 20px;
     border-radius: 4px;
- .dropdown-toggle {
+
+    .dropdown-toggle {
         background-color: #CCECF7 !important;
         border: 0;
         display: flex;
@@ -689,13 +696,13 @@ span.slect_span.selected {
         border-radius: 50px;
         padding: 12px 20px;
         padding-right: 30px;
-      
+
     }
 
-h2.subhead {
-    margin: 0;
-    font-weight: 500;
-}
+    h2.subhead {
+        margin: 0;
+        font-weight: 500;
+    }
 }
 
 body:has(.course-detail-tab) {
@@ -703,7 +710,7 @@ body:has(.course-detail-tab) {
     padding: 0 !important;
 }
 
-.res  .add-btn{
+.res .add-btn a {
     background-color: #CCECF7;
     border: 0;
     display: flex;
@@ -723,11 +730,11 @@ body:has(.course-detail-tab) {
     box-shadow: 0px 0px 14.86px 0px #0000000F;
 }
 
- .drop-box .dropdown img {
+.drop-box .dropdown img {
     filter: brightness(0) saturate(100%) invert(44%) sepia(90%) saturate(728%) hue-rotate(158deg) brightness(92%) contrast(103%);
 }
 
- .detail-box .drop-box {
+.detail-box .drop-box {
     height: 25px;
     width: 25px;
     background-color: #fff;
@@ -745,9 +752,10 @@ body:has(.course-detail-tab) {
     border: 0 !important;
 }
 
-.Course-form .row > div {
+.Course-form .row>div {
     margin-bottom: 20px;
 }
+
 .Course-form .form-group {
     position: relative;
 }
@@ -756,18 +764,19 @@ body:has(.course-detail-tab) {
     position: absolute;
     right: 0;
     top: auto;
-    transform: translate(-50%,-50%);
+    transform: translate(-50%, -50%);
     margin: 0;
     bottom: 0;
 }
 
 .search-bar {
     position: relative;
+
     img {
-    position: absolute;
-    top: 50%;
-    right: 10px;
-}
+        position: absolute;
+        top: 50%;
+        right: 10px;
+    }
 }
 
 .res .dropdown-toggle::after {
@@ -782,19 +791,19 @@ body:has(.course-detail-tab) {
     position: absolute;
     right: 8px;
     top: 50%;
-    transform:translate(-50%,-50%) rotate(180deg);
+    transform: translate(-50%, -50%) rotate(180deg);
 }
 
 .res .dropdown-toggle.show::after {
-    transform: translate(-50%,-50%) rotate(0deg);
+    transform: translate(-50%, -50%) rotate(0deg);
 }
 
-.res .dropdown-item:active{
+.res .dropdown-item:active {
     color: inherit;
 }
 
 
-.confirmation-modal:has(.add-link-form)  .add-link-form label {
+.confirmation-modal:has(.add-link-form) .add-link-form label {
     text-align: left;
     font-weight: 400;
     font-size: 14px;
@@ -806,7 +815,7 @@ body:has(.course-detail-tab) {
     position: relative;
 }
 
-.confirmation-modal:has(.add-link-form)  .error-message {
+.confirmation-modal:has(.add-link-form) .error-message {
     position: absolute;
     top: 0;
     right: 0;
@@ -817,7 +826,7 @@ body:has(.course-detail-tab) {
     color: #E83F29;
 }
 
-.confirmation-modal:has(.add-link-form)  .form-control {
+.confirmation-modal:has(.add-link-form) .form-control {
     background-color: transparent !important;
     border: 0.8px solid #E9EAF0;
     padding: 15px;
@@ -826,7 +835,7 @@ body:has(.course-detail-tab) {
     font-size: 12px;
 }
 
-.confirmation-modal:has(.add-link-form)  .modal-header {
+.confirmation-modal:has(.add-link-form) .modal-header {
     padding: 0;
     border: 0;
 }
@@ -836,7 +845,7 @@ body:has(.course-detail-tab) {
     border-radius: 20px;
 }
 
-.confirmation-modal:has(.add-link-form)  .modal-title.h4 {
+.confirmation-modal:has(.add-link-form) .modal-title.h4 {
     font-family: Inter;
     font-weight: 600;
     font-size: 24px;
@@ -844,15 +853,15 @@ body:has(.course-detail-tab) {
     margin-bottom: 15px;
 }
 
-.confirmation-modal:has(.add-link-form)  button.btn-close {
+.confirmation-modal:has(.add-link-form) button.btn-close {
     display: none;
 }
 
-.confirmation-modal:has(.add-link-form)  .modal-body {
+.confirmation-modal:has(.add-link-form) .modal-body {
     padding: 0;
 }
 
-.confirmation-modal:has(.add-link-form)  .divider-or {
+.confirmation-modal:has(.add-link-form) .divider-or {
     position: relative;
 }
 
@@ -869,7 +878,7 @@ body:has(.course-detail-tab) {
     z-index: 1;
 }
 
-.confirmation-modal:has(.add-link-form)  .divider-or span {
+.confirmation-modal:has(.add-link-form) .divider-or span {
     background-color: #fff;
     z-index: 2;
     position: relative;
@@ -880,7 +889,7 @@ body:has(.course-detail-tab) {
     line-height: 1.2;
 }
 
-.confirmation-modal:has(.add-link-form)  .form-group.res-file label {
+.confirmation-modal:has(.add-link-form) .form-group.res-file label {
     font-family: Inter;
     font-weight: 600;
     font-size: 24px;
@@ -889,7 +898,7 @@ body:has(.course-detail-tab) {
     margin: 20px 0px 5px;
 }
 
-.confirmation-modal:has(.add-link-form)   .custom-footer-class {
+.confirmation-modal:has(.add-link-form) .custom-footer-class {
     justify-content: left;
     padding: 0;
     margin: 0;
@@ -899,12 +908,12 @@ label.form-label {
     font-weight: 500;
     margin-bottom: 8px;
     display: block;
-  }
+}
 
 
 
 
-  .popup-backdrop {
+.popup-backdrop {
     position: fixed;
     top: 0;
     left: 0;
@@ -917,21 +926,24 @@ label.form-label {
     z-index: 99;
 }
 
-  .popup {
+.popup {
     background: white;
     padding: 20px;
     border-radius: 10px;
     min-width: 300px;
-  }
-  .popup ul {
+}
+
+.popup ul {
     list-style: none;
     padding: 0;
-  }
-  .popup ul li {
+}
+
+.popup ul li {
     cursor: pointer;
     margin: 10px 0;
-  }
-  .showing-transcript{
+}
+
+.showing-transcript {
     border: 1px solid #019ED8;
     padding: 0;
     display: block;
@@ -944,7 +956,7 @@ label.form-label {
     display: inline-block;
 }
 
-.trans-res  .ql-toolbar.ql-snow {
+.trans-res .ql-toolbar.ql-snow {
     padding: 20px;
     border-bottom: 1px solid #019ED8 !important;
 }
@@ -983,26 +995,27 @@ label.form-label {
     padding: 40px;
 }
 
-.coursemodal .modal-body{
+.coursemodal .modal-body {
     padding: 0;
 }
+
 .coursemodal .form-group {
     position: relative;
-  }
-  
-  .coursemodal .form-group .floating-label {
+}
+
+.coursemodal .form-group .floating-label {
     display: block;
     position: relative;
     cursor: text;
-  }
-  
-  .coursemodal .form-group input {
+}
+
+.coursemodal .form-group input {
     width: 100%;
     border-radius: 4px;
     border: 1px solid #fff;
-  }
-  
-  .coursemodal .form-group .floating-label span {
+}
+
+.coursemodal .form-group .floating-label span {
     position: absolute;
     top: 40%;
     left: 10px;
@@ -1013,18 +1026,18 @@ label.form-label {
     background-color: #fff;
     padding: 0 4px;
     font-size: 12px;
-  }
-  
-  .coursemodal .form-group input:focus + span {
+}
+
+.coursemodal .form-group input:focus+span {
     top: 8px;
     font-size: 0.8em;
-  }
-  
-  .coursemodal .form-group input:focus{
-    border: 1px solid #B1B6BF !important;
-  }
+}
 
-  .coursemodal .modal-header .modal-title {
+.coursemodal .form-group input:focus {
+    border: 1px solid #B1B6BF !important;
+}
+
+.coursemodal .modal-header .modal-title {
     font-weight: 600;
     font-size: 29px;
     line-height: 1.2;
@@ -1042,12 +1055,12 @@ label.form-label {
     display: none;
 }
 
-.publishcourse .modal-content{
+.publishcourse .modal-content {
     padding: 60px;
 }
 
-.addcourse-section .add-course-form .tab-buttons .cancel-btn:hover{
-color: #fff !important;
+.addcourse-section .add-course-form .tab-buttons .cancel-btn:hover {
+    color: #fff !important;
 }
 
 .addcourse-section .add-course-form .tab-buttons .btn {
@@ -1067,38 +1080,41 @@ color: #fff !important;
 
 .course-left .dropdown-menu.move-drop {
     border: 1px solid rgba(128, 128, 128, 0.164) !important;
-      top: 0;
-      left: 100%;
-      margin-top: -6px;
-      margin-left: -1px;
-      max-height: 120px;
-      overflow-y: scroll;
-      box-shadow:0px 0px 14.86px 0px rgb(57 60 61 / 68%);
-    .dropdown-item {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      
-      &::after {
-        content: "→";
-        margin-left: 10px;
-      }
-    }
-  }
+    top: 0;
+    left: 100%;
+    margin-top: -6px;
+    margin-left: -1px;
+    max-height: 120px;
+    overflow-y: scroll;
+    box-shadow: 0px 0px 14.86px 0px rgb(57 60 61 / 68%);
 
-  .new-page-view {
+    .dropdown-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+
+        &::after {
+            content: "→";
+            margin-left: 10px;
+        }
+    }
+}
+
+.new-page-view {
     margin-bottom: 20px;
 }
 
-.detail-box .drop-box .dropdown-menu{
+.detail-box .drop-box .dropdown-menu {
     border: 1px solid #019ED8
 }
 
-.Course-form .row > div:has(.thumbnail-block),.Course-form .row:has(.thumbnail-block) {
+.Course-form .row>div:has(.thumbnail-block),
+.Course-form .row:has(.thumbnail-block) {
     margin-bottom: 0 !important;
 }
 
-.course-detail-row  .ql-snow.ql-toolbar button, .ql-snow .ql-toolbar button {
+.course-detail-row .ql-snow.ql-toolbar button,
+.ql-snow .ql-toolbar button {
     height: 35px;
     padding: 8px 8px;
     display: inline-block;
@@ -1108,37 +1124,47 @@ color: #fff !important;
 .course-detail-row .ql-snow .ql-tooltip.ql-flip {
     left: 0;
     right: 0;
-    width: max-content;
     margin: auto;
-    padding: 10px;
-    border-radius: 6px;
-    box-shadow:    0px 0px 14.86px 0px rgb(0 0 0 / 56%);
+    padding: 40px 40px 50px;
+    border-radius: 20px;
+    box-shadow: 0px 0px 14.86px 0px rgb(0 0 0 / 56%);
     transform: none;
     z-index: 2;
-    top: 0% !important;
+    top: 50% !important;
+    margin: auto;
+    position: fixed;
+    top: 50% !important;
+    transform: translateY(-50%);
+    width: 95% !important;
+    max-width: 500px;
 }
 
 .course-detail-row .ql-action {
     width: max-content;
-    padding: 5px 20px;
+    padding: 15px 40px;
     background: linear-gradient(183.91deg, #00C7CC 3.24%, #009CD8 96.84%);
     color: #fff;
     border-radius: 5px;
     line-height: 1.2;
 }
 
-.course-detail-row .ql-action::after,.course-detail-row  .ql-snow .ql-tooltip::before {
+.ql-snow .ql-tooltip.ql-editing a.ql-action::after {
+    font-size: 16px;
+}
+
+.course-detail-row .ql-action::after,
+.course-detail-row .ql-snow .ql-tooltip::before {
     margin: 0 !important;
 }
 
-.course-detail-row  .ql-snow .ql-tooltip.ql-editing input {
+.course-detail-row .ql-snow .ql-tooltip.ql-editing input {
     display: inline-block;
     border-radius: 4px !important;
     border: 1px solid #B1B6BF !important;
     margin: 0px 10px !important;
 }
 
-.course-detail-row  .ql-snow .ql-tooltip.ql-editing input:focus{
+.course-detail-row .ql-snow .ql-tooltip.ql-editing input:focus {
     outline: 0;
 }
 
@@ -1167,27 +1193,89 @@ color: #fff !important;
     flex-wrap: wrap;
 }
 
+.ql-video-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: #0003;
+    z-index: 1;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+}
+
+.ql-video-overlay.show {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.course-detail-row .ql-snow .ql-tooltip.ql-editing input {
+    display: block;
+    margin: 15px 0px 30px !important;
+    width: 100% !important;
+    padding: 20px;
+}
+
+.ql-snow .ql-tooltip[data-mode=video]::before {
+    content: "Enter video:";
+    font-weight: 600;
+    font-size: 30px;
+    line-height: 1.2;
+    color: #1D2026;
+    margin-bottom: 20px;
+}
+
+.ql-snow .ql-tooltip.ql-editing a.ql-action::after {
+    font-size: 16px;
+    font-weight: 500;
+}
+
+.detail-box .drop-box {
+    min-width: 25px;
+}
+
+.detail-box li {
+    gap: 5px;
+}
+
+.detail-box li > a {
+    word-break: break-all;
+}
+
+.course-left-top {
+    gap: 10px;
+}
+
+.course-left-top .subhead {
+    margin-bottom: 0;
+}
 
 @media only screen and (max-width:991px) {
     .access-container {
         flex-wrap: wrap;
     }
-    
+
     .access-option {
         flex: 0 0 50%;
         border: 1px solid #e0e0e0;
     }
-    
-    .access-option:first-child,.access-option:nth-child(2) {
+
+    .access-option:first-child,
+    .access-option:nth-child(2) {
         border-bottom: 0;
     }
-    
-    .access-option:first-child, .access-option:nth-child(3) {
+
+    .access-option:first-child,
+    .access-option:nth-child(3) {
         border-right: 0;
-    } 
+    }
+
     .Course-form {
         padding-top: 20px;
     }
+
     .select-label {
         gap: 0px 30px;
     }
@@ -1197,11 +1285,13 @@ color: #fff !important;
         max-height: 200px;
         overflow-y: scroll;
     }
+
     .course-left-top {
         margin-bottom: 20px;
     }
 
-    .submit-btn, .cancel-btn {
+    .submit-btn,
+    .cancel-btn {
         font-size: 14px;
         padding: 10px 20px !important;
     }
@@ -1209,13 +1299,16 @@ color: #fff !important;
     .detail-box li {
         padding: 8px 10px;
     }
+
     .confirmation-modal:has(.add-link-form) .modal-title.h4 {
         font-size: 20px;
         margin-bottom: 10px;
     }
+
     .confirmation-modal:has(.add-link-form) .form-group.res-file label {
         font-size: 18px;
     }
+
     .res {
         background-color: #fff;
         padding: 10px 20px;
@@ -1226,7 +1319,7 @@ color: #fff !important;
         padding-right: 25px;
     }
 
-    .res .add-btn {
+    .res .add-btn a {
         padding: 10px 15px;
     }
 
@@ -1234,7 +1327,8 @@ color: #fff !important;
         transform: translate(0px, -24px);
     }
 
-    .course-detail-row .ql-snow.ql-toolbar button, .ql-snow .ql-toolbar button {
+    .course-detail-row .ql-snow.ql-toolbar button,
+    .ql-snow .ql-toolbar button {
         height: 24px;
         padding: 3px 5px;
         display: inline-block;
@@ -1246,80 +1340,100 @@ color: #fff !important;
     }
 
     .field-quill-control .ql-editor {
-        padding: 15px 15px 0px;
+        padding: 15px 15px 15px;
     }
-    
+
     .new-resource-main-card {
         padding: 0px 15px 20px;
+    }
+
+    .select-label {
+        grid-template-columns: repeat(2, 1fr);
     }
 }
 
 @media only screen and (max-width:767px) {
-.coursemodal .modal-content {
-    padding: 40px;
-    max-width: 401px;
-    margin: auto;
-    border-radius: 15px;
-}
-.confirmation-modal:has(.add-link-form) .modal-content {
-    padding: 20px;
-    border-radius: 15px;
+    .coursemodal .modal-content {
+        padding: 40px;
+        max-width: 401px;
+        margin: auto;
+        border-radius: 15px;
+    }
+
+    .confirmation-modal:has(.add-link-form) .modal-content {
+        padding: 20px;
+        border-radius: 15px;
+    }
+
+    .confirmation-modal:has(.add-link-form) .form-control {
+        padding: 11px;
+    }
+
+    .coursemodal .modal-header .modal-title {
+        font-size: 24px;
+        margin-bottom: 15px;
+    }
+
+    .confirmation-modal .custom-footer-class .custom-button {
+        padding: 10px 25px;
+    }
+
+    .select-label {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .coursemodal .modal-footer button {
+        font-size: 12px;
+    }
+
+    .course-right {
+        margin-top: 50px;
+    }
+
+    .custom-radio {
+        height: 18px;
+        width: 18px;
+        min-width: 18px;
+    }
+
+    .access-option.selected .custom-radio:after {
+        height: 10px;
+        width: 10px;
+    }
+
+.course-detail-row .ql-snow .ql-tooltip.ql-flip {
+    padding: 25px;
 }
 
-.confirmation-modal:has(.add-link-form) .form-control {
-    padding: 11px;
+.ql-snow .ql-tooltip[data-mode=video]::before {
+    font-size: 22px;
+    margin-bottom: 10px;
 }
 
-.coursemodal .modal-header .modal-title {
-    font-size: 24px;
-    margin-bottom: 15px;
+.course-detail-row .ql-action {
+    padding: 12px 25px;
 }
 
-.confirmation-modal .custom-footer-class .custom-button {
-    padding: 10px 25px;
-}
-
-.select-label {
-    grid-template-columns: repeat(2, 1fr);
-}
-.coursemodal .modal-footer button {
-    font-size: 12px;
-}
-
-.course-right {
-    margin-top: 50px;
-}
-
-.custom-radio {
-    height: 18px;
-    width: 18px;
-    min-width: 18px;
-}
-
-.access-option.selected .custom-radio:after {
-    height: 10px;
-    width: 10px;
-}
-.course-detail-row .ql-snow .ql-tooltip.ql-editing input {
-    display: block;
-    margin: 10px 0px !important;
+.ql-snow .ql-tooltip.ql-editing a.ql-action::after {
+    font-size: 16px;
 }
 }
 
 
 @media only screen and (max-width:575px) {
-.select-label {
-    grid-template-columns: repeat(1, 1fr);
-}
+    .select-label {
+        grid-template-columns: repeat(1, 1fr);
+    }
 
-.confirmation-modal:has(.add-link-form) .modal-title.h4 {
-    font-size: 16px;
-}
-.confirmation-modal:has(.add-link-form) .form-group.res-file label {
-    font-size: 16px;
-}
+    .confirmation-modal:has(.add-link-form) .modal-title.h4 {
+        font-size: 16px;
+    }
 
-.tab-buttons {
-    justify-content: center !important;
-}
+    .confirmation-modal:has(.add-link-form) .form-group.res-file label {
+        font-size: 16px;
+    }
+
+    .tab-buttons {
+        justify-content: center !important;
+    }
 }

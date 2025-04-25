@@ -90,7 +90,58 @@ const RichTextEditor = (props) => {
             }
         };
     }, []);
+    
+    useEffect(() => {
+        const quill = quillRef.current?.getEditor();
+        if (!quill) return;
+      
+        let overlayEl = null;
+        let isOverlayVisible = false;
+      
+        const checkTooltip = () => {
+          const tooltip = quill.theme?.tooltip;
+          if (!tooltip || !tooltip.root) return;
+      
+          const root = tooltip.root;
+          const input = root.querySelector('input');
+      
+          const isEditing = root.classList.contains('ql-editing');
+          const isHidden = root.classList.contains('ql-hidden');
+          const isVideoInput = input?.placeholder === 'Embed URL';
+      
+          const shouldShowOverlay = isEditing && isVideoInput && !isHidden;
 
+          if (shouldShowOverlay && !isOverlayVisible) {
+            if (!overlayEl) {
+              overlayEl = document.createElement('div');
+              overlayEl.id = 'ql-video-overlay';
+              overlayEl.className = 'ql-video-overlay';
+              document.body.appendChild(overlayEl);
+              // delay adding the 'show' class to trigger transition
+              requestAnimationFrame(() => {
+                overlayEl?.classList.add('show');
+              });
+            }
+            isOverlayVisible = true;
+          } else if ((!shouldShowOverlay || isHidden) && isOverlayVisible) {
+            overlayEl?.classList.remove('show');
+            setTimeout(() => {
+              overlayEl?.remove();
+              overlayEl = null;
+            }, 300); // match transition time
+            isOverlayVisible = false;
+          }
+        
+        };
+      
+        const interval = setInterval(checkTooltip, 200);
+      
+        return () => {
+          clearInterval(interval);
+          if (overlayEl) overlayEl.remove();
+        };
+      }, []);
+      
     return (
         <div className="quill-editor">
             <div id={`${props.id}`} >
