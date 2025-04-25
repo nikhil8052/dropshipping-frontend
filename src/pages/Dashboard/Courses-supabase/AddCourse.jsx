@@ -171,20 +171,23 @@ const AddNewCourse = () => {
     };
     const createOrUpdateCourse = async (formData) => {
 
+        console.log(formData, "FORM DATA")
         try {
           if (currentCourse) {
             await axiosWrapper('PUT', `${API_URL.SUPABASE_UPDATE_COURSE.replace(':id', currentCourse)}`, formData, token);
             getCourseById(currentCourse);
           } else {
+           
             const course = await axiosWrapper('POST', API_URL.SUPABASE_CREATE_COURSE, formData, token);
             console.warn(course);
+            const newLectData= {
+                "name": "New Page",
+                "courseId": course.data.id
+            };
             const newLecture = await axiosWrapper(
                 'POST',
                 API_URL.SUPABASE_ADD_LECTURE,
-                {
-                  name: 'New Page',
-                  courseId: course.data.id
-                },
+                newLectData,
                 token
               );  
             console.warn(newLecture);
