@@ -185,7 +185,7 @@ const RichTextEditor = (props) => {
             /> */}
             {props.showNameField && (
                 <>
-                <TextField
+                {/* <TextField
                     fullWidth
                     name="name"
                     label="Name"
@@ -196,8 +196,29 @@ const RichTextEditor = (props) => {
                     onChange={handleNameChange}
                     required
                     autoComplete="off" 
-                />
-                
+                /> */}
+                <TextField
+                    fullWidth
+                    name="name"
+                    label="Name"
+                    className="field-control name-field-editor"
+                    id="name-basic"
+                    type="text"
+                    value={nameField}
+                    onChange={handleNameChange}
+                    required
+                    autoComplete="off"
+                    variant="standard" // or "outlined"
+                    InputProps={{
+                        disableUnderline: true, // works for standard and filled variant
+                        classes: {
+                        notchedOutline: 'no-outline',
+                        }
+                    }}
+                    InputLabelProps={{
+                        shrink: true
+                    }}
+                    />
                 </>
             )}
 

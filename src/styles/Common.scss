@@ -904,3 +904,41 @@ filter: invert(0);
 }
 
 
+.MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline {
+    border: none !important;
+    box-shadow: none !important;
+  }
+  
+  .MuiInputBase-root:focus-within {
+    outline: none !important;
+    box-shadow: none !important;
+    background-color:#ffffff;
+  }
+
+
+
+.quill-editor > div > div {
+    padding: 10px 0px 0px;
+}
+
+.cancel-tans {
+    top: 20px;
+}
+
+.field-quill-control .ql-editor {
+    padding: 20px;
+}
+
+ input:focus-visible {
+    outline: 0px !important;
+}
+
+:focus-visible {
+    outline: 0px !important;
+    border:0px !important;
+}
+
+.trans-res .ql-toolbar.ql-snow {
+    box-shadow: none !important;
+}
+
