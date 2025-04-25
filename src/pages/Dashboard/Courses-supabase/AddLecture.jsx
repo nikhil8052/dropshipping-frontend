@@ -21,6 +21,7 @@ import Loading from '@components/Loading/Loading';
 import { stripHtmlTags } from '../../../utils/utils';
 import PencilLine from '../../../assets/icons/PencilLine.svg';
 import trashIconRed from '../../../assets/icons/Trash-rename.svg';
+import * as types from '../../../redux/actions/actionTypes';
 
 const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCourseData }) => {
   console.log(initialData, " THis is the initial data ")
@@ -32,7 +33,8 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
   const [modalShowRename, setModalShowRename] = useState(false);
   const [selectedLectureId, setSelectedLectureId] = useState(null);
   const [lectureLabel, setLectureLabel] = useState('');
-  
+  const dispatch = useDispatch();
+
   const [publishLectureModel, setPublishLectureModel] = useState(false);
   const [pendingLectureId, setPendingLectureId] = useState(null);
 
@@ -65,6 +67,13 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
       initialValues: null
   });
 
+  const [showLectureDeleteModal, setShowLectureDeleteModal] = useState({
+        show: false,
+        title: '',
+        isEditable: false,
+        lectureId: null,
+        initialValues: null
+    });
   const handleQuizSubmit = async (values, { setSubmitting, resetForm }) => {
     setSubmitting(true);
     const { question, options, correctAnswer } = values.quiz;
@@ -109,24 +118,9 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
   
 
 
-  // useEffect(() => {
-  //   const fetchQuizzes = async () => {
-  //     console.warn(currentActiveLectureID);
-  //     if (currentActiveLectureID) {
-  //       const url = API_URL.SUPABASE_GET_QUIZZES.replace(':id', currentActiveLectureID);
-  //       const response = await axiosWrapper('GET', url, {}, token);
-  //       console.log(response.data);
-  //       setLectureQuizzes(response.data || []);
-  //     }
-  //   };
-  //   fetchQuizzes();
-  // }, [currentActiveLectureID]);
-  
-
-  // console.warn(initialData);
+  console.warn(initialData);
   useEffect(() => {
-    // console.log(initialData);
-    // console.log(initialData.lecturess);
+
     setUnassignedLectures([]);
     if (initialData?.lecturess) {
       const newLectures = initialData.lecturess.map(lecture => ({
@@ -262,26 +256,33 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
   //   setTopics(updatedTopics);
   // };
 
-  const duplicateLecture = async (topicIndex, lectureIndex, lectureId) => {
+  const duplicateLecture = async ({ lectureId, topicIndex = 0, lectureIndex = 0 }) => {
+
+    // console.log("Lecture ID:", lectureId);
+    // console.log("Topic Index:", topicIndex);
+    // console.log("Lecture Index:", lectureIndex);
+
+    setLoading(true);
     try {
-      // Step 1: Get original lecture details
       const originalLectureRes = await axiosWrapper('GET', API_URL.SUPABASE_GET_LECTURE.replace(':id', lectureId), null, token);
       const originalLecture = originalLectureRes?.data;
       if (!originalLecture) throw new Error("Lecture not found");
   
-      // Step 2: Create duplicated lecture
       const newLecturePayload = {
-        ...originalLecture,
-        name: `${originalLecture.name} (Copy)`,
+        name: `(Copy) ${originalLecture.name}`,
+        description: originalLecture.description,
+        transcript: originalLecture.transcript,
+        courseId: originalLecture.courseId,
+        folder_id: originalLecture.folder_id,
       };
-      delete newLecturePayload.id; // remove ID to create new
-      const newLectureRes = await axiosWrapper('POST', API_URL.SUPABASE_ADD_LECTURE, newLecturePayload, token);
-      const newLecture = newLectureRes?.data;
-      if (!newLecture?.id) throw new Error("Failed to duplicate lecture");
   
+      const newLectureRes = await axiosWrapper('POST', API_URL.SUPABASE_ADD_LECTURE, newLecturePayload, token);
+      const newLecture = newLectureRes.data[0];
       const newLectureId = newLecture.id;
   
-      // Step 3: Duplicate quizzes
+      if (!newLectureId) throw new Error("Failed to duplicate lecture");
+  
+      // Duplicate quizzes
       const quizzes = originalLecture.quizzes || [];
       for (const quiz of quizzes) {
         const quizPayload = {
@@ -296,7 +297,7 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
         await axiosWrapper('POST', API_URL.SUPABASE_ADD_QUIZ, quizPayload, token);
       }
   
-      // Step 4: Duplicate resources
+      // Duplicate resources
       const resources = originalLecture.resources || [];
       for (const res of resources) {
         const resourcePayload = {
@@ -304,19 +305,39 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
           model_type: 'lecture',
           name: res.name || res.title,
           type: res.type || 'file',
-          file_link: res.file_link || res.image, // image is from frontend, file_link is likely from backend
+          file_link: res.file_link || res.image,
         };
         const resourceUrl = API_URL.SUPABASE_UPDATE_LECTURE_RESOURCE.replace(':id', newLectureId);
         await axiosWrapper('POST', resourceUrl, resourcePayload, token);
       }
   
-      console.log("✅ Lecture duplicated with quizzes and resources!");
+    //   if(newLecture.folder_id !== '' ){
+    //   setTopics(prevTopics => {
+    //     const updated = [...prevTopics];
+    //     const lectures = updated[topicIndex].lectures || [];
+    //     updated[topicIndex].lectures = [
+    //       ...lectures.slice(0, lectureIndex + 1),
+    //       newLecture,
+    //       ...lectures.slice(lectureIndex + 1),
+    //     ];
+    //     return updated;
+    //   });
+    // }else{
+    //   setUnassignedLectures(prev => [
+    //     ...prev,
+    //     { name: newLecture.name, id: newLecture.id }
+    //   ]);
+    // }
+    dispatch({ type: types.ALL_RECORDS, data: { keyOfData: 'currentCourseUpdate', data: true } });
+
+      setLoading(false);
       return newLecture;
-  
     } catch (err) {
       console.error("❌ Error duplicating lecture with extras:", err);
+      setLoading(false);
     }
   };
+  
   
   const moveUnassignedLecture = async (unassignedIndex, targetTopicIndex) => {
 
@@ -527,13 +548,9 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
   }
 
   const handleEditClick = async (id) => {
-    // console.warn(currentCourse);
-    // console.log('trigger');
-    // const lecture = initialData?.lecturess?.find((lec) => lec.id === id);
+
     const lecture = await getLectureData(id);
-    console.log(lecture, " lect data")
-    // console.log(lecture.data?.courseId);
-    // stripHtmlTags
+
     const description = stripHtmlTags(lecture.data?.description);
     const transcript = stripHtmlTags(lecture.data?.transcript);
     setCurrentActiveLectureID(id);
@@ -598,16 +615,30 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
       const method = isEditing ? 'PUT' : 'POST';
 
       const response = await axiosWrapper(method, url, formData, token);
+      dispatch({ type: types.ALL_RECORDS, data: { keyOfData: 'currentCourseUpdate', data: true } });
 
-      if (response?.data) {
-        setUnassignedLectures((prevLectures) =>
-          prevLectures.map((lecture) =>
-            lecture.id === response?.data?.id
-              ? { ...lecture, name: response?.data?.name.trim() }
-              : lecture
-          )
-        );
-      }
+      // if (response?.data) {
+      //   const updatedLectureId = response.data.id;
+      //   const updatedLectureName = response.data.name.trim();  
+      //   setUnassignedLectures((prevLectures) =>
+      //     prevLectures.map((lecture) =>
+      //       lecture.id === updatedLectureId
+      //         ? { ...lecture, name: updatedLectureName }
+      //         : lecture
+      //     )
+      //   );
+      //   setTopics((prevTopics) =>
+      //     prevTopics.map((folder) => ({
+      //       ...folder,
+      //       lectures: folder.lectures.map((lecture) =>
+      //         lecture.id === updatedLectureId
+      //           ? { ...lecture, name: updatedLectureName }
+      //           : lecture
+      //       )
+      //     }))
+      //   );
+      // }
+      
       
     } catch (err) {
       // handleError(err);
@@ -618,6 +649,70 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
     }
 
   };
+
+
+const handleLectureDeleteClick = (id) => {
+  setShowLectureDeleteModal({
+        show: true,
+        title: 'Delete Lecture',
+        isEditable: false,
+        lectureId: id,
+        initialValues: null
+    });
+};
+
+const handleLectureCloseDeleteModal = () => {
+  setShowLectureDeleteModal({
+        show: false,
+        title: 'Delete Lecture',
+        isEditable: false,
+        lectureId: null,
+        initialValues: null
+    });
+};
+
+
+const handleDeleteLecture = async () => {
+  try {
+      setLoadingCRUD(true);
+      await axiosWrapper(
+          'DELETE',
+          `${API_URL.SUPABASE_DELETE_LECTURE.replace(':id', showLectureDeleteModal.lectureId)}`,
+          {},
+          token
+      );
+      dispatch({ type: types.ALL_RECORDS, data: { keyOfData: 'currentCourseUpdate', data: true } });
+
+      // if (showLectureDeleteModal.lectureId) {
+      //   const deletedLectureId = String(showLectureDeleteModal.lectureId); // ensure consistent type
+      
+      //   // Remove from unassigned lectures
+      //   setUnassignedLectures(prevLectures =>
+      //     prevLectures.filter(lecture => String(lecture.id) !== deletedLectureId)
+      //   );
+      
+      //   // Remove from topics
+      //   setTopics(prevTopics =>
+      //     prevTopics.map(folder => ({
+      //       ...folder,
+      //       lectures: folder.lectures.filter(lecture => String(lecture.id) !== deletedLectureId)
+      //     }))
+      //   );
+      // }
+      
+  } catch (error) {
+      console.error('Error deleting lecture:', error);
+  } finally {
+      setLoadingCRUD(false);
+      setShowLectureDeleteModal({
+          show: false,
+          title: 'Delete Lecture',
+          isEditable: false,
+          lectureId: null,
+          initialValues: null
+      });
+  }
+};
 
   const renameLecture = async (id, newTitle) => {
     if (!id || !newTitle) {
@@ -649,14 +744,29 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
     const updated = await renameLecture(selectedLectureId, lectureLabel.trim());
     
     if (updated) {
-      setUnassignedLectures((prevLectures) =>
-        prevLectures.map((lecture) =>
+      // ✅ Update unassigned lectures
+      setUnassignedLectures(prev =>
+        prev.map((lecture) =>
           lecture.id === selectedLectureId
             ? { ...lecture, name: lectureLabel.trim() }
             : lecture
         )
       );
     
+      // ✅ Update inside folder (topics)
+      setTopics(prevTopics =>
+        prevTopics.map(folder => ({
+          ...folder,
+          lectures: folder.lectures.map(lecture =>
+            lecture.id === selectedLectureId
+              ? { ...lecture, name: lectureLabel.trim() }
+              : lecture
+          )
+        }))
+      );
+        
+
+
       // Close modal and reset form
       setModalShowRename(false);
       setLectureLabel('');
@@ -730,7 +840,20 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
           activeBtnTitle="Update"
         />
       )}
-
+      {showLectureDeleteModal.show && (
+                <ConfirmationBox
+                    show={showLectureDeleteModal.show}
+                    onClose={handleLectureCloseDeleteModal}
+                    loading={loadingCRUD}
+                    title="Delete Lecture"
+                    body="Are you sure you want to delete this Lecture?"
+                    onConfirm={handleDeleteLecture}
+                    customFooterClass="custom-footer-class"
+                    nonActiveBtn="cancel-button"
+                    activeBtn="delete-button"
+                    activeBtnTitle="Delete"
+                />
+      )}
 
       {loading ? (
         <Loading />
@@ -932,6 +1055,7 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
                             <div className="drop-box" onClick={() => toggleFolder(topicIndex)} style={{ cursor: 'pointer' }}>
                               <h3>{topic.name}</h3>
                               <div className={`folder-dropdown ${isOpen[topicIndex] ? 'rotated' : ''}`}>
+                                {/* add icons here::: */}
                                 <img src={Drop} alt="" />
                               </div>
                             </div>
@@ -970,19 +1094,29 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
                                             {/* <Dropdown.Item href="javascript:void(0)" 
                                             onClick={() => handleEditClick(lecture.id)}
                                               >Edit</Dropdown.Item> */}
-                                            {isEditing && ( 
-                                            <Dropdown.Item
-                                              href="javascript:void(0)"
-                                              onClick={() => {
-                                                setPendingLectureId(lecture.id); // store the ID
-                                                setPublishLectureModel(true); // show modal
-                                              }}
-                                            >
-                                              Edit
-                                            </Dropdown.Item>
+                                            {isEditing ? (
+                                              <Dropdown.Item
+                                                href="javascript:void(0)"
+                                                onClick={() => {
+                                                  setPendingLectureId(lecture.id); 
+                                                  setPublishLectureModel(true);
+                                                }}
+                                              >
+                                                Edit
+                                              </Dropdown.Item>
+                                            ) : (
+                                              <Dropdown.Item
+                                                href="javascript:void(0)"
+                                                onClick={() => handleEditClick(lecture.id)}
+                                              >
+                                                Edit
+                                              </Dropdown.Item>
                                             )}
+
                                             {/* <Dropdown.Item href="javascript:void(0)">Copy</Dropdown.Item> */}
-                                            <Dropdown.Item onClick={() => duplicateLecture(topicIndex, lectureIndex,lecture.id)}>Duplicate</Dropdown.Item>
+                                            <Dropdown.Item onClick={() => duplicateLecture({ lectureId: lecture.id, topicIndex, lectureIndex })}>
+                                              Duplicate
+                                            </Dropdown.Item>
                                             <Dropdown drop="right" as="div">
                                               {/* wrapper as a div so we get the submenu in the same "menu" */}
                                               <Dropdown.Toggle
@@ -992,6 +1126,10 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
                                               >
                                                 Move
                                               </Dropdown.Toggle>
+                                              <Dropdown.Item
+                                                onClick={() => handleLectureDeleteClick(lecture.id)}
+                                              >
+                                                Delete</Dropdown.Item>
                                               <Dropdown.Menu className='move-drop'>
                                                 {topics.map((topic, i) => (
                                                   <Dropdown.Item
@@ -1058,43 +1196,50 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
                                             ))}
                                           </Dropdown.Menu>
                                         </Dropdown>
-                                        {/* <Dropdown.Item href="javascript:void(0)" onClick={() => handleEditClick(lecture.id)}>Edit</Dropdown.Item> */}
-                                        {isEditing && ( 
-                                        <Dropdown.Item
-                                              href="javascript:void(0)"
-                                              onClick={() => {
-                                                setPendingLectureId(lecture.id); // store the ID
-                                                setPublishLectureModel(true); // show modal
-                                              }}
-                                            >
-                                              Edit
-                                        </Dropdown.Item>
-                                        )}
-                                     <Dropdown drop="right" as="div">
-                                          {/* wrapper as a div so we get the submenu in the same "menu" */}
-                                          <Dropdown.Toggle
-                                            as="span"
-                                            className="dropdown-item"
-                                            style={{ cursor: 'pointer' }}
+                                        {isEditing ? (
+                                          <Dropdown.Item
+                                            href="javascript:void(0)"
+                                            onClick={() => {
+                                              setPendingLectureId(lecture.id); 
+                                              setPublishLectureModel(true); 
+                                            }}
                                           >
-                                            Move
-                                          </Dropdown.Toggle>
-                                          <Dropdown.Menu className='move-drop'>
-                                            {topics.map((topic, i) => (
-                                              <Dropdown.Item
-                                                key={i}
-                                                onClick={() =>
-                                                  moveUnassignedLecture(
-                                                    index,
-                                                    i
-                                                  )
-                                                }
-                                              >
-                                                {topic.name}
-                                              </Dropdown.Item>
-                                            ))}
-                                          </Dropdown.Menu>
-                                        </Dropdown>
+                                            Edit
+                                          </Dropdown.Item>
+                                        ) : (
+                                          <Dropdown.Item
+                                            href="javascript:void(0)"
+                                            onClick={() => handleEditClick(lecture.id)}
+                                          >
+                                            Edit
+                                          </Dropdown.Item>
+                                        )}
+
+                                        <Dropdown.Item onClick={() => {
+                                          setSelectedLecture({ topicIndex: null, lectureIndex: index }); // null because it's unassigned
+                                          setShowMovePopup(true);
+                                        }}>
+                                          Move
+                                        </Dropdown.Item>
+                                        <Dropdown.Item
+                                         onClick={() => duplicateLecture({ lectureId: lecture.id })}
+
+                                         >
+                                          Duplicate</Dropdown.Item>
+                                        <Dropdown.Item
+                                          onClick={() => handleLectureDeleteClick(lecture.id)}
+
+                                         >
+                                          Delete</Dropdown.Item>
+                                      {/* <Dropdown.Item 
+                                        onClick={() => {
+                                          setSelectedLectureId(lecture.id);
+                                          setLectureLabel(lecture.title);
+                                          setModalShowRename(true);
+                                        }}
+                                      >
+                                        Rename
+                                      </Dropdown.Item> */}
                                       </Dropdown.Menu>
                                     </Dropdown>
                                     
@@ -1151,30 +1296,53 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
                           </Button>
                         </div>
                       </div> */}
-                      {initialData?.lecturess?.length > 0 ? (
-                        initialData.lecturess.map((lecture) => (
-                          <div className="new-page-view" key={lecture.id}>
-                            <div className="course-right-header">
-                              <h2 className="subhead">{lecture?.name}</h2>
-                              <img
-                                className="cursor-pointer"
-                                src={PencilLine}
-                                alt="Edit"
-                                onClick={() => handleEditClick(lecture.id)}
-                              />
+                      {(initialData?.lecturess?.length > 0 || initialData?.folders?.some(folder => folder.lectures?.length > 0)) ? (
+                        <>
+                          {/* Unassigned lectures */}
+                          {initialData.lecturess?.map((lecture) => (
+                            <div className="new-page-view" key={lecture.id}>
+                              <div className="course-right-header">
+                                <h2 className="subhead">{lecture?.name}</h2>
+                                <img
+                                  className="cursor-pointer"
+                                  src={PencilLine}
+                                  alt="Edit"
+                                  onClick={() => handleEditClick(lecture.id)}
+                                />
+                              </div>
                             </div>
-                          </div>
-                        ))
+                          ))}
+
+                          {/* Folder lectures */}
+                          {initialData.folders?.map((folder) =>
+                            folder.lectures?.map((lecture) => (
+                              <div className="new-page-view" key={lecture.id}>
+                                <div className="course-right-header">
+                                  <h2 className="subhead">{lecture?.name}</h2>
+                                  <img
+                                    className="cursor-pointer"
+                                    src={PencilLine}
+                                    alt="Edit"
+                                    onClick={() => handleEditClick(lecture.id)}
+                                  />
+                                </div>
+                              </div>
+                            ))
+                          )}
+                        </>
                       ) : (
                         <p className="no-lectures-message">
-                        You don’t have any lectures yet.{' '}
-                          <span onClick={() => addUnassignedLecture()} style={{ cursor: 'pointer', color: '#007bff' }}>
+                          You don’t have any lectures yet.{' '}
+                          <span
+                            onClick={() => addUnassignedLecture()}
+                            style={{ cursor: 'pointer', color: '#007bff' }}
+                          >
                             Add
                           </span>{' '}
                           a new lecture to get started.
                         </p>
-                      
                       )}
+
 
                       </>
 
