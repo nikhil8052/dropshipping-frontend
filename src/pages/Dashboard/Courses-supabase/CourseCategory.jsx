@@ -176,7 +176,7 @@ const CourseCategory = ({ value = [], onChange, token }) => {
                         <Modal.Title>Add New Category</Modal.Title>
                     </Modal.Header>
                     <Modal.Body>
-                    <div className='Course-form' style={{ paddingTop: '0px' }}>
+                    <div className='add-course-form Course-form' style={{ paddingTop: '0px' }}>
                         <div className="form-group">
                             {/* <label>Category Name</label> */}
                             {/* <input
