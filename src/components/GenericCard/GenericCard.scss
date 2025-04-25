@@ -158,6 +158,7 @@
 
 .generic-card.card {
     overflow: hidden;
+    height: 100%;
 }
 
 .delete-box {
@@ -181,4 +182,6 @@
 .generic-card * {
     cursor: inherit !important;
   }
+
+
   
