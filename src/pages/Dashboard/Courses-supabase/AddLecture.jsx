@@ -249,17 +249,75 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
   };
 
 
-  const duplicateLecture = (topicIndex, lectureIndex) => {
-    const updatedTopics = [...topics];
-    const lectureToDuplicate = updatedTopics[topicIndex].lectures[lectureIndex];
+  // const duplicateLecture = (topicIndex, lectureIndex) => {
+  //   console.log(topicIndex)
+  //   console.log(lectureIndex)
+  //   return false;
+  //   const updatedTopics = [...topics];
+  //   const lectureToDuplicate = updatedTopics[topicIndex].lectures[lectureIndex];
 
-    // Insert the duplicated lecture after the clicked one
-    updatedTopics[topicIndex].lectures.splice(lectureIndex + 1, 0, lectureToDuplicate + " (Copy)");
+  //   // Insert the duplicated lecture after the clicked one
+  //   updatedTopics[topicIndex].lectures.splice(lectureIndex + 1, 0, lectureToDuplicate + " (Copy)");
 
-    setTopics(updatedTopics);
+  //   setTopics(updatedTopics);
+  // };
+
+  const duplicateLecture = async (topicIndex, lectureIndex, lectureId) => {
+    try {
+      // Step 1: Get original lecture details
+      const originalLectureRes = await axiosWrapper('GET', API_URL.SUPABASE_GET_LECTURE.replace(':id', lectureId), null, token);
+      const originalLecture = originalLectureRes?.data;
+      if (!originalLecture) throw new Error("Lecture not found");
+  
+      // Step 2: Create duplicated lecture
+      const newLecturePayload = {
+        ...originalLecture,
+        name: `${originalLecture.name} (Copy)`,
+      };
+      delete newLecturePayload.id; // remove ID to create new
+      const newLectureRes = await axiosWrapper('POST', API_URL.SUPABASE_ADD_LECTURE, newLecturePayload, token);
+      const newLecture = newLectureRes?.data;
+      if (!newLecture?.id) throw new Error("Failed to duplicate lecture");
+  
+      const newLectureId = newLecture.id;
+  
+      // Step 3: Duplicate quizzes
+      const quizzes = originalLecture.quizzes || [];
+      for (const quiz of quizzes) {
+        const quizPayload = {
+          lecture_id: newLectureId,
+          title: quiz.title,
+          option1: quiz.option1,
+          option2: quiz.option2,
+          option3: quiz.option3,
+          option4: quiz.option4,
+          correct_answer: quiz.correct_answer,
+        };
+        await axiosWrapper('POST', API_URL.SUPABASE_ADD_QUIZ, quizPayload, token);
+      }
+  
+      // Step 4: Duplicate resources
+      const resources = originalLecture.resources || [];
+      for (const res of resources) {
+        const resourcePayload = {
+          model_id: newLectureId,
+          model_type: 'lecture',
+          name: res.name || res.title,
+          type: res.type || 'file',
+          file_link: res.file_link || res.image, // image is from frontend, file_link is likely from backend
+        };
+        const resourceUrl = API_URL.SUPABASE_UPDATE_LECTURE_RESOURCE.replace(':id', newLectureId);
+        await axiosWrapper('POST', resourceUrl, resourcePayload, token);
+      }
+  
+      console.log("✅ Lecture duplicated with quizzes and resources!");
+      return newLecture;
+  
+    } catch (err) {
+      console.error("❌ Error duplicating lecture with extras:", err);
+    }
   };
-
-
+  
   const moveUnassignedLecture = async (unassignedIndex, targetTopicIndex) => {
 
     console.log('unassignedIndex', unassignedIndex, 'targetTopicIndex', targetTopicIndex);
@@ -304,7 +362,10 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
     setShowMovePopup(false);
   };
 
-
+  const validationSchema = Yup.object().shape({
+    name: Yup.string().required('Name is required'),
+  });
+  
   const quizValidationSchema = Yup.object().shape({
     quiz: Yup.object().shape({
       question: Yup.string().required('Question is required'),
@@ -531,17 +592,22 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
 
     try {
       const formData = prepareFormData(values);
+
       console.log(editingLecture);
       const url = getApiUrl(isEditing, editingLecture?.id);
       const method = isEditing ? 'PUT' : 'POST';
 
-      await axiosWrapper(method, url, formData, token);
+      const response = await axiosWrapper(method, url, formData, token);
 
-      // toast.success(`${action === 'update' ? 'Updated' : 'Saved'} successfully!`);
-
-      // if (action === 'save') {
-      //   // handle next step navigation
-      // }
+      if (response?.data) {
+        setUnassignedLectures((prevLectures) =>
+          prevLectures.map((lecture) =>
+            lecture.id === response?.data?.id
+              ? { ...lecture, name: response?.data?.name.trim() }
+              : lecture
+          )
+        );
+      }
       
     } catch (err) {
       // handleError(err);
@@ -915,7 +981,7 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
                                             </Dropdown.Item>
                                             )}
                                             {/* <Dropdown.Item href="javascript:void(0)">Copy</Dropdown.Item> */}
-                                            <Dropdown.Item onClick={() => duplicateLecture(topicIndex, lectureIndex)}>Duplicate</Dropdown.Item>
+                                            <Dropdown.Item onClick={() => duplicateLecture(topicIndex, lectureIndex,lecture.id)}>Duplicate</Dropdown.Item>
                                             <Dropdown drop="right" as="div">
                                               {/* wrapper as a div so we get the submenu in the same "menu" */}
                                               <Dropdown.Toggle
@@ -1011,11 +1077,6 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
                                           Move
                                         </Dropdown.Item>
                                       {/* <Dropdown.Item 
-                                        // onClick={() => renameLecture(lecture.id)}
-                                        onClick={() => setModalShowRename(true)}
-                                          
-                                          >Rename</Dropdown.Item> */}
-                                      <Dropdown.Item 
                                         onClick={() => {
                                           setSelectedLectureId(lecture.id);
                                           setLectureLabel(lecture.title);
@@ -1023,7 +1084,7 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
                                         }}
                                       >
                                         Rename
-                                      </Dropdown.Item>
+                                      </Dropdown.Item> */}
                                       </Dropdown.Menu>
                                       
 
@@ -1114,30 +1175,41 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
                         initialValues={{
                           // description: stripHtmlTags(editingLecture?.description) || '',
                           description: editingLecture?.description || '',
+                          name: editingLecture?.name || '',
                           transcript: editingLecture?.transcript || '',
                           id: editingLecture?.id || '',
                           // quizzes: editingLecture?.quizzes || [],
                           // quizzes: lectureQuizzes || [],
                         }}
+                        validationSchema={validationSchema}
                         onSubmit={handleSubmit}
                       >
                         {/* {({ isSubmitting, values, setFieldValue }) => ( */}
-                        {({ isSubmitting, handleSubmit, setFieldValue, values }) => (
+                        {({ isSubmitting, handleSubmit, setFieldValue, values ,errors}) => (
 
                           <Form>
                             <Row>
                               <Col>
-                                <Input
-                                  className="field-quill-control"
-                                  type="richTextEditor"
-                                  name="description"
-                                  id="course_description"
-                                  placeholder="Enter Course Description"
-                                  showResources={true}
-                                  resources={resources}
-                                  modules={{ toolbar: TOOLBAR_CONFIG }}
-                                  formats={FORMATS}
-                                />
+                              <Input
+                                className="field-quill-control"
+                                type="richTextEditor"
+                                name="description"
+                                id="course_description"
+                                placeholder="Enter Course Description"
+                                showResources={true}
+                                showNameField={true}
+                                showNameFieldData={values?.name}
+                                onNameChange={(newName) => setFieldValue('name', newName)}
+                                resources={resources}
+                                modules={{ toolbar: TOOLBAR_CONFIG }}
+                                formats={FORMATS}
+                              />
+                              <ErrorMessage
+                                name="name"
+                                component="div"
+                                className="error"
+                              />
+
                                 {/* <Input
                                     className="field-quill-control"
                                     type="richTextEditor"

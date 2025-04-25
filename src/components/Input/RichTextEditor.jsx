@@ -5,6 +5,7 @@ import { useRef, useEffect, useState } from 'react';
 import './input.scss';
 import ImageResize from 'quill-image-resize-module-react';
 Quill.register('modules/imageResize', ImageResize);
+import TextField from '@mui/material/TextField';
 
 
 const Block = Quill.import('blots/block');
@@ -20,6 +21,10 @@ const RichTextEditor = (props) => {
     const [field, , helpers] = useField(props.name);
     const quillRef = useRef(null);
     const resourceList = props.resources || [];
+    const [nameField, setNameField] = useState('');
+    useEffect(() => {
+        setNameField(props.showNameFieldData || '');
+    }, [props.showNameFieldData]);
 
     const TOOLBAR_CONFIG = {
         container: [
@@ -111,7 +116,14 @@ const RichTextEditor = (props) => {
         helpers.setValue(finalHTML); // Save clean value
         if (props.onChange) props.onChange(finalHTML);
     };
-    
+    const handleNameChange = (e) => {
+        const newName = e.target.value;
+        setNameField(newName);
+        if (props.onNameChange) {
+          props.onNameChange(newName);
+        }
+      };
+      
     
     
     
@@ -171,6 +183,25 @@ const RichTextEditor = (props) => {
                 formats={FORMATS}
                 placeholder={props.placeholder}
             /> */}
+            {props.showNameField && (
+                <>
+                <TextField
+                    fullWidth
+                    name="name"
+                    label="Name"
+                    className="field-control name-field-editor"
+                    id="name-basic"
+                    type="text"
+                    value={nameField}
+                    onChange={handleNameChange}
+                    required
+                    autoComplete="off" 
+                />
+                
+                </>
+            )}
+
+            
             <ReactQuill
                 ref={quillRef}
                 value={field.value}

@@ -883,3 +883,22 @@ filter: invert(0);
     color: white !important;
     background: rgb(255, 100, 100) !important;
 }
+
+.quill-editor .field-control.name-field-editor,.quill-editor .field-control.name-field-editor:focus-visible {
+    outline: 0px !important;
+    border: 0 !important;
+    background-color: #ffffff !important;
+    background: #ffffff !important;
+    border-radius: 0px !important;
+}
+
+
+.quill-editor .field-control.name-field-editor input:focus,.quill-editor .field-control.name-field-editor input:focus-visible {
+    outline: 0px;
+        outline: 0px !important;
+    border: 0 !important;
+    background-color: #ffffff !important;
+    background: #ffffff !important;
+    border-radius: 0px !important;
+    
+}
