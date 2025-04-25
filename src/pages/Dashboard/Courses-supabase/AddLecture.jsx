@@ -263,25 +263,30 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
   // };
 
   const duplicateLecture = async (topicIndex, lectureIndex, lectureId) => {
+    // setLoading(true);
     try {
-      // Step 1: Get original lecture details
+    // setLoading(false);
+
       const originalLectureRes = await axiosWrapper('GET', API_URL.SUPABASE_GET_LECTURE.replace(':id', lectureId), null, token);
       const originalLecture = originalLectureRes?.data;
       if (!originalLecture) throw new Error("Lecture not found");
   
       // Step 2: Create duplicated lecture
       const newLecturePayload = {
-        ...originalLecture,
-        name: `${originalLecture.name} (Copy)`,
+        // ...originalLecture,
+        name: `(Copy) ${originalLecture.name}`,
+        description: originalLecture.description,
+        transcript: originalLecture.transcript,
+        courseId: originalLecture.courseId,
+        folder_id: originalLecture.folder_id,
+        
       };
-      delete newLecturePayload.id; // remove ID to create new
       const newLectureRes = await axiosWrapper('POST', API_URL.SUPABASE_ADD_LECTURE, newLecturePayload, token);
-      const newLecture = newLectureRes?.data;
-      if (!newLecture?.id) throw new Error("Failed to duplicate lecture");
-  
+      const newLecture =newLectureRes.data[0];
+      console.log(newLectureRes);
       const newLectureId = newLecture.id;
-  
-      // Step 3: Duplicate quizzes
+      if (!newLecture?.id) throw new Error("Failed to duplicate lecture");
+      
       const quizzes = originalLecture.quizzes || [];
       for (const quiz of quizzes) {
         const quizPayload = {
@@ -295,8 +300,6 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
         };
         await axiosWrapper('POST', API_URL.SUPABASE_ADD_QUIZ, quizPayload, token);
       }
-  
-      // Step 4: Duplicate resources
       const resources = originalLecture.resources || [];
       for (const res of resources) {
         const resourcePayload = {
@@ -304,7 +307,7 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
           model_type: 'lecture',
           name: res.name || res.title,
           type: res.type || 'file',
-          file_link: res.file_link || res.image, // image is from frontend, file_link is likely from backend
+          file_link: res.file_link || res.image,
         };
         const resourceUrl = API_URL.SUPABASE_UPDATE_LECTURE_RESOURCE.replace(':id', newLectureId);
         await axiosWrapper('POST', resourceUrl, resourcePayload, token);
