@@ -17,6 +17,7 @@ import { API_URL } from '../../../utils/apiUrl';
 import { textParser } from '../../../utils/utils';
 import AddLecture from './AddLecture';
 import AddLectureModel from './AddLectureModal';
+import './CourseNew.scss';
 
 const AddNewCourse = () => {
     const location = useLocation();
