@@ -10,6 +10,8 @@ const AvatarGroup = ({ count, attendees, handleCountClick }) => {
                         <div key={index} className="avatarGroup_wrapper-avatar">
                             <img src={attendee} alt="" />
                         </div>
+
+                        
                     );
                 })}
                 <div className="avatarGroup_wrapper-avatar" onClick={handleCountClick}>
