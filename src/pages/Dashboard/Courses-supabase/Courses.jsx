@@ -10,13 +10,15 @@ import axiosWrapper from '../../../utils/api';
 import '../../../styles/Common.scss';
 import '../../../styles/Courses.scss';
 import { Helmet } from 'react-helmet';
-import GenericCard from  '../../../components/GenericCard/GenericCardSupabase';
+import GenericCard from '../../../components/GenericCard/GenericCardSupabase';
 import { precisionRound } from '../../../utils/common';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import * as types from '../../../redux/actions/actionTypes';
 import { DndContext, closestCenter, PointerSensor, useSensor, useSensors } from '@dnd-kit/core';
 import { arrayMove, SortableContext, useSortable, rectSortingStrategy } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
+import { color } from 'framer-motion';
+import './CourseNew.scss';
 
 const Courses = () => {
     const [items, setItems] = useState([1, 2, 3, 4, 5, 6, 7, 8, 9]);
@@ -243,7 +245,6 @@ const Courses = () => {
         return totalLectures > 0 ? (completedLectures / totalLectures) * 100 : 0;
     };
 
-    
     const handleDelete = async (courseId) => {
         setLoading(true);
         try {
@@ -332,6 +333,32 @@ const Courses = () => {
                                     id={course._id}
                                 />
                             ))}
+                            <div
+                                className="add-course-card"
+                                onClick={handleCreateClick}
+                                style={{
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                    border: '2px dashed #b1b1b0',
+                                    borderRadius: '12px',
+                                    height: '200px',
+                                    cursor: 'pointer',
+                                    height: '100%',
+                                    gap: '10px'
+                                }}
+                            >
+                                <img
+                                    src={add}
+                                    alt="Add"
+                                    style={{
+                                        width: '30px',
+                                        height: '30px',
+                                        filter: 'brightness(0) saturate(100%) invert(96%) sepia(5%) saturate(218%) hue-rotate(189deg) brightness(98%) contrast(91%)'
+                                    }}
+                                />
+                                <span style={{ color: '#b1b1b0' }}>New Course</span>
+                            </div>
                         </InfiniteScroll>
                     </SortableContext>
                 </DndContext>

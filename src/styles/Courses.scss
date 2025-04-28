@@ -543,12 +543,13 @@
     color: #212121;
     font-weight: $font-weight-bold;
     font-family: $font-primary;
-    font-size: $font-size-large;
+    font-size: 24px;
 }
 
 .quiz-fields-container {
     max-height: 400px;
     overflow-y: auto;
+    padding-right: 20px;
 
     @include respond-to($small-screen) {
         max-height: 640px;
@@ -564,7 +565,7 @@
         align-items: center;
         flex-wrap: wrap;
         font-family: $font-primary;
-        font-size: $font-size-medium;
+        font-size: 16px;
 
         span {
             color: #019ed8;

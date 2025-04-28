@@ -280,7 +280,7 @@ const AddNewCourse = () => {
         setIsPublished(!isPublished);
     };
     return (
-        <div className="addcourse-section">
+        <div className="addcourse-section supabase">
             <div className="title-top">
                 <span onClick={() => navigate(`/${role}/courses-supabase`)} style={{ cursor: 'pointer' }}>
                     Add Course

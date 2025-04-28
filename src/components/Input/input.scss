@@ -150,34 +150,42 @@
     color: #fff;
 }
 
-.field-control:focus-visible, .field-select-control:focus-visible, .field-text-area-control:focus-visible {
+.field-control:focus-visible,
+.field-select-control:focus-visible,
+.field-text-area-control:focus-visible {
     outline: 0px !important;
     border: 1px solid #fff !important;
     color: #fff !important;
 }
 
- .new-page .dropdown-button .dropdown-toggle, .new-page  .custom_select__control .dropdown-toggle, .new-page .dropdown-button-fix .dropdown-toggle {
+.new-page .dropdown-button .dropdown-toggle,
+.new-page .custom_select__control .dropdown-toggle,
+.new-page .dropdown-button-fix .dropdown-toggle {
     padding: 10px 20px;
     color: #fff;
     background-color: #fff;
     background: #343837 !important;
 }
 
- .new-page .dropdown-button .dropdown-toggle span, .new-page .custom_select__control .dropdown-toggle span, .new-page .dropdown-button-fix .dropdown-toggle span {
+.new-page .dropdown-button .dropdown-toggle span,
+.new-page .custom_select__control .dropdown-toggle span,
+.new-page .dropdown-button-fix .dropdown-toggle span {
     color: #fff;
     -webkit-text-fill-color: #fff;
 }
 
- .new-page .dropdown-button .dropdown-toggle img, .new-page .custom_select__control .dropdown-toggle img, .new-page  .dropdown-button-fix .dropdown-toggle img {
+.new-page .dropdown-button .dropdown-toggle img,
+.new-page .custom_select__control .dropdown-toggle img,
+.new-page .dropdown-button-fix .dropdown-toggle img {
     filter: invert(1);
 }
 
-
-.new-page .field-control,.new-page .field-select-control{
+.new-page .field-control,
+.new-page .field-select-control {
     margin-bottom: 0 !important;
 }
 
-.new-page .formgroup label{
+.new-page .formgroup label {
     margin-bottom: 16px;
 }
 
@@ -189,11 +197,6 @@
     color: #fff;
 }
 
-.quill-editor {
-    box-shadow: 0px 0px 14.86px 0px #0000000F;
-    border-radius: 5px;
-}
-
 .box-row {
     margin: 2rem 0rem;
     border: 1px solid #fff;
@@ -201,7 +204,7 @@
     border-radius: 16px;
 }
 
- .formgroup input[type=text] {
+.formgroup input[type='text'] {
     border: 0px !important;
 }
 
@@ -210,38 +213,40 @@
     overflow-y: scroll;
 }
 
-.field-control:focus-visible, .field-select-control:focus-visible, .field-text-area-control:focus-visible {
+.field-control:focus-visible,
+.field-select-control:focus-visible,
+.field-text-area-control:focus-visible {
     outline: 0px !important;
     border: 1px solid rgba(3, 164, 194, 0.24) !important;
     color: inherit !important;
 }
 
-
-.ql-header[value="1"],
-.ql-header[value="2"],
-.ql-header[value="3"],
-.ql-header[value="4"] {
+.ql-header[value='1'],
+.ql-header[value='2'],
+.ql-header[value='3'],
+.ql-header[value='4'] {
     color: #444 !important;
-    font-weight: bold !important; 
+    font-weight: bold !important;
     fill: #444 !important;
 }
 
-
-.ql-header[value="1"]:hover,
-.ql-header[value="2"]:hover,
-.ql-header[value="3"]:hover,
-.ql-header[value="4"]:hover {
-   color: blue;  /* Light background on hover */
+.ql-header[value='1']:hover,
+.ql-header[value='2']:hover,
+.ql-header[value='3']:hover,
+.ql-header[value='4']:hover {
+    color: blue;
+    /* Light background on hover */
 }
 
-.ql-toolbar{
+.ql-toolbar {
     background-color: white !important;
     border: none !important;
-    border-bottom: 1px solid #E8EAF0 !important;
+    border-bottom: 1px solid #e8eaf0 !important;
     padding: 17px;
 }
-.ql-container.ql-snow{
- border: none !important;
+
+.ql-container.ql-snow {
+    border: none !important;
 }
 
 .resource-card {
@@ -250,53 +255,49 @@
     background: #ffffff;
     transition: all 0.3s ease;
     gap: 10px;
-  }
-  
-  .fr{
-    float: right !important;
-  }
+}
 
-  .resource-image {
+.fr {
+    float: right !important;
+}
+
+.resource-image {
     object-fit: cover;
     height: 25px;
     width: 25px;
     border-radius: 2px;
+}
 
-  }
-  
-  .resource-title {
-    font-size: 12px;
+.resource-title {
+    font-size: 14px;
     font-weight: 500;
     color: #333;
-  }
+}
 
-.quill.field-quill-control{
+.quill.field-quill-control {
     background: white !important;
     border: none !important;
 }
-.new-resource-main-card{
-    border:none !important
+
+.new-resource-main-card {
+    border: none !important;
 }
 
 .transcript-wrapper.active .subhead {
     transform: translateY(-10px);
-  }
-
-  .quill-editor {
-    box-shadow: 0px 0px 14.86px 0px #0000000F;
-    border-radius: 5px;
 }
 
 .field-quill-control .ql-editor {
     display: flex;
     flex-direction: column;
     gap: 10px;
-    padding: 17px 30px 0px;
+    padding: 17px 20px 0px;
 }
-.new-resource-main-card{
-    padding: 0px 30px 30px;
 
-    .card-body{
+.new-resource-main-card {
+    padding: 0px 20px 20px;
+
+    .card-body {
         padding: 0;
     }
 }
@@ -305,17 +306,124 @@
     display: none;
 }
 
-@media only screen and (max-width:767px) {
+@media only screen and (max-width: 767px) {
     .box-row > div {
         margin-bottom: 0rem;
     }
+
     .new-page .formgroup label {
         margin-bottom: 10px;
     }
-    }
+}
+
+.ql-editor img {
+    max-width: none;
+}
+
+.new-resource-main-card {
+    padding-top: 50px;
+}
+
+.res .dropdown-item {
+    font-size: 10px;
+    padding: 0px 10px;
+}
+
+.res .dropdown-menu {
+    box-shadow: 0px 0px 14.86px 0px #0000000f;
+    border-radius: 4px;
+    border: 1px solid #e9eaf0;
+}
+
+.add-course-form.Course-form .form-group > div > div {
+    padding: 0;
+}
+
+.modal .add-course-form .field-control {
+    padding: 0;
+    margin: 0;
+}
+
+.tab-buttons.editor-buttons {
+    padding: 20px;
+}
+
+.tab-buttons.editor-buttons button {
+    font-weight: 600;
+    padding: 14px 18px;
+    font-size: 16px;
+}
+
+.course-right:has(> form) .ql-toolbar.ql-snow {
+    background-color: #f3f4f6 !important;
+    border: 0 !important;
+}
+
+.addAdditionalOptions button {
+    background-color: transparent !important;
+    color: #7b8089 !important;
+    border: 1px solid #7b8089 !important;
+    padding: 12px 22px !important;
+    text-transform: uppercase;
+}
+
+.addAdditionalOptions button:hover {
+    color: #000 !important;
+    border: 1px solid #000 !important;
+}
+
+.addAdditionalOptions .dropdown-toggle::after {
+    border: 0 !important;
+    background-image: url(/src/assets/images/droparrow.png);
+    height: 12px;
+    width: 12px;
+    background-repeat: no-repeat;
+    background-size: contain;
+    transform: translate(8px, 4px) rotate(180deg);
+}
+
+.addAdditionalOptions button:hover::after {
+    filter: brightness(0) saturate(100%) invert(0%) sepia(77%) saturate(7500%) hue-rotate(354deg) brightness(110%)
+        contrast(87%);
+}
+
+.addAdditionalOptions .dropdown.show .dropdown-toggle::after {
+    transform: translate(8px, 8px) rotate(0deg);
+    filter: brightness(0) saturate(100%) invert(0%) sepia(77%) saturate(7500%) hue-rotate(354deg) brightness(110%)
+        contrast(87%);
+}
+
+.addAdditionalOptions .dropdown-item {
+    padding: 8px 15px;
+    font-weight: 600;
+    color:#595a5ab3 !important
+}
+
+.addAdditionalOptions .dropdown-item:hover {
+    color: #000 !important;
+}
+
+.showing-transcript {
+    margin: 40px 20px 0px;
+    border-radius: 5px;
+}
+
+.course-right:has(> form) {
+    padding-bottom: 20px;
+}
+
+.transcript-section {
+    overflow: hidden;
+    border-radius: 15px;
+}
+
+.showing-transcript {
+    margin: 40px 20px 0px;
+    border-radius: 5px;
+}
 
 
-    .ql-editor img {
-        max-width: none;
-      }
-      
+.course-right:has(> form)  .transcript-section .ql-toolbar.ql-snow {
+    background-color: #fff !important;
+    padding: 0px 20px;
+}

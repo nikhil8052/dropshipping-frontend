@@ -1436,7 +1436,6 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
                                   type="richTextEditor"
                                   name="description"
                                   id="course_description"
-                                  placeholder="Enter Course Description"
                                   showResources={true}
                                   showNameField={true}
                                   showNameFieldData={values?.name}
@@ -1453,11 +1452,11 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
                                 />
                               </Col>
                             </Row>
-                            <div className="mt-5 d-flex gap-3 flex-wrap tab-buttons justify-content-between">
-                              <div className='card new-resource-main-card '>
+                            <div className="mt-3 d-flex gap-3 flex-wrap tab-buttons  editor-buttons justify-content-between">
+                              <div className='editor-button'>
                                 <div className='addAdditionalOptions'>
                                   <Dropdown onSelect={handleSelect} >
-                                    <Dropdown.Toggle variant="primary" id="dropdown-basic">
+                                    <Dropdown.Toggle  id="dropdown-basic">
                                       Add
                                     </Dropdown.Toggle>
                                     <Dropdown.Menu>
