@@ -22,9 +22,9 @@ import { stripHtmlTags } from '../../../utils/utils';
 import PencilLine from '../../../assets/icons/PencilLine.svg';
 import trashIconRed from '../../../assets/icons/Trash-rename.svg';
 import * as types from '../../../redux/actions/actionTypes';
+import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 
 const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCourseData }) => {
-  console.log(initialData, " THis is the initial data ")
   const [loading, setLoading] = useState(false);
   const [isOpen, setIsOpen] = useState(true);
   const [currentActiveLectureID, setCurrentActiveLectureID] = useState(null);
@@ -116,9 +116,6 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
     }
   };
 
-
-
-  console.warn(initialData);
   useEffect(() => {
 
     setUnassignedLectures([]);
@@ -143,9 +140,6 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
       }));
       setTopics(updatedTopics);
     }
-
-
-
   }, [initialData]);
 
 
@@ -338,24 +332,36 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
     }
   };
 
+  const moveLectureDND = async (lectureID , topicID ) => {
+    
+    var formData = {
+      // "name": lectureToMove.name,
+      "lecture_id": lectureID,
+      "folder_id": topicID,
+      "courseId": currentCourse,
+    };
+
+    const url = API_URL.SUPABASE_UPDATE_LECTURE_FOLDER.replace(':id', lectureID);
+    // Request the API and change the DB 
+    const response = await axiosWrapper(
+      'POST',
+      url,
+      formData,
+      token
+    );
+  };
+
 
   const moveUnassignedLecture = async (unassignedIndex, targetTopicIndex) => {
-
-    console.log('unassignedIndex', unassignedIndex, 'targetTopicIndex', targetTopicIndex);
     const lectureToMove = unassignedLectures[unassignedIndex];
-
-    console.log(lectureToMove, " Move this lecture to the other folder ");
-
+  
     // Add lecture to target topic
     const updatedTopics = [...topics];
-
-    console.log(updatedTopics, " These are the updated topics which we have currently..");
 
     updatedTopics[targetTopicIndex].lectures.push(lectureToMove);
 
     // Remove lecture from unassigned
     const updatedUnassignedLectures = unassignedLectures.filter((_, idx) => idx !== unassignedIndex);
-
 
     var formData = {
       // "name": lectureToMove.name,
@@ -553,8 +559,7 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
     setCurrentActiveLectureID(lecture.id);
     setCurrentActiveLecture(lecture);
     const lecData = await getLectureData(currentActiveLectureID);
-    console.log(lecData, " This is the lecture data ")
-    console.log(lecture, " Current lecture where the user has clicked ")
+
   }
 
   const handleEditClick = async (id) => {
@@ -586,7 +591,6 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
       }
     })
     setResources(resources);
-
   };
 
   const getApiUrl = (isEditable, lectureId) => {
@@ -681,6 +685,27 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
     });
   };
 
+  const handleDragEnd = (result) => {
+    const { source, destination } = result;
+    if (!destination) return;
+    const sourceTopicIndex = parseInt(source.droppableId.split('-')[1]);
+    const destTopicIndex = parseInt(destination.droppableId.split('-')[1]);
+    if (sourceTopicIndex === destTopicIndex && source.index === destination.index) {
+      return; 
+    }
+    const newTopics = [...topics];
+    const movedLecture = newTopics[sourceTopicIndex].lectures[source.index];
+    // Remove from source
+    newTopics[sourceTopicIndex].lectures.splice(source.index, 1);
+    // Add to destination
+    newTopics[destTopicIndex].lectures.splice(destination.index, 0, movedLecture);
+    const folder_id = newTopics[destTopicIndex].id ; 
+    const lecture_id = movedLecture.id ;
+    moveLectureDND(lecture_id, folder_id);
+    setTopics(newTopics);
+  };
+
+
 
   const handleDeleteLecture = async () => {
     try {
@@ -774,9 +799,6 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
           )
         }))
       );
-
-
-
       // Close modal and reset form
       setModalShowRename(false);
       setLectureLabel('');
@@ -1051,8 +1073,7 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
                             <Dropdown.Item onClick={onBack}>Edit Course</Dropdown.Item>
                             <Dropdown.Item onClick={addNewTopic}>Add Folder</Dropdown.Item>
                             <Dropdown.Item onClick={addUnassignedLecture}>Add Lecture</Dropdown.Item>
-                            {/* <Dropdown.Item href="javascript:void(0)">Add Page</Dropdown.Item> */}
-                            {/* <Dropdown.Item href="javascript:void(0)">Move</Dropdown.Item> */}
+                    
                             <Dropdown.Item href="javascript:void(0)">Delete</Dropdown.Item>
                           </Dropdown.Menu>
                         </Dropdown>
@@ -1060,113 +1081,141 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
                     </div>
                     {!hasLectures ? (
                       <>
-                        {topics.map((topic, topicIndex) => (
-                          <div className="folder-detail" key={topicIndex}>
-                            <div className="drop-box" onClick={() => toggleFolder(topicIndex)} style={{ cursor: 'pointer' }}>
-                              <h3>{topic.name}</h3>
-                              <div className={`folder-dropdown ${isOpen[topicIndex] ? 'rotated' : ''}`}>
-                                {/* add icons here::: */}
-                                <img src={Drop} alt="" />
-                              </div>
-                            </div>
+                        {/* Folders code start  */}
+                        <DragDropContext onDragEnd={handleDragEnd}>
+                          {topics.map((topic, topicIndex) => (
+                            <Droppable droppableId={`topic-${topicIndex}`} key={topicIndex}>
+                              {(provided) => (
+                                <div
+                                  className="folder-detail"
+                                  ref={provided.innerRef}
+                                  {...provided.droppableProps}
+                                >
+                                  {/* Topic Header */}
+                                  <div
+                                    className="drop-box"
+                                    onClick={() => toggleFolder(topicIndex)}
+                                    style={{ cursor: 'pointer' }}
+                                  >
+                                    <h3>{topic.name}</h3>
+                                    <div className={`folder-dropdown ${isOpen[topicIndex] ? 'rotated' : ''}`}>
+                                      <img src={Drop} alt="" />
+                                    </div>
+                                  </div>
 
-                            {/* {showMovePopup && (
-                              <div className="popup-backdrop">
-                                <div className="popup">
-                                  <h3>Move to Folder</h3>
-                                  <ul>
-                                    {topics.map((topic, index) => (
-                                      <li key={index} onClick={() => moveLecture(index)}>
-                                        {topic.name}
-                                      </li>
-                                    ))}
-                                  </ul>
-                                  <button className='btn btn-primary' onClick={() => setShowMovePopup(false)}>Cancel</button>
-                                </div>
-                              </div>
-                            )} */}
+                                  {/* Lectures */}
+                                  {isOpen[topicIndex] && (
+                                    <div className="detail-box">
+                                      <ul>
+                                        {topic.lectures.map((lecture, lectureIndex) => (
+                                          <Draggable
+                                            key={lecture.id}
+                                            draggableId={lecture.id.toString()}
+                                            index={lectureIndex}
+                                          >
+                                            {(provided) => (
+                                              <li
+                                                ref={provided.innerRef}
+                                                {...provided.draggableProps}
+                                                {...provided.dragHandleProps}
+                                              >
+                                                <a
+                                                  href="javascript:void(0)"
+                                                  onClick={() => loadLectureData(lecture)}
+                                                >
+                                                  {lecture.name ?? "ERROR"}
+                                                </a>
 
-                            {isOpen[topicIndex] && (
-                              <div className="detail-box">
-                                <ul>
-                                  {topic.lectures.map((lecture, lectureIndex) => (
-                                    <li key={lectureIndex} >
-                                      <a href="javascript:void(0)" onClick={() => loadLectureData(lecture)} >{lecture.name ?? "ERROR"}</a>
-                                      <div className="drop-box">
-                                        <Dropdown>
-                                          <Dropdown.Toggle id="dropdown-basic">
-                                            <div className="toggle-icon">
-                                              <img src={Ellips} alt="" onClick={() => {
-                                                setSelectedLecture(lectureIndex);
-                                              }} />
-                                            </div>
-                                          </Dropdown.Toggle>
-                                          <Dropdown.Menu>
-                                            {/* <Dropdown.Item href="javascript:void(0)" 
-                                            onClick={() => handleEditClick(lecture.id)}
-                                              >Edit</Dropdown.Item> */}
-                                            {isEditing ? (
-                                              <Dropdown.Item
-                                                href="javascript:void(0)"
-                                                onClick={() => {
-                                                  setPendingLectureId(lecture.id);
-                                                  setPublishLectureModel(true);
-                                                }}
-                                              >
-                                                Edit
-                                              </Dropdown.Item>
-                                            ) : (
-                                              <Dropdown.Item
-                                                href="javascript:void(0)"
-                                                onClick={() => handleEditClick(lecture.id)}
-                                              >
-                                                Edit
-                                              </Dropdown.Item>
+                                                <div className="drop-box">
+                                                  <Dropdown>
+                                                    <Dropdown.Toggle id="dropdown-basic">
+                                                      <div className="toggle-icon">
+                                                        <img
+                                                          src={Ellips}
+                                                          alt=""
+                                                          onClick={() => {
+                                                            setSelectedLecture(lectureIndex);
+                                                          }}
+                                                        />
+                                                      </div>
+                                                    </Dropdown.Toggle>
+                                                    <Dropdown.Menu>
+
+                                                      {isEditing ? (
+                                                        <Dropdown.Item
+                                                          href="javascript:void(0)"
+                                                          onClick={() => {
+                                                            setPendingLectureId(lecture.id);
+                                                            setPublishLectureModel(true);
+                                                          }}
+                                                        >
+                                                          Edit
+                                                        </Dropdown.Item>
+                                                      ) : (
+                                                        <Dropdown.Item
+                                                          href="javascript:void(0)"
+                                                          onClick={() => handleEditClick(lecture.id)}
+                                                        >
+                                                          Edit
+                                                        </Dropdown.Item>
+                                                      )}
+
+                                                      <Dropdown.Item
+                                                        onClick={() => duplicateLecture({
+                                                          lectureId: lecture.id,
+                                                          topicIndex,
+                                                          lectureIndex
+                                                        })}
+                                                      >
+                                                        Duplicate
+                                                      </Dropdown.Item>
+
+                                                      <Dropdown drop="right" as="div">
+                                                        <Dropdown.Toggle
+                                                          as="span"
+                                                          className="dropdown-item"
+                                                          style={{ cursor: 'pointer' }}
+                                                        >
+                                                          Move
+                                                        </Dropdown.Toggle>
+
+                                                        <Dropdown.Item
+                                                          onClick={() => handleLectureDeleteClick(lecture.id)}
+                                                        >
+                                                          Delete
+                                                        </Dropdown.Item>
+
+                                                        <Dropdown.Menu className="move-drop">
+                                                          {topics.map((moveTopic, i) => (
+                                                            <Dropdown.Item
+                                                              key={i}
+                                                              onClick={() => moveLecture(i)}
+                                                            >
+                                                              {moveTopic.name}
+                                                            </Dropdown.Item>
+                                                          ))}
+                                                        </Dropdown.Menu>
+                                                      </Dropdown>
+                                                    </Dropdown.Menu>
+                                                  </Dropdown>
+                                                </div>
+
+                                              </li>
                                             )}
+                                          </Draggable>
+                                        ))}
+                                        {provided.placeholder}
+                                      </ul>
+                                    </div>
+                                  )}
+                                </div>
+                              )}
+                            </Droppable>
+                          ))}
+                        </DragDropContext>
+                        {/* Folders Code End  */}
 
-                                            {/* <Dropdown.Item href="javascript:void(0)">Copy</Dropdown.Item> */}
-                                            <Dropdown.Item onClick={() => duplicateLecture({ lectureId: lecture.id, topicIndex, lectureIndex })}>
-                                              Duplicate
-                                            </Dropdown.Item>
-                                            <Dropdown drop="right" as="div">
-                                              {/* wrapper as a div so we get the submenu in the same "menu" */}
-                                              <Dropdown.Toggle
-                                                as="span"
-                                                className="dropdown-item"
-                                                style={{ cursor: 'pointer' }}
-                                              >
-                                                Move
-                                              </Dropdown.Toggle>
-                                              <Dropdown.Item
-                                                onClick={() => handleLectureDeleteClick(lecture.id)}
-                                              >
-                                                Delete</Dropdown.Item>
-                                              <Dropdown.Menu className='move-drop'>
-                                                {topics.map((topic, i) => (
-                                                  <Dropdown.Item
-                                                    key={i}
-                                                    onClick={() =>
-                                                      moveLecture(
-                                                        i
-                                                      )
-                                                    }
-                                                  >
-                                                    {topic.name}
-                                                  </Dropdown.Item>
-                                                ))}
-                                              </Dropdown.Menu>
-                                            </Dropdown>
-                                          </Dropdown.Menu>
-                                        </Dropdown>
-                                      </div>
-                                    </li>
-                                  ))}
-                                </ul>
-                              </div>
-                            )}
-                          </div>
-                        ))}
-
+                        {/* Lectures without folder  */}
                         {unassignedLectures.map((lecture, index) => (
                           <div className="drop-box" key={`unassigned-${index}`}>
                             <div className="detail-box">
@@ -1260,6 +1309,7 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
                             </div>
                           </div>
                         ))}
+                        {/* End Lectures without Folders  */}
 
                         {/* Show the Move Popup for unassigned lectures */}
                         {showMovePopup && selectedLecture && selectedLecture.topicIndex === null && (
