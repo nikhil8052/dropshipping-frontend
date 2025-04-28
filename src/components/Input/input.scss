@@ -139,6 +139,7 @@
 
     .ql-editor {
         min-height: 200px;
+        overflow-y: scroll;
     }
 
     .ql-editing {
@@ -195,6 +196,12 @@
 
 .ql-editor.ql-blank::before {
     color: #fff;
+}
+
+.quill-editor {
+    box-shadow: 0px 0px 14.86px 0px #0000000F;
+    border-radius: 5px;
+    overflow: hidden;
 }
 
 .box-row {
@@ -427,3 +434,18 @@
     background-color: #fff !important;
     padding: 0px 20px;
 }
+
+
+
+// Added by nikhil 
+
+.ql-editor iframe {
+    width: calc(100% + 2rem); /* or whatever padding .ql-editor has */
+    max-width: none;
+    margin-left: -1rem; /* half of added width */
+    margin-right: -1rem; /* half of added width */
+    height: auto;
+    aspect-ratio: 16/9;
+    display: block;
+    border: none;
+  }
