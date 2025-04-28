@@ -332,8 +332,8 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
     }
   };
 
-  const moveLectureDND = async (lectureID , topicID ) => {
-    
+  const moveLectureDND = async (lectureID, topicID) => {
+
     var formData = {
       // "name": lectureToMove.name,
       "lecture_id": lectureID,
@@ -354,7 +354,7 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
 
   const moveUnassignedLecture = async (unassignedIndex, targetTopicIndex) => {
     const lectureToMove = unassignedLectures[unassignedIndex];
-  
+
     // Add lecture to target topic
     const updatedTopics = [...topics];
 
@@ -691,7 +691,7 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
     const sourceTopicIndex = parseInt(source.droppableId.split('-')[1]);
     const destTopicIndex = parseInt(destination.droppableId.split('-')[1]);
     if (sourceTopicIndex === destTopicIndex && source.index === destination.index) {
-      return; 
+      return;
     }
     const newTopics = [...topics];
     const movedLecture = newTopics[sourceTopicIndex].lectures[source.index];
@@ -699,11 +699,14 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
     newTopics[sourceTopicIndex].lectures.splice(source.index, 1);
     // Add to destination
     newTopics[destTopicIndex].lectures.splice(destination.index, 0, movedLecture);
-    const folder_id = newTopics[destTopicIndex].id ; 
-    const lecture_id = movedLecture.id ;
+    const folder_id = newTopics[destTopicIndex].id;
+    const lecture_id = movedLecture.id;
     moveLectureDND(lecture_id, folder_id);
     setTopics(newTopics);
   };
+
+
+
 
 
 
@@ -1073,7 +1076,7 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
                             <Dropdown.Item onClick={onBack}>Edit Course</Dropdown.Item>
                             <Dropdown.Item onClick={addNewTopic}>Add Folder</Dropdown.Item>
                             <Dropdown.Item onClick={addUnassignedLecture}>Add Lecture</Dropdown.Item>
-                    
+
                             <Dropdown.Item href="javascript:void(0)">Delete</Dropdown.Item>
                           </Dropdown.Menu>
                         </Dropdown>

@@ -152,24 +152,28 @@ const Courses = () => {
     const getAllCourses = async () => {
         setLoading(true);
         try {
-            // const page = Math.floor(displayedCourses.length / itemsPerBatch) + 1;
-            // let constructedUrl = `${API_URL.SUPABASE_GET_ALL_COURSES}?search=${encodeURIComponent(search)}&page=${page}&limit=${itemsPerBatch}`;
-
-            let constructedUrl = `${API_URL.SUPABASE_GET_ALL_COURSES}?search=${encodeURIComponent(search)}`;
-
+            let constructedUrl = `${API_URL.GET_ALL_COURSES}?search=${encodeURIComponent(search)}`;
             if (role === 'STUDENT') {
                 constructedUrl += '&isEnrolled=true';
             }
-
-            if (coursesFilter && coursesFilter !== 'All Courses') {
-                const isActive = coursesFilter === 'Active Courses' ? true : false;
-                constructedUrl += `&isActive=${isActive}`;
+            if (coursesFilter && coursesFilter == 'Active Courses') {
+                constructedUrl += `&isActive=${true}`;
+            } else if (coursesFilter && coursesFilter == 'Inactive Courses') {
+                constructedUrl += `&isActive=false`;
+            } else if (coursesFilter && coursesFilter == 'Name A - Z') {
+                constructedUrl += `&sort_by=name_a_z`;
+            } else if (coursesFilter && coursesFilter == 'Name Z - A') {
+                constructedUrl += `&sort_by=name_z_a`;
+            } else if (coursesFilter && coursesFilter == 'Newly Added') {
+                constructedUrl += `&sort_by=latest`;
+            } else if (coursesFilter && coursesFilter == 'Old Entries') {
+                constructedUrl += `&sort_by=oldest`;
             }
 
+            console.log(constructedUrl, " constructedUrl ")
             const response = await axiosWrapper('GET', constructedUrl, {}, userToken);
             const { data } = response; // Assuming response contains all courses without pagination
 
-            console.log( data , " All Courses ")
             // Format the fetched data
             const formattedData = data.map((course) => {
                 const baseCourseData = {
@@ -177,14 +181,11 @@ const Courses = () => {
                     title: course?.title,
                     description: course?.description,
                     detail: course?.subtitle,
-                    // lectureNo: `Lectures: ${course?.lectures.length}`,
-                    lectureNo: `Lectures: 0`,
+                    lectureNo: `Lectures: ${course?.lectures.length}`,
                     archive: course?.isArchived,
-                    coachName: course?.moduleManager,
-                    // coachName: course?.moduleManager?.name,
-                    
-                    // enroll: course?.enrolledStudents.includes(userInfo?._id),
-                    _id: course?.id
+                    coachName: course?.moduleManager?.name,
+                    enroll: course?.enrolledStudents.includes(userInfo?._id),
+                    _id: course?._id
                 };
 
                 if (role === 'STUDENT' && course?.enrolledStudents.includes(userInfo?._id)) {
@@ -200,6 +201,7 @@ const Courses = () => {
 
             setAllCourses(uniqueCourses);
             setDisplayedCourses(uniqueCourses.slice(0, itemsPerBatch));
+            setItems(uniqueCourses.slice(0, itemsPerBatch).map(c => c._id));
             setHasMore(uniqueCourses.length > itemsPerBatch);
             setHasLoaded(true);
         } catch (error) {
@@ -209,7 +211,6 @@ const Courses = () => {
             setLoading(false);
         }
     };
-        
 
     const fetchMoreData = () => {
         if (loading) return; // Prevent multiple fetches
