@@ -214,7 +214,7 @@ const CourseCategory = ({ value = [], onChange, token }) => {
                     </Modal.Body>
                     <Modal.Footer>
                         <Button 
-                            className="text-black" 
+                            className="cancel-btn" 
                             onClick={() => setShowCategoryModal(false)}
                         >
                             Cancel

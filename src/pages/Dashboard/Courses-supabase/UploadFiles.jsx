@@ -593,7 +593,6 @@ const UploadFiles = ({ onNext, onBack, initialData, setStepComplete, updateCours
                                                 type="richTextEditor"
                                                 name="description"
                                                 label="Course Description"
-                                                placeholder="Enter Course Description"
                                                 modules={{
                                                     toolbar: TOOLBAR_CONFIG
                                                 }}

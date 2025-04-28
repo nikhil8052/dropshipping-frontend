@@ -1,5 +1,10 @@
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
 
+
+.addcourse-section.supabase * ,.coursemodal * {
+    font-family: "Montserrat", sans-serif !important;
+}
+
 .main-panel {
     background-color: #F3F4F6;
 
@@ -20,7 +25,7 @@
 
     span {
         font-weight: 600;
-        font-size: 19.13px;
+        font-size: 24px;
         color: #1D2026;
         line-height: 25.51px;
     }
@@ -101,7 +106,7 @@ fieldset {
     gap: 15px;
 
     .toggle-label {
-        font-size: 16px;
+        font-size: 18px;
         color: #6b7280;
     }
 
@@ -576,7 +581,7 @@ span.slect_span.selected {
 
 .subhead {
     font-weight: 600;
-    font-size: 14px;
+    font-size: 18px;
     color: #1D2026;
 }
 
@@ -627,7 +632,7 @@ span.slect_span.selected {
 
     h3 {
         font-weight: 600;
-        font-size: 12px;
+        font-size: 14px;
         line-height: 1.2;
         color: #1D2026;
         margin: 0;
@@ -649,7 +654,7 @@ span.slect_span.selected {
     li {
         list-style: none;
         font-weight: 500;
-        font-size: 11px;
+        font-size: 14px;
         text-transform: capitalize;
         color: #019ED8;
         background-color: #CCECF7;
@@ -797,7 +802,7 @@ body:has(.course-detail-tab) {
 .confirmation-modal:has(.add-link-form) .add-link-form label {
     text-align: left;
     font-weight: 400;
-    font-size: 14px;
+    font-size: 16px;
     color: #1D2026;
 }
 
@@ -812,7 +817,7 @@ body:has(.course-detail-tab) {
     right: 0;
     font-family: Inter;
     font-weight: 400;
-    font-size: 12px;
+    font-size: 14px;
     line-height: 19.13px;
     color: #E83F29;
 }
@@ -823,7 +828,7 @@ body:has(.course-detail-tab) {
     padding: 15px;
     font-family: Inter;
     font-weight: 400;
-    font-size: 12px;
+    font-size: 14px;
 }
 
 .confirmation-modal:has(.add-link-form) .modal-header {
@@ -967,7 +972,7 @@ label.form-label {
 
 .nwcat {
     border: 0 !important;
-    font-size: 12px;
+    font-size: 14px;
     margin-bottom: 6px;
 }
 
@@ -1064,7 +1069,7 @@ label.form-label {
 
 .course-left .dropdown-item {
     font-weight: 400;
-    font-size: 12px;
+    font-size: 14px;
     line-height: 1.4;
     padding: 6px 15px;
 }
@@ -1165,7 +1170,7 @@ label.form-label {
 
 .course-right .quill-editor .card-title {
     font-weight: 600;
-    font-size: 14px;
+    font-size: 18px;
     line-height: 1.2;
 }
 
@@ -1187,3 +1192,44 @@ label.form-label {
 .add-course-form.Course-form .form-group>div>div {
     padding: 0;
 }
+
+.modal .add-course-form .field-control {
+    padding: 0;
+    margin: 0;
+}
+
+.coursemodal .custom-button {
+    border-radius: 59px;
+    font-weight: 400;
+    padding: 15px 33px;
+    white-space: nowrap;
+    border: none;
+    font-family: Inter;
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 1.2;
+    letter-spacing: -0.008em;
+    text-align: center;
+    background-color: transparent !important;
+}
+
+.coursemodal .form-group input {
+    border: 1px solid #B1B6BF !important;
+}
+
+.coursemodal .Course-form label {
+    background-color: #fff;
+}
+
+.addcourse-section .formgroup input {
+    font-weight: 600;
+    color: #000 !important;
+    font-size: 20px;
+}
+
+.course-right:has(> form) {
+    background-color: #fff;
+    border-radius: 15px;
+    box-shadow: 0px 0px 14.86px 0px #0000000F;
+}
+
