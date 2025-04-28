@@ -6,7 +6,8 @@ import './input.scss';
 import ImageResize from 'quill-image-resize-module-react';
 Quill.register('modules/imageResize', ImageResize);
 import TextField from '@mui/material/TextField';
-
+import { Dropdown } from 'react-bootstrap';
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 const Block = Quill.import('blots/block');
 
@@ -22,6 +23,8 @@ const RichTextEditor = (props) => {
     const quillRef = useRef(null);
     const resourceList = props.resources || [];
     const [nameField, setNameField] = useState('');
+
+  
     useEffect(() => {
         setNameField(props.showNameFieldData || '');
     }, [props.showNameFieldData]);
@@ -59,8 +62,8 @@ const RichTextEditor = (props) => {
         //     parchment: Quill.import('parchment'),
         //     modules: ['Resize', 'DisplaySize','Toolbar'],
         // },
-        
-    }; 
+
+    };
     const FORMATS = [
         'header',
         'bold', 'italic', 'underline', 'strike',
@@ -85,14 +88,14 @@ const RichTextEditor = (props) => {
     // };
     const handleChange = (value) => {
         if (!quillRef.current || !quillRef.current.getEditor) return;
-    
+
         const quill = quillRef.current.getEditor();
         const editor = quill.root;
-    
+
         // Ensure all image widths and heights are inlined
         editor.querySelectorAll('img').forEach(img => {
             const width = img.width;
-            const mainWidth = img.data-width;
+            const mainWidth = img.data - width;
             const inlineWidth = img.style.width;
 
             const height = img.height;
@@ -103,14 +106,14 @@ const RichTextEditor = (props) => {
             // if(width) img.style.setProperty('width', '');
             if (width) img.setAttribute('width', width);
             // if (width) img.setAttribute('data-width', width);
-            
+
             // if (height) img.setAttribute('height', height);
             // if(width) img.style.setProperty('width', width + 'px');
             if (width) img.style.removeProperty('width');
 
             console.log(img);
         });
-    
+
         const finalHTML = editor.innerHTML;
         // console.warn(finalHTML);
         helpers.setValue(finalHTML); // Save clean value
@@ -120,13 +123,13 @@ const RichTextEditor = (props) => {
         const newName = e.target.value;
         setNameField(newName);
         if (props.onNameChange) {
-          props.onNameChange(newName);
+            props.onNameChange(newName);
         }
-      };
-      
-    
-    
-    
+    };
+
+
+
+
     useEffect(() => {
         const quill = quillRef.current.getEditor();
 
@@ -154,7 +157,7 @@ const RichTextEditor = (props) => {
             }
         };
     }, []);
-    
+
     return (
         <div className="quill-editor">
             <div id={`${props.id}`} >
@@ -174,55 +177,36 @@ const RichTextEditor = (props) => {
                 <button className="ql-image"></button>
                 <button className="ql-video"></button>
             </div>
-            {/* <ReactQuill
-                ref={quillRef}
-                value={field.value}
-                onChange={handleChange}
-                modules={{ toolbar: { container: `#${props.id}` } }}
-                className="field-quill-control"
-                formats={FORMATS}
-                placeholder={props.placeholder}
-            /> */}
+
             {props.showNameField && (
                 <>
-                {/* <TextField
-                    fullWidth
-                    name="name"
-                    label="Name"
-                    className="field-control name-field-editor"
-                    id="name-basic"
-                    type="text"
-                    value={nameField}
-                    onChange={handleNameChange}
-                    required
-                    autoComplete="off" 
-                /> */}
-                <TextField
-                    fullWidth
-                    name="name"
-                    label="Name"
-                    className="field-control name-field-editor"
-                    id="name-basic"
-                    type="text"
-                    value={nameField}
-                    onChange={handleNameChange}
-                    required
-                    autoComplete="off"
-                    variant="standard" // or "outlined"
-                    InputProps={{
-                        disableUnderline: true, // works for standard and filled variant
-                        classes: {
-                        notchedOutline: 'no-outline',
-                        }
-                    }}
-                    InputLabelProps={{
-                        shrink: true
-                    }}
+
+                    <TextField
+                        fullWidth
+                        name="name"
+                        label="Name"
+                        className="field-control name-field-editor"
+                        id="name-basic"
+                        type="text"
+                        value={nameField}
+                        onChange={handleNameChange}
+                        required
+                        autoComplete="off"
+                        variant="standard" // or "outlined"
+                        InputProps={{
+                            disableUnderline: true, // works for standard and filled variant
+                            classes: {
+                                notchedOutline: 'no-outline',
+                            }
+                        }}
+                        InputLabelProps={{
+                            shrink: true
+                        }}
                     />
                 </>
             )}
 
-            
+
             <ReactQuill
                 ref={quillRef}
                 value={field.value}
@@ -233,25 +217,8 @@ const RichTextEditor = (props) => {
                 placeholder={props.placeholder}
             />
 
-
-            {/* {props.showResources && (
-    <div className='card new-resource-main-card'>
-        <div className='card-body d-flex flex-column'>
-            <h5 className='card-title'>Resources</h5>
-            <div id="all_resources">
-                <div className="resource-card">
-                    <img src="https://dropship-api.ropstam.dev/uploads/1736169674625-courseThumbnail.jpeg" alt="Resource Image" className="resource-image" />
-                    <div className="resource-title">This is the Resource Title</div>
-                </div>
-                <div className="resource-card mt-3">
-                    <img src="https://dropship-api.ropstam.dev/uploads/1736169674625-courseThumbnail.jpeg" alt="Resource Image" className="resource-image" />
-                    <div className="resource-title">This is the Resource Title</div>
-                </div>
-            </div>
-        </div>
-    </div>
-)} */}
-            {props.showResources && resourceList.length>0 && (
+            {/* Resources List  */}
+            {props.showResources && resourceList.length > 0 && (
                 <div className='card new-resource-main-card '>
                     <div className='card-body d-flex flex-column'>
                         <h5 className='card-title'>Resources</h5>
@@ -267,16 +234,6 @@ const RichTextEditor = (props) => {
                 </div>
             )}
 
-
-
-            {/* <div className="card mt-4">
-                <div className="card-body d-flex justify-content-between">
-                    <h4>Add Resource </h4>
-                    <button type="button" className="btn btn-primary btn-sm fr" id="add-resource-btn">
-                        Add
-                    </button>
-                </div>
-            </div> */}
         </div>
     );
 };

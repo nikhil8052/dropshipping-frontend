@@ -189,6 +189,8 @@ const Courses = () => {
         // Calculate the completion percentage for this course
         return totalLectures > 0 ? (completedLectures / totalLectures) * 100 : 0;
     };
+
+    
     const handleDelete = async (courseId) => {
         setLoading(true);
         try {

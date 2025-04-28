@@ -38,7 +38,7 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
   const [publishLectureModel, setPublishLectureModel] = useState(false);
   const [pendingLectureId, setPendingLectureId] = useState(null);
 
-  
+
   const [modalShowSave, setModalShowSave] = useState(false);
   const [loadingCRUD, setLoadingCRUD] = useState(false);
 
@@ -60,20 +60,20 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
   const [lectureQuizzes, setLectureQuizzes] = useState([]);
   const [editQuiz, setEditQuiz] = useState(null); // null = add mode
   const [showDeleteModal, setShowDeleteModal] = useState({
-      show: false,
-      title: '',
-      isEditable: false,
-      quizId: null,
-      initialValues: null
+    show: false,
+    title: '',
+    isEditable: false,
+    quizId: null,
+    initialValues: null
   });
 
   const [showLectureDeleteModal, setShowLectureDeleteModal] = useState({
-        show: false,
-        title: '',
-        isEditable: false,
-        lectureId: null,
-        initialValues: null
-    });
+    show: false,
+    title: '',
+    isEditable: false,
+    lectureId: null,
+    initialValues: null
+  });
   const handleQuizSubmit = async (values, { setSubmitting, resetForm }) => {
     setSubmitting(true);
     const { question, options, correctAnswer } = values.quiz;
@@ -115,7 +115,7 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
       setSubmitting(false);
     }
   };
-  
+
 
 
   console.warn(initialData);
@@ -210,7 +210,7 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
     const response = await axiosWrapper('POST', url, formData, token);
 
     const resource = {
-      image: resourceFileUrl,
+      image: '/resource_image.svg',
       url: url,
       title: label,
     }
@@ -267,7 +267,7 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
       const originalLectureRes = await axiosWrapper('GET', API_URL.SUPABASE_GET_LECTURE.replace(':id', lectureId), null, token);
       const originalLecture = originalLectureRes?.data;
       if (!originalLecture) throw new Error("Lecture not found");
-  
+
       const newLecturePayload = {
         name: `(Copy) ${originalLecture.name}`,
         description: originalLecture.description,
@@ -275,13 +275,13 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
         courseId: originalLecture.courseId,
         folder_id: originalLecture.folder_id,
       };
-  
+
       const newLectureRes = await axiosWrapper('POST', API_URL.SUPABASE_ADD_LECTURE, newLecturePayload, token);
       const newLecture = newLectureRes.data[0];
       const newLectureId = newLecture.id;
-  
+
       if (!newLectureId) throw new Error("Failed to duplicate lecture");
-  
+
       // Duplicate quizzes
       const quizzes = originalLecture.quizzes || [];
       for (const quiz of quizzes) {
@@ -296,7 +296,7 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
         };
         await axiosWrapper('POST', API_URL.SUPABASE_ADD_QUIZ, quizPayload, token);
       }
-  
+
       // Duplicate resources
       const resources = originalLecture.resources || [];
       for (const res of resources) {
@@ -310,25 +310,25 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
         const resourceUrl = API_URL.SUPABASE_UPDATE_LECTURE_RESOURCE.replace(':id', newLectureId);
         await axiosWrapper('POST', resourceUrl, resourcePayload, token);
       }
-  
-    //   if(newLecture.folder_id !== '' ){
-    //   setTopics(prevTopics => {
-    //     const updated = [...prevTopics];
-    //     const lectures = updated[topicIndex].lectures || [];
-    //     updated[topicIndex].lectures = [
-    //       ...lectures.slice(0, lectureIndex + 1),
-    //       newLecture,
-    //       ...lectures.slice(lectureIndex + 1),
-    //     ];
-    //     return updated;
-    //   });
-    // }else{
-    //   setUnassignedLectures(prev => [
-    //     ...prev,
-    //     { name: newLecture.name, id: newLecture.id }
-    //   ]);
-    // }
-    dispatch({ type: types.ALL_RECORDS, data: { keyOfData: 'currentCourseUpdate', data: true } });
+
+      //   if(newLecture.folder_id !== '' ){
+      //   setTopics(prevTopics => {
+      //     const updated = [...prevTopics];
+      //     const lectures = updated[topicIndex].lectures || [];
+      //     updated[topicIndex].lectures = [
+      //       ...lectures.slice(0, lectureIndex + 1),
+      //       newLecture,
+      //       ...lectures.slice(lectureIndex + 1),
+      //     ];
+      //     return updated;
+      //   });
+      // }else{
+      //   setUnassignedLectures(prev => [
+      //     ...prev,
+      //     { name: newLecture.name, id: newLecture.id }
+      //   ]);
+      // }
+      dispatch({ type: types.ALL_RECORDS, data: { keyOfData: 'currentCourseUpdate', data: true } });
 
       setLoading(false);
       return newLecture;
@@ -337,8 +337,8 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
       setLoading(false);
     }
   };
-  
-  
+
+
   const moveUnassignedLecture = async (unassignedIndex, targetTopicIndex) => {
 
     console.log('unassignedIndex', unassignedIndex, 'targetTopicIndex', targetTopicIndex);
@@ -386,7 +386,7 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
   const validationSchema = Yup.object().shape({
     name: Yup.string().required('Name is required'),
   });
-  
+
   const quizValidationSchema = Yup.object().shape({
     quiz: Yup.object().shape({
       question: Yup.string().required('Question is required'),
@@ -424,13 +424,13 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
   };
   const handleDeleteQuizClick = (id) => {
     console.log(id);
-      setShowDeleteModal({
-          show: true,
-          title: 'Delete Quiz',
-          isEditable: false,
-          quizId: id,
-          initialValues: null
-      });
+    setShowDeleteModal({
+      show: true,
+      title: 'Delete Quiz',
+      isEditable: false,
+      quizId: id,
+      initialValues: null
+    });
   };
   //  const handleDeleteSubmit = async () => {
   //   console.log(showDeleteModal.quizId);
@@ -458,45 +458,55 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
   //     };
 
 
-    const handleDeleteSubmit = async () => {
-        const deletedQuizId = showDeleteModal.quizId;      
-        try {
-          setLoadingCRUD(true);
-          await axiosWrapper(
-            'DELETE',
-            `${API_URL.SUPABASE_DELETE_QUIZ.replace(':id', deletedQuizId)}`,
-            {},
-            token
-          );
-      
-          setLectureQuizzes((prevQuizzes) =>
-            prevQuizzes.filter((quiz) => quiz.id !== deletedQuizId)
-          );
-        } catch (error) {
-          console.error('Error deleting quiz:', error);
-          return;
-        } finally {
-          setLoadingCRUD(false);
-          setShowDeleteModal({
-            show: false,
-            title: 'Delete Lecture',
-            isEditable: false,
-            quizId: null,
-            initialValues: null
-          });
-        }
-      };
-      
-    
-      const handleCloseDeleteModal = () => {
-        setShowDeleteModal({
-            show: false,
-            title: 'Delete Quiz',
-            isEditable: false,
-            quizId: null,
-            initialValues: null
-        });
-    };
+  const handleSelect = (eventKey) => {
+    if (eventKey === 'add-transcript') {
+      setShowTranscriptEditor(true);
+    } else if (eventKey === 'add-resource') {
+      setModalShow(true);
+    } else if (eventKey === 'add-quiz') {
+      handleQuizPopupClick(true);
+    }
+  };
+
+  const handleDeleteSubmit = async () => {
+    const deletedQuizId = showDeleteModal.quizId;
+    try {
+      setLoadingCRUD(true);
+      await axiosWrapper(
+        'DELETE',
+        `${API_URL.SUPABASE_DELETE_QUIZ.replace(':id', deletedQuizId)}`,
+        {},
+        token
+      );
+
+      setLectureQuizzes((prevQuizzes) =>
+        prevQuizzes.filter((quiz) => quiz.id !== deletedQuizId)
+      );
+    } catch (error) {
+      console.error('Error deleting quiz:', error);
+      return;
+    } finally {
+      setLoadingCRUD(false);
+      setShowDeleteModal({
+        show: false,
+        title: 'Delete Lecture',
+        isEditable: false,
+        quizId: null,
+        initialValues: null
+      });
+    }
+  };
+
+
+  const handleCloseDeleteModal = () => {
+    setShowDeleteModal({
+      show: false,
+      title: 'Delete Quiz',
+      isEditable: false,
+      quizId: null,
+      initialValues: null
+    });
+  };
   const moveLecture = (targetTopicIndex) => {
     const updatedTopics = [...topics];
     const { topicIndex, lectureIndex } = selectedLecture;
@@ -518,7 +528,7 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
   const handlePopupClick = () => {
     setModalShow(!modalShow);
   };
-  const handlePopupClickRename = () =>{
+  const handlePopupClickRename = () => {
     setModalShowRename(!modalShowRename);
   };
 
@@ -593,8 +603,8 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
     return formData;
   };
 
-  const modelPopAction= () => {
-    if(pendingLectureId){
+  const modelPopAction = () => {
+    if (pendingLectureId) {
       handleEditClick(pendingLectureId);
       setPublishLectureModel(false);
       setPendingLectureId(null);
@@ -638,8 +648,8 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
       //     }))
       //   );
       // }
-      
-      
+
+
     } catch (err) {
       // handleError(err);
       console.log(err);
@@ -651,46 +661,46 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
   };
 
 
-const handleLectureDeleteClick = (id) => {
-  setShowLectureDeleteModal({
-        show: true,
-        title: 'Delete Lecture',
-        isEditable: false,
-        lectureId: id,
-        initialValues: null
+  const handleLectureDeleteClick = (id) => {
+    setShowLectureDeleteModal({
+      show: true,
+      title: 'Delete Lecture',
+      isEditable: false,
+      lectureId: id,
+      initialValues: null
     });
-};
+  };
 
-const handleLectureCloseDeleteModal = () => {
-  setShowLectureDeleteModal({
-        show: false,
-        title: 'Delete Lecture',
-        isEditable: false,
-        lectureId: null,
-        initialValues: null
+  const handleLectureCloseDeleteModal = () => {
+    setShowLectureDeleteModal({
+      show: false,
+      title: 'Delete Lecture',
+      isEditable: false,
+      lectureId: null,
+      initialValues: null
     });
-};
+  };
 
 
-const handleDeleteLecture = async () => {
-  try {
+  const handleDeleteLecture = async () => {
+    try {
       setLoadingCRUD(true);
       await axiosWrapper(
-          'DELETE',
-          `${API_URL.SUPABASE_DELETE_LECTURE.replace(':id', showLectureDeleteModal.lectureId)}`,
-          {},
-          token
+        'DELETE',
+        `${API_URL.SUPABASE_DELETE_LECTURE.replace(':id', showLectureDeleteModal.lectureId)}`,
+        {},
+        token
       );
       dispatch({ type: types.ALL_RECORDS, data: { keyOfData: 'currentCourseUpdate', data: true } });
 
       // if (showLectureDeleteModal.lectureId) {
       //   const deletedLectureId = String(showLectureDeleteModal.lectureId); // ensure consistent type
-      
+
       //   // Remove from unassigned lectures
       //   setUnassignedLectures(prevLectures =>
       //     prevLectures.filter(lecture => String(lecture.id) !== deletedLectureId)
       //   );
-      
+
       //   // Remove from topics
       //   setTopics(prevTopics =>
       //     prevTopics.map(folder => ({
@@ -699,34 +709,34 @@ const handleDeleteLecture = async () => {
       //     }))
       //   );
       // }
-      
-  } catch (error) {
+
+    } catch (error) {
       console.error('Error deleting lecture:', error);
-  } finally {
+    } finally {
       setLoadingCRUD(false);
       setShowLectureDeleteModal({
-          show: false,
-          title: 'Delete Lecture',
-          isEditable: false,
-          lectureId: null,
-          initialValues: null
+        show: false,
+        title: 'Delete Lecture',
+        isEditable: false,
+        lectureId: null,
+        initialValues: null
       });
-  }
-};
+    }
+  };
 
   const renameLecture = async (id, newTitle) => {
     if (!id || !newTitle) {
       console.warn('Lecture ID and new title are required to rename.');
       return;
     }
-  
+
     try {
       const payload = {
         name: newTitle,
       };
-  
+
       const url = API_URL.SUPABASE_UPDATE_LECTURE.replace(':id', id);
-  
+
       const response = await axiosWrapper('PUT', url, payload, token);
       console.log('Lecture renamed:', response.data);
       return response.data;
@@ -740,9 +750,9 @@ const handleDeleteLecture = async () => {
     if (!lectureLabel?.trim() || !selectedLectureId) {
       return;
     }
-  console.log(selectedLectureId);
+    console.log(selectedLectureId);
     const updated = await renameLecture(selectedLectureId, lectureLabel.trim());
-    
+
     if (updated) {
       // ✅ Update unassigned lectures
       setUnassignedLectures(prev =>
@@ -752,7 +762,7 @@ const handleDeleteLecture = async () => {
             : lecture
         )
       );
-    
+
       // ✅ Update inside folder (topics)
       setTopics(prevTopics =>
         prevTopics.map(folder => ({
@@ -764,7 +774,7 @@ const handleDeleteLecture = async () => {
           )
         }))
       );
-        
+
 
 
       // Close modal and reset form
@@ -772,9 +782,9 @@ const handleDeleteLecture = async () => {
       setLectureLabel('');
       setSelectedLectureId(null);
     }
-    
+
   };
-  
+
   const resourceFileChanged = async (e) => {
     const file = e.target.files[0];
     const formData = new FormData();
@@ -785,24 +795,24 @@ const handleDeleteLecture = async () => {
   }
 
   const handlePublishCourseModal = () => {
-      setPublishLectureModel(false);
+    setPublishLectureModel(false);
   };
-  
+
   return (
     <>
       {showDeleteModal.show && (
-          <ConfirmationBox
-              show={showDeleteModal.show}
-              onClose={handleCloseDeleteModal}
-              loading={loadingCRUD}
-              title="Delete Quiz"
-              body="Are you sure you want to delete this Quiz?"
-              onConfirm={handleDeleteSubmit}
-              customFooterClass="custom-footer-class"
-              nonActiveBtn="cancel-button"
-              activeBtn="delete-button"
-              activeBtnTitle="Delete"
-          />
+        <ConfirmationBox
+          show={showDeleteModal.show}
+          onClose={handleCloseDeleteModal}
+          loading={loadingCRUD}
+          title="Delete Quiz"
+          body="Are you sure you want to delete this Quiz?"
+          onConfirm={handleDeleteSubmit}
+          customFooterClass="custom-footer-class"
+          nonActiveBtn="cancel-button"
+          activeBtn="delete-button"
+          activeBtnTitle="Delete"
+        />
       )}
 
       {/* rename model ::: */}
@@ -841,18 +851,18 @@ const handleDeleteLecture = async () => {
         />
       )}
       {showLectureDeleteModal.show && (
-                <ConfirmationBox
-                    show={showLectureDeleteModal.show}
-                    onClose={handleLectureCloseDeleteModal}
-                    loading={loadingCRUD}
-                    title="Delete Lecture"
-                    body="Are you sure you want to delete this Lecture?"
-                    onConfirm={handleDeleteLecture}
-                    customFooterClass="custom-footer-class"
-                    nonActiveBtn="cancel-button"
-                    activeBtn="delete-button"
-                    activeBtnTitle="Delete"
-                />
+        <ConfirmationBox
+          show={showLectureDeleteModal.show}
+          onClose={handleLectureCloseDeleteModal}
+          loading={loadingCRUD}
+          title="Delete Lecture"
+          body="Are you sure you want to delete this Lecture?"
+          onConfirm={handleDeleteLecture}
+          customFooterClass="custom-footer-class"
+          nonActiveBtn="cancel-button"
+          activeBtn="delete-button"
+          activeBtnTitle="Delete"
+        />
       )}
 
       {loading ? (
@@ -914,7 +924,7 @@ const handleDeleteLecture = async () => {
             />
           )}
 
-        <Modal show={showQuizModal} onHide={() => setShowQuizModal(false)} size="lg" centered>
+          <Modal show={showQuizModal} onHide={() => setShowQuizModal(false)} size="lg" centered>
             <Modal.Body>
               <Formik
                 initialValues={{
@@ -1086,8 +1096,9 @@ const handleDeleteLecture = async () => {
                                         <Dropdown>
                                           <Dropdown.Toggle id="dropdown-basic">
                                             <div className="toggle-icon">
-                                              <img src={Ellips} alt=""  onClick={() => { setSelectedLecture(lectureIndex);
-}}/>
+                                              <img src={Ellips} alt="" onClick={() => {
+                                                setSelectedLecture(lectureIndex);
+                                              }} />
                                             </div>
                                           </Dropdown.Toggle>
                                           <Dropdown.Menu>
@@ -1098,7 +1109,7 @@ const handleDeleteLecture = async () => {
                                               <Dropdown.Item
                                                 href="javascript:void(0)"
                                                 onClick={() => {
-                                                  setPendingLectureId(lecture.id); 
+                                                  setPendingLectureId(lecture.id);
                                                   setPublishLectureModel(true);
                                                 }}
                                               >
@@ -1200,8 +1211,8 @@ const handleDeleteLecture = async () => {
                                           <Dropdown.Item
                                             href="javascript:void(0)"
                                             onClick={() => {
-                                              setPendingLectureId(lecture.id); 
-                                              setPublishLectureModel(true); 
+                                              setPendingLectureId(lecture.id);
+                                              setPublishLectureModel(true);
                                             }}
                                           >
                                             Edit
@@ -1222,16 +1233,16 @@ const handleDeleteLecture = async () => {
                                           Move
                                         </Dropdown.Item>
                                         <Dropdown.Item
-                                         onClick={() => duplicateLecture({ lectureId: lecture.id })}
+                                          onClick={() => duplicateLecture({ lectureId: lecture.id })}
 
-                                         >
+                                        >
                                           Duplicate</Dropdown.Item>
                                         <Dropdown.Item
                                           onClick={() => handleLectureDeleteClick(lecture.id)}
 
-                                         >
+                                        >
                                           Delete</Dropdown.Item>
-                                      {/* <Dropdown.Item 
+                                        {/* <Dropdown.Item 
                                         onClick={() => {
                                           setSelectedLectureId(lecture.id);
                                           setLectureLabel(lecture.title);
@@ -1242,7 +1253,7 @@ const handleDeleteLecture = async () => {
                                       </Dropdown.Item> */}
                                       </Dropdown.Menu>
                                     </Dropdown>
-                                    
+
                                   </div>
                                 </li>
                               </ul>
@@ -1296,26 +1307,10 @@ const handleDeleteLecture = async () => {
                           </Button>
                         </div>
                       </div> */}
-                      {(initialData?.lecturess?.length > 0 || initialData?.folders?.some(folder => folder.lectures?.length > 0)) ? (
-                        <>
-                          {/* Unassigned lectures */}
-                          {initialData.lecturess?.map((lecture) => (
-                            <div className="new-page-view" key={lecture.id}>
-                              <div className="course-right-header">
-                                <h2 className="subhead">{lecture?.name}</h2>
-                                <img
-                                  className="cursor-pointer"
-                                  src={PencilLine}
-                                  alt="Edit"
-                                  onClick={() => handleEditClick(lecture.id)}
-                                />
-                              </div>
-                            </div>
-                          ))}
-
-                          {/* Folder lectures */}
-                          {initialData.folders?.map((folder) =>
-                            folder.lectures?.map((lecture) => (
+                        {(initialData?.lecturess?.length > 0 || initialData?.folders?.some(folder => folder.lectures?.length > 0)) ? (
+                          <>
+                            {/* Unassigned lectures */}
+                            {initialData.lecturess?.map((lecture) => (
                               <div className="new-page-view" key={lecture.id}>
                                 <div className="course-right-header">
                                   <h2 className="subhead">{lecture?.name}</h2>
@@ -1327,21 +1322,37 @@ const handleDeleteLecture = async () => {
                                   />
                                 </div>
                               </div>
-                            ))
-                          )}
-                        </>
-                      ) : (
-                        <p className="no-lectures-message">
-                          You don’t have any lectures yet.{' '}
-                          <span
-                            onClick={() => addUnassignedLecture()}
-                            style={{ cursor: 'pointer', color: '#007bff' }}
-                          >
-                            Add
-                          </span>{' '}
-                          a new lecture to get started.
-                        </p>
-                      )}
+                            ))}
+
+                            {/* Folder lectures */}
+                            {initialData.folders?.map((folder) =>
+                              folder.lectures?.map((lecture) => (
+                                <div className="new-page-view" key={lecture.id}>
+                                  <div className="course-right-header">
+                                    <h2 className="subhead">{lecture?.name}</h2>
+                                    <img
+                                      className="cursor-pointer"
+                                      src={PencilLine}
+                                      alt="Edit"
+                                      onClick={() => handleEditClick(lecture.id)}
+                                    />
+                                  </div>
+                                </div>
+                              ))
+                            )}
+                          </>
+                        ) : (
+                          <p className="no-lectures-message">
+                            You don’t have any lectures yet.{' '}
+                            <span
+                              onClick={() => addUnassignedLecture()}
+                              style={{ cursor: 'pointer', color: '#007bff' }}
+                            >
+                              Add
+                            </span>{' '}
+                            a new lecture to get started.
+                          </p>
+                        )}
 
 
                       </>
@@ -1362,47 +1373,64 @@ const handleDeleteLecture = async () => {
                         onSubmit={handleSubmit}
                       >
                         {/* {({ isSubmitting, values, setFieldValue }) => ( */}
-                        {({ isSubmitting, handleSubmit, setFieldValue, values ,errors}) => (
-
+                        {({ isSubmitting, handleSubmit, setFieldValue, values, errors }) => (
+                          // richTextEditor for the lecure edit part 
                           <Form>
                             <Row>
                               <Col>
-                              <Input
-                                className="field-quill-control"
-                                type="richTextEditor"
-                                name="description"
-                                id="course_description"
-                                placeholder="Enter Course Description"
-                                showResources={true}
-                                showNameField={true}
-                                showNameFieldData={values?.name}
-                                onNameChange={(newName) => setFieldValue('name', newName)}
-                                resources={resources}
-                                modules={{ toolbar: TOOLBAR_CONFIG }}
-                                formats={FORMATS}
-                              />
-                              <ErrorMessage
-                                name="name"
-                                component="div"
-                                className="error"
-                              />
+                                <Input
+                                  className="field-quill-control"
+                                  type="richTextEditor"
+                                  name="description"
+                                  id="course_description"
+                                  placeholder="Enter Course Description"
+                                  showResources={true}
+                                  showNameField={true}
+                                  showNameFieldData={values?.name}
+                                  onNameChange={(newName) => setFieldValue('name', newName)}
+                                  resources={resources}
 
-                                {/* <Input
-                                    className="field-quill-control"
-                                    type="richTextEditor"
-                                    name="description"
-                                    id="course_description"
-                                    placeholder="Enter Course Description"
-                                    showResources={true}
-                                    resources={resources}
-                                    modules={modules} 
-                                    formats={FORMATS}
-                                /> */}
-
+                                  modules={{ toolbar: TOOLBAR_CONFIG }}
+                                  formats={FORMATS}
+                                />
+                                <ErrorMessage
+                                  name="name"
+                                  component="div"
+                                  className="error"
+                                />
                               </Col>
                             </Row>
+                            <div className="mt-5 d-flex gap-3 flex-wrap tab-buttons justify-content-between">
+                              <div className='card new-resource-main-card '>
+                                <div className='addAdditionalOptions'>
+                                  <Dropdown onSelect={handleSelect} >
+                                    <Dropdown.Toggle variant="primary" id="dropdown-basic">
+                                      Add
+                                    </Dropdown.Toggle>
+                                    <Dropdown.Menu>
+                                      <Dropdown.Item eventKey="add-resource">Add resources</Dropdown.Item>
+                                      <Dropdown.Item eventKey="add-transcript" >Add Transcript </Dropdown.Item>
+                                      <Dropdown.Item eventKey="add-quiz" >Add Quiz </Dropdown.Item>
+                                    </Dropdown.Menu>
+                                  </Dropdown>
+                                </div>
+                              </div>
+                              <div className='gap-3 d-flex'>
+                                <Button type="submit" className="submit-btn" disabled={isSubmitting}>
+                                  {isEditing ? 'Update Lecture' : 'Save & Next'}
+                                </Button>
+                                <Button type="submit" className="submit-btn"
+                                >
+                                  Save & Next
+                                </Button>
+                              </div>
 
-                            <div className="res">
+
+                            </div>
+
+
+
+                            {/* <div className="res">
                               <h2 className="subhead">Add Resources</h2>
                               <div className="drop-box">
                                 <Dropdown>
@@ -1413,27 +1441,64 @@ const handleDeleteLecture = async () => {
                                     <Dropdown.Item href="javascript:void(0)" onClick={handlePopupClick}>
                                       Add resource
                                     </Dropdown.Item>
-                                    {/* <Dropdown.Item href="javascript:void(0)" onClick={handlePopupClick}>
-                                      Add resource file
-                                    </Dropdown.Item> */}
+
                                   </Dropdown.Menu>
                                 </Dropdown>
                               </div>
-                            </div>
+                            </div> */}
 
-                            <div className="res">
+                            {/* <div className="res">
                               <h2 className="subhead">Add Quiz</h2>
 
-                                <div className="drop-box">
-                                  <div className="add-btn">
-                                    <a href="javascript:void(0)" onClick={handleQuizPopupClick}>Add New</a>
+                              <div className="drop-box">
+                                <div className="add-btn">
+                                  <a href="javascript:void(0)" onClick={handleQuizPopupClick}>Add New</a>
+                                </div>
+                              </div>
+                            </div> */}
+
+
+                            {/* Transcript section  */}
+                            {
+                              showTranscriptEditor ? (
+                                <div className={`res trans-res ${showTranscriptEditor ? 'showing-transcript' : ''}`}>
+                                  <h2 className="subhead">Add Transcript</h2>
+                                  <div className="transc">
+                                    <div className="drop-box">
+                                    </div>
+                                    <div
+                                      className={`transcript-section ${showTranscriptEditor ? '' : 'd-none'}`}
+                                    >
+                                      <Input
+                                        className="field-quill-control"
+                                        type="richTextEditor"
+                                        name="transcript"
+                                        id="transcript"
+                                        showResources={false}
+                                        modules={{ toolbar: TOOLBAR_CONFIG }}
+                                        formats={FORMATS}
+                                      />
+                                      <div className="mt-3 cancel-tans">
+                                        <button
+                                          type="button"
+                                          className="cancel-btnn"
+                                          onClick={() => setShowTranscriptEditor(false)}
+                                        >
+                                          Cancel
+                                        </button>
+                                      </div>
+                                    </div>
                                   </div>
                                 </div>
-                            </div>
-                                {/* Display quizzes if available */}
-                              {lectureQuizzes.length > 0 && (
-                                <div className="res">
-                               <div className="quizz-wrap" style={{ width: '100%' }}>
+                              ) : ""
+                            }
+
+                            {/* End Transcript Section  */}
+
+                            {/* Display quizzes if available */}
+                            {lectureQuizzes.length > 0 && (
+                              <div className="res">
+                                <div className="quizz-wrap" style={{ width: '100%' }}>
 
                                   {lectureQuizzes.map((quiz, index) => (
                                     <div className="course-right-header border-0" key={quiz.id}>
@@ -1446,199 +1511,43 @@ const handleDeleteLecture = async () => {
                                           onClick={() => handleQuizPopupClick(quiz)}
                                         />
                                         <img
-                                            className="cursor-pointer"
-                                            src={trashIconRed}
-                                            alt="Delete"
-                                            onClick={() => handleDeleteQuizClick(quiz.id)}
+                                          className="cursor-pointer"
+                                          src={trashIconRed}
+                                          alt="Delete"
+                                          onClick={() => handleDeleteQuizClick(quiz.id)}
                                         />
                                       </div>
                                     </div>
                                   ))}
                                 </div>
                               </div>
-                              )}
+                            )}
+                            {/* END QUIZES AVAILABLE  */}
 
 
-                            <div className={`res trans-res ${showTranscriptEditor ? 'showing-transcript' : ''}`}>
-                              <h2 className="subhead">Add Transcript</h2>
-                              <div className="transc">
-                                <div className="drop-box">
-                                  {!showTranscriptEditor ? (
-                                    <div className="add-btn">
-                                      <a href="javascript:void(0)" onClick={() => setShowTranscriptEditor(true)}>
-                                        Add New
-                                      </a>
-                                    </div>
-                                  ) : null}
-                                </div>
 
-                                <div
-                                  className={`transcript-section ${showTranscriptEditor ? '' : 'd-none'}`}
-                                >
-                                  <Input
-                                    className="field-quill-control"
-                                    type="richTextEditor"
-                                    name="transcript"
-                                    id="transcript"
-                                    showResources={false}
-                                    modules={{ toolbar: TOOLBAR_CONFIG }}
-                                    formats={FORMATS}
-                                  />
-                                  <div className="mt-3 cancel-tans">
-                                    <button
-                                      type="button"
-                                      className="cancel-btnn"
-                                      onClick={() => setShowTranscriptEditor(false)}
-                                    >
-                                      Cancel
-                                    </button>
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-
-                            <div className="mt-5 d-flex gap-3 flex-wrap tab-buttons justify-content-between">
-                              <div className='gap-3 d-flex'>
-                                <Button type="button" className="cancel-btn" onClick={onBack} >
-                                  Cancel
-                                </Button>
-
-                                <Button type="submit" className="submit-btn" disabled={isSubmitting}>
-                                  {isEditing ? 'Update Lecture' : 'Save & Next'}
-                                </Button>
-                              </div>
-                              <div>
-                                <Button type="submit" className="submit-btn"
-                                // onClick={() => handleSubmit()}
-                                >
-                                  Save & Next
-                                </Button>
-                              </div>
-                            </div>
 
                             {publishLectureModel && (
                               <ConfirmationBox
-                                  show={publishLectureModel}
-                                  onClose={modelPopAction}
-                                  onConfirm={handleSubmit}
-                                  title="Save Your lecture data ..."
-                                  body="You have unsaved changes. Would you like to save them before editing, or continue without saving?"
-                                  loading={loadingCRUD}
-                                  customFooterClass="custom-footer-class"
-                                  nonActiveBtn="cancel-btn"
-                                  activeBtn="submit-btn"
-                                  cancelButtonTitle="Proceed without Saving"
-                                  activeBtnTitle=" Save & Proceed"
+                                show={publishLectureModel}
+                                onClose={modelPopAction}
+                                onConfirm={handleSubmit}
+                                title="Save Your lecture data ..."
+                                body="You have unsaved changes. Would you like to save them before editing, or continue without saving?"
+                                loading={loadingCRUD}
+                                customFooterClass="custom-footer-class"
+                                nonActiveBtn="cancel-btn"
+                                activeBtn="submit-btn"
+                                cancelButtonTitle="Proceed without Saving"
+                                activeBtnTitle=" Save & Proceed"
                               />
                             )}
-                           
+
                           </Form>
                         )}
                       </Formik>
                     )}
-                    {/* new code end */}
-                    {/* <Formik
-                  initialValues={{
-                    description: description || '',
-                    transcript: '',
-                  }}
-                >
-                  {() => (
-                    <Form>
-                      <Row>
-                        <Col>
-                          <Input
-                            className="field-quill-control"
-                            type="richTextEditor"
-                            name="description"
-                            id="course_description"
-                            placeholder="Enter Course Description"
-                            showResources={true}
-                            modules={{ toolbar: TOOLBAR_CONFIG }}
-                            formats={FORMATS}
-                          />
-                        </Col>
-                      </Row>
 
-                      <div className="res">
-                        <h2 className="subhead">Add Resources</h2>
-                        <div className="drop-box">
-                          <Dropdown>
-                            <Dropdown.Toggle id="dropdown-basic">
-                              <div className="toggle-icon">Add</div>
-                            </Dropdown.Toggle>
-                            <Dropdown.Menu>
-                              <Dropdown.Item href="javascript:void(0)" onClick={handlePopupClick}>
-                                Add resource link
-                              </Dropdown.Item>
-                              <Dropdown.Item href="javascript:void(0)" onClick={handlePopupClick}>
-                                Add resource file
-                              </Dropdown.Item>
-                            </Dropdown.Menu>
-                          </Dropdown>
-                        </div>
-                      </div>
-
-                      <div className="res">
-                        <h2 className="subhead">Add Quiz</h2>
-                        <div className="drop-box">
-                          <div className="add-btn">
-                            <a href="javascript:void(0)" onClick={handleQuizPopupClick}>Add New</a>
-                          </div>
-                        </div>
-                      </div>
-
-                      <div className={`res trans-res ${showTranscriptEditor ? 'showing-transcript' : ''}`}>
-                        <h2 className="subhead">Add Transcript</h2>
-                        <div className="transc">
-                          <div className="drop-box">
-                            {!showTranscriptEditor ? (
-                              <div className="add-btn">
-                                <a href="javascript:void(0)" onClick={() => setShowTranscriptEditor(true)}>
-                                  Add New
-                                </a>
-                              </div>
-                            ) : null}
-                          </div>
-
-                          <div
-                            className={`transcript-section ${showTranscriptEditor ? '' : 'd-none'}`}
-                          >
-                            <Input
-                              className="field-quill-control"
-                              type="richTextEditor"
-                              name="transcript"
-                              id="transcript"
-                              placeholder="Add Transcript"
-                              showResources={false}
-                              modules={{ toolbar: TOOLBAR_CONFIG }}
-                              formats={FORMATS}
-                            />
-                            <div className="mt-3 cancel-tans">
-                              <button
-                                type="button"
-                                className="cancel-btnn"
-                                onClick={() => setShowTranscriptEditor(false)}
-                              >
-                                Cancel
-                              </button>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-
-                      <div className="mt-5 d-flex gap-3 flex-wrap tab-buttons">
-                        <Button type="button" className="cancel-btn" onClick={onBack} >
-                          Cancel
-                        </Button>
-                        <Button type="submit" className="submit-btn">
-                          Save & Next
-                        </Button>
-                      </div>
-                      
-                    </Form>
-                  )}
-                </Formik> */}
                   </div>
                 </div>
               </div>
