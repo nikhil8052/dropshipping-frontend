@@ -353,6 +353,8 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
 
 
   const moveUnassignedLecture = async (unassignedIndex, targetTopicIndex) => {
+
+    // console.log( unassignedIndex)
     const lectureToMove = unassignedLectures[unassignedIndex];
 
     // Add lecture to target topic
@@ -704,10 +706,6 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
     moveLectureDND(lecture_id, folder_id);
     setTopics(newTopics);
   };
-
-
-
-
 
 
   const handleDeleteLecture = async () => {
@@ -1192,7 +1190,7 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
                                                           {topics.map((moveTopic, i) => (
                                                             <Dropdown.Item
                                                               key={i}
-                                                              onClick={() => moveLecture(i)}
+                                                              onClick={() => moveUnassignedLecture(lectureIndex, i)}
                                                             >
                                                               {moveTopic.name}
                                                             </Dropdown.Item>
@@ -1233,16 +1231,8 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
                                         </div>
                                       </Dropdown.Toggle>
                                       <Dropdown.Menu>
-                                        {/* <Dropdown.Item href="javascript:void(0)" onClick={() => handleEditClick(lecture.id)}>Edit</Dropdown.Item> */}
                                         <Dropdown drop="right" as="div">
-                                          {/* wrapper as a div so we get the submenu in the same "menu" */}
-                                          {/* <Dropdown.Toggle
-                                            as="span"
-                                            className="dropdown-item"
-                                            style={{ cursor: 'pointer' }}
-                                          >
-                                            Move
-                                          </Dropdown.Toggle> */}
+
                                           <Dropdown.Menu className='move-drop'>
                                             {topics.map((topic, i) => (
                                               <Dropdown.Item
@@ -1278,12 +1268,13 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
                                           </Dropdown.Item>
                                         )}
 
-                                        <Dropdown.Item onClick={() => {
+                                        {/* <Dropdown.Item onClick={() => {
                                           setSelectedLecture({ topicIndex: null, lectureIndex: index }); // null because it's unassigned
                                           setShowMovePopup(true);
                                         }}>
                                           Move
-                                        </Dropdown.Item>
+                                        </Dropdown.Item> */}
+
                                         <Dropdown.Item
                                           onClick={() => duplicateLecture({ lectureId: lecture.id })}
 
@@ -1294,6 +1285,32 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
 
                                         >
                                           Delete</Dropdown.Item>
+                                        <Dropdown drop="right" as="div">
+                                          <Dropdown.Toggle
+                                            as="span"
+                                            className="dropdown-item"
+                                            style={{ cursor: 'pointer' }}
+                                          >
+                                            Move
+                                          </Dropdown.Toggle>
+
+                                          <Dropdown.Item
+                                            onClick={() => handleLectureDeleteClick(lecture.id)}
+                                          >
+                                            Delete
+                                          </Dropdown.Item>
+
+                                          <Dropdown.Menu className="move-drop">
+                                            {topics.map((moveTopic, i) => (
+                                              <Dropdown.Item
+                                                key={i}
+                                                onClick={() => moveLecture(i)}
+                                              >
+                                                {moveTopic.name}
+                                              </Dropdown.Item>
+                                            ))}
+                                          </Dropdown.Menu>
+                                        </Dropdown>
                                         {/* <Dropdown.Item 
                                         onClick={() => {
                                           setSelectedLectureId(lecture.id);
@@ -1452,11 +1469,47 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
                                 />
                               </Col>
                             </Row>
+                            {/* Transcript section  */}
+                            {
+                              showTranscriptEditor ? (
+                                <div className={`res trans-res ${showTranscriptEditor ? 'showing-transcript' : ''}`}>
+                                  <h2 className="subhead">Add Transcript</h2>
+                                  <div className="transc">
+                                    <div className="drop-box">
+                                    </div>
+                                    <div
+                                      className={`transcript-section ${showTranscriptEditor ? '' : 'd-none'}`}
+                                    >
+                                      <Input
+                                        className="field-quill-control"
+                                        type="richTextEditor"
+                                        name="transcript"
+                                        id="transcript"
+                                        showResources={false}
+                                        modules={{ toolbar: TOOLBAR_CONFIG }}
+                                        formats={FORMATS}
+                                      />
+                                      <div className="mt-3 cancel-tans">
+                                        <button
+                                          type="button"
+                                          className="cancel-btnn"
+                                          onClick={() => setShowTranscriptEditor(false)}
+                                        >
+                                          Cancel
+                                        </button>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                              ) : ""
+                            }
+
+                            {/* End Transcript Section  */}
                             <div className="mt-3 d-flex gap-3 flex-wrap tab-buttons  editor-buttons justify-content-between">
                               <div className='editor-button'>
                                 <div className='addAdditionalOptions'>
                                   <Dropdown onSelect={handleSelect} >
-                                    <Dropdown.Toggle  id="dropdown-basic">
+                                    <Dropdown.Toggle id="dropdown-basic">
                                       Add
                                     </Dropdown.Toggle>
                                     <Dropdown.Menu>
@@ -1510,42 +1563,6 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
                             </div> */}
 
 
-                            {/* Transcript section  */}
-                            {
-                              showTranscriptEditor ? (
-                                <div className={`res trans-res ${showTranscriptEditor ? 'showing-transcript' : ''}`}>
-                                  <h2 className="subhead">Add Transcript</h2>
-                                  <div className="transc">
-                                    <div className="drop-box">
-                                    </div>
-                                    <div
-                                      className={`transcript-section ${showTranscriptEditor ? '' : 'd-none'}`}
-                                    >
-                                      <Input
-                                        className="field-quill-control"
-                                        type="richTextEditor"
-                                        name="transcript"
-                                        id="transcript"
-                                        showResources={false}
-                                        modules={{ toolbar: TOOLBAR_CONFIG }}
-                                        formats={FORMATS}
-                                      />
-                                      <div className="mt-3 cancel-tans">
-                                        <button
-                                          type="button"
-                                          className="cancel-btnn"
-                                          onClick={() => setShowTranscriptEditor(false)}
-                                        >
-                                          Cancel
-                                        </button>
-                                      </div>
-                                    </div>
-                                  </div>
-                                </div>
-                              ) : ""
-                            }
-
-                            {/* End Transcript Section  */}
 
                             {/* Display quizzes if available */}
                             {lectureQuizzes.length > 0 && (
