@@ -10,13 +10,40 @@ import axiosWrapper from '../../../utils/api';
 import '../../../styles/Common.scss';
 import '../../../styles/Courses.scss';
 import { Helmet } from 'react-helmet';
-import GenericCard from '../../../components/GenericCard/GenericCardSupabase';
-// import GenericCard from '../../../components/GenericCard/GenericCard';
+import GenericCard from  '../../../components/GenericCard/GenericCardSupabase';
 import { precisionRound } from '../../../utils/common';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import * as types from '../../../redux/actions/actionTypes';
+import { DndContext, closestCenter, PointerSensor, useSensor, useSensors } from '@dnd-kit/core';
+import { arrayMove, SortableContext, useSortable, rectSortingStrategy } from '@dnd-kit/sortable';
+import { CSS } from '@dnd-kit/utilities';
 
 const Courses = () => {
+    const [items, setItems] = useState([1, 2, 3, 4, 5, 6, 7, 8, 9]);
+    const sensors = useSensors(
+        useSensor(PointerSensor, {
+            activationConstraint: {
+                distance: 5
+            }
+        })
+    );
+
+    const handleDragEnd = (event) => {
+        const { active, over } = event;
+        if (active.id !== over?.id) {
+            const oldIndex = items.indexOf(active.id);
+            const newIndex = items.indexOf(over.id);
+            const newItems = arrayMove(items, oldIndex, newIndex);
+            setItems(newItems);
+            const newDisplayedCourses = newItems
+                .map((id) => displayedCourses.find((course) => course._id === id))
+                .filter(Boolean); // Filter out any undefined
+
+            setDisplayedCourses(newDisplayedCourses);
+
+            console.log(newDisplayedCourses, ' All cpirses ');
+        }
+    };
 
     const [search, setSearch] = useState('');
     const [coursesFilter, setCoursesFilter] = useState('All Courses');
@@ -30,6 +57,31 @@ const Courses = () => {
     const { userInfo, userToken } = useSelector((state) => state?.auth);
     const role = userInfo?.role;
     const itemsPerBatch = 12; // Number of courses to load per scroll
+
+    function SortableItem({ course, id, onDelete }) {
+        const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({ id });
+
+        const style = {
+            transform: CSS.Transform.toString(transform),
+            transition: isDragging ? 'none' : 'transform 300ms ease', // Animate only others
+            cursor: isDragging ? 'grabbing' : 'grab',
+            zIndex: isDragging ? 999 : 'auto',
+            opacity: isDragging ? 0.7 : 1,
+            boxShadow: isDragging ? '0 8px 20px rgba(0, 161, 215, 0.16)' : 'none'
+        };
+
+        return (
+            <div ref={setNodeRef} style={style} {...attributes} {...listeners}>
+                <GenericCard
+                    key={course._id}
+                    {...course}
+                    onDelete={() => onDelete(course._id)}
+                    onChange={(e) => handleArchiveChange(e, course._id, course.archive)}
+                    canAccessCourse={true}
+                />
+            </div>
+        );
+    }
 
     // Debounce search input to prevent excessive API calls
     const debounce = (func, delay) => {
@@ -97,7 +149,7 @@ const Courses = () => {
             const response = await axiosWrapper('GET', constructedUrl, {}, userToken);
             const { data } = response; // Assuming response contains all courses without pagination
 
-            console.log( data , " All Courses ")
+            console.log(data, ' All Courses ');
             // Format the fetched data
             const formattedData = data.map((course) => {
                 const baseCourseData = {
@@ -110,7 +162,7 @@ const Courses = () => {
                     archive: course?.isArchived,
                     coachName: course?.moduleManager,
                     // coachName: course?.moduleManager?.name,
-                    
+
                     // enroll: course?.enrolledStudents.includes(userInfo?._id),
                     _id: course?.id
                 };
@@ -149,6 +201,7 @@ const Courses = () => {
         }
 
         setDisplayedCourses((prevCourses) => [...prevCourses, ...moreCourses]);
+        setItems(displayedCourses.map((c) => c._id));
         if (currentLength + moreCourses.length >= allCourses.length) {
             setHasMore(false);
         }
@@ -204,6 +257,7 @@ const Courses = () => {
             <Helmet>
                 <title>Courses | Dropship Academy</title>
             </Helmet>
+
             <div className="courses-button-wrapper">
                 <InputGroup>
                     <InputGroup.Text>
@@ -218,6 +272,7 @@ const Courses = () => {
                         placeholder="Search"
                     />
                 </InputGroup>
+
                 {role !== 'STUDENT' && (
                     <div className="d-flex gap-2 flex-wrap">
                         <DropdownButton
@@ -230,7 +285,15 @@ const Courses = () => {
                             defaultValue={coursesFilter}
                             className="dropdown-button"
                         >
-                            {['All Courses', 'Active Courses', 'Inactive Courses'].map((event) => (
+                            {[
+                                'All Courses',
+                                'Active Courses',
+                                'Inactive Courses',
+                                'Name A - Z',
+                                'Name Z - A',
+                                'Newly Added',
+                                'Old Entries'
+                            ].map((event) => (
                                 <Dropdown.Item
                                     onClick={(e) => handleCoursesFilter(e, event)}
                                     key={event}
@@ -250,22 +313,42 @@ const Courses = () => {
             {hasLoaded && allCourses.length === 0 ? (
                 <div className="no-data-wrapper">No Data Found.</div>
             ) : (
-                <InfiniteScroll
-                    className="custom-card-course"
-                    dataLength={displayedCourses.length}
-                    next={fetchMoreData}
-                    hasMore={hasMore}
-                >
-                    {displayedCourses.map((course) => (
-                        <GenericCard
-                            key={course._id}
-                            {...course}
-                            onDelete={handleDelete}
-                            onChange={(e) => handleArchiveChange(e, course._id, course.archive)}
-                            canAccessCourse={true} // Adjust logic as needed
-                        />
-                    ))}
-                </InfiniteScroll>
+                <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
+                    <SortableContext items={displayedCourses.map((c) => c._id)} strategy={rectSortingStrategy}>
+                        <InfiniteScroll
+                            className="custom-card-course"
+                            dataLength={displayedCourses.length}
+                            next={fetchMoreData}
+                            hasMore={hasMore}
+                            loader={<p style={{ textAlign: 'center' }}>Loading more courses...</p>}
+                        >
+                            {displayedCourses.map((course) => (
+                                <SortableItem
+                                    key={course._id}
+                                    course={course}
+                                    onDelete={handleDelete}
+                                    id={course._id}
+                                />
+                            ))}
+                        </InfiniteScroll>
+                    </SortableContext>
+                </DndContext>
+                // <InfiniteScroll
+                //     className="custom-card-course"
+                //     dataLength={displayedCourses.length}
+                //     next={fetchMoreData}
+                //     hasMore={hasMore}
+                // >
+                //     {displayedCourses.map((course) => (
+                //         <GenericCard
+                //             key={course._id}
+                //             {...course}
+                //             onDelete={handleDelete}
+                //             onChange={(e) => handleArchiveChange(e, course._id, course.archive)}
+                //             canAccessCourse={true} // Adjust logic as needed
+                //         />
+                //     ))}
+                // </InfiniteScroll>
             )}
         </div>
     );
