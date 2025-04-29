@@ -489,9 +489,12 @@ background-color: transparent !important;
 }
 
 .main-panel:has(.course-section) .generic-card {
-    border: 0.5px solid rgb(0 163 214 / 44%);
+    // border: 0.5px solid rgb(0 163 214 / 44%);
+    border:  1px solid rgb(228, 228, 228)
 }
-
+.main-panel:has(.course-section) .generic-card:hover {
+box-shadow: rgba(60, 64, 67, 0.32) 0px 1px 2px, rgba(60, 64, 67, 0.15) 0px 2px 6px, rgba(0, 0, 0, 0.1) 0px 1px 8px;
+}
 // .main-panel:has(.course-section) .course-section {
 //     border: 0.5px solid rgb(0 172 212 / 58%);
 //     padding: 30px 30px 0px;

@@ -335,7 +335,9 @@ const Courses = () => {
                                     height: '200px',
                                     cursor: 'pointer',
                                     height: '100%',
+                                    padding: '20px 0px',
                                     gap: '10px'
+
                                 }}
                             >
                                 <img

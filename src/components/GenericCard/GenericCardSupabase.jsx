@@ -11,6 +11,7 @@ import ConfirmationBox from '../ConfirmationBox/ConfirmationBox';
 import { useState } from 'react';
 import { decode } from 'he';
 import Edit from '../../assets/icons/edit2.svg';
+import Edit2 from '../../assets/icons/Dropdown.svg';
 import 'react-tooltip/dist/react-tooltip.css';
 import { Tooltip } from 'react-tooltip';
 import * as types from '../../redux/actions/actionTypes';
@@ -75,13 +76,48 @@ const GenericCard = ({
     return (
         <>
             <Card className="generic-card">
-                {/* {role === 'admin' && (
-                    <div className='delete-box'>
-                    <button type="button" className="delete-icon-btn" onClick={handleDeleteClick} data-tooltip-id="my-tooltip" data-tooltip-content="Delete Course" >
-                            <img src={deleteIcon} alt="Delete" className="delete-icon" />
-                        </button>
-                    </div>
-                      )} */}
+                <Dropdown align="end">
+                    <Dropdown.Toggle variant="light" className="action-dropdown-toggle" id="dropdown-basic">
+                        <img src={Edit2} alt="" />
+                    </Dropdown.Toggle>
+                    <Dropdown.Menu>
+                        <Dropdown.Item
+                            onClick={(e) => {
+                                e.stopPropagation();
+
+                                dispatch({
+                                    type: types.ALL_RECORDS,
+                                    data: { keyOfData: 'currentCourse', data: rest?._id }
+                                });
+
+                                navigate(
+                                    role === 'student' && enroll && canAccessCourse
+                                        ? `/${role}/courses-supabase/enrolled-course/${createSlug(title)}`
+                                        : `/${role}/courses-supabase/details/${createSlug(title)}`
+                                );
+                            }}
+                        >
+                            View
+                        </Dropdown.Item>
+
+                        <Dropdown.Item
+                        onClick={(e) => {
+                            e.stopPropagation();
+
+                            dispatch({
+                                type: types.ALL_RECORDS,
+                                data: { keyOfData: 'currentCourse', data: rest?._id }
+                            });
+
+                            navigate(
+                                role === 'student' && enroll && canAccessCourse
+                                    ? `/${role}/courses-supabase/enrolled-course/${createSlug(title)}`
+                                    : `/${role}/courses-supabase/edit`
+                            );
+                        }}>Edit</Dropdown.Item>
+                        <Dropdown.Item onClick={handleDeleteClick}> Delete </Dropdown.Item>
+                    </Dropdown.Menu>
+                </Dropdown>
                 <div
                     className="image-box cursor-pointer"
                     onClick={(e) => {
@@ -103,7 +139,7 @@ const GenericCard = ({
                     }}
                 >
                     <div className="image-container">
-                        <Card.Img loading="lazy" variant="top" src={img} className="card-image" />
+                        <Card.Img loading="lazy" variant="top" src={img}  />
                         {/* {role === 'admin' && (
                         <button type="button" className="delete-icon-btn" onClick={handleDeleteClick}>
                             <img src={deleteIcon} alt="Delete" className="delete-icon" />

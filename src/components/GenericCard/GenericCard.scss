@@ -6,7 +6,7 @@
     width: 100%;
     display: flex;
     flex-direction: column;
-     border-radius: 10px;
+    border-radius: 10px;
     justify-content: space-between;
     border: none;
     position: relative;
@@ -14,10 +14,12 @@
     transition: all 0.5s ease;
     background-color: #FFFFFF1A;
     color: #fff;
+
     &:hover {
-            // box-shadow: rgb(0 161 215 / 55%) 0px 1px 2px, rgb(1 162 216 / 49%) 0px 2px 6px, rgb(0 159 214 / 57%) 0px 1px 8px;
-            box-shadow: rgb(0 161 215 / 16%) 0px 9px 25px;
+        // box-shadow: rgb(0 161 215 / 55%) 0px 1px 2px, rgb(1 162 216 / 49%) 0px 2px 6px, rgb(0 159 214 / 57%) 0px 1px 8px;
+        box-shadow: rgb(0 161 215 / 16%) 0px 9px 25px;
     }
+
     .card-image {
         object-fit: cover;
         border-top-left-radius: 15px;
@@ -60,10 +62,12 @@
             background-color: $info-color !important;
             border-color: transparent;
         }
+
         .form-check-input:not(:checked) {
             border-color: rgba(233, 234, 240, 1) !important;
             color: red;
         }
+
         .form-check-input:focus {
             box-shadow: none;
             border-color: none;
@@ -75,7 +79,8 @@
         display: flex;
         flex-direction: column;
         justify-content: space-between;
-            padding: 1rem !important;
+        padding: 1rem !important;
+
         .card-title {
             font-size: 1.25rem;
             font-weight: bold;
@@ -93,6 +98,7 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
+
             span {
                 font-size: 0.75rem;
                 font-family: Inter;
@@ -107,14 +113,17 @@
             background-color: #34c759;
         }
     }
+
     .enroll-icon {
         position: absolute;
         top: 0px;
         left: 0px;
+
         img {
             width: 88px;
             height: 38px;
         }
+
         p {
             position: absolute;
             top: 7px;
@@ -131,8 +140,31 @@
     z-index: 99;
     display: flex;
     justify-content: right;
-    width: 40px;
-    right: 0;
+    right: 5px;
+    top: 5px;
+    border-radius: 50%;
+    z-index: 9;
+    opacity: 0;
+    transition: all 0.5s ease-in;
+}
+
+.generic-card:hover .dropdown {
+    opacity: 1;
+}
+
+.generic-card .dropdown button {
+    padding: 0px;
+    background-color: transparent !important;
+    border: 0;
+    cursor: pointer !important;
+}
+
+.generic-card .dropdown button {
+    padding: 0px;
+}
+
+.generic-card .dropdown button img {
+    max-width: 30px;
 }
 
 .generic-card {
@@ -181,7 +213,50 @@
 
 .generic-card * {
     cursor: inherit !important;
-  }
+}
+
+.generic-card .dropdown button {
+    padding: 0px;
+}
+
+.generic-card .dropdown button:after {
+    display: none;
+}
+
+.generic-card .dropdown-menu {
+    border: 1px solid rgb(228, 228, 228);
+    box-shadow: rgba(60, 64, 67, 0.32) 0px 1px 2px, rgba(60, 64, 67, 0.15) 0px 2px 6px, rgba(0, 0, 0, 0.1) 0px 1px 8px;
+}
+
+.generic-card .dropdown-item {
+    padding: 10px 15px;
+    font-weight: 500;
+    cursor: pointer !important;
+}
+
+.image-box {
+    display: flex;
+    flex-direction: column;
+    justify-content: end;
+    height: 100%;
+    gap: 0px;
+}
 
 
-  
+.image-container,
+.card-body {
+    flex: 1 1 40%;
+    max-height: 40%;
+    overflow: hidden;
+}
+
+.generic-card .image-container {
+    flex: 1 1 60%;
+    max-height: 60%;
+}
+
+.generic-card .card-body {
+    justify-content: end;
+    background-color: #fff;
+}
+
