@@ -3,8 +3,8 @@ import 'react-quill/dist/quill.snow.css';
 import { useField } from 'formik';
 import { useRef, useEffect, useState } from 'react';
 import './input.scss';
-import ImageResize from 'quill-image-resize-module-react';
-Quill.register('modules/imageResize', ImageResize);
+// import ImageResize from 'quill-image-resize-module-react';
+// Quill.register('modules/imageResize', ImageResize);
 import TextField from '@mui/material/TextField';
 import { Dropdown } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -24,7 +24,7 @@ const RichTextEditor = (props) => {
     const resourceList = props.resources || [];
     const [nameField, setNameField] = useState('');
 
-  
+
     useEffect(() => {
         setNameField(props.showNameFieldData || '');
     }, [props.showNameFieldData]);
@@ -58,11 +58,11 @@ const RichTextEditor = (props) => {
     };
     const modules = {
         toolbar: { container: `#${props.id}` },
-        imageResize: {
-          parchment: Quill.import('parchment'),
-          modules: ['Resize', 'DisplaySize', 'Toolbar'],
-        },
-      };
+        // imageResize: {
+        //     parchment: Quill.import('parchment'),
+        //     modules: ['Resize', 'DisplaySize', 'Toolbar'],
+        // },
+    };
     const FORMATS = [
         'header',
         'bold', 'italic', 'underline', 'strike',
@@ -128,86 +128,57 @@ const RichTextEditor = (props) => {
 
 
 
-
-    useEffect(() => {
-        const quill = quillRef.current.getEditor();
-
-        const handleAddResource = () => {
-            const html = `
-             <div class="resource-card mt-2">
-                            <img src="https://dropship-api.ropstam.dev/uploads/1736169674625-courseThumbnail.jpeg" alt="Resource Image" class="resource-image" />
-                            <div class="resource-title">This is the Resource Title</div>
-                        </div>
-            `;
-
-            document.getElementById('all_resources').innerHTML += html;
-
-        };
-
-        const button = document.getElementById('add-resource-btn');
-        if (button) {
-            button.addEventListener('click', handleAddResource);
-        }
-
-        // Cleanup on unmount
-        return () => {
-            if (button) {
-                button.removeEventListener('click', handleAddResource);
-            }
-        };
-    }, []);
-    
     useEffect(() => {
         const quill = quillRef.current?.getEditor();
         if (!quill) return;
-      
+
         let overlayEl = null;
         let isOverlayVisible = false;
-      
-        const checkTooltip = () => {
-          const tooltip = quill.theme?.tooltip;
-          if (!tooltip || !tooltip.root) return;
-      
-          const root = tooltip.root;
-          const input = root.querySelector('input');
-      
-          const isEditing = root.classList.contains('ql-editing');
-          const isHidden = root.classList.contains('ql-hidden');
-          const isVideoInput = input?.placeholder === 'Embed URL';
-      
-          const shouldShowOverlay = isEditing && isVideoInput && !isHidden;
 
-          if (shouldShowOverlay && !isOverlayVisible) {
-            if (!overlayEl) {
-              overlayEl = document.createElement('div');
-              overlayEl.id = 'ql-video-overlay';
-              overlayEl.className = 'ql-video-overlay';
-              document.body.appendChild(overlayEl);
-              // delay adding the 'show' class to trigger transition
-              requestAnimationFrame(() => {
-                overlayEl?.classList.add('show');
-              });
+        const checkTooltip = () => {
+            const tooltip = quill.theme?.tooltip;
+            if (!tooltip || !tooltip.root) return;
+
+            const root = tooltip.root;
+            const input = root.querySelector('input');
+
+            const isEditing = root.classList.contains('ql-editing');
+            const isHidden = root.classList.contains('ql-hidden');
+            const isVideoInput = input?.placeholder === 'Embed URL';
+
+            const shouldShowOverlay = isEditing && isVideoInput && !isHidden;
+
+            if (shouldShowOverlay && !isOverlayVisible) {
+                if (!overlayEl) {
+                    overlayEl = document.createElement('div');
+                    overlayEl.id = 'ql-video-overlay';
+                    overlayEl.className = 'ql-video-overlay';
+                    document.body.appendChild(overlayEl);
+                    // delay adding the 'show' class to trigger transition
+                    requestAnimationFrame(() => {
+                        overlayEl?.classList.add('show');
+                    });
+                }
+                isOverlayVisible = true;
+            } else if ((!shouldShowOverlay || isHidden) && isOverlayVisible) {
+                overlayEl?.classList.remove('show');
+                setTimeout(() => {
+                    overlayEl?.remove();
+                    overlayEl = null;
+                }, 300); // match transition time
+                isOverlayVisible = false;
             }
-            isOverlayVisible = true;
-          } else if ((!shouldShowOverlay || isHidden) && isOverlayVisible) {
-            overlayEl?.classList.remove('show');
-            setTimeout(() => {
-              overlayEl?.remove();
-              overlayEl = null;
-            }, 300); // match transition time
-            isOverlayVisible = false;
-          }
-        
+
         };
-      
+
         const interval = setInterval(checkTooltip, 200);
-      
+
         return () => {
-          clearInterval(interval);
-          if (overlayEl) overlayEl.remove();
+            clearInterval(interval);
+            if (overlayEl) overlayEl.remove();
         };
-      }, []);
-      
+    }, []);
+
     return (
         <div className="quill-editor">
             <div id={`${props.id}`} >
@@ -223,9 +194,14 @@ const RichTextEditor = (props) => {
                 <button className="ql-list" value="ordered"></button>
                 <button className="ql-list" value="bullet"></button>
                 <button className="ql-blockquote"></button>
-                <button className="ql-link"></button>
-                <button className="ql-image"></button>
-                <button className="ql-video"></button>
+                {props.name !== 'transcript' && (
+                    <>
+                        <button className="ql-link"></button>
+                        <button className="ql-image"></button>
+                        <button className="ql-video"></button>
+                    </>
+                )}
+
             </div>
 
             {props.showNameField && (
