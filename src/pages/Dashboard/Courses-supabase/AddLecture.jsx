@@ -20,6 +20,7 @@ import { API_URL } from '../../../utils/apiUrl';
 import Loading from '@components/Loading/Loading';
 import { stripHtmlTags } from '../../../utils/utils';
 import PencilLine from '../../../assets/icons/PencilLine.svg';
+import PencilEdit from  '../../../assets/icons/PencilLine2.svg';
 import trashIconRed from '../../../assets/icons/Trash-rename.svg';
 import * as types from '../../../redux/actions/actionTypes';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
@@ -1393,12 +1394,14 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
                                                             <div className="new-page-view" key={lecture.id}>
                                                                 <div className="course-right-header">
                                                                     <h2 className="subhead">{lecture?.name}</h2>
-                                                                    <img
-                                                                        className="cursor-pointer"
-                                                                        src={PencilLine}
-                                                                        alt="Edit"
-                                                                        onClick={() => handleEditClick(lecture.id)}
-                                                                    />
+                                                                    <div className="img-box cursor-pointer" onClick={() => handleEditClick(lecture.id)} >
+                                                                        <img
+                                                                            
+                                                                            src={PencilEdit}
+                                                                            alt="Edit"
+                                                                            
+                                                                        />
+                                                                        </div>
                                                                 </div>
                                                             </div>
                                                         ))}
@@ -1409,12 +1412,14 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
                                                                 <div className="new-page-view" key={lecture.id}>
                                                                     <div className="course-right-header">
                                                                         <h2 className="subhead">{lecture?.name}</h2>
+                                                                        <div className="img-box">
                                                                         <img
                                                                             className="cursor-pointer"
-                                                                            src={PencilLine}
+                                                                            src={PencilEdit}
                                                                             alt="Edit"
                                                                             onClick={() => handleEditClick(lecture.id)}
                                                                         />
+                                                                        </div>
                                                                     </div>
                                                                 </div>
                                                             ))
