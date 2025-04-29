@@ -1312,6 +1312,25 @@ label.form-label {
     margin: 0 !important;
 }
 
+ .editable-input {
+    background-color: #656c6d17 !important;
+    padding: 7px;
+    border-radius: 5px;
+    width: 100%;
+}
+
+.detail-box li a {
+    word-break: break-word;
+}
+
+.editable-text {
+    word-break: break-word;
+    cursor: pointer;
+    padding: 2px 5px;
+    border-radius: 3px;
+    transition: background-color 0.2s;
+  }
+  
 @media only screen and (max-width:991px) {
     .access-container {
         flex-wrap: wrap;
@@ -1505,7 +1524,5 @@ label.form-label {
     }
 
 }
-.detail-box li a {
-    word-break: break-word;
-}
+
 

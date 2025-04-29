@@ -171,12 +171,11 @@ const CourseCategory = ({ value = [], onChange, token }) => {
             </div>
             {/* Add New Category Modal */}
             <Modal show={showCategoryModal} onHide={() => setShowCategoryModal(false)} centered className="coursemodal">
-               
-                    <Modal.Header closeButton>
-                        <Modal.Title>Add New Category</Modal.Title>
-                    </Modal.Header>
-                    <Modal.Body>
-                    <div className='add-course-form Course-form' style={{ paddingTop: '0px' }}>
+                <Modal.Header closeButton>
+                    <Modal.Title>Add New Category</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    <div className="add-course-form Course-form" style={{ paddingTop: '0px' }}>
                         <div className="form-group">
                             {/* <label>Category Name</label> */}
                             {/* <input
@@ -208,17 +207,13 @@ const CourseCategory = ({ value = [], onChange, token }) => {
                                 helperText={`${newCategoryName.length || 0}/80`}
                                 fullWidth
                             />
-
                         </div>
-                        </div>
-                    </Modal.Body>
-                    <Modal.Footer>
-                        <Button 
-                            className="cancel-btn" 
-                            onClick={() => setShowCategoryModal(false)}
-                        >
-                            Cancel
-                        </Button>
+                    </div>
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button className="cancel-btn" onClick={() => setShowCategoryModal(false)}>
+                        Cancel
+                    </Button>
 
                     <Button
                         className="submit-btn"

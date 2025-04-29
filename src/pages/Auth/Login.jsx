@@ -12,7 +12,7 @@ import Footer from './Footer';
 import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import './auth.scss';
-import Rightloginimg from '@images/rightimg2.png'
+import Rightloginimg from '@images/rightimg2.png';
 
 const Login = () => {
     const dispatch = useDispatch();
@@ -73,7 +73,7 @@ const Login = () => {
                 <div className="login-page-section">
                     <div className="login-page">
                         <LoginLeftSec />
-                        <div className='login-center'>
+                        <div className="login-center">
                             <div className="auth-form-wrapper">
                                 {/* <div className='left-img col-md-6'>
                                  <img src={Rightloginimg} alt="" />
@@ -129,12 +129,11 @@ const Login = () => {
                                             </FormikForm>
                                         )}
                                     </Formik>
-                                    
                                 </div>
                             </div>
                         </div>
-                        <div className='copyright'>
-                        <Footer />
+                        <div className="copyright">
+                            <Footer />
                         </div>
                     </div>
                 </div>

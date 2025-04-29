@@ -30,7 +30,6 @@ import Loading from '@components/Loading/Loading';
 import BasicInformation from './FirstFormStep';
 
 const AddNewCourse = () => {
-
     const location = useLocation();
     const navigate = useNavigate();
     const dispatch = useDispatch();
@@ -49,7 +48,6 @@ const AddNewCourse = () => {
     const [subtitle, setSubtitle] = useState('');
     const [description, setDescription] = useState('');
 
-  
     const [courseData, setCourseData] = useState({
         title: '',
         subtitle: '',
@@ -80,7 +78,6 @@ const AddNewCourse = () => {
         }
     };
     const handleTabChange = (key) => {
-
         // console.log( key , " THI IS THEKLEY")
         if (courseId) {
             setActiveKey(key);
@@ -90,8 +87,6 @@ const AddNewCourse = () => {
                 (key === 'upload-files' && stepsCompleted.step1) ||
                 (key === 'publish-course' && stepsCompleted.step1 && stepsCompleted.step2)
             ) {
-
-
                 setActiveKey(key);
             }
         }
@@ -123,7 +118,6 @@ const AddNewCourse = () => {
     // ///////////////// APi Calls ///////////////
     const getCourseById = async (id) => {
         try {
-
             // return
             const { data } = await axiosWrapper('GET', `${API_URL.SUPABASE_GET_COURSE.replace(':id', id)}`, {}, token);
 
@@ -177,7 +171,12 @@ const AddNewCourse = () => {
         console.log(formData);
         return false;
         if (currentCourse) {
-            await axiosWrapper('PUT', `${API_URL.SUPABASE_UPDATE_COURSE.replace(':id', currentCourse)}`, formData, token);
+            await axiosWrapper(
+                'PUT',
+                `${API_URL.SUPABASE_UPDATE_COURSE.replace(':id', currentCourse)}`,
+                formData,
+                token
+            );
 
             getCourseById(currentCourse);
 
@@ -243,7 +242,7 @@ const AddNewCourse = () => {
         setPublishCourseModel(false);
     };
     const setShowConfirmModal = (e) => {
-        e.stopPropagation(); 
+        e.stopPropagation();
         setPublishCourseModel(true);
     };
     const handleSubmit = async (values, { resetForm, setSubmitting }) => {
@@ -267,10 +266,8 @@ const AddNewCourse = () => {
     return (
         <>
             <div className="addcourse-section">
-                <Tabs id="add-course-tabs"
-                    activeKey={activeKey}
-                    onSelect={(k) => handleTabChange(k)}>
-                    <Tab eventKey="basic-information" >
+                <Tabs id="add-course-tabs" activeKey={activeKey} onSelect={(k) => handleTabChange(k)}>
+                    <Tab eventKey="basic-information">
                         <div className="title-top">
                             <span onClick={() => navigate(`/${role}/courses-supabase`)} style={{ cursor: 'pointer' }}>
                                 Add Course
@@ -281,39 +278,40 @@ const AddNewCourse = () => {
                             <div className="toggle-wrapper">
                                 <span className="toggle-label">{isPublished ? 'Published' : 'Unpublished'}</span>
                                 <div className="switch">
-                                    <input
-                                        type="checkbox"
-                                        id="switch"
-                                        checked={isPublished}
-                                        onChange={toggleSwitch}
-                                    />
+                                    <input type="checkbox" id="switch" checked={isPublished} onChange={toggleSwitch} />
                                     <label htmlFor="switch"></label>
                                 </div>
                             </div>
-
-
-
                         </div>
-                        
-                        
-                        <div className='Course-form'>
-                            <div className='form-group'>
-                                <TextField id="Title-basic" label="Title" variant="outlined" onChange={(e) => {
-                                    if (e.target.value.length <= 80) setTitle(e.target.value);
-                                }}
+
+                        <div className="Course-form">
+                            <div className="form-group">
+                                <TextField
+                                    id="Title-basic"
+                                    label="Title"
+                                    variant="outlined"
+                                    onChange={(e) => {
+                                        if (e.target.value.length <= 80) setTitle(e.target.value);
+                                    }}
                                     inputProps={{ maxLength: 80 }}
                                     helperText={`${title.length}/80`}
-                                    fullWidth />
+                                    fullWidth
+                                />
                             </div>
-                            <div className='form-group'>
-                                <TextField id="SubTitle-basic" label="Subtitle" variant="outlined" onChange={(e) => {
-                                    if (e.target.value.length <= 120) setSubtitle(e.target.value);
-                                }}
+                            <div className="form-group">
+                                <TextField
+                                    id="SubTitle-basic"
+                                    label="Subtitle"
+                                    variant="outlined"
+                                    onChange={(e) => {
+                                        if (e.target.value.length <= 120) setSubtitle(e.target.value);
+                                    }}
                                     inputProps={{ maxLength: 120 }}
                                     helperText={`${subtitle.length}/120`}
-                                    fullWidth />
+                                    fullWidth
+                                />
                             </div>
-                            <div className='form-group'>
+                            <div className="form-group">
                                 <TextField
                                     id="Description-basic"
                                     label="Course Description"
@@ -322,16 +320,15 @@ const AddNewCourse = () => {
                                     rows={7}
                                     onChange={(e) => {
                                         if (e.target.value.length <= 500) setDescription(e.target.value);
-                                      }}
-                                      inputProps={{ maxLength: 500 }}
-                                      helperText={`${description.length}/500`}
-                                      fullWidth
+                                    }}
+                                    inputProps={{ maxLength: 500 }}
+                                    helperText={`${description.length}/500`}
+                                    fullWidth
                                 />
                             </div>
-
                         </div>
                         <CourseAccessType />
-                       
+
                         <CourseCategory />
                         <UploadThumbnail
                             setStepComplete={completeStep}
@@ -340,65 +337,62 @@ const AddNewCourse = () => {
                             onNext={() => handleTabChange('upload-files')}
                             updateCourseData={updateCourseData}
                         />
-                        <div className=''>
+                        <div className="">
                             <div className="mt-5 d-flex gap-3 flex-wrap tab-buttons">
-                                    <Button
+                                <Button
                                     type="button"
                                     className="cancel-btn"
                                     onClick={() => navigate(`/${role}/courses-supabase`)}
                                     // disabled={isSubmitting}
                                     // onClick={onBack}
-                                    >
+                                >
                                     Cancel
-                                    </Button>
-                                    <Button
+                                </Button>
+                                <Button
                                     type="button"
                                     className="submit-btn"
                                     // disabled={isSubmitting}
                                     // data-bs-toggle="modal"
                                     // data-bs-target="#confirmModal"
                                     onClick={() => setPublishCourseModel(true)}
-                                    >
+                                >
                                     Save & Next
-                                    </Button>
-
-                                </div>
+                                </Button>
+                            </div>
                         </div>
                     </Tab>
-                    <Tab eventKey="upload-files" >
-                        <AddLecture setStepComplete={completeStep}
+                    <Tab eventKey="upload-files">
+                        <AddLecture
+                            setStepComplete={completeStep}
                             onBack={() => handleTabChange('basic-information')}
                             updateCourseData={updateCourseData}
-                            initialData={courseData} />
-
+                            initialData={courseData}
+                        />
                     </Tab>
-                   
                 </Tabs>
             </div>
-             <>
-                   
-                    {/* confirmation model : default */}
-            
-                    {publishCourseModel && (
-                            <ConfirmationBox
-                                show={publishCourseModel}
-                                onClose={handlePublishCourseModal}
-                                onConfirm={handleSubmit}
-                                title="Publish your course!"
-                                // body="Are you sure you want to delete this course? Data associated with this course will be lost."
-                                loading={loadingCRUD}
-                                customFooterClass="custom-footer-class"
-                                nonActiveBtn="cancel-btn"
-                                activeBtn="submit-btn"
-                                cancelButtonTitle="Cancel"
-                                activeBtnTitle="Proceed"
-                                 modalClassName="coursemodal publishcourse"
-                            />
-                        )}
-                  </>
+            <>
+                {/* confirmation model : default */}
+
+                {publishCourseModel && (
+                    <ConfirmationBox
+                        show={publishCourseModel}
+                        onClose={handlePublishCourseModal}
+                        onConfirm={handleSubmit}
+                        title="Publish your course!"
+                        // body="Are you sure you want to delete this course? Data associated with this course will be lost."
+                        loading={loadingCRUD}
+                        customFooterClass="custom-footer-class"
+                        nonActiveBtn="cancel-btn"
+                        activeBtn="submit-btn"
+                        cancelButtonTitle="Cancel"
+                        activeBtnTitle="Proceed"
+                        modalClassName="coursemodal publishcourse"
+                    />
+                )}
+            </>
         </>
     );
 };
-
 
 export default AddNewCourse;

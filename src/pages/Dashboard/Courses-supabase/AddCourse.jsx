@@ -36,9 +36,9 @@ const AddNewCourse = () => {
     const [isPublished, setIsPublished] = useState(false);
     const courseId = useSelector((state) => state?.root?.currentCourse);
 
-    console.log( courseId, "COURSE ID ")
-    console.log( currentCourse, " CURRENT COURSE ")
-    
+    console.log(courseId, 'COURSE ID ');
+    console.log(currentCourse, ' CURRENT COURSE ');
+
     const [courseData, setCourseData] = useState({
         title: '',
         subtitle: '',
@@ -57,7 +57,7 @@ const AddNewCourse = () => {
     });
 
     // //////////////////////////////Handlers////////////////////////
-   
+
     const handleDelete = async (courseId) => {
         setLoading(true);
         try {
@@ -107,10 +107,9 @@ const AddNewCourse = () => {
 
     // ///////////////// APi Calls ///////////////
     const getCourseById = async (id) => {
-       
         try {
             const { data } = await axiosWrapper('GET', `${API_URL.SUPABASE_GET_COURSE.replace(':id', id)}`, {}, token);
-            
+
             // console.log( data, "COURSE DATA ")
             // if(data.id  && data.lectures.length == 0){
             //     const newLecture = await axiosWrapper(
@@ -121,7 +120,7 @@ const AddNewCourse = () => {
             //           courseId: data.id
             //         },
             //         token
-            //       );  
+            //       );
             // }
             const description = textParser(data.description);
 
@@ -143,12 +142,12 @@ const AddNewCourse = () => {
                 category: categories,
                 createdBy: data.createdBy?.id,
                 thumbnail: data.thumbnail,
-                access_type:data.access_type,
+                access_type: data.access_type,
                 banner: data.banner,
                 trailer: data.trailer,
                 description: description,
                 lecturess: data.unassignedLectures,
-                folders:data.folders
+                folders: data.folders
             });
 
             dispatch({ type: types.ALL_RECORDS, data: { keyOfData: 'currentCourseUpdate', data: false } });
@@ -171,45 +170,49 @@ const AddNewCourse = () => {
         }
     };
     const createOrUpdateCourse = async (formData) => {
-
         try {
-          if (currentCourse) {
-            await axiosWrapper('PUT', `${API_URL.SUPABASE_UPDATE_COURSE.replace(':id', currentCourse)}`, formData, token);
-            getCourseById(currentCourse);
-          } else {
-            const course = await axiosWrapper('POST', API_URL.SUPABASE_CREATE_COURSE, formData, token);
-            console.warn(course);
-            const newLecture = await axiosWrapper(
-                'POST',
-                API_URL.SUPABASE_ADD_LECTURE,
-                {
-                  name: 'New Page',
-                  courseId: course.data.id
-                },
-                token
-              );  
-            console.warn(newLecture);
+            if (currentCourse) {
+                await axiosWrapper(
+                    'PUT',
+                    `${API_URL.SUPABASE_UPDATE_COURSE.replace(':id', currentCourse)}`,
+                    formData,
+                    token
+                );
+                getCourseById(currentCourse);
+            } else {
+                const course = await axiosWrapper('POST', API_URL.SUPABASE_CREATE_COURSE, formData, token);
+                console.warn(course);
+                const newLecture = await axiosWrapper(
+                    'POST',
+                    API_URL.SUPABASE_ADD_LECTURE,
+                    {
+                        name: 'New Page',
+                        courseId: course.data.id
+                    },
+                    token
+                );
+                console.warn(newLecture);
 
-            dispatch({ type: types.ALL_RECORDS, data: { keyOfData: 'currentCourse', data: course.data.id } });
-          }
-      
-          dispatch({ type: types.ALL_RECORDS, data: { keyOfData: 'currentCourseUpdate', data: true } });
+                dispatch({ type: types.ALL_RECORDS, data: { keyOfData: 'currentCourse', data: course.data.id } });
+            }
+
+            dispatch({ type: types.ALL_RECORDS, data: { keyOfData: 'currentCourseUpdate', data: true } });
         } catch (error) {
-          console.error('Error in createOrUpdateCourse:', error);
+            console.error('Error in createOrUpdateCourse:', error);
         }
-      };
-      
+    };
+
     // const createOrUpdateCourse = async (formData) => {
-        
+
     //     if (currentCourse) {
     //         await axiosWrapper('PUT', `${API_URL.SUPABASE_UPDATE_COURSE.replace(':id', currentCourse)}`, formData, token);
 
     //         getCourseById(currentCourse);
     //     } else {
-            
+
     //         const course = await axiosWrapper('POST', API_URL.SUPABASE_CREATE_COURSE, formData, token);
-    //         const courseId = course?.data?.id; 
-    //        
+    //         const courseId = course?.data?.id;
+    //
     //         const newLecture = await createLectore(courseId);
     //         // const newLecture = await createLectore(courseId);
     //         // const formData = {
@@ -218,30 +221,30 @@ const AddNewCourse = () => {
     //         //     courseId: courseId,
     //         // };
     //         // const lectureData = await axiosWrapper('POST', API_URL.SUPABASE_ADD_LECTURE, formData, token);
-    //         dispatch({ type: types.ALL_RECORDS, data: { keyOfData: 'currentCourse', data: courseId } }); 
+    //         dispatch({ type: types.ALL_RECORDS, data: { keyOfData: 'currentCourse', data: courseId } });
     //     }
-        
+
     //         // Call the get Course By Id so we can have updated state of part one
     //         dispatch({ type: types.ALL_RECORDS, data: { keyOfData: 'currentCourseUpdate', data: true } });
     //     };
 
-        // const createLecture = async (courseId) => {
-        //     try {
-        //         const response = await axiosWrapper(
-        //             'POST',
-        //             `${API_URL.SUPABASE_ADD_LECTURE}`,
-        //             // { name: 'New Lecture', courseId: courseId },
-        //             formData,
-        //             token
-        //         );
-        
-        //         const createdLecture = response?.data;
-        //         return createdLecture;
-               
-        //     } catch (error) {
-        //         return null;
-        //     }
-        // };
+    // const createLecture = async (courseId) => {
+    //     try {
+    //         const response = await axiosWrapper(
+    //             'POST',
+    //             `${API_URL.SUPABASE_ADD_LECTURE}`,
+    //             // { name: 'New Lecture', courseId: courseId },
+    //             formData,
+    //             token
+    //         );
+
+    //         const createdLecture = response?.data;
+    //         return createdLecture;
+
+    //     } catch (error) {
+    //         return null;
+    //     }
+    // };
     const handlePublishCourse = async () => {
         await axiosWrapper('PUT', `${API_URL.PUBLISH_COURSE.replace(':id', currentCourse)}`, {}, token);
         // Call the get Course By Id so we can have updated state of part one
@@ -257,7 +260,6 @@ const AddNewCourse = () => {
         }
     }, [stepsCompleted]);
 
-  
     useEffect(() => {
         if (currentCourseUpdate) {
             getCourseById(currentCourse);
@@ -289,12 +291,7 @@ const AddNewCourse = () => {
                 <div className="toggle-wrapper">
                     <span className="toggle-label">{isPublished ? 'Published' : 'Unpublished'}</span>
                     <div className="switch">
-                        <input
-                            type="checkbox"
-                            id="switch"
-                            checked={isPublished}
-                            onChange={toggleSwitch}
-                        />
+                        <input type="checkbox" id="switch" checked={isPublished} onChange={toggleSwitch} />
                         <label htmlFor="switch"></label>
                     </div>
                 </div>
@@ -324,14 +321,15 @@ const AddNewCourse = () => {
                         onDelete={handleDelete}
                         {...courseData}
                         id={courseId}
-
                     />
                 </Tab>
-                <Tab eventKey="upload-files" >
-                    <AddLecture setStepComplete={completeStep}
-                    onBack={() => handleTabChange('basic-information')}
-                    updateCourseData={updateCourseData}
-                    initialData={courseData}/>
+                <Tab eventKey="upload-files">
+                    <AddLecture
+                        setStepComplete={completeStep}
+                        onBack={() => handleTabChange('basic-information')}
+                        updateCourseData={updateCourseData}
+                        initialData={courseData}
+                    />
                 </Tab>
                 <Tab
                     eventKey="upload-filess"

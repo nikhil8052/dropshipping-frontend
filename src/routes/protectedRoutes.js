@@ -82,7 +82,7 @@ export const adminRoutes = [
         access: 'ADMIN'
     },
 
-// FOR CATEGORY Categories
+    // FOR CATEGORY Categories
 
     {
         path: 'category',

@@ -1,7 +1,7 @@
 import { Card, Form, Dropdown } from 'react-bootstrap';
 import CustomProgressBar from '../CustomProgressBar/CustomProgressBar';
 import { useSelector, useDispatch } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import TextExpand from '@components/TextExpand/TextExpand';
 import enrollIcon from '../../assets/icons/enroll-icon.svg';
 import lockIcon from '../../assets/icons/lock-icon.svg';
@@ -10,12 +10,10 @@ import './GenericCard.scss';
 import ConfirmationBox from '../ConfirmationBox/ConfirmationBox';
 import { useState } from 'react';
 import { decode } from 'he';
-import { useLocation } from 'react-router-dom';
 import Edit from '../../assets/icons/edit2.svg';
-import 'react-tooltip/dist/react-tooltip.css'
-import { Tooltip } from 'react-tooltip'
+import 'react-tooltip/dist/react-tooltip.css';
+import { Tooltip } from 'react-tooltip';
 import * as types from '../../redux/actions/actionTypes';
-
 
 const GenericCard = ({
     img,
@@ -31,7 +29,6 @@ const GenericCard = ({
     onDelete,
     ...rest
 }) => {
-
     const { userInfo } = useSelector((state) => state?.auth);
     const role = userInfo?.role?.toLowerCase();
     const navigate = useNavigate();
@@ -50,7 +47,7 @@ const GenericCard = ({
 
     const createSlug = (title) => {
         // return title.toLowerCase().replace(/\s+/g, "-").replace(/[^a-z0-9-]/g, "");
-        return " TEst ";
+        return ' TEst ';
     };
 
     // Handler to close the delete confirmation modal
@@ -77,8 +74,7 @@ const GenericCard = ({
 
     return (
         <>
-            <Card
-                className="generic-card">
+            <Card className="generic-card">
                 {/* {role === 'admin' && (
                     <div className='delete-box'>
                     <button type="button" className="delete-icon-btn" onClick={handleDeleteClick} data-tooltip-id="my-tooltip" data-tooltip-content="Delete Course" >
@@ -87,7 +83,7 @@ const GenericCard = ({
                     </div>
                       )} */}
                 <div
-                    className='image-box cursor-pointer'
+                    className="image-box cursor-pointer"
                     onClick={(e) => {
                         const isToggleClick = e.target.className === 'form-check-input';
                         if (isToggleClick) return;
@@ -126,7 +122,6 @@ const GenericCard = ({
                                 className="course-des"
                                 // value={decode(description)?.replace(/<\/?[^>]+(>|$)/g, '') || ''}
                                 value={description || ''}
-
                                 width="100%"
                             />
                         </Card.Text>

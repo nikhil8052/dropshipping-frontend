@@ -88,7 +88,6 @@ export const API_URL = {
     SUPABASE_PUBLISH_COURSE: `${SUPABASE_COURSE_API_BASE}/publish/:id`,
     SUPABASE_CREATE_COURSE_FOLDER: `${SUPABASE_COURSE_API_BASE}/folder/:id`,
 
-
     // Lectures API
     ADD_LECTURE: `${LECTURE_API_BASE}/add`,
     UPDATE_LECTURE: `${LECTURE_API_BASE}/update/:id`,
@@ -113,7 +112,6 @@ export const API_URL = {
     SUPABASE_GET_QUIZZES: `${SUPABASE_LECTURE_API_BASE}/quiz/lecture/:id`,
     SUPABASE_UPDATE_QUIZ: `${SUPABASE_LECTURE_API_BASE}/quiz/update/:id`,
     SUPABASE_DELETE_QUIZ: `${SUPABASE_LECTURE_API_BASE}/quiz/delete/:id`,
-
 
     // Products API
     UPLOAD_PRODUCTS_CSV: `${PRODUCT_API_BASE}/upload-csv`,
@@ -167,13 +165,12 @@ export const API_URL = {
     GET_ALL_CATEGORIES: `${CATEGORY_API_BASE}/`,
     DELETE_CATEGORY: `${CATEGORY_API_BASE}/delete/:id`,
 
-      // supabase categories api :::
+    // supabase categories api :::
     SUPABASE_CREATE_CATEGORY: `${SUPABASE_CATEGORY_API_BASE}/create`,
     SUPABASE_UPDATE_CATEGORY: `${SUPABASE_CATEGORY_API_BASE}/update/:id`,
     SUPABASE_GET_CATEGORY: `${SUPABASE_CATEGORY_API_BASE}/:id`,
     SUPABASE_GET_ALL_CATEGORIES: `${SUPABASE_CATEGORY_API_BASE}/`,
     SUPABASE_DELETE_CATEGORY: `${SUPABASE_CATEGORY_API_BASE}/delete/:id`,
-
 
     // Payments API
     CREATE_PAYMENT_LINK: `${PAYMENT_API_BASE}/create-payment-link`,

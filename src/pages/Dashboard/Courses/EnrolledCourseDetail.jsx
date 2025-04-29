@@ -18,8 +18,7 @@ import bannerImage from '../../../assets/images/publish-background.svg';
 import checkicon from '../../../assets/images/Check.svg';
 import checkicon2 from '../../../assets/images/check2.svg';
 import 'react-tooltip/dist/react-tooltip.css';
-import { Tooltip } from 'react-tooltip'
-
+import { Tooltip } from 'react-tooltip';
 
 const EnrolledCourseDetail = () => {
     const navigate = useNavigate();
@@ -27,11 +26,11 @@ const EnrolledCourseDetail = () => {
     const userInfo = useSelector((state) => state?.auth?.userInfo);
     const token = useSelector((state) => state?.auth?.userToken);
     const role = userInfo?.role?.toLowerCase();
-  
+
     const queryParams = new URLSearchParams(location.search);
-    const cid = queryParams.get('cid'); 
-    const lid = queryParams.get('lid'); 
-    const medium = queryParams.get('m'); 
+    const cid = queryParams.get('cid');
+    const lid = queryParams.get('lid');
+    const medium = queryParams.get('m');
 
     const [currentCourseID, setCurrentCourseID] = useState('');
     const [search, setSearch] = useState('');
@@ -46,14 +45,14 @@ const EnrolledCourseDetail = () => {
     // const [accessRestricted, setAccessRestricted] = useState(false);
     const accessRestricted = false;
 
-    var courseId=location.state?.courseId;
+    let courseId = location.state?.courseId;
 
     const [initialValues, setInitialValues] = useState({
         mcqs: []
     });
 
-    if(medium=="direct"){
-        courseId=cid;
+    if (medium == 'direct') {
+        courseId = cid;
         // setCurrentCourseID(cid);
     }
 
@@ -63,7 +62,6 @@ const EnrolledCourseDetail = () => {
     //         setCurrentCourseID(cid);
     //     }
     // },[])
-
 
     const validationSchema = Yup.object().shape({
         mcqs: Yup.array()
@@ -88,7 +86,7 @@ const EnrolledCourseDetail = () => {
 
     const getCourseById = async (id, nextLecture) => {
         const { data } = await axiosWrapper('GET', `${API_URL.GET_COURSE.replace(':id', id)}`, {}, token);
- 
+
         setCurrentCourseID(id);
         // Higher Level info
         setCourseDetails({
@@ -99,7 +97,7 @@ const EnrolledCourseDetail = () => {
         });
         // Overall lectures
         setLectures(data.lectures);
-       
+
         // Handle search results
         setFilteredLectures(data.lectures);
         const incompleteLectureIndex = data.lectures.find((lec) => !lec.completedBy?.includes(userInfo?._id));
@@ -111,22 +109,20 @@ const EnrolledCourseDetail = () => {
         } else {
             getCurrentLecture(data.lectures[0]?._id);
         }
-
     };
 
-
-    useEffect(()=>{
+    useEffect(() => {
         if (lid != null) {
             for (let idx = 0; idx < lectures.length; idx++) {
                 const lec = lectures[idx];
                 if (lec._id == lid) {
                     setActiveIndex(idx);
                     getCurrentLecture(lec._id);
-                    break; 
+                    break;
                 }
             }
         }
-    },[lectures,medium,cid])
+    }, [lectures, medium, cid]);
     // Commenting out for future reference
     // Handle eligibility check based on courseAccessUntil
     // const checkAccessEligibility = () => {
@@ -176,29 +172,23 @@ const EnrolledCourseDetail = () => {
         }
     }, [courseId]);
 
-   
-
-
     useEffect(() => {
         if (search) {
-            const filtered = lectures.filter((lecture, idx ) => {
+            const filtered = lectures.filter((lecture, idx) => {
                 const searchCriteria = lecture.name.toLowerCase() || lecture.description.toLowerCase();
                 return searchCriteria.includes(search.toLowerCase());
             });
             setFilteredLectures(filtered);
-
         } else {
-
-
-            if (lectures.length > 0 && slugOnce==false && medium==null  ) {
-                var name = lectures[0].name;
+            if (lectures.length > 0 && slugOnce == false && medium == null) {
+                const name = lectures[0].name;
                 const slug = createSlug(name);
-                let segments = location.pathname.split("/").filter(Boolean);
+                const segments = location.pathname.split('/').filter(Boolean);
                 const lastSegment = segments[segments.length - 1];
                 if (lastSegment !== slug) {
                     segments.push(slug);
-                    setSlugOnce(true)
-                    const newUrl = `/${segments.join("/")}`;
+                    setSlugOnce(true);
+                    const newUrl = `/${segments.join('/')}`;
                     navigate(newUrl, { replace: true }); // Ensure leading slash & avoid history stacking
                 }
             }
@@ -207,7 +197,10 @@ const EnrolledCourseDetail = () => {
     }, [search, lectures]);
 
     const createSlug = (title) => {
-        return title.toLowerCase().replace(/\s+/g, "-").replace(/[^a-z0-9-]/g, "");
+        return title
+            .toLowerCase()
+            .replace(/\s+/g, '-')
+            .replace(/[^a-z0-9-]/g, '');
     };
 
     const handleButtonClick = (index, fetchLecture = true) => {
@@ -215,11 +208,11 @@ const EnrolledCourseDetail = () => {
 
         if (fetchLecture) getCurrentLecture(lectures[index]?._id);
 
-        if (lectures[index] ) {
+        if (lectures[index]) {
             if (lectures[index] && lectures[index].name) {
                 const slug = createSlug(lectures[index].name);
                 // Get URL segments
-                let segments = location.pathname.split("/").filter(Boolean); // Remove empty segments
+                const segments = location.pathname.split('/').filter(Boolean); // Remove empty segments
                 const lastSegment = segments[segments.length - 1]; // Get last part of the URL
                 if (lastSegment !== slug) {
                     // Replace last segment with the new slug
@@ -228,11 +221,10 @@ const EnrolledCourseDetail = () => {
                     } else {
                         segments.push(slug); // If only one segment, just add it
                     }
-                    const newUrl = `/${segments.join("/")}`;
+                    const newUrl = `/${segments.join('/')}`;
                     navigate(newUrl, { replace: true }); // Ensure leading slash
                 }
             }
-
         }
         setContinueQuiz(false);
     };
@@ -255,8 +247,8 @@ const EnrolledCourseDetail = () => {
             if (data.pass) {
                 // Proceed to next lecture if pass
                 handleButtonClick(activeIndex + 1, false);
-                getCourseById(courseId, lectures[activeIndex + 1]?._id); 
-                setCourseId(courseId)// Refresh course data
+                getCourseById(courseId, lectures[activeIndex + 1]?._id);
+                setCourseId(courseId); // Refresh course data
                 toast.success('You have passed the quiz. Proceeding to the next lecture.');
                 setRetryQuiz(false);
             } else {
@@ -273,7 +265,7 @@ const EnrolledCourseDetail = () => {
     };
 
     const markLectureAsCompleted = async (lectureId) => {
-        const URL=`${API_URL.MARK_LECTURE_COMPLETED.replace(':id', lectureId)}`;
+        const URL = `${API_URL.MARK_LECTURE_COMPLETED.replace(':id', lectureId)}`;
         await axiosWrapper('PUT', URL, {}, token);
         setSlugOnce(true);
         getCourseById(currentCourseID, lectures[activeIndex]?._id);
@@ -303,30 +295,30 @@ const EnrolledCourseDetail = () => {
                         </div>
                     ) : (
                         <>
-                        <div className='row'>
-                        <div className="title-top col-md-8">
-                                <span onClick={() => navigate(`/${role}/courses`)} style={{ cursor: 'pointer' }}>
-                                    Courses <img src={CaretRight} alt=">" />
-                                </span>{' '}
-                                Enrolled Course Details <img src={CaretRight} alt=">" /> Lecture {activeIndex + 1}
+                            <div className="row">
+                                <div className="title-top col-md-8">
+                                    <span onClick={() => navigate(`/${role}/courses`)} style={{ cursor: 'pointer' }}>
+                                        Courses <img src={CaretRight} alt=">" />
+                                    </span>{' '}
+                                    Enrolled Course Details <img src={CaretRight} alt=">" /> Lecture {activeIndex + 1}
+                                </div>
+                                <div className="col-md-4">
+                                    <InputGroup>
+                                        <InputGroup.Text>
+                                            <img src={Search} alt="Search" />
+                                        </InputGroup.Text>
+                                        <Form.Control
+                                            className="search-input"
+                                            type="text"
+                                            name="Search"
+                                            label="Search"
+                                            value={search}
+                                            onChange={onFilterTextChange}
+                                            placeholder="Search"
+                                        />
+                                    </InputGroup>
+                                </div>
                             </div>
-                            <div className='col-md-4'>
-                            <InputGroup>
-                                                        <InputGroup.Text>
-                                                            <img src={Search} alt="Search" />
-                                                        </InputGroup.Text>
-                                                        <Form.Control
-                                                            className="search-input"
-                                                            type="text"
-                                                            name="Search"
-                                                            label="Search"
-                                                            value={search}
-                                                            onChange={onFilterTextChange}
-                                                            placeholder="Search"
-                                                        />
-                            </InputGroup>
-                            </div>
-                        </div>
                             <Formik
                                 enableReinitialize
                                 initialValues={initialValues}
@@ -393,11 +385,12 @@ const EnrolledCourseDetail = () => {
                                                                     /> */}
                                                                     <p>{lecture.name}</p>
                                                                 </div>
-                                                                <img className='checkimg'
+                                                                <img
+                                                                    className="checkimg"
                                                                     src={
                                                                         lecture?.completedBy?.includes(userInfo?._id)
                                                                             ? checkicon
-                                                                            : ""
+                                                                            : ''
                                                                     }
                                                                     alt="IconLect"
                                                                 />

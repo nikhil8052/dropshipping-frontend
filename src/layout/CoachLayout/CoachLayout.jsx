@@ -15,18 +15,18 @@ const DashboardLayout = () => {
     }, [isLoggedIn, role]);
 
     return (
-       <div className='coach_layout'>
-         <Container fluid className="p-0">
-            {/* Collapsible Sidebar */}
-            {/* Main Content */}
-            <Sidebar />
-            <MainPanel>
-                <Suspense fallback={<Loading centered />}>
-                    <Outlet />
-                </Suspense>
-            </MainPanel>
-        </Container>
-       </div>
+        <div className="coach_layout">
+            <Container fluid className="p-0">
+                {/* Collapsible Sidebar */}
+                {/* Main Content */}
+                <Sidebar />
+                <MainPanel>
+                    <Suspense fallback={<Loading centered />}>
+                        <Outlet />
+                    </Suspense>
+                </MainPanel>
+            </Container>
+        </div>
     );
 };
 

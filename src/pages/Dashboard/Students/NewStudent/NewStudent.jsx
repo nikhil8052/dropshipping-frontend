@@ -64,7 +64,7 @@ const NewStudent = () => {
         coursesRoadmap: [],
         category: [],
         roadMap: 'ROAD_MAP_ONE',
-        roadmapAccess:'false' 
+        roadmapAccess: 'false'
         // paymentType: '',
         // installmentFrequency: '',
         // installmentCount: 0,
@@ -145,8 +145,8 @@ const NewStudent = () => {
         const response = await axiosWrapper('GET', API_URL.GET_STUDENT.replace(':id', id), {}, token);
         const student = response.data;
 
-        console.log( student , " DD ")
-        // return 
+        console.log(student, ' DD ');
+        // return
         const coursesRoadmap = student.coursesRoadmap.map((course) => ({
             value: course?._id,
             label: course?.title,
@@ -171,7 +171,7 @@ const NewStudent = () => {
             coachingTrajectory: student?.coachingTrajectory || '',
             roadMap: student?.roadMap || 'ROAD_MAP_ONE',
             coursesRoadmap: student?.coursesRoadmap.map((c) => c?._id),
-            roadmapAccess:String(student?.roadmapAccess || 'false'), 
+            roadmapAccess: String(student?.roadmapAccess || 'false')
             // paymentType: student?.paymentType || 'one-time', // Default to 'one-time' if not present
             // installmentFrequency: student?.installmentFrequency || '',
             // installmentCount: student?.installmentCount || 0,
@@ -257,13 +257,10 @@ const NewStudent = () => {
     };
 
     const handleFormSubmit = async (values, { resetForm, setSubmitting }) => {
-        let formData = { ...values,
-            avatar: studentPhoto,
-            category: values.category.map((cat) => cat.value) };
+        let formData = { ...values, avatar: studentPhoto, category: values.category.map((cat) => cat.value) };
 
-
-            // console.log(formData, "DD ");
-            // return 
+        // console.log(formData, "DD ");
+        // return
         // If updating an existing student, exclude the email field
         if (studentId) {
             const { email, ...rest } = formData;

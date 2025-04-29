@@ -191,7 +191,7 @@
     margin-bottom: 16px;
 }
 
-.box-row > div {
+.box-row>div {
     margin-bottom: 2rem;
 }
 
@@ -333,7 +333,7 @@
     border: 1px solid #e9eaf0;
 }
 
-.add-course-form.Course-form .form-group > div > div {
+.add-course-form.Course-form .form-group>div>div {
     padding: 0;
 }
 
@@ -382,14 +382,12 @@
 }
 
 .addAdditionalOptions button:hover::after {
-    filter: brightness(0) saturate(100%) invert(0%) sepia(77%) saturate(7500%) hue-rotate(354deg) brightness(110%)
-        contrast(87%);
+    filter: brightness(0) saturate(100%) invert(0%) sepia(77%) saturate(7500%) hue-rotate(354deg) brightness(110%) contrast(87%);
 }
 
 .addAdditionalOptions .dropdown.show .dropdown-toggle::after {
     transform: translate(8px, 8px) rotate(0deg);
-    filter: brightness(0) saturate(100%) invert(0%) sepia(77%) saturate(7500%) hue-rotate(354deg) brightness(110%)
-        contrast(87%);
+    filter: brightness(0) saturate(100%) invert(0%) sepia(77%) saturate(7500%) hue-rotate(354deg) brightness(110%) contrast(87%);
 }
 
 .addAdditionalOptions .dropdown-item {
@@ -419,7 +417,7 @@
 }
 
 
-.course-right:has(> form)  .transcript-section .ql-toolbar.ql-snow {
+.course-right:has(> form) .transcript-section .ql-toolbar.ql-snow {
     background-color: #fff !important;
     padding: 0px 12px 20px 12px;
 }
@@ -430,33 +428,37 @@
 // Added by nikhil 
 
 .ql-editor iframe {
-    width: calc(100% + 2rem); /* or whatever padding .ql-editor has */
+    width: calc(100% + 2rem);
+    /* or whatever padding .ql-editor has */
     max-width: none;
-    margin-left: -1rem; /* half of added width */
-    margin-right: -1rem; /* half of added width */
+    margin-left: -1rem;
+    /* half of added width */
+    margin-right: -1rem;
+    /* half of added width */
     height: auto;
     aspect-ratio: 16/9;
     display: block;
     border: none;
-  }
-  
- .toggle-wrapper:has(.switch input:checked) .toggle-label {
+}
+
+.toggle-wrapper:has(.switch input:checked) .toggle-label {
     color: #009e5d;
 }
 
- .toggle-wrapper .switch input:checked + label::after {
+.toggle-wrapper .switch input:checked+label::after {
     background-color: #009e5d;
 }
 
- .toggle-wrapper .switch input:checked + label {
+.toggle-wrapper .switch input:checked+label {
     background: #c1e8d8;
 }
 
-.confirmation-modal:has(.add-link-form) * ,.modal-dialog:has(.quiz-wrapper) *{
+.confirmation-modal:has(.add-link-form) *,
+.modal-dialog:has(.quiz-wrapper) * {
     font-family: 'Montserrat' !important;
 }
 
-.subhead{
+.subhead {
     margin-bottom: 0px;
 }
 
@@ -466,27 +468,43 @@
     border-radius: 10px;
 }
 
-.course-detail-row .ql-snow.ql-toolbar, .ql-snow .ql-toolbar {
+.course-detail-row .ql-snow.ql-toolbar,
+.ql-snow .ql-toolbar {
     display: flex;
     flex-wrap: wrap;
 }
 
-.course-detail-row .ql-snow.ql-toolbar button, .ql-snow .ql-toolbar button {
-    flex: 1 ;
+.course-detail-row .ql-snow.ql-toolbar button,
+.ql-snow .ql-toolbar button {
+    flex: 1;
     min-width: 0;
     height: 35px;
     padding: 8px;
     width: auto;
 }
 
-@media only screen and (max-width: 991px) {
-.course-detail-row .ql-snow.ql-toolbar button, .ql-snow .ql-toolbar button {
-    flex: 1 1 auto;
+._i5--j {
+    white-space: pre-wrap;
 }
+
+.course-left-top .subhead {
+    word-break: break-all;
+}
+
+div:where(.swal2-container) button:where(.swal2-styled):where(.swal2-confirm) {
+    background-color: #03A9F4;
+}
+
+@media only screen and (max-width: 991px) {
+
+    .course-detail-row .ql-snow.ql-toolbar button,
+    .ql-snow .ql-toolbar button {
+        flex: 1 1 auto;
+    }
 }
 
 @media only screen and (max-width: 767px) {
-    .box-row > div {
+    .box-row>div {
         margin-bottom: 0rem;
     }
 
@@ -500,7 +518,7 @@
         font-size: 14px;
     }
 
-    .tab-buttons.editor-buttons{
+    .tab-buttons.editor-buttons {
         justify-content: left;
     }
 }

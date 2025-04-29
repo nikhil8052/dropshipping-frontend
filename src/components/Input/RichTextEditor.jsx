@@ -11,19 +11,16 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 
 const Block = Quill.import('blots/block');
 
-class CustomHeader extends Block { }
+class CustomHeader extends Block {}
 CustomHeader.blotName = 'header';
 CustomHeader.tagName = ['H1', 'H2', 'H3'];
 Quill.register(CustomHeader, true);
-
-
 
 const RichTextEditor = (props) => {
     const [field, , helpers] = useField(props.name);
     const quillRef = useRef(null);
     const resourceList = props.resources || [];
     const [nameField, setNameField] = useState('');
-
 
     useEffect(() => {
         setNameField(props.showNameFieldData || '');
@@ -35,7 +32,7 @@ const RichTextEditor = (props) => {
             [{ list: 'ordered' }, { list: 'bullet' }],
             ['blockquote'],
             ['link', 'image', 'video'],
-            [{ 'header-h1': 'H1' }, { 'header-h2': 'H2' }, { 'header-h3': 'H3' }, { 'header-h4': 'H4' }],
+            [{ 'header-h1': 'H1' }, { 'header-h2': 'H2' }, { 'header-h3': 'H3' }, { 'header-h4': 'H4' }]
         ],
         handlers: {
             'header-h1': function () {
@@ -53,11 +50,11 @@ const RichTextEditor = (props) => {
             'header-h4': function () {
                 const quill = this.quill;
                 quill.format('header', 4);
-            },
+            }
         }
     };
     const modules = {
-        toolbar: { container: `#${props.id}` },
+        toolbar: { container: `#${props.id}` }
         // imageResize: {
         //     parchment: Quill.import('parchment'),
         //     modules: ['Resize', 'DisplaySize', 'Toolbar'],
@@ -65,11 +62,17 @@ const RichTextEditor = (props) => {
     };
     const FORMATS = [
         'header',
-        'bold', 'italic', 'underline', 'strike',
-        'list', 'bullet',
+        'bold',
+        'italic',
+        'underline',
+        'strike',
+        'list',
+        'bullet',
         'blockquote',
         'code-block',
-        'link', 'image', 'video'
+        'link',
+        'image',
+        'video'
     ];
 
     // const handleChange = (value) => {
@@ -92,7 +95,7 @@ const RichTextEditor = (props) => {
         const editor = quill.root;
 
         // Ensure all image widths and heights are inlined
-        editor.querySelectorAll('img').forEach(img => {
+        editor.querySelectorAll('img').forEach((img) => {
             const width = img.width;
             const mainWidth = img.data - width;
             const inlineWidth = img.style.width;
@@ -125,8 +128,6 @@ const RichTextEditor = (props) => {
             props.onNameChange(newName);
         }
     };
-
-
 
     useEffect(() => {
         const quill = quillRef.current?.getEditor();
@@ -168,7 +169,6 @@ const RichTextEditor = (props) => {
                 }, 300); // match transition time
                 isOverlayVisible = false;
             }
-
         };
 
         const interval = setInterval(checkTooltip, 200);
@@ -181,11 +181,19 @@ const RichTextEditor = (props) => {
 
     return (
         <div className="quill-editor">
-            <div id={`${props.id}`} >
-                <button className="ql-header" value="1">H1</button>
-                <button className="ql-header" value="2">H2</button>
-                <button className="ql-header" value="3">H3</button>
-                <button className="ql-header" value="4">H4</button>
+            <div id={`${props.id}`}>
+                <button className="ql-header" value="1">
+                    H1
+                </button>
+                <button className="ql-header" value="2">
+                    H2
+                </button>
+                <button className="ql-header" value="3">
+                    H3
+                </button>
+                <button className="ql-header" value="4">
+                    H4
+                </button>
                 <button className="ql-bold"></button>
                 <button className="ql-italic"></button>
                 <button className="ql-underline"></button>
@@ -201,12 +209,10 @@ const RichTextEditor = (props) => {
                         <button className="ql-video"></button>
                     </>
                 )}
-
             </div>
 
             {props.showNameField && (
                 <>
-
                     <TextField
                         fullWidth
                         name="name"
@@ -222,7 +228,7 @@ const RichTextEditor = (props) => {
                         InputProps={{
                             disableUnderline: true, // works for standard and filled variant
                             classes: {
-                                notchedOutline: 'no-outline',
+                                notchedOutline: 'no-outline'
                             }
                         }}
                         InputLabelProps={{
@@ -231,7 +237,6 @@ const RichTextEditor = (props) => {
                     />
                 </>
             )}
-
 
             <ReactQuill
                 ref={quillRef}
@@ -245,9 +250,9 @@ const RichTextEditor = (props) => {
 
             {/* Resources List  */}
             {props.showResources && resourceList.length > 0 && (
-                <div className='card new-resource-main-card '>
-                    <div className='card-body d-flex flex-column'>
-                        <h5 className='card-title'>Resources</h5>
+                <div className="card new-resource-main-card ">
+                    <div className="card-body d-flex flex-column">
+                        <h5 className="card-title">Resources</h5>
                         <div id="all_resources">
                             {resourceList.map((resource, index) => (
                                 <div key={resource.id} className={`resource-card ${index !== 0 ? 'mt-3' : ''}`}>
@@ -259,7 +264,6 @@ const RichTextEditor = (props) => {
                     </div>
                 </div>
             )}
-
         </div>
     );
 };

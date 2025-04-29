@@ -26,8 +26,7 @@ const SidebarItem = ({ item, selectedItemId, handleSideBarClick }) => {
             return true;
         }
         // Default case - match exact or starts with linkTo
-        return selectedItemId === item.id || 
-               (item.linkTo && location.pathname.startsWith(item.linkTo));
+        return selectedItemId === item.id || (item.linkTo && location.pathname.startsWith(item.linkTo));
     }, [selectedItemId, item.id, item.linkTo, item.name, location.pathname]);
 
     return (
@@ -43,11 +42,7 @@ const SidebarItem = ({ item, selectedItemId, handleSideBarClick }) => {
                     </div>
                 </div>
             ) : (
-                <Link
-                    to={item.linkTo}
-                    className={isActive ? 'active-item' : ''}
-                    onClick={changeRoute}
-                >
+                <Link to={item.linkTo} className={isActive ? 'active-item' : ''} onClick={changeRoute}>
                     <img src={item.iconLight} className="side-nav-icon" alt="nav-icon" />
                     <span>{item.name}</span>
                 </Link>

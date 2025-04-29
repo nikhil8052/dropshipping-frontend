@@ -20,7 +20,7 @@ const ConfirmationBox = ({
     modalClassName
 }) => {
     return (
-        <Modal show={show} onHide={onClose} centered className={`confirmation-modal ${modalClassName || ''}` }>
+        <Modal show={show} onHide={onClose} centered className={`confirmation-modal ${modalClassName || ''}`}>
             <Modal.Header closeButton>
                 <Modal.Title>{title}</Modal.Title>
             </Modal.Header>
