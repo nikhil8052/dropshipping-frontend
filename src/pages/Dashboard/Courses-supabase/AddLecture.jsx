@@ -478,6 +478,34 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
         }
     };
 
+    const handleRename = async ({ value, type, id }) => {
+
+        const updated = await renameLecture(id, value.trim(), type);
+
+        if (updated) {
+            setUnassignedLectures((prev) =>
+                prev.map((lecture) =>
+                    lecture.id === selectedLectureId ? { ...lecture, name: lectureLabel.trim() } : lecture
+                )
+            );
+            setTopics((prevTopics) =>
+                prevTopics.map((folder) => ({
+                    ...folder,
+                    lectures: folder.lectures.map((lecture) =>
+                        lecture.id === selectedLectureId ? { ...lecture, name: lectureLabel.trim() } : lecture
+                    )
+                }))
+            );
+       
+            setModalShowRename(false);
+            setLectureLabel('');
+            setSelectedLectureId(null);
+        }
+
+    };
+
+
+
     const handleDeleteSubmit = async () => {
         const deletedQuizId = showDeleteModal.quizId;
         try {
@@ -805,44 +833,44 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
         }
     };
 
-    const renameLecture = async (id, newTitle) => {
+    const renameLecture = async (id, newTitle, type) => {
         if (!id || !newTitle) {
-            console.warn('Lecture ID and new title are required to rename.');
             return;
+        }
+
+        let ENDPOINT="";
+        if( type=="lecture"){
+            ENDPOINT = API_URL.SUPABASE_UPDATE_LECTURE.replace(':id', id);
+
+        }else if( type=="folder"){
+            ENDPOINT = API_URL.SUPABASE_COURSE_FOLDER_UPDATE.replace(':id', id);
         }
 
         try {
             const payload = {
                 name: newTitle
             };
-
-            const url = API_URL.SUPABASE_UPDATE_LECTURE.replace(':id', id);
-
-            const response = await axiosWrapper('PUT', url, payload, token);
-            console.log('Lecture renamed:', response.data);
+            const response = await axiosWrapper('PUT', ENDPOINT, payload, token);
             return response.data;
         } catch (error) {
             console.error('Failed to rename lecture:', error);
-            // toast.error('Failed to rename lecture');
             return null;
         }
     };
+
     const handleRenameLecture = async () => {
         if (!lectureLabel?.trim() || !selectedLectureId) {
             return;
         }
-        console.log(selectedLectureId);
-        const updated = await renameLecture(selectedLectureId, lectureLabel.trim());
+
+        const updated = await renameLecture(selectedLectureId, lectureLabel.trim(), "lecture");
 
         if (updated) {
-            // ✅ Update unassigned lectures
             setUnassignedLectures((prev) =>
                 prev.map((lecture) =>
                     lecture.id === selectedLectureId ? { ...lecture, name: lectureLabel.trim() } : lecture
                 )
             );
-
-            // ✅ Update inside folder (topics)
             setTopics((prevTopics) =>
                 prevTopics.map((folder) => ({
                     ...folder,
@@ -894,7 +922,7 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
                     className="add-link-modal"
                     show={modalShowRename}
                     onClose={() => setModalShowRename(false)}
-                    onConfirm={() => handleRenameLecture()} // 👈 rename logic
+                    onConfirm={() => handleRenameLecture()}
                     loading={false}
                     title="Lecture Name"
                     body={
@@ -1158,6 +1186,7 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
                                                                                 name="textbox2"
                                                                                 defaultValue={topic.name}
                                                                                 inputClassName="editable-input"
+                                                                                onSave={({ value }) => handleRename({ value, type: "folder", id: topic.id })}
                                                                             />
                                                                         </h3>
                                                                         <div
@@ -1201,6 +1230,7 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
                                                                                                                 'ERROR'
                                                                                                             }
                                                                                                             inputClassName="editable-input"
+                                                                                                            onSave={({ value }) => handleRename({ value, type: "lecture", id: lecture.id })}
                                                                                                         />
                                                                                                     </a>
 
@@ -1358,7 +1388,7 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
                                                                                                 'ERROR'
                                                                                             }
                                                                                             inputClassName="editable-input"
-                                                                                        />
+                                                                                            onSave={({ value }) => handleRename({ value, type: "lecture", id: lecture.id })} />
                                                                                         <div className="drop-box">
                                                                                             <Dropdown>
                                                                                                 <Dropdown.Toggle id="dropdown-basic">

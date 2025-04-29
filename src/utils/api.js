@@ -9,6 +9,11 @@ axios.interceptors.response.use(
         const { method } = config;
         // You can handle and modify the response data here if needed
         if (method === 'post' || method === 'delete' || method === 'put' || method === 'patch') {
+            
+            if(response?.data?.message==""){
+                return response;
+            }
+
             const successMessage = response?.data?.message || response?.data?.desc || 'Operation successful';
             Swal.fire({
                 title: 'Success!',

@@ -18,6 +18,7 @@ import { textParser } from '../../../utils/utils';
 import AddLecture from './AddLecture';
 import AddLectureModel from './AddLectureModal';
 import './CourseNew.scss';
+import Loading from '@components/Loading/Loading';
 
 const AddNewCourse = () => {
     const location = useLocation();
@@ -35,9 +36,6 @@ const AddNewCourse = () => {
     const [loading, setLoading] = useState(false);
     const [isPublished, setIsPublished] = useState(false);
     const courseId = useSelector((state) => state?.root?.currentCourse);
-
-    console.log(courseId, 'COURSE ID ');
-    console.log(currentCourse, ' CURRENT COURSE ');
 
     const [courseData, setCourseData] = useState({
         title: '',
@@ -108,6 +106,7 @@ const AddNewCourse = () => {
     // ///////////////// APi Calls ///////////////
     const getCourseById = async (id) => {
         try {
+            setLoading(true);
             const { data } = await axiosWrapper('GET', `${API_URL.SUPABASE_GET_COURSE.replace(':id', id)}`, {}, token);
 
             // console.log( data, "COURSE DATA ")
@@ -149,6 +148,7 @@ const AddNewCourse = () => {
                 lecturess: data.unassignedLectures,
                 folders: data.folders
             });
+            setLoading(false);
 
             dispatch({ type: types.ALL_RECORDS, data: { keyOfData: 'currentCourseUpdate', data: false } });
             dispatch({ type: types.ALL_RECORDS, data: { keyOfData: 'coachName', data: data.createdBy?.name } });
@@ -281,10 +281,13 @@ const AddNewCourse = () => {
     const toggleSwitch = () => {
         setIsPublished(!isPublished);
     };
-    return (
+    return  loading ? (
+        <Loading />
+    ) :  (
         <div className="addcourse-section supabase">
             <div className="title-top">
-                <span onClick={() => navigate(`/${role}/courses-supabase`)} style={{ cursor: 'pointer' }}>
+            {/* onClick={() => navigate(`/${role}/courses-supabase`)}  */}
+                <span style={{ cursor: 'pointer' }}>
                     Add Course
                 </span>
                 {/* {editMode ? 'Edit New Course' : 'Add New Course'} */}
