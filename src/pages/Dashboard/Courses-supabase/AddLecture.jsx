@@ -392,7 +392,6 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
         // Update state
         setTopics(updatedTopics);
 
-        console.log(updatedTopics, ' These are the updated topics ');
         setUnassignedLectures(updatedUnassignedLectures);
         setShowMovePopup(false);
     };
@@ -1351,9 +1350,15 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
                                                                                         {...provided.draggableProps}
                                                                                         {...provided.dragHandleProps}
                                                                                     >
-                                                                                        <a href="javascript:void(0)">
-                                                                                            {lecture.name}
-                                                                                        </a>
+
+                                                                                        <EditText
+                                                                                            name="textbox4"
+                                                                                            defaultValue={
+                                                                                                lecture.name ??
+                                                                                                'ERROR'
+                                                                                            }
+                                                                                            inputClassName="editable-input"
+                                                                                        />
                                                                                         <div className="drop-box">
                                                                                             <Dropdown>
                                                                                                 <Dropdown.Toggle id="dropdown-basic">
@@ -1425,12 +1430,9 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
                                                             </div>
                                                         )}
                                                     </Droppable>
+                                                    {/* End Unassinged Lecture Section  */}
                                                 </DragDropContext>
-                                                {/* Folders Code End  */}
 
-                                                {/* Lectures without folder  */}
-
-                                                {/* End Lectures without Folders  */}
 
                                                 {/* Show the Move Popup for unassigned lectures */}
                                                 {showMovePopup &&
@@ -1494,7 +1496,7 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
                         </div>
                       </div> */}
                                                 {initialData?.lecturess?.length > 0 ||
-                                                initialData?.folders?.some((folder) => folder.lectures?.length > 0) ? (
+                                                    initialData?.folders?.some((folder) => folder.lectures?.length > 0) ? (
                                                     <>
                                                         {/* Unassigned lectures */}
                                                         {initialData.lecturess?.map((lecture) => (
@@ -1638,7 +1640,7 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
                                                                             <Dropdown.Item eventKey="add-resource">
                                                                                 Add resources
                                                                             </Dropdown.Item>
-                                                                            <Dropdown.Item eventKey="add-transcript">
+                                                                            <Dropdown.Item eventKey="add-transcript" disabled={showTranscriptEditor === true}  >
                                                                                 Add Transcript{' '}
                                                                             </Dropdown.Item>
                                                                             <Dropdown.Item eventKey="add-quiz">
