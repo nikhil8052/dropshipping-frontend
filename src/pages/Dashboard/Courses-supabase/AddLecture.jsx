@@ -158,8 +158,14 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
         }));
     };
 
-    const toggleSwitch = () => {
+    const toggleSwitch = async () => {
+        const data ={
+            "is_published":"false"
+        }
         setIsPublished(!isPublished);
+        const url = getApiUrl(isEditing, editingLecture?.id);
+        const method = isEditing ? 'PUT' : 'POST';
+        const response = await axiosWrapper(method, url, data, token);       
     };
 
     // Add New Lecture which is unassinged
@@ -582,7 +588,7 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
         try {
             const formData = prepareFormData(values);
 
-            console.log(editingLecture);
+           
             const url = getApiUrl(isEditing, editingLecture?.id);
             const method = isEditing ? 'PUT' : 'POST';
 
@@ -759,7 +765,7 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
         formData.append('files', file);
         formData.append('name', file.name);
         const mediaFile = await axiosWrapper('POST', API_URL.UPLOAD_MEDIA, formData, '', true);
-        setResourceFileUrl(mediaFile.data[0].path);
+        setResourceFileUrl('/resource_image.svg');
     };
 
     const handlePublishCourseModal = () => {
@@ -1551,11 +1557,11 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
                                                                     className="submit-btn"
                                                                     disabled={isSubmitting}
                                                                 >
-                                                                    {isEditing ? 'Update' : 'Save'}
+                                                                    {isEditing ? 'Update Lecture' : 'Update Lecture'}
                                                                 </Button>
-                                                                <Button type="submit" className="submit-btn">
+                                                                {/* <Button type="submit" className="submit-btn">
                                                                     Save
-                                                                </Button>
+                                                                </Button> */}
                                                             </div>
                                                         </div>
 
