@@ -20,10 +20,12 @@ import { API_URL } from '../../../utils/apiUrl';
 import Loading from '@components/Loading/Loading';
 import { stripHtmlTags } from '../../../utils/utils';
 import PencilLine from '../../../assets/icons/PencilLine.svg';
-import PencilEdit from  '../../../assets/icons/PencilLine2.svg';
+import PencilEdit from '../../../assets/icons/PencilLine2.svg';
 import trashIconRed from '../../../assets/icons/Trash-rename.svg';
 import * as types from '../../../redux/actions/actionTypes';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
+import { EditText } from 'react-edit-text';
+import 'react-edit-text/dist/index.css';
 
 const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCourseData }) => {
     const [loading, setLoading] = useState(false);
@@ -39,7 +41,6 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
 
     const [publishLectureModel, setPublishLectureModel] = useState(false);
     const [pendingLectureId, setPendingLectureId] = useState(null);
-
     const [modalShowSave, setModalShowSave] = useState(false);
     const [loadingCRUD, setLoadingCRUD] = useState(false);
 
@@ -160,13 +161,13 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
     };
 
     const toggleSwitch = async () => {
-        const data ={
-            "is_published":"false"
-        }
+        const data = {
+            is_published: 'false'
+        };
         setIsPublished(!isPublished);
         const url = getApiUrl(isEditing, editingLecture?.id);
         const method = isEditing ? 'PUT' : 'POST';
-        const response = await axiosWrapper(method, url, data, token);       
+        const response = await axiosWrapper(method, url, data, token);
     };
 
     // Add New Lecture which is unassinged
@@ -589,7 +590,6 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
         try {
             const formData = prepareFormData(values);
 
-           
             const url = getApiUrl(isEditing, editingLecture?.id);
             const method = isEditing ? 'PUT' : 'POST';
 
@@ -1006,7 +1006,13 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
                                 <div className="col-md-3">
                                     <div className="course-left">
                                         <div className="course-left-top">
-                                            <h2 className="subhead">{title}</h2>
+                                            <h2 className="subhead">
+                                                <EditText
+                                                    name="textbox1"
+                                                    defaultValue={title}
+                                                    inputClassName="editable-input"
+                                                />
+                                            </h2>
                                             <div className="drop-box">
                                                 <Dropdown>
                                                     <Dropdown.Toggle id="dropdown-basic">
@@ -1042,10 +1048,20 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
                                                                     {/* Topic Header */}
                                                                     <div
                                                                         className="drop-box"
-                                                                        onClick={() => toggleFolder(topicIndex)}
+                                                                        onClick={(e) => {
+                                                                            if (!e.target.closest('.editable-text')) {
+                                                                                toggleFolder(topicIndex);
+                                                                            }
+                                                                        }}
                                                                         style={{ cursor: 'pointer' }}
                                                                     >
-                                                                        <h3>{topic.name}</h3>
+                                                                        <h3>
+                                                                            <EditText
+                                                                                name="textbox2"
+                                                                                defaultValue={topic.name}
+                                                                                inputClassName="editable-input"
+                                                                            />
+                                                                        </h3>
                                                                         <div
                                                                             className={`folder-dropdown ${isOpen[topicIndex] ? 'rotated' : ''}`}
                                                                         >
@@ -1080,8 +1096,14 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
                                                                                                             )
                                                                                                         }
                                                                                                     >
-                                                                                                        {lecture.name ??
-                                                                                                            'ERROR'}
+                                                                                                        <EditText
+                                                                                                            name="textbox3"
+                                                                                                            defaultValue={
+                                                                                                                lecture.name ??
+                                                                                                                'ERROR'
+                                                                                                            }
+                                                                                                            inputClassName="editable-input"
+                                                                                                        />
                                                                                                     </a>
 
                                                                                                     <div className="drop-box">
@@ -1217,7 +1239,13 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
                                                         <div className="detail-box">
                                                             <ul>
                                                                 <li>
-                                                                    <a href="javascript:void(0)">{lecture.name}</a>
+                                                                    <a href="javascript:void(0)">
+                                                                        <EditText
+                                                                            name="textbox4"
+                                                                            defaultValue={lecture.name}
+                                                                            inputClassName="editable-input"
+                                                                        />
+                                                                    </a>
                                                                     <div className="drop-box">
                                                                         <Dropdown>
                                                                             <Dropdown.Toggle id="dropdown-basic">
@@ -1394,14 +1422,12 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
                                                             <div className="new-page-view" key={lecture.id}>
                                                                 <div className="course-right-header">
                                                                     <h2 className="subhead">{lecture?.name}</h2>
-                                                                    <div className="img-box cursor-pointer" onClick={() => handleEditClick(lecture.id)} >
-                                                                        <img
-                                                                            
-                                                                            src={PencilEdit}
-                                                                            alt="Edit"
-                                                                            
-                                                                        />
-                                                                        </div>
+                                                                    <div
+                                                                        className="img-box cursor-pointer"
+                                                                        onClick={() => handleEditClick(lecture.id)}
+                                                                    >
+                                                                        <img src={PencilEdit} alt="Edit" />
+                                                                    </div>
                                                                 </div>
                                                             </div>
                                                         ))}
@@ -1413,12 +1439,14 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
                                                                     <div className="course-right-header">
                                                                         <h2 className="subhead">{lecture?.name}</h2>
                                                                         <div className="img-box">
-                                                                        <img
-                                                                            className="cursor-pointer"
-                                                                            src={PencilEdit}
-                                                                            alt="Edit"
-                                                                            onClick={() => handleEditClick(lecture.id)}
-                                                                        />
+                                                                            <img
+                                                                                className="cursor-pointer"
+                                                                                src={PencilEdit}
+                                                                                alt="Edit"
+                                                                                onClick={() =>
+                                                                                    handleEditClick(lecture.id)
+                                                                                }
+                                                                            />
                                                                         </div>
                                                                     </div>
                                                                 </div>
@@ -1541,7 +1569,7 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
                                                                     </Dropdown>
                                                                 </div>
                                                             </div>
-                                                            <div className="gap-3 d-flex" style={{flexWrap: 'wrap'}}>
+                                                            <div className="gap-3 d-flex" style={{ flexWrap: 'wrap' }}>
                                                                 <div className="toggle-wrapper">
                                                                     <span className="toggle-label">
                                                                         {isPublished ? 'Published' : 'Draft'}
