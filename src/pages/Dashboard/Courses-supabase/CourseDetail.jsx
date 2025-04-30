@@ -228,7 +228,7 @@ const CourseDetail = () => {
                                     <div className="product-details d-flex  justify-content-between">
                                         <h3>{selectedLecture?.name}</h3>
                                         <div>
-                                            <FontAwesomeIcon icon={faCopy} onClick={handleCopy} />
+                                            <FontAwesomeIcon style={{ cursor: 'pointer' }} icon={faCopy} onClick={handleCopy} />
                                         </div>
                                     </div>
                                     <div className="modal-description">
