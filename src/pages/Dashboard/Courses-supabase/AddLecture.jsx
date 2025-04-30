@@ -63,18 +63,27 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
     const [lectureQuizzes, setLectureQuizzes] = useState([]);
     const [editQuiz, setEditQuiz] = useState(null);
     const [rightViewLecture, setRightViewLecture] = useState(null);
+    const [activeLectureId, setActiveLectureId] = useState(null);
 
     const dispatch = useDispatch();
 
+    useEffect(() => {
+        if (topics.length > 0) {
+            setIsOpen({ 0: true }); // Open the first topic
+        }
+    }, [topics]);
 
     useEffect(() => {
         if (initialData) {
             if (initialData.lecturess?.length > 0) {
                 setRightViewLecture(initialData.lecturess[0]);
+                setActiveLectureId(initialData.lecturess[0].id)
             } else {
                 const folderWithLecture = initialData.folders?.find(folder => folder.lectures?.length > 0);
                 if (folderWithLecture) {
                     setRightViewLecture(folderWithLecture.lectures[0]);
+                    setActiveLectureId(folderWithLecture.lectures[0].id);
+
                 }
             }
         }
@@ -683,7 +692,7 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
 
         const lecture = await getLectureData(id);
         setRightViewLecture(lecture.data);
-        
+
         const description = stripHtmlTags(lecture.data?.description);
         const transcript = stripHtmlTags(lecture.data?.transcript);
         setCurrentActiveLectureID(id);
@@ -1327,14 +1336,18 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
                                                                                                     }
                                                                                                     {...provided.draggableProps}
                                                                                                     {...provided.dragHandleProps}
+                                                                                                    className={lecture.id === activeLectureId ? "active_lecture" : ""}
                                                                                                 >
                                                                                                     <a
                                                                                                         href="javascript:void(0)"
-                                                                                                        onClick={() =>
+                                                                                                        onClick={() => {
+
+                                                                                                            console.log("Lecture clicked")
+                                                                                                        }
                                                                                                             // loadLectureData(
                                                                                                             //     lecture
                                                                                                             // )
-                                                                                                            console.log("Lecture clicked")
+
                                                                                                         }
                                                                                                     >
                                                                                                         {
@@ -1374,6 +1387,7 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
                                                                                                                     <Dropdown.Item
                                                                                                                         href="javascript:void(0)"
                                                                                                                         onClick={() => {
+                                                                                                                            setActiveLectureId(lecture.id);
                                                                                                                             setPendingLectureId(
                                                                                                                                 lecture.id
                                                                                                                             );
@@ -1387,10 +1401,12 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
                                                                                                                 ) : (
                                                                                                                     <Dropdown.Item
                                                                                                                         href="javascript:void(0)"
-                                                                                                                        onClick={() =>
+                                                                                                                        onClick={() => {
+                                                                                                                            setActiveLectureId(lecture.id)
                                                                                                                             handleEditClick(
                                                                                                                                 lecture.id
                                                                                                                             )
+                                                                                                                        }
                                                                                                                         }
                                                                                                                     >
                                                                                                                         Edit
@@ -1416,7 +1432,7 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
                                                                                                                     drop="right"
                                                                                                                     as="div"
                                                                                                                 >
-                                                                                                                    <Dropdown.Toggle
+                                                                                                                    {/* <Dropdown.Toggle
                                                                                                                         as="span"
                                                                                                                         className="dropdown-item"
                                                                                                                         style={{
@@ -1424,7 +1440,7 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
                                                                                                                         }}
                                                                                                                     >
                                                                                                                         Move
-                                                                                                                    </Dropdown.Toggle>
+                                                                                                                    </Dropdown.Toggle> */}
 
                                                                                                                     <Dropdown.Item
                                                                                                                         onClick={() =>
@@ -1436,29 +1452,7 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
                                                                                                                         Delete
                                                                                                                     </Dropdown.Item>
 
-                                                                                                                    <Dropdown.Menu className="move-drop">
-                                                                                                                        {topics.map(
-                                                                                                                            (
-                                                                                                                                moveTopic,
-                                                                                                                                i
-                                                                                                                            ) => (
-                                                                                                                                <Dropdown.Item
-                                                                                                                                    key={
-                                                                                                                                        i
-                                                                                                                                    }
-                                                                                                                                    onClick={() =>
-                                                                                                                                        moveLecture(
-                                                                                                                                            i
-                                                                                                                                        )
-                                                                                                                                    }
-                                                                                                                                >
-                                                                                                                                    {
-                                                                                                                                        moveTopic.name
-                                                                                                                                    }
-                                                                                                                                </Dropdown.Item>
-                                                                                                                            )
-                                                                                                                        )}
-                                                                                                                    </Dropdown.Menu>
+                                                                                                                    
                                                                                                                 </Dropdown>
                                                                                                             </Dropdown.Menu>
                                                                                                         </Dropdown>
@@ -1497,6 +1491,7 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
                                                                                         ref={provided.innerRef}
                                                                                         {...provided.draggableProps}
                                                                                         {...provided.dragHandleProps}
+                                                                                        className={lecture.id === activeLectureId ? "active_lecture" : ""}
                                                                                     >
 
                                                                                         {
@@ -1528,6 +1523,7 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
                                                                                                         <Dropdown.Item
                                                                                                             href="javascript:void(0)"
                                                                                                             onClick={() => {
+                                                                                                                setActiveLectureId(lecture.id);
                                                                                                                 setPendingLectureId(
                                                                                                                     lecture.id
                                                                                                                 );
@@ -1542,9 +1538,13 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
                                                                                                         <Dropdown.Item
                                                                                                             href="javascript:void(0)"
                                                                                                             onClick={() =>
+                                                                                                            {
+                                                                                                                setActiveLectureId(lecture.id);
                                                                                                                 handleEditClick(
                                                                                                                     lecture.id
                                                                                                                 )
+                                                                                                            }
+                                                                                                                
                                                                                                             }
                                                                                                         >
                                                                                                             Edit
@@ -1801,8 +1801,8 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
                                                                         </div>
                                                                     </div>
                                                                 </>)}
-                                                                <Button type="button" className="submit-btn" onClick={()=> { setIsEditing(false) }}>
-                                                                     Cancel
+                                                                <Button type="button" className="cancel-btn" onClick={() => { setIsEditing(false) }}>
+                                                                    Cancel
                                                                 </Button>
                                                                 <Button type="submit" className="submit-btn" disabled={isSubmitting}>
                                                                     {isSubmitting ? (
@@ -1821,7 +1821,7 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
                                                                         isEditing ? 'Update' : 'Update'
                                                                     )}
                                                                 </Button>
-                                                               
+
                                                             </div>
                                                         </div>
 

@@ -1361,6 +1361,19 @@ label.form-label {
     opacity: 1;
 }
 
+.detail-box li.active_lecture {
+    background-color: #00b5d1;
+    color: white !important;
+}
+
+.detail-box li.active_lecture > a {
+    color: #FFF;
+}
+
+.tab-buttons.editor-buttons button {
+    background-color: transparent !important;
+}
+
 @media only screen and (max-width:991px) {
     .access-container {
         flex-wrap: wrap;

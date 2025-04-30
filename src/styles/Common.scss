@@ -1060,6 +1060,13 @@ input:focus-visible {
     color: #000;
 }
 
+.main-panel:has(.new-student-page-wrapper) .title-top span, .title-top p {
+    font-weight: 600;
+    font-size: 20px;
+    color: #1D2026;
+    line-height: 1.2;
+}
+
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
 
 
