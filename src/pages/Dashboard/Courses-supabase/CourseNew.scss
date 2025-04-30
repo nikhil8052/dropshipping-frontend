@@ -1,7 +1,9 @@
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
 
 
-.addcourse-section.supabase * ,.coursemodal * {
+.addcourse-section.supabase *,
+.coursemodal *,
+.course-section * .publish-form-section * {
     font-family: "Montserrat", sans-serif !important;
 }
 
@@ -35,7 +37,8 @@
     padding: 0;
     padding-bottom: 12px;
 
-    span {
+    span,
+    p {
         font-weight: 600;
         font-size: 24px;
         color: #1D2026;
@@ -1292,7 +1295,7 @@ label.form-label {
     gap: 5px;
 }
 
-.detail-box li > a {
+.detail-box li>a {
     word-break: break-all;
 }
 
@@ -1312,7 +1315,7 @@ label.form-label {
     margin: 0 !important;
 }
 
- .editable-input {
+.editable-input {
     background-color: #656c6d17 !important;
     padding: 7px;
     border-radius: 5px;
@@ -1329,8 +1332,8 @@ label.form-label {
     padding: 2px 5px;
     border-radius: 3px;
     transition: background-color 0.2s;
-  }
-  
+}
+
 @media only screen and (max-width:991px) {
     .access-container {
         flex-wrap: wrap;
@@ -1479,34 +1482,35 @@ label.form-label {
         width: 10px;
     }
 
-.course-detail-row .ql-snow .ql-tooltip.ql-flip {
-    padding: 25px;
-}
+    .course-detail-row .ql-snow .ql-tooltip.ql-flip {
+        padding: 25px;
+    }
 
-.ql-snow .ql-tooltip[data-mode=video]::before {
-    font-size: 22px;
-    margin-bottom: 10px;
-}
+    .ql-snow .ql-tooltip[data-mode=video]::before {
+        font-size: 22px;
+        margin-bottom: 10px;
+    }
 
-.course-detail-row .ql-action {
-    padding: 12px 25px;
-}
+    .course-detail-row .ql-action {
+        padding: 12px 25px;
+    }
 
-.ql-snow .ql-tooltip.ql-editing a.ql-action::after {
-    font-size: 16px;
-}
+    .ql-snow .ql-tooltip.ql-editing a.ql-action::after {
+        font-size: 16px;
+    }
 
-.title-top span{
-    font-size: 20px;
-}
+    .title-top span,
+    .title-top p {
+        font-size: 20px;
+    }
 
-.subhead {
-    font-size: 16px;
-}
+    .subhead {
+        font-size: 16px;
+    }
 
-.toggle-wrapper .toggle-label {
-    font-size: 16px;
-}
+    .toggle-wrapper .toggle-label {
+        font-size: 16px;
+    }
 }
 
 
@@ -1524,5 +1528,3 @@ label.form-label {
     }
 
 }
-
-

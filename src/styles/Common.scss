@@ -36,11 +36,12 @@
             display: none;
         }
 
-        & > div {
+        &>div {
             width: 100%;
         }
+
         @media screen and (max-width: 768px) {
-            padding: 5px 8px; 
+            padding: 5px 8px;
         }
     }
 
@@ -92,35 +93,44 @@
 .custom_select__control {
     border-radius: unset !important;
 }
+
 // Action Buttons
 .action-button {
     width: 30px;
     height: 30px;
     cursor: pointer;
+
     &:hover {
         border: none !important;
     }
+
     display: flex;
     justify-content: center;
     align-items: center;
     border: none;
+
     .action-icon {
         width: 20px;
         height: 20px;
     }
 }
+
 .edit-button {
     transition: all 0.5s ease-in-out;
+
     &:hover {
         border: 1px solid $info-color;
     }
 }
+
 .delete-button {
     transition: all 0.5s ease-in-out;
+
     &:hover {
         border: 1px solid $danger-color;
     }
 }
+
 .add-button {
     @include pagination-gradient;
     border-radius: 59px;
@@ -138,11 +148,13 @@
     white-space: nowrap;
     border: none;
 }
+
 .submit-btn {
     color: #ffff !important;
     padding: 10px 30px;
     @include pagination-gradient;
 }
+
 .custom-width {
     padding: 10px 50px;
 }
@@ -154,6 +166,7 @@
     color: #fff;
     border: 1px solid rgba(233, 234, 240, 1) !important;
 }
+
 .filter-button {
     background-color: transparent;
     border-radius: 59px;
@@ -170,12 +183,15 @@
     justify-content: center;
     border: none;
     cursor: pointer;
+
     &:hover {
         border: none !important;
     }
+
     .form-check-input {
         width: 60px;
         height: 30px;
+
         &:checked {
             background-color: $info-color !important;
             border-color: $info-color !important;
@@ -205,11 +221,13 @@
     margin-bottom: 0.5rem;
     opacity: 0px;
 }
+
 .title-top {
-background-color: rgba(255, 255, 255, 0.1019607843) !important;
-// border: 1px solid rgb(233, 234, 240) !important;
-color: #fff;
+    background-color: rgba(255, 255, 255, 0.1019607843) !important;
+    // border: 1px solid rgb(233, 234, 240) !important;
+    color: #fff;
 }
+
 // Fields, Selects
 
 .field-label {
@@ -223,6 +241,7 @@ color: #fff;
     color: #fff;
     margin-bottom: 1rem;
 }
+
 // Fields
 .field-control,
 .field-select-control {
@@ -237,7 +256,7 @@ color: #fff;
     padding: 15px 20px;
     width: 100%;
     margin-bottom: 2rem;
-    background-color: #343837!important;
+    background-color: #343837 !important;
     border: 1px solid rgb(233, 234, 240) !important;
     color: #fff;
 }
@@ -255,7 +274,7 @@ color: #fff;
     padding: 15px 20px;
     width: 100%;
     margin-bottom: 2rem;
-    background-color: #fff!important;
+    background-color: #fff !important;
     border: 1px solid rgb(233, 234, 240) !important;
     color: #343837;
 }
@@ -268,7 +287,7 @@ color: #fff;
     line-height: 14px;
     text-align: left;
     color: #fff !important;
-    background-color: #343837!important;
+    background-color: #343837 !important;
     border: 0.8px solid rgba(233, 234, 240, 1) !important;
     border-radius: 50px !important;
     width: 100% !important;
@@ -291,18 +310,19 @@ color: #fff;
     border: 0.8px solid rgba(233, 234, 240, 1) !important;
     color: rgba(71, 81, 86, 1);
 }
+
 .field-control::placeholder,
 .field-select-control::placeholder,
 .field-text-area-control::placeholder {
     color: rgba(146, 159, 165, 1) !important;
 }
+
 // Select
 .field-select-control {
     appearance: none;
     -webkit-appearance: none;
     -moz-appearance: none;
-    background: url('data:image/svg+xml;utf8,<svg fill="rgba(146, 159, 165, 1)" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path d="M7 10l5 5 5-5z"/></svg>')
-        no-repeat;
+    background: url('data:image/svg+xml;utf8,<svg fill="rgba(146, 159, 165, 1)" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path d="M7 10l5 5 5-5z"/></svg>') no-repeat;
     background-position: right 20px top 50%;
     background-size: 20px;
     padding: 12px 20px;
@@ -340,6 +360,7 @@ color: #fff;
         background-color: $success-color !important;
         color: white !important;
     }
+
     &.correctAnswer::placeholder {
         color: white !important;
     }
@@ -360,10 +381,12 @@ color: #fff;
     white-space: nowrap;
     border: none;
 }
-.white-important-bg{
-background-color: transparent !important;
+
+.white-important-bg {
+    background-color: transparent !important;
     color: #000 !important;
 }
+
 // Media styles
 @media (max-width: $large-screen) {
     .responsive-btn {
@@ -415,71 +438,81 @@ background-color: transparent !important;
     cursor: pointer !important;
 }
 
-.students-page .edit-button .action-icon {
-    filter: invert(1);
-}
-
 .ag-overlay-no-rows-wrapper span {
     color: #fff;
 }
 
-.field-control:focus-visible, .field-select-control:focus-visible, .field-text-area-control:focus-visible {
+.field-control:focus-visible,
+.field-select-control:focus-visible,
+.field-text-area-control:focus-visible {
     outline: 0px !important;
     border: 1px solid #fff !important;
     color: #fff !important;
 }
 
- .new-page .dropdown-button .dropdown-toggle, .new-page  .custom_select__control .dropdown-toggle, .new-page .dropdown-button-fix .dropdown-toggle {
+.new-page .dropdown-button .dropdown-toggle,
+.new-page .custom_select__control .dropdown-toggle,
+.new-page .dropdown-button-fix .dropdown-toggle {
     padding: 10px 20px;
     color: #fff;
     background-color: #fff;
     background: #343837 !important;
 }
 
- .new-page .dropdown-button .dropdown-toggle span, .new-page .custom_select__control .dropdown-toggle span, .new-page .dropdown-button-fix .dropdown-toggle span {
+.new-page .dropdown-button .dropdown-toggle span,
+.new-page .custom_select__control .dropdown-toggle span,
+.new-page .dropdown-button-fix .dropdown-toggle span {
     color: #fff;
     -webkit-text-fill-color: #fff;
 }
 
- .new-page .dropdown-button .dropdown-toggle img, .new-page .custom_select__control .dropdown-toggle img, .new-page  .dropdown-button-fix .dropdown-toggle img {
+.new-page .dropdown-button .dropdown-toggle img,
+.new-page .custom_select__control .dropdown-toggle img,
+.new-page .dropdown-button-fix .dropdown-toggle img {
     filter: invert(1);
 }
 
 
-.new-page .field-control,.new-page .field-select-control{
+.new-page .field-control,
+.new-page .field-select-control {
     margin-bottom: 0 !important;
 }
 
-.new-page .formgroup label{
+.new-page .formgroup label {
     margin-bottom: 16px;
 }
 
-.box-row > div {
-    margin-bottom: 2rem;
+.box-row>div {
+    margin-bottom: 1rem;
 }
 
-.students-page .box-row > div > div {
-    margin-bottom: 2rem;
+.students-page .box-row>div>div {
+    margin-bottom: 1rem;
 }
 
 .ql-editor.ql-blank::before {
     color: #fff;
 }
-.box-row {
-    margin: 2rem 0rem;
-    border: 1px solid rgba(255, 255, 255, 0.5019607843)!important;
-    padding: 30px;
-    border-radius: 16px;
-}
+
+// .box-row {
+//     margin: 2rem 0rem;
+//     border: 1px solid rgba(255, 255, 255, 0.5019607843) !important;
+//     padding: 30px;
+//     border-radius: 16px;
+// }
 
 // new css for coursepage(light)
-.main-panel:has(.publish-form-section), .main-content-wrapper:has(.publish-form-section),.main-panel:has(.course-section),.main-content-wrapper:has(.course-section)
-{
+.main-panel:has(.publish-form-section),
+.main-content-wrapper:has(.publish-form-section),
+.main-panel:has(.course-section),
+.main-content-wrapper:has(.course-section) {
     background-color: #F3F4F6;
 }
 
-.main-panel:has(.view-progress-section), .main-content-wrapper:has(.view-progress-section),.main-panel:has(.course-section),.main-content-wrapper:has(.course-section)
-{
+.main-panel:has(.view-progress-section),
+.main-content-wrapper:has(.view-progress-section),
+.main-panel:has(.course-section),
+.main-content-wrapper:has(.course-section) {
     background-color: #F3F4F6;
 }
 
@@ -490,36 +523,40 @@ background-color: transparent !important;
 
 .main-panel:has(.course-section) .generic-card {
     // border: 0.5px solid rgb(0 163 214 / 44%);
-    border:  1px solid rgb(228, 228, 228)
+    border: 1px solid rgb(228, 228, 228)
 }
+
 .main-panel:has(.course-section) .generic-card:hover {
-box-shadow: rgba(60, 64, 67, 0.32) 0px 1px 2px, rgba(60, 64, 67, 0.15) 0px 2px 6px, rgba(0, 0, 0, 0.1) 0px 1px 8px;
+    box-shadow: rgba(60, 64, 67, 0.32) 0px 1px 2px, rgba(60, 64, 67, 0.15) 0px 2px 6px, rgba(0, 0, 0, 0.1) 0px 1px 8px;
 }
+
 // .main-panel:has(.course-section) .course-section {
 //     border: 0.5px solid rgb(0 172 212 / 58%);
 //     padding: 30px 30px 0px;
 // }
 
 
-.main-panel:has(.course-section) .search-input{
+.main-panel:has(.course-section) .search-input {
     background-color: #F3F4F6 !important;
     border: 1px solid rgb(176 225 235) !important;
     color: #000;
 }
 
-.main-panel:has(.course-section) .input-group-text{
+.main-panel:has(.course-section) .input-group-text {
     background-color: #F3F4F6 !important;
     border: 1px solid rgb(176 225 235) !important;
 }
-.main-panel:has(.course-section) .input-group-text img{
-filter: invert(0);
+
+.main-panel:has(.course-section) .input-group-text img {
+    filter: invert(0);
 }
 
-.main-panel:has(.course-section) .search-input::placeholder{
+.main-panel:has(.course-section) .search-input::placeholder {
     color: #000;
 }
 
-.main-panel:has(.publish-form-section) .title-top,.main-panel:has(.view-progress-section) .title-top {
+.main-panel:has(.publish-form-section) .title-top,
+.main-panel:has(.view-progress-section) .title-top {
 
     background-color: #F3F4F6 !important;
     // border: 1px solid rgb(176 225 235) !important;
@@ -531,99 +568,107 @@ filter: invert(0);
 //     padding: 30px;
 // }
 
-.main-panel:has(.publish-form-section) .corse-detail-box *,.main-panel:has(.view-progress-section) .corse-detail-box *{
+.main-panel:has(.publish-form-section) .corse-detail-box *,
+.main-panel:has(.view-progress-section) .corse-detail-box * {
     color: #000;
 }
 
-.main-panel:has(.publish-form-section) .lecture-card *,.main-panel:has(.view-progress-section) .lecture-card * {
+.main-panel:has(.publish-form-section) .lecture-card *,
+.main-panel:has(.view-progress-section) .lecture-card * {
     color: #000 !important;
 }
 
-.main-panel:has(.publish-form-section) .lecture-card ,.main-panel:has(.view-progress-section) .lecture-card {
+.main-panel:has(.publish-form-section) .lecture-card,
+.main-panel:has(.view-progress-section) .lecture-card {
     background-color: transparent;
     border: 1px solid rgb(217 216 215);
 }
 
-.main-panel:has(.publish-form-section) .lecture-card:hover,.main-panel:has(.view-progress-section) .lecture-card:hover{
-        background-color: #80808042;
-    }
+.main-panel:has(.publish-form-section) .lecture-card:hover,
+.main-panel:has(.view-progress-section) .lecture-card:hover {
+    background-color: #80808042;
+}
 
-    // .main-panel:has(.publish-form-section)   .corse-detail-box iframe,.main-panel:has(.publish-form-section)  .corse-detail-box .pdf-viewer {
-    //     padding: 30px;
-    //     border: 1px solid rgb(217 216 215);
-    //     border-radius: 16px;
-    // }
+// .main-panel:has(.publish-form-section)   .corse-detail-box iframe,.main-panel:has(.publish-form-section)  .corse-detail-box .pdf-viewer {
+//     padding: 30px;
+//     border: 1px solid rgb(217 216 215);
+//     border-radius: 16px;
+// }
 
-    // .main-panel:has(.view-progress-section)   .corse-detail-box iframe,.main-panel:has(.view-progress-section)  .corse-detail-box .pdf-viewer {
-    //     padding: 30px;
-    //     border: 1px solid rgb(217 216 215);
-    //     border-radius: 16px;
-    // }
+// .main-panel:has(.view-progress-section)   .corse-detail-box iframe,.main-panel:has(.view-progress-section)  .corse-detail-box .pdf-viewer {
+//     padding: 30px;
+//     border: 1px solid rgb(217 216 215);
+//     border-radius: 16px;
+// }
 
-    .main-panel:has(.publish-form-section)  .publish-added-button-footer .edit-btn {
-        border: 1px solid #000;
-    }
+.main-panel:has(.publish-form-section) .publish-added-button-footer .edit-btn {
+    border: 1px solid #000;
+}
 
-    .main-panel:has(.view-progress-section)  .publish-added-button-footer .edit-btn {
-        border: 1px solid #000;
-    }
+.main-panel:has(.view-progress-section) .publish-added-button-footer .edit-btn {
+    border: 1px solid #000;
+}
 
-    .main-panel .main-content-wrapper {
-        margin-top: 15px;
-    }
+.main-panel .main-content-wrapper {
+    margin-top: 15px;
+}
 
-    .main-panel:has(.publish-form-section) .lecture-card, .main-panel:has(.view-progress-section) .lecture-card {
-        background-color: transparent;
-         border:none; 
-        box-shadow: none;
-        padding: 5px 0px;
-        margin: 0;
-    }
+.main-panel:has(.publish-form-section) .lecture-card,
+.main-panel:has(.view-progress-section) .lecture-card {
+    background-color: transparent;
+    border: none;
+    box-shadow: none;
+    padding: 5px 0px;
+    margin: 0;
+}
 
-    .main-panel:has(.course-section) .generic-card:hover  {
-        background: transparent;
-    }
+.main-panel:has(.course-section) .generic-card:hover {
+    background: transparent;
+}
 
-    .main-panel:has(.course-section) .search-input, .main-panel:has(.course-section) .search-input::placeholder {
-        color: #000 !important;
-    }
+.main-panel:has(.course-section) .search-input,
+.main-panel:has(.course-section) .search-input::placeholder {
+    color: #000 !important;
+}
 
-    .main-panel:has(.publish-form-section) .publish-course-wrapper .carousel-lecture {
-        width: 100%;
-        padding: 0;
-    }
+.main-panel:has(.publish-form-section) .publish-course-wrapper .carousel-lecture {
+    width: 100%;
+    padding: 0;
+}
 
-    .main-panel:has(.view-progress-section) .publish-course-wrapper .carousel-lecture {
-        width: 100%;
-        padding: 0;
-    }
+.main-panel:has(.view-progress-section) .publish-course-wrapper .carousel-lecture {
+    width: 100%;
+    padding: 0;
+}
 
-    .main-panel:has(.publish-form-section) .active_lec .lecture-card {
-        background-color: #00a7d57d;
-    }
+.main-panel:has(.publish-form-section) .active_lec .lecture-card {
+    background-color: #00a7d57d;
+}
 
-    .main-panel:has(.view-progress-section) .active_lec .lecture-card {
-        background-color: #00a7d57d;
-    }
+.main-panel:has(.view-progress-section) .active_lec .lecture-card {
+    background-color: #00a7d57d;
+}
 
-    .sidebar .brand-logo {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        justify-content: space-between;
-    }
+.sidebar .brand-logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    justify-content: space-between;
+}
 
-    button.menu-toggler {
+button.menu-toggler {
     background-color: transparent;
     padding: 5px 15px;
 }
 
-.main-panel:has(.publish-form-section)  .top-nav-title h3,.main-panel:has(.course-section)  .top-nav-title h3 {
+.main-panel:has(.publish-form-section) .top-nav-title h3,
+.main-panel:has(.course-section) .top-nav-title h3 {
     margin-bottom: 0rem;
     display: none;
 }
 
-.main-panel:has(.view-progress-section)  .top-nav-title h3,.main-panel:has(.course-section)  .top-nav-title h3 {
+.main-panel:has(.view-progress-section) .top-nav-title h3,
+.main-panel:has(.course-section) .top-nav-title h3 {
     margin-bottom: 0rem;
     display: none;
 }
@@ -633,19 +678,27 @@ filter: invert(0);
     color: #000 !important;
 }
 
-.addcourse-section .section-title p {color: #000;}
+.addcourse-section .section-title p {
+    color: #000;
+}
 
 .addcourse-section .field-label {
     color: #000;
 }
 
-.addcourse-section .field-control,.addcourse-section  .field-select-control,.upload-course-form .field-control, .upload-course-form .field-select-control {
+.addcourse-section .field-control,
+.addcourse-section .field-select-control,
+.upload-course-form .field-control,
+.upload-course-form .field-select-control {
     background-color: transparent !important;
     color: #000 !important;
     border: 1px solid rgb(3 164 194 / 24%) !important;
 }
 
-.addcourse-section .formgroup input[type=text],.addcourse-section .formgroup input[type=password],.addcourse-section .formgroup textarea,.addcourse-section .formgroup .custom_select__control {
+.addcourse-section .formgroup input[type=text],
+.addcourse-section .formgroup input[type=password],
+.addcourse-section .formgroup textarea,
+.addcourse-section .formgroup .custom_select__control {
     background-color: transparent !important;
     padding: 0px 20px;
 }
@@ -658,15 +711,18 @@ filter: invert(0);
     color: #6E7485 !important;
 }
 
-.addcourse-section .field-control:focus-visible,.addcourse-section  .field-select-control:focus-visible, 
+.addcourse-section .field-control:focus-visible,
+.addcourse-section .field-select-control:focus-visible,
 .addcourse-section .field-text-area-control:focus-visible {
     outline: 0px !important;
     border: 1px solid rgb(3 164 194 / 24%) !important;
     color: #000 !important;
 }
 
-.addcourse-section .formgroup input[type=text],.addcourse-section  .formgroup input[type=password],
-.addcourse-section  .formgroup textarea,.addcourse-section .formgroup .custom_select__control{
+.addcourse-section .formgroup input[type=text],
+.addcourse-section .formgroup input[type=password],
+.addcourse-section .formgroup textarea,
+.addcourse-section .formgroup .custom_select__control {
     border: 1px solid rgb(3 164 194 / 24%) !important;
 }
 
@@ -674,7 +730,8 @@ filter: invert(0);
     background-color: #00b9cf !important;
 }
 
-.publish-form-section .publish-course-wrapper .lecture-details-wrapper,.view-progress-section .publish-course-wrapper .lecture-details-wrapper {
+.publish-form-section .publish-course-wrapper .lecture-details-wrapper,
+.view-progress-section .publish-course-wrapper .lecture-details-wrapper {
     border: 1px solid transparent;
     padding: 0px 30px;
     width: 100%;
@@ -688,33 +745,40 @@ filter: invert(0);
     padding-bottom: 30px;
 }
 
-.addcourse-section  .add-lecture-section .add-lecture-item .items-button .quiz-lec-btn {
+.addcourse-section .add-lecture-section .add-lecture-item .items-button .quiz-lec-btn {
     background-color: #0395c6;
 }
 
-.addcourse-section  .add-lecture-section .add-lecture-item .items-button .quiz-btn {
+.addcourse-section .add-lecture-section .add-lecture-item .items-button .quiz-btn {
     background-color: #a2d9dd;
 }
 
-.addcourse-section  .publish-form-section .publish-course-wrapper .lecture-details-wrapper,.addcourse-section  .view-progress-section .publish-course-wrapper .lecture-details-wrapper {
+.addcourse-section .publish-form-section .publish-course-wrapper .lecture-details-wrapper,
+.addcourse-section .view-progress-section .publish-course-wrapper .lecture-details-wrapper {
     position: static;
 }
 
-.addcourse-section  .publish-form-section .publish-course-wrapper .card-background,.addcourse-section  .view-progress-section .publish-course-wrapper .card-background {
+.addcourse-section .publish-form-section .publish-course-wrapper .card-background,
+.addcourse-section .view-progress-section .publish-course-wrapper .card-background {
     z-index: 1;
 }
 
-.addcourse-section .publish-form-section .publish-course-wrapper .lecture-details-wrapper .lecture-details,.addcourse-section .view-progress-section .publish-course-wrapper .lecture-details-wrapper .lecture-details {
+.addcourse-section .publish-form-section .publish-course-wrapper .lecture-details-wrapper .lecture-details,
+.addcourse-section .view-progress-section .publish-course-wrapper .lecture-details-wrapper .lecture-details {
     position: relative;
     z-index: 2;
 }
 
-.upload-course-form .publish-form-section .cancel-btn,.upload-course-form .cancel-btn,.main-panel:has(.publish-form-section) .publish-course-wrapper .cancel-btn {
+.upload-course-form .publish-form-section .cancel-btn,
+.upload-course-form .cancel-btn,
+.main-panel:has(.publish-form-section) .publish-course-wrapper .cancel-btn {
     color: #000 !important;
     border: 1px solid rgb(3 164 194 / 24%) !important;
 }
 
-.upload-course-form .view-progress-section .cancel-btn,.upload-course-form .cancel-btn,.main-panel:has(.view-progress-section) .publish-course-wrapper .cancel-btn {
+.upload-course-form .view-progress-section .cancel-btn,
+.upload-course-form .cancel-btn,
+.main-panel:has(.view-progress-section) .publish-course-wrapper .cancel-btn {
     color: #000 !important;
     border: 1px solid rgb(3 164 194 / 24%) !important;
 }
@@ -724,7 +788,8 @@ filter: invert(0);
     color: #000;
 }
 
-.upload-course-form .add-lecture-section .add-lecture-nav p,.upload-course-form span{
+.upload-course-form .add-lecture-section .add-lecture-nav p,
+.upload-course-form span {
     color: #000;
 }
 
@@ -732,9 +797,9 @@ filter: invert(0);
     color: #0009;
 }
 
-.new-student-page-wrapper .box-row > div >div {
-    margin-bottom: 2rem;
-}
+// .new-student-page-wrapper .box-row>div>div {
+//     margin-bottom: 2rem;
+// }
 
 .publish-added-button-footer {
     border-top: 0px;
@@ -744,7 +809,8 @@ filter: invert(0);
     padding-left: 2rem !important;
 }
 
-.top-nav-title .h3, .top-nav-title h3{
+.top-nav-title .h3,
+.top-nav-title h3 {
     display: none;
 }
 
@@ -757,16 +823,17 @@ filter: invert(0);
     color: #fff;
 }
 
-.box-row > div:not(:has(div)) {
-    margin-bottom: 0;
-}
+// .box-row>div:not(:has(div)) {
+//     margin-bottom: 0;
+// }
 
-.addcourse-section .formgroup input[type=text]{
+.addcourse-section .formgroup input[type=text] {
     border: 0px !important;
 }
 
 
-.publish-form-section .publish-course-wrapper .lecture-details-wrapper .lecture-details > div,.view-progress-section .publish-course-wrapper .lecture-details-wrapper .lecture-details > div {
+.publish-form-section .publish-course-wrapper .lecture-details-wrapper .lecture-details>div,
+.view-progress-section .publish-course-wrapper .lecture-details-wrapper .lecture-details>div {
     width: 50%;
     text-align: center;
     justify-content: center;
@@ -782,7 +849,8 @@ filter: invert(0);
     color: #fff;
 }
 
-.roadmap-wrapper iframe html, .roadmap-wrapper iframe body {
+.roadmap-wrapper iframe html,
+.roadmap-wrapper iframe body {
     margin: 0;
     padding: 0;
     height: 100%;
@@ -799,21 +867,22 @@ filter: invert(0);
     color: #000 !important;
 }
 
-.view-progress-section .search-lectures .inactive{
+.view-progress-section .search-lectures .inactive {
     background-color: transparent !important;
     border: 1px solid rgb(217, 216, 215) !important;
     border-radius: 10px;
-    }
+}
 
-.view-progress-section .search-lectures .inactive{
-        background-color: #80808042;
-    }
-    
-.view-progress-section .search-lectures .inactive{
+.view-progress-section .search-lectures .inactive {
+    background-color: #80808042;
+}
+
+.view-progress-section .search-lectures .inactive {
     background-color: #00a7d57d !important;
-    }
+}
+
 .new-category-page .ql-editor {
-        color: #fff !important;
+    color: #fff !important;
 }
 
 @media only screen and (max-width:767px) {
@@ -821,18 +890,21 @@ filter: invert(0);
         margin-top: 2rem;
     }
 
-    .main-panel:has(.publish-form-section) .corse-detail-box iframe, .main-panel:has(.publish-form-section) .corse-detail-box .pdf-viewer {
+    .main-panel:has(.publish-form-section) .corse-detail-box iframe,
+    .main-panel:has(.publish-form-section) .corse-detail-box .pdf-viewer {
         padding: 15px;
     }
 
-        .main-panel:has(.view-progress-section) .corse-detail-box iframe, .main-panel:has(.view-progress-section) .corse-detail-box .pdf-viewer {
+    .main-panel:has(.view-progress-section) .corse-detail-box iframe,
+    .main-panel:has(.view-progress-section) .corse-detail-box .pdf-viewer {
         padding: 15px;
     }
 
     .main-panel:has(.publish-form-section) .publish-course-wrapper {
         padding: 15px;
     }
-        .main-panel:has(.view-progress-section) .publish-course-wrapper {
+
+    .main-panel:has(.view-progress-section) .publish-course-wrapper {
         padding: 15px;
     }
 
@@ -840,27 +912,36 @@ filter: invert(0);
         padding-left: 1rem !important;
     }
 
-    .add-course-form form div:last-child .col > div {
+    .add-course-form form div:last-child .col>div {
         flex-direction: column;
         margin-top: 3rem !important;
     }
 
-    .formgroup input[type=text], .formgroup input[type=password], .formgroup textarea, .formgroup .custom_select__control{
+    .formgroup input[type=text],
+    .formgroup input[type=password],
+    .formgroup textarea,
+    .formgroup .custom_select__control {
         width: auto !important;
     }
-    .box-row > div > div {
-        margin-bottom: 1rem;
-    }
-    .box-row > div{
+
+    // .box-row>div>div {
+    //     margin-bottom: 1rem;
+    // }
+
+    .box-row>div {
         margin-bottom: 0px;
     }
-    .new-student-page-wrapper .box-row > div > div {
-        margin-bottom: 1rem;
-    }
+
+    // .new-student-page-wrapper .box-row>div>div {
+    //     margin-bottom: 1rem;
+    // }
+
     .main-panel .main-content-wrapper {
         padding: 10px 10px !important;
     }
-    .field-control, .field-select-control {
+
+    .field-control,
+    .field-select-control {
         padding: 10px;
         margin-bottom: 1rem;
         border-radius: 10px !important;
@@ -870,24 +951,27 @@ filter: invert(0);
         padding: 0px 10px;
     }
 
-       .view-progress-section .publish-course-wrapper .lecture-details-wrapper {
+    .view-progress-section .publish-course-wrapper .lecture-details-wrapper {
         padding: 0px 10px;
     }
 
-    .box-row {
-        margin: 1rem 0rem;
-        padding: 15px;
-    }
+    // .box-row {
+    //     margin: 1rem 0rem;
+    //     padding: 15px;
+    // }
+
     .main-panel:has(.course-section) .course-section {
         padding: 15px;
     }
 }
+
 .confirmation-modal .custom-footer-class .delete-button {
     color: white !important;
     background: rgb(255, 100, 100) !important;
 }
 
-.quill-editor .field-control.name-field-editor,.quill-editor .field-control.name-field-editor:focus-visible {
+.quill-editor .field-control.name-field-editor,
+.quill-editor .field-control.name-field-editor:focus-visible {
     outline: 0px !important;
     border: 0 !important;
     background-color: #ffffff !important;
@@ -896,31 +980,32 @@ filter: invert(0);
 }
 
 
-.quill-editor .field-control.name-field-editor input:focus,.quill-editor .field-control.name-field-editor input:focus-visible {
+.quill-editor .field-control.name-field-editor input:focus,
+.quill-editor .field-control.name-field-editor input:focus-visible {
     outline: 0px;
-        outline: 0px !important;
+    outline: 0px !important;
     border: 0 !important;
     background-color: #ffffff !important;
     background: #ffffff !important;
     border-radius: 0px !important;
-    
+
 }
 
 
 .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline {
     border: none !important;
     box-shadow: none !important;
-  }
-  
-  .MuiInputBase-root:focus-within {
+}
+
+.MuiInputBase-root:focus-within {
     outline: none !important;
     box-shadow: none !important;
-    background-color:#ffffff;
-  }
+    background-color: #ffffff;
+}
 
 
 
-.quill-editor > div > div {
+.quill-editor>div>div {
     padding: 10px 0px 0px;
 }
 
@@ -932,16 +1017,131 @@ filter: invert(0);
     padding: 20px;
 }
 
- input:focus-visible {
+input:focus-visible {
     outline: 0px !important;
 }
 
 :focus-visible {
     outline: 0px !important;
-    border:0px !important;
+    border: 0px !important;
 }
 
 .trans-res .ql-toolbar.ql-snow {
     box-shadow: none !important;
 }
 
+// student supbase page
+.main-panel:has(.students-page),
+.main-panel:has(.students-page) .main-content-wrapper,
+.main-panel:has(.new-student-page-wrapper),
+.main-panel:has(.new-student-page-wrapper) .main-content-wrapper {
+    background-color: #F3F4F6;
+}
+
+.main-panel:has(.students-page) .ag-theme-alpine.custom-table {
+    background-color: transparent !important;
+    border-radius: 0px !important;
+    padding: 0 !important;
+    box-shadow: none !important;
+    border: 0 !important;
+}
+
+.main-panel:has(.new-student-page-wrapper) .title-top {
+    background-color: transparent !important;
+    color: #000;
+    font-size: 16px;
+    font-weight: 500;
+    width: auto;
+    justify-content: left;
+    align-items: center;
+}
+
+.main-panel:has(.new-student-page-wrapper) .field-label {
+    color: #000;
+}
+
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
+
+
+.main-panel:has(.new-student-page-wrapper) *,
+.main-panel:has(.students-page) * {
+    font-family: "Montserrat", sans-serif;
+}
+
+.ag-icon {
+    font-family: var(--ag-icon-font-family-none, var(--ag-icon-font-family)) !important;
+}
+
+
+.custom-table .search-input {
+    border-color: #dee2e6 !important;
+}
+
+.main-panel:has(.new-student-page-wrapper) .title-top img {
+    filter: brightness(0) saturate(100%) invert(0%) sepia(100%) saturate(0%) hue-rotate(252deg) brightness(105%) contrast(101%);
+}
+
+.main-panel:has(.new-student-page-wrapper) .title-top span, .title-top p {
+    font-weight: 600;
+    font-size: 20px;
+    color: #1D2026;
+    line-height: 25.51px;
+}
+
+.main-panel:has(.new-student-page-wrapper) .title-top {
+    gap: 10px;
+}
+
+.main-panel:has(.new-student-page-wrapper) .css-sc8y68-MuiInputBase-root-MuiOutlinedInput-root-MuiSelect-root {
+    border: 0px;
+    background-color: #fff;
+}
+
+.main-panel:has(.new-student-page-wrapper) .field-label{
+    font-weight: 500;
+}
+
+.main-panel:has(.new-student-page-wrapper) .image-preview {
+    display: flex;
+    justify-content: start;
+    height: 180px;
+    cursor: pointer;
+    align-items: center;
+    gap: 1.5rem;
+    padding: 10px;
+    color: rgb(110, 116, 133);
+}
+
+.main-panel:has(.new-student-page-wrapper) .image-preview {
+    display: flex;
+    justify-content: start;
+    height: 180px;
+    cursor: pointer;
+    align-items: center;
+    gap: 1.5rem;
+    padding: 10px;
+    color: rgb(110, 116, 133);
+}
+
+.main-panel:has(.new-student-page-wrapper) .thumbnail-block  .image-renderer > img {
+    background-color: #F5F7FA;
+    padding: 10px;
+    border-radius: 4px !important;
+}
+
+.main-panel:has(.new-student-page-wrapper) .thumbnail-block{
+    margin-top: 0px;
+}
+
+.main-panel:has(.new-student-page-wrapper) .tab-buttons .btn {
+    padding: 14px 24px;
+    font-weight: 600;
+    font-size: 14px;
+    line-height: 1.2 !important;
+    background-color: transparent !important;
+    height: max-content;
+}
+
+.main-panel:has(.new-student-page-wrapper) * {
+    font-family: 'Montserrat';
+}
