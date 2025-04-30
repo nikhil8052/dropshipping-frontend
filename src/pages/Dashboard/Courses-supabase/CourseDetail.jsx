@@ -1,3 +1,69 @@
+// import Drop from '../../../assets/images/droparrow.png';
+
+// const FolderStructureView = ({ topics, unassignedLectures, onLectureSelect }) => {
+//     const [expandedFolders, setExpandedFolders] = useState({});
+  
+//     const toggleFolder = (folderIndex) => {
+//       setExpandedFolders(prev => ({
+//         ...prev,
+//         [folderIndex]: !prev[folderIndex]
+//       }));
+//     };
+  
+//     return (
+//       <div className="course-left">
+//         {topics.map((topic, topicIndex) => (
+//           <div className="folder-detail" key={topic.id}>
+           
+//            <div
+//             className="drop-box"
+//             style={{ cursor: 'pointer' }}
+//             onClick={() => toggleFolder(topicIndex)} // ← add this!
+//             >
+//             <h3>{topic.name}</h3>
+//             <div className={`folder-dropdown ${expandedFolders[topicIndex] ? 'open rotated' : ''}`}>
+//                 <img src={Drop} alt="" />
+//             </div>
+//             </div>
+
+            
+//             {expandedFolders[topicIndex] && (
+//               <div className="detail-box">
+//                 <ul>
+//                 {topic.lectures.map(lecture => (
+//                   <li 
+//                     key={lecture.id} 
+//                     className="lecture-item"
+//                     onClick={() => onLectureSelect(lecture)}
+//                   >
+//                     {lecture.name}
+//                   </li>
+//                 ))}
+//                 </ul>
+//               </div>
+//             )}
+//           </div>
+//         ))}
+  
+//         {unassignedLectures.length > 0 && (
+//           <div className="detail-box">
+//             <ul>
+//               {unassignedLectures.map(lecture => (
+//                 <li 
+//                   key={lecture.id} 
+//                   className="lecture-item"
+//                   onClick={() => onLectureSelect(lecture)}
+//                 >
+//                   {lecture.title}
+//                 </li>
+//               ))}
+//             </ul>
+//           </div>
+//         )}
+//       </div>
+//     );
+//   };
+
 import { useEffect, useState } from 'react';
 import { Button } from 'react-bootstrap';
 import { useSelector } from 'react-redux';
@@ -11,6 +77,11 @@ import '../../../styles/Courses.scss';
 import { textParser, stripHtmlTags } from '../../../utils/utils';
 // import bannerImage from '../../../assets/images/publish-background.svg';
 import PdfModal from '../../../components/PdfRenderer/PdfViewer';
+import FolderStructureView from './CoursesModal/FolderStructureView';
+import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd';
+import '../Courses-supabase/CourseNew.scss';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faCopy } from '@fortawesome/free-solid-svg-icons';
 
 const CourseDetail = () => {
     const navigate = useNavigate();
@@ -21,24 +92,56 @@ const CourseDetail = () => {
     const [courseSlug, setCourseSlug] = useState('developer');
     const [selectedLecture, setSelectedLecture] = useState(0);
 
+    //  new for folder structure :
+    const [topics, setTopics] = useState([]);
+    const [unassignedLectures, setUnassignedLectures] = useState([]);
+
+
+
     const role = userInfo?.role;
     const courseId = location.state?.courseId;
     const isDetailPage =
         location.pathname === '/admin/courses-supabase/details' ||
         location.pathname === '/coach/courses-supabase/details';
 
+
+        useEffect(() => {
+            const processCourseData = (courseData) => {
+              // Process folders into topics
+              const processedTopics = courseData.folders?.map(folder => ({
+                id: folder.id,
+                name: folder.name,
+                lectures: folder.lectures || []
+              })) || [];
+          
+              // Process unassigned lectures
+              const unassigned = courseData.lectures?.filter((lecture) => {
+                return lecture.folder_id === null || lecture.folder_id === '';
+              }) || [];
+              
+              setTopics(processedTopics);
+              setUnassignedLectures(unassigned);
+            };
+          
+            if (course) {
+              processCourseData(course);
+            }
+          }, [course]);
+          
     const getCourseById = async (id) => {
         const { data } = await axiosWrapper('GET', `${API_URL.SUPABASE_GET_COURSE.replace(':id', id)}`, {}, token);
         const courseSlug = createSlug(data.title);
         setCourseSlug(courseSlug);
-
+        console.log(data);
         const mapLectures = data.lectures.map((lecture) => {
-            const description = textParser(lecture?.description);
+            // const description = textParser(lecture?.description);
             return {
-                id: lecture._id,
-                title: lecture.name,
+                id: lecture.id,
+                name: lecture.name,
+                transcript: lecture?.transcript || '',
+                folder_id: lecture.folder_id,
                 type: lecture.file ? 'pdf' : 'video',
-                description: description,
+                description: lecture?.description,
                 thumbnail: lecture?.thumbnail || '',
                 dataType: lecture?.dataType,
                 file: lecture?.file || null,
@@ -86,7 +189,8 @@ const CourseDetail = () => {
     };
 
     const handleLectureSelect = (lecture) => {
-        const name = lecture?.title;
+        console.log(lecture);
+        const name = lecture?.title != null ? lecture.title : lecture?.name;
         if (lecture) {
             const slug = createSlug(name);
             // Get URL segments
@@ -105,7 +209,28 @@ const CourseDetail = () => {
         }
         setSelectedLecture(lecture);
     };
+    const unescapeHtml = (html) => {
+        const txt = document.createElement("textarea");
+        txt.innerHTML = html;
+        return txt.value;
+      };
+    
+    const [copied, setCopied] = useState(false);
+      
+    const handleCopy = async () => {
+        const courseId = course.id;
+        const { data } = await axiosWrapper('GET', `${API_URL.SUPABASE_GET_COURSE.replace(':id', courseId)}`, {}, token);
+        const courseSlug = createSlug(data.title);
+        const slug = createSlug(selectedLecture?.name);
+        const baseUrl = import.meta.env.VITE__APP_URL;
 
+        const link = `${baseUrl}/student/courses/enrolled-course/${courseSlug}/${slug}?m=direct&cid=${courseId}&lid=${selectedLecture?.id}`;
+        console.log(link, ' LINK ');
+        navigator.clipboard.writeText(link);
+        setCopied(true);
+        alert('Link has been copied to clipboard');
+    };
+    
     return (
         <div className="publish-form-section">
             {role === 'STUDENT' ? (
@@ -128,28 +253,63 @@ const CourseDetail = () => {
                     Course Details
                 </div>
             )}
-
+            
             <div className="publish-course-wrapper">
                 <div className="row">
-                    <div className="col-md-4 col-sm-12">
+                    {/* <div className="col-md-4 col-sm-12">
                         <div className="carousel-lecture">
                             <CarouselWrapper
                                 items={course?.lectures || []}
-                                courseId={course._id}
+                                courseId={course.id}
                                 courseSlug={courseSlug}
                                 type="lecture"
                                 onItemClick={handleLectureSelect}
                             />
                         </div>
+                    </div> */}
+                    <div className="col-md-4 col-sm-12">
+                    <FolderStructureView 
+                        topics={topics}
+                        unassignedLectures={unassignedLectures}
+                        onLectureSelect={handleLectureSelect}
+                    />
                     </div>
                     <div className="col-md-8 col-sm-12">
                         <div className="corse-detail-box">
                             {selectedLecture ? (
                                 <>
-                                    <h3>{selectedLecture?.title}</h3>
-                                    {selectedLecture?.dataType === 'file' ? (
+                                    {/* <div className="corse-head-sec">
+                                    <h3>{selectedLecture?.name}</h3>
+                                    </div> */}
+                                    <div className="product-details d-flex  justify-content-between">
+                                        <h3>{selectedLecture?.name}</h3>
+                                        <div>
+                                            <FontAwesomeIcon icon={faCopy} onClick={handleCopy} />
+                                        </div>
+                                    </div>
+                                    <div className="modal-description">
+                                         <div
+                                            className="content"
+                                            dangerouslySetInnerHTML={{
+                                                __html: unescapeHtml(selectedLecture.description) || ''
+                                            }}
+                                            />
+                                    </div>
+                                    {/* {selectedLecture?.transcript && (
                                         <>
-                                            <h5>{selectedLecture?.title}</h5>
+                                        <h3>Transcript</h3>
+                                        <div
+                                            className="content"
+                                            dangerouslySetInnerHTML={{
+                                                __html: unescapeHtml(selectedLecture.transcript) || ''
+                                            }}
+                                            />
+                                        </>
+                                    )} */}
+
+                                    {/* {selectedLecture?.dataType === 'file' ? (
+                                        <>
+                                            <h5>{selectedLecture?.name}</h5>
                                             <PdfModal file={selectedLecture?.file} />
                                             <hr />
                                             <p>{stripHtmlTags(selectedLecture?.description)}</p>
@@ -167,8 +327,8 @@ const CourseDetail = () => {
                                                 allow="autoplay; fullscreen; picture-in-picture"
                                                 allowFullScreen
                                                 title="Lecture"
-                                            />
-                                            <hr />
+                                            /> 
+                                            <hr /> 
                                             <div className="modal-description">
                                                 <div
                                                     className="content"
@@ -178,7 +338,7 @@ const CourseDetail = () => {
                                                 />
                                             </div>
                                         </>
-                                    )}
+                                    )} */}
                                 </>
                             ) : (
                                 <p>Select a lecture to preview</p>
@@ -192,12 +352,12 @@ const CourseDetail = () => {
                     className="publish-added-button-footer"
                     style={{ display: 'flex', justifyContent: 'space-between' }}
                 >
-                    {(userInfo?.role === 'ADMIN' || course?.createdBy?._id === userInfo?._id) && (
+                    {(userInfo?.role === 'ADMIN' || course?.createdBy?.id === userInfo?.id) && (
                         <>
                             <Button
                                 onClick={() =>
                                     navigate(`/${role?.toLowerCase()}/courses-supabase/all-students`, {
-                                        state: { courseId: course._id }
+                                        state: { courseId: course.id }
                                     })
                                 }
                                 type="button"
@@ -208,7 +368,7 @@ const CourseDetail = () => {
                             <Button
                                 onClick={() =>
                                     navigate(`/${role?.toLowerCase()}/courses-supabase/edit`, {
-                                        state: { isEdit: true, courseId: course._id }
+                                        state: { isEdit: true, courseId: course.id }
                                     })
                                 }
                                 type="button"
