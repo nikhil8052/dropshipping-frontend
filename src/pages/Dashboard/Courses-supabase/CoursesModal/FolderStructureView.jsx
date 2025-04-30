@@ -38,8 +38,10 @@ const FolderStructureView = ({ topics, unassignedLectures, onLectureSelect }) =>
                                 {topic.lectures.map(lecture => (
                                     <li
                                         key={lecture.id}
-                                        className={`lecture-item ${activeLectureId === lecture.id ? 'active_lec' : ''}`}
+                                        className={`lecture-item ${activeLectureId === lecture.id ? 'active_lecture' : ''}`}
                                         onClick={() => handleLectureClick(lecture)}
+                                        style={{ cursor: 'pointer' }}
+
                                     >
                                         {lecture.name}
                                     </li>
@@ -58,6 +60,8 @@ const FolderStructureView = ({ topics, unassignedLectures, onLectureSelect }) =>
                                 key={lecture.id}
                                 className={`lecture-item ${activeLectureId === lecture.id ? 'active_lecture' : ''}`}
                                 onClick={() => handleLectureClick(lecture)}
+                                style={{ cursor: 'pointer' }}
+
                             >
                                 {lecture.name}
                             </li>
