@@ -7,6 +7,8 @@ const Coaches = lazy(() => import('@pages/Dashboard/Coaches/Coaches'));
 const NewCoach = lazy(() => import('@pages/Dashboard/Coaches/NewCoach/NewCoach'));
 const NewStudent = lazy(() => import('@pages/Dashboard/Students/NewStudent/NewStudent'));
 const Students = lazy(() => import('@pages/Dashboard/Students/Students'));
+const StudentsSupbase = lazy(() => import('@pages/Dashboard/Students-supabase/Students'));
+const NewSupabaseStudent = lazy(() => import('@pages/Dashboard/Students-supabase/NewStudent/NewStudent'));
 const EnrolledCourseDetail = lazy(() => import('@pages/Dashboard/Courses/EnrolledCourseDetail'));
 const Courses = lazy(() => import('@pages/Dashboard/Courses/Courses'));
 const CourseSupabase = lazy(() => import('@pages/Dashboard/Courses-supabase/Courses'));
@@ -68,6 +70,13 @@ export const adminRoutes = [
         access: 'ADMIN'
     },
     {
+        path: 'students-supabase',
+        exact: true,
+        name: 'Students',
+        Component: StudentsSupbase,
+        access: 'ADMIN'
+    },
+    {
         path: 'students/new',
         exact: true,
         name: 'Students',
@@ -79,6 +88,20 @@ export const adminRoutes = [
         exact: true,
         name: 'Students',
         Component: NewStudent,
+        access: 'ADMIN'
+    },
+    {
+        path: 'students-supabase/new',
+        exact: true,
+        name: 'Students',
+        Component: NewSupabaseStudent,
+        access: 'ADMIN'
+    },
+    {
+        path: 'students-supabase/edit',
+        exact: true,
+        name: 'Students',
+        Component: NewSupabaseStudent,
         access: 'ADMIN'
     },
 
