@@ -192,7 +192,7 @@
 }
 
 .box-row>div {
-    margin-bottom: 2rem;
+    margin-bottom: 1rem;
 }
 
 .ql-editor.ql-blank::before {
@@ -205,12 +205,12 @@
 //     overflow: hidden;
 // }
 
-.box-row {
-    margin: 2rem 0rem;
-    border: 1px solid #fff;
-    padding: 30px;
-    border-radius: 16px;
-}
+// .box-row {
+//     margin: 2rem 0rem;
+//     border: 1px solid #fff;
+//     padding: 30px;
+//     border-radius: 16px;
+// }
 
 .formgroup input[type='text'] {
     border: 0px !important;

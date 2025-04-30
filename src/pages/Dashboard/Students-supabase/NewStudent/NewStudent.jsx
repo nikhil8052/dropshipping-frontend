@@ -5,15 +5,21 @@ import dropDownArrow from '@icons/drop-down-black.svg';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import ConfirmationBox from '@components/ConfirmationBox/ConfirmationBox';
 import * as Yup from 'yup';
+import TextField from '@mui/material/TextField';
+import Select from '@mui/material/Select';
+import MenuItem from '@mui/material/MenuItem';
+import InputLabel from '@mui/material/InputLabel';
+import FormControl from '@mui/material/FormControl';
+import '../../Courses-supabase/CourseNew.scss';
+import StudentCourseCategory from './StudentCourseCategory';
+import imagePreview2 from '../../../../assets/icons/Thumbnail.svg';
+
 import {
-    Container,
     Row,
     Col,
-    Button,
-    DropdownButton,
-    Dropdown
-
-    //  Badge
+    Button
+    // DropdownButton,
+    // Dropdown
 } from 'react-bootstrap';
 import 'react-quill/dist/quill.snow.css';
 import { coachingTrajectory, countryList, regions } from '../../../../data/data';
@@ -31,17 +37,16 @@ import { getFileObjectFromBlobUrl } from '../../../../utils/utils';
 import '../../../../styles/Students.scss';
 import '../../../../styles/Common.scss';
 import PhoneInputField from '../../../../components/Input/PhoneInput';
-// import PaymentStatusOneTime from './Payments/PaymentStatusOneTime';
-// import PaymentStatusInstallments from './Payments/PaymentStatusInstallments';
-// import Card from '@components/Card/Card';
 
 const NewStudent = () => {
     const inputRef = useRef();
     const [studentPhoto, setStudentPhoto] = useState('');
     const location = useLocation();
     const studentId = location.state?.studentId;
-    const { userInfo } = useSelector((state) => state?.auth);
+    // const { userInfo } = useSelector((state) => state?.auth);
     const token = useSelector((state) => state?.auth?.userToken);
+    const { userInfo, userToken } = useSelector((state) => state?.auth);
+
     const role = userInfo?.role?.toLowerCase();
     const navigate = useNavigate();
     const [cropping, setCropping] = useState(false);
@@ -52,9 +57,8 @@ const NewStudent = () => {
     const [loadingCRUD, setLoadingCRUD] = useState(false);
     const [categories, setCategories] = useState([]);
     const [selectedCategories, setSelectedCategories] = useState([]);
-    // const [isRefetch, setIsRefetch] = useState(false);
     const isRefetch = false;
-    // Form state
+
     const [studentData, setStudentData] = useState({
         name: '',
         email: '',
@@ -65,11 +69,7 @@ const NewStudent = () => {
         coursesRoadmap: [],
         category: [],
         roadMap: 'ROAD_MAP_ONE',
-        roadmapAccess:'false' 
-        // paymentType: '',
-        // installmentFrequency: '',
-        // installmentCount: 0,
-        // paymentHistory: []
+        roadmapAccess: 'false'
     });
 
     const [showModal, setShowModal] = useState({
@@ -78,12 +78,6 @@ const NewStudent = () => {
         isEditable: false,
         studentId: null
     });
-    // Session details
-    // const [sessionInfo, setSessionInfo] = useState({
-    //     paymentStatus: 'unpaid',
-    //     remainingSessions: 0,
-    //     nextSessionAvailableDate: null
-    // });
 
     const schema = Yup.object({
         name: Yup.string()
@@ -100,8 +94,7 @@ const NewStudent = () => {
             .required('Please enter a phone number')
             .matches(/\S/, 'Phone number cannot be empty or spaces only')
             .test('is-valid-phone', 'Phone number must be in the correct format country', (value) => {
-                if (!value) return false; // If value is undefined/null, it fails the test
-                // Check for the valid patterns
+                if (!value) return false;
                 const belgiumPattern = '32';
                 const netherlandsPattern = '31';
                 return value.startsWith(belgiumPattern) || value.startsWith(netherlandsPattern);
@@ -121,49 +114,33 @@ const NewStudent = () => {
             .matches(/\S/, 'Coaching trajectory cannot be empty or spaces only'),
         roadMap: Yup.string().trim().oneOf(['ROAD_MAP_ONE', 'ROAD_MAP_TWO']).required('Please select a road map'),
         coursesRoadmap: Yup.array(),
-        category: Yup.array()
-            .min(1, 'Please select at least one category') // Ensures at least one category is selected
-            .required('Please select a category')
-        // paymentType: Yup.string().required('Please select a payment type'),
-        // installmentFrequency: Yup.string().when('paymentType', {
-        //     is: 'installments',
-        //     then: () => Yup.string().required('Please select installment frequency'),
-        //     otherwise: () => Yup.string().nullable()
-        // })
+        category: Yup.array().min(1, 'Please select at least one category').required('Please select a category')
     });
 
     useEffect(() => {
-        console.log(studentId);
         if (studentId) {
             getSingleStudentById(studentId);
-            // Get students Products
             getStudentProducts(studentId);
-            // Commenting out for future reference
-            // getSessionInfo(studentId);
         }
     }, [studentId, isRefetch]);
 
     const getSingleStudentById = async (id) => {
         const response = await axiosWrapper('GET', API_URL.SUPABASE_GET_STUDENT.replace(':id', id), {}, token);
         const student = response.data;
-        console.log( student , " DD ")
-        // const coursesRoadmap = student.coursesRoadmap.map((course) => ({
+
         const coursesRoadmap = student.coursesRoadmaps.map((course) => ({
             value: course?.id,
             label: course?.title,
             id: course?.id
         }));
 
-        // const mappedCategories = student.category.map((category) => {
         const mappedCategories = student.categories.map((category) => {
-
             return {
                 value: category.id,
                 label: category.name
             };
         });
 
-        // setCategories(mappedCategories);
         setSelectedCategories(mappedCategories);
         setStudentData({
             name: student?.name || '',
@@ -175,34 +152,15 @@ const NewStudent = () => {
             coachingTrajectory: student?.coachingTrajectory || '',
             roadMap: student?.roadMap || 'ROAD_MAP_ONE',
             coursesRoadmap: student?.coursesRoadmaps.map((c) => c?.id),
-            roadmapAccess:String(student?.roadmapAccess || 'false'), 
-            // paymentType: student?.paymentType || 'one-time', // Default to 'one-time' if not present
-            // installmentFrequency: student?.installmentFrequency || '',
-            // installmentCount: student?.installmentCount || 0,
-            // paymentHistory: student?.paymentHistory
+            roadmapAccess: String(student?.roadmapAccess || 'false')
         });
         setCourses(coursesRoadmap);
-        console.warn(courses);
         setStudentPhoto(student.avatar);
     };
 
     const getStudentProducts = async (id) => {
-        // Fetch student products
-        // const url = `${API_URL.GET_ALL_PRODUCTS}?createdBy=${id}`;
-        // const response = await axiosWrapper('get', url, {}, token);
-        // const { data } = response;
-        // setStudentProducts(data);
+        // Fetch student products implementation
     };
-
-    // const getSessionInfo = async (id) => {
-    //     const response = await axiosWrapper('GET', API_URL.GET_STUDENT_SESSION_INFO.replace(':id', id), {}, token);
-    //     const { paymentStatus, remainingSessions, nextSessionAvailableDate } = response.data;
-    //     setSessionInfo({
-    //         paymentStatus,
-    //         remainingSessions,
-    //         nextSessionAvailableDate: nextSessionAvailableDate ? new Date(nextSessionAvailableDate) : null
-    //     });
-    // };
 
     useEffect(() => {
         if (studentData.coachingTrajectory) {
@@ -230,7 +188,6 @@ const NewStudent = () => {
     const handleFileChange = async (e) => {
         const file = e.target.files[0];
         if (!file || !file.type.startsWith('image/')) {
-            // Display an error or handle the invalid file selection
             toast.error('Invalid file selected. Please choose an image file.');
             return;
         }
@@ -262,26 +219,20 @@ const NewStudent = () => {
     };
 
     const handleFormSubmit = async (values, { resetForm, setSubmitting }) => {
-        let formData = { ...values,
-            avatar: studentPhoto,
-            category: values.category.map((cat) => cat.value) };
+        let formData = { ...values, avatar: studentPhoto, category: values.category.map((cat) => cat.value) };
 
-
-            // console.log(formData);
-            // return false;
-        // If updating an existing student, exclude the email field
         if (studentId) {
             const { email, ...rest } = formData;
             formData = rest;
         }
 
-        const url = studentId ? `${API_URL.SUPABASE_UPDATE_STUDENT.replace(':id', studentId)}` : API_URL.SUPABASE_CREATE_STUDENT;
+        const url = studentId
+            ? `${API_URL.SUPABASE_UPDATE_STUDENT.replace(':id', studentId)}`
+            : API_URL.SUPABASE_CREATE_STUDENT;
         const method = studentId ? 'PUT' : 'POST';
 
         try {
             await axiosWrapper(method, url, formData, token);
-            // resetForm();
-            // navigate(`/${role}/students-supabase`);
         } catch (error) {
             setSubmitting(false);
         }
@@ -303,7 +254,6 @@ const NewStudent = () => {
     const handleUpdateTrajectory = async () => {
         try {
             setLoadingCRUD(true);
-            // Delete API call here
             await axiosWrapper(
                 'PUT',
                 API_URL.SUPABASE_UPDATE_STUDENT.replace(':id', showModal?.studentId),
@@ -328,14 +278,13 @@ const NewStudent = () => {
             value: category.id
         }));
         setCategories(mappedCategories);
-        console.log(mappedCategories);
     };
+
     useEffect(() => {
         getAllCategories();
     }, []);
 
     useEffect(() => {
-        // When initialData.category changes, update the categories state to include them
         if (studentData?.category) {
             setCategories((prevCategories) => {
                 const combined = [...prevCategories, ...studentData.category];
@@ -355,15 +304,13 @@ const NewStudent = () => {
             const response = await axiosWrapper('GET', `${API_URL.SUPABASE_GET_ALL_CATEGORIES}`, {}, token);
             const allCategories = response?.data || [];
 
-            // Filter categories based on input value
             const filteredCategories = allCategories.filter((category) =>
                 category.name.toLowerCase().includes(inputValue.toLowerCase())
             );
 
-            // Format the categories for react-select
             const mappedCategories = filteredCategories.map((category) => ({
                 label: category.name,
-                value: category.id // Assuming id is the unique identifier for categories
+                value: category.id
             }));
 
             setCategories((prevCategories) => {
@@ -391,14 +338,13 @@ const NewStudent = () => {
                 { name: newCategoryName, createdBy: userInfo?.id },
                 token
             );
-            const createdCategory = response?.data; // Assuming API returns the created category
+            const createdCategory = response?.data;
 
             const newCategoryOption = {
                 label: createdCategory.name,
                 value: createdCategory.id
             };
 
-            // Update the category list with the new category without duplicates
             setCategories((prevCategories) => {
                 return [...prevCategories, newCategoryOption];
             });
@@ -418,7 +364,6 @@ const NewStudent = () => {
         return newCategory;
     };
 
-    // Define your academy dropdown options using your Vite environment variables
     const academyOptions = [
         { label: 'Dropship Academy Low offer', value: 'ROAD_MAP_ONE' },
         { label: 'Dropship Academy Roadmap', value: 'ROAD_MAP_TWO' }
@@ -435,11 +380,10 @@ const NewStudent = () => {
                 <span onClick={() => navigate(`/${role}/students-supabase`)} style={{ cursor: 'pointer' }}>
                     Students <img src={CaretRight} alt=">" />
                 </span>
-                {studentId ? 'Student Profile' : 'Add New Student'}
+                <p>{studentId ? 'Student Profile' : 'Add New Student'}</p>
             </div>
             <div className="new-student-page new-page">
-                <Container fluid className="p-3">
-                    <h4 className="mb-3 new-student-title">{studentId ? 'Student Profile' : 'Add New Student'}</h4>
+                <div className="add-course-form Course-form">
                     <Formik
                         initialValues={studentData}
                         validationSchema={schema}
@@ -448,333 +392,177 @@ const NewStudent = () => {
                     >
                         {({ isSubmitting, handleSubmit, values, setFieldValue }) => (
                             <Form onSubmit={handleSubmit}>
-                                <Row className="mb-3">
-                                    <Col>
-                                        {studentPhoto ? (
-                                            <label className="field-label fw-bold">Profile image</label>
-                                        ) : (
-                                            <label className="field-label">UPLOAD PHOTO</label>
-                                        )}
-                                        <div className="image_wrapper">
-                                            <Field name="studentPhoto">
-                                                {({ field }) => (
-                                                    <>
-                                                        <input
-                                                            ref={inputRef}
-                                                            accept=".jpg,.jpeg,.png"
-                                                            {...field}
-                                                            type="file"
-                                                            style={{ display: 'none' }}
-                                                            onChange={handleFileChange}
-                                                        />
-                                                        {studentPhoto ? (
-                                                            <div className="image-renderer">
-                                                                <div className="img-wrapper">
-                                                                    <img
-                                                                        src={
-                                                                            typeof studentPhoto === 'string'
-                                                                                ? studentPhoto
-                                                                                : URL.createObjectURL(studentPhoto)
-                                                                        }
-                                                                        alt=""
-                                                                        style={{ borderRadius: '50%' }}
-                                                                    />
-                                                                    <div
-                                                                        className="overlay-image"
-                                                                        onClick={(e) => {
-                                                                            e.preventDefault();
-                                                                            inputRef.current.click();
-                                                                        }}
-                                                                    >
-                                                                        Edit
-                                                                    </div>
-                                                                    <span>{studentPhoto.name}</span>
-                                                                </div>
-                                                            </div>
-                                                        ) : (
-                                                            <div className="image-preview">
-                                                                <img
-                                                                    onClick={(e) => {
-                                                                        e.preventDefault();
-                                                                        inputRef.current.click();
-                                                                    }}
-                                                                    src={imagePreview}
-                                                                    alt=""
-                                                                />
-                                                                <span>
-                                                                    Upload student picture here
-                                                                    <br />
-                                                                    Supported formats:{' '}
-                                                                    <strong>.jpg, .jpeg, or .png</strong>
-                                                                    <br />
-                                                                    <Button
-                                                                        onClick={(e) => {
-                                                                            e.preventDefault();
-                                                                            inputRef.current.click();
-                                                                        }}
-                                                                        className="upload-image-btn"
-                                                                    >
-                                                                        Upload Image{' '}
-                                                                        <img src={UploadSimple} alt="Upload Btn" />
-                                                                    </Button>
-                                                                </span>
-                                                            </div>
-                                                        )}
-                                                    </>
-                                                )}
-                                            </Field>
-                                        </div>
-                                    </Col>
-                                </Row>
                                 <div className="box-row">
                                     <Row>
-                                        <Col md={6} xs={12}>
-                                            <label className="field-label">Student Name</label>
-                                            <Field
+                                        <Col md={6} xs={12} className="form-group">
+                                            <TextField
                                                 name="name"
+                                                label="Name"
                                                 className="field-control"
+                                                variant="outlined"
+                                                id="name-basic"
                                                 type="text"
-                                                placeholder="E.g David Henderson"
+                                                value={values.name}
+                                                onChange={(e) => {
+                                                    if (e.target.value.length <= 100) {
+                                                        setFieldValue('name', e.target.value);
+                                                    }
+                                                }}
+                                                helperText={`${values.name?.length || 0}/100`}
+                                                inputProps={{ maxLength: 100 }}
+                                                fullWidth
                                             />
                                             <ErrorMessage name="name" component="div" className="error" />
                                         </Col>
-                                        <Col md={6} xs={12}>
-                                            <label className="field-label">Email</label>
-                                            <Field
+                                        <Col md={6} xs={12} className="form-group">
+                                            <TextField
                                                 name="email"
+                                                label="Email"
                                                 className="field-control"
+                                                variant="outlined"
+                                                id="email-basic"
                                                 type="email"
-                                                placeholder="kevin12345@gmail.com"
+                                                value={values.email}
+                                                onChange={(e) => {
+                                                    if (e.target.value.length <= 100) {
+                                                        setFieldValue('email', e.target.value);
+                                                    }
+                                                }}
+                                                helperText={`${values.email?.length || 0}/100`}
+                                                inputProps={{ maxLength: 100 }}
+                                                fullWidth
                                             />
                                             <ErrorMessage name="email" component="div" className="error" />
                                         </Col>
-                                        <Col md={6} xs={12}>
-                                            <PhoneInputField
+                                        <Col md={6} xs={12} className="form-group">
+                                            <TextField
                                                 name="phoneNumber"
                                                 label="Phone Number"
+                                                className="field-control"
+                                                variant="outlined"
+                                                id="phone-basic"
+                                                type="number"
+                                                value={values.phoneNumber}
+                                                onChange={(e) => {
+                                                    if (e.target.value.length <= 100) {
+                                                        setFieldValue('phoneNumber', e.target.value);
+                                                    }
+                                                }}
+                                                helperText={`${values.phoneNumber?.length || 0}/100`}
+                                                inputProps={{ maxLength: 100 }}
+                                                fullWidth
                                                 countriesAllowed={values.country === 'Netherlands' ? ['nl'] : ['be']}
                                             />
                                         </Col>
-
-                                        <Col md={6} xs={12}>
-                                            <label className="field-label">Country</label>
-                                            {/* eslint-disable */}
-                                            <Field
-                                                name="country"
-                                                className="field-select-control"
-                                                type="text"
-                                                component={({ field, form }) => {
-                                                    const handleSelect = (eventKey) => {
-                                                        const selectedCountry = countryList.find(
-                                                            (country) => country.id.toString() === eventKey
+                                        <Col md={6} xs={12} className="form-group">
+                                            <FormControl fullWidth>
+                                                <InputLabel id="country-label">Country</InputLabel>
+                                                <Select
+                                                    labelId="country-label"
+                                                    id="country-select"
+                                                    value={values.country}
+                                                    label="Country"
+                                                    onChange={(e) => {
+                                                        setFieldValue('country', e.target.value);
+                                                        setFieldValue('region', '');
+                                                    }}
+                                                >
+                                                    {countryList.map((country) => (
+                                                        <MenuItem key={country.id} value={country.name}>
+                                                            {country.name}
+                                                        </MenuItem>
+                                                    ))}
+                                                </Select>
+                                                <ErrorMessage name="country" component="div" className="error" />
+                                            </FormControl>
+                                        </Col>
+                                        <Col md={6} xs={12} className="form-group">
+                                            <FormControl fullWidth>
+                                                <InputLabel id="region-label">Region/State</InputLabel>
+                                                <Select
+                                                    labelId="region-label"
+                                                    id="region-select"
+                                                    value={values.region}
+                                                    label="Region/State"
+                                                    onChange={(e) => setFieldValue('region', e.target.value)}
+                                                    disabled={!values.country}
+                                                >
+                                                    {(() => {
+                                                        const currentRegion = regions.find(
+                                                            (r) => r?.name === values?.country
                                                         );
-                                                        form.setFieldValue(field.name, selectedCountry.name);
-                                                        // clear the selected region
-                                                        form.setFieldValue('region', '');
-                                                    };
+                                                        const regionList = currentRegion ? currentRegion.regions : [];
 
-                                                    return (
-                                                        <>
-                                                            <DropdownButton
-                                                                title={
-                                                                    <div className="d-flex justify-content-between align-items-center">
-                                                                        <span>
-                                                                            {field.value || 'Select a country ...'}
-                                                                        </span>
-                                                                        <img src={dropDownArrow} alt="arrow" />
-                                                                    </div>
-                                                                }
-                                                                id={field.name}
-                                                                onSelect={handleSelect}
-                                                                className="dropdown-button w-100"
-                                                            >
-                                                                {countryList.map((country) => (
-                                                                    <Dropdown.Item
-                                                                        key={country.id}
-                                                                        eventKey={country.id}
-                                                                        className="my-1 ms-2 w-100"
-                                                                    >
-                                                                        <span className="country-name">
-                                                                            {country.name}
-                                                                        </span>
-                                                                    </Dropdown.Item>
-                                                                ))}
-                                                            </DropdownButton>
-                                                            {form.touched[field.name] && form.errors[field.name] && (
-                                                                <div className="error mt-2">
-                                                                    {form.errors[field.name]}
-                                                                </div>
-                                                            )}
-                                                        </>
-                                                    );
-                                                }}
-                                            />
+                                                        return regionList.length > 0 ? (
+                                                            regionList.map((region) => (
+                                                                <MenuItem key={region.id} value={region.label}>
+                                                                    {region.label}
+                                                                </MenuItem>
+                                                            ))
+                                                        ) : (
+                                                            <MenuItem disabled>No regions available</MenuItem>
+                                                        );
+                                                    })()}
+                                                </Select>
+                                                <ErrorMessage name="region" component="div" className="error" />
+                                            </FormControl>
                                         </Col>
                                         <Col md={6} xs={12}>
-                                            <label className="field-label">Region/State</label>
-                                            {/* eslint-disable */}
-                                            <Field
-                                                name="region"
-                                                className="field-select-control"
-                                                type="text"
-                                                component={({ field, form }) => {
-                                                    // Try to find the region object based on the selected country.
-                                                    const currentRegion = regions.find(
-                                                        (r) => r?.name === values?.country
-                                                    );
-                                                    // If no matching country is found, fallback to an empty array.
-                                                    const regionList = currentRegion ? currentRegion.regions : [];
-
-                                                    const handleSelect = (eventKey) => {
-                                                        // Find the selected region in our regionList.
-                                                        const selectedRegion = regionList.find(
-                                                            (country) => country?.id.toString() === eventKey
-                                                        );
-                                                        // Set the field value; if not found, set it to an empty string.
-                                                        form.setFieldValue(
-                                                            field.name,
-                                                            selectedRegion ? selectedRegion.label : ''
-                                                        );
-                                                    };
-
-                                                    return (
-                                                        <>
-                                                            <DropdownButton
-                                                                title={
-                                                                    <div className="d-flex justify-content-between align-items-center">
-                                                                        <span>
-                                                                            {field.value ||
-                                                                                (regionList.length > 0
-                                                                                    ? 'Select a region ...'
-                                                                                    : 'No region available')}
-                                                                        </span>
-                                                                        <img src={dropDownArrow} alt="arrow" />
-                                                                    </div>
-                                                                }
-                                                                id={field.name}
-                                                                onSelect={handleSelect}
-                                                                className="dropdown-button  menu-overflow w-100"
-                                                                disabled={regionList.length === 0} // disable dropdown if no regions found
-                                                            >
-                                                                {regionList.map((country) => (
-                                                                    <Dropdown.Item
-                                                                        key={country?.id}
-                                                                        eventKey={country?.id}
-                                                                        className="my-1 ms-2 w-100"
-                                                                    >
-                                                                        <span className="country-name">
-                                                                            {country?.label}
-                                                                        </span>
-                                                                    </Dropdown.Item>
-                                                                ))}
-                                                            </DropdownButton>
-                                                            {form.touched[field.name] && form.errors[field.name] && (
-                                                                <div className="error mt-2">
-                                                                    {form.errors[field.name]}
-                                                                </div>
-                                                            )}
-                                                        </>
-                                                    );
-                                                }}
-                                            />
-                                        </Col>
-
-                                        <Col md={6} xs={12}>
-                                            <label className="field-label">Coaching Trajectory</label>
-                                            {/* eslint-disable */}
-                                            <Field
-                                                name="coachingTrajectory"
-                                                className="field-select-control"
-                                                type="text"
-                                                component={({ field, form }) => {
-                                                    const handleSelect = (eventKey) => {
-                                                        const selectedField = coachingTrajectory.find(
-                                                            (coach) => coach.id.toString() === eventKey
-                                                        );
+                                            <FormControl fullWidth>
+                                                <InputLabel id="coaching-label">Coaching Trajectory</InputLabel>
+                                                <Select
+                                                    labelId="coaching-label"
+                                                    id="coaching-select"
+                                                    value={values.coachingTrajectory}
+                                                    label="Coaching Trajectory"
+                                                    onChange={(e) => {
                                                         if (studentId && values.coursesRoadmap.length > 0) {
-                                                            // show a toast message that on changing course trajectory, the courses will be updated or removed all the courses
                                                             setShowModal({
                                                                 show: true,
                                                                 title: 'Update Trajectory',
                                                                 isEditable: true,
                                                                 studentId,
-                                                                trajectory: selectedField.value
+                                                                trajectory: e.target.value
                                                             });
                                                             return;
                                                         }
-                                                        getAllCourses(selectedField.value);
-                                                        form.setFieldValue(field.name, selectedField.value);
-                                                    };
-
-                                                    return (
-                                                        <>
-                                                            <DropdownButton
-                                                                title={
-                                                                    <div className="d-flex justify-content-between align-items-center">
-                                                                        <span>
-                                                                            {coachingTrajectory.find(
-                                                                                (c) => c.value === field.value
-                                                                            )?.label || 'Select ...'}
-                                                                        </span>
-                                                                        <img src={dropDownArrow} alt="arrow" />
-                                                                    </div>
-                                                                }
-                                                                id={field.name}
-                                                                onSelect={handleSelect}
-                                                                className="dropdown-button w-100"
-                                                            >
-                                                                {coachingTrajectory.map((coach) => (
-                                                                    <Dropdown.Item
-                                                                        key={coach.id}
-                                                                        eventKey={coach.id}
-                                                                        className="my-1 ms-2 w-100"
-                                                                    >
-                                                                        <span className="coach-name">
-                                                                            {coach.label}
-                                                                        </span>
-                                                                    </Dropdown.Item>
-                                                                ))}
-                                                            </DropdownButton>
-                                                            {form.touched[field.name] && form.errors[field.name] && (
-                                                                <div className="error mt-2">
-                                                                    {form.errors[field.name]}
-                                                                </div>
-                                                            )}
-                                                        </>
-                                                    );
-                                                }}
-                                            >
-                                                {coachingTrajectory.map((region) => (
-                                                    <option key={region.label} value={region.value}>
-                                                        {region.label}
-                                                    </option>
-                                                ))}
-                                            </Field>
-                                        </Col>
-
-                                        {/* {studentId && (
-                                            <Col md={6} xs={12}>
-                                                <Input
-                                                    options={courses}
-                                                    name="coursesRoadmap"
-                                                    placeholder="Select..."
-                                                    label="Courses Roadmap"
-                                                    type="select"
-                                                    isMulti={true}
-                                                    className="up-menu"
+                                                        getAllCourses(e.target.value);
+                                                        setFieldValue('coachingTrajectory', e.target.value);
+                                                    }}
+                                                >
+                                                    {coachingTrajectory.map((coach) => (
+                                                        <MenuItem key={coach.id} value={coach.value}>
+                                                            {coach.label}
+                                                        </MenuItem>
+                                                    ))}
+                                                </Select>
+                                                <ErrorMessage
+                                                    name="coachingTrajectory"
+                                                    component="div"
+                                                    className="error"
                                                 />
-                                                {courses.length === 0 && (
-                                                    <div>
-                                                        <div className="error mt-2">
-                                                            No coach assigned to this student or coach is not created
-                                                            any courses yet.
-                                                        </div>
-                                                    </div>
-                                                )}
-                                            </Col>
-                                        )} */}
-
-                                        <Col>
+                                            </FormControl>
+                                        </Col>
+                                        <Col md={12} xs={12}>
+                                            <FormControl fullWidth>
+                                                <InputLabel id="roadmap-access-label">Roadmap Access</InputLabel>
+                                                <Select
+                                                    labelId="roadmap-access-label"
+                                                    id="roadmap-access-select"
+                                                    value={values.roadmapAccess}
+                                                    label="Roadmap Access"
+                                                    onChange={(e) => setFieldValue('roadmapAccess', e.target.value)}
+                                                >
+                                                    {roadmapAccessOptions.map((option) => (
+                                                        <MenuItem key={option.value} value={option.value}>
+                                                            {option.label}
+                                                        </MenuItem>
+                                                    ))}
+                                                </Select>
+                                                <ErrorMessage name="roadmapAccess" component="div" className="error" />
+                                            </FormControl>
+                                        </Col>
+                                        {/* <Col>
                                             <Input
                                                 name="category"
                                                 label="Course Category"
@@ -788,325 +576,127 @@ const NewStudent = () => {
                                                     handleCreateCategory(inputValue, setFieldValue, values.category)
                                                 }
                                             />
-                                        </Col>
-                                    </Row>
-                                    {/* Commenting out for future reference */}
-                                    <Row>
-                                        {/* <h4 className="my-3 new-student-title">Payment Information</h4> */}
-                                        {/* <Col md={12} xs={12}>
-                                        <label className="field-label">Payment Type</label>
-                                        <Field
-                                            name="paymentType"
-                                            component={({ field, form }) => {
-                                                const handleSelect = (eventKey) => {
-                                                    form.setFieldValue(field.name, eventKey);
-                                                    // Reset installment frequency when payment type changes
-                                                    if (eventKey !== 'installments') {
-                                                        form.setFieldValue('installmentFrequency', '');
-                                                    }
-                                                };
-
-                                                return (
-                                                    <DropdownButton
-                                                        title={
-                                                            <div className="d-flex justify-content-between align-items-center">
-                                                                <span>
-                                                                    {field.value
-                                                                        ? field.value === 'one-time'
-                                                                            ? 'One-Time'
-                                                                            : 'Installments'
-                                                                        : 'Select Payment Type'}
-                                                                </span>
-                                                                <img src={dropDownArrow} alt="arrow" />
-                                                            </div>
-                                                        }
-                                                        id={field.name}
-                                                        onSelect={handleSelect}
-                                                        className="dropdown-button w-100"
-                                                        disabled={studentId}
-                                                    >
-                                                        <Dropdown.Item eventKey="one-time">One-Time</Dropdown.Item>
-                                                        <Dropdown.Item eventKey="installments">
-                                                            Installments
-                                                        </Dropdown.Item>
-                                                    </DropdownButton>
-                                                );
-                                            }}
-                                        />
-                                        <ErrorMessage name="paymentType" component="div" className="error mt-2" />
-                                    </Col> */}
-
-                                        {/* Installment Frequency Dropdown (conditional) */}
-                                        {/* {values.paymentType === 'installments' && (
-                                        <>
-                                            <Col md={6} xs={12}>
-                                                <label className="field-label">Installment Frequency</label>
-                                                <Field
-                                                    name="installmentFrequency"
-                                                    component={({ field, form }) => {
-                                                        const handleSelect = (eventKey) => {
-                                                            form.setFieldValue(field.name, eventKey);
-                                                        };
-
-                                                        return (
-                                                            <DropdownButton
-                                                                title={
-                                                                    <div className="d-flex justify-content-between align-items-center">
-                                                                        <span>
-                                                                            {field.value
-                                                                                ? field.value === 'weekly'
-                                                                                    ? 'Weekly'
-                                                                                    : 'Monthly'
-                                                                                : 'Select Frequency'}
-                                                                        </span>
-                                                                        <img src={dropDownArrow} alt="arrow" />
-                                                                    </div>
-                                                                }
-                                                                id={field.name}
-                                                                onSelect={handleSelect}
-                                                                className="dropdown-button w-100"
-                                                                disabled={studentId}
-                                                            >
-                                                                <Dropdown.Item eventKey="weekly">Weekly</Dropdown.Item>
-                                                                <Dropdown.Item eventKey="monthly">
-                                                                    Monthly
-                                                                </Dropdown.Item>
-                                                            </DropdownButton>
-                                                        );
-                                                    }}
-                                                />
-                                                <ErrorMessage
-                                                    name="installmentFrequency"
-                                                    component="div"
-                                                    className="error mt-2"
-                                                />
-                                            </Col>
-                                            <Col md={6} xs={12}>
-                                                <label className="field-label">Number of Installments</label>
-                                                <Field
-                                                    name="installmentCount"
-                                                    type="number"
-                                                    className="field-control"
-                                                    placeholder="Enter number of installments"
-                                                    disabled={studentId}
-                                                />
-                                                <ErrorMessage
-                                                    name="installmentCount"
-                                                    component="div"
-                                                    className="error mt-2"
-                                                />
-                                            </Col>
-                                        </>
-                                    )} */}
-                                        {/*                                    
-                                    {studentId && (
-                                        <Col md={12} xs={12}>
-                                            {values.paymentType === 'one-time' && (
-                                                <PaymentStatusOneTime
-                                                    studentName={studentData.name}
-                                                    paymentDate={studentData.paymentHistory?.[0]?.paymentDate}
-                                                    status={
-                                                        studentData.paymentHistory?.[0]?.status === 'paid'
-                                                            ? 'Paid'
-                                                            : 'Unpaid'
-                                                    }
-                                                />
-                                            )}
-                                            {values.paymentType === 'installments' && (
-                                                <PaymentStatusInstallments
-                                                    studentName={studentData.name}
-                                                    paymentHistory={studentData.paymentHistory || []}
-                                                    id={studentId}
-                                                    setIsRefetch={setIsRefetch}
-                                                />
-                                            )}
-                                        </Col>
-                                    )} */}
-                                    </Row>
-                                    <Row>
-                                        {/* <Col md={6} xs={6}>
-                                            <label className="field-label">Road Map</label>
-                                            <Field
-                                                name="roadMap"
-                                                className="field-select-control"
-                                                type="text"
-                                                component={({ field, form }) => {
-                                                    const handleSelect = (eventKey) => {
-                                                        const selected = academyOptions.find(
-                                                            (option) => option.value === eventKey
-                                                        );
-                                                        form.setFieldValue(field.name, selected.value);
-                                                    };
-
-                                                    return (
-                                                        <>
-                                                            <DropdownButton
-                                                                title={
-                                                                    <div className="d-flex justify-content-between align-items-center">
-                                                                        <span>
-                                                                            {academyOptions.find(
-                                                                                (option) => option.value === field.value
-                                                                            )?.label || 'Select a road map...'}
-                                                                        </span>
-                                                                    </div>
-                                                                }
-                                                                id={field.name}
-                                                                onSelect={handleSelect}
-                                                                className="dropdown-button w-100"
-                                                            >
-                                                                {academyOptions.map((option) => (
-                                                                    <Dropdown.Item
-                                                                        key={option.value}
-                                                                        eventKey={option.value}
-                                                                        className="my-1 ms-2 w-100"
-                                                                    >
-                                                                        {option.label}
-                                                                    </Dropdown.Item>
-                                                                ))}
-                                                            </DropdownButton>
-                                                            {form.touched[field.name] && form.errors[field.name] && (
-                                                                <div className="error mt-2">
-                                                                    {form.errors[field.name]}
-                                                                </div>
-                                                            )}
-                                                        </>
-                                                    );
-                                                }}
-                                            />
                                         </Col> */}
-                                        {/* Road Map access  */}
-                                        <Col md={12} xs={12} >
-                                           <label className="field-label">Roadmap Access</label>
-                                           <Field
-                                                name="roadmapAccess"
-                                                className="field-select-control"
-                                                type="text"
-                                                component={({ field, form }) => {
-                                                    const handleSelect = (eventKey) => {
-                                                        const selected = roadmapAccessOptions.find(
-                                                            (option) => option.value === eventKey
-                                                        );
-                                                        form.setFieldValue(field.name, selected.value);
-                                                    };
-
-                                                    return (
-                                                        <>
-                                                            <DropdownButton
-                                                                title={
-                                                                    <div className="d-flex justify-content-between align-items-center">
-                                                                        <span>
-                                                                            {roadmapAccessOptions.find(
-                                                                                (option) => option.value === field.value
-                                                                            )?.label || 'Select roadmap access...'}
-                                                                        </span>
-                                                                    </div>
-                                                                }
-                                                                id={field.name}
-                                                                onSelect={handleSelect}
-                                                                className="dropdown-button w-100"
-                                                            >
-                                                                {roadmapAccessOptions.map((option) => (
-                                                                    <Dropdown.Item
-                                                                        key={option.value}
-                                                                        eventKey={option.value}
-                                                                        className="my-1 ms-2 w-100"
-                                                                    >
-                                                                        {option.label}
-                                                                    </Dropdown.Item>
-                                                                ))}
-                                                            </DropdownButton>
-                                                            {form.touched[field.name] && form.errors[field.name] && (
-                                                                <div className="error mt-2">
-                                                                    {form.errors[field.name]}
-                                                                </div>
-                                                            )}
-                                                        </>
-                                                    );
-                                                }}
-                                            />
+                                        <Col md={12} xs={12}>
+                                            <Field name="category">
+                                                {({ field, form }) => (
+                                                    <StudentCourseCategory
+                                                        value={field.value}
+                                                        onChange={(value) => form.setFieldValue(field.name, value)}
+                                                        token={userToken}
+                                                    />
+                                                )}
+                                            </Field>
+                                            <ErrorMessage name="category" component="div" className="error" />
                                         </Col>
                                     </Row>
                                 </div>
 
-                                {/* <Row>
+                                <Row className="mb-3">
                                     <Col>
-                                        {values.coursesRoadmap?.length > 0 && (
-                                            <>
-                                                <div className="field-label my-2">Courses Roadmap List </div>
-                                                <div className="course-roadmap-wrapper">
-                                                    <RoadMapList
-                                                        coursesList={courses.filter((c) =>
-                                                            values.coursesRoadmap.find((val) => c.id === val)
-                                                        )}
-                                                        setCoursesMap={(roadmap) => {
-                                                            setFieldValue('coursesRoadmap', roadmap);
-                                                        }}
-                                                    />
-                                                </div>
-                                            </>
-                                        )}
+                                        <div className="student-upload thumbnail-block">
+                                            {studentPhoto ? (
+                                                <label className="field-label fw-bold">Profile image</label>
+                                            ) : (
+                                                <label className="field-label">UPLOAD PHOTO</label>
+                                            )}
+                                            <div className="image_wrapper">
+                                                <Field name="studentPhoto">
+                                                    {({ field }) => (
+                                                        <>
+                                                            <input
+                                                                ref={inputRef}
+                                                                accept=".jpg,.jpeg,.png"
+                                                                {...field}
+                                                                type="file"
+                                                                style={{ display: 'none' }}
+                                                                onChange={handleFileChange}
+                                                            />
+                                                            {studentPhoto ? (
+                                                                <div className="image-renderer">
+                                                                    <div className="img-wrapper">
+                                                                        <img
+                                                                            src={
+                                                                                typeof studentPhoto === 'string'
+                                                                                    ? studentPhoto
+                                                                                    : URL.createObjectURL(studentPhoto)
+                                                                            }
+                                                                            alt=""
+                                                                            style={{
+                                                                                borderRadius: '50%',
+                                                                                width: '200px',
+                                                                                height: '128px'
+                                                                            }}
+                                                                        />
+                                                                        <div
+                                                                            className="overlay-image"
+                                                                            onClick={(e) => {
+                                                                                e.preventDefault();
+                                                                                inputRef.current.click();
+                                                                            }}
+                                                                        >
+                                                                            Edit
+                                                                        </div>
+                                                                        <span>{studentPhoto.name}</span>
+                                                                    </div>
+                                                                </div>
+                                                            ) : (
+                                                                <div className="image-preview">
+                                                                    <img
+                                                                        onClick={(e) => {
+                                                                            e.preventDefault();
+                                                                            inputRef.current.click();
+                                                                        }}
+                                                                        src={imagePreview2}
+                                                                        alt=""
+                                                                    />
+                                                                    <span>
+                                                                        Upload student picture here
+                                                                        <br />
+                                                                        Supported formats:{' '}
+                                                                        <strong>.jpg, .jpeg, or .png</strong>
+                                                                        <br />
+                                                                        <Button
+                                                                            onClick={(e) => {
+                                                                                e.preventDefault();
+                                                                                inputRef.current.click();
+                                                                            }}
+                                                                            className="upload-image-btn"
+                                                                        >
+                                                                            Upload Image{' '}
+                                                                            <img src={UploadSimple} alt="Upload Btn" />
+                                                                        </Button>
+                                                                    </span>
+                                                                </div>
+                                                            )}
+                                                        </>
+                                                    )}
+                                                </Field>
+                                            </div>
+                                        </div>
                                     </Col>
-                                </Row> */}
-                                {/* Session Information */}
-                                {/* Commenting out for future reference */}
-                                {/*
-                                studentId && studentData.paymentType === 'installments' && (
-                                    <>
-                                        <Row>
-                                            <h4 className="my-3 new-student-title">Coaching Session Information</h4>
-                                            <Col md={12} xs={12}>
-                                                <Card className="p-3 events-card">
-                                                    <p>
-                                                        <strong>Payment Status:</strong>{' '}
-                                                        {sessionInfo.paymentStatus === 'paid' ? (
-                                                            <Badge bg="success">Paid</Badge>
-                                                        ) : (
-                                                            <Badge bg="danger">Unpaid</Badge>
-                                                        )}
-                                                    </p>
-                                                    <p>
-                                                        <strong>Remaining Sessions:</strong>{' '}
-                                                        {sessionInfo.remainingSessions}/
-                                                        {studentData.installmentFrequency === 'weekly' ? '1' : '4'}{' '}
-                                                        sessions available
-                                                    </p>
-                                                    {sessionInfo.nextSessionAvailableDate &&
-                                                        !isNaN(sessionInfo.nextSessionAvailableDate.getTime()) && (
-                                                            <p>
-                                                                <strong>Next Session Available On:</strong>{' '}
-                                                                {sessionInfo.nextSessionAvailableDate.toLocaleDateString()}
-                                                            </p>
-                                                        )}
-                                                </Card>
-                                            </Col>
-                                        </Row>
-                                    </>
-                                ) */}
+                                </Row>
 
-                                {studentId && (
-                                    <>
-                                        <Row>
-                                            <Col>
-                                                <Button
-                                                    type="button"
-                                                    onClick={() =>
-                                                        navigate(`/${role}/visualize-csv`, {
-                                                            state: { studentId, studentName: values.name }
-                                                        })
-                                                    }
-                                                    className="submit-btn my-2"
-                                                >
-                                                    View Test Products
-                                                </Button>
-                                            </Col>
-                                        </Row>
-
-                                        <CarouselWrapper items={studentProducts} type="product" />
-                                    </>
-                                )}
                                 <Row>
                                     <Col>
-                                        <div className="mt-3 d-flex justify-content-end gap-3">
+                                        <div className="mt-5 d-flex justify-content-end align-items-center gap-3 tab-buttons ">
+                                            {studentId && (
+                                                <>
+                                                    <Button
+                                                        type="button"
+                                                        onClick={() =>
+                                                            navigate(`/${role}/visualize-csv`, {
+                                                                state: { studentId, studentName: values.name }
+                                                            })
+                                                        }
+                                                        className="submit-btn my-2"
+                                                    >
+                                                        View Test Products
+                                                    </Button>
+
+                                                    <CarouselWrapper items={studentProducts} type="product" />
+                                                </>
+                                            )}
                                             <Button
                                                 type="button"
                                                 onClick={() => navigate(`/${role}/students-supabase`)}
@@ -1147,7 +737,7 @@ const NewStudent = () => {
                             activeBtnTitle="Update"
                         />
                     )}
-                </Container>
+                </div>
             </div>
         </div>
     );

@@ -1,10 +1,18 @@
 @import './constants/colors.scss';
 @import './constants/typography.scss';
 
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
+
+.addcourse-section.supabase *,
+.coursemodal *,
+.course-section *,
+.publish-form-section * {
+    font-family: "Montserrat", sans-serif !important;
+}
+
 :root {
     font-family: $font-primary;
     line-height: $line-height-medium;
-
     color-scheme: light dark;
     color: $light-color;
     background-color: $dark-color;
@@ -157,7 +165,7 @@ input,
 
 .img-wrapper img {
     display: block;
-    border-radius: 50%;
+    // border-radius: 50%;
     width: 100%; /* Adjust width as needed */
     height: auto; /* Adjust height as needed */
 }
@@ -192,6 +200,7 @@ input[type='number']::-webkit-inner-spin-button {
 /* Firefox */
 input[type='number'] {
     -moz-appearance: textfield;
+    appearance: textfield;
 }
 
 /* General styling for the radio input */
@@ -215,5 +224,10 @@ input[type='radio']:checked {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
     gap: 16px;
+}
+
+
+.main-panel:has(.students-page) input,.main-panel:has(.students-page) .form-select,.main-panel:has(.students-page)  .form-control {
+    background-color: #fff !important;
 }
 
