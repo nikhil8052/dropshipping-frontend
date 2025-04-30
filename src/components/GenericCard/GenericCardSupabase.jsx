@@ -10,7 +10,7 @@ import './GenericCard.scss';
 import ConfirmationBox from '../ConfirmationBox/ConfirmationBox';
 import { useState } from 'react';
 import { decode } from 'he';
-import Edit from '../../assets/icons/edit2.svg';
+
 import Edit2 from '../../assets/icons/Dropdown.svg';
 import 'react-tooltip/dist/react-tooltip.css';
 import { Tooltip } from 'react-tooltip';
@@ -83,19 +83,43 @@ const GenericCard = ({
                     <Dropdown.Menu>
                         <Dropdown.Item
                             onClick={(e) => {
-                                e.stopPropagation();
-
-                                dispatch({
-                                    type: types.ALL_RECORDS,
-                                    data: { keyOfData: 'currentCourse', data: rest?._id }
-                                });
-
+                                const isToggleClick = e.target.className === 'form-check-input';
+                                if (isToggleClick) return;
                                 navigate(
                                     role === 'student' && enroll && canAccessCourse
                                         ? `/${role}/courses-supabase/enrolled-course/${createSlug(title)}`
-                                        : `/${role}/courses-supabase/details/${createSlug(title)}`
+                                        : `/${role}/courses-supabase/details/${createSlug(title)}`,
+                                    {
+                                        state: {
+                                            courseId: rest?._id
+                                        }
+                                    }
                                 );
                             }}
+                            // onClick={(e) => {
+                            //     e.stopPropagation();
+
+                            //     dispatch({
+                            //         type: types.ALL_RECORDS,
+                            //         data: { keyOfData: 'currentCourse', data: rest?._id }
+                            //     });
+
+                            //     // navigate(
+                            //     //     role === 'student' && enroll && canAccessCourse
+                            //     //         ? `/${role}/courses-supabase/enrolled-course/${createSlug(title)}`
+                            //     //         : `/${role}/courses-supabase/details/${createSlug(title)}`
+                            //     // );
+                            //     navigate(
+                            //         role === 'student' && enroll && canAccessCourse
+                            //             ? `/${role}/courses-supabase/enrolled-course/${createSlug(title)}`
+                            //             : `/${role}/courses-supabase/details/${createSlug(title)}`,
+                            //         {
+                            //             state: {
+                            //                 courseId: rest?._id
+                            //             }
+                            //         }
+                            //     );
+                            // }}
                         >
                             View
                         </Dropdown.Item>
@@ -123,20 +147,34 @@ const GenericCard = ({
                     onClick={(e) => {
                         const isToggleClick = e.target.className === 'form-check-input';
                         if (isToggleClick) return;
-
-                        // Dispatch to Redux first
-                        dispatch({
-                            type: types.ALL_RECORDS,
-                            data: { keyOfData: 'currentCourse', data: rest?._id }
-                        });
-
-                        // Then navigate
                         navigate(
                             role === 'student' && enroll && canAccessCourse
                                 ? `/${role}/courses-supabase/enrolled-course/${createSlug(title)}`
-                                : `/${role}/courses-supabase/details/${createSlug(title)}`
+                                : `/${role}/courses-supabase/details/${createSlug(title)}`,
+                            {
+                                state: {
+                                    courseId: rest?._id
+                                }
+                            }
                         );
                     }}
+                    // onClick={(e) => {
+                    //     const isToggleClick = e.target.className === 'form-check-input';
+                    //     if (isToggleClick) return;
+
+                    //     // Dispatch to Redux first
+                    //     dispatch({
+                    //         type: types.ALL_RECORDS,
+                    //         data: { keyOfData: 'currentCourse', data: rest?._id }
+                    //     });
+
+                    //     // Then navigate
+                    //     navigate(
+                    //         role === 'student' && enroll && canAccessCourse
+                    //             ? `/${role}/courses-supabase/enrolled-course/${createSlug(title)}`
+                    //             : `/${role}/courses-supabase/details/${createSlug(title)}`
+                    //     );
+                    // }}
                 >
                     <div className="image-container">
                         <Card.Img loading="lazy" variant="top" src={img}  />

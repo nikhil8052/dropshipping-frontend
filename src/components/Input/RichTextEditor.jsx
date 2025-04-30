@@ -8,10 +8,15 @@ import './input.scss';
 import TextField from '@mui/material/TextField';
 import { Dropdown } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
+// import { Card, Form, Dropdown } from 'react-bootstrap';
+import Edit2 from '../../assets/icons/Dropdown.svg';
+import { useSelector } from 'react-redux';
+import { API_URL } from '../../utils/apiUrl';
+import axiosWrapper from '../../utils/api';
 
 const Block = Quill.import('blots/block');
 
-class CustomHeader extends Block {}
+class CustomHeader extends Block { }
 CustomHeader.blotName = 'header';
 CustomHeader.tagName = ['H1', 'H2', 'H3'];
 Quill.register(CustomHeader, true);
@@ -21,6 +26,7 @@ const RichTextEditor = (props) => {
     const quillRef = useRef(null);
     const resourceList = props.resources || [];
     const [nameField, setNameField] = useState('');
+    const token = useSelector((state) => state?.auth?.userToken);
 
     useEffect(() => {
         setNameField(props.showNameFieldData || '');
@@ -75,19 +81,7 @@ const RichTextEditor = (props) => {
         'video'
     ];
 
-    // const handleChange = (value) => {
-    //     helpers.setValue(value);
-    //     if (props.onChange) {
-    //         props.onChange(value);
-    //     }
-    // };
-    // const handleChange = (value) => {
-    //     console.log(value);
-    //     helpers.setValue(value); // This value is full HTML
-    //     if (props.onChange) {
-    //         props.onChange(value);
-    //     }
-    // };
+
     const handleChange = (value) => {
         if (!quillRef.current || !quillRef.current.getEditor) return;
 
@@ -99,21 +93,10 @@ const RichTextEditor = (props) => {
             const width = img.width;
             const mainWidth = img.data - width;
             const inlineWidth = img.style.width;
-
             const height = img.height;
-            console.log(width);
-            // console.log(height);
-            // if (width) img.setAttribute('width', width);
-            // if(width) img.style.setProperty('width', width + 'px');
-            // if(width) img.style.setProperty('width', '');
             if (width) img.setAttribute('width', width);
-            // if (width) img.setAttribute('data-width', width);
-
-            // if (height) img.setAttribute('height', height);
-            // if(width) img.style.setProperty('width', width + 'px');
             if (width) img.style.removeProperty('width');
 
-            console.log(img);
         });
 
         const finalHTML = editor.innerHTML;
@@ -178,6 +161,30 @@ const RichTextEditor = (props) => {
             if (overlayEl) overlayEl.remove();
         };
     }, []);
+
+
+
+
+    const deleteResource = async (id) => {
+        const ENDPOINT = API_URL.SUPABASE_DELETE_LECTURE_RESOURCE.replace(':id', id);
+        const response = await axiosWrapper('POST', ENDPOINT, {}, token);
+        props.setResources(prev => prev.filter(resource => resource.id !== id));
+        console.log(response, " This is the response from the delte resource ")
+    }
+
+    const editResource = async (id) => {
+        const resourceToEdit = resourceList.find((res) => res.id === id);
+        props.setEditResource(true);
+        props.setEditResourceID(id);
+        if (resourceToEdit) {
+            props.setModalShow(true);
+            props.setLabel(resourceToEdit.title ?? "");
+            props.setResourceFileUrl(resourceToEdit.image ?? "");
+            props.setResourceUrl(resourceToEdit.url ?? "");
+        }
+    }
+
+
 
     return (
         <div className="quill-editor">
@@ -255,13 +262,28 @@ const RichTextEditor = (props) => {
                         <h5 className="card-title">Resources</h5>
                         <div id="all_resources">
                             {resourceList.map((resource, index) => (
-                                <div key={resource.id} className={`resource-card ${index !== 0 ? 'mt-3' : ''}`}>
-                                    <img src={resource.image} alt="Resource" className="resource-image" />
-                                    <div className="resource-title">{resource.title}</div>
-                                </div>
+
+                                <>
+                                    <div key={resource.id} className={`resource-card ${index !== 0 ? 'mt-3' : ''}`}>
+                                        <img src={resource.image} alt="Resource" className="resource-image" />
+                                        <div className="resource-title">{resource.title}</div>
+                                        <Dropdown align="end">
+                                            <Dropdown.Toggle variant="light" className="action-dropdown-toggle" id="dropdown-basic">
+                                                <img src={Edit2} alt="" />
+                                            </Dropdown.Toggle>
+                                            <Dropdown.Menu>
+                                                <Dropdown.Item onClick={() => editResource(resource.id)}  >Edit</Dropdown.Item>
+                                                <Dropdown.Item onClick={() => deleteResource(resource.id)}>Delete</Dropdown.Item>
+                                            </Dropdown.Menu>
+                                        </Dropdown>
+                                    </div>
+
+                                </>
+
                             ))}
                         </div>
                     </div>
+
                 </div>
             )}
         </div>

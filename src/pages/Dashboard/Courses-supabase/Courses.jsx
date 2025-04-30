@@ -42,6 +42,7 @@ const Courses = () => {
             setDisplayedCourses(newDisplayedCourses);
 
             console.log(newDisplayedCourses, ' All cpirses ');
+            console.warn(newDisplayedCourses);
         }
     };
 
