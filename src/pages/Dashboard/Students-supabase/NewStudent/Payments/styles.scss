@@ -1,0 +1,18 @@
+@import '@constants/colors.scss';
+@import '@constants/media.scss';
+@import '@constants/typography.scss';
+
+.update-due-date-btn {
+    font-family: $font-primary;
+    color: #ffff !important;
+    padding: 10px 30px;
+    @include pagination-gradient;
+    border-radius: 59px;
+    font-weight: 400;
+    white-space: nowrap;
+    border: none;
+}
+
+.react-datepicker-wrapper {
+    width: 100%;
+}

@@ -166,13 +166,15 @@ export const adminSidebarItems = [
         name: 'Courses Supabase',
         iconLight: courses,
         linkTo: '/admin/courses-supabase',
-        pathCombinations: [
-            '/admin/courses-supabase',
-            '/admin/courses-supabase/new',
-            '/admin/courses-supabase/edit',
-            '/admin/courses-supabase/details'
-        ]
-    }
+        pathCombinations: ['/admin/courses-supabase', '/admin/courses-supabase/new', '/admin/courses-supabase/edit', '/admin/courses-supabase/details']
+    },
+    {
+        id: 10,
+        name: 'Student Supabase',
+        iconLight: student, 
+        linkTo: '/admin/students-supabase',
+        pathCombinations: ['/admin/students-supabase', '/admin/students-supabase/new', '/admin/students-supabase/edit', '/admin/students-supabase/details']
+    },
     // {
     //     id: 8,
     //     name: 'Logout',
