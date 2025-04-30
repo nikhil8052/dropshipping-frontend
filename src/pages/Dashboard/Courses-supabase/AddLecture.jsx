@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Button, Row, Col, Modal } from 'react-bootstrap';
+import { Button, Row, Col, Modal, Spinner } from 'react-bootstrap';
 import '../../../styles/Courses.scss';
 import Dropdown from 'react-bootstrap/Dropdown';
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -25,8 +25,10 @@ import * as types from '../../../redux/actions/actionTypes';
 import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd';
 import { EditText } from 'react-edit-text';
 import 'react-edit-text/dist/index.css';
+import Edit2 from '../../../assets/icons/Dropdown.svg';
 
 const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCourseData }) => {
+
     const [loading, setLoading] = useState(false);
     const [isOpen, setIsOpen] = useState(true);
     const [currentActiveLectureID, setCurrentActiveLectureID] = useState(null);
@@ -34,15 +36,15 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
     const [modalShow, setModalShow] = useState(false);
     const [isPublished, setIsPublished] = useState(false);
     const [modalShowRename, setModalShowRename] = useState(false);
+    const [editResource, setEditResource] = useState(false);
+    const [editResourceID, setEditResourceID] = useState(null);
     const [selectedLectureId, setSelectedLectureId] = useState(null);
     const [lectureLabel, setLectureLabel] = useState('');
-    const dispatch = useDispatch();
-
+    const [isPublishing, setIsPublishing] = useState(false);
     const [publishLectureModel, setPublishLectureModel] = useState(false);
     const [pendingLectureId, setPendingLectureId] = useState(null);
     const [modalShowSave, setModalShowSave] = useState(false);
     const [loadingCRUD, setLoadingCRUD] = useState(false);
-
     const [showTranscriptEditor, setShowTranscriptEditor] = useState(false);
     const [showQuizModal, setShowQuizModal] = useState(false);
     const [showMovePopup, setShowMovePopup] = useState(false);
@@ -59,7 +61,25 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
     const [label, setLabel] = useState('');
     const [topics, setTopics] = useState([]);
     const [lectureQuizzes, setLectureQuizzes] = useState([]);
-    const [editQuiz, setEditQuiz] = useState(null); // null = add mode
+    const [editQuiz, setEditQuiz] = useState(null);
+    const [rightViewLecture, setRightViewLecture] = useState(null);
+
+    const dispatch = useDispatch();
+
+
+    useEffect(() => {
+        if (initialData) {
+            if (initialData.lecturess?.length > 0) {
+                setRightViewLecture(initialData.lecturess[0]);
+            } else {
+                const folderWithLecture = initialData.folders?.find(folder => folder.lectures?.length > 0);
+                if (folderWithLecture) {
+                    setRightViewLecture(folderWithLecture.lectures[0]);
+                }
+            }
+        }
+    }, [initialData]);
+
     const [showDeleteModal, setShowDeleteModal] = useState({
         show: false,
         title: '',
@@ -67,6 +87,7 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
         quizId: null,
         initialValues: null
     });
+    const [renaming, setRenaming] = useState({ type: null, id: null });
 
     const [showLectureDeleteModal, setShowLectureDeleteModal] = useState({
         show: false,
@@ -75,6 +96,7 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
         lectureId: null,
         initialValues: null
     });
+
     const handleQuizSubmit = async (values, { setSubmitting, resetForm }) => {
         setSubmitting(true);
         const { question, options, correctAnswer } = values.quiz;
@@ -128,7 +150,6 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
             setUnassignedLectures((prev) => [...prev, ...newLectures]);
         }
 
-        console.log(initialData.folders, ' Folders ');
 
         // set the folders and the topic well
         if (initialData?.folders) {
@@ -152,6 +173,28 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
         }
     };
 
+
+
+    // DELETE FOLDER START 
+    const deleteFolder = async (id) => {
+        let ENDPOINT = API_URL.SUPABASE_COURSE_FOLDER_DELETE.replace(':id', id);
+        try {
+            console.log(ENDPOINT)
+            const response = await axiosWrapper('DELETE', ENDPOINT, {}, token);
+            if (response?.data) {
+                const folderToDelete = topics.find(folder => folder.id === id);
+                if (folderToDelete) {
+                    setUnassignedLectures(prev => [...prev, ...(folderToDelete.lectures || [])]);
+                    setTopics(prev => prev.filter(folder => folder.id !== id));
+                }
+            }
+        } catch (error) {
+            console.error('Failed to rename lecture:', error);
+            return null;
+        }
+    }
+    // DELETE FOLDER END 
+
     const toggleFolder = (index) => {
         setIsOpen((prevState) => ({
             ...prevState,
@@ -160,15 +203,25 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
     };
 
     const toggleSwitch = async () => {
+        setIsPublishing(true);
         const data = {
             is_published: 'false'
         };
         setIsPublished(!isPublished);
         const url = getApiUrl(isEditing, editingLecture?.id);
         const method = isEditing ? 'PUT' : 'POST';
-        const response = await axiosWrapper(method, url, data, token);
+        try {
+            await axiosWrapper(method, url, data, token);
+        } catch (err) {
+            setIsPublished((prev) => !prev);
+        } finally {
+            setIsPublishing(false);
+        }
     };
 
+
+
+    // END DELETE RESOURCE 
     // Add New Lecture which is unassinged
     const addUnassignedLecture = async () => {
         const newLec = {
@@ -189,6 +242,7 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
     };
 
     const addResource = async () => {
+
         const urlPattern = /^(https?:\/\/)?([\w\d-]+\.)+[a-zA-Z]{2,}(\/\S*)?$/;
 
         if (!label.trim()) {
@@ -210,25 +264,53 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
             return;
         }
 
+        let ENDPOINT = API_URL.SUPABASE_UPDATE_LECTURE_RESOURCE.replace(':id', currentActiveLectureID);
+        let METHOD = "POST";
+
         const formData = {
             model_id: currentActiveLectureID,
             model_type: 'lecture',
             name: label,
             type: 'file',
-            file_link: resourceFileUrl
+            file_link: resourceFileUrl,
+            url: resourceUrl
         };
 
-        const url = API_URL.SUPABASE_UPDATE_LECTURE_RESOURCE.replace(':id', currentActiveLectureID);
-        const response = await axiosWrapper('POST', url, formData, token);
+        if (editResource === true && editResourceID) {
+            formData.id = editResourceID;
+        }
+
+        const response = await axiosWrapper(METHOD, ENDPOINT, formData, token);
+        var id = null;
+        if (response) {
+            id = response.data[0].id;
+        }
 
         const resource = {
             image: '/resource_image.svg',
-            url: url,
-            title: label
+            url: resourceUrl,
+            title: label,
+            id: id,
+            file_link: resourceFileUrl,
+            type: isUrlProvided ? 'url' : 'file',
         };
 
-        setResources([...resources, resource]);
+        // Update UI - replace if editing, or append if new
+        if (editResource && editResourceID) {
+            setResources(prev =>
+                prev.map((r) => (r.id === editResourceID ? resource : r))
+            );
+        } else {
+            setResources([...resources, resource]);
+        }
+
+        // ✅ Reset state after done
         setModalShow(false);
+        setEditResource(false);
+        setEditResourceID(null);
+        setLabel('');
+        setResourceFileUrl('');
+        setResourceUrl('');
     };
 
     const addNewTopic = async () => {
@@ -419,7 +501,7 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
     //   useEffect(() => {
     //     if (!hasLectures) setIsEditing(true);
     //   }, [hasLectures]);
-    console.log(hasLectures);
+    // console.log(hasLectures);
     // useEffect(() => {
     //   if (!hasLectures) setIsEditing(true);
     // }, [hasLectures]);
@@ -473,35 +555,52 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
             setShowTranscriptEditor(true);
         } else if (eventKey === 'add-resource') {
             setModalShow(true);
+            setEditResource(false);
+            setEditResourceID(null);
+            setLabel('');
+            setResourceFileUrl('');
+            setResourceUrl('');
         } else if (eventKey === 'add-quiz') {
             handleQuizPopupClick(true);
         }
     };
 
     const handleRename = async ({ value, type, id }) => {
+        setRenaming({ type, id });
 
         const updated = await renameLecture(id, value.trim(), type);
 
+        setRenaming({ type: null, id: null });
+
         if (updated) {
-            setUnassignedLectures((prev) =>
-                prev.map((lecture) =>
-                    lecture.id === selectedLectureId ? { ...lecture, name: lectureLabel.trim() } : lecture
-                )
-            );
-            setTopics((prevTopics) =>
-                prevTopics.map((folder) => ({
-                    ...folder,
-                    lectures: folder.lectures.map((lecture) =>
-                        lecture.id === selectedLectureId ? { ...lecture, name: lectureLabel.trim() } : lecture
+            if (type === "lecture") {
+                setUnassignedLectures((prev) =>
+                    prev.map((lecture) =>
+                        lecture.id === id ? { ...lecture, name: value.trim() } : lecture
                     )
-                }))
-            );
-       
+                );
+
+                setTopics((prevTopics) =>
+                    prevTopics.map((folder) => ({
+                        ...folder,
+                        lectures: folder.lectures.map((lecture) =>
+                            lecture.id === id ? { ...lecture, name: value.trim() } : lecture
+                        )
+                    }))
+                );
+            } else if (type === "folder") {
+                setTopics((prevTopics) =>
+                    prevTopics.map((folder) =>
+                        folder.id === id ? { ...folder, name: value.trim() } : folder
+                    )
+                );
+            }
+
+            // Clear modal and input only if renaming lecture (optional)
             setModalShowRename(false);
             setLectureLabel('');
             setSelectedLectureId(null);
         }
-
     };
 
 
@@ -564,13 +663,13 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
 
     const { description } = {};
 
+    // GET FRESH LECTURE DATA 
     const getLectureData = async (id) => {
         const url = API_URL.SUPABASE_GET_LECTURE.replace(':id', id);
-
         const response = await axiosWrapper('GET', url, {}, token);
-
         return response;
     };
+    // END GET FRESH LECTURE DATA 
 
     const loadLectureData = async (lecture) => {
         setCurrentActiveLectureID(lecture.id);
@@ -578,12 +677,17 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
         const lecData = await getLectureData(currentActiveLectureID);
     };
 
-    const handleEditClick = async (id) => {
-        const lecture = await getLectureData(id);
 
+    // EDIT THE LECTURE WHEN CLICK ON THE EDIT 
+    const handleEditClick = async (id) => {
+
+        const lecture = await getLectureData(id);
+        setRightViewLecture(lecture.data);
+        
         const description = stripHtmlTags(lecture.data?.description);
         const transcript = stripHtmlTags(lecture.data?.transcript);
         setCurrentActiveLectureID(id);
+
         const lectureDetail = {
             name: lecture.data?.name,
             description: description,
@@ -592,21 +696,28 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
             courseId: lecture.data?.courseId,
             quizzes: lecture?.data?.quizzes
         };
+
         setLectureQuizzes(lecture?.data?.quizzes || []);
-        console.table(lectureQuizzes);
+
         setEditingLecture(lectureDetail);
+
         setIsEditing(true);
+
         // Get the resouces of the lecture
         const lecResources = lecture.data.resources ?? [];
         const resources = lecResources.map((lec) => {
             return {
-                image: lec.file_link,
-                url: lec.file_link,
-                title: lec.name
+                image: '/resource_image.svg',
+                url: lec.url,
+                file_link: lec.file_link,
+                type: lec.type,
+                title: lec.name,
+                id: lec.id
             };
         });
         setResources(resources);
     };
+    // END THE LECTURE EDIT FUNCTION 
 
     const getApiUrl = (isEditable, lectureId) => {
         return isEditable
@@ -617,7 +728,7 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
     const prepareFormData = (values) => {
         const formData = { ...values, courseId: editingLecture?.courseId };
 
-        console.log(formData);
+
         return formData;
     };
 
@@ -630,7 +741,7 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
         // setSubmitting(false);
     };
     const handleSubmit = async (values, { setSubmitting, resetForm, ...formikHelpers }) => {
-        setSubmitting(true);
+        // setSubmitting(true);
 
         const action = formikHelpers?.event?.nativeEvent?.submitter?.value;
 
@@ -641,7 +752,7 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
             const method = isEditing ? 'PUT' : 'POST';
 
             const response = await axiosWrapper(method, url, formData, token);
-            dispatch({ type: types.ALL_RECORDS, data: { keyOfData: 'currentCourseUpdate', data: true } });
+            // dispatch({ type: types.ALL_RECORDS, data: { keyOfData: 'currentCourseUpdate', data: true } });
 
             // if (response?.data) {
             //   const updatedLectureId = response.data.id;
@@ -668,7 +779,7 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
             // handleError(err);
             console.log(err);
         } finally {
-            setSubmitting(false);
+            // setSubmitting(false);
             modelPopAction();
         }
     };
@@ -693,25 +804,6 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
         });
     };
 
-    // const handleDragEnd = (result) => {
-    //     const { source, destination } = result;
-    //     if (!destination) return;
-    //     const sourceTopicIndex = parseInt(source.droppableId.split('-')[1]);
-    //     const destTopicIndex = parseInt(destination.droppableId.split('-')[1]);
-    //     if (sourceTopicIndex === destTopicIndex && source.index === destination.index) {
-    //         return;
-    //     }
-    //     const newTopics = [...topics];
-    //     const movedLecture = newTopics[sourceTopicIndex].lectures[source.index];
-    //     // Remove from source
-    //     newTopics[sourceTopicIndex].lectures.splice(source.index, 1);
-    //     // Add to destination
-    //     newTopics[destTopicIndex].lectures.splice(destination.index, 0, movedLecture);
-    //     const folder_id = newTopics[destTopicIndex].id;
-    //     const lecture_id = movedLecture.id;
-    //     moveLectureDND(lecture_id, folder_id);
-    //     setTopics(newTopics);
-    // };
 
     const handleDragEnd = (result) => {
         const { source, destination } = result;
@@ -838,18 +930,20 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
             return;
         }
 
-        let ENDPOINT="";
-        if( type=="lecture"){
+        let ENDPOINT = "";
+        if (type == "lecture") {
             ENDPOINT = API_URL.SUPABASE_UPDATE_LECTURE.replace(':id', id);
 
-        }else if( type=="folder"){
+        } else if (type == "folder") {
             ENDPOINT = API_URL.SUPABASE_COURSE_FOLDER_UPDATE.replace(':id', id);
         }
 
         try {
             const payload = {
-                name: newTitle
+                name: newTitle,
+                source: "rename"
             };
+
             const response = await axiosWrapper('PUT', ENDPOINT, payload, token);
             return response.data;
         } catch (error) {
@@ -985,6 +1079,7 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
                                             id="labelInput"
                                             className="form-control"
                                             placeholder="Google Document"
+                                            value={label}
                                             required
                                             onChange={(e) => setLabel(e.target.value)}
                                         />
@@ -995,6 +1090,7 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
                                         <input
                                             type="text"
                                             id="urlInput"
+                                            value={resourceUrl}
                                             className="form-control"
                                             placeholder="Enter URL"
                                             onChange={(e) => setResourceUrl(e.target.value)}
@@ -1008,6 +1104,7 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
                                         <input
                                             type="file"
                                             id="fileUpload"
+
                                             className="form-control"
                                             accept=".pdf,.doc,.docx,.png,.jpg,.jpeg,.mp4,.mov,.avi"
                                             onChange={(e) => resourceFileChanged(e)}
@@ -1019,7 +1116,7 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
                             nonActiveBtn="cancel-btn"
                             activeBtn="submit-btn"
                             cancelButtonTitle="Cancel"
-                            activeBtnTitle="Add"
+                            activeBtnTitle={editResource ? "Update" : "Add"}
                         />
                     )}
 
@@ -1181,18 +1278,34 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
                                                                         }}
                                                                         style={{ cursor: 'pointer' }}
                                                                     >
-                                                                        <h3>
-                                                                            <EditText
-                                                                                name="textbox2"
-                                                                                defaultValue={topic.name}
-                                                                                inputClassName="editable-input"
-                                                                                onSave={({ value }) => handleRename({ value, type: "folder", id: topic.id })}
-                                                                            />
+                                                                        <h3 className="editable-header">
+                                                                            {renaming.type === "folder" && renaming.id === topic.id ? (
+                                                                                <Spinner animation="border" size="sm" className="ms-2" />
+                                                                            ) : (
+                                                                                <EditText
+                                                                                    name="textbox2"
+                                                                                    defaultValue={topic.name}
+                                                                                    inputClassName="editable-input"
+                                                                                    onSave={({ value }) =>
+                                                                                        handleRename({ value, type: "folder", id: topic.id })
+                                                                                    }
+                                                                                />
+                                                                            )}
                                                                         </h3>
-                                                                        <div
-                                                                            className={`folder-dropdown ${isOpen[topicIndex] ? 'rotated' : ''}`}
-                                                                        >
-                                                                            <img src={Drop} alt="" />
+                                                                        <div className='folder-dd-name'>
+                                                                            <Dropdown align="end">
+                                                                                <Dropdown.Toggle variant="light" className="action-dropdown-toggle" id="dropdown-basic">
+                                                                                    <img src={Edit2} alt="" />
+                                                                                </Dropdown.Toggle>
+                                                                                <Dropdown.Menu>
+                                                                                    <Dropdown.Item onClick={() => deleteFolder(topic.id)}>Delete</Dropdown.Item>
+                                                                                </Dropdown.Menu>
+                                                                            </Dropdown>
+                                                                            <div
+                                                                                className={`folder-dropdown ${isOpen[topicIndex] ? 'rotated' : ''}`}
+                                                                            >
+                                                                                <img src={Drop} alt="" />
+                                                                            </div>
                                                                         </div>
                                                                     </div>
 
@@ -1218,22 +1331,27 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
                                                                                                     <a
                                                                                                         href="javascript:void(0)"
                                                                                                         onClick={() =>
-                                                                                                            loadLectureData(
-                                                                                                                lecture
-                                                                                                            )
+                                                                                                            // loadLectureData(
+                                                                                                            //     lecture
+                                                                                                            // )
+                                                                                                            console.log("Lecture clicked")
                                                                                                         }
                                                                                                     >
-                                                                                                        <EditText
-                                                                                                            name="textbox3"
-                                                                                                            defaultValue={
-                                                                                                                lecture.name ??
-                                                                                                                'ERROR'
-                                                                                                            }
-                                                                                                            inputClassName="editable-input"
-                                                                                                            onSave={({ value }) => handleRename({ value, type: "lecture", id: lecture.id })}
-                                                                                                        />
-                                                                                                    </a>
+                                                                                                        {
+                                                                                                            renaming.type === "lecture" && renaming.id === lecture.id ? (
+                                                                                                                <Spinner animation="border" size="sm" className="ms-2" />
+                                                                                                            ) : (<EditText
+                                                                                                                name="textbox3"
+                                                                                                                defaultValue={
+                                                                                                                    lecture.name ??
+                                                                                                                    'ERROR'
+                                                                                                                }
+                                                                                                                inputClassName="editable-input"
+                                                                                                                onSave={({ value }) => handleRename({ value, type: "lecture", id: lecture.id })}
+                                                                                                            />)
+                                                                                                        }
 
+                                                                                                    </a>
                                                                                                     <div className="drop-box">
                                                                                                         <Dropdown>
                                                                                                             <Dropdown.Toggle id="dropdown-basic">
@@ -1381,14 +1499,20 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
                                                                                         {...provided.dragHandleProps}
                                                                                     >
 
-                                                                                        <EditText
-                                                                                            name="textbox4"
-                                                                                            defaultValue={
-                                                                                                lecture.name ??
-                                                                                                'ERROR'
-                                                                                            }
-                                                                                            inputClassName="editable-input"
-                                                                                            onSave={({ value }) => handleRename({ value, type: "lecture", id: lecture.id })} />
+                                                                                        {
+                                                                                            renaming.type === "lecture" && renaming.id === lecture.id ? (
+                                                                                                <Spinner animation="border" size="sm" className="ms-2" />
+                                                                                            ) : (<EditText
+                                                                                                name="textbox4"
+                                                                                                defaultValue={
+                                                                                                    lecture.name ??
+                                                                                                    'ERROR'
+                                                                                                }
+                                                                                                inputClassName="editable-input"
+                                                                                                onSave={({ value }) => handleRename({ value, type: "lecture", id: lecture.id })}
+                                                                                            />)
+                                                                                        }
+
                                                                                         <div className="drop-box">
                                                                                             <Dropdown>
                                                                                                 <Dropdown.Toggle id="dropdown-basic">
@@ -1516,54 +1640,18 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
                                         {/* new code  */}
                                         {!hasLectures && !isEditing ? (
                                             <>
-                                                {/* <div className="new-page-view">
-                        <div className="course-right-header">
-                          <h2 className="subhead">New Page</h2>
-                          <Button onClick={() => setIsEditing(true)} className="edit-btn" variant="outlined">
-                            <FontAwesomeIcon icon={faPen} style={{ marginRight: 8 }} />
-
-                          </Button>
-                        </div>
-                      </div> */}
-                                                {initialData?.lecturess?.length > 0 ||
-                                                    initialData?.folders?.some((folder) => folder.lectures?.length > 0) ? (
-                                                    <>
-                                                        {/* Unassigned lectures */}
-                                                        {initialData.lecturess?.map((lecture) => (
-                                                            <div className="new-page-view" key={lecture.id}>
-                                                                <div className="course-right-header">
-                                                                    <h2 className="subhead">{lecture?.name}</h2>
-                                                                    <div
-                                                                        className="img-box cursor-pointer"
-                                                                        onClick={() => handleEditClick(lecture.id)}
-                                                                    >
-                                                                        <img src={PencilEdit} alt="Edit" />
-                                                                    </div>
-                                                                </div>
+                                                {rightViewLecture ? (
+                                                    <div className="new-page-view" key={rightViewLecture.id}>
+                                                        <div className="course-right-header">
+                                                            <h2 className="subhead">{rightViewLecture.name}</h2>
+                                                            <div
+                                                                className="img-box cursor-pointer"
+                                                                onClick={() => handleEditClick(rightViewLecture.id)}
+                                                            >
+                                                                <img src={PencilEdit} alt="Edit" />
                                                             </div>
-                                                        ))}
-
-                                                        {/* Folder lectures */}
-                                                        {initialData.folders?.map((folder) =>
-                                                            folder.lectures?.map((lecture) => (
-                                                                <div className="new-page-view" key={lecture.id}>
-                                                                    <div className="course-right-header">
-                                                                        <h2 className="subhead">{lecture?.name}</h2>
-                                                                        <div className="img-box">
-                                                                            <img
-                                                                                className="cursor-pointer"
-                                                                                src={PencilEdit}
-                                                                                alt="Edit"
-                                                                                onClick={() =>
-                                                                                    handleEditClick(lecture.id)
-                                                                                }
-                                                                            />
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            ))
-                                                        )}
-                                                    </>
+                                                        </div>
+                                                    </div>
                                                 ) : (
                                                     <p className="no-lectures-message">
                                                         You don’t have any lectures yet.{' '}
@@ -1576,6 +1664,7 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
                                                         a new lecture to get started.
                                                     </p>
                                                 )}
+
                                             </>
                                         ) : (
                                             <Formik
@@ -1610,6 +1699,13 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
                                                                         setFieldValue('name', newName)
                                                                     }
                                                                     resources={resources}
+                                                                    setResources={setResources}
+                                                                    setModalShow={setModalShow}
+                                                                    setLabel={setLabel}
+                                                                    setResourceFileUrl={setResourceFileUrl}
+                                                                    setResourceUrl={setResourceUrl}
+                                                                    setEditResource={setEditResource}
+                                                                    setEditResourceID={setEditResourceID}
                                                                     modules={{ toolbar: TOOLBAR_CONFIG }}
                                                                     formats={FORMATS}
                                                                 />
@@ -1668,7 +1764,7 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
                                                                         </Dropdown.Toggle>
                                                                         <Dropdown.Menu>
                                                                             <Dropdown.Item eventKey="add-resource">
-                                                                                Add resources
+                                                                                Add Resource
                                                                             </Dropdown.Item>
                                                                             <Dropdown.Item eventKey="add-transcript" disabled={showTranscriptEditor === true}  >
                                                                                 Add Transcript{' '}
@@ -1681,31 +1777,51 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
                                                                 </div>
                                                             </div>
                                                             <div className="gap-3 d-flex" style={{ flexWrap: 'wrap' }}>
-                                                                <div className="toggle-wrapper">
-                                                                    <span className="toggle-label">
-                                                                        {isPublished ? 'Published' : 'Draft'}
-                                                                    </span>
-                                                                    <div className="switch">
-                                                                        <input
-                                                                            type="checkbox"
-                                                                            id="switch2"
-                                                                            checked={isPublished}
-                                                                            onChange={toggleSwitch}
-                                                                        />
-                                                                        <label htmlFor="switch2"></label>
-                                                                    </div>
-                                                                </div>
 
-                                                                <Button
-                                                                    type="submit"
-                                                                    className="submit-btn"
-                                                                    disabled={isSubmitting}
-                                                                >
-                                                                    {isEditing ? 'Update Lecture' : 'Update Lecture'}
+                                                                {isPublishing ? (
+                                                                    <Spinner
+                                                                        animation="border"
+                                                                        size="sm"
+                                                                        role="status"
+                                                                        aria-hidden="true"
+                                                                    />
+                                                                ) : (<>
+                                                                    <div className="toggle-wrapper">
+                                                                        <span className="toggle-label">
+                                                                            {isPublished ? 'Published' : 'Draft'}
+                                                                        </span>
+                                                                        <div className="switch">
+                                                                            <input
+                                                                                type="checkbox"
+                                                                                id="switch2"
+                                                                                checked={isPublished}
+                                                                                onChange={toggleSwitch}
+                                                                            />
+                                                                            <label htmlFor="switch2"></label>
+                                                                        </div>
+                                                                    </div>
+                                                                </>)}
+                                                                <Button type="button" className="submit-btn" onClick={()=> { setIsEditing(false) }}>
+                                                                     Cancel
                                                                 </Button>
-                                                                {/* <Button type="submit" className="submit-btn">
-                                                                    Save
-                                                                </Button> */}
+                                                                <Button type="submit" className="submit-btn" disabled={isSubmitting}>
+                                                                    {isSubmitting ? (
+                                                                        <>
+                                                                            <Spinner
+                                                                                as="span"
+                                                                                animation="border"
+                                                                                size="sm"
+                                                                                role="status"
+                                                                                aria-hidden="true"
+                                                                                className="me-2"
+                                                                            />
+
+                                                                        </>
+                                                                    ) : (
+                                                                        isEditing ? 'Update' : 'Update'
+                                                                    )}
+                                                                </Button>
+                                                               
                                                             </div>
                                                         </div>
 
@@ -1778,7 +1894,7 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
                                                                 show={publishLectureModel}
                                                                 onClose={modelPopAction}
                                                                 onConfirm={handleSubmit}
-                                                                title="Save Your lecture data ..."
+                                                                title="Save Your Lecture"
                                                                 body="You have unsaved changes. Would you like to save them before editing, or continue without saving?"
                                                                 loading={loadingCRUD}
                                                                 customFooterClass="custom-footer-class"

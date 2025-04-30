@@ -10,7 +10,7 @@ import './GenericCard.scss';
 import ConfirmationBox from '../ConfirmationBox/ConfirmationBox';
 import { useState } from 'react';
 import { decode } from 'he';
-import Edit from '../../assets/icons/edit2.svg';
+
 import Edit2 from '../../assets/icons/Dropdown.svg';
 import 'react-tooltip/dist/react-tooltip.css';
 import { Tooltip } from 'react-tooltip';
