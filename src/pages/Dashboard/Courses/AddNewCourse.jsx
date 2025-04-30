@@ -49,7 +49,7 @@ const AddNewCourse = () => {
     });
 
     // //////////////////////////////Handlers////////////////////////
-   
+
     const handleDelete = async (courseId) => {
         setLoading(true);
         try {
@@ -238,12 +238,7 @@ const AddNewCourse = () => {
                 </span>
                 {editMode ? 'Edit New Course' : 'Add New Course'}
             </div>
-            <Tabs
-                fill
-                activeKey={activeKey}
-                onSelect={(k) => handleTabChange(k)}
-                id="controlled-tab-example"
-            >
+            <Tabs fill activeKey={activeKey} onSelect={(k) => handleTabChange(k)} id="controlled-tab-example">
                 <Tab
                     eventKey="basic-information"
                     title={
@@ -262,7 +257,6 @@ const AddNewCourse = () => {
                         onDelete={handleDelete}
                         {...courseData}
                         _id={courseId}
-
                     />
                 </Tab>
                 <Tab

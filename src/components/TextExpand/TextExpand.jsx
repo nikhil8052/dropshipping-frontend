@@ -25,17 +25,20 @@ const TextExpand = ({ value = '--', width = '150px', className = '' }) => {
                         style={{
                             overflow: 'hidden',
                             textOverflow: 'ellipsis',
-                           
+
                             cursor: 'pointer',
                             display: 'inline-block',
                             maxWidth: width
                         }}
                         className={className}
                     >
-                       <p style={{
-                        wordBreak: 'break-word',
-                      
-                    }}>{value}</p> 
+                        <p
+                            style={{
+                                wordBreak: 'break-word'
+                            }}
+                        >
+                            {value}
+                        </p>
                     </div>
                 </OverlayTrigger>
             ) : (
@@ -44,18 +47,19 @@ const TextExpand = ({ value = '--', width = '150px', className = '' }) => {
                     style={{
                         overflow: 'hidden',
                         textOverflow: 'ellipsis',
-                      
+
                         display: 'inline-block',
                         maxWidth: width
                     }}
                     className={className}
                 >
-                      <p
-                      style={{
-                        wordBreak: 'break-word',
-                      
-                    }}
-                    >{value}</p> 
+                    <p
+                        style={{
+                            wordBreak: 'break-word'
+                        }}
+                    >
+                        {value}
+                    </p>
                 </div>
             )}
         </div>

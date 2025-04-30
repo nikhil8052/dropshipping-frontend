@@ -12,11 +12,11 @@ import '../../../styles/Courses.scss';
 import Input from '../../../components/Input/Input';
 import deleteIcon from '@icons/trash-2.svg';
 import ConfirmationBox from '@components/ConfirmationBox/ConfirmationBox';
-import 'react-tooltip/dist/react-tooltip.css'
-import { Tooltip } from 'react-tooltip'
+import 'react-tooltip/dist/react-tooltip.css';
+import { Tooltip } from 'react-tooltip';
 import CourseAccessType from './CourseAccessType';
 
-const BasicInformation = ({ initialData, setStepComplete, createOrUpdateCourse, resetStep, onDelete,...rest }) => {
+const BasicInformation = ({ initialData, setStepComplete, createOrUpdateCourse, resetStep, onDelete, ...rest }) => {
     const { userInfo, userToken } = useSelector((state) => state?.auth);
     const role = userInfo?.role?.toLowerCase();
     const [categories, setCategories] = useState([]);
@@ -26,7 +26,7 @@ const BasicInformation = ({ initialData, setStepComplete, createOrUpdateCourse, 
 
     const [showDeleteModal, setShowDeleteModal] = useState(false);
     const [loadingCRUD, setLoadingCRUD] = useState(false);
-    
+
     // New state for category creation modal
     const [showCategoryModal, setShowCategoryModal] = useState(false);
     const [newCategoryName, setNewCategoryName] = useState('');
@@ -55,8 +55,6 @@ const BasicInformation = ({ initialData, setStepComplete, createOrUpdateCourse, 
             resetStep();
         }
     };
-
-
 
     useEffect(() => {
         if (initialData?.category) {
@@ -126,14 +124,9 @@ const BasicInformation = ({ initialData, setStepComplete, createOrUpdateCourse, 
         }
     };
 
-
-
     const noOptionsMessage = ({ inputValue }) => {
         return inputValue ? 'No categories found' : 'Type to search categories';
     };
-
-
-
 
     return (
         <>
@@ -144,24 +137,24 @@ const BasicInformation = ({ initialData, setStepComplete, createOrUpdateCourse, 
                     <div
                         className="section-title"
                         style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}
-                        >
+                    >
                         <p>Basic Information</p>
 
                         {role === 'admin' && (
                             <div className="delete-boxs">
-                            <button
-                                type="button"
-                                className="delete-icon-btn"
-                                onClick={handleDeleteClick}
-                                data-tooltip-id="my-tooltip2"
-                                data-tooltip-content="Delete Course"
-                                style={{ background: 'transparent', border: 'none' }}
-                            >
-                                <img src={deleteIcon} alt="Delete" className="delete-icon" />
-                            </button>
+                                <button
+                                    type="button"
+                                    className="delete-icon-btn"
+                                    onClick={handleDeleteClick}
+                                    data-tooltip-id="my-tooltip2"
+                                    data-tooltip-content="Delete Course"
+                                    style={{ background: 'transparent', border: 'none' }}
+                                >
+                                    <img src={deleteIcon} alt="Delete" className="delete-icon" />
+                                </button>
                             </div>
                         )}
-                        </div>
+                    </div>
 
                     <div className="add-course-form">
                         <Formik
@@ -200,11 +193,20 @@ const BasicInformation = ({ initialData, setStepComplete, createOrUpdateCourse, 
                                     {/* <CourseAccessType /> */}
                                     <Row>
                                         <Col md={12} xs={12}>
-                                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                                                <label style={{ marginBottom: '5px', fontWeight: '500' }}>Course Category</label>
-                                                <Button 
-                                                    variant="text-dark" className='nwcat'
-                                                    size="sm" 
+                                            <div
+                                                style={{
+                                                    display: 'flex',
+                                                    justifyContent: 'space-between',
+                                                    alignItems: 'center'
+                                                }}
+                                            >
+                                                <label style={{ marginBottom: '5px', fontWeight: '500' }}>
+                                                    Course Category
+                                                </label>
+                                                <Button
+                                                    variant="text-dark"
+                                                    className="nwcat"
+                                                    size="sm"
                                                     style={{ padding: 0, fontSize: '0.875rem' }}
                                                     onClick={() => setShowCategoryModal(true)}
                                                 >
@@ -221,11 +223,10 @@ const BasicInformation = ({ initialData, setStepComplete, createOrUpdateCourse, 
                                                 options={categories}
                                                 isMulti={true}
                                                 noOptionsMessage={noOptionsMessage}
-                                                formatCreateLabel={(inputValue) => `No categories found`} 
+                                                formatCreateLabel={(inputValue) => 'No categories found'}
                                                 isValidNewOption={() => false}
                                             />
                                         </Col>
-
                                     </Row>
 
                                     <Row>
@@ -251,9 +252,7 @@ const BasicInformation = ({ initialData, setStepComplete, createOrUpdateCourse, 
                     </div>
                 </div>
             )}
-            
-           
-            
+
             <Tooltip id="my-tooltip2" />
         </>
     );

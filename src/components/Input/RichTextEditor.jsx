@@ -3,20 +3,18 @@ import 'react-quill/dist/quill.snow.css';
 import { useField } from 'formik';
 import { useRef, useEffect, useState } from 'react';
 import './input.scss';
-import ImageResize from 'quill-image-resize-module-react';
-Quill.register('modules/imageResize', ImageResize);
+// import ImageResize from 'quill-image-resize-module-react';
+// Quill.register('modules/imageResize', ImageResize);
 import TextField from '@mui/material/TextField';
 import { Dropdown } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 const Block = Quill.import('blots/block');
 
-class CustomHeader extends Block { }
+class CustomHeader extends Block {}
 CustomHeader.blotName = 'header';
 CustomHeader.tagName = ['H1', 'H2', 'H3'];
 Quill.register(CustomHeader, true);
-
-
 
 const RichTextEditor = (props) => {
     const [field, , helpers] = useField(props.name);
@@ -24,7 +22,6 @@ const RichTextEditor = (props) => {
     const resourceList = props.resources || [];
     const [nameField, setNameField] = useState('');
 
-  
     useEffect(() => {
         setNameField(props.showNameFieldData || '');
     }, [props.showNameFieldData]);
@@ -35,7 +32,7 @@ const RichTextEditor = (props) => {
             [{ list: 'ordered' }, { list: 'bullet' }],
             ['blockquote'],
             ['link', 'image', 'video'],
-            [{ 'header-h1': 'H1' }, { 'header-h2': 'H2' }, { 'header-h3': 'H3' }, { 'header-h4': 'H4' }],
+            [{ 'header-h1': 'H1' }, { 'header-h2': 'H2' }, { 'header-h3': 'H3' }, { 'header-h4': 'H4' }]
         ],
         handlers: {
             'header-h1': function () {
@@ -53,23 +50,29 @@ const RichTextEditor = (props) => {
             'header-h4': function () {
                 const quill = this.quill;
                 quill.format('header', 4);
-            },
+            }
         }
     };
     const modules = {
-        toolbar: { container: `#${props.id}` },
-        imageResize: {
-          parchment: Quill.import('parchment'),
-          modules: ['Resize', 'DisplaySize', 'Toolbar'],
-        },
-      };
+        toolbar: { container: `#${props.id}` }
+        // imageResize: {
+        //     parchment: Quill.import('parchment'),
+        //     modules: ['Resize', 'DisplaySize', 'Toolbar'],
+        // },
+    };
     const FORMATS = [
         'header',
-        'bold', 'italic', 'underline', 'strike',
-        'list', 'bullet',
+        'bold',
+        'italic',
+        'underline',
+        'strike',
+        'list',
+        'bullet',
         'blockquote',
         'code-block',
-        'link', 'image', 'video'
+        'link',
+        'image',
+        'video'
     ];
 
     // const handleChange = (value) => {
@@ -92,7 +95,7 @@ const RichTextEditor = (props) => {
         const editor = quill.root;
 
         // Ensure all image widths and heights are inlined
-        editor.querySelectorAll('img').forEach(img => {
+        editor.querySelectorAll('img').forEach((img) => {
             const width = img.width;
             const mainWidth = img.data - width;
             const inlineWidth = img.style.width;
@@ -126,95 +129,71 @@ const RichTextEditor = (props) => {
         }
     };
 
-
-
-
-    useEffect(() => {
-        const quill = quillRef.current.getEditor();
-
-        const handleAddResource = () => {
-            const html = `
-             <div class="resource-card mt-2">
-                            <img src="https://dropship-api.ropstam.dev/uploads/1736169674625-courseThumbnail.jpeg" alt="Resource Image" class="resource-image" />
-                            <div class="resource-title">This is the Resource Title</div>
-                        </div>
-            `;
-
-            document.getElementById('all_resources').innerHTML += html;
-
-        };
-
-        const button = document.getElementById('add-resource-btn');
-        if (button) {
-            button.addEventListener('click', handleAddResource);
-        }
-
-        // Cleanup on unmount
-        return () => {
-            if (button) {
-                button.removeEventListener('click', handleAddResource);
-            }
-        };
-    }, []);
-    
     useEffect(() => {
         const quill = quillRef.current?.getEditor();
         if (!quill) return;
-      
+
         let overlayEl = null;
         let isOverlayVisible = false;
-      
-        const checkTooltip = () => {
-          const tooltip = quill.theme?.tooltip;
-          if (!tooltip || !tooltip.root) return;
-      
-          const root = tooltip.root;
-          const input = root.querySelector('input');
-      
-          const isEditing = root.classList.contains('ql-editing');
-          const isHidden = root.classList.contains('ql-hidden');
-          const isVideoInput = input?.placeholder === 'Embed URL';
-      
-          const shouldShowOverlay = isEditing && isVideoInput && !isHidden;
 
-          if (shouldShowOverlay && !isOverlayVisible) {
-            if (!overlayEl) {
-              overlayEl = document.createElement('div');
-              overlayEl.id = 'ql-video-overlay';
-              overlayEl.className = 'ql-video-overlay';
-              document.body.appendChild(overlayEl);
-              // delay adding the 'show' class to trigger transition
-              requestAnimationFrame(() => {
-                overlayEl?.classList.add('show');
-              });
+        const checkTooltip = () => {
+            const tooltip = quill.theme?.tooltip;
+            if (!tooltip || !tooltip.root) return;
+
+            const root = tooltip.root;
+            const input = root.querySelector('input');
+
+            const isEditing = root.classList.contains('ql-editing');
+            const isHidden = root.classList.contains('ql-hidden');
+            const isVideoInput = input?.placeholder === 'Embed URL';
+
+            const shouldShowOverlay = isEditing && isVideoInput && !isHidden;
+
+            if (shouldShowOverlay && !isOverlayVisible) {
+                if (!overlayEl) {
+                    overlayEl = document.createElement('div');
+                    overlayEl.id = 'ql-video-overlay';
+                    overlayEl.className = 'ql-video-overlay';
+                    document.body.appendChild(overlayEl);
+                    // delay adding the 'show' class to trigger transition
+                    requestAnimationFrame(() => {
+                        overlayEl?.classList.add('show');
+                    });
+                }
+                isOverlayVisible = true;
+            } else if ((!shouldShowOverlay || isHidden) && isOverlayVisible) {
+                overlayEl?.classList.remove('show');
+                setTimeout(() => {
+                    overlayEl?.remove();
+                    overlayEl = null;
+                }, 300); // match transition time
+                isOverlayVisible = false;
             }
-            isOverlayVisible = true;
-          } else if ((!shouldShowOverlay || isHidden) && isOverlayVisible) {
-            overlayEl?.classList.remove('show');
-            setTimeout(() => {
-              overlayEl?.remove();
-              overlayEl = null;
-            }, 300); // match transition time
-            isOverlayVisible = false;
-          }
-        
         };
-      
+
         const interval = setInterval(checkTooltip, 200);
-      
+
         return () => {
-          clearInterval(interval);
-          if (overlayEl) overlayEl.remove();
+            clearInterval(interval);
+            if (overlayEl) overlayEl.remove();
         };
-      }, []);
-      
+    }, []);
+
     return (
         <div className="quill-editor">
-            <div id={`${props.id}`} >
-                <button className="ql-header" value="1">H1</button>
-                <button className="ql-header" value="2">H2</button>
-                <button className="ql-header" value="3">H3</button>
-                <button className="ql-header" value="4">H4</button>
+            <div id={`${props.id}`}>
+                <button className="ql-header" value="1">
+                    H1
+                </button>
+                <button className="ql-header" value="2">
+                    H2
+                </button>
+                <button className="ql-header" value="3">
+                    H3
+                </button>
+                <button className="ql-header" value="4">
+                    H4
+                </button>
                 <button className="ql-bold"></button>
                 <button className="ql-italic"></button>
                 <button className="ql-underline"></button>
@@ -223,14 +202,17 @@ const RichTextEditor = (props) => {
                 <button className="ql-list" value="ordered"></button>
                 <button className="ql-list" value="bullet"></button>
                 <button className="ql-blockquote"></button>
-                <button className="ql-link"></button>
-                <button className="ql-image"></button>
-                <button className="ql-video"></button>
+                {props.name !== 'transcript' && (
+                    <>
+                        <button className="ql-link"></button>
+                        <button className="ql-image"></button>
+                        <button className="ql-video"></button>
+                    </>
+                )}
             </div>
 
             {props.showNameField && (
                 <>
-
                     <TextField
                         fullWidth
                         name="name"
@@ -246,7 +228,7 @@ const RichTextEditor = (props) => {
                         InputProps={{
                             disableUnderline: true, // works for standard and filled variant
                             classes: {
-                                notchedOutline: 'no-outline',
+                                notchedOutline: 'no-outline'
                             }
                         }}
                         InputLabelProps={{
@@ -255,7 +237,6 @@ const RichTextEditor = (props) => {
                     />
                 </>
             )}
-
 
             <ReactQuill
                 ref={quillRef}
@@ -269,9 +250,9 @@ const RichTextEditor = (props) => {
 
             {/* Resources List  */}
             {props.showResources && resourceList.length > 0 && (
-                <div className='card new-resource-main-card '>
-                    <div className='card-body d-flex flex-column'>
-                        <h5 className='card-title'>Resources</h5>
+                <div className="card new-resource-main-card ">
+                    <div className="card-body d-flex flex-column">
+                        <h5 className="card-title">Resources</h5>
                         <div id="all_resources">
                             {resourceList.map((resource, index) => (
                                 <div key={resource.id} className={`resource-card ${index !== 0 ? 'mt-3' : ''}`}>
@@ -283,7 +264,6 @@ const RichTextEditor = (props) => {
                     </div>
                 </div>
             )}
-
         </div>
     );
 };

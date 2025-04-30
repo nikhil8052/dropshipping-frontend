@@ -14,19 +14,8 @@ import GenericCard from '../../../components/GenericCard/GenericCard';
 import { precisionRound } from '../../../utils/common';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import * as types from '../../../redux/actions/actionTypes';
-import {
-    DndContext,
-    closestCenter,
-    PointerSensor,
-    useSensor,
-    useSensors,
-} from '@dnd-kit/core';
-import {
-    arrayMove,
-    SortableContext,
-    useSortable,
-    rectSortingStrategy,
-} from '@dnd-kit/sortable';
+import { DndContext, closestCenter, PointerSensor, useSensor, useSensors } from '@dnd-kit/core';
+import { arrayMove, SortableContext, useSortable, rectSortingStrategy } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 
 const Courses = () => {
@@ -34,8 +23,8 @@ const Courses = () => {
     const sensors = useSensors(
         useSensor(PointerSensor, {
             activationConstraint: {
-                distance: 5,
-            },
+                distance: 5
+            }
         })
     );
 
@@ -46,13 +35,13 @@ const Courses = () => {
             const newIndex = items.indexOf(over.id);
             const newItems = arrayMove(items, oldIndex, newIndex);
             setItems(newItems);
-            const newDisplayedCourses = newItems.map(id =>
-                displayedCourses.find(course => course._id === id)
-            ).filter(Boolean); // Filter out any undefined
-    
+            const newDisplayedCourses = newItems
+                .map((id) => displayedCourses.find((course) => course._id === id))
+                .filter(Boolean); // Filter out any undefined
+
             setDisplayedCourses(newDisplayedCourses);
 
-            console.log(newDisplayedCourses, " All cpirses ")
+            console.log(newDisplayedCourses, ' All cpirses ');
         }
     };
 
@@ -69,28 +58,20 @@ const Courses = () => {
     const role = userInfo?.role;
     const itemsPerBatch = 12; // Number of courses to load per scroll
 
-
     function SortableItem({ course, id, onDelete }) {
-        const {
-            attributes,
-            listeners,
-            setNodeRef,
-            transform,
-            transition,
-            isDragging,
-        } = useSortable({ id });
-    
+        const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({ id });
+
         const style = {
             transform: CSS.Transform.toString(transform),
             transition: isDragging ? 'none' : 'transform 300ms ease', // Animate only others
             cursor: isDragging ? 'grabbing' : 'grab',
             zIndex: isDragging ? 999 : 'auto',
             opacity: isDragging ? 0.7 : 1,
-            boxShadow: isDragging ? '0 8px 20px rgba(0, 161, 215, 0.16)' : 'none',
+            boxShadow: isDragging ? '0 8px 20px rgba(0, 161, 215, 0.16)' : 'none'
         };
-    
+
         return (
-            <div  ref={setNodeRef} style={style} {...attributes} {...listeners}>
+            <div ref={setNodeRef} style={style} {...attributes} {...listeners}>
                 <GenericCard
                     key={course._id}
                     {...course}
@@ -101,7 +82,6 @@ const Courses = () => {
             </div>
         );
     }
-    
 
     // Debounce search input to prevent excessive API calls
     const debounce = (func, delay) => {
@@ -159,18 +139,18 @@ const Courses = () => {
             if (coursesFilter && coursesFilter == 'Active Courses') {
                 constructedUrl += `&isActive=${true}`;
             } else if (coursesFilter && coursesFilter == 'Inactive Courses') {
-                constructedUrl += `&isActive=false`;
+                constructedUrl += '&isActive=false';
             } else if (coursesFilter && coursesFilter == 'Name A - Z') {
-                constructedUrl += `&sort_by=name_a_z`;
+                constructedUrl += '&sort_by=name_a_z';
             } else if (coursesFilter && coursesFilter == 'Name Z - A') {
-                constructedUrl += `&sort_by=name_z_a`;
+                constructedUrl += '&sort_by=name_z_a';
             } else if (coursesFilter && coursesFilter == 'Newly Added') {
-                constructedUrl += `&sort_by=latest`;
+                constructedUrl += '&sort_by=latest';
             } else if (coursesFilter && coursesFilter == 'Old Entries') {
-                constructedUrl += `&sort_by=oldest`;
+                constructedUrl += '&sort_by=oldest';
             }
 
-            console.log(constructedUrl, " constructedUrl ")
+            console.log(constructedUrl, ' constructedUrl ');
             const response = await axiosWrapper('GET', constructedUrl, {}, userToken);
             const { data } = response; // Assuming response contains all courses without pagination
 
@@ -201,7 +181,7 @@ const Courses = () => {
 
             setAllCourses(uniqueCourses);
             setDisplayedCourses(uniqueCourses.slice(0, itemsPerBatch));
-            setItems(uniqueCourses.slice(0, itemsPerBatch).map(c => c._id));
+            setItems(uniqueCourses.slice(0, itemsPerBatch).map((c) => c._id));
             setHasMore(uniqueCourses.length > itemsPerBatch);
             setHasLoaded(true);
         } catch (error) {
@@ -223,7 +203,7 @@ const Courses = () => {
         }
 
         setDisplayedCourses((prevCourses) => [...prevCourses, ...moreCourses]);
-        setItems(displayedCourses.map(c => c._id));
+        setItems(displayedCourses.map((c) => c._id));
         if (currentLength + moreCourses.length >= allCourses.length) {
             setHasMore(false);
         }
@@ -307,7 +287,15 @@ const Courses = () => {
                             defaultValue={coursesFilter}
                             className="dropdown-button"
                         >
-                            {['All Courses', 'Active Courses', 'Inactive Courses', 'Name A - Z', 'Name Z - A', 'Newly Added', 'Old Entries'].map((event) => (
+                            {[
+                                'All Courses',
+                                'Active Courses',
+                                'Inactive Courses',
+                                'Name A - Z',
+                                'Name Z - A',
+                                'Newly Added',
+                                'Old Entries'
+                            ].map((event) => (
                                 <Dropdown.Item
                                     onClick={(e) => handleCoursesFilter(e, event)}
                                     key={event}
@@ -328,20 +316,25 @@ const Courses = () => {
                 <div className="no-data-wrapper">No Data Found.</div>
             ) : (
                 <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
-                <SortableContext items={displayedCourses.map(c => c._id)}   strategy={rectSortingStrategy}>
-                    <InfiniteScroll
-                        className="custom-card-course"
-                        dataLength={displayedCourses.length}
-                        next={fetchMoreData}
-                        hasMore={hasMore}
-                        loader={<p style={{ textAlign: 'center' }}>Loading more courses...</p>}
-                    >
-                        {displayedCourses.map((course) => (
-                            <SortableItem key={course._id} course={course} onDelete={handleDelete} id={course._id} />
-                        ))}
-                    </InfiniteScroll>
-                </SortableContext>
-            </DndContext>
+                    <SortableContext items={displayedCourses.map((c) => c._id)} strategy={rectSortingStrategy}>
+                        <InfiniteScroll
+                            className="custom-card-course"
+                            dataLength={displayedCourses.length}
+                            next={fetchMoreData}
+                            hasMore={hasMore}
+                            loader={<p style={{ textAlign: 'center' }}>Loading more courses...</p>}
+                        >
+                            {displayedCourses.map((course) => (
+                                <SortableItem
+                                    key={course._id}
+                                    course={course}
+                                    onDelete={handleDelete}
+                                    id={course._id}
+                                />
+                            ))}
+                        </InfiniteScroll>
+                    </SortableContext>
+                </DndContext>
                 // <InfiniteScroll
                 //     className="custom-card-course"
                 //     dataLength={displayedCourses.length}

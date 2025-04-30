@@ -1,5 +1,7 @@
 import axios from 'axios';
 import toast from 'react-hot-toast';
+import Swal from 'sweetalert2';
+
 // Add response interceptor
 axios.interceptors.response.use(
     (response) => {
@@ -8,7 +10,13 @@ axios.interceptors.response.use(
         // You can handle and modify the response data here if needed
         if (method === 'post' || method === 'delete' || method === 'put' || method === 'patch') {
             const successMessage = response?.data?.message || response?.data?.desc || 'Operation successful';
-            toast.success(successMessage);
+            Swal.fire({
+                title: 'Success!',
+                text: successMessage,
+                icon: 'success',
+                confirmButtonText: 'OK'
+            });
+            // toast.success(successMessage);
         }
 
         return response;

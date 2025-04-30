@@ -613,7 +613,7 @@ const UploadFiles = ({ onNext, onBack, initialData, setStepComplete, updateCours
                                                         <img
                                                             className="cursor-pointer"
                                                             src={plusIcon}
-                                                            alt="menu" 
+                                                            alt="menu"
                                                             onClick={handleCreateClick}
                                                         />
                                                     </div>

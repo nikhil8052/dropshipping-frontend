@@ -5,22 +5,19 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import logoImg from '@icons/dropship-logo.svg';
 import subImg from '@icons/Logo.svg';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCircleXmark, faCircleUser } from '@fortawesome/free-solid-svg-icons';
+import { faCircleXmark, faCircleUser, faBarsStaggered, faChevronRight } from '@fortawesome/free-solid-svg-icons';
 import { useSelector, useDispatch } from 'react-redux';
 import axiosWrapper from '@utils/api';
 import { API_URL } from '@utils/apiUrl';
 import SidebarItem from './SidebarItem';
 import SidebarItemCollapse from './SidebarItemCollapse';
-import { collapseSidebar } from '@redux/theme/theme_slice.js';
+import { collapseSidebar, toggleSidebar } from '@redux/theme/theme_slice.js';
 import ConfirmationBox from '../../ConfirmationBox/ConfirmationBox';
 import { logoutUser } from '@redux/auth/auth_slice';
 import { changeLink } from '@redux/sidebar/sidebarSlice';
 import dotBlue from '@icons/dot-blue-2.svg';
 import faRoad from '@icons/roadmap.svg';
-import { faBarsStaggered } from '@fortawesome/free-solid-svg-icons';
-import { toggleSidebar } from '@redux/theme/theme_slice.js';
-import { faChevronRight } from '@fortawesome/free-solid-svg-icons';
-import logoutIcon from "@icons/logout-light.svg";
+import logoutIcon from '@icons/logout-light.svg';
 // import { Link } from 'react-router-dom';
 
 // import all static icons
@@ -47,22 +44,21 @@ const Sidebar = () => {
             role === 'ADMIN' ? adminSidebarItems : role === 'COACH' ? coachSidebarItems : [...studentSidebarItems]; // clone to avoid mutating original array
 
         // For student role, if a roadMap exists then insert a "Roadmap" item before Settings.
-        if (role === 'STUDENT' && userInfo?.roadMap && userInfo?.roadmapAccess==true ) {
+        if (role === 'STUDENT' && userInfo?.roadMap && userInfo?.roadmapAccess == true) {
             const roadmapItem = {
                 id: 'roadmap', // unique id for the new item
                 name: 'Roadmap',
                 iconLight: faRoad, // using a FontAwesome icon
                 linkTo: '/student/roadmap'
             };
-        
+
             // Find index of the "Settings" item.
             const settingsIndex = items.findIndex((item) => item.name === 'Settings');
             if (settingsIndex > -1) {
-                items.splice(settingsIndex, 0, roadmapItem); 
+                items.splice(settingsIndex, 0, roadmapItem);
             } else {
                 items.push(roadmapItem);
             }
-            
         }
         setUpdatedItems(items);
     }, [role, activeSidebarItem]);
@@ -85,23 +81,22 @@ const Sidebar = () => {
             }
             return null;
         };
-    
+
         const activeItem = findActiveItem(updatedItems);
-        
+
         // If we're on a course lecture page but Roadmap is active, force switch to Courses
         if (window.location.pathname.includes('/courses/') && activeSidebarItem === 'roadmap') {
-            const coursesItem = updatedItems.find(item => item.name === 'Courses');
+            const coursesItem = updatedItems.find((item) => item.name === 'Courses');
             if (coursesItem) {
                 dispatch(changeLink(coursesItem.id));
                 return;
             }
         }
-    
+
         if (activeItem && activeItem.id !== activeSidebarItem) {
             dispatch(changeLink(activeItem.id));
         }
     };
-    
 
     const handleSideBarClick = (item) => {
         dispatch(changeLink(item.id)); // Dispatch the selected item to update the activeLink
@@ -179,10 +174,9 @@ const Sidebar = () => {
                         <button onClick={() => dispatch(toggleSidebar())} className="menu-toggler" type="button">
                             <FontAwesomeIcon icon={collapsed ? faChevronRight : faBarsStaggered} />
                         </button>
-                        <img src={logoImg} alt="brand-logo" className='main-logo' />
-                        <img src={subImg} alt="brand-logo" className='sub-logo' />
+                        <img src={logoImg} alt="brand-logo" className="main-logo" />
+                        <img src={subImg} alt="brand-logo" className="sub-logo" />
                     </div>
-
 
                     <div className="side-nav-wrapper">
                         <div className="side-nav-scroll">
@@ -194,7 +188,6 @@ const Sidebar = () => {
                                             item={item}
                                             selectedItemId={activeSidebarItem}
                                             handleSideBarClick={handleSideBarClick}
-
                                         />
                                     ) : (
                                         <SidebarItem
@@ -202,7 +195,6 @@ const Sidebar = () => {
                                             item={item}
                                             selectedItemId={activeSidebarItem}
                                             handleSideBarClick={handleSideBarClick}
-
                                         />
                                     )
                                 )}
@@ -245,10 +237,8 @@ const Sidebar = () => {
                             )}
                         </div>
 
-                        <div className={`side-bar-btm ${sideBarStudentEventModal ? 'remove-auto' : ''}`}
-                        >
-                            
-                            <div className='side-bar-profile'>
+                        <div className={`side-bar-btm ${sideBarStudentEventModal ? 'remove-auto' : ''}`}>
+                            <div className="side-bar-profile">
                                 <div className="profile-wrapper">
                                     {userInfo?.avatar ? (
                                         <img src={userInfo?.avatar} className="profile-pic" alt="nav-icon" />
@@ -267,8 +257,8 @@ const Sidebar = () => {
                                 </div>
                             </div>
                             <button className="logout-btn active-item" onClick={handleLogoutClick}>
-                            <img src={logoutIcon} alt="Logout" className="logout-icon" /> 
-                            <span> LOGOUT</span> 
+                                <img src={logoutIcon} alt="Logout" className="logout-icon" />
+                                <span> LOGOUT</span>
                             </button>
                         </div>
                     </div>

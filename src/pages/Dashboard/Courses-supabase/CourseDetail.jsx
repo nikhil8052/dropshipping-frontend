@@ -20,18 +20,18 @@ const CourseDetail = () => {
     const [course, setCourse] = useState(0);
     const [courseSlug, setCourseSlug] = useState('developer');
     const [selectedLecture, setSelectedLecture] = useState(0);
-    
+
     const role = userInfo?.role;
     const courseId = location.state?.courseId;
     const isDetailPage =
-        location.pathname === '/admin/courses-supabase/details' || location.pathname === '/coach/courses-supabase/details';
+        location.pathname === '/admin/courses-supabase/details' ||
+        location.pathname === '/coach/courses-supabase/details';
 
-    
     const getCourseById = async (id) => {
         const { data } = await axiosWrapper('GET', `${API_URL.SUPABASE_GET_COURSE.replace(':id', id)}`, {}, token);
-        const courseSlug=createSlug(data.title);
+        const courseSlug = createSlug(data.title);
         setCourseSlug(courseSlug);
-    
+
         const mapLectures = data.lectures.map((lecture) => {
             const description = textParser(lecture?.description);
             return {
@@ -54,14 +54,14 @@ const CourseDetail = () => {
 
         setCourse({ ...data, lectures: mapLectures, pdfLectures, totalQuestions });
 
-        if(data.lectures.length > 0 ){
-            var name = data.lectures[0].name;
+        if (data.lectures.length > 0) {
+            const name = data.lectures[0].name;
             const slug = createSlug(name);
-            let segments = location.pathname.split("/").filter(Boolean);
-            const lastSegment = segments[segments.length - 1]; 
+            const segments = location.pathname.split('/').filter(Boolean);
+            const lastSegment = segments[segments.length - 1];
             if (lastSegment !== slug) {
-                segments.push(slug); 
-                const newUrl = `/${segments.join("/")}`;
+                segments.push(slug);
+                const newUrl = `/${segments.join('/')}`;
                 navigate(newUrl, { replace: true }); // Ensure leading slash & avoid history stacking
             }
         }
@@ -69,7 +69,6 @@ const CourseDetail = () => {
         // Optionally set the first lecture as selected
         if (mapLectures.length > 0) {
             setSelectedLecture(mapLectures[0]);
-            
         }
     };
 
@@ -80,24 +79,27 @@ const CourseDetail = () => {
     }, [courseId]);
 
     const createSlug = (title) => {
-        return title.toLowerCase().replace(/\s+/g, "-").replace(/[^a-z0-9-]/g, "");
+        return title
+            .toLowerCase()
+            .replace(/\s+/g, '-')
+            .replace(/[^a-z0-9-]/g, '');
     };
 
     const handleLectureSelect = (lecture) => {
-        var name = lecture?.title;
-        if( lecture ){
+        const name = lecture?.title;
+        if (lecture) {
             const slug = createSlug(name);
             // Get URL segments
-            let segments = location.pathname.split("/").filter(Boolean); // Remove empty segments
+            const segments = location.pathname.split('/').filter(Boolean); // Remove empty segments
             const lastSegment = segments[segments.length - 1]; // Get last part of the URL
             if (lastSegment !== slug) {
                 // Replace last segment with the new slug
                 if (segments.length > 1) {
-                segments[segments.length - 1] = slug; // Replace last segment
+                    segments[segments.length - 1] = slug; // Replace last segment
                 } else {
-                segments.push(slug); // If only one segment, just add it
+                    segments.push(slug); // If only one segment, just add it
                 }
-                const newUrl = `/${segments.join("/")}`;
+                const newUrl = `/${segments.join('/')}`;
                 navigate(newUrl, { replace: true }); // Ensure leading slash
             }
         }
@@ -116,7 +118,10 @@ const CourseDetail = () => {
             ) : (
                 <div className="title-top mb-3">
                     {isDetailPage && (
-                        <span onClick={() => navigate(`/${role?.toLowerCase()}/courses-supabase`)} style={{ cursor: 'pointer' }}>
+                        <span
+                            onClick={() => navigate(`/${role?.toLowerCase()}/courses-supabase`)}
+                            style={{ cursor: 'pointer' }}
+                        >
                             Courses <img src={CaretRight} alt=">" />{' '}
                         </span>
                     )}

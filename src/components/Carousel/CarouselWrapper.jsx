@@ -5,13 +5,13 @@ import 'swiper/css';
 import ProductCard from '../ProductCard/ProductCard';
 import LectureCard from '../LectureCard/LectureCard';
 
-const CarouselWrapper = ({ items = [], type = 'product', onItemClick, courseId=null , courseSlug}) => {
+const CarouselWrapper = ({ items = [], type = 'product', onItemClick, courseId = null, courseSlug }) => {
     const [activeIndex, setActiveIndex] = useState(0);
 
-    const handleClick = (e, item, index ) => {
+    const handleClick = (e, item, index) => {
         e.currentTarget.classList.add('active_lec');
         e.stopPropagation();
-        setActiveIndex(index); 
+        setActiveIndex(index);
         e.preventDefault();
         if (type === 'product') return;
         if (onItemClick) {
@@ -22,17 +22,17 @@ const CarouselWrapper = ({ items = [], type = 'product', onItemClick, courseId=n
     return (
         <div className="gx-4 gy-4">
             {items?.map((item, index) => (
-                <div key={index} >
+                <div key={index}>
                     <div
                         className={`cursor-pointer d-flex justify-content-center align-items-center ${
                             activeIndex === index ? 'active_lec' : ''
                         }`}
-                        onClick={(e) => handleClick(e, item, index )}
+                        onClick={(e) => handleClick(e, item, index)}
                     >
                         {type === 'product' ? (
                             <ProductCard item={item} />
                         ) : type === 'lecture' ? (
-                            <LectureCard item={item} courseId={courseId} coueseSlug={courseSlug}/>
+                            <LectureCard item={item} courseId={courseId} coueseSlug={courseSlug} />
                         ) : null}
                     </div>
                 </div>

@@ -111,7 +111,7 @@ export const adminSidebarItems = [
             '/admin/categories/new',
             '/admin/categories/edit'
         ],
-        child: [  
+        child: [
             {
                 id: '4-1',
                 name: 'All Courses',
@@ -126,7 +126,7 @@ export const adminSidebarItems = [
             }
         ]
     },
-    
+
     // {
     //     id: 4,
     //     name: 'Courses',
@@ -161,10 +161,10 @@ export const adminSidebarItems = [
         iconLight: settings, // Replace with
         linkTo: '/admin/settings'
     },
-     {
+    {
         id: 9,
         name: 'Courses Supabase',
-        iconLight: courses, 
+        iconLight: courses,
         linkTo: '/admin/courses-supabase',
         pathCombinations: ['/admin/courses-supabase', '/admin/courses-supabase/new', '/admin/courses-supabase/edit', '/admin/courses-supabase/details']
     },

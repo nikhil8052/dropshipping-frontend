@@ -7,7 +7,7 @@ import './auth.scss';
 
 const LoginLeftSec = () => {
     return (
-        <div className='top-bar'>
+        <div className="top-bar">
             <div className="auth-left-header-mob ">
                 <img className="auth-logo " src={logoImg} alt="auth-logo" />
             </div>

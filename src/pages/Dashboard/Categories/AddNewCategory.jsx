@@ -44,7 +44,7 @@ const NewCategory = () => {
             // const htmlDoc = parser.parseFromString(category.description, 'text/html');
             // const description = htmlDoc.body.textContent;
             setCategoryData({
-                name: category.name,
+                name: category.name
                 // description: description
             });
         } catch (error) {
@@ -58,7 +58,7 @@ const NewCategory = () => {
         name: Yup.string()
             .required('Category name is required')
             .trim('Name cannot include leading or trailing spaces')
-            .strict(true),
+            .strict(true)
         // description: Yup.string()
         //     .trim('Description cannot include leading or trailing spaces')
         //     .strict(true)
@@ -68,26 +68,24 @@ const NewCategory = () => {
         try {
             setLoading(true);
             setSubmitting(true);
-            
+
             const payload = {
                 name: values.name,
                 // description: values.description,
                 createdBy: userInfo?._id
             };
 
-            const url = categoryId 
-                ? API_URL.UPDATE_CATEGORY.replace(':id', categoryId) 
-                : API_URL.CREATE_CATEGORY;
-            
+            const url = categoryId ? API_URL.UPDATE_CATEGORY.replace(':id', categoryId) : API_URL.CREATE_CATEGORY;
+
             const method = categoryId ? 'PUT' : 'POST';
 
             const response = await axiosWrapper(method, url, payload, token);
-            
+
             if (response?.data) {
                 // toast.success(categoryId ? 'Category updated!' : 'Category created!');
                 navigate(`/${role}/category`);
                 resetForm();
-                
+
                 if (!categoryId) {
                     return {
                         label: response.data.name,
@@ -125,7 +123,6 @@ const NewCategory = () => {
                             <Form onSubmit={handleSubmit}>
                                 <Row>
                                     <Col md={12} className="mb-3">
-
                                         <label className="field-label">Category Name</label>
                                         <Field
                                             name="name"

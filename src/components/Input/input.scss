@@ -191,7 +191,7 @@
     margin-bottom: 16px;
 }
 
-.box-row > div {
+.box-row>div {
     margin-bottom: 2rem;
 }
 
@@ -199,11 +199,11 @@
     color: #fff;
 }
 
-.quill-editor {
-    box-shadow: 0px 0px 14.86px 0px #0000000F;
-    border-radius: 5px;
-    overflow: hidden;
-}
+// .quill-editor {
+//     box-shadow: 0px 0px 14.86px 0px #0000000F;
+//     border-radius: 5px;
+//     overflow: hidden;
+// }
 
 .box-row {
     margin: 2rem 0rem;
@@ -314,16 +314,6 @@
     display: none;
 }
 
-@media only screen and (max-width: 767px) {
-    .box-row > div {
-        margin-bottom: 0rem;
-    }
-
-    .new-page .formgroup label {
-        margin-bottom: 10px;
-    }
-}
-
 .ql-editor img {
     max-width: none;
 }
@@ -343,7 +333,7 @@
     border: 1px solid #e9eaf0;
 }
 
-.add-course-form.Course-form .form-group > div > div {
+.add-course-form.Course-form .form-group>div>div {
     padding: 0;
 }
 
@@ -372,7 +362,7 @@
     background-color: transparent !important;
     color: #7b8089 !important;
     border: 1px solid #7b8089 !important;
-    padding: 12px 22px !important;
+    padding: 9px 18px !important;
     text-transform: uppercase;
 }
 
@@ -392,20 +382,19 @@
 }
 
 .addAdditionalOptions button:hover::after {
-    filter: brightness(0) saturate(100%) invert(0%) sepia(77%) saturate(7500%) hue-rotate(354deg) brightness(110%)
-        contrast(87%);
+    filter: brightness(0) saturate(100%) invert(0%) sepia(77%) saturate(7500%) hue-rotate(354deg) brightness(110%) contrast(87%);
 }
 
 .addAdditionalOptions .dropdown.show .dropdown-toggle::after {
     transform: translate(8px, 8px) rotate(0deg);
-    filter: brightness(0) saturate(100%) invert(0%) sepia(77%) saturate(7500%) hue-rotate(354deg) brightness(110%)
-        contrast(87%);
+    filter: brightness(0) saturate(100%) invert(0%) sepia(77%) saturate(7500%) hue-rotate(354deg) brightness(110%) contrast(87%);
 }
 
 .addAdditionalOptions .dropdown-item {
     padding: 8px 15px;
-    font-weight: 600;
+    font-weight: 500;
     color: #000 !important;
+    font-size: 14px;
 }
 
 .showing-transcript {
@@ -428,34 +417,113 @@
 }
 
 
-.course-right:has(> form)  .transcript-section .ql-toolbar.ql-snow {
+.course-right:has(> form) .transcript-section .ql-toolbar.ql-snow {
     background-color: #fff !important;
-    padding: 0px 20px;
+    padding: 0px 12px 20px 12px;
 }
+
 
 
 
 // Added by nikhil 
 
 .ql-editor iframe {
-    width: calc(100% + 2rem); /* or whatever padding .ql-editor has */
+    width: calc(100% + 2rem);
+    /* or whatever padding .ql-editor has */
     max-width: none;
-    margin-left: -1rem; /* half of added width */
-    margin-right: -1rem; /* half of added width */
+    margin-left: -1rem;
+    /* half of added width */
+    margin-right: -1rem;
+    /* half of added width */
     height: auto;
     aspect-ratio: 16/9;
     display: block;
     border: none;
-  }
-  
-.tab-buttons.editor-buttons .toggle-wrapper:has(.switch input:checked) .toggle-label {
+}
+
+.toggle-wrapper:has(.switch input:checked) .toggle-label {
     color: #009e5d;
 }
 
-.tab-buttons.editor-buttons .toggle-wrapper .switch input:checked + label::after {
+.toggle-wrapper .switch input:checked+label::after {
     background-color: #009e5d;
 }
 
-.tab-buttons.editor-buttons .toggle-wrapper .switch input:checked + label {
+.toggle-wrapper .switch input:checked+label {
     background: #c1e8d8;
 }
+
+.confirmation-modal:has(.add-link-form) *,
+.modal-dialog:has(.quiz-wrapper) * {
+    font-family: 'Montserrat' !important;
+}
+
+.subhead {
+    margin-bottom: 0px;
+}
+
+.addAdditionalOptions .dropdown-menu {
+    box-shadow: 2px 4px 14px 0px #00000026;
+    border: 0;
+    border-radius: 10px;
+}
+
+.course-detail-row .ql-snow.ql-toolbar,
+.ql-snow .ql-toolbar {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.course-detail-row .ql-snow.ql-toolbar button,
+.ql-snow .ql-toolbar button {
+    flex: 1;
+    min-width: 0;
+    height: 35px;
+    padding: 8px;
+    width: auto;
+}
+
+._i5--j {
+    white-space: pre-wrap;
+}
+
+.course-left-top .subhead {
+    word-break: break-all;
+}
+
+div:where(.swal2-container) button:where(.swal2-styled):where(.swal2-confirm) {
+    background-color: #03A9F4;
+}
+
+.addAdditionalOptions .dropdown-item.disabled {
+    color: grey !important;
+}
+
+@media only screen and (max-width: 991px) {
+
+    .course-detail-row .ql-snow.ql-toolbar button,
+    .ql-snow .ql-toolbar button {
+        flex: 1 1 auto;
+    }
+}
+
+@media only screen and (max-width: 767px) {
+    .box-row>div {
+        margin-bottom: 0rem;
+    }
+
+    .new-page .formgroup label {
+        margin-bottom: 10px;
+    }
+
+    .tab-buttons.editor-buttons button {
+        font-weight: 600;
+        padding: 12px 16px;
+        font-size: 14px;
+    }
+
+    .tab-buttons.editor-buttons {
+        justify-content: left;
+    }
+}
+

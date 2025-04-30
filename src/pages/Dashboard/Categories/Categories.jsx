@@ -76,13 +76,8 @@ const Categories = () => {
                 ...category,
                 isActive: !category.isActive
             };
-            
-            await axiosWrapper(
-                'PUT', 
-                API_URL.UPDATE_CATEGORY.replace(':id', category._id), 
-                updatedCategory, 
-                token
-            );
+
+            await axiosWrapper('PUT', API_URL.UPDATE_CATEGORY.replace(':id', category._id), updatedCategory, token);
             fetchData(false);
         } catch (error) {
             console.error('Error toggling category status:', error);
@@ -114,9 +109,9 @@ const Categories = () => {
         try {
             setLoadingCRUD(true);
             await axiosWrapper(
-                'DELETE', 
-                API_URL.DELETE_CATEGORY.replace(':id', showDeleteModal?.categoryId), 
-                {}, 
+                'DELETE',
+                API_URL.DELETE_CATEGORY.replace(':id', showDeleteModal?.categoryId),
+                {},
                 token
             );
             fetchData(false);
@@ -182,7 +177,7 @@ const Categories = () => {
             filter: 'agSetColumnFilter',
             sortable: true,
             cellRenderer: TextItemExpand,
-            resizable: false,
+            resizable: false
         },
         // {
         //     headerName: 'Description',
@@ -193,7 +188,7 @@ const Categories = () => {
         //     resizable: false,
         //     flex: 2, // Give description more space
         //     minWidth: 200 // Minimum width for Description column
-        // },        
+        // },
         // {
         //     headerName: 'Status',
         //     field: 'isActive',
