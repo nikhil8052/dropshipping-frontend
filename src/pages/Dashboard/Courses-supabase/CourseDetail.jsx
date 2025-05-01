@@ -27,7 +27,7 @@ const CourseDetail = () => {
     const [course, setCourse] = useState(0);
     const [courseSlug, setCourseSlug] = useState('developer');
     const [selectedLecture, setSelectedLecture] = useState(0);
-    const [loading, setLoading] = useState(false);
+    const [loading, setLoading] = useState(true);
 
     //  new for folder structure :
     const [topics, setTopics] = useState([]);
@@ -309,7 +309,7 @@ const CourseDetail = () => {
                             >
                                 All Students
                             </Button>
-                            <Button
+                            {/* <Button
                                 onClick={() =>
                                     navigate(`/${role?.toLowerCase()}/courses-supabase/edit`, {
                                         state: { isEdit: true, courseId: course.id }
@@ -318,6 +318,24 @@ const CourseDetail = () => {
                                 type="button"
                                 className="edit-btn"
                             >
+                                Edit
+                            </Button> */}
+                            <Button
+                                onClick={() =>
+                                {
+                                    navigate(`/${role?.toLowerCase()}/courses-supabase/edit`, {
+                                        state: { 
+                                            isEdit: true, 
+                                            courseId: course.id,
+                                            activeKey: "upload-files"
+                                        }
+                                        })
+                                }
+                                    
+                                }
+                                type="button"
+                                className="edit-btn"
+                                >
                                 Edit
                             </Button>
                         </>

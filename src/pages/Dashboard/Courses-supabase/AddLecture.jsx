@@ -30,7 +30,7 @@ import Edit2 from '../../../assets/icons/Dropdown.svg';
 const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCourseData }) => {
 
     const [loading, setLoading] = useState(false);
-    const [isOpen, setIsOpen] = useState(true);
+    const [isOpen, setIsOpen] = useState(false);
     const [currentActiveLectureID, setCurrentActiveLectureID] = useState(null);
     const [currentActiveLecture, setCurrentActiveLecture] = useState(true);
     const [modalShow, setModalShow] = useState(false);
@@ -66,12 +66,24 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
     const [activeLectureId, setActiveLectureId] = useState(null);
 
     const dispatch = useDispatch();
+    const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
+
+    // useEffect(() => {
+    //     if (topics.length > 0) {
+    //         setIsOpen({ 0: true }); // Open the first topic
+    //     }
+    // }, [topics]);
 
     useEffect(() => {
         if (topics.length > 0) {
-            setIsOpen({ 0: true }); // Open the first topic
+            const openAll = {};
+            topics.forEach((_, index) => {
+                openAll[index] = true;
+            });
+            setIsOpen(openAll);
         }
     }, [topics]);
+
 
     useEffect(() => {
         if (initialData) {
@@ -604,7 +616,6 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
                     )
                 );
             }
-
             // Clear modal and input only if renaming lecture (optional)
             setModalShowRename(false);
             setLectureLabel('');
@@ -749,6 +760,19 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
         }
         // setSubmitting(false);
     };
+    const editClickLeture = (lecture) => {
+        if (hasUnsavedChanges) {
+            const confirmLeave = window.confirm('You have unsaved changes. Do you want to leave without saving?');
+            if (!confirmLeave) {
+                return;
+            }
+        }
+        setActiveLectureId(lecture.id);
+        setHasUnsavedChanges(false);
+        setIsEditing(false);
+        setRightViewLecture(lecture);
+    };
+
     const handleSubmit = async (values, { setSubmitting, resetForm, ...formikHelpers }) => {
         // setSubmitting(true);
 
@@ -763,33 +787,34 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
             const response = await axiosWrapper(method, url, formData, token);
             // dispatch({ type: types.ALL_RECORDS, data: { keyOfData: 'currentCourseUpdate', data: true } });
 
-            // if (response?.data) {
-            //   const updatedLectureId = response.data.id;
-            //   const updatedLectureName = response.data.name.trim();
-            //   setUnassignedLectures((prevLectures) =>
-            //     prevLectures.map((lecture) =>
-            //       lecture.id === updatedLectureId
-            //         ? { ...lecture, name: updatedLectureName }
-            //         : lecture
-            //     )
-            //   );
-            //   setTopics((prevTopics) =>
-            //     prevTopics.map((folder) => ({
-            //       ...folder,
-            //       lectures: folder.lectures.map((lecture) =>
-            //         lecture.id === updatedLectureId
-            //           ? { ...lecture, name: updatedLectureName }
-            //           : lecture
-            //       )
-            //     }))
-            //   );
-            // }
+            if (response?.data) {
+                const updatedLectureId = response.data.id;
+                const updatedLectureName = response.data.name.trim();
+                setUnassignedLectures((prevLectures) =>
+                    prevLectures.map((lecture) =>
+                        lecture.id === updatedLectureId
+                            ? { ...lecture, name: updatedLectureName }
+                            : lecture
+                    )
+                );
+                setTopics((prevTopics) =>
+                    prevTopics.map((folder) => ({
+                        ...folder,
+                        lectures: folder.lectures.map((lecture) =>
+                            lecture.id === updatedLectureId
+                                ? { ...lecture, name: updatedLectureName }
+                                : lecture
+                        )
+                    }))
+                );
+            }
         } catch (err) {
             // handleError(err);
             console.log(err);
         } finally {
             // setSubmitting(false);
             modelPopAction();
+            setHasUnsavedChanges(false);
         }
     };
 
@@ -840,8 +865,8 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
             const folder_id = newTopics[destTopicIndex].id;
             const lecture_id = movedLecture.id;
             moveLectureDND(lecture_id, folder_id);
-
             setTopics(newTopics);
+            updateLectureSequences(newTopics[destTopicIndex].lectures);
             return;
         }
 
@@ -864,6 +889,10 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
 
             setTopics(newTopics);
             setUnassignedLectures(newUnassigned);
+
+            updateLectureSequences(newUnassigned);
+            updateLectureSequences(newTopics[sourceTopicIndex].lectures);
+
             return;
         }
 
@@ -889,9 +918,43 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
             moveLectureDND(lecture_id, folder_id);
 
             setTopics(newTopics);
+
+            updateLectureSequences(newTopics[destTopicIndex].lectures);
+
+            // Also update source topic if lecture was moved out of it
+            if (sourceTopicIndex !== destTopicIndex) {
+                updateLectureSequences(newTopics[sourceTopicIndex].lectures);
+            }
+
             return;
         }
     };
+
+    const updateLectureSequences = (lectureList) => {
+        const payload = lectureList.map((lecture, index) => ({
+            id: lecture.id,
+            order_id: index,
+        }));
+        updateLectureOrder(payload);
+    };
+
+
+    const updateLectureOrder = async (lectures) => {
+        try {
+            let ENDPOINT = API_URL.SUPABASE_UPDATE_LECTURE_SEQUENCE
+            const response = await axiosWrapper('PUT', ENDPOINT, { lectures }, token);
+
+        } catch (error) {
+            console.error('Failed to update lecture order', error);
+        }
+    };
+
+    const unescapeHtml = (html) => {
+        const txt = document.createElement("textarea");
+        txt.innerHTML = html;
+        return txt.value;
+      };
+    
 
     const handleDeleteLecture = async () => {
         try {
@@ -966,27 +1029,40 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
             return;
         }
 
-        const updated = await renameLecture(selectedLectureId, lectureLabel.trim(), "lecture");
+        let ENDPOINT = API_URL.SUPABASE_UPDATE_LECTURE.replace(':id', selectedLectureId);
+        try {
+            const payload = {
+                name: lectureLabel,
+                source: "rename"
+            };
 
-        if (updated) {
-            setUnassignedLectures((prev) =>
-                prev.map((lecture) =>
-                    lecture.id === selectedLectureId ? { ...lecture, name: lectureLabel.trim() } : lecture
-                )
-            );
-            setTopics((prevTopics) =>
-                prevTopics.map((folder) => ({
-                    ...folder,
-                    lectures: folder.lectures.map((lecture) =>
+            const response = await axiosWrapper('PUT', ENDPOINT, payload, token);
+
+
+            if (response) {
+                setUnassignedLectures((prev) =>
+                    prev.map((lecture) =>
                         lecture.id === selectedLectureId ? { ...lecture, name: lectureLabel.trim() } : lecture
                     )
-                }))
-            );
-            // Close modal and reset form
-            setModalShowRename(false);
-            setLectureLabel('');
-            setSelectedLectureId(null);
+                );
+                setTopics((prevTopics) =>
+                    prevTopics.map((folder) => ({
+                        ...folder,
+                        lectures: folder.lectures.map((lecture) =>
+                            lecture.id === selectedLectureId ? { ...lecture, name: lectureLabel.trim() } : lecture
+                        )
+                    }))
+                );
+                setModalShowRename(false);
+                setLectureLabel('');
+                setSelectedLectureId(null);
+                setRightViewLecture({ ...rightViewLecture, name: lectureLabel.trim() });
+            }
+        } catch (error) {
+            console.error('Failed to rename lecture:', error);
+            return null;
         }
+
     };
 
     const resourceFileChanged = async (e) => {
@@ -1331,18 +1407,24 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
                                                                                         >
                                                                                             {(provided) => (
                                                                                                 <li
-                                                                                                    ref={
-                                                                                                        provided.innerRef
-                                                                                                    }
+                                                                                                    onClick={() => {
+                                                                                                        // setActiveLectureId(lecture.id);
+                                                                                                        // setPendingLectureId(lecture.id);
+                                                                                                        editClickLeture(lecture);
+                                                                                                        // setPublishLectureModel(
+                                                                                                        //     true
+                                                                                                        // );
+                                                                                                    }}
+                                                                                                    ref={provided.innerRef}
                                                                                                     {...provided.draggableProps}
                                                                                                     {...provided.dragHandleProps}
                                                                                                     className={lecture.id === activeLectureId ? "active_lecture" : ""}
+
                                                                                                 >
                                                                                                     <a
                                                                                                         href="javascript:void(0)"
                                                                                                         onClick={() => {
-
-                                                                                                            console.log("Lecture clicked")
+                                                                                                            console.log('');
                                                                                                         }
                                                                                                             // loadLectureData(
                                                                                                             //     lecture
@@ -1351,17 +1433,18 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
                                                                                                         }
                                                                                                     >
                                                                                                         {
-                                                                                                            renaming.type === "lecture" && renaming.id === lecture.id ? (
-                                                                                                                <Spinner animation="border" size="sm" className="ms-2" />
-                                                                                                            ) : (<EditText
-                                                                                                                name="textbox3"
-                                                                                                                defaultValue={
-                                                                                                                    lecture.name ??
-                                                                                                                    'ERROR'
-                                                                                                                }
-                                                                                                                inputClassName="editable-input"
-                                                                                                                onSave={({ value }) => handleRename({ value, type: "lecture", id: lecture.id })}
-                                                                                                            />)
+                                                                                                            lecture.name
+                                                                                                            // renaming.type === "lecture" && renaming.id === lecture.id ? (
+                                                                                                            //     <Spinner animation="border" size="sm" className="ms-2" />
+                                                                                                            // ) : (<EditText
+                                                                                                            //     name="textbox3"
+                                                                                                            //     defaultValue={
+                                                                                                            //         lecture.name ??
+                                                                                                            //         'ERROR'
+                                                                                                            //     }
+                                                                                                            //     inputClassName="editable-input"
+                                                                                                            //     onSave={({ value }) => handleRename({ value, type: "lecture", id: lecture.id })}
+                                                                                                            // />)
                                                                                                         }
 
                                                                                                     </a>
@@ -1451,8 +1534,17 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
                                                                                                                     >
                                                                                                                         Delete
                                                                                                                     </Dropdown.Item>
+                                                                                                                    <Dropdown.Item
+                                                                                                                        onClick={() => {
+                                                                                                                            setModalShowRename(true);
+                                                                                                                            setSelectedLectureId(lecture.id);
+                                                                                                                            setLectureLabel(lecture.name);
+                                                                                                                        }}
+                                                                                                                    >
+                                                                                                                        Rename
+                                                                                                                    </Dropdown.Item>
 
-                                                                                                                    
+
                                                                                                                 </Dropdown>
                                                                                                             </Dropdown.Menu>
                                                                                                         </Dropdown>
@@ -1488,6 +1580,14 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
                                                                             >
                                                                                 {(provided) => (
                                                                                     <li
+                                                                                        onClick={() => {
+                                                                                            // setActiveLectureId(lecture.id);
+                                                                                            // setPendingLectureId(lecture.id);
+                                                                                            editClickLeture(lecture);
+                                                                                            // setPublishLectureModel(
+                                                                                            //     true
+                                                                                            // );
+                                                                                        }}
                                                                                         ref={provided.innerRef}
                                                                                         {...provided.draggableProps}
                                                                                         {...provided.dragHandleProps}
@@ -1495,17 +1595,18 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
                                                                                     >
 
                                                                                         {
-                                                                                            renaming.type === "lecture" && renaming.id === lecture.id ? (
-                                                                                                <Spinner animation="border" size="sm" className="ms-2" />
-                                                                                            ) : (<EditText
-                                                                                                name="textbox4"
-                                                                                                defaultValue={
-                                                                                                    lecture.name ??
-                                                                                                    'ERROR'
-                                                                                                }
-                                                                                                inputClassName="editable-input"
-                                                                                                onSave={({ value }) => handleRename({ value, type: "lecture", id: lecture.id })}
-                                                                                            />)
+                                                                                            lecture?.name
+                                                                                            // renaming.type === "lecture" && renaming.id === lecture.id ? (
+                                                                                            //     <Spinner animation="border" size="sm" className="ms-2" />
+                                                                                            // ) : (<EditText
+                                                                                            //     name="textbox4"
+                                                                                            //     defaultValue={
+                                                                                            //         lecture.name ??
+                                                                                            //         'ERROR'
+                                                                                            //     }
+                                                                                            //     inputClassName="editable-input"
+                                                                                            //     onSave={({ value }) => handleRename({ value, type: "lecture", id: lecture.id })}
+                                                                                            // />)
                                                                                         }
 
                                                                                         <div className="drop-box">
@@ -1537,14 +1638,12 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
                                                                                                     ) : (
                                                                                                         <Dropdown.Item
                                                                                                             href="javascript:void(0)"
-                                                                                                            onClick={() =>
-                                                                                                            {
+                                                                                                            onClick={() => {
                                                                                                                 setActiveLectureId(lecture.id);
                                                                                                                 handleEditClick(
                                                                                                                     lecture.id
                                                                                                                 )
                                                                                                             }
-                                                                                                                
                                                                                                             }
                                                                                                         >
                                                                                                             Edit
@@ -1571,6 +1670,15 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
                                                                                                     >
                                                                                                         Delete
                                                                                                     </Dropdown.Item>
+                                                                                                    <Dropdown.Item
+                                                                                                        onClick={() => {
+                                                                                                            setModalShowRename(true);
+                                                                                                            setSelectedLectureId(lecture.id);
+                                                                                                            setLectureLabel(lecture.name);
+                                                                                                        }}
+                                                                                                    >
+                                                                                                        Rename
+                                                                                                    </Dropdown.Item>
                                                                                                 </Dropdown.Menu>
                                                                                             </Dropdown>
                                                                                         </div>
@@ -1589,7 +1697,7 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
 
 
                                                 {/* Show the Move Popup for unassigned lectures */}
-                                                {showMovePopup &&
+                                                {/* {showMovePopup &&
                                                     selectedLecture &&
                                                     selectedLecture.topicIndex === null && (
                                                         <div className="popup-backdrop">
@@ -1618,7 +1726,7 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
                                                                 </button>
                                                             </div>
                                                         </div>
-                                                    )}
+                                                    )} */}
                                             </>
                                         ) : (
                                             <></>
@@ -1650,6 +1758,8 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
                                                             >
                                                                 <img src={PencilEdit} alt="Edit" />
                                                             </div>
+                                                            
+                                                            
                                                         </div>
                                                     </div>
                                                 ) : (
@@ -1680,152 +1790,167 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
                                                 }}
                                                 validationSchema={validationSchema}
                                                 onSubmit={handleSubmit}
+                                            // onSubmit={(values) => {
+                                            //     handleSubmit(values);
+                                            //     setHasUnsavedChanges(false);
+                                            // }}
                                             >
                                                 {/* {({ isSubmitting, values, setFieldValue }) => ( */}
-                                                {({ isSubmitting, handleSubmit, setFieldValue, values, errors }) => (
-                                                    // richTextEditor for the lecure edit part
-                                                    <Form>
-                                                        <Row>
-                                                            <Col>
-                                                                <Input
-                                                                    className="field-quill-control"
-                                                                    type="richTextEditor"
-                                                                    name="description"
-                                                                    id="course_description"
-                                                                    showResources={true}
-                                                                    showNameField={true}
-                                                                    showNameFieldData={values?.name}
-                                                                    onNameChange={(newName) =>
-                                                                        setFieldValue('name', newName)
-                                                                    }
-                                                                    resources={resources}
-                                                                    setResources={setResources}
-                                                                    setModalShow={setModalShow}
-                                                                    setLabel={setLabel}
-                                                                    setResourceFileUrl={setResourceFileUrl}
-                                                                    setResourceUrl={setResourceUrl}
-                                                                    setEditResource={setEditResource}
-                                                                    setEditResourceID={setEditResourceID}
-                                                                    modules={{ toolbar: TOOLBAR_CONFIG }}
-                                                                    formats={FORMATS}
-                                                                />
-                                                                <ErrorMessage
-                                                                    name="name"
-                                                                    component="div"
-                                                                    className="error"
-                                                                />
-                                                            </Col>
-                                                        </Row>
-                                                        {/* Transcript section  */}
-                                                        {showTranscriptEditor ? (
-                                                            <div
-                                                                className={`res trans-res ${showTranscriptEditor ? 'showing-transcript' : ''}`}
-                                                            >
-                                                                <h2 className="subhead">Add Transcript</h2>
-                                                                <div className="transc">
-                                                                    <div className="drop-box"></div>
-                                                                    <div
-                                                                        className={`transcript-section ${showTranscriptEditor ? '' : 'd-none'}`}
-                                                                    >
-                                                                        <Input
-                                                                            className="field-quill-control"
-                                                                            type="richTextEditor"
-                                                                            name="transcript"
-                                                                            id="transcript"
-                                                                            showResources={false}
-                                                                            modules={{ toolbar: TOOLBAR_CONFIG }}
-                                                                            formats={FORMATS}
-                                                                        />
-                                                                        <div className="mt-3 cancel-tans">
-                                                                            <button
-                                                                                type="button"
-                                                                                className="cancel-btnn"
-                                                                                onClick={() =>
-                                                                                    setShowTranscriptEditor(false)
-                                                                                }
-                                                                            >
-                                                                                Cancel
-                                                                            </button>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        ) : (
-                                                            ''
-                                                        )}
+                                                {({ isSubmitting, handleSubmit, setFieldValue, values, dirty }) => {
+                                                    useEffect(() => {
+                                                        if (dirty) {
+                                                            setHasUnsavedChanges(true);
+                                                        } else {
+                                                            setHasUnsavedChanges(false);
+                                                        }
 
-                                                        {/* End Transcript Section  */}
-                                                        <div className="mt-3 d-flex gap-3 flex-wrap tab-buttons  editor-buttons justify-content-between">
-                                                            <div className="editor-button">
-                                                                <div className="addAdditionalOptions">
-                                                                    <Dropdown onSelect={handleSelect}>
-                                                                        <Dropdown.Toggle id="dropdown-basic">
-                                                                            Add
-                                                                        </Dropdown.Toggle>
-                                                                        <Dropdown.Menu>
-                                                                            <Dropdown.Item eventKey="add-resource">
-                                                                                Add Resource
-                                                                            </Dropdown.Item>
-                                                                            <Dropdown.Item eventKey="add-transcript" disabled={showTranscriptEditor === true}  >
-                                                                                Add Transcript{' '}
-                                                                            </Dropdown.Item>
-                                                                            <Dropdown.Item eventKey="add-quiz">
-                                                                                Add Quiz{' '}
-                                                                            </Dropdown.Item>
-                                                                        </Dropdown.Menu>
-                                                                    </Dropdown>
-                                                                </div>
-                                                            </div>
-                                                            <div className="gap-3 d-flex" style={{ flexWrap: 'wrap' }}>
+                                                        // Option 2: Deep compare values (optional, more accurate)
+                                                        // setHasUnsavedChanges(!isEqual(values, initialFormValues));
+                                                    }, [values, dirty]);
 
-                                                                {isPublishing ? (
-                                                                    <Spinner
-                                                                        animation="border"
-                                                                        size="sm"
-                                                                        role="status"
-                                                                        aria-hidden="true"
+                                                    return (
+                                                        <Form>
+                                                            <Row>
+                                                                <Col>
+                                                                    <Input
+                                                                        className="field-quill-control"
+                                                                        type="richTextEditor"
+                                                                        name="description"
+                                                                        id="course_description"
+                                                                        showResources={true}
+                                                                        showNameField={true}
+                                                                        showNameFieldData={values?.name}
+                                                                        onNameChange={(newName) =>
+                                                                            setFieldValue('name', newName)
+                                                                        }
+                                                                        resources={resources}
+                                                                        setResources={setResources}
+                                                                        setModalShow={setModalShow}
+                                                                        setLabel={setLabel}
+                                                                        setResourceFileUrl={setResourceFileUrl}
+                                                                        setResourceUrl={setResourceUrl}
+                                                                        setEditResource={setEditResource}
+                                                                        setEditResourceID={setEditResourceID}
+                                                                        modules={{ toolbar: TOOLBAR_CONFIG }}
+                                                                        formats={FORMATS}
                                                                     />
-                                                                ) : (<>
-                                                                    <div className="toggle-wrapper">
-                                                                        <span className="toggle-label">
-                                                                            {isPublished ? 'Published' : 'Draft'}
-                                                                        </span>
-                                                                        <div className="switch">
-                                                                            <input
-                                                                                type="checkbox"
-                                                                                id="switch2"
-                                                                                checked={isPublished}
-                                                                                onChange={toggleSwitch}
+                                                                    <ErrorMessage
+                                                                        name="name"
+                                                                        component="div"
+                                                                        className="error"
+                                                                    />
+                                                                </Col>
+                                                            </Row>
+                                                            {/* Transcript section  */}
+                                                            {showTranscriptEditor ? (
+                                                                <div
+                                                                    className={`res trans-res ${showTranscriptEditor ? 'showing-transcript' : ''}`}
+                                                                >
+                                                                    <h2 className="subhead">Add Transcript</h2>
+                                                                    <div className="transc">
+                                                                        <div className="drop-box"></div>
+                                                                        <div
+                                                                            className={`transcript-section ${showTranscriptEditor ? '' : 'd-none'}`}
+                                                                        >
+                                                                            <Input
+                                                                                className="field-quill-control"
+                                                                                type="richTextEditor"
+                                                                                name="transcript"
+                                                                                id="transcript"
+                                                                                showResources={false}
+                                                                                modules={{ toolbar: TOOLBAR_CONFIG }}
+                                                                                formats={FORMATS}
                                                                             />
-                                                                            <label htmlFor="switch2"></label>
+                                                                            <div className="mt-3 cancel-tans">
+                                                                                <button
+                                                                                    type="button"
+                                                                                    className="cancel-btnn"
+                                                                                    onClick={() =>
+                                                                                        setShowTranscriptEditor(false)
+                                                                                    }
+                                                                                >
+                                                                                    Cancel
+                                                                                </button>
+                                                                            </div>
                                                                         </div>
                                                                     </div>
-                                                                </>)}
-                                                                <Button type="button" className="cancel-btn" onClick={() => { setIsEditing(false) }}>
-                                                                    Cancel
-                                                                </Button>
-                                                                <Button type="submit" className="submit-btn" disabled={isSubmitting}>
-                                                                    {isSubmitting ? (
-                                                                        <>
-                                                                            <Spinner
-                                                                                as="span"
-                                                                                animation="border"
-                                                                                size="sm"
-                                                                                role="status"
-                                                                                aria-hidden="true"
-                                                                                className="me-2"
-                                                                            />
+                                                                </div>
+                                                            ) : (
+                                                                ''
+                                                            )}
 
-                                                                        </>
-                                                                    ) : (
-                                                                        isEditing ? 'Update' : 'Update'
-                                                                    )}
-                                                                </Button>
+                                                            {/* End Transcript Section  */}
+                                                            <div className="mt-3 d-flex gap-3 flex-wrap tab-buttons  editor-buttons justify-content-between">
+                                                                <div className="editor-button">
+                                                                    <div className="addAdditionalOptions">
+                                                                        <Dropdown onSelect={handleSelect}>
+                                                                            <Dropdown.Toggle id="dropdown-basic">
+                                                                                Add
+                                                                            </Dropdown.Toggle>
+                                                                            <Dropdown.Menu>
+                                                                                <Dropdown.Item eventKey="add-resource">
+                                                                                    Add Resource
+                                                                                </Dropdown.Item>
+                                                                                <Dropdown.Item eventKey="add-transcript" disabled={showTranscriptEditor === true}  >
+                                                                                    Add Transcript{' '}
+                                                                                </Dropdown.Item>
+                                                                                <Dropdown.Item eventKey="add-quiz">
+                                                                                    Add Quiz{' '}
+                                                                                </Dropdown.Item>
+                                                                            </Dropdown.Menu>
+                                                                        </Dropdown>
+                                                                    </div>
+                                                                </div>
+                                                                <div className="gap-3 d-flex" style={{ flexWrap: 'wrap' }}>
 
+                                                                    {isPublishing ? (
+                                                                        <Spinner
+                                                                            animation="border"
+                                                                            size="sm"
+                                                                            role="status"
+                                                                            aria-hidden="true"
+                                                                        />
+                                                                    ) : (<>
+                                                                        <div className="toggle-wrapper">
+                                                                            <span className="toggle-label">
+                                                                                {isPublished ? 'Published' : 'Draft'}
+                                                                            </span>
+                                                                            <div className="switch">
+                                                                                <input
+                                                                                    type="checkbox"
+                                                                                    id="switch2"
+                                                                                    checked={isPublished}
+                                                                                    onChange={toggleSwitch}
+                                                                                />
+                                                                                <label htmlFor="switch2"></label>
+                                                                            </div>
+                                                                        </div>
+                                                                    </>)}
+                                                                    <Button type="button" className="cancel-btn" onClick={() => { setIsEditing(false) }}>
+                                                                        Cancel
+                                                                    </Button>
+                                                                    <Button type="submit" className="submit-btn" disabled={isSubmitting}>
+                                                                        {isSubmitting ? (
+                                                                            <>
+                                                                                <Spinner
+                                                                                    as="span"
+                                                                                    animation="border"
+                                                                                    size="sm"
+                                                                                    role="status"
+                                                                                    aria-hidden="true"
+                                                                                    className="me-2"
+                                                                                />
+
+                                                                            </>
+                                                                        ) : (
+                                                                            isEditing ? 'Update' : 'Update'
+                                                                        )}
+                                                                    </Button>
+
+                                                                </div>
                                                             </div>
-                                                        </div>
 
-                                                        {/* <div className="res">
+                                                            {/* <div className="res">
                               <h2 className="subhead">Add Resources</h2>
                               <div className="drop-box">
                                 <Dropdown>
@@ -1842,7 +1967,7 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
                               </div>
                             </div> */}
 
-                                                        {/* <div className="res">
+                                                            {/* <div className="res">
                               <h2 className="subhead">Add Quiz</h2>
 
                               <div className="drop-box">
@@ -1852,60 +1977,61 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
                               </div>
                             </div> */}
 
-                                                        {/* Display quizzes if available */}
-                                                        {lectureQuizzes.length > 0 && (
-                                                            <div className="res">
-                                                                <div className="quizz-wrap" style={{ width: '100%' }}>
-                                                                    {lectureQuizzes.map((quiz, index) => (
-                                                                        <div
-                                                                            className="course-right-header border-0"
-                                                                            key={quiz.id}
-                                                                        >
-                                                                            <h2 className="subhead border-0">
-                                                                                {quiz.title}
-                                                                            </h2>
-                                                                            <div className="items-text d-flex gap-2">
-                                                                                <img
-                                                                                    className="cursor-pointer"
-                                                                                    src={PencilLine}
-                                                                                    alt="Edit"
-                                                                                    onClick={() =>
-                                                                                        handleQuizPopupClick(quiz)
-                                                                                    }
-                                                                                />
-                                                                                <img
-                                                                                    className="cursor-pointer"
-                                                                                    src={trashIconRed}
-                                                                                    alt="Delete"
-                                                                                    onClick={() =>
-                                                                                        handleDeleteQuizClick(quiz.id)
-                                                                                    }
-                                                                                />
+                                                            {/* Display quizzes if available */}
+                                                            {lectureQuizzes.length > 0 && (
+                                                                <div className="res">
+                                                                    <div className="quizz-wrap" style={{ width: '100%' }}>
+                                                                        {lectureQuizzes.map((quiz, index) => (
+                                                                            <div
+                                                                                className="course-right-header border-0"
+                                                                                key={quiz.id}
+                                                                            >
+                                                                                <h2 className="subhead border-0">
+                                                                                    {quiz.title}
+                                                                                </h2>
+                                                                                <div className="items-text d-flex gap-2">
+                                                                                    <img
+                                                                                        className="cursor-pointer"
+                                                                                        src={PencilLine}
+                                                                                        alt="Edit"
+                                                                                        onClick={() =>
+                                                                                            handleQuizPopupClick(quiz)
+                                                                                        }
+                                                                                    />
+                                                                                    <img
+                                                                                        className="cursor-pointer"
+                                                                                        src={trashIconRed}
+                                                                                        alt="Delete"
+                                                                                        onClick={() =>
+                                                                                            handleDeleteQuizClick(quiz.id)
+                                                                                        }
+                                                                                    />
+                                                                                </div>
                                                                             </div>
-                                                                        </div>
-                                                                    ))}
+                                                                        ))}
+                                                                    </div>
                                                                 </div>
-                                                            </div>
-                                                        )}
-                                                        {/* END QUIZES AVAILABLE  */}
+                                                            )}
+                                                            {/* END QUIZES AVAILABLE  */}
 
-                                                        {publishLectureModel && (
-                                                            <ConfirmationBox
-                                                                show={publishLectureModel}
-                                                                onClose={modelPopAction}
-                                                                onConfirm={handleSubmit}
-                                                                title="Save Your Lecture"
-                                                                body="You have unsaved changes. Would you like to save them before editing, or continue without saving?"
-                                                                loading={loadingCRUD}
-                                                                customFooterClass="custom-footer-class"
-                                                                nonActiveBtn="cancel-btn"
-                                                                activeBtn="submit-btn"
-                                                                cancelButtonTitle="Proceed without Saving"
-                                                                activeBtnTitle=" Save & Proceed"
-                                                            />
-                                                        )}
-                                                    </Form>
-                                                )}
+                                                            {publishLectureModel && (
+                                                                <ConfirmationBox
+                                                                    show={publishLectureModel}
+                                                                    onClose={modelPopAction}
+                                                                    onConfirm={handleSubmit}
+                                                                    title="Save Your Lecture"
+                                                                    body="You have unsaved changes. Would you like to save them before editing, or continue without saving?"
+                                                                    loading={loadingCRUD}
+                                                                    customFooterClass="custom-footer-class"
+                                                                    nonActiveBtn="cancel-btn"
+                                                                    activeBtn="submit-btn"
+                                                                    cancelButtonTitle="Proceed without Saving"
+                                                                    activeBtnTitle=" Save & Proceed"
+                                                                />
+                                                            )}
+                                                        </Form>
+                                                    );
+                                                }}
                                             </Formik>
                                         )}
                                     </div>

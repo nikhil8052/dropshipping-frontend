@@ -1,9 +1,18 @@
 import Drop from '../../../../assets/images/droparrow.png';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 const FolderStructureView = ({ topics, unassignedLectures, onLectureSelect }) => {
     const [expandedFolders, setExpandedFolders] = useState({});
-    const [activeLectureId, setActiveLectureId] = useState(null); // Track selected lecture
+    const [activeLectureId, setActiveLectureId] = useState(null);
+
+    // Open all folders by default on initial load
+    useEffect(() => {
+        const initialExpanded = {};
+        topics.forEach((_, index) => {
+            initialExpanded[index] = true;
+        });
+        setExpandedFolders(initialExpanded);
+    }, [topics]);
 
     const toggleFolder = (folderIndex) => {
         setExpandedFolders(prev => ({
@@ -13,8 +22,8 @@ const FolderStructureView = ({ topics, unassignedLectures, onLectureSelect }) =>
     };
 
     const handleLectureClick = (lecture) => {
-        setActiveLectureId(lecture.id); // Mark as active
-        onLectureSelect(lecture); // Trigger selection handler
+        setActiveLectureId(lecture.id);
+        onLectureSelect(lecture);
     };
 
     return (
@@ -41,7 +50,6 @@ const FolderStructureView = ({ topics, unassignedLectures, onLectureSelect }) =>
                                         className={`lecture-item ${activeLectureId === lecture.id ? 'active_lecture' : ''}`}
                                         onClick={() => handleLectureClick(lecture)}
                                         style={{ cursor: 'pointer' }}
-
                                     >
                                         {lecture.name}
                                     </li>
@@ -61,7 +69,6 @@ const FolderStructureView = ({ topics, unassignedLectures, onLectureSelect }) =>
                                 className={`lecture-item ${activeLectureId === lecture.id ? 'active_lecture' : ''}`}
                                 onClick={() => handleLectureClick(lecture)}
                                 style={{ cursor: 'pointer' }}
-
                             >
                                 {lecture.name}
                             </li>

@@ -94,12 +94,12 @@ const CourseThumbnail = ({ value, onChange }) => {
             <div className="image-preview">
               <img src={courseThumbnail} alt="thumbnail" />
               <div className="image-preview-text">
-                <div>
+                {/* <div>
                   <p>
                     Upload your course Thumbnail here. <strong>Important guidelines: </strong> 
                     1200x800 pixels or 12:8 Ratio. Supported format: <strong>.jpg, .jpeg, or .png</strong>
                   </p>
-                </div>
+                </div> */}
                 <Button
                   type="button"
                   className="upload-btn"
