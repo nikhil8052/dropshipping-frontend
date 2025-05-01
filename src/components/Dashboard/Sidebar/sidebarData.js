@@ -242,6 +242,13 @@ export const studentSidebarItems = [
         linkTo: '/student/courses',
         pathCombinations: ['/student/courses', '/student/courses/details']
     },
+    {
+        id: 3,
+        name: 'Courses Supabase',
+        iconLight: courses, // Replace with your icon
+        linkTo: '/student/courses-supabase',
+        pathCombinations: ['/student/courses-supabase', '/student/courses-supabase/details']
+    },
     // {
     //     id: 3,
     //     name: 'Events',
