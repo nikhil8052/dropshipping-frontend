@@ -27,7 +27,7 @@ const CourseDetail = () => {
     const [course, setCourse] = useState(0);
     const [courseSlug, setCourseSlug] = useState('developer');
     const [selectedLecture, setSelectedLecture] = useState(0);
-    const [loading, setLoading] = useState(false);
+    const [loading, setLoading] = useState(true);
 
     //  new for folder structure :
     const [topics, setTopics] = useState([]);
