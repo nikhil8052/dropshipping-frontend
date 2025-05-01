@@ -73,6 +73,7 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
     //         setIsOpen({ 0: true }); // Open the first topic
     //     }
     // }, [topics]);
+
     useEffect(() => {
         if (topics.length > 0) {
             const openAll = {};
@@ -83,6 +84,7 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
         }
     }, [topics]);
     
+
     useEffect(() => {
         if (initialData) {
             if (initialData.lecturess?.length > 0) {
@@ -863,8 +865,8 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
             const folder_id = newTopics[destTopicIndex].id;
             const lecture_id = movedLecture.id;
             moveLectureDND(lecture_id, folder_id);
-
             setTopics(newTopics);
+            updateLectureSequences(newTopics[destTopicIndex].lectures);
             return;
         }
 
@@ -887,6 +889,10 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
 
             setTopics(newTopics);
             setUnassignedLectures(newUnassigned);
+
+            updateLectureSequences(newUnassigned);
+            updateLectureSequences(newTopics[sourceTopicIndex].lectures);
+
             return;
         }
 
@@ -912,7 +918,34 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
             moveLectureDND(lecture_id, folder_id);
 
             setTopics(newTopics);
+
+            updateLectureSequences(newTopics[destTopicIndex].lectures);
+
+            // Also update source topic if lecture was moved out of it
+            if (sourceTopicIndex !== destTopicIndex) {
+                updateLectureSequences(newTopics[sourceTopicIndex].lectures);
+            }
+
             return;
+        }
+    };
+
+    const updateLectureSequences = (lectureList) => {
+        const payload = lectureList.map((lecture, index) => ({
+            id: lecture.id,
+            order_id: index,
+        }));
+        updateLectureOrder(payload);
+    };
+
+
+    const updateLectureOrder = async (lectures) => {
+        try {
+            let ENDPOINT= API_URL.SUPABASE_UPDATE_LECTURE_SEQUENCE
+            const response = await axiosWrapper('PUT', ENDPOINT, {lectures}, token);
+            
+        } catch (error) {
+            console.error('Failed to update lecture order', error);
         }
     };
 
@@ -1604,7 +1637,6 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
                                                                                                                     lecture.id
                                                                                                                 )
                                                                                                             }
-                                                                                                                
                                                                                                             }
                                                                                                         >
                                                                                                             Edit
@@ -1658,7 +1690,7 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
 
 
                                                 {/* Show the Move Popup for unassigned lectures */}
-                                                {showMovePopup &&
+                                                {/* {showMovePopup &&
                                                     selectedLecture &&
                                                     selectedLecture.topicIndex === null && (
                                                         <div className="popup-backdrop">
@@ -1687,7 +1719,7 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
                                                                 </button>
                                                             </div>
                                                         </div>
-                                                    )}
+                                                    )} */}
                                             </>
                                         ) : (
                                             <></>
