@@ -17,6 +17,8 @@ import * as types from '../../../redux/actions/actionTypes';
 import { DndContext, closestCenter, PointerSensor, useSensor, useSensors } from '@dnd-kit/core';
 import { arrayMove, SortableContext, useSortable, rectSortingStrategy } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
+import CourseSkeletonCard from '../../../components/CourseSkeletonCard';
+
 
 const Courses = () => {
     const [items, setItems] = useState([1, 2, 3, 4, 5, 6, 7, 8, 9]);
@@ -132,6 +134,7 @@ const Courses = () => {
 
     const getAllCourses = async () => {
         setLoading(true);
+         
         try {
             let constructedUrl = `${API_URL.SUPABASE_GET_ALL_COURSES}?search=${encodeURIComponent(search)}`;
 
@@ -304,9 +307,14 @@ const Courses = () => {
                     </div>
                 )}
             </div>
-            {hasLoaded && allCourses.length === 0 ? (
-                <div className="no-data-wrapper">No Data Found.</div>
-            ) : (
+            {loading && !hasLoaded ? (
+    <div className="custom-card-course">
+        {Array.from({ length: 12 }).map((_, index) => (
+            <CourseSkeletonCard key={index} />
+        ))}
+    </div>
+) : (
+                // Your DndContext + SortableContext + InfiniteScroll goes here
                 <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
                     <SortableContext items={displayedCourses.map((c) => c._id)} strategy={rectSortingStrategy}>
                         <InfiniteScroll
@@ -338,7 +346,6 @@ const Courses = () => {
                                     height: '100%',
                                     padding: '20px 0px',
                                     gap: '10px'
-
                                 }}
                             >
                                 <img

@@ -646,7 +646,7 @@ span.slect_span.selected {
 
     h3 {
         font-weight: 600;
-        font-size: 14px;
+        font-size: 16px;
         line-height: 1.2;
         color: #1D2026;
         margin: 0;
@@ -668,7 +668,7 @@ span.slect_span.selected {
     li {
         list-style: none;
         font-weight: 500;
-        font-size: 11px;
+        font-size: 16px;
         text-transform: capitalize;
         color: #019ED8;
         background-color: #CCECF7;
@@ -1374,6 +1374,29 @@ label.form-label {
     background-color: transparent !important;
 }
 
+.folder-detail {
+    h3 {
+        font-size: 1rem !important;
+    }
+}
+
+.detail-box li {
+    font-size: 1rem !important;
+}
+
+.detail-box li > a {
+    width: calc(100% - 30px);
+}
+
+.folder-detail h3 {
+    font-size: 16px !important;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    transition: background 0.2s ease;
+    min-height: 28px;
+}
+
 @media only screen and (max-width:991px) {
     .access-container {
         flex-wrap: wrap;
@@ -1471,6 +1494,9 @@ label.form-label {
     .select-label {
         grid-template-columns: repeat(2, 1fr);
     }
+    .tab-buttons.editor-buttons button {
+        font-size: 14px;
+    }
 }
 
 @media only screen and (max-width:767px) {
@@ -1552,7 +1578,6 @@ label.form-label {
         font-size: 16px;
     }
 }
-
 
 @media only screen and (max-width:575px) {
     .select-label {
