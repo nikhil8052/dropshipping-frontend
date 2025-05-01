@@ -243,17 +243,17 @@
 }
 
 
-.image-container,
-.card-body {
-    flex: 1 1 40%;
-    max-height: 40%;
-    overflow: hidden;
-}
+// .image-container,
+// .card-body {
+//     flex: 1 1 40%;
+//     max-height: 40%;
+//     overflow: hidden;
+// }
 
-.generic-card .image-container {
-    flex: 1 1 60%;
-    max-height: 60%;
-}
+// .generic-card .image-container {
+//     flex: 1 1 60%;
+//     max-height: 60%;
+// }
 
 .generic-card .card-body {
     justify-content: end;

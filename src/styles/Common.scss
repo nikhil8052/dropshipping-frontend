@@ -885,6 +885,11 @@ button.menu-toggler {
     color: #fff !important;
 }
 
+.main-panel:has(.new-student-page-wrapper) .MuiInputBase-formControl {
+    border: 0px;
+    background-color: #fff;
+}
+
 @media only screen and (max-width:767px) {
     .corse-detail-box {
         margin-top: 2rem;
