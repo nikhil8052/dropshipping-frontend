@@ -1421,6 +1421,12 @@ label.custom_check span{
     margin-bottom: 1rem !important;
 }
 
+.quiz-wrapper .field-control:focus-visible,.quiz-wrapper .field-select-control:focus-visible,.quiz-wrapper .field-text-area-control:focus-visible {
+    outline: 0px!important;
+    border: 1px solid rgb(233,234,240)!important;
+    color: #343837 !important;
+}
+
 @media only screen and (max-width:991px) {
     .access-container {
         flex-wrap: wrap;
