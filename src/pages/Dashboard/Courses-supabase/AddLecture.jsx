@@ -822,6 +822,8 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
             return;
         }
 
+
+
         // Moving from unassigned to a topic
         if (source.droppableId === 'unassigned' && destination.droppableId.startsWith('topic-')) {
             const destTopicIndex = parseInt(destination.droppableId.split('-')[1]);
@@ -842,6 +844,9 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
             moveLectureDND(lecture_id, folder_id);
 
             setTopics(newTopics);
+            updateLectureSequences(newTopics[destTopicIndex].lectures);
+
+
             return;
         }
 
@@ -864,6 +869,10 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
 
             setTopics(newTopics);
             setUnassignedLectures(newUnassigned);
+
+            updateLectureSequences(newUnassigned);
+            updateLectureSequences(newTopics[sourceTopicIndex].lectures);
+
             return;
         }
 
@@ -889,9 +898,29 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
             moveLectureDND(lecture_id, folder_id);
 
             setTopics(newTopics);
+
+            updateLectureSequences(newTopics[destTopicIndex].lectures);
+
+            // Also update source topic if lecture was moved out of it
+            if (sourceTopicIndex !== destTopicIndex) {
+                updateLectureSequences(newTopics[sourceTopicIndex].lectures);
+            }
+
             return;
         }
     };
+
+    const updateLectureSequences = (lectureList) => {
+        const payload = lectureList.map((lecture, index) => ({
+            id: lecture.id,
+            sequence: index,
+        }));
+    
+        console.log( payload, ' This is the payload to update the lecture order');
+        // Call your API to persist the new order
+        // updateLectureOrder(payload);
+    };
+
 
     const handleDeleteLecture = async () => {
         try {
@@ -1544,7 +1573,6 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
                                                                                                                     lecture.id
                                                                                                                 )
                                                                                                             }
-                                                                                                                
                                                                                                             }
                                                                                                         >
                                                                                                             Edit
@@ -1589,7 +1617,7 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
 
 
                                                 {/* Show the Move Popup for unassigned lectures */}
-                                                {showMovePopup &&
+                                                {/* {showMovePopup &&
                                                     selectedLecture &&
                                                     selectedLecture.topicIndex === null && (
                                                         <div className="popup-backdrop">
@@ -1618,7 +1646,7 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
                                                                 </button>
                                                             </div>
                                                         </div>
-                                                    )}
+                                                    )} */}
                                             </>
                                         ) : (
                                             <></>
