@@ -1158,6 +1158,7 @@ input:focus-visible {
     font-family: 'Montserrat';
 }
 
+
 .modal-description iframe.ql-video {
     width: calc(100% + 2rem);
     max-width: none;
@@ -1168,3 +1169,27 @@ input:focus-visible {
     display: block;
     border: none;
 }
+
+.player.right-content-area-supported {
+    max-width: 100% !important;
+}
+
+ .vp-video-wrapper.content-area-sibling-enabled .VideoThumbnail_module_videoThumbnail__d1b35579.VideoThumbnail_module_cover__d1b35579{
+    background-size:cover;
+    border-radius:0px;
+}
+
+ iframe.ql-video {
+    padding: 0 !important;
+    border-radius: 0px;
+}
+ .player{
+    max-width: 100% !important;
+}
+
+.ql-video {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 16 / 9;
+}
+

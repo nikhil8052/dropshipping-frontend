@@ -395,6 +395,90 @@ const NewStudent = () => {
                         {({ isSubmitting, handleSubmit, values, setFieldValue }) => (
                             <Form onSubmit={handleSubmit}>
                                 <div className="box-row">
+                                <Row className="mb-5">
+                                    <Col>
+                                        <div className="student-upload thumbnail-block">
+                                            {studentPhoto ? (
+                                                <label className="field-label fw-bold">Profile image</label>
+                                            ) : (
+                                                <label className="field-label">UPLOAD PHOTO</label>
+                                            )}
+                                            <div className="image_wrapper">
+                                                <Field name="studentPhoto">
+                                                    {({ field }) => (
+                                                        <>
+                                                            <input
+                                                                ref={inputRef}
+                                                                accept=".jpg,.jpeg,.png"
+                                                                {...field}
+                                                                type="file"
+                                                                style={{ display: 'none' }}
+                                                                onChange={handleFileChange}
+                                                            />
+                                                            {studentPhoto ? (
+                                                                <div className="image-renderer">
+                                                                    <div className="img-wrapper">
+                                                                        <img
+                                                                            src={
+                                                                                typeof studentPhoto === 'string'
+                                                                                    ? studentPhoto
+                                                                                    : URL.createObjectURL(studentPhoto)
+                                                                            }
+                                                                            alt=""
+                                                                            style={{
+                                                                                borderRadius: '50%',
+                                                                                width: '200px',
+                                                                                height: '128px'
+                                                                            }}
+                                                                        />
+                                                                        <div
+                                                                            className="overlay-image"
+                                                                            onClick={(e) => {
+                                                                                e.preventDefault();
+                                                                                inputRef.current.click();
+                                                                            }}
+                                                                        >
+                                                                            Edit
+                                                                        </div>
+                                                                        <span>{studentPhoto.name}</span>
+                                                                    </div>
+                                                                </div>
+                                                            ) : (
+                                                                <div className="image-preview">
+                                                                    <img
+                                                                        onClick={(e) => {
+                                                                            e.preventDefault();
+                                                                            inputRef.current.click();
+                                                                        }}
+                                                                        src={imagePreview2}
+                                                                        alt=""
+                                                                    />
+                                                                    <span>
+                                                                        {/* Upload student picture here
+                                                                        <br />
+                                                                        Supported formats:{' '}
+                                                                        <strong>.jpg, .jpeg, or .png</strong>
+                                                                        <br /> */}
+                                                                        <Button
+                                                                            onClick={(e) => {
+                                                                                e.preventDefault();
+                                                                                inputRef.current.click();
+                                                                            }}
+                                                                            className="upload-image-btn"
+                                                                        >
+                                                                            Upload Image{' '}
+                                                                            <img src={UploadSimple} alt="Upload Btn" />
+                                                                        </Button>
+                                                                    </span>
+                                                                </div>
+                                                            )}
+                                                        </>
+                                                    )}
+                                                </Field>
+                                            </div>
+                                        </div>
+                                    </Col>
+                                </Row>
                                     <Row>
                                         <Col md={6} xs={12} className="form-group">
                                             <TextField
@@ -603,91 +687,6 @@ const NewStudent = () => {
                                         </Col>
                                     </Row>
                                 </div>
-
-                                <Row className="mb-3">
-                                    <Col>
-                                        <div className="student-upload thumbnail-block">
-                                            {studentPhoto ? (
-                                                <label className="field-label fw-bold">Profile image</label>
-                                            ) : (
-                                                <label className="field-label">UPLOAD PHOTO</label>
-                                            )}
-                                            <div className="image_wrapper">
-                                                <Field name="studentPhoto">
-                                                    {({ field }) => (
-                                                        <>
-                                                            <input
-                                                                ref={inputRef}
-                                                                accept=".jpg,.jpeg,.png"
-                                                                {...field}
-                                                                type="file"
-                                                                style={{ display: 'none' }}
-                                                                onChange={handleFileChange}
-                                                            />
-                                                            {studentPhoto ? (
-                                                                <div className="image-renderer">
-                                                                    <div className="img-wrapper">
-                                                                        <img
-                                                                            src={
-                                                                                typeof studentPhoto === 'string'
-                                                                                    ? studentPhoto
-                                                                                    : URL.createObjectURL(studentPhoto)
-                                                                            }
-                                                                            alt=""
-                                                                            style={{
-                                                                                borderRadius: '50%',
-                                                                                width: '200px',
-                                                                                height: '128px'
-                                                                            }}
-                                                                        />
-                                                                        <div
-                                                                            className="overlay-image"
-                                                                            onClick={(e) => {
-                                                                                e.preventDefault();
-                                                                                inputRef.current.click();
-                                                                            }}
-                                                                        >
-                                                                            Edit
-                                                                        </div>
-                                                                        <span>{studentPhoto.name}</span>
-                                                                    </div>
-                                                                </div>
-                                                            ) : (
-                                                                <div className="image-preview">
-                                                                    <img
-                                                                        onClick={(e) => {
-                                                                            e.preventDefault();
-                                                                            inputRef.current.click();
-                                                                        }}
-                                                                        src={imagePreview2}
-                                                                        alt=""
-                                                                    />
-                                                                    <span>
-                                                                        {/* Upload student picture here
-                                                                        <br />
-                                                                        Supported formats:{' '}
-                                                                        <strong>.jpg, .jpeg, or .png</strong>
-                                                                        <br /> */}
-                                                                        <Button
-                                                                            onClick={(e) => {
-                                                                                e.preventDefault();
-                                                                                inputRef.current.click();
-                                                                            }}
-                                                                            className="upload-image-btn"
-                                                                        >
-                                                                            Upload Image{' '}
-                                                                            <img src={UploadSimple} alt="Upload Btn" />
-                                                                        </Button>
-                                                                    </span>
-                                                                </div>
-                                                            )}
-                                                        </>
-                                                    )}
-                                                </Field>
-                                            </div>
-                                        </div>
-                                    </Col>
-                                </Row>
 
                                 <Row>
                                     <Col>
