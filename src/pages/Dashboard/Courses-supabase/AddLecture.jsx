@@ -67,11 +67,11 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
 
     const dispatch = useDispatch();
 
-    useEffect(() => {
-        if (topics.length > 0) {
-            setIsOpen({ 0: true }); // Open the first topic
-        }
-    }, [topics]);
+    // useEffect(() => {
+    //     if (topics.length > 0) {
+    //         setIsOpen({ 0: true }); // Open the first topic
+    //     }
+    // }, [topics]);
 
     useEffect(() => {
         if (initialData) {
@@ -822,8 +822,6 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
             return;
         }
 
-
-
         // Moving from unassigned to a topic
         if (source.droppableId === 'unassigned' && destination.droppableId.startsWith('topic-')) {
             const destTopicIndex = parseInt(destination.droppableId.split('-')[1]);
@@ -842,11 +840,8 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
             const folder_id = newTopics[destTopicIndex].id;
             const lecture_id = movedLecture.id;
             moveLectureDND(lecture_id, folder_id);
-
             setTopics(newTopics);
             updateLectureSequences(newTopics[destTopicIndex].lectures);
-
-
             return;
         }
 
@@ -913,14 +908,21 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
     const updateLectureSequences = (lectureList) => {
         const payload = lectureList.map((lecture, index) => ({
             id: lecture.id,
-            sequence: index,
+            order_id: index,
         }));
-    
-        console.log( payload, ' This is the payload to update the lecture order');
-        // Call your API to persist the new order
-        // updateLectureOrder(payload);
+        updateLectureOrder(payload);
     };
 
+
+    const updateLectureOrder = async (lectures) => {
+        try {
+            let ENDPOINT= API_URL.SUPABASE_UPDATE_LECTURE_SEQUENCE
+            const response = await axiosWrapper('PUT', ENDPOINT, {lectures}, token);
+            
+        } catch (error) {
+            console.error('Failed to update lecture order', error);
+        }
+    };
 
     const handleDeleteLecture = async () => {
         try {
