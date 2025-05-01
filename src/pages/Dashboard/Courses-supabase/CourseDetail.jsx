@@ -1,68 +1,3 @@
-// import Drop from '../../../assets/images/droparrow.png';
-
-// const FolderStructureView = ({ topics, unassignedLectures, onLectureSelect }) => {
-//     const [expandedFolders, setExpandedFolders] = useState({});
-  
-//     const toggleFolder = (folderIndex) => {
-//       setExpandedFolders(prev => ({
-//         ...prev,
-//         [folderIndex]: !prev[folderIndex]
-//       }));
-//     };
-  
-//     return (
-//       <div className="course-left">
-//         {topics.map((topic, topicIndex) => (
-//           <div className="folder-detail" key={topic.id}>
-           
-//            <div
-//             className="drop-box"
-//             style={{ cursor: 'pointer' }}
-//             onClick={() => toggleFolder(topicIndex)} // ← add this!
-//             >
-//             <h3>{topic.name}</h3>
-//             <div className={`folder-dropdown ${expandedFolders[topicIndex] ? 'open rotated' : ''}`}>
-//                 <img src={Drop} alt="" />
-//             </div>
-//             </div>
-
-            
-//             {expandedFolders[topicIndex] && (
-//               <div className="detail-box">
-//                 <ul>
-//                 {topic.lectures.map(lecture => (
-//                   <li 
-//                     key={lecture.id} 
-//                     className="lecture-item"
-//                     onClick={() => onLectureSelect(lecture)}
-//                   >
-//                     {lecture.name}
-//                   </li>
-//                 ))}
-//                 </ul>
-//               </div>
-//             )}
-//           </div>
-//         ))}
-  
-//         {unassignedLectures.length > 0 && (
-//           <div className="detail-box">
-//             <ul>
-//               {unassignedLectures.map(lecture => (
-//                 <li 
-//                   key={lecture.id} 
-//                   className="lecture-item"
-//                   onClick={() => onLectureSelect(lecture)}
-//                 >
-//                   {lecture.title}
-//                 </li>
-//               ))}
-//             </ul>
-//           </div>
-//         )}
-//       </div>
-//     );
-//   };
 
 import { useEffect, useState } from 'react';
 import { Button } from 'react-bootstrap';
@@ -82,6 +17,7 @@ import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd';
 import '../Courses-supabase/CourseNew.scss';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCopy } from '@fortawesome/free-solid-svg-icons';
+import Loading from '@components/Loading/Loading';
 
 const CourseDetail = () => {
     const navigate = useNavigate();
@@ -91,6 +27,7 @@ const CourseDetail = () => {
     const [course, setCourse] = useState(0);
     const [courseSlug, setCourseSlug] = useState('developer');
     const [selectedLecture, setSelectedLecture] = useState(0);
+    const [loading, setLoading] = useState(false);
 
     //  new for folder structure :
     const [topics, setTopics] = useState([]);
@@ -129,6 +66,7 @@ const CourseDetail = () => {
           }, [course]);
           
     const getCourseById = async (id) => {
+        setLoading(true);
         const { data } = await axiosWrapper('GET', `${API_URL.SUPABASE_GET_COURSE.replace(':id', id)}`, {}, token);
         const courseSlug = createSlug(data.title);
         setCourseSlug(courseSlug);
@@ -173,6 +111,7 @@ const CourseDetail = () => {
         if (mapLectures.length > 0) {
             setSelectedLecture(mapLectures[0]);
         }
+        setLoading(false);
     };
 
     useEffect(() => {
@@ -232,7 +171,12 @@ const CourseDetail = () => {
     };
     
     return (
+        <>
+        {loading ? (
+            <Loading />
+        ) : (
         <div className="publish-form-section">
+
             {role === 'STUDENT' ? (
                 <Link to={`/${role?.toLowerCase()}/courses-supabase`}>
                     <Button type="button" className="back-button">
@@ -284,7 +228,7 @@ const CourseDetail = () => {
                                     <div className="product-details d-flex  justify-content-between">
                                         <h3>{selectedLecture?.name}</h3>
                                         <div>
-                                            <FontAwesomeIcon icon={faCopy} onClick={handleCopy} />
+                                            <FontAwesomeIcon style={{ cursor: 'pointer' }} icon={faCopy} onClick={handleCopy} />
                                         </div>
                                     </div>
                                     <div className="modal-description">
@@ -365,7 +309,7 @@ const CourseDetail = () => {
                             >
                                 All Students
                             </Button>
-                            <Button
+                            {/* <Button
                                 onClick={() =>
                                     navigate(`/${role?.toLowerCase()}/courses-supabase/edit`, {
                                         state: { isEdit: true, courseId: course.id }
@@ -375,12 +319,33 @@ const CourseDetail = () => {
                                 className="edit-btn"
                             >
                                 Edit
+                            </Button> */}
+                            <Button
+                                onClick={() =>
+                                {
+                                    navigate(`/${role?.toLowerCase()}/courses-supabase/edit`, {
+                                        state: { 
+                                            isEdit: true, 
+                                            courseId: course.id,
+                                            activeKey: "upload-files"
+                                        }
+                                        })
+                                }
+                                    
+                                }
+                                type="button"
+                                className="edit-btn"
+                                >
+                                Edit
                             </Button>
                         </>
                     )}
                 </div>
             )}
+            
         </div>
+        )}
+        </>
     );
 };
 

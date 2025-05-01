@@ -47,8 +47,8 @@ const GenericCard = ({
     };
 
     const createSlug = (title) => {
-        // return title.toLowerCase().replace(/\s+/g, "-").replace(/[^a-z0-9-]/g, "");
-        return ' TEst ';
+        return title.toLowerCase().replace(/\s+/g, "-").replace(/[^a-z0-9-]/g, "");
+        // return ' TEst ';
     };
 
     // Handler to close the delete confirmation modal

@@ -128,13 +128,13 @@ const NewStudent = () => {
         const response = await axiosWrapper('GET', API_URL.SUPABASE_GET_STUDENT.replace(':id', id), {}, token);
         const student = response.data;
 
-        const coursesRoadmap = student.coursesRoadmaps.map((course) => ({
+        const coursesRoadmap = student?.coursesRoadmaps?.map((course) => ({
             value: course?.id,
             label: course?.title,
             id: course?.id
         }));
 
-        const mappedCategories = student.categories.map((category) => {
+        const mappedCategories = student?.categories?.map((category) => {
             return {
                 value: category.id,
                 label: category.name
@@ -151,7 +151,7 @@ const NewStudent = () => {
             category: mappedCategories || [],
             coachingTrajectory: student?.coachingTrajectory || '',
             roadMap: student?.roadMap || 'ROAD_MAP_ONE',
-            coursesRoadmap: student?.coursesRoadmaps.map((c) => c?.id),
+            coursesRoadmap: student?.coursesRoadmaps?.map((c) => c?.id),
             roadmapAccess: String(student?.roadmapAccess || 'false')
         });
         setCourses(coursesRoadmap);
@@ -220,7 +220,7 @@ const NewStudent = () => {
 
     const handleFormSubmit = async (values, { resetForm, setSubmitting }) => {
         let formData = { ...values, avatar: studentPhoto, category: values.category.map((cat) => cat.value) };
-
+        console.log(formData);
         if (studentId) {
             const { email, ...rest } = formData;
             formData = rest;
@@ -233,6 +233,8 @@ const NewStudent = () => {
 
         try {
             await axiosWrapper(method, url, formData, token);
+            resetForm();
+            navigate(`/${role}/students-supabase`);
         } catch (error) {
             setSubmitting(false);
         }
@@ -435,7 +437,7 @@ const NewStudent = () => {
                                             <ErrorMessage name="email" component="div" className="error" />
                                         </Col>
                                         <Col md={6} xs={12} className="form-group">
-                                            <TextField
+                                            {/* <TextField
                                                 name="phoneNumber"
                                                 label="Phone Number"
                                                 className="field-control"
@@ -452,7 +454,17 @@ const NewStudent = () => {
                                                 inputProps={{ maxLength: 100 }}
                                                 fullWidth
                                                 countriesAllowed={values.country === 'Netherlands' ? ['nl'] : ['be']}
-                                            />
+                                            /> */}
+                                            <label htmlFor="phoneNumber">Phone Number</label>
+                                            <Field name="phoneNumber">
+                                            {({ field, form }) => (
+                                                <PhoneInputField
+                                                {...field}
+                                                countriesAllowed={values.country === 'Netherlands' ? ['nl'] : ['be']}
+                                                onChange={(value) => form.setFieldValue('phoneNumber', value)}
+                                                />
+                                            )}
+                                            </Field>
                                         </Col>
                                         <Col md={6} xs={12} className="form-group">
                                             <FormControl fullWidth>

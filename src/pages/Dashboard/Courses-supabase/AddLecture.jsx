@@ -30,7 +30,7 @@ import Edit2 from '../../../assets/icons/Dropdown.svg';
 const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCourseData }) => {
 
     const [loading, setLoading] = useState(false);
-    const [isOpen, setIsOpen] = useState(true);
+    const [isOpen, setIsOpen] = useState(false);
     const [currentActiveLectureID, setCurrentActiveLectureID] = useState(null);
     const [currentActiveLecture, setCurrentActiveLecture] = useState(true);
     const [modalShow, setModalShow] = useState(false);
@@ -66,12 +66,24 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
     const [activeLectureId, setActiveLectureId] = useState(null);
 
     const dispatch = useDispatch();
+    const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
 
     // useEffect(() => {
     //     if (topics.length > 0) {
     //         setIsOpen({ 0: true }); // Open the first topic
     //     }
     // }, [topics]);
+
+    useEffect(() => {
+        if (topics.length > 0) {
+            const openAll = {};
+            topics.forEach((_, index) => {
+                openAll[index] = true;
+            });
+            setIsOpen(openAll);
+        }
+    }, [topics]);
+    
 
     useEffect(() => {
         if (initialData) {
@@ -604,7 +616,6 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
                     )
                 );
             }
-
             // Clear modal and input only if renaming lecture (optional)
             setModalShowRename(false);
             setLectureLabel('');
@@ -749,6 +760,19 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
         }
         // setSubmitting(false);
     };
+    const editClickLeture = (lecture) => {
+        if (hasUnsavedChanges) {
+            const confirmLeave = window.confirm('You have unsaved changes. Do you want to leave without saving?');
+            if (!confirmLeave) {
+                return;
+            }
+        }
+        setActiveLectureId(lecture.id);
+        setHasUnsavedChanges(false);
+        setIsEditing(false);
+        setRightViewLecture(lecture);
+    };
+    
     const handleSubmit = async (values, { setSubmitting, resetForm, ...formikHelpers }) => {
         // setSubmitting(true);
 
@@ -763,33 +787,34 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
             const response = await axiosWrapper(method, url, formData, token);
             // dispatch({ type: types.ALL_RECORDS, data: { keyOfData: 'currentCourseUpdate', data: true } });
 
-            // if (response?.data) {
-            //   const updatedLectureId = response.data.id;
-            //   const updatedLectureName = response.data.name.trim();
-            //   setUnassignedLectures((prevLectures) =>
-            //     prevLectures.map((lecture) =>
-            //       lecture.id === updatedLectureId
-            //         ? { ...lecture, name: updatedLectureName }
-            //         : lecture
-            //     )
-            //   );
-            //   setTopics((prevTopics) =>
-            //     prevTopics.map((folder) => ({
-            //       ...folder,
-            //       lectures: folder.lectures.map((lecture) =>
-            //         lecture.id === updatedLectureId
-            //           ? { ...lecture, name: updatedLectureName }
-            //           : lecture
-            //       )
-            //     }))
-            //   );
-            // }
+            if (response?.data) {
+              const updatedLectureId = response.data.id;
+              const updatedLectureName = response.data.name.trim();
+              setUnassignedLectures((prevLectures) =>
+                prevLectures.map((lecture) =>
+                  lecture.id === updatedLectureId
+                    ? { ...lecture, name: updatedLectureName }
+                    : lecture
+                )
+              );
+              setTopics((prevTopics) =>
+                prevTopics.map((folder) => ({
+                  ...folder,
+                  lectures: folder.lectures.map((lecture) =>
+                    lecture.id === updatedLectureId
+                      ? { ...lecture, name: updatedLectureName }
+                      : lecture
+                  )
+                }))
+              );
+            }
         } catch (err) {
             // handleError(err);
             console.log(err);
         } finally {
             // setSubmitting(false);
             modelPopAction();
+            setHasUnsavedChanges(false);
         }
     };
 
@@ -997,9 +1022,17 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
             return;
         }
 
-        const updated = await renameLecture(selectedLectureId, lectureLabel.trim(), "lecture");
+        let ENDPOINT = API_URL.SUPABASE_UPDATE_LECTURE.replace(':id', selectedLectureId);
+        try {
+            const payload = {
+                name: lectureLabel,
+                source: "rename"
+            };
 
-        if (updated) {
+            const response = await axiosWrapper('PUT', ENDPOINT, payload, token);
+            // return response.data;
+            if (response) {
+                // dispatch({ type: types.ALL_RECORDS, data: { keyOfData: 'currentCourseUpdate', data: true } });
             setUnassignedLectures((prev) =>
                 prev.map((lecture) =>
                     lecture.id === selectedLectureId ? { ...lecture, name: lectureLabel.trim() } : lecture
@@ -1013,11 +1046,15 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
                     )
                 }))
             );
-            // Close modal and reset form
-            setModalShowRename(false);
-            setLectureLabel('');
-            setSelectedLectureId(null);
+                setModalShowRename(false);
+                setLectureLabel('');
+                setSelectedLectureId(null);
+            }
+        } catch (error) {
+            console.error('Failed to rename lecture:', error);
+            return null;
         }
+       
     };
 
     const resourceFileChanged = async (e) => {
@@ -1266,7 +1303,7 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
                     <div className="course-detail-tab">
                         <div className="course-detail-row">
                             <div className="row">
-                                <div className="col-md-3">
+                                <div className="col-lg-4 col-md-5">
                                     <div className="course-left">
                                         <div className="course-left-top">
                                             <h2 className="subhead">
@@ -1362,18 +1399,24 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
                                                                                         >
                                                                                             {(provided) => (
                                                                                                 <li
-                                                                                                    ref={
-                                                                                                        provided.innerRef
-                                                                                                    }
-                                                                                                    {...provided.draggableProps}
-                                                                                                    {...provided.dragHandleProps}
-                                                                                                    className={lecture.id === activeLectureId ? "active_lecture" : ""}
+                                                                                                onClick={() => {
+                                                                                                    // setActiveLectureId(lecture.id);
+                                                                                                    // setPendingLectureId(lecture.id);
+                                                                                                    editClickLeture(lecture);
+                                                                                                    // setPublishLectureModel(
+                                                                                                     //     true
+                                                                                                     // );
+                                                                                                }}
+                                                                                                ref={provided.innerRef}
+                                                                                                {...provided.draggableProps}
+                                                                                                {...provided.dragHandleProps}
+                                                                                                className={lecture.id === activeLectureId ? "active_lecture" : ""}
+                                                                                                    
                                                                                                 >
                                                                                                     <a
                                                                                                         href="javascript:void(0)"
                                                                                                         onClick={() => {
-
-                                                                                                            console.log("Lecture clicked")
+                                                                                                            console.log('');
                                                                                                         }
                                                                                                             // loadLectureData(
                                                                                                             //     lecture
@@ -1382,17 +1425,18 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
                                                                                                         }
                                                                                                     >
                                                                                                         {
-                                                                                                            renaming.type === "lecture" && renaming.id === lecture.id ? (
-                                                                                                                <Spinner animation="border" size="sm" className="ms-2" />
-                                                                                                            ) : (<EditText
-                                                                                                                name="textbox3"
-                                                                                                                defaultValue={
-                                                                                                                    lecture.name ??
-                                                                                                                    'ERROR'
-                                                                                                                }
-                                                                                                                inputClassName="editable-input"
-                                                                                                                onSave={({ value }) => handleRename({ value, type: "lecture", id: lecture.id })}
-                                                                                                            />)
+                                                                                                            lecture.name
+                                                                                                            // renaming.type === "lecture" && renaming.id === lecture.id ? (
+                                                                                                            //     <Spinner animation="border" size="sm" className="ms-2" />
+                                                                                                            // ) : (<EditText
+                                                                                                            //     name="textbox3"
+                                                                                                            //     defaultValue={
+                                                                                                            //         lecture.name ??
+                                                                                                            //         'ERROR'
+                                                                                                            //     }
+                                                                                                            //     inputClassName="editable-input"
+                                                                                                            //     onSave={({ value }) => handleRename({ value, type: "lecture", id: lecture.id })}
+                                                                                                            // />)
                                                                                                         }
 
                                                                                                     </a>
@@ -1482,6 +1526,15 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
                                                                                                                     >
                                                                                                                         Delete
                                                                                                                     </Dropdown.Item>
+                                                                                                                    <Dropdown.Item
+                                                                                                                        onClick={() => {
+                                                                                                                            setModalShowRename(true);
+                                                                                                                            setSelectedLectureId(lecture.id);
+                                                                                                                            setLectureLabel(lecture.name);
+                                                                                                                        }}
+                                                                                                                        >
+                                                                                                                        Rename
+                                                                                                                    </Dropdown.Item>
 
                                                                                                                     
                                                                                                                 </Dropdown>
@@ -1519,6 +1572,14 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
                                                                             >
                                                                                 {(provided) => (
                                                                                     <li
+                                                                                        onClick={() => {
+                                                                                            // setActiveLectureId(lecture.id);
+                                                                                            // setPendingLectureId(lecture.id);
+                                                                                            editClickLeture(lecture);
+                                                                                            // setPublishLectureModel(
+                                                                                            //     true
+                                                                                            // );
+                                                                                        }}
                                                                                         ref={provided.innerRef}
                                                                                         {...provided.draggableProps}
                                                                                         {...provided.dragHandleProps}
@@ -1526,17 +1587,18 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
                                                                                     >
 
                                                                                         {
-                                                                                            renaming.type === "lecture" && renaming.id === lecture.id ? (
-                                                                                                <Spinner animation="border" size="sm" className="ms-2" />
-                                                                                            ) : (<EditText
-                                                                                                name="textbox4"
-                                                                                                defaultValue={
-                                                                                                    lecture.name ??
-                                                                                                    'ERROR'
-                                                                                                }
-                                                                                                inputClassName="editable-input"
-                                                                                                onSave={({ value }) => handleRename({ value, type: "lecture", id: lecture.id })}
-                                                                                            />)
+                                                                                            lecture?.name
+                                                                                            // renaming.type === "lecture" && renaming.id === lecture.id ? (
+                                                                                            //     <Spinner animation="border" size="sm" className="ms-2" />
+                                                                                            // ) : (<EditText
+                                                                                            //     name="textbox4"
+                                                                                            //     defaultValue={
+                                                                                            //         lecture.name ??
+                                                                                            //         'ERROR'
+                                                                                            //     }
+                                                                                            //     inputClassName="editable-input"
+                                                                                            //     onSave={({ value }) => handleRename({ value, type: "lecture", id: lecture.id })}
+                                                                                            // />)
                                                                                         }
 
                                                                                         <div className="drop-box">
@@ -1600,6 +1662,15 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
                                                                                                         }
                                                                                                     >
                                                                                                         Delete
+                                                                                                    </Dropdown.Item>
+                                                                                                    <Dropdown.Item
+                                                                                                        onClick={() => {
+                                                                                                            setModalShowRename(true);
+                                                                                                            setSelectedLectureId(lecture.id);
+                                                                                                            setLectureLabel(lecture.name);
+                                                                                                        }}
+                                                                                                        >
+                                                                                                        Rename
                                                                                                     </Dropdown.Item>
                                                                                                 </Dropdown.Menu>
                                                                                             </Dropdown>
@@ -1665,7 +1736,7 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
                                     </div>
                                 </div>
 
-                                <div className="col-md-9">
+                                <div className="col-lg-8 col-md-7">
                                     <div className="course-right">
                                         {/* new code  */}
                                         {!hasLectures && !isEditing ? (
@@ -1710,10 +1781,25 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
                                                 }}
                                                 validationSchema={validationSchema}
                                                 onSubmit={handleSubmit}
+                                                // onSubmit={(values) => {
+                                                //     handleSubmit(values);
+                                                //     setHasUnsavedChanges(false);
+                                                // }}
                                             >
                                                 {/* {({ isSubmitting, values, setFieldValue }) => ( */}
-                                                {({ isSubmitting, handleSubmit, setFieldValue, values, errors }) => (
-                                                    // richTextEditor for the lecure edit part
+                                                {({ isSubmitting, handleSubmit, setFieldValue, values, dirty }) => {
+                                                    useEffect(() => {
+                                                        if (dirty) {
+                                                            setHasUnsavedChanges(true);
+                                                        } else {
+                                                            setHasUnsavedChanges(false);
+                                                        }
+
+                                                        // Option 2: Deep compare values (optional, more accurate)
+                                                        // setHasUnsavedChanges(!isEqual(values, initialFormValues));
+                                                    }, [values, dirty]);
+
+                                                    return (
                                                     <Form>
                                                         <Row>
                                                             <Col>
@@ -1935,7 +2021,8 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
                                                             />
                                                         )}
                                                     </Form>
-                                                )}
+                                                 );
+                                                }}
                                             </Formik>
                                         )}
                                     </div>

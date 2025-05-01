@@ -35,8 +35,15 @@ const AddNewCourse = () => {
     const lectureUpdate = useSelector((state) => state?.root?.lectureUpdate);
     const [loading, setLoading] = useState(false);
     const [isPublished, setIsPublished] = useState(false);
-    const courseId = useSelector((state) => state?.root?.currentCourse);
+    let courseId = useSelector((state) => state?.root?.currentCourse);
 
+
+    if( location.state.courseId){
+        courseId=location.state.courseId
+    }else {
+        courseId = useSelector((state) => state?.root?.currentCourse);
+
+    }
     const [courseData, setCourseData] = useState({
         title: '',
         subtitle: '',
@@ -53,6 +60,7 @@ const AddNewCourse = () => {
         step2: false,
         step3: false
     });
+
 
     // //////////////////////////////Handlers////////////////////////
 
@@ -252,6 +260,11 @@ const AddNewCourse = () => {
     };
 
     // /////////// Hooks //////////
+    useEffect(() => {
+        if (location.state?.activeKey) {
+          setActiveKey(location.state.activeKey);
+        }
+      }, [location.state]);
     useEffect(() => {
         if (stepsCompleted.step1 && stepsCompleted.step2) {
             setActiveKey('publish-course');
