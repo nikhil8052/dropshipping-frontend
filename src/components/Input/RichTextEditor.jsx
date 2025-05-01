@@ -241,6 +241,15 @@ const RichTextEditor = (props) => {
                         InputLabelProps={{
                             shrink: true
                         }}
+                        onKeyDown={(e) => {
+                        if (e.key === 'Enter') {
+                            e.preventDefault();
+                            if (quillRef.current) {
+                            const editor = quillRef.current.getEditor();
+                            editor.focus();
+                            }
+                        }
+                        }}
                     />
                 </>
             )}
