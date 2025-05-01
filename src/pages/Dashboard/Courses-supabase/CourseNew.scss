@@ -40,7 +40,7 @@
     span,
     p {
         font-weight: 600;
-        font-size: 24px;
+        font-size: 20px;
         color: #1D2026;
         line-height: 25.51px;
     }
@@ -1411,6 +1411,14 @@ label.form-label {
 
 label.custom_check span{
     border-radius: 50%;
+}
+
+.detail-box li .drop-box {
+    overflow: visible !important;
+}
+
+.main-panel:has(.new-student-page-wrapper) .Course-form .row > div:has(.thumbnail-block),.main-panel:has(.new-student-page-wrapper)  .Course-form .row:has(.thumbnail-block) {
+    margin-bottom: 1rem !important;
 }
 
 @media only screen and (max-width:991px) {
