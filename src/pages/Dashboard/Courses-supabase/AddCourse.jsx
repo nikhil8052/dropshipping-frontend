@@ -19,6 +19,7 @@ import AddLecture from './AddLecture';
 import AddLectureModel from './AddLectureModal';
 import './CourseNew.scss';
 import Loading from '@components/Loading/Loading';
+import ConfirmationBox from '@components/ConfirmationBox/ConfirmationBox';
 
 const AddNewCourse = () => {
     const location = useLocation();
@@ -38,6 +39,8 @@ const AddNewCourse = () => {
     const reduxCourseId = useSelector((state) => state?.root?.currentCourse);
     const courseId = location.state?.courseId ?? reduxCourseId ?? '';
 
+    const [isOpenCoursePublishModal, setIsOpenCoursePublishModal] = useState(false);
+
     // if( location.state.courseId){
     //     courseId=location.state.courseId
     // }else {
@@ -53,7 +56,8 @@ const AddNewCourse = () => {
         banner: '',
         trailer: '',
         description: '',
-        lectures: []
+        lectures: [],
+        isPublished:false 
     });
     const [stepsCompleted, setStepsCompleted] = useState({
         step1: false,
@@ -63,7 +67,6 @@ const AddNewCourse = () => {
 
 
     // //////////////////////////////Handlers////////////////////////
-
     const handleDelete = async (courseId) => {
         setLoading(true);
         try {
@@ -74,6 +77,7 @@ const AddNewCourse = () => {
             setLoading(false);
         }
     };
+
     const handleTabChange = (key) => {
         if (courseId) {
             setActiveKey(key);
@@ -154,8 +158,10 @@ const AddNewCourse = () => {
                 trailer: data.trailer,
                 description: description,
                 lecturess: data.unassignedLectures,
-                folders: data.folders
+                folders: data.folders,
+               
             });
+            setIsPublished(data.isPublished)
             setLoading(false);
 
             dispatch({ type: types.ALL_RECORDS, data: { keyOfData: 'currentCourseUpdate', data: false } });
@@ -189,7 +195,7 @@ const AddNewCourse = () => {
                 getCourseById(currentCourse);
             } else {
                 const course = await axiosWrapper('POST', API_URL.SUPABASE_CREATE_COURSE, formData, token);
-                console.warn(course);
+               
                 const newLecture = await axiosWrapper(
                     'POST',
                     API_URL.SUPABASE_ADD_LECTURE,
@@ -199,7 +205,7 @@ const AddNewCourse = () => {
                     },
                     token
                 );
-                console.warn(newLecture);
+            
 
                 dispatch({ type: types.ALL_RECORDS, data: { keyOfData: 'currentCourse', data: course.data.id } });
             }
@@ -254,6 +260,7 @@ const AddNewCourse = () => {
     //     }
     // };
     const handlePublishCourse = async () => {
+        
         await axiosWrapper('PUT', `${API_URL.PUBLISH_COURSE.replace(':id', currentCourse)}`, {}, token);
         // Call the get Course By Id so we can have updated state of part one
         // dispatch({ type: types.ALL_RECORDS, data: { keyOfData: 'currentCourseUpdate', data: true } });
@@ -262,9 +269,9 @@ const AddNewCourse = () => {
     // /////////// Hooks //////////
     useEffect(() => {
         if (location.state?.activeKey) {
-          setActiveKey(location.state.activeKey);
+            setActiveKey(location.state.activeKey);
         }
-      }, [location.state]);
+    }, [location.state]);
     useEffect(() => {
         if (stepsCompleted.step1 && stepsCompleted.step2) {
             setActiveKey('publish-course');
@@ -291,15 +298,31 @@ const AddNewCourse = () => {
             getCourseById(courseId);
         }
     }, [courseId]);
+
+
+
+    // PUBLISH UNPUBLISH  
     const toggleSwitch = () => {
+        setIsOpenCoursePublishModal(!isPublished)
         setIsPublished(!isPublished);
     };
-    return  loading ? (
+
+    const publishCourse = async () => {
+        setIsOpenCoursePublishModal(false)
+        const data ={
+            "isPublished": isPublished,
+        }
+        createOrUpdateCourse(data)
+    };
+
+    // END PUBLISH UNPUBLISH 
+
+    return loading ? (
         <Loading />
-    ) :  (
+    ) : (
         <div className="addcourse-section supabase">
             <div className="title-top">
-            {/* onClick={() => navigate(`/${role}/courses-supabase`)}  */}
+                {/* onClick={() => navigate(`/${role}/courses-supabase`)}  */}
                 <span style={{ cursor: 'pointer' }}>
                     Add Course
                 </span>
@@ -312,6 +335,7 @@ const AddNewCourse = () => {
                     </div>
                 </div>
             </div>
+
             <Tabs
                 fill
                 activeKey={activeKey}
@@ -321,11 +345,11 @@ const AddNewCourse = () => {
             >
                 <Tab
                     eventKey="basic-information"
-                    // title={
-                    //     <span className="tab-span">
-                    //         Add Course
-                    //     </span>
-                    // }
+                // title={
+                //     <span className="tab-span">
+                //         Add Course
+                //     </span>
+                // }
                 >
                     <BasicInformation
                         setStepComplete={completeStep}
@@ -349,11 +373,11 @@ const AddNewCourse = () => {
                 </Tab>
                 <Tab
                     eventKey="upload-filess"
-                    // title={
-                    //     <span className="tab-span">
-                    //         <img src={ClipboardText} alt="course-icon" /> Upload Files
-                    //     </span>
-                    // }
+                // title={
+                //     <span className="tab-span">
+                //         <img src={ClipboardText} alt="course-icon" /> Upload Files
+                //     </span>
+                // }
                 >
                     <UploadFiles
                         setStepComplete={completeStep}
@@ -365,11 +389,11 @@ const AddNewCourse = () => {
                 </Tab>
                 <Tab
                     eventKey="publish-course"
-                    // title={
-                    //     <span className="tab-span">
-                    //         <img src={taskAlt} alt="course-icon" /> Publish Course
-                    //     </span>
-                    // }
+                // title={
+                //     <span className="tab-span">
+                //         <img src={taskAlt} alt="course-icon" /> Publish Course
+                //     </span>
+                // }
                 >
                     <PublishCourses
                         onBack={() => handleTabChange('upload-files')}
@@ -379,6 +403,25 @@ const AddNewCourse = () => {
                     />
                 </Tab>
             </Tabs>
+
+            {/* MODAL FOR PUBLISH THE LECTURE  */}
+            {isOpenCoursePublishModal && (
+                <ConfirmationBox
+                    show={isOpenCoursePublishModal}
+                    onClose={toggleSwitch}
+                    onConfirm={publishCourse}
+                    title="Publish Your Course!"
+                    // body="Are you sure you want to delete this course? Data associated with this course will be lost."
+                    // loading={loadingCRUD}
+                    customFooterClass="custom-footer-class"
+                    nonActiveBtn="cancel-btn"
+                    activeBtn="submit-btn"
+                    cancelButtonTitle="Cancel"
+                    activeBtnTitle="Publish"
+                    modalClassName="coursemodal publishcourse"
+                />
+            )}
+            {/* END MODAL FOR PUBLISH THE LECTURE  */}
         </div>
     );
 };

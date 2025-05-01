@@ -19,7 +19,7 @@ import CourseCategory from './CourseCategory'; // Import the new component
 import CourseAccessType from './CourseAccessType'; // Import the new component
 import CourseThumbnail from './CourseThumbnail'; // Import the new component
 
-const BasicInformation = ({ initialData, setStepComplete, createOrUpdateCourse, resetStep, onDelete, ...rest }) => {
+const BasicInformation = ({ initialData, setStepComplete, createOrUpdateCourse, resetStep, onDelete, id , ...rest }) => {
     const { userInfo, userToken } = useSelector((state) => state?.auth);
     const role = userInfo?.role?.toLowerCase();
     const [loading, setLoading] = useState(false);
@@ -105,7 +105,7 @@ const BasicInformation = ({ initialData, setStepComplete, createOrUpdateCourse, 
                             onSubmit={handleSubmit}
                             enableReinitialize
                         >
-                            {({ isSubmitting, handleSubmit, setFieldValue, values }) => (
+                            {({ isSubmitting, handleSubmit, setFieldValue,setFieldTouched, validateForm, values }) => (
                                 <Form onSubmit={handleSubmit}>
                                     <Row>
                                         <Col md={12} xs={12} className="form-group">
@@ -248,7 +248,20 @@ const BasicInformation = ({ initialData, setStepComplete, createOrUpdateCourse, 
                                                         type="button"
                                                         className="submit-btn"
                                                         disabled={isSubmitting}
-                                                        onClick={() => setPublishCourseModel(true)}
+                                                        onClick={ async () => {
+                                                            const fields = ['title', 'subtitle', 'thumbnail', 'access_type', 'category', 'description'];
+
+                                                            // Mark all fields as touched so errors appear
+                                                            fields.forEach((field) => setFieldTouched(field, true, true));
+                                                    
+                                                            // Trigger validation
+                                                            const errors = await validateForm();
+                                                    
+                                                            // If no errors, open modal
+                                                            if (Object.keys(errors).length === 0) {
+                                                                setPublishCourseModel(true);
+                                                            }
+                                                        }}
                                                     >
                                                         Save & Next
                                                     </Button>
@@ -261,7 +274,7 @@ const BasicInformation = ({ initialData, setStepComplete, createOrUpdateCourse, 
                                             show={publishCourseModel}
                                             onClose={handlePublishCourseModal}
                                             onConfirm={handleSubmit}
-                                            title="Publish your course!"
+                                            title={id ? "Course Updated!" :"Course Created!"}
                                             // body="Are you sure you want to delete this course? Data associated with this course will be lost."
                                             loading={loadingCRUD}
                                             customFooterClass="custom-footer-class"
