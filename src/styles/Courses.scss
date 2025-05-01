@@ -247,7 +247,7 @@
         font-weight: 400;
         white-space: nowrap;
         border: none;
-        margin-top: auto !important;
+        // margin-top: auto !important;
     }
 
     .submit-btn {
@@ -1688,7 +1688,7 @@
 }
 
 .course-right-header .img-box img {
-max-width: 15px;
+    max-width: 15px;
 }
 
 
@@ -1702,11 +1702,10 @@ max-width: 15px;
     border-radius: 50%;
 }
 
-.course-right-header .img-box:hover{
-    border: 1px solid  #ccecf7;
+.course-right-header .img-box:hover {
+    border: 1px solid #ccecf7;
 }
 
 .quiz-wrapper select.field-control {
     margin-bottom: 5px !important;
 }
-
