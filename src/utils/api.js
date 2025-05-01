@@ -19,7 +19,9 @@ axios.interceptors.response.use(
                 title: 'Success!',
                 text: successMessage,
                 icon: 'success',
-                confirmButtonText: 'OK'
+                showConfirmButton: false,
+                timer: 2000, 
+                timerProgressBar: true 
             });
             // toast.success(successMessage);
         }
