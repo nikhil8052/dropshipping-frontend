@@ -93,7 +93,7 @@ const NewStudent = () => {
             .trim()
             .required('Please enter a phone number')
             .matches(/\S/, 'Phone number cannot be empty or spaces only')
-            .test('is-valid-phone', 'Phone number must be in the correct format country', (value) => {
+            .test('is-valid-phone', 'Please add country code', (value) => {
                 if (!value) return false;
                 const belgiumPattern = '32';
                 const netherlandsPattern = '31';
@@ -521,7 +521,7 @@ const NewStudent = () => {
                                             <ErrorMessage name="email" component="div" className="error" />
                                         </Col>
                                         <Col md={6} xs={12} className="form-group">
-                                            {/* <TextField
+                                            <TextField
                                                 name="phoneNumber"
                                                 label="Phone Number"
                                                 className="field-control"
@@ -530,16 +530,18 @@ const NewStudent = () => {
                                                 type="number"
                                                 value={values.phoneNumber}
                                                 onChange={(e) => {
-                                                    if (e.target.value.length <= 100) {
+                                                    if (e.target.value.length <= 12) {
                                                         setFieldValue('phoneNumber', e.target.value);
                                                     }
                                                 }}
-                                                helperText={`${values.phoneNumber?.length || 0}/100`}
-                                                inputProps={{ maxLength: 100 }}
+                                                helperText={`${values.phoneNumber?.length || 0}/12`}
+                                                inputProps={{ maxLength: 12 }}
                                                 fullWidth
                                                 countriesAllowed={values.country === 'Netherlands' ? ['nl'] : ['be']}
-                                            /> */}
-                                            <label htmlFor="phoneNumber">Phone Number</label>
+                                            />
+                                            <ErrorMessage name="phoneNumber" component="div" className="error" />
+
+                                            {/* <label htmlFor="phoneNumber">Phone Number</label>
                                             <Field name="phoneNumber">
                                             {({ field, form }) => (
                                                 <PhoneInputField
@@ -548,7 +550,7 @@ const NewStudent = () => {
                                                 onChange={(value) => form.setFieldValue('phoneNumber', value)}
                                                 />
                                             )}
-                                            </Field>
+                                            </Field> */}
                                         </Col>
                                         <Col md={6} xs={12} className="form-group">
                                             <FormControl fullWidth>

@@ -294,7 +294,7 @@ const CourseDetail = () => {
             {role !== 'STUDENT' && (
                 <div
                     className="publish-added-button-footer"
-                    style={{ display: 'flex', justifyContent: 'space-between' }}
+                    style={{ display: 'flex', justifyContent: 'end', gap :'10px'}}
                 >
                     {(userInfo?.role === 'ADMIN' || course?.createdBy?.id === userInfo?.id) && (
                         <>
@@ -305,7 +305,7 @@ const CourseDetail = () => {
                                     })
                                 }
                                 type="button"
-                                className="publish-btn"
+                                className="submit-btn"
                             >
                                 All Students
                             </Button>
@@ -334,7 +334,7 @@ const CourseDetail = () => {
                                     
                                 }
                                 type="button"
-                                className="edit-btn"
+                                className="cancel-btn"
                                 >
                                 Edit
                             </Button>
