@@ -1157,3 +1157,14 @@ input:focus-visible {
 .main-panel:has(.new-student-page-wrapper) * {
     font-family: 'Montserrat';
 }
+
+.modal-description iframe.ql-video {
+    width: calc(100% + 2rem);
+    max-width: none;
+    margin-left: -1rem;
+    margin-right: -1rem;
+    height: auto;
+    aspect-ratio: 16 / 9;
+    display: block;
+    border: none;
+}

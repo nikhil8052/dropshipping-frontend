@@ -663,11 +663,11 @@ const NewStudent = () => {
                                                                         alt=""
                                                                     />
                                                                     <span>
-                                                                        Upload student picture here
+                                                                        {/* Upload student picture here
                                                                         <br />
                                                                         Supported formats:{' '}
                                                                         <strong>.jpg, .jpeg, or .png</strong>
-                                                                        <br />
+                                                                        <br /> */}
                                                                         <Button
                                                                             onClick={(e) => {
                                                                                 e.preventDefault();

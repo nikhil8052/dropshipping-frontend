@@ -468,6 +468,7 @@ span.slect_span.selected {
     background-color: #FFFFFF;
     margin-top: 20px;
     padding: 7px 10px;
+    border-radius: 4px;
 
     .upload-course-form {
         margin: 0;
@@ -1382,6 +1383,13 @@ label.form-label {
 
 .detail-box li {
     font-size: 1rem !important;
+    >div{
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        transition: background 0.2s ease;
+        min-height: 28px;
+    }
 }
 
 .detail-box li > a {
@@ -1395,6 +1403,10 @@ label.form-label {
     white-space: nowrap;
     transition: background 0.2s ease;
     min-height: 28px;
+}
+
+label.custom_check span{
+    border-radius: 50%;
 }
 
 @media only screen and (max-width:991px) {

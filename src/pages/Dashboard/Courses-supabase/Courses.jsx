@@ -134,7 +134,7 @@ const Courses = () => {
 
     const getAllCourses = async () => {
         setLoading(true);
-         
+          
         try {
             let constructedUrl = `${API_URL.SUPABASE_GET_ALL_COURSES}?search=${encodeURIComponent(search)}`;
 
