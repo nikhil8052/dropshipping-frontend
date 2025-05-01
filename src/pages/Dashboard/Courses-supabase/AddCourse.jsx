@@ -35,15 +35,15 @@ const AddNewCourse = () => {
     const lectureUpdate = useSelector((state) => state?.root?.lectureUpdate);
     const [loading, setLoading] = useState(false);
     const [isPublished, setIsPublished] = useState(false);
-    let courseId = useSelector((state) => state?.root?.currentCourse);
+    const reduxCourseId = useSelector((state) => state?.root?.currentCourse);
+    const courseId = location.state?.courseId ?? reduxCourseId ?? '';
 
+    // if( location.state.courseId){
+    //     courseId=location.state.courseId
+    // }else {
+    //     courseId = useSelector((state) => state?.root?.currentCourse);
 
-    if( location.state.courseId){
-        courseId=location.state.courseId
-    }else {
-        courseId = useSelector((state) => state?.root?.currentCourse);
-
-    }
+    // }
     const [courseData, setCourseData] = useState({
         title: '',
         subtitle: '',
