@@ -170,7 +170,7 @@ export const adminSidebarItems = [
     },
     {
         id: 10,
-        name: 'Student',
+        name: 'Students',
         iconLight: student, 
         linkTo: '/admin/students-supabase',
         pathCombinations: ['/admin/students-supabase', '/admin/students-supabase/new', '/admin/students-supabase/edit', '/admin/students-supabase/details']

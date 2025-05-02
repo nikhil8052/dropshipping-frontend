@@ -38,6 +38,8 @@ const GenericCard = ({
 
     // State to manage modal visibility and loading state
     const [showDeleteModal, setShowDeleteModal] = useState(false);
+
+
     const [loadingCRUD, setLoadingCRUD] = useState(false);
 
     // Handler to open the delete confirmation modal
@@ -96,49 +98,49 @@ const GenericCard = ({
                                     }
                                 );
                             }}
-                            // onClick={(e) => {
-                            //     e.stopPropagation();
+                        // onClick={(e) => {
+                        //     e.stopPropagation();
 
-                            //     dispatch({
-                            //         type: types.ALL_RECORDS,
-                            //         data: { keyOfData: 'currentCourse', data: rest?._id }
-                            //     });
+                        //     dispatch({
+                        //         type: types.ALL_RECORDS,
+                        //         data: { keyOfData: 'currentCourse', data: rest?._id }
+                        //     });
 
-                            //     // navigate(
-                            //     //     role === 'student' && enroll && canAccessCourse
-                            //     //         ? `/${role}/courses-supabase/enrolled-course/${createSlug(title)}`
-                            //     //         : `/${role}/courses-supabase/details/${createSlug(title)}`
-                            //     // );
-                            //     navigate(
-                            //         role === 'student' && enroll && canAccessCourse
-                            //             ? `/${role}/courses-supabase/enrolled-course/${createSlug(title)}`
-                            //             : `/${role}/courses-supabase/details/${createSlug(title)}`,
-                            //         {
-                            //             state: {
-                            //                 courseId: rest?._id
-                            //             }
-                            //         }
-                            //     );
-                            // }}
+                        //     // navigate(
+                        //     //     role === 'student' && enroll && canAccessCourse
+                        //     //         ? `/${role}/courses-supabase/enrolled-course/${createSlug(title)}`
+                        //     //         : `/${role}/courses-supabase/details/${createSlug(title)}`
+                        //     // );
+                        //     navigate(
+                        //         role === 'student' && enroll && canAccessCourse
+                        //             ? `/${role}/courses-supabase/enrolled-course/${createSlug(title)}`
+                        //             : `/${role}/courses-supabase/details/${createSlug(title)}`,
+                        //         {
+                        //             state: {
+                        //                 courseId: rest?._id
+                        //             }
+                        //         }
+                        //     );
+                        // }}
                         >
                             View
                         </Dropdown.Item>
 
                         <Dropdown.Item
-                        onClick={(e) => {
-                            e.stopPropagation();
+                            onClick={(e) => {
+                                e.stopPropagation();
 
-                            dispatch({
-                                type: types.ALL_RECORDS,
-                                data: { keyOfData: 'currentCourse', data: rest?._id }
-                            });
+                                dispatch({
+                                    type: types.ALL_RECORDS,
+                                    data: { keyOfData: 'currentCourse', data: rest?._id }
+                                });
 
-                            navigate(
-                                role === 'student' && enroll && canAccessCourse
-                                    ? `/${role}/courses-supabase/enrolled-course/${createSlug(title)}`
-                                    : `/${role}/courses-supabase/edit`
-                            );
-                        }}>Edit</Dropdown.Item>
+                                navigate(
+                                    role === 'student' && enroll && canAccessCourse
+                                        ? `/${role}/courses-supabase/enrolled-course/${createSlug(title)}`
+                                        : `/${role}/courses-supabase/edit`
+                                );
+                            }}>Edit</Dropdown.Item>
                         <Dropdown.Item onClick={handleDeleteClick}> Delete </Dropdown.Item>
                     </Dropdown.Menu>
                 </Dropdown>
@@ -158,26 +160,26 @@ const GenericCard = ({
                             }
                         );
                     }}
-                    // onClick={(e) => {
-                    //     const isToggleClick = e.target.className === 'form-check-input';
-                    //     if (isToggleClick) return;
+                // onClick={(e) => {
+                //     const isToggleClick = e.target.className === 'form-check-input';
+                //     if (isToggleClick) return;
 
-                    //     // Dispatch to Redux first
-                    //     dispatch({
-                    //         type: types.ALL_RECORDS,
-                    //         data: { keyOfData: 'currentCourse', data: rest?._id }
-                    //     });
+                //     // Dispatch to Redux first
+                //     dispatch({
+                //         type: types.ALL_RECORDS,
+                //         data: { keyOfData: 'currentCourse', data: rest?._id }
+                //     });
 
-                    //     // Then navigate
-                    //     navigate(
-                    //         role === 'student' && enroll && canAccessCourse
-                    //             ? `/${role}/courses-supabase/enrolled-course/${createSlug(title)}`
-                    //             : `/${role}/courses-supabase/details/${createSlug(title)}`
-                    //     );
-                    // }}
+                //     // Then navigate
+                //     navigate(
+                //         role === 'student' && enroll && canAccessCourse
+                //             ? `/${role}/courses-supabase/enrolled-course/${createSlug(title)}`
+                //             : `/${role}/courses-supabase/details/${createSlug(title)}`
+                //     );
+                // }}
                 >
                     <div className="image-container">
-                        <Card.Img loading="lazy" variant="top" src={img}  />
+                        <Card.Img loading="lazy" variant="top" src={img} />
                         {/* {role === 'admin' && (
                         <button type="button" className="delete-icon-btn" onClick={handleDeleteClick}>
                             <img src={deleteIcon} alt="Delete" className="delete-icon" />
@@ -194,8 +196,11 @@ const GenericCard = ({
                         <Card.Text className="card-coach">
                             <TextExpand
                                 className="course-des"
-                                // value={decode(description)?.replace(/<\/?[^>]+(>|$)/g, '') || ''}
-                                value={description || ''}
+                                value={
+                                    description?.length > 70
+                                        ? `${description.slice(0, 70)}...`
+                                        : description
+                                }
                                 width="100%"
                             />
                         </Card.Text>
@@ -232,8 +237,8 @@ const GenericCard = ({
                     show={showDeleteModal}
                     onClose={handleCloseDeleteModal}
                     onConfirm={handleDeleteSubmit}
-                    title="Delete Course"
-                    body="Are you sure you want to delete this course? Data associated with this course will be lost."
+                    title={`Are you sure? You want to delete ${title}`}
+                    body={`Are you sure you want to delete ${title}? Data associated with this course will be lost.`}
                     loading={loadingCRUD}
                     customFooterClass="custom-footer-class" // Optional: adjust based on your styling
                     nonActiveBtn="cancel-button" // Optional: adjust based on your styling
