@@ -1,7 +1,7 @@
 import { useRef, useState, useEffect } from 'react';
 import { OverlayTrigger, Tooltip } from 'react-bootstrap';
 
-const TextExpand = ({ value = '--', width = '150px', className = '' }) => {
+const TextExpand = ({ value = '--', width = '', className = '' }) => {
     const textRef = useRef(null);
     const [isOverflowed, setIsOverflowed] = useState(false);
 
@@ -18,14 +18,13 @@ const TextExpand = ({ value = '--', width = '150px', className = '' }) => {
                 <OverlayTrigger
                     placement="top"
                     overlay={<Tooltip id="tooltip-top">{value}</Tooltip>}
-                    trigger={['hover', 'focus']} // Show on hover or focus
+                    trigger={['hover', 'focus']} 
                 >
                     <div
                         ref={textRef}
                         style={{
                             overflow: 'hidden',
                             textOverflow: 'ellipsis',
-
                             cursor: 'pointer',
                             display: 'inline-block',
                             maxWidth: width

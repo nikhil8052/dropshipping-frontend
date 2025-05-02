@@ -18,6 +18,8 @@ import TextItemExpand from '@components/TextExpand/TextItemExpand';
 import '../../../styles/Students.scss';
 import '../../../styles/Common.scss';
 import RoadMapList from './Roadmap/RoadmapList';
+import HeaderWithIcon from './HeaderWithIcon';
+import NameIcon from '../../../assets/images/name.png';
 
 const Students = () => {
     const [showDeleteModal, setShowDeleteModal] = useState({
@@ -170,7 +172,12 @@ const Students = () => {
         try {
             setLoadingCRUD(true);
             // Delete API call here
-            await axiosWrapper('DELETE', API_URL.SUPABASE_DELETE_STUDENT.replace(':id', showDeleteModal?.studentId), {}, token);
+            await axiosWrapper(
+                'DELETE',
+                API_URL.SUPABASE_DELETE_STUDENT.replace(':id', showDeleteModal?.studentId),
+                {},
+                token
+            );
             fetchData();
             setSelectedRowId(null);
             setShowDeleteModal({
@@ -305,7 +312,11 @@ const Students = () => {
 
     const columns = [
         {
-            headerName: 'Name',
+            headerComponentFramework: HeaderWithIcon,
+            headerComponentParams: {
+                icon: NameIcon
+            },
+            headerName: `Name`,
             field: 'name',
             filter: 'agSetColumnFilter',
             sortable: true,
