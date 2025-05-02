@@ -1194,3 +1194,7 @@ input:focus-visible {
     aspect-ratio: 16 / 9;
 }
 
+
+.add-link-form input:focus-visible {
+    border: inherit !important;
+}

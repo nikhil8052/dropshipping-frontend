@@ -1074,7 +1074,7 @@ const NewStudent = () => {
                                     </>
                                 ) */}
 
-                                {studentId && (
+                                {/* {studentId && (
                                     <>
                                         <Row>
                                             <Col>
@@ -1094,7 +1094,7 @@ const NewStudent = () => {
 
                                         <CarouselWrapper items={studentProducts} type="product" />
                                     </>
-                                )}
+                                )} */}
                                 <Row>
                                     <Col>
                                         <div className="mt-3 d-flex justify-content-end gap-3">

@@ -68,8 +68,9 @@ const Table = ({
     };
 
     return (
-        <div className="ag-theme-alpine custom-table" style={{ height: '100%', width: '100%' }}>
-            <Row className="mb-3">
+        <div className="ag-theme-alpine custom-table student-table" style={{ height: '100%', width: '100%' }}>
+            <div className="top-bar">
+            <Row className=" student-table-row">
                 <Col lg={inputLgSize || 6} md={12}>
                     <InputGroup>
                         <InputGroup.Text>
@@ -89,6 +90,7 @@ const Table = ({
                     {children}
                 </Col>
             </Row>
+            </div>
             <div className="ag-theme-alpine" style={{ width: width ? width : '100%' }}>
                 {loading ? (
                     <Loading />
