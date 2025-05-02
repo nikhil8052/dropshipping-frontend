@@ -121,7 +121,8 @@ const Sidebar = () => {
         if (sideBarStudentEventModal) {
             // Fetch the upcoming event for the student
             // setInterval(() => {
-            getUpcomingEvent();
+                // uncomment this upcomming event for events :: 
+            // getUpcomingEvent();
             // }, [5000]);
         }
     }, []);
@@ -201,7 +202,7 @@ const Sidebar = () => {
                                 {/* Last child should be an image and role */}
                             </Nav>
 
-                            {sideBarStudentEventModal && eventData && (
+                            {/* {sideBarStudentEventModal && eventData && (
                                 <div className="side-bar-event">
                                     <Card className="custom-event-card">
                                         <Card.Header className="d-flex flex-column align-items-start">
@@ -234,7 +235,7 @@ const Sidebar = () => {
                                         </Card.Body>
                                     </Card>
                                 </div>
-                            )}
+                            )} */}
                         </div>
 
                         <div className={`side-bar-btm ${sideBarStudentEventModal ? 'remove-auto' : ''}`}>

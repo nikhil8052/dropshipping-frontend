@@ -14,7 +14,7 @@ const PublicLayout = () => {
         if (isLoggedIn && !isRedirectUrl) {
             if (role === 'ADMIN') navigate('/admin');
             else if (role === 'COACH') navigate('/coach');
-            else if (role === 'STUDENT') navigate('/student/courses');
+            else if (role === 'STUDENT') navigate('/student/courses-supabase');
         } else if (isLoggedIn && isRedirectUrl) {
             // also set the state if any in the url
             navigate(location.pathname + location.search);
