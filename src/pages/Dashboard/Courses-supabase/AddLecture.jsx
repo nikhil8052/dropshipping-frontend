@@ -1753,7 +1753,7 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
                                                 {rightViewLecture ? (
                                                     <div className="new-page-view" key={rightViewLecture.id}>
                                                         <div className="course-right-header">
-                                                            <div className='d-flex justify-content-between mb-3'>
+                                                            <div className='course-right-name d-flex justify-content-between mb-3' >
                                                                 <h2 className="subhead">{rightViewLecture.name}</h2>
                                                                 <div
                                                                     className="img-box cursor-pointer"
@@ -1762,8 +1762,6 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
                                                                     <img src={PencilEdit} alt="Edit" />
                                                                 </div>
                                                             </div>
-
-
                                                             <div
                                                                 className="content"
                                                                 dangerouslySetInnerHTML={{
