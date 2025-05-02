@@ -20,6 +20,7 @@ import '../../../styles/Common.scss';
 import RoadMapList from './Roadmap/RoadmapList';
 import HeaderWithIcon from './HeaderWithIcon';
 import NameIcon from '../../../assets/images/name.png';
+import Select from 'react-select';
 
 const Students = () => {
     const [showDeleteModal, setShowDeleteModal] = useState({
@@ -47,13 +48,6 @@ const Students = () => {
     const [selectedOption, setSelectedOption] = useState(studentsTrajectory[0].label);
     const [selectedCoach, setSelectedCoach] = useState('Assigned Coach');
 
-    const allColumns = [
-        'name', 'email', 'coachingTrajectory', 'isActive' // default visible fields
-      ]; 
-
-    const [visibleFields, setVisibleFields] = useState([
-      'name', 'email', 'coachingTrajectory', 'isActive' 
-    ]);
 
     useEffect(() => {
         // Fetch data from API here
@@ -332,7 +326,8 @@ const Students = () => {
             wrapText: true,
             autoHeight: true,
             cellRenderer: TextItemExpand,
-            resizable: false
+            resizable: false,
+
         },
         {
             headerName: 'Email',
@@ -457,6 +452,20 @@ const Students = () => {
         }
     };
 
+
+
+    const [visibleFields, setVisibleFields] = useState(['name', 'email', 'coachingTrajectory', 'isActive']);
+
+    const filteredColumns = columns.filter((col) => visibleFields.includes(col.field));
+
+    const columnOptions = columns.map((col) => ({
+        value: col.field,
+        label: col.headerName
+    }));
+
+
+
+
     return (
         <div className="students-page">
             <Helmet>
@@ -490,13 +499,14 @@ const Students = () => {
                 />
             )}
             <Table
-                columns={columns}
+                columns={filteredColumns}
                 tableData={studentsData}
                 onRowClicked={handleRowClick}
                 loading={loading}
                 children={
                     <div className="button-wrapper">
                         {role === 'ADMIN' && (
+
                             <DropdownButton
                                 title={
                                     <div className="d-flex justify-content-between align-items-center gap-2">
@@ -554,6 +564,17 @@ const Students = () => {
                             <img className="mb-1" src={add} alt="add button" />
                             <span className="ms-1">Add New Student</span>
                         </Button>
+                        <Select
+                            isMulti
+                            options={columnOptions}
+                            value={columnOptions.filter((opt) => visibleFields.includes(opt.value))}
+                            onChange={(selectedOptions) => {
+                                setVisibleFields(selectedOptions.map((opt) => opt.value));
+                            }}
+                            placeholder="Select columns..."
+                            className="basic-multi-select"
+                            classNamePrefix="select"
+                        />
                     </div>
                 }
             />

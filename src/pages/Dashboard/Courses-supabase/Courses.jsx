@@ -250,7 +250,6 @@ const Courses = () => {
     const handleDelete = async (courseId) => {
         setLoading(true);
 
-
         try {
             await axiosWrapper('DELETE', `${API_URL.SUPABASE_DELETE_COURSE.replace(':id', courseId)}`, {}, userToken);
             setLoading(false);

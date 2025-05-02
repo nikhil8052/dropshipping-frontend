@@ -15,6 +15,7 @@ import Edit2 from '../../assets/icons/Dropdown.svg';
 import 'react-tooltip/dist/react-tooltip.css';
 import { Tooltip } from 'react-tooltip';
 import * as types from '../../redux/actions/actionTypes';
+import Swal from 'sweetalert2';
 
 const GenericCard = ({
     img,
@@ -44,8 +45,24 @@ const GenericCard = ({
 
     // Handler to open the delete confirmation modal
     const handleDeleteClick = (e) => {
-        e.stopPropagation();
-        setShowDeleteModal(true);
+        // e.stopPropagation();
+        Swal.fire({
+            html: `<div style="font-size: 18px;">Are you sure you want to delete <strong>${title}</strong>?</div>`,
+            text: 'Data associated with this course will be lost.',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#3085d6',
+            confirmButtonText: 'Yes, delete it!',
+            cancelButtonText: 'Cancel'
+        }).then( async (result) => {
+            if (result.isConfirmed) {
+                await onDelete(rest?._id);
+                Swal.fire('Deleted!', 'The item has been deleted.', 'success');
+            }
+        });
+
+        
     };
 
     const createSlug = (title) => {
@@ -237,14 +254,14 @@ const GenericCard = ({
                     show={showDeleteModal}
                     onClose={handleCloseDeleteModal}
                     onConfirm={handleDeleteSubmit}
-                    title={`Do want to delete this course?`}
-                    body={`Are you sure you want to delete ${title}? Data associated with this course will be lost.`}
+                    title={`Are you sure you want to delete?`}
+                    body={`Data associated with this course will be lost.`}
                     loading={loadingCRUD}
-                    customFooterClass="custom-footer-class" // Optional: adjust based on your styling
-                    nonActiveBtn="cancel-button" // Optional: adjust based on your styling
-                    activeBtn="delete-button" // Optional: adjust based on your styling
-                    cancelButtonTitle="No" // Optional: customize button text
-                    activeBtnTitle="Delete" // Optional: customize button text
+                    customFooterClass="custom-footer-class" 
+                    nonActiveBtn="cancel-button" 
+                    activeBtn="delete-button" 
+                    cancelButtonTitle="No" 
+                    activeBtnTitle="Delete" 
                 />
             )}
         </>

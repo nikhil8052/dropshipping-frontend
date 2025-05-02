@@ -409,7 +409,8 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
                     option2: quiz.option2,
                     option3: quiz.option3,
                     option4: quiz.option4,
-                    correct_answer: quiz.correct_answer
+                    correct_answer: quiz.correct_answer,
+                    showPopUp: false
                 };
                 await axiosWrapper('POST', API_URL.SUPABASE_ADD_QUIZ, quizPayload, token);
             }
@@ -417,15 +418,16 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
             // Duplicate resources
             const resources = originalLecture.resources || [];
             for (const res of resources) {
-                const resourcePayload = {
+                const lectureData = {
                     model_id: newLectureId,
                     model_type: 'lecture',
                     name: res.name || res.title,
                     type: res.type || 'file',
-                    file_link: res.file_link || res.image
+                    file_link: res.file_link || res.image,
+                    showPopUp: false
                 };
                 const resourceUrl = API_URL.SUPABASE_UPDATE_LECTURE_RESOURCE.replace(':id', newLectureId);
-                await axiosWrapper('POST', resourceUrl, resourcePayload, token);
+                await axiosWrapper('POST', resourceUrl, { lectureData }, token);
             }
 
             //   if(newLecture.folder_id !== '' ){
@@ -953,8 +955,8 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
         const txt = document.createElement("textarea");
         txt.innerHTML = html;
         return txt.value;
-      };
-    
+    };
+
 
     const handleDeleteLecture = async () => {
         try {
@@ -1751,15 +1753,23 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
                                                 {rightViewLecture ? (
                                                     <div className="new-page-view" key={rightViewLecture.id}>
                                                         <div className="course-right-header">
-                                                            <h2 className="subhead">{rightViewLecture.name}</h2>
-                                                            <div
-                                                                className="img-box cursor-pointer"
-                                                                onClick={() => handleEditClick(rightViewLecture.id)}
-                                                            >
-                                                                <img src={PencilEdit} alt="Edit" />
+                                                            <div className='d-flex justify-content-between mb-3'>
+                                                                <h2 className="subhead">{rightViewLecture.name}</h2>
+                                                                <div
+                                                                    className="img-box cursor-pointer"
+                                                                    onClick={() => handleEditClick(rightViewLecture.id)}
+                                                                >
+                                                                    <img src={PencilEdit} alt="Edit" />
+                                                                </div>
                                                             </div>
-                                                            
-                                                            
+
+
+                                                            <div
+                                                                className="content"
+                                                                dangerouslySetInnerHTML={{
+                                                                    __html: unescapeHtml(rightViewLecture.description) || ''
+                                                                }}
+                                                            />
                                                         </div>
                                                     </div>
                                                 ) : (
