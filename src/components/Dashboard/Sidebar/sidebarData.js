@@ -83,49 +83,49 @@ export const adminSidebarItems = [
         iconLight: dashboardLight,
         linkTo: '/admin'
     },
-    {
-        id: 2,
-        name: 'Coaches',
-        iconLight: coaches, // Replace with your icon
-        linkTo: '/admin/coaches',
-        pathCombinations: ['/admin/coaches', '/admin/coaches/new', '/admin/coaches/edit']
-    },
-    {
-        id: 3,
-        name: 'Students',
-        iconLight: student, // Replace with your icon
-        linkTo: '/admin/students',
-        pathCombinations: ['/admin/visualize-csv']
-    },
-    {
-        id: 4,
-        name: 'Courses',
-        iconLight: courses,
-        linkTo: '/admin/courses',
-        pathCombinations: [
-            '/admin/courses',
-            '/admin/courses/new',
-            '/admin/courses/edit',
-            '/admin/courses/details',
-            '/admin/categories',
-            '/admin/categories/new',
-            '/admin/categories/edit'
-        ],
-        child: [
-            {
-                id: '4-1',
-                name: 'All Courses',
-                iconLight: courses,
-                linkTo: '/admin/courses'
-            },
-            {
-                id: '4-2',
-                name: 'Category',
-                iconLight: categories, // Replace with,
-                linkTo: '/admin/category'
-            }
-        ]
-    },
+    // {
+    //     id: 2,
+    //     name: 'Coaches',
+    //     iconLight: coaches, // Replace with your icon
+    //     linkTo: '/admin/coaches',
+    //     pathCombinations: ['/admin/coaches', '/admin/coaches/new', '/admin/coaches/edit']
+    // },
+    // {
+    //     id: 3,
+    //     name: 'Students',
+    //     iconLight: student, // Replace with your icon
+    //     linkTo: '/admin/students',
+    //     pathCombinations: ['/admin/visualize-csv']
+    // },
+    // {
+    //     id: 4,
+    //     name: 'Courses',
+    //     iconLight: courses,
+    //     linkTo: '/admin/courses',
+    //     pathCombinations: [
+    //         '/admin/courses',
+    //         '/admin/courses/new',
+    //         '/admin/courses/edit',
+    //         '/admin/courses/details',
+    //         '/admin/categories',
+    //         '/admin/categories/new',
+    //         '/admin/categories/edit'
+    //     ],
+    //     child: [
+    //         {
+    //             id: '4-1',
+    //             name: 'All Courses',
+    //             iconLight: courses,
+    //             linkTo: '/admin/courses'
+    //         },
+    //         {
+    //             id: '4-2',
+    //             name: 'Category',
+    //             iconLight: categories, // Replace with,
+    //             linkTo: '/admin/category'
+    //         }
+    //     ]
+    // },
 
     // {
     //     id: 4,
@@ -142,35 +142,35 @@ export const adminSidebarItems = [
     //     pathCombinations: ['/admin/categories', '/admin/categories/new', '/admin/categories/edit']
 
     // },
-    {
-        id: 5,
-        name: 'Events',
-        iconLight: events, // Replace with
-        linkTo: '/admin/events',
-        pathCombinations: ['/admin/events', '/admin/events/new', '/admin/events/edit', '/admin/events/details']
-    },
-    {
-        id: 6,
-        name: 'Payment Management',
-        iconLight: payment, // Replace with
-        linkTo: '/admin/payment'
-    },
-    {
-        id: 7,
-        name: 'Settings',
-        iconLight: settings, // Replace with
-        linkTo: '/admin/settings'
-    },
+    // {
+    //     id: 5,
+    //     name: 'Events',
+    //     iconLight: events, // Replace with
+    //     linkTo: '/admin/events',
+    //     pathCombinations: ['/admin/events', '/admin/events/new', '/admin/events/edit', '/admin/events/details']
+    // },
+    // {
+    //     id: 6,
+    //     name: 'Payment Management',
+    //     iconLight: payment, // Replace with
+    //     linkTo: '/admin/payment'
+    // },
+    // {
+    //     id: 7,
+    //     name: 'Settings',
+    //     iconLight: settings, // Replace with
+    //     linkTo: '/admin/settings'
+    // },
     {
         id: 9,
-        name: 'Courses Supabase',
+        name: 'Courses',
         iconLight: courses,
         linkTo: '/admin/courses-supabase',
         pathCombinations: ['/admin/courses-supabase', '/admin/courses-supabase/new', '/admin/courses-supabase/edit', '/admin/courses-supabase/details']
     },
     {
         id: 10,
-        name: 'Student Supabase',
+        name: 'Student',
         iconLight: student, 
         linkTo: '/admin/students-supabase',
         pathCombinations: ['/admin/students-supabase', '/admin/students-supabase/new', '/admin/students-supabase/edit', '/admin/students-supabase/details']

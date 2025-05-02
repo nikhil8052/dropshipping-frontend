@@ -30,7 +30,8 @@ const Courses = () => {
         })
     );
 
-    const handleDragEnd = (event) => {
+    const handleDragEnd = async (event) => {
+        console.log(event)
         const { active, over } = event;
         if (active.id !== over?.id) {
             const oldIndex = items.indexOf(active.id);
@@ -39,12 +40,19 @@ const Courses = () => {
             setItems(newItems);
             const newDisplayedCourses = newItems
                 .map((id) => displayedCourses.find((course) => course._id === id))
-                .filter(Boolean); // Filter out any undefined
+                .filter(Boolean);
 
             setDisplayedCourses(newDisplayedCourses);
+            console.log( newDisplayedCourses, " NEw course ")
+            const courses = newDisplayedCourses.map((course, index) => ({
+                course_id: course._id,      
+                sequence_id: index + 1     
+            }));
+            const response = await axiosWrapper('POST', API_URL.SUPABASE_REORDER_COURSE_VIEW, { courses }, userToken);
 
-            console.log(newDisplayedCourses, ' All cpirses ');
-            console.warn(newDisplayedCourses);
+            console.log(response)
+
+
         }
     };
 
@@ -122,7 +130,7 @@ const Courses = () => {
 
     const handleCoursesFilter = (eventKey, course) => {
         setCoursesFilter(course);
-        setDisplayedCourses([]); // Clear displayed courses
+        setDisplayedCourses([]);
         setHasMore(true);
         setHasLoaded(false);
     };
@@ -134,7 +142,7 @@ const Courses = () => {
 
     const getAllCourses = async () => {
         setLoading(true);
-          
+
         try {
             let constructedUrl = `${API_URL.SUPABASE_GET_ALL_COURSES}?search=${encodeURIComponent(search)}`;
 
@@ -241,8 +249,10 @@ const Courses = () => {
     };
     const handleDelete = async (courseId) => {
         setLoading(true);
+
+
         try {
-            await axiosWrapper('DELETE', `${API_URL.DELETE_COURSE.replace(':id', courseId)}`, {}, userToken);
+            await axiosWrapper('DELETE', `${API_URL.SUPABASE_DELETE_COURSE.replace(':id', courseId)}`, {}, userToken);
             setLoading(false);
             getAllCourses();
         } catch (error) {
@@ -308,12 +318,12 @@ const Courses = () => {
                 )}
             </div>
             {loading && !hasLoaded ? (
-    <div className="custom-card-course">
-        {Array.from({ length: 12 }).map((_, index) => (
-            <CourseSkeletonCard key={index} />
-        ))}
-    </div>
-) : (
+                <div className="custom-card-course">
+                    {Array.from({ length: 12 }).map((_, index) => (
+                        <CourseSkeletonCard key={index} />
+                    ))}
+                </div>
+            ) : (
                 // Your DndContext + SortableContext + InfiniteScroll goes here
                 <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
                     <SortableContext items={displayedCourses.map((c) => c._id)} strategy={rectSortingStrategy}>
