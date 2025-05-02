@@ -423,6 +423,13 @@ export const studentRoutes = [
         access: 'STUDENT'
     },
     {
+        path: 'courses-supabase',
+        exact: true,
+        name: 'Courses Supabase',
+        Component: CourseSupabase,
+        access: 'STUDENT'
+    },
+    {
         path: 'request-meeting',
         exact: true,
         name: 'Dashboard',
@@ -441,6 +448,13 @@ export const studentRoutes = [
         exact: true,
         name: 'Courses',
         Component: EnrolledCourseDetail,
+        access: 'STUDENT'
+    },
+    {
+        path: 'courses-supabase/details/:name?/:lec_name?',
+        exact: true,
+        name: 'Courses',
+        Component: CourseDetailSupabase,
         access: 'STUDENT'
     },
     {

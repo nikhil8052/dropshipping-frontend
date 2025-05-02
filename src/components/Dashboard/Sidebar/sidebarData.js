@@ -235,12 +235,19 @@ export const studentSidebarItems = [
     //     linkTo: '/student',
     //     pathCombinations: ['/student/request-meeting']
     // },
+    // {
+    //     id: 2,
+    //     name: 'Courses',
+    //     iconLight: courses, // Replace with your icon
+    //     linkTo: '/student/courses',
+    //     pathCombinations: ['/student/courses', '/student/courses/details']
+    // },
     {
-        id: 2,
+        id: 3,
         name: 'Courses',
         iconLight: courses, // Replace with your icon
-        linkTo: '/student/courses',
-        pathCombinations: ['/student/courses', '/student/courses/details']
+        linkTo: '/student/courses-supabase',
+        pathCombinations: ['/student/courses-supabase', '/student/courses-supabase/details']
     },
     // {
     //     id: 3,
@@ -254,12 +261,12 @@ export const studentSidebarItems = [
     //     iconLight: csv, // Replace with your icon (optional)
     //     linkTo: '/student/visualize-csv'
     // },
-    {
-        id: 5,
-        name: 'Settings',
-        iconLight: settings, // Replace with your icon
-        linkTo: '/student/settings'
-    },
+    // {
+    //     id: 5,
+    //     name: 'Settings',
+    //     iconLight: settings, // Replace with your icon
+    //     linkTo: '/student/settings'
+    // },
     {
         id: 6,
         name: 'Logout',

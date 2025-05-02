@@ -123,23 +123,26 @@ const GenericCard = ({
                         >
                             View
                         </Dropdown.Item>
+                        {role !== 'student' && (
+                            <Dropdown.Item
+                            onClick={(e) => {
+                                e.stopPropagation();
 
-                        <Dropdown.Item
-                        onClick={(e) => {
-                            e.stopPropagation();
+                                dispatch({
+                                    type: types.ALL_RECORDS,
+                                    data: { keyOfData: 'currentCourse', data: rest?._id }
+                                });
 
-                            dispatch({
-                                type: types.ALL_RECORDS,
-                                data: { keyOfData: 'currentCourse', data: rest?._id }
-                            });
-
-                            navigate(
-                                role === 'student' && enroll && canAccessCourse
-                                    ? `/${role}/courses-supabase/enrolled-course/${createSlug(title)}`
-                                    : `/${role}/courses-supabase/edit`
-                            );
-                        }}>Edit</Dropdown.Item>
+                                navigate(
+                                    role === 'student' && enroll && canAccessCourse
+                                        ? `/${role}/courses-supabase/enrolled-course/${createSlug(title)}`
+                                        : `/${role}/courses-supabase/edit`
+                                );
+                            }}>Edit</Dropdown.Item>
+                        )}
+                        {role !== 'student' && (
                         <Dropdown.Item onClick={handleDeleteClick}> Delete </Dropdown.Item>
+                        )}
                     </Dropdown.Menu>
                 </Dropdown>
                 <div
