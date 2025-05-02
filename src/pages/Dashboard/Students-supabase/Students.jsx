@@ -429,6 +429,7 @@ const Students = () => {
         },
         {
             headerName: 'Actions',
+            field: 'Actions',
             headerComponent: 'headerWithIcon',
             headerComponentParams: {
               icon: ActionIcon,
@@ -474,7 +475,7 @@ const Students = () => {
 
 
 
-    const [visibleFields, setVisibleFields] = useState(['name', 'email', 'coachingTrajectory', 'isActive']);
+    const [visibleFields, setVisibleFields] = useState(['name', 'email', 'coachingTrajectory', 'isActive','Actions']);
 
     const filteredColumns = columns.filter((col) => visibleFields.includes(col.field));
 
