@@ -1220,6 +1220,14 @@ input:focus-visible {
     margin-top: 10rem;
 }
 
+.ag-header-cell-comp-wrapper img {
+    filter: brightness(0) saturate(100%) invert(51%) sepia(3%) saturate(1722%) hue-rotate(185deg) brightness(94%) contrast(90%);
+}
+
+
+.ag-theme-alpine .ag-header-row span{
+color:#767c8b;
+}
 @media only screen and (max-width:1499px) {
     .detail-page-header {
         max-width: 950px;
