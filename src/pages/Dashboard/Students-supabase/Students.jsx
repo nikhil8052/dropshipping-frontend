@@ -44,9 +44,16 @@ const Students = () => {
     const token = useSelector((state) => state?.auth?.userToken);
     const role = userInfo?.role?.toLowerCase();
     const [studentsData, setStudentsData] = useState(null);
-
     const [selectedOption, setSelectedOption] = useState(studentsTrajectory[0].label);
     const [selectedCoach, setSelectedCoach] = useState('Assigned Coach');
+
+    const allColumns = [
+        'name', 'email', 'coachingTrajectory', 'isActive' // default visible fields
+      ]; 
+
+    const [visibleFields, setVisibleFields] = useState([
+      'name', 'email', 'coachingTrajectory', 'isActive' 
+    ]);
 
     useEffect(() => {
         // Fetch data from API here
