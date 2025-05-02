@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Container, Nav, Card, Button } from 'react-bootstrap';
 import './sidebar.scss';
 import { useNavigate, useLocation } from 'react-router-dom';
@@ -18,9 +18,6 @@ import { changeLink } from '@redux/sidebar/sidebarSlice';
 import dotBlue from '@icons/dot-blue-2.svg';
 import faRoad from '@icons/roadmap.svg';
 import logoutIcon from '@icons/logout-light.svg';
-// import { Link } from 'react-router-dom';
-
-// import all static icons
 import { adminSidebarItems, coachSidebarItems, studentSidebarItems } from './sidebarData';
 import { getFormattedTimes, trimLongText } from '../../../utils/common';
 
@@ -32,27 +29,28 @@ const Sidebar = () => {
     const { userInfo } = useSelector((state) => state?.auth);
     const [eventData, setEventData] = useState({});
     const [updatedItems, setUpdatedItems] = useState([]);
-
-    // Later we change this to actual role
-    const role = userInfo?.role;
-
-    const [modalShow, setModalShow] = useState(false);
     const { activeSidebarItem } = useSelector((state) => state.activeSidebarItem);
     const location = useLocation();
-    useEffect(() => {
-        const items =
-            role === 'ADMIN' ? adminSidebarItems : role === 'COACH' ? coachSidebarItems : [...studentSidebarItems]; // clone to avoid mutating original array
+    const navigate = useNavigate();
+    const [modalShow, setModalShow] = useState(false);
 
-        // For student role, if a roadMap exists then insert a "Roadmap" item before Settings.
-        if (role === 'STUDENT' && userInfo?.roadMap && userInfo?.roadmapAccess == true) {
+    const role = userInfo?.role;
+    const sideBarStudentEventModal = role === 'STUDENT';
+
+    const updateSidebarItems = useCallback(() => {
+        const items = 
+            role === 'ADMIN' ? [...adminSidebarItems] : 
+            role === 'COACH' ? [...coachSidebarItems] : 
+            [...studentSidebarItems];
+
+        if (role === 'STUDENT' && userInfo?.roadMap && userInfo?.roadmapAccess === true) {
             const roadmapItem = {
-                id: 'roadmap', // unique id for the new item
+                id: 'roadmap',
                 name: 'Roadmap',
-                iconLight: faRoad, // using a FontAwesome icon
+                iconLight: faRoad,
                 linkTo: '/student/roadmap'
             };
 
-            // Find index of the "Settings" item.
             const settingsIndex = items.findIndex((item) => item.name === 'Settings');
             if (settingsIndex > -1) {
                 items.splice(settingsIndex, 0, roadmapItem);
@@ -61,17 +59,34 @@ const Sidebar = () => {
             }
         }
         setUpdatedItems(items);
-    }, [role, activeSidebarItem]);
+    }, [role, userInfo?.roadMap, userInfo?.roadmapAccess]);
 
-    const sideBarStudentEventModal = role === 'STUDENT';
+    useEffect(() => {
+        updateSidebarItems();
+    }, [updateSidebarItems]);
 
-    const navigate = useNavigate();
+    const getUpcomingEvent = useCallback(async () => {
+        if (!sideBarStudentEventModal) return;
+        
+        try {
+            const response = await axiosWrapper('GET', API_URL.GET_UPCOMING_EVENTS, {}, token);
+            setEventData(response.data[0] || {});
+        } catch (error) {
+            console.error('Error fetching upcoming events:', error);
+        }
+    }, [sideBarStudentEventModal, token]);
 
-    const selectActiveItem = () => {
+    useEffect(() => {
+        getUpcomingEvent();
+    }, [getUpcomingEvent]);
+
+    const selectActiveItem = useCallback(() => {
+        if (!updatedItems.length) return;
+
         const findActiveItem = (items) => {
             for (const item of items) {
-                // Check if current path starts with item's linkTo (to handle nested routes)
-                if (window.location.pathname.startsWith(item.linkTo)) {
+                if (location.pathname === item.linkTo || 
+                    (item.linkTo !== '/' && location.pathname.startsWith(`${item.linkTo}/`))) {
                     return item;
                 }
                 if (item.child) {
@@ -84,8 +99,7 @@ const Sidebar = () => {
 
         const activeItem = findActiveItem(updatedItems);
 
-        // If we're on a course lecture page but Roadmap is active, force switch to Courses
-        if (window.location.pathname.includes('/courses/') && activeSidebarItem === 'roadmap') {
+        if (location.pathname.includes('/courses/') && activeSidebarItem === 'roadmap') {
             const coursesItem = updatedItems.find((item) => item.name === 'Courses');
             if (coursesItem) {
                 dispatch(changeLink(coursesItem.id));
@@ -96,48 +110,31 @@ const Sidebar = () => {
         if (activeItem && activeItem.id !== activeSidebarItem) {
             dispatch(changeLink(activeItem.id));
         }
-    };
+    }, [location.pathname, updatedItems, activeSidebarItem, dispatch]);
+
+    useEffect(() => {
+        selectActiveItem();
+    }, [selectActiveItem]);
 
     const handleSideBarClick = (item) => {
-        dispatch(changeLink(item.id)); // Dispatch the selected item to update the activeLink
-
         if (item.name === 'Logout') {
             handleLogoutClick();
         } else if (item.linkTo) {
+            dispatch(changeLink(item.id));
             navigate(item.linkTo);
         }
     };
-
-    // Upcoming event call for student
-
-    const getUpcomingEvent = async () => {
-        // Fetch the upcoming event for the student
-
-        const response = await axiosWrapper('GET', API_URL.GET_UPCOMING_EVENTS, {}, token);
-        setEventData(response.data[0]);
-    };
-
-    useEffect(() => {
-        if (sideBarStudentEventModal) {
-            // Fetch the upcoming event for the student
-            // setInterval(() => {
-            getUpcomingEvent();
-            // }, [5000]);
-        }
-    }, []);
-
-    useEffect(() => {
-        if (updatedItems.length > 0) {
-            selectActiveItem();
-        }
-    }, [location.pathname, updatedItems, activeSidebarItem]);
 
     const handleLogoutClick = () => {
         setModalShow(!modalShow);
     };
 
     const handleButtonClick = () => {
-        window.open(eventData?.typeOfEvent === 'ONLINE' ? eventData?.meetingLink : eventData?.location, '_blank');
+        if (eventData?.typeOfEvent === 'ONLINE') {
+            window.open(eventData?.meetingLink, '_blank');
+        } else if (eventData?.location) {
+            window.open(eventData?.location, '_blank');
+        }
     };
 
     return (
@@ -164,13 +161,10 @@ const Sidebar = () => {
                     >
                         <FontAwesomeIcon className="collapse-icon" icon={faCircleXmark} />
                     </button>
-                ) : (
-                    <></>
-                )}
+                ) : null}
 
                 <Container>
                     <div className="brand-logo">
-                        {/* Toggle button inside the sidebar */}
                         <button onClick={() => dispatch(toggleSidebar())} className="menu-toggler" type="button">
                             <FontAwesomeIcon icon={collapsed ? faChevronRight : faBarsStaggered} />
                         </button>
@@ -180,7 +174,7 @@ const Sidebar = () => {
 
                     <div className="side-nav-wrapper">
                         <div className="side-nav-scroll">
-                            <Nav defaultActiveKey="/" className="sidebar-nav-items">
+                            <Nav className="sidebar-nav-items">
                                 {updatedItems.map((item) =>
                                     item.child ? (
                                         <SidebarItemCollapse
@@ -198,10 +192,9 @@ const Sidebar = () => {
                                         />
                                     )
                                 )}
-                                {/* Last child should be an image and role */}
                             </Nav>
 
-                            {sideBarStudentEventModal && eventData && (
+                            {sideBarStudentEventModal && eventData && Object.keys(eventData).length > 0 && (
                                 <div className="side-bar-event">
                                     <Card className="custom-event-card">
                                         <Card.Header className="d-flex flex-column align-items-start">
@@ -227,9 +220,13 @@ const Sidebar = () => {
                                                     {getFormattedTimes(eventData?.dateTime).endTime}
                                                 </Card.Text>
                                             </div>
-                                            <Button onClick={handleButtonClick} className="w-100 mt-3  zoom-btn">
+                                            <Button 
+                                                onClick={handleButtonClick} 
+                                                className="w-100 mt-3 zoom-btn"
+                                                disabled={!eventData?.meetingLink && !eventData?.location}
+                                            >
                                                 <div className="zoom-icon me-2"></div>
-                                                Go to Zoom link
+                                                {eventData?.typeOfEvent === 'ONLINE' ? 'Go to Zoom link' : 'View Location'}
                                             </Button>
                                         </Card.Body>
                                     </Card>
@@ -267,4 +264,5 @@ const Sidebar = () => {
         </React.Fragment>
     );
 };
+
 export default Sidebar;

@@ -693,7 +693,7 @@ const NewStudent = () => {
                                 <Row>
                                     <Col>
                                         <div className="mt-5 d-flex justify-content-end align-items-center gap-3 tab-buttons ">
-                                            {studentId && (
+                                            {/* {studentId && (
                                                 <>
                                                     <Button
                                                         type="button"
@@ -709,7 +709,7 @@ const NewStudent = () => {
 
                                                     <CarouselWrapper items={studentProducts} type="product" />
                                                 </>
-                                            )}
+                                            )} */}
                                             <Button
                                                 type="button"
                                                 onClick={() => navigate(`/${role}/students-supabase`)}
