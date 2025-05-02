@@ -120,6 +120,7 @@ const Table = ({
                         suppressAggFuncInHeader={true}
                         rowHeight={57}
                         suppressMovableColumns={true}
+                        
                     />
                 )}
                 {onExportCsv && (

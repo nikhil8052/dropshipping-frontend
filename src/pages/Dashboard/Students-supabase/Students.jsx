@@ -20,6 +20,7 @@ import '../../../styles/Common.scss';
 import RoadMapList from './Roadmap/RoadmapList';
 import HeaderWithIcon from './HeaderWithIcon';
 import NameIcon from '../../../assets/images/name.png';
+import EmailIcon from '../../../assets/images/email.png';
 
 const Students = () => {
     const [showDeleteModal, setShowDeleteModal] = useState({
@@ -315,9 +316,8 @@ const Students = () => {
             headerComponentFramework: HeaderWithIcon,
             headerComponentParams: {
               icon: NameIcon,
-              displayName: 'Name' 
+              displayName: 'Name',
             },
-            headerName: `Name`,
             field: 'name',
             filter: 'agSetColumnFilter',
             sortable: true,
@@ -328,6 +328,11 @@ const Students = () => {
             resizable: false
         },
         {
+            headerComponentFramework: HeaderWithIcon,
+            headerComponentParams: {
+                icon: EmailIcon,
+                displayName: 'Email'
+            },
             headerName: 'Email',
             field: 'email',
             filter: 'agSetColumnFilter',

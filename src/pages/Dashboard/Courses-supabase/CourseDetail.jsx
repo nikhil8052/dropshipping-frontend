@@ -227,7 +227,7 @@ const CourseDetail = () => {
 
                                         }
                                         type="button"
-                                        className="cancel-btn"
+                                        className="submit-btn"
                                     >
                                         Edit
                                     </Button>
