@@ -315,7 +315,8 @@ const Students = () => {
         {
             headerComponentFramework: HeaderWithIcon,
             headerComponentParams: {
-                icon: NameIcon
+              icon: NameIcon,
+              displayName: 'Name' 
             },
             headerName: `Name`,
             field: 'name',

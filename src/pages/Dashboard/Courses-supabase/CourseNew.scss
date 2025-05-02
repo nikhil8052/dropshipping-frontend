@@ -482,7 +482,7 @@ span.slect_span.selected {
             span {
                 display: block;
                 font-size: 14px;
-                font-weight: 400;
+                font-weight: 500;
                 color: #1D2026;
                 margin-bottom: 10px;
             }
@@ -497,7 +497,7 @@ span.slect_span.selected {
 
     label {
         font-size: 14px;
-        font-weight: 400;
+        font-weight: 500;
     }
 
     .image-preview {
@@ -1334,9 +1334,9 @@ label.form-label {
     border-radius: 3px;
     transition: background-color 0.2s;
 
-  }
-  
-  .folder-detail .drop-box .dropdown button img {
+}
+
+.folder-detail .drop-box .dropdown button img {
     max-width: 22px;
     filter: none;
 }
@@ -1367,7 +1367,7 @@ label.form-label {
     color: white !important;
 }
 
-.detail-box li.active_lecture > a {
+.detail-box li.active_lecture>a {
     color: #FFF;
 }
 
@@ -1383,7 +1383,8 @@ label.form-label {
 
 .detail-box li {
     font-size: 1rem !important;
-    >div{
+
+    >div {
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
@@ -1392,7 +1393,7 @@ label.form-label {
     }
 }
 
-.detail-box li > a {
+.detail-box li>a {
     width: calc(100% - 30px);
 }
 
@@ -1409,7 +1410,7 @@ label.form-label {
     min-height: 28px;
 }
 
-label.custom_check span{
+label.custom_check span {
     border-radius: 50%;
 }
 
@@ -1417,18 +1418,82 @@ label.custom_check span{
     overflow: visible !important;
 }
 
-.main-panel:has(.new-student-page-wrapper) .Course-form .row > div:has(.thumbnail-block),.main-panel:has(.new-student-page-wrapper)  .Course-form .row:has(.thumbnail-block) {
+.main-panel:has(.new-student-page-wrapper) .Course-form .row>div:has(.thumbnail-block),
+.main-panel:has(.new-student-page-wrapper) .Course-form .row:has(.thumbnail-block) {
     margin-bottom: 1rem !important;
 }
 
-.quiz-wrapper .field-control:focus-visible,.quiz-wrapper .field-select-control:focus-visible,.quiz-wrapper .field-text-area-control:focus-visible {
-    outline: 0px!important;
-    border: 1px solid rgb(233,234,240)!important;
+.quiz-wrapper .field-control:focus-visible,
+.quiz-wrapper .field-select-control:focus-visible,
+.quiz-wrapper .field-text-area-control:focus-visible {
+    outline: 0px !important;
+    border: 1px solid rgb(233, 234, 240) !important;
     color: #343837 !important;
 }
 
+
 .course-right-header p {
     word-break: break-all;
+}
+.main-panel:has(.publish-form-section)>.title-top {
+    position: absolute;
+    top: 0;
+    padding: 30px 0px;
+    background-color: #fff !important;
+    width: 100%;
+    left: 0;
+    right: 0;
+}
+
+.detail-page-header {
+    max-width: 1440px;
+    margin: auto;
+    width: 100%;
+}
+
+.db-cats {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-top: 1rem;
+}
+
+.publish-form-section .publish-course-wrapper {
+    margin-top: 10rem;
+}
+
+.cat-name {
+    background: linear-gradient(183.91deg, #00C7CC 3.2%, #009CD8 96.81%);
+    font-weight: 400;
+    font-size: 12px;
+    line-height: 30px;
+    text-transform: capitalize;
+    color: #fff !important;
+    width: fit-content;
+    padding: 0 12px;
+    border-radius: 4px;
+}
+
+.dp-title-name {
+    width: 80%;
+}
+
+.dp-main-box {
+    display: flex;
+    justify-content: space-between;
+    align-items: start;
+}
+
+.dp-title-name p {
+    font-size: 2rem;
+}
+
+.dp-info {
+    display: flex;
+    flex-direction: column;
+    align-items: end;
+    width: 19%;
+
 }
 
 @media only screen and (max-width:991px) {
@@ -1528,6 +1593,7 @@ label.custom_check span{
     .select-label {
         grid-template-columns: repeat(2, 1fr);
     }
+
     .tab-buttons.editor-buttons button {
         font-size: 14px;
     }

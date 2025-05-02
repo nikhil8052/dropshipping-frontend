@@ -186,7 +186,7 @@ const CourseDetail = () => {
                             </Button>
                         </Link>
                     ) : (
-                        <div className="title-top mb-3">
+                        <div className="title-top course-top mb-3">
                             {isDetailPage && (
                                 <span
                                     onClick={() => navigate(`/${role?.toLowerCase()}/courses-supabase`)}
@@ -197,7 +197,7 @@ const CourseDetail = () => {
                             )}
                             <div className='detail-page-header'>
                                 <div className='dp-main-box'>
-                                    <div className='dp-title-name'> <p> {course.title} </p> </div>
+                                    <div className='dp-title-name'> <p> {course.title} </p>
                                     <div className='db-cats'>
                                         {
                                             course.categoryDetails.map((cat)=>{
@@ -206,8 +206,10 @@ const CourseDetail = () => {
                                                 </>
                                             })
                                         }
+                                    </div> 
+
                                     </div>
-                                </div>
+
                                 <div className='dp-info'>
                                     <p>
                                         Total Lectures: {unassignedLectures.length + topics.reduce((acc, topic) => acc + (topic.lectures?.length || 0), 0)}
@@ -230,6 +232,7 @@ const CourseDetail = () => {
                                         Edit
                                     </Button>
 
+                                </div>
                                 </div>
 
                             </div>
