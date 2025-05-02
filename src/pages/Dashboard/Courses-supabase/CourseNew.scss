@@ -1462,15 +1462,15 @@ label.custom_check span {
     margin-top: 10rem;
 }
 
-.cat-name {
+.cat-name,.dp-info .submit-btn {
     background: linear-gradient(183.91deg, #00C7CC 3.2%, #009CD8 96.81%);
     font-weight: 400;
-    font-size: 12px;
+    font-size: 16px;
     line-height: 30px;
     text-transform: capitalize;
     color: #fff !important;
     width: fit-content;
-    padding: 0 12px;
+    padding: 4px 12px !important;
     border-radius: 4px;
 }
 
@@ -1493,7 +1493,15 @@ label.custom_check span {
     flex-direction: column;
     align-items: end;
     width: 19%;
+    gap: 16px;
+}
 
+.dp-info .cancel-btn {
+    padding: 5px 15px;
+}
+
+.dp-info .submit-btn{
+    cursor: pointer;
 }
 
 @media only screen and (max-width:991px) {

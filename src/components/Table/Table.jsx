@@ -7,6 +7,11 @@ import Search from '../../assets/icons/Search.svg';
 import './Table.scss';
 import 'ag-grid-community/styles/ag-grid.css';
 import 'ag-grid-community/styles/ag-theme-alpine.css';
+import HeaderWithIcon from '../../components/HeaderWithIcon';
+
+const gridComponents = {
+    headerWithIcon: HeaderWithIcon
+  };
 
 const Table = ({
     columns,
@@ -23,6 +28,9 @@ const Table = ({
     const [gridApi, setGridApi] = useState(null);
     const [gridColumnApi, setGridColumnApi] = useState(null);
     const [search, setSearch] = useState('');
+       const gridComponents = {
+            headerWithIcon: HeaderWithIcon
+          };
 
     const defferedSearch = useDeferredValue(search);
 
@@ -120,6 +128,8 @@ const Table = ({
                         suppressAggFuncInHeader={true}
                         rowHeight={57}
                         suppressMovableColumns={true}
+                        components={gridComponents}
+                        
                     />
                 )}
                 {onExportCsv && (

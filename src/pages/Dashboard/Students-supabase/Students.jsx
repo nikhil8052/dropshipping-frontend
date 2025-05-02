@@ -18,9 +18,12 @@ import TextItemExpand from '@components/TextExpand/TextItemExpand';
 import '../../../styles/Students.scss';
 import '../../../styles/Common.scss';
 import RoadMapList from './Roadmap/RoadmapList';
-import HeaderWithIcon from './HeaderWithIcon';
-import NameIcon from '../../../assets/images/name.png';
 import Select from 'react-select';
+import HeaderWithIcon from '../../../components/HeaderWithIcon';
+import NameIcon from '../../../assets/images/profile.svg';
+import EmailIcon from '../../../assets/images/email.svg';
+import StatusIcon from '../../../assets/images/status.svg';
+import ActionIcon from '../../../assets/images/action.svg';
 
 const Students = () => {
     const [showDeleteModal, setShowDeleteModal] = useState({
@@ -38,6 +41,7 @@ const Students = () => {
         data: null,
         courseId: null
     });
+ 
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
     const [loadingCRUD, setLoadingCRUD] = useState(false);
@@ -311,35 +315,39 @@ const Students = () => {
     );
     /*eslint-disable */
 
-    const columns = [
-        {
-            headerComponentFramework: HeaderWithIcon,
-            headerComponentParams: {
-              icon: NameIcon,
-              displayName: 'Name' 
+        const columns = [
+            {
+              headerName: 'Name', // Fallback text
+              field: 'name',
+              headerComponent: 'headerWithIcon', // Use the registered name
+              headerComponentParams: {
+                icon: NameIcon,
+                displayName: 'Name'
+              },
+              filter: 'agSetColumnFilter',
+              sortable: true,
+              unSortIcon: true,
+              wrapText: true,
+              autoHeight: true,
+              cellRenderer: TextItemExpand,
+              resizable: false
             },
-            headerName: `Name`,
-            field: 'name',
-            filter: 'agSetColumnFilter',
-            sortable: true,
-            unSortIcon: true,
-            wrapText: true,
-            autoHeight: true,
-            cellRenderer: TextItemExpand,
-            resizable: false,
-
-        },
-        {
-            headerName: 'Email',
-            field: 'email',
-            filter: 'agSetColumnFilter',
-            sortable: true,
-            unSortIcon: true,
-            wrapText: true,
-            autoHeight: true,
-            cellRenderer: TextExpand,
-            resizable: false
-        },
+            {
+                headerName: 'Email', // Fallback text
+                field: 'email',
+                headerComponent: 'headerWithIcon', // Use the registered name
+                headerComponentParams: {
+                  icon: EmailIcon,
+                  displayName: 'Email'
+                },
+                filter: 'agSetColumnFilter',
+                sortable: true,
+                unSortIcon: true,
+                wrapText: true,
+                autoHeight: true,
+                cellRenderer: TextExpand,
+                resizable: false
+              },
         // {
         //     headerName: 'Courses%',
         //     field: 'id',
@@ -402,6 +410,13 @@ const Students = () => {
         // },
         {
             headerName: 'Activate/Deactivate',
+            field: 'isActive',
+            headerComponent: 'headerWithIcon',
+            headerComponentParams: {
+              icon: StatusIcon,
+              displayName: 'Activate/Deactivate'
+            },
+            filter: 'agSetColumnFilter',
             cellRenderer: ToggleRenderer,
             field: 'isActive',
             cellRendererParams: {
@@ -414,7 +429,12 @@ const Students = () => {
         },
         {
             headerName: 'Actions',
-            maxWidth: 100,
+            headerComponent: 'headerWithIcon',
+            headerComponentParams: {
+              icon: ActionIcon,
+              displayName: 'Actions'
+            },
+            // maxWidth: 100,
             cellRenderer: ActionsRenderer,
             cellRendererParams: {
                 onEditClick: handleEditClick,
