@@ -1198,3 +1198,36 @@ input:focus-visible {
 .add-link-form input:focus-visible {
     border: inherit !important;
 }
+
+.main-panel:has(.publish-form-section) .course-top {
+    position: absolute;
+    top: 0;
+    padding: 30px 0px;
+    background-color: #fff !important;
+    width: 100%;
+    left: 0;
+    right: 0;
+}
+
+.detail-page-header {
+    max-width: 1440px;
+    margin: auto;
+    width: 100%;
+    padding: 0px 30px;
+}
+
+.publish-form-section .publish-course-wrapper {
+    margin-top: 10rem;
+}
+
+@media only screen and (max-width:1499px) {
+    .detail-page-header {
+        max-width: 950px;
+        margin: auto;
+    }
+    }
+    @media only screen and (max-width:767px) {
+        .detail-page-header{
+            width: 100%;
+        }
+    }
