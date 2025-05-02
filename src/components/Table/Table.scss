@@ -246,7 +246,7 @@
     text-align: center;
 }
 
-.student-table.custom-table .ag-paging-panel .ag-paging-page-summary-panel div.ag-disabled {
+.student-table.custom-table .ag-paging-panel .ag-paging-page-summary-panel div {
     height: 40px;
     width: 40px;
     border-radius: 50%;
@@ -258,6 +258,15 @@
     align-items: center;
 }
 
+.student-table.custom-table .ag-paging-panel .ag-paging-page-summary-panel div:not(.ag-disabled) {
+    background: linear-gradient(90.19deg, #00c7cc -0.27%, #009cd8 99.11%);
+    border: 1px solid #00BCD4;
+}
+
+.student-table.custom-table .ag-paging-panel .ag-paging-page-summary-panel div:not(.ag-disabled) span{
+    color: #fff;
+}
+
 .student-table.custom-table .ag-theme-alpine .ag-header-row{
     font-weight: 600;
 }
@@ -266,6 +275,10 @@
     width: 32px;
     height: 35px;
     border-radius: 4px;
+}
+
+.student-table.custom-table .search-input::placeholder {
+    color: #a9a9a9 !important;
 }
 
 @media only screen and (max-width:1499px) {

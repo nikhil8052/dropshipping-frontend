@@ -82,12 +82,12 @@
         padding: 1rem !important;
 
         .card-title {
-            font-size: 1.25rem;
+            font-size: 1.8rem;
             font-weight: bold;
         }
 
         .card-coach {
-            font-size: 1rem;
+            font-size: 1.4rem;
             margin-bottom: 10px;
             font-family: Inter;
             font-weight: 400;
@@ -260,3 +260,18 @@
     background-color: #fff;
 }
 
+
+@media only  screen and (max-width:1499px) {
+    .generic-card {
+        .card-body{
+            .card-title {
+                font-size: 1.4rem;
+            }
+    
+            .card-coach {
+                font-size: 1rem;
+            }
+    
+        }  
+    }
+}

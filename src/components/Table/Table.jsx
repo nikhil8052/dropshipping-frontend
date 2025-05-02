@@ -29,6 +29,9 @@ const Table = ({
     const onGridReady = (params) => {
         setGridApi(params.api);
         setGridColumnApi(params.columnApi);
+
+        // Auto-size all columns based on their content
+        params.columnApi.autoSizeAllColumns();
     };
 
     useEffect(() => {
@@ -70,26 +73,26 @@ const Table = ({
     return (
         <div className="ag-theme-alpine custom-table student-table" style={{ height: '100%', width: '100%' }}>
             <div className="top-bar">
-            <Row className=" student-table-row">
-                <Col lg={inputLgSize || 6} md={12}>
-                    <InputGroup>
-                        <InputGroup.Text>
-                            <img src={Search} alt="Search" />
-                        </InputGroup.Text>
-                        <Form.Control
-                            className="search-input"
-                            type="text"
-                            name="Search"
-                            label="Search"
-                            onChange={onFilterTextChange}
-                            placeholder="Search"
-                        />
-                    </InputGroup>
-                </Col>
-                <Col lg={childLgSize || 6} md={12}>
-                    {children}
-                </Col>
-            </Row>
+                <Row className=" student-table-row">
+                    <Col lg={inputLgSize || 6} md={12}>
+                        <InputGroup>
+                            <InputGroup.Text>
+                                <img src={Search} alt="Search" />
+                            </InputGroup.Text>
+                            <Form.Control
+                                className="search-input"
+                                type="text"
+                                name="Search"
+                                label="Search"
+                                onChange={onFilterTextChange}
+                                placeholder="Search"
+                            />
+                        </InputGroup>
+                    </Col>
+                    <Col lg={childLgSize || 6} md={12}>
+                        {children}
+                    </Col>
+                </Row>
             </div>
             <div className="ag-theme-alpine" style={{ width: width ? width : '100%' }}>
                 {loading ? (
@@ -117,7 +120,6 @@ const Table = ({
                         suppressAggFuncInHeader={true}
                         rowHeight={57}
                         suppressMovableColumns={true}
-                        // noRowsOverlayComponent={}
                     />
                 )}
                 {onExportCsv && (
