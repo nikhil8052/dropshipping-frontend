@@ -244,7 +244,7 @@ const GenericCard = ({
                         {role === 'student' && (
                         // {role === 'student' && enroll && (
                             <>
-                                <CustomProgressBar progress={progress?.toFixed(2)} />
+                                {/* <CustomProgressBar progress={progress?.toFixed(2)} /> */}
                                 {/* <div className="enroll-icon">
                                 <img src={!canAccessCourse ? lockIcon : enrollIcon} alt="enrollIcon" />
                                 <p className="">{!canAccessCourse ? 'Locked' : 'Enrolled'}</p>
