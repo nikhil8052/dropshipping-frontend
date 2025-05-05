@@ -288,20 +288,21 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
         let ENDPOINT = API_URL.SUPABASE_UPDATE_LECTURE_RESOURCE.replace(':id', currentActiveLectureID);
         let METHOD = "POST";
 
-        const formData = {
+        const lectureData = {
             model_id: currentActiveLectureID,
             model_type: 'lecture',
             name: label,
             type: 'file',
             file_link: resourceFileUrl,
-            url: resourceUrl
+            url: resourceUrl,
+            showPopUp:true 
         };
 
         if (editResource === true && editResourceID) {
-            formData.id = editResourceID;
+            lectureData.id = editResourceID;
         }
 
-        const response = await axiosWrapper(METHOD, ENDPOINT, formData, token);
+        const response = await axiosWrapper(METHOD, ENDPOINT, { lectureData }, token);
         var id = null;
         if (response) {
             id = response.data[0].id;
@@ -314,6 +315,7 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
             id: id,
             file_link: resourceFileUrl,
             type: isUrlProvided ? 'url' : 'file',
+            showPopUp: true 
         };
 
         // Update UI - replace if editing, or append if new
