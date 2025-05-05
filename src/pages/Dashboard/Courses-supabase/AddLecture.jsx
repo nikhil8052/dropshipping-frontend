@@ -861,9 +861,24 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
 
     const handleDragEnd = (result) => {
         const { source, destination } = result;
+
         if (!destination) return;
         // If dropped in the same position
         if (source.droppableId === destination.droppableId && source.index === destination.index) {
+           
+            return;
+        }
+
+        if (
+            source.droppableId === 'unassigned' &&
+            destination.droppableId === 'unassigned'
+        ) {
+            const newUnassigned = [...unassignedLectures];
+            const [movedLecture] = newUnassigned.splice(source.index, 1);
+            newUnassigned.splice(destination.index, 0, movedLecture);
+    
+            setUnassignedLectures(newUnassigned);
+            updateLectureSequences(newUnassigned); // Update order in DB or local state
             return;
         }
 
@@ -918,6 +933,7 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
 
         // Moving between topics (existing logic)
         if (source.droppableId.startsWith('topic-') && destination.droppableId.startsWith('topic-')) {
+          
             const sourceTopicIndex = parseInt(source.droppableId.split('-')[1]);
             const destTopicIndex = parseInt(destination.droppableId.split('-')[1]);
 
@@ -948,6 +964,8 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
 
             return;
         }
+
+     
     };
 
     const updateLectureSequences = (lectureList) => {
