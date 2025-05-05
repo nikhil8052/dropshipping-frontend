@@ -73,7 +73,7 @@ const Login = () => {
                 <div className="login-page-section">
                     <div className="login-page">
                         <LoginLeftSec />
-                        <div className="login-center">
+                        <Col className="login-center">
                             <div className="auth-form-wrapper">
                                 {/* <div className='left-img col-md-6'>
                                  <img src={Rightloginimg} alt="" />
@@ -131,7 +131,7 @@ const Login = () => {
                                     </Formik>
                                 </div>
                             </div>
-                        </div>
+                        </Col>
                         <div className="copyright">
                             <Footer />
                         </div>

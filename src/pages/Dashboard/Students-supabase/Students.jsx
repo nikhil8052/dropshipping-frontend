@@ -42,9 +42,7 @@ const Students = () => {
         data: null,
         courseId: null
     });
-    const [showColumnSelector, setShowColumnSelector] = useState(false);
-    const [selectAnchor, setSelectAnchor] = useState(null); // for positioning
-    
+
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
     const [loadingCRUD, setLoadingCRUD] = useState(false);
@@ -54,6 +52,8 @@ const Students = () => {
     const [studentsData, setStudentsData] = useState(null);
     const [selectedOption, setSelectedOption] = useState(studentsTrajectory[0].label);
     const [selectedCoach, setSelectedCoach] = useState('Assigned Coach');
+    const [showColumnSelect, setShowColumnSelect] = useState(false);
+    const [selectPosition, setSelectPosition] = useState({ top: 0, left: 0 });
     useEffect(() => {
         // Fetch data from API here
         if (selectedOption) {
@@ -436,16 +436,14 @@ const Students = () => {
                 icon: ActionIcon,
                 displayName: 'Actions'
             },
-            sortable: false,
-            filter: false,
-            resizable: false,
             // maxWidth: 100,
             cellRenderer: ActionsRenderer,
             cellRendererParams: {
                 onEditClick: handleEditClick,
                 onDeleteClick: handleDeleteClick
             }
-        },   
+        },
+          
     ];
 
     const handleRoadmapUpdate = async (data, id) => {
@@ -521,6 +519,35 @@ const Students = () => {
                 />
             )}
 
+            {showColumnSelect && (
+                <div
+                    style={{
+                        position: 'absolute',
+                        top: `${selectPosition.top}px`,
+                        left: `${selectPosition.left}px`,
+                        zIndex: 1000,
+                        backgroundColor: 'white',
+                        boxShadow: '0 2px 10px rgba(0,0,0,0.2)',
+                        minWidth: '200px'
+                    }}
+                    onMouseLeave={() => setShowColumnSelect(false)}
+                >
+                    <Select
+                        isMulti
+                        options={columnOptions}
+                        value={columnOptions.filter((opt) => visibleFields.includes(opt.value))}
+                        onChange={(selectedOptions) => {
+                            setVisibleFields(selectedOptions.map((opt) => opt.value));
+                            setShowColumnSelect(false);
+                        }}
+                        placeholder="Select columns..."
+                        className="basic-multi-select"
+                        classNamePrefix="select"
+                        menuIsOpen={true}
+                        autoFocus
+                    />
+                </div>
+            )}
             <Table
                 columns={filteredColumns}
                 tableData={studentsData}

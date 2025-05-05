@@ -46,10 +46,10 @@ const ForgotPassword = () => {
     return (
         <React.Fragment>
             <div className="auth-main-wrapper">
-                <Row className="login-page-section">
+                <div className="login-page-section">
                 <div className="login-page">
                     <LoginLeftSec />
-                    <Col xs={12} sm={12} md={12} lg={6} className='login-center'>
+                    <Col className='login-center'>
                         <div className="auth-form-wrapper ">
                             <div className="auth-form-data ">
                                 <h1 className="auth-title ">Forgot Password</h1>
@@ -97,7 +97,7 @@ const ForgotPassword = () => {
                     </Col>
                 <Footer />
                     </div>
-                </Row>
+                </div>
             </div>
         </React.Fragment>
     );
