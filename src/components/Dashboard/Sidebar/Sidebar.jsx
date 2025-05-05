@@ -42,8 +42,11 @@ const Sidebar = () => {
             role === 'ADMIN' ? [...adminSidebarItems] : 
             role === 'COACH' ? [...coachSidebarItems] : 
             [...studentSidebarItems];
+        console.log(userInfo);
+        // if (role === 'STUDENT' && userInfo?.roadMap && userInfo?.roadmapAccess === true) {
+            if (role === 'STUDENT' && userInfo?.roadMap && userInfo?.roadmapAccess == 'true') {
+        console.log('dnsfnspofnsdnfoi',userInfo);
 
-        if (role === 'STUDENT' && userInfo?.roadMap && userInfo?.roadmapAccess === true) {
             const roadmapItem = {
                 id: 'roadmap',
                 name: 'Roadmap',

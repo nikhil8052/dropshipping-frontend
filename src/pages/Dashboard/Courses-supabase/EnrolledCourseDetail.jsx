@@ -79,8 +79,6 @@ const EnrolledCourseDetail = () => {
             setTopics(processedTopics);
             setUnassignedLectures(unassigned);
 
-            console.log("Unassigned Lectures: ", unassigned); 
-            console.log("processedTopics: ", processedTopics); 
         };
 
         if (courseDetails) {
@@ -91,8 +89,6 @@ const EnrolledCourseDetail = () => {
     let courseId = location.state?.courseId;
     // const courseId = location.state?.courseId;
 
-    console.log(courseId);
-    console.log('courseId');
     const [initialValues, setInitialValues] = useState({
         mcqs: []
     });
@@ -132,7 +128,6 @@ const EnrolledCourseDetail = () => {
 
     const getCourseById = async (id, nextLecture) => {
         const { data } = await axiosWrapper('GET', `${API_URL.SUPABASE_GET_COURSE.replace(':id', id)}`, {}, token);
-        console.log(data);
 
         setCurrentCourseID(id);
         // Higher Level info
@@ -214,7 +209,6 @@ const EnrolledCourseDetail = () => {
         setLectureLoading(false);
 
     };
-    console.log(selectedLecture);
     const decodeHtmlEntities = (encodedString) => {
         const textarea = document.createElement('textarea');
         textarea.innerHTML = encodedString;
@@ -260,7 +254,6 @@ const EnrolledCourseDetail = () => {
 
     const handleButtonClick = (index, fetchLecture = true) => {
         setActiveIndex(index);
-        console.log(lectures[index]?.id);
         if (fetchLecture) getCurrentLecture(lectures[index]?.id);
 
         if (lectures[index]) {
@@ -553,12 +546,12 @@ const EnrolledCourseDetail = () => {
                                                                 }  src={checkicon2}  alt="Mark lecture as completed."
                                                                 data-tooltip-id="my-tooltip2"   data-tooltip-place="top" data-tooltip-content="Mark lecture as completed."/>} */}
                                                                 {selectedLecture?.lecture_progress?.is_completed ?  <img className='checkimg' src={checkicon}   alt="Already completed"
-                                                                    data-tooltip-id="my-tooltip2" data-tooltip-place="top" 
+                                                                    data-tooltip-id="my-tooltip2" data-tooltip-place="top"  style={{ cursor: 'pointer' }}
                                                                      data-tooltip-content="Already completed"/> : <img className='checkimg' 
                                                                        onClick={() =>
                                                                     markLectureAsCompleted(selectedLecture?.id)
                                                                 }  src={checkicon2}  alt="Mark lecture as completed."
-                                                                data-tooltip-id="my-tooltip2"   data-tooltip-place="top" data-tooltip-content="Mark lecture as completed."/>}
+                                                                data-tooltip-id="my-tooltip2"   style={{ cursor: 'pointer' }}  data-tooltip-place="top" data-tooltip-content="Mark lecture as completed."/>}
                                                                 
                                                         </h2>
                                                         
