@@ -42,7 +42,9 @@ const Students = () => {
         data: null,
         courseId: null
     });
-
+    const [showColumnSelector, setShowColumnSelector] = useState(false);
+    const [selectAnchor, setSelectAnchor] = useState(null); // for positioning
+    
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
     const [loadingCRUD, setLoadingCRUD] = useState(false);
@@ -443,18 +445,7 @@ const Students = () => {
                 onEditClick: handleEditClick,
                 onDeleteClick: handleDeleteClick
             }
-        },
-        {
-            headerName: '+',
-            field: 'AddColumn',
-            pinned: 'right',
-            sortable: false,
-            filter: false,
-            resizable: false,
-            maxWidth: 60,
-          }
-          
-          
+        },   
     ];
 
     const handleRoadmapUpdate = async (data, id) => {

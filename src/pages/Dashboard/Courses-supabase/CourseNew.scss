@@ -683,8 +683,12 @@ span.slect_span.selected {
         align-items: center;
 
          &:hover{
-            background-color: #04a3c3;
+                background-color: #00b5d1;
     }
+
+    a{
+            color: #fff !important;
+        }
     }
   
 }
