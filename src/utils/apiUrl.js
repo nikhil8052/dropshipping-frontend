@@ -1,5 +1,5 @@
 const BASE_URL = import.meta.env.VITE_API_URL;
-const USER_API_BASE = `${BASE_URL}/api/user`;
+const USER_API_BASE = `${BASE_URL}/api/supabase/user`;
 const SUPABASE_USER_API_BASE = `${BASE_URL}/api/supabase/user`;
 const STUDENT_API_BASE = `${BASE_URL}/api/student`;
 const SUPABASE_STUDENT_API_BASE = `${BASE_URL}/api/supabase/student`;

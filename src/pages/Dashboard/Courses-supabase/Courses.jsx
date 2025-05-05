@@ -68,7 +68,6 @@ const Courses = () => {
     const { userInfo, userToken } = useSelector((state) => state?.auth);
     const role = userInfo?.role;
     const itemsPerBatch = 12; // Number of courses to load per scroll
-
     function SortableItem({ course, id, onDelete }) {
         const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({ id });
 
@@ -157,7 +156,7 @@ const Courses = () => {
 
             const response = await axiosWrapper('GET', constructedUrl, {}, userToken);
             const { data } = response;
-
+            console.log(data)
             const formattedData = data.map((course) => {
                 const baseCourseData = {
                     img: course?.thumbnail,
@@ -170,10 +169,10 @@ const Courses = () => {
                     _id: course?.id
                 };
 
-                if (role === 'STUDENT' && course?.enrolledStudents.includes(userInfo?._id)) {
-                    const progress = calcProgress(course, userInfo?._id);
-                    return { ...baseCourseData, progress: precisionRound(progress, 0) };
-                }
+                // if (role === 'STUDENT' && course?.enrolledStudents.includes(userInfo?._id)) {
+                //     const progress = calcProgress(course, userInfo?._id);
+                //     return { ...baseCourseData, progress: precisionRound(progress, 0) };
+                // }
 
                 return baseCourseData;
             });
@@ -341,6 +340,7 @@ const Courses = () => {
                                     id={course._id}
                                 />
                             ))}
+                            {role !== 'STUDENT' && (
                             <div
                                 className="add-course-card"
                                 onClick={handleCreateClick}
@@ -368,6 +368,7 @@ const Courses = () => {
                                 />
                                 <span style={{ color: '#b1b1b0' }}>New Course</span>
                             </div>
+                            )}
                         </InfiniteScroll>
                     </SortableContext>
                 </DndContext>

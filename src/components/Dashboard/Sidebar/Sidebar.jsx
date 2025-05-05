@@ -194,7 +194,7 @@ const Sidebar = () => {
                                 )}
                             </Nav>
 
-                            {sideBarStudentEventModal && eventData && Object.keys(eventData).length > 0 && (
+                            {/* {sideBarStudentEventModal && eventData && (
                                 <div className="side-bar-event">
                                     <Card className="custom-event-card">
                                         <Card.Header className="d-flex flex-column align-items-start">
@@ -231,7 +231,7 @@ const Sidebar = () => {
                                         </Card.Body>
                                     </Card>
                                 </div>
-                            )}
+                            )} */}
                         </div>
 
                         <div className={`side-bar-btm ${sideBarStudentEventModal ? 'remove-auto' : ''}`}>

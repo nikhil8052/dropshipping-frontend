@@ -46,7 +46,8 @@ const EnrolledCourseDetail = () => {
     const accessRestricted = false;
 
     let courseId = location.state?.courseId;
-
+    console.log(courseId);
+    console.log('courseId');
     const [initialValues, setInitialValues] = useState({
         mcqs: []
     });
@@ -85,7 +86,7 @@ const EnrolledCourseDetail = () => {
     };
 
     const getCourseById = async (id, nextLecture) => {
-        const { data } = await axiosWrapper('GET', `${API_URL.GET_COURSE.replace(':id', id)}`, {}, token);
+        const { data } = await axiosWrapper('GET', `${API_URL.SUPABASE_GET_COURSE.replace(':id', id)}`, {}, token);
 
         setCurrentCourseID(id);
         // Higher Level info
@@ -146,7 +147,7 @@ const EnrolledCourseDetail = () => {
 
     const getCurrentLecture = async (id) => {
         if (!id) return;
-        const { data } = await axiosWrapper('GET', `${API_URL.GET_LECTURE.replace(':id', id)}`, {}, token);
+        const { data } = await axiosWrapper('GET', `${API_URL.SUPABASE_GET_LECTURE.replace(':id', id)}`, {}, token);
         setSelectedLecture(data);
         const mcqs = data.quiz?.mcqs;
 

@@ -3,8 +3,8 @@ import axiosWrapper from '../../utils/api';
 
 export const loginUser = createAsyncThunk('auth/api/login', async ({ email, password }, { rejectWithValue }) => {
     try {
-        // const { data } = await axiosWrapper('post', `${import.meta.env.VITE_API_URL}/api/supabase/user/login/email`, {
-        const { data } = await axiosWrapper('post', `${import.meta.env.VITE_API_URL}/api/user/login/email`, {
+        const { data } = await axiosWrapper('post', `${import.meta.env.VITE_API_URL}/api/supabase/user/login/email`, {
+        // const { data } = await axiosWrapper('post', `${import.meta.env.VITE_API_URL}/api/user/login/email`, {
             email,
             password
         });

@@ -18,6 +18,8 @@ const ResetPassword = () => {
     const navigate = useNavigate();
     const location = useLocation();
     const token = location.state?.token;
+    const email = location.state?.user?.email;
+    console.log(location.state.user.email);
     const { loading } = useSelector((state) => state?.auth);
     const [showPassword, setShowPassword] = useState({
         password: false,
@@ -25,7 +27,8 @@ const ResetPassword = () => {
     }); // State for password visibility
     const initialValues = {
         password: '',
-        confirmPassword: ''
+        confirmPassword: '',
+        email: email
     };
     const validationSchema = Yup.object().shape({
         password: Yup.string()
