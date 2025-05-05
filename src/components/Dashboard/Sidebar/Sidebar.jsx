@@ -148,8 +148,9 @@ const Sidebar = () => {
                     body="Are you sure you want to Logout?"
                     onConfirm={() => dispatch(logoutUser())}
                     customFooterClass="custom-footer-class"
-                    nonActiveBtn="cancel-button"
-                    activeBtn="yes-button"
+                    nonActiveBtn="cancel-btn"
+                    activeBtn="submit-btn"
+                    modalClassName="logout-popup"
                 />
             )}
             <div className={`sidebar ${collapsed ? 'hide-sidebar' : ''}`}>

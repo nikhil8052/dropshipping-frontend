@@ -470,6 +470,40 @@
     display: none;
 }
 
+.logout-popup.modal-header button {
+    display: none;
+}
+
+.logout-popup .modal-header {
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    border: 0px;
+}
+
+.logout-popup .modal-header .modal-title {
+    font-size: 1.6rem;
+    font-weight: 600;
+}
+
+.logout-popup .modal-body {
+    padding: 0px;
+    color: #000 !important;
+}
+
+.logout-popup .btn-close {
+    display: none;
+}
+
+.logout-popup .custom-footer-class button{
+  border-radius: 5px !important;
+  padding: 10px 30px !important;
+}
+
+.logout-popup .custom-footer-class button {
+    color: grey;
+}
+
 @media only screen and (max-width:767px) {
     .main-panel,.full-width-panel {
         width: 100%;
