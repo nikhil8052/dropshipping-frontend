@@ -289,7 +289,7 @@ const NewEvent = () => {
                                                                                           )
                                                                                 }
                                                                                 alt=""
-                                                                                style={{ borderRadius: '50%' }}
+                                                                                
                                                                             />
                                                                             <div
                                                                                 className="overlay-image"

@@ -468,7 +468,7 @@ const NewStudent = () => {
                                                                                 : URL.createObjectURL(studentPhoto)
                                                                         }
                                                                         alt=""
-                                                                        style={{ borderRadius: '50%' }}
+                                                                        
                                                                     />
                                                                     <div
                                                                         className="overlay-image"

@@ -139,7 +139,7 @@
     font-size: 18px;
     border-radius: 80px;
     padding: 10px 20px;
-    width: auto;
+    width: 100%;
     margin-top: 20px;
     border: none;
     @include pagination-gradient;
@@ -284,7 +284,7 @@
     max-width: 100%;
 }
 
-.layout_public:has(.login-page-section) {
+.layout_public:has(.auth-main-wrapper) {
     background-image: url("/src/assets/images/login2.png");
     background-position: center;
     background-repeat: no-repeat;
@@ -306,6 +306,10 @@
 
 .auth-form-data form {
     width: 100%;
+}
+
+.back-btn.white{
+    color:#fff !important;
 }
 
 @media only screen and (max-width:1199px) {

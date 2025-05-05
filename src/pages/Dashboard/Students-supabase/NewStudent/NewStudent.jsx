@@ -426,7 +426,6 @@ const NewStudent = () => {
                                                                             }
                                                                             alt=""
                                                                             style={{
-                                                                                borderRadius: '50%',
                                                                                 width: '200px',
                                                                                 height: '128px'
                                                                             }}

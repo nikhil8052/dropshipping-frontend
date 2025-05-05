@@ -339,7 +339,7 @@ const UploadFiles = ({ onNext, onBack, initialData, setStepComplete, updateCours
                                                                     }
                                                                     alt=""
                                                                     style={{
-                                                                        borderRadius: '50%',
+                                                                       
                                                                         objectFit: 'cover',
                                                                         width: '200px',
                                                                         height: '128px'

@@ -75,7 +75,7 @@ const CourseThumbnail = ({ value, onChange }) => {
                 src={value}
                 alt="Course thumbnail"
                 style={{
-                  borderRadius: '50%',
+                 
                   objectFit: 'cover',
                   width: '200px',
                   height: '128px'

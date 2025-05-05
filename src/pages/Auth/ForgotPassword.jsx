@@ -46,9 +46,10 @@ const ForgotPassword = () => {
     return (
         <React.Fragment>
             <div className="auth-main-wrapper">
-                <Row className=" g-0">
+                <Row className="login-page-section">
+                <div className="login-page">
                     <LoginLeftSec />
-                    <Col xs={12} sm={12} md={12} lg={6}>
+                    <Col xs={12} sm={12} md={12} lg={6} className='login-center'>
                         <div className="auth-form-wrapper ">
                             <div className="auth-form-data ">
                                 <h1 className="auth-title ">Forgot Password</h1>
@@ -79,7 +80,7 @@ const ForgotPassword = () => {
                                                 </Button>
                                             </FormikForm>
                                             <Button
-                                                className="back-btn"
+                                                className="back-btn white"
                                                 type="button"
                                                 onClick={() => navigate('/login')}
                                                 disabled={isSubmitting || loading}
@@ -90,10 +91,12 @@ const ForgotPassword = () => {
                                         </>
                                     )}
                                 </Formik>
-                                <Footer />
+                                
                             </div>
                         </div>
                     </Col>
+                <Footer />
+                    </div>
                 </Row>
             </div>
         </React.Fragment>

@@ -298,7 +298,7 @@ const NewCoach = () => {
                                                                                 : URL.createObjectURL(coachPhoto)
                                                                         }
                                                                         alt=""
-                                                                        style={{ borderRadius: '50%' }}
+                                                                       
                                                                     />
                                                                     <div
                                                                         className="overlay-image"
