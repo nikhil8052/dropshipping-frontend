@@ -400,7 +400,7 @@ const EnrolledCourseDetail = () => {
                                 </div>
                                 </div>
                                 <div className="col-md-4">
-                                    <InputGroup>
+                                    {/* <InputGroup>
                                         <InputGroup.Text>
                                             <img src={Search} alt="Search" />
                                         </InputGroup.Text>
@@ -413,7 +413,7 @@ const EnrolledCourseDetail = () => {
                                             onChange={onFilterTextChange}
                                             placeholder="Search"
                                         />
-                                    </InputGroup>
+                                    </InputGroup> */}
                                 </div>
                             </div>
                             <Formik
