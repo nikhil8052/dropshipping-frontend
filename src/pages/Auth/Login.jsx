@@ -41,7 +41,7 @@ const Login = () => {
     useEffect(() => {
         if (user) {
             if (userRole === 'ADMIN') {
-                navigate('/admin');
+                navigate('/admin/courses-supabase');
             } else if (userRole === 'COACH') {
                 navigate('/coach');
             } else if (userRole === 'STUDENT') {

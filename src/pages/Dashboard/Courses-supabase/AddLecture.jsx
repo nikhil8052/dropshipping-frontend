@@ -165,7 +165,8 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
         if (initialData?.lecturess) {
             const newLectures = initialData.lecturess.map((lecture) => ({
                 name: lecture.name,
-                id: lecture.id
+                id: lecture.id,
+                description: lecture.description
             }));
 
             setUnassignedLectures((prev) => [...prev, ...newLectures]);
@@ -765,6 +766,8 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
         // setSubmitting(false);
     };
     const editClickLeture = (lecture) => {
+    
+    
         if (hasUnsavedChanges) {
             const confirmLeave = window.confirm('You have unsaved changes. Do you want to leave without saving?');
             if (!confirmLeave) {
@@ -782,6 +785,7 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
 
         const action = formikHelpers?.event?.nativeEvent?.submitter?.value;
 
+        console.log( values , " all the values of the submit ")
         try {
             const formData = prepareFormData(values);
 
@@ -792,12 +796,15 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
             // dispatch({ type: types.ALL_RECORDS, data: { keyOfData: 'currentCourseUpdate', data: true } });
 
             if (response?.data) {
+               
                 const updatedLectureId = response.data.id;
                 const updatedLectureName = response.data.name.trim();
+                const updatedDes = response.data.description;
+
                 setUnassignedLectures((prevLectures) =>
                     prevLectures.map((lecture) =>
                         lecture.id === updatedLectureId
-                            ? { ...lecture, name: updatedLectureName }
+                            ? { ...lecture, name: updatedLectureName, description:  updatedDes }
                             : lecture
                     )
                 );
@@ -806,11 +813,20 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
                         ...folder,
                         lectures: folder.lectures.map((lecture) =>
                             lecture.id === updatedLectureId
-                                ? { ...lecture, name: updatedLectureName }
+                                ? { ...lecture, name: updatedLectureName , description:  updatedDes  }
                                 : lecture
                         )
                     }))
                 );
+
+                if (rightViewLecture?.id === updatedLectureId) {
+                    setRightViewLecture((prevLecture) => ({
+                        ...prevLecture,
+                        name: updatedLectureName,
+                        description:  updatedDes
+                    }));
+                }
+
             }
         } catch (err) {
             // handleError(err);
@@ -1428,11 +1444,8 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
                                                                                                     <a
                                                                                                         href="javascript:void(0)"
                                                                                                         onClick={() => {
-                                                                                                            console.log('');
+                                                                                                            setRightViewLecture(lecture)
                                                                                                         }
-                                                                                                            // loadLectureData(
-                                                                                                            //     lecture
-                                                                                                            // )
 
                                                                                                         }
                                                                                                     >
@@ -1587,10 +1600,14 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
                                                                                         onClick={() => {
                                                                                             // setActiveLectureId(lecture.id);
                                                                                             // setPendingLectureId(lecture.id);
+                                                                            
+                                                                                            setRightViewLecture(lecture)
                                                                                             editClickLeture(lecture);
                                                                                             // setPublishLectureModel(
                                                                                             //     true
                                                                                             // );
+                                                                                           
+                                                                                            
                                                                                         }}
                                                                                         ref={provided.innerRef}
                                                                                         {...provided.draggableProps}
@@ -1600,17 +1617,7 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
 
                                                                                         {
                                                                                             lecture?.name
-                                                                                            // renaming.type === "lecture" && renaming.id === lecture.id ? (
-                                                                                            //     <Spinner animation="border" size="sm" className="ms-2" />
-                                                                                            // ) : (<EditText
-                                                                                            //     name="textbox4"
-                                                                                            //     defaultValue={
-                                                                                            //         lecture.name ??
-                                                                                            //         'ERROR'
-                                                                                            //     }
-                                                                                            //     inputClassName="editable-input"
-                                                                                            //     onSave={({ value }) => handleRename({ value, type: "lecture", id: lecture.id })}
-                                                                                            // />)
+                                                                                            
                                                                                         }
 
                                                                                         <div className="drop-box">
