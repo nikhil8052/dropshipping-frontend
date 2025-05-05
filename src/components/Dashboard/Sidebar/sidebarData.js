@@ -77,12 +77,12 @@ export const sideBarItems = [
 ];
 
 export const adminSidebarItems = [
-    {
-        id: 1,
-        name: 'Dashboard',
-        iconLight: dashboardLight,
-        linkTo: '/admin'
-    },
+    // {
+    //     id: 1,
+    //     name: 'Dashboard',
+    //     iconLight: dashboardLight,
+    //     linkTo: '/admin'
+    // },
     // {
     //     id: 2,
     //     name: 'Coaches',

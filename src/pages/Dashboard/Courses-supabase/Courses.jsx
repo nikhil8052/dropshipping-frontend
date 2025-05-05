@@ -31,7 +31,7 @@ const Courses = () => {
     );
 
     const handleDragEnd = async (event) => {
-        console.log(event)
+      
         const { active, over } = event;
         if (active.id !== over?.id) {
             const oldIndex = items.indexOf(active.id);
@@ -43,15 +43,11 @@ const Courses = () => {
                 .filter(Boolean);
 
             setDisplayedCourses(newDisplayedCourses);
-            console.log( newDisplayedCourses, " NEw course ")
             const courses = newDisplayedCourses.map((course, index) => ({
                 course_id: course._id,      
                 sequence_id: index + 1     
             }));
             const response = await axiosWrapper('POST', API_URL.SUPABASE_REORDER_COURSE_VIEW, { courses }, userToken);
-
-            console.log(response)
-
 
         }
     };
@@ -67,7 +63,7 @@ const Courses = () => {
     const dispatch = useDispatch();
     const { userInfo, userToken } = useSelector((state) => state?.auth);
     const role = userInfo?.role;
-    const itemsPerBatch = 12; // Number of courses to load per scroll
+    const itemsPerBatch = 50; // Number of courses to load per scroll
     function SortableItem({ course, id, onDelete }) {
         const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({ id });
 
