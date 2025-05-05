@@ -12,7 +12,7 @@ const PublicLayout = () => {
 
     useEffect(() => {
         if (isLoggedIn && !isRedirectUrl) {
-            if (role === 'ADMIN') navigate('/admin');
+            if (role === 'ADMIN') navigate('/admin/courses-supabase');
             else if (role === 'COACH') navigate('/coach');
             // else if (role === 'STUDENT') navigate('/student/courses');
             else if (role === 'STUDENT') navigate('/student/courses-supabase');
