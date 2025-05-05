@@ -68,7 +68,7 @@ const ResetPassword = () => {
                 <title>Login | Dropship Academy</title>
             </Helmet>
             <div className="auth-main-wrapper">
-                <Row className=" g-0">
+                <Row className="section">
                     <LoginLeftSec />
                     <Col xs={12} sm={12} md={12} lg={6}>
                         <div className="auth-form-wrapper ">
