@@ -19,6 +19,11 @@ import checkicon from '../../../assets/images/Check.svg';
 import checkicon2 from '../../../assets/images/check2.svg';
 import 'react-tooltip/dist/react-tooltip.css';
 import { Tooltip } from 'react-tooltip';
+import EnrollFolderStructure from './EnrollFolderStructure';
+import '../Courses-supabase/CourseNew.scss';
+import Loading from '@components/Loading/Loading';
+import CustomProgressBar from '../../../components/CustomProgressBar/CustomProgressBar';
+import LectureCurriculumSkeleton from '../../../components/LectureCurriculumSkeleton';
 
 const EnrolledCourseDetail = () => {
     const navigate = useNavigate();
@@ -26,6 +31,8 @@ const EnrolledCourseDetail = () => {
     const userInfo = useSelector((state) => state?.auth?.userInfo);
     const token = useSelector((state) => state?.auth?.userToken);
     const role = userInfo?.role?.toLowerCase();
+    const [loading, setLoading] = useState(true);
+    const [lectureLoading, setLectureLoading] = useState(false);
 
     const queryParams = new URLSearchParams(location.search);
     const cid = queryParams.get('cid');
@@ -45,7 +52,45 @@ const EnrolledCourseDetail = () => {
     // const [accessRestricted, setAccessRestricted] = useState(false);
     const accessRestricted = false;
 
+    const [course, setCourse] = useState(0);
+    const [unassignedLectures, setUnassignedLectures] = useState([]);
+    const [topics, setTopics] = useState([]);
+
+    useEffect(() => {
+        const processCourseData = (courseData) => {
+            if (!courseData || !courseData.folders || !courseData.lectures) {
+                console.error("Course data or lectures/folders missing");
+                return; // Exit if data is incomplete
+            }
+
+            // Process folders into topics
+            const processedTopics = courseData.folders.map(folder => ({
+                id: folder.id,
+                name: folder.name,
+                lectures: folder.lectures || []
+            })) || [];
+
+            // Process unassigned lectures
+            const unassigned = courseData.lectures.filter(lecture => {
+                // Check if folder_id is null, empty string, or undefined
+                return !lecture.folder_id;  // This will handle null, undefined, and empty string
+            }) || [];
+
+            setTopics(processedTopics);
+            setUnassignedLectures(unassigned);
+
+            console.log("Unassigned Lectures: ", unassigned); 
+            console.log("processedTopics: ", processedTopics); 
+        };
+
+        if (courseDetails) {
+            processCourseData(courseDetails);
+        }
+    }, [courseDetails]);
+
     let courseId = location.state?.courseId;
+    // const courseId = location.state?.courseId;
+
     console.log(courseId);
     console.log('courseId');
     const [initialValues, setInitialValues] = useState({
@@ -87,6 +132,7 @@ const EnrolledCourseDetail = () => {
 
     const getCourseById = async (id, nextLecture) => {
         const { data } = await axiosWrapper('GET', `${API_URL.SUPABASE_GET_COURSE.replace(':id', id)}`, {}, token);
+        console.log(data);
 
         setCurrentCourseID(id);
         // Higher Level info
@@ -94,31 +140,35 @@ const EnrolledCourseDetail = () => {
             title: data.title,
             moduleManager: data.createdBy?.name,
             category: data.category || [],
-            banner: data?.banner || ''
+            banner: data?.banner || '',
+            lectures: data?.lectures || [],
+            folders: data?.folders || [],
+            
         });
         // Overall lectures
         setLectures(data.lectures);
 
         // Handle search results
         setFilteredLectures(data.lectures);
-        const incompleteLectureIndex = data.lectures.find((lec) => !lec.completedBy?.includes(userInfo?._id));
+        const incompleteLectureIndex = data.lectures.find((lec) => !lec.completedBy?.includes(userInfo?.id));
         // Get the first lecture
         if (nextLecture && activeIndex <= data?.lectures?.length - 1) {
             getCurrentLecture(nextLecture);
-        } else if (incompleteLectureIndex?._id !== undefined) {
-            getCurrentLecture(incompleteLectureIndex?._id);
+        } else if (incompleteLectureIndex?.id !== undefined) {
+            getCurrentLecture(incompleteLectureIndex?.id);
         } else {
-            getCurrentLecture(data.lectures[0]?._id);
+            getCurrentLecture(data.lectures[0]?.id);
         }
+        setLoading(false);
     };
 
     useEffect(() => {
         if (lid != null) {
             for (let idx = 0; idx < lectures.length; idx++) {
                 const lec = lectures[idx];
-                if (lec._id == lid) {
+                if (lec.id == lid) {
                     setActiveIndex(idx);
-                    getCurrentLecture(lec._id);
+                    getCurrentLecture(lec.id);
                     break;
                 }
             }
@@ -147,20 +197,24 @@ const EnrolledCourseDetail = () => {
 
     const getCurrentLecture = async (id) => {
         if (!id) return;
+        setLectureLoading(true);
         const { data } = await axiosWrapper('GET', `${API_URL.SUPABASE_GET_LECTURE.replace(':id', id)}`, {}, token);
         setSelectedLecture(data);
         const mcqs = data.quiz?.mcqs;
 
         const initialValues = {
             mcqs: mcqs?.map((mcq) => ({
-                questionId: mcq._id,
+                questionId: mcq.id,
                 answer: mcq.answer || '',
                 question: mcq.question,
                 options: shuffleArray(mcq.options)
             }))
         };
         setInitialValues(initialValues);
+        setLectureLoading(false);
+
     };
+    console.log(selectedLecture);
     const decodeHtmlEntities = (encodedString) => {
         const textarea = document.createElement('textarea');
         textarea.innerHTML = encodedString;
@@ -206,8 +260,8 @@ const EnrolledCourseDetail = () => {
 
     const handleButtonClick = (index, fetchLecture = true) => {
         setActiveIndex(index);
-
-        if (fetchLecture) getCurrentLecture(lectures[index]?._id);
+        console.log(lectures[index]?.id);
+        if (fetchLecture) getCurrentLecture(lectures[index]?.id);
 
         if (lectures[index]) {
             if (lectures[index] && lectures[index].name) {
@@ -241,14 +295,14 @@ const EnrolledCourseDetail = () => {
 
             const { data } = await axiosWrapper(
                 'PUT',
-                `${API_URL.PERFORM_QUIZ.replace(':id', selectedLecture._id)}`,
+                `${API_URL.PERFORM_QUIZ.replace(':id', selectedLecture.id)}`,
                 answers,
                 token
             );
             if (data.pass) {
                 // Proceed to next lecture if pass
                 handleButtonClick(activeIndex + 1, false);
-                getCourseById(courseId, lectures[activeIndex + 1]?._id);
+                getCourseById(courseId, lectures[activeIndex + 1]?.id);
                 setCourseId(courseId); // Refresh course data
                 toast.success('You have passed the quiz. Proceeding to the next lecture.');
                 setRetryQuiz(false);
@@ -265,14 +319,58 @@ const EnrolledCourseDetail = () => {
         }
     };
 
-    const markLectureAsCompleted = async (lectureId) => {
-        const URL = `${API_URL.MARK_LECTURE_COMPLETED.replace(':id', lectureId)}`;
-        await axiosWrapper('PUT', URL, {}, token);
-        setSlugOnce(true);
-        getCourseById(currentCourseID, lectures[activeIndex]?._id);
-    };
+    // const markLectureAsCompleted = async (lectureId) => {
+    //     const URL = `${API_URL.SUPABASE_MARK_LECTURE_COMPLETED.replace(':id', lectureId)}`;
+    //     await axiosWrapper('PUT', URL, {}, token);
+    //     setSlugOnce(true);
+    //     getCourseById(currentCourseID, lectures[activeIndex]?.id);
+    // };
 
+    const markLectureAsCompleted = async (lectureId, courseId) => {
+        const URL = `${API_URL.SUPABASE_MARK_LECTURE_COMPLETED.replace(':id', lectureId)}`;        
+        const data = {
+            lectureId,
+            courseId
+        };
+        
+        await axiosWrapper('PUT', URL, data, token);
+        
+        setSlugOnce(true);
+        getCourseById(currentCourseID, lectures[activeIndex]?.id);
+    };
+    const handleLectureSelect = (lecture) => {
+        setSelectedLecture(lecture);
+    };
+    // const calculateCompletionPercentage = () => {
+    //     console.log('%lectures',lectures);
+    //     if (lectures.length === 0) return 0;
+    //     const completedLectures = lectures.filter(lecture => lecture.lecture_progress?.is_completed).length;
+    //     console.log('completedLectures',completedLectures);
+    //     return (completedLectures / lectures.length) * 100;
+    // };
+    const calculateCompletionPercentage = () => {
+        if (lectures.length === 0) return 0;
+        
+        lectures.forEach((lecture, index) => {  
+            if (lecture.lecture_progress && lecture.lecture_progress.length > 0) {
+                const progress = lecture.lecture_progress[0];
+            } else {
+                // console.log(`Lecture ${index + 1} has no progress data.`);
+            }
+        });
+        const completedLectures = lectures.filter(lecture => 
+            lecture.lecture_progress?.length > 0 && 
+            lecture.lecture_progress[0]?.is_completed
+        ).length;    
+        return (completedLectures / lectures.length) * 100;
+    };
+    
+    
     return (
+        <>
+        {loading ? (
+            <Loading />
+        ) : (
         <div className="EnrolledCourseDetail">
             {filteredLectures.length === 0 ? (
                 <>
@@ -297,7 +395,8 @@ const EnrolledCourseDetail = () => {
                     ) : (
                         <>
                             <div className="row">
-                                <div className="title-top col-md-8">
+                                <div className='col-md-8'>
+                                <div className="title-top">
                                     <span
                                         onClick={() => navigate(`/${role}/courses-supabase`)}
                                         style={{ cursor: 'pointer' }}
@@ -305,6 +404,7 @@ const EnrolledCourseDetail = () => {
                                         Courses <img src={CaretRight} alt=">" />
                                     </span>{' '}
                                     Enrolled Course Details <img src={CaretRight} alt=">" /> Lecture {activeIndex + 1}
+                                </div>
                                 </div>
                                 <div className="col-md-4">
                                     <InputGroup>
@@ -349,7 +449,7 @@ const EnrolledCourseDetail = () => {
 
                                             <div className="category-container">
                                                 {courseDetails?.category?.map((cat) => (
-                                                    <span key={cat._id} className="category-tag">
+                                                    <span key={cat.id} className="category-tag">
                                                         {cat.name}
                                                     </span>
                                                 ))}
@@ -363,94 +463,105 @@ const EnrolledCourseDetail = () => {
                                                     </div>
 
                                                     <div className="lecture-btns">
-                                                        {filteredLectures.map((lecture, index) => (
+                                                    {/* <EnrollFolderStructure
+                                                        topics={topics}
+                                                        unassignedLectures={unassignedLectures}
+                                                        onLectureSelect={selectedLecture}
+                                                    /> */}
+                                                   <div className='progress-wrap'> 
+                                                   <CustomProgressBar progress={calculateCompletionPercentage().toFixed(2)} />
+
+                                                        {/* <h3>Course Completion:</h3>
+                                                        <input 
+                                                            type="number" 
+                                                            value={calculateCompletionPercentage().toFixed(2)} 
+                                                            readOnly
+                                                            style={{ width: '100px', textAlign: 'center', fontSize: '16px' }}
+                                                        />
+                                                        <span>%</span> */}
+                                                    </div>
+                                                    <EnrollFolderStructure 
+                                                        topics={topics}
+                                                        unassignedLectures={unassignedLectures}
+                                                        filteredLectures={filteredLectures}
+                                                        onLectureSelect={(lecture) => {
+                                                            const index = filteredLectures.findIndex(l => l.id === lecture.id);
+                                                            if (index !== -1) {
+                                                            handleButtonClick(index);
+                                                            }
+                                                        }}
+                                                        selectedLectureId={selectedLecture?.id}
+                                                        userInfo={userInfo}
+                                                        markLectureAsCompleted={markLectureAsCompleted}
+                                                        accessRestricted={accessRestricted}
+                                                    />
+                                                        {/* {filteredLectures.map((lecture, index) => (
                                                             <Button
                                                                 type="button"
                                                                 key={index}
-                                                                className={`btn ${lecture?._id === selectedLecture?._id ? 'active' : 'inactive'} ${lecture?.completedBy?.includes(userInfo?._id) && 'passed-lecture'}`}
+                                                                className={`btn ${lecture?.id === selectedLecture?.id ? 'active' : 'inactive'} ${lecture?.completedBy?.includes(userInfo?.id) && 'passed-lecture'}`}
                                                                 onClick={() => handleButtonClick(index)}
                                                                 disabled={
                                                                     accessRestricted ||
                                                                     (index > 0 &&
                                                                         !filteredLectures[
                                                                             index - 1
-                                                                        ]?.completedBy?.includes(userInfo?._id) &&
+                                                                        ]?.completedBy?.includes(userInfo?.id) &&
                                                                         lecture?.quiz?.mcqs?.length > 0)
                                                                 }
                                                             >
                                                                 <div>
-                                                                    {/* <img
+                                                                    <img
                                                                         src={
-                                                                            lecture?.completedBy?.includes(userInfo?._id)
+                                                                            lecture?.completedBy?.includes(userInfo?.id)
                                                                                 ? ActiveIcon
                                                                                 : InactiveIcon
                                                                         }
                                                                         alt="IconLect"
-                                                                    /> */}
+                                                                    />
                                                                     <p>{lecture.name}</p>
                                                                 </div>
                                                                 <img
                                                                     className="checkimg"
                                                                     src={
-                                                                        lecture?.completedBy?.includes(userInfo?._id)
+                                                                        lecture?.completedBy?.includes(userInfo?.id)
                                                                             ? checkicon
                                                                             : ''
                                                                     }
                                                                     alt="IconLect"
                                                                 />
                                                             </Button>
-                                                        ))}
+                                                        ))} */}
                                                     </div>
                                                 </div>
                                             </Col>
                                             {/* eslint-disable  */}
                                             <Col sm={12} md={6} lg={8} xl={9}>
                                             <div className="lecture-right">
+                                            {lectureLoading? (
+                                                <LectureCurriculumSkeleton />
+                                            ) : (<>
                                             {!continueQuiz && selectedLecture && (
                                                     <div className="lecture-curriculum">
                                                         <h2 className="title">
                                                             {selectedLecture.name}
-                                                                {selectedLecture.completedBy?.some(user => user._id === userInfo?._id) ?  <img className='checkimg' src={checkicon}   alt="Already completed"
-    data-tooltip-id="my-tooltip2" data-tooltip-place="top"  data-tooltip-content="Already completed"/> : <img className='checkimg'   onClick={() =>
-                                                                    markLectureAsCompleted(selectedLecture?._id)
+                                                                {/* {selectedLecture.completedBy?.some(user => user.id === userInfo?.id) ?  <img className='checkimg' src={checkicon}   alt="Already completed"
+                                                                    data-tooltip-id="my-tooltip2" data-tooltip-place="top" 
+                                                                     data-tooltip-content="Already completed"/> : <img className='checkimg' 
+                                                                       onClick={() =>
+                                                                    markLectureAsCompleted(selectedLecture?.id)
+                                                                }  src={checkicon2}  alt="Mark lecture as completed."
+                                                                data-tooltip-id="my-tooltip2"   data-tooltip-place="top" data-tooltip-content="Mark lecture as completed."/>} */}
+                                                                {selectedLecture?.lecture_progress?.is_completed ?  <img className='checkimg' src={checkicon}   alt="Already completed"
+                                                                    data-tooltip-id="my-tooltip2" data-tooltip-place="top" 
+                                                                     data-tooltip-content="Already completed"/> : <img className='checkimg' 
+                                                                       onClick={() =>
+                                                                    markLectureAsCompleted(selectedLecture?.id)
                                                                 }  src={checkicon2}  alt="Mark lecture as completed."
                                                                 data-tooltip-id="my-tooltip2"   data-tooltip-place="top" data-tooltip-content="Mark lecture as completed."/>}
+                                                                
                                                         </h2>
-                                                        {selectedLecture.file ? (
-                                                            <div className="video">
-                                                                <div className="pdf-viewer">
-                                                                    <PdfModal file={selectedLecture.file} />
-                                                                </div>
-                                                            </div>
-                                                        ) : selectedLecture?.vimeoLink ||
-                                                            selectedLecture?.vimeoVideoData ? (
-                                                            <div className="video">
-                                                                <iframe
-                                                                    src={
-                                                                        selectedLecture?.vimeoLink ||
-                                                                        selectedLecture.vimeoVideoData?.player_embed_url
-                                                                    }
-                                                                    title="Vimeo video player"
-                                                                    frameBorder="0"
-                                                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                                                                    allowFullScreen
-                                                                    className="video-iframe w-100"
-                                                                ></iframe>
-                                                            </div>
-                                                        ) : (
-                                                            <div className="lecture-curriculum">
-                                                                <div>
-                                                                    <h2 className="title">
-                                                                        {selectedLecture.name}
-                                                                            <img className="checkimg" src={checkicon} alt="Check icon" />
-                                                                    </h2>
-                                                                </div>
-                                                                <p className="text-justify text-wrap">
-                                                                    {selectedLecture.description}
-                                                                </p>
-                                                            </div>
-                                                        )}
-                                                        <hr />
+                                                        
                                                         <p
                                                             className="mb-2"
                                                             dangerouslySetInnerHTML={{
@@ -511,6 +622,7 @@ const EnrolledCourseDetail = () => {
                                                         )}
                                                     </div>
                                                 )}
+                                               </>)} 
                                             </div>
                                             </Col>
                                         </Row>
@@ -522,7 +634,7 @@ const EnrolledCourseDetail = () => {
                                                     type="submit"
                                                     disabled={
                                                         isSubmitting ||
-                                                        selectedLecture?.completedBy?.includes(userInfo?._id)
+                                                        selectedLecture?.completedBy?.includes(userInfo?.id)
                                                     }
                                                 >
                                                     {retryQuiz ? 'Retry Quiz' : 'Submit Quiz'}
@@ -531,7 +643,7 @@ const EnrolledCourseDetail = () => {
                                                 <>
                                                     {
                                                         /* Continue to Quiz Button */
-                                                        selectedLecture?.quiz.mcqs.length !== 0 ? (
+                                                        selectedLecture && selectedLecture.quiz && selectedLecture.quiz.mcqs && selectedLecture.quiz.mcqs.length !== 0 ? (
                                                             <Button
                                                                 className="done-btn"
                                                                 type="button"
@@ -539,22 +651,25 @@ const EnrolledCourseDetail = () => {
                                                                 disabled={
                                                                     isSubmitting ||
                                                                     selectedLecture?.completedBy?.includes(
-                                                                        userInfo?._id
+                                                                        userInfo?.id
                                                                     )
                                                                 }
                                                             >
                                                                 Continue To Quiz
                                                             </Button>
                                                         ) : (
-                                                            <Button
-                                                                className="done-btn"
-                                                                type="button"
-                                                                onClick={() =>
-                                                                    markLectureAsCompleted(selectedLecture?._id)
-                                                                }
-                                                            >
-                                                                Done
-                                                            </Button>
+                                                            <></>
+                                                            // <Button
+                                                            //     className="done-btn"
+                                                            //     type="button"
+                                                            //     onClick={() =>
+                                                            //         // markLectureAsCompleted(selectedLecture?.id)
+                                                            //         markLectureAsCompleted(selectedLecture?.id, selectedLecture?.courseId)
+
+                                                            //     }
+                                                            // >
+                                                            //     Done
+                                                            // </Button>
                                                         )
                                                     }
                                                 </>
@@ -568,6 +683,8 @@ const EnrolledCourseDetail = () => {
                 </>
             )}
         </div>
+        )}
+        </>
     );
 };
 
