@@ -77,7 +77,7 @@ const Sidebar = () => {
     }, [sideBarStudentEventModal, token]);
 
     useEffect(() => {
-        getUpcomingEvent();
+        // getUpcomingEvent();
     }, [getUpcomingEvent]);
 
     const selectActiveItem = useCallback(() => {

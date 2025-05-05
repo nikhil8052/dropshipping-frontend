@@ -267,9 +267,9 @@ export const studentSidebarItems = [
     //     iconLight: settings, // Replace with your icon
     //     linkTo: '/student/settings'
     // },
-    {
-        id: 6,
-        name: 'Logout',
-        iconLight: logout // Replace with your icon
-    }
+    // {
+    //     id: 6,
+    //     name: 'Logout',
+    //     iconLight: logout // Replace with your icon
+    // }
 ];

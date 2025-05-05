@@ -1506,6 +1506,44 @@ label.custom_check span {
     cursor: pointer;
 }
 
+
+.progress-wrap {
+    display: block;
+    width: 100%;
+    margin: 20px 0px;
+}
+
+.progress-wrap .progress-bar-label {
+    left: 0 !important;
+    right: 0 !important;
+    margin: auto;
+    width: 100%;
+    transform: none !important;
+}
+
+.course-left {
+    width: 100%;
+}
+
+.EnrolledCourseDetail .title-top {
+    justify-content: left;
+}
+
+.lecture-curriculum {
+    padding: 20px;
+}
+
+.lecture-curriculum .title-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.lecture-curriculum .circle-loader {
+    margin-left: 10px;
+    border-radius: 15px;
+}
+
 @media only screen and (max-width:991px) {
     .access-container {
         flex-wrap: wrap;

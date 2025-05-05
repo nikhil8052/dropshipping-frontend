@@ -31,6 +31,7 @@ const GenericCard = ({
     onDelete,
     ...rest
 }) => {
+    console.warn(progress);
     const { userInfo } = useSelector((state) => state?.auth);
     const role = userInfo?.role?.toLowerCase();
     const navigate = useNavigate();
@@ -242,9 +243,10 @@ const GenericCard = ({
                             /> */}
                             </div>
                         )}
-                        {role === 'student' && enroll && (
+                        {role === 'student' && (
+                        // {role === 'student' && enroll && (
                             <>
-                                <CustomProgressBar progress={progress} />
+                                <CustomProgressBar progress={progress?.toFixed(2)} />
                                 {/* <div className="enroll-icon">
                                 <img src={!canAccessCourse ? lockIcon : enrollIcon} alt="enrollIcon" />
                                 <p className="">{!canAccessCourse ? 'Locked' : 'Enrolled'}</p>

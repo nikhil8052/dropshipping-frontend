@@ -29,7 +29,7 @@ const Courses = () => {
             }
         })
     );
-
+    
     const handleDragEnd = async (event) => {
         console.log(event)
         const { active, over } = event;
@@ -139,53 +139,122 @@ const Courses = () => {
         getAllCourses();
     }, [search, coursesFilter]);
 
+    // const getAllCourses = async () => {
+    //     setLoading(true);
+
+    //     try {
+    //         let constructedUrl = `${API_URL.SUPABASE_GET_ALL_COURSES}?search=${encodeURIComponent(search)}`;
+
+    //         if (role === 'STUDENT') {
+    //             constructedUrl += '&isEnrolled=true';
+    //         }
+
+    //         if (coursesFilter && coursesFilter !== 'All Courses') {
+    //             const isActive = coursesFilter === 'Active Courses' ? true : false;
+    //             constructedUrl += `&isActive=${isActive}`;
+    //         }
+
+    //         const response = await axiosWrapper('GET', constructedUrl, {}, userToken);
+    //         const { data } = response;
+    //         console.log(data)
+    //         const formattedData = data.map((course) => {
+    //             const baseCourseData = {
+    //                 img: course?.thumbnail,
+    //                 title: course?.title,
+    //                 progress: 34,
+    //                 description: course?.description,
+    //                 detail: course?.subtitle,
+    //                 lectureNo: 'Lectures: 0',
+    //                 archive: course?.isArchived,
+    //                 coachName: course?.moduleManager,
+    //                 _id: course?.id
+    //             };
+
+    //             // if (role === 'STUDENT' && course?.enrolledStudents.includes(userInfo?._id)) {
+    //             //     const progress = calcProgress(course, userInfo?._id);
+    //             //     return { ...baseCourseData, progress: precisionRound(progress, 0) };
+    //             // }
+
+    //             return baseCourseData;
+    //         });
+
+    //         const uniqueCourses = Array.from(new Map(formattedData.map((item) => [item._id, item])).values());
+
+    //         setAllCourses(uniqueCourses);
+    //         const initialDisplayedCourses = uniqueCourses.slice(0, itemsPerBatch);
+    //         setDisplayedCourses(initialDisplayedCourses);
+    //         // Update items state with actual course IDs
+    //         setItems(initialDisplayedCourses.map((c) => c._id));
+    //         setHasMore(uniqueCourses.length > itemsPerBatch);
+    //         setHasLoaded(true);
+    //     } catch (error) {
+    //         setHasMore(false);
+    //         setHasLoaded(true);
+    //     } finally {
+    //         setLoading(false);
+    //     }
+    // };
     const getAllCourses = async () => {
         setLoading(true);
-
+    
         try {
             let constructedUrl = `${API_URL.SUPABASE_GET_ALL_COURSES}?search=${encodeURIComponent(search)}`;
-
+    
             if (role === 'STUDENT') {
                 constructedUrl += '&isEnrolled=true';
             }
-
+    
             if (coursesFilter && coursesFilter !== 'All Courses') {
                 const isActive = coursesFilter === 'Active Courses' ? true : false;
                 constructedUrl += `&isActive=${isActive}`;
             }
-
+    
             const response = await axiosWrapper('GET', constructedUrl, {}, userToken);
             const { data } = response;
-            console.log(data)
+            console.log(data);
+    
             const formattedData = data.map((course) => {
+                // Step 1: Calculate Completion Percentage
+                const calculateCompletionPercentage = () => {
+                    if (!course?.lectures || course?.lectures.length === 0) return 0;
+    
+                    const completedLectures = course.lectures.filter(lecture => 
+                        lecture.lecture_progress?.some(progress => progress.is_completed)
+                    ).length;
+    
+                    return (completedLectures / course.lectures.length) * 100;
+                };
+    
+                const completionPercentage = calculateCompletionPercentage();
+    
                 const baseCourseData = {
                     img: course?.thumbnail,
                     title: course?.title,
+                    progress: completionPercentage,
                     description: course?.description,
                     detail: course?.subtitle,
-                    lectureNo: 'Lectures: 0',
+                    lectureNo: `Lectures: ${course?.lectures?.length || 0}`,
                     archive: course?.isArchived,
                     coachName: course?.moduleManager,
                     _id: course?.id
                 };
-
-                // if (role === 'STUDENT' && course?.enrolledStudents.includes(userInfo?._id)) {
-                //     const progress = calcProgress(course, userInfo?._id);
-                //     return { ...baseCourseData, progress: precisionRound(progress, 0) };
-                // }
-
+    
+                // Return the formatted course data with calculated progress
                 return baseCourseData;
             });
-
+    
+            // Remove duplicates by course _id
             const uniqueCourses = Array.from(new Map(formattedData.map((item) => [item._id, item])).values());
-
+    
             setAllCourses(uniqueCourses);
+    
+            // Step 2: Pagination Handling
             const initialDisplayedCourses = uniqueCourses.slice(0, itemsPerBatch);
             setDisplayedCourses(initialDisplayedCourses);
-            // Update items state with actual course IDs
             setItems(initialDisplayedCourses.map((c) => c._id));
             setHasMore(uniqueCourses.length > itemsPerBatch);
             setHasLoaded(true);
+    
         } catch (error) {
             setHasMore(false);
             setHasLoaded(true);
@@ -193,7 +262,7 @@ const Courses = () => {
             setLoading(false);
         }
     };
-
+    
     const fetchMoreData = () => {
         if (loading) return; // Prevent multiple fetches
 
