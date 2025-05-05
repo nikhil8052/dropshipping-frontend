@@ -24,6 +24,7 @@ import NameIcon from '../../../assets/images/profile.svg';
 import EmailIcon from '../../../assets/images/email.svg';
 import StatusIcon from '../../../assets/images/status.svg';
 import ActionIcon from '../../../assets/images/action.svg';
+import Plus from '../../../assets/images/plus.svg';
 
 const Students = () => {
     const [showDeleteModal, setShowDeleteModal] = useState({
@@ -41,7 +42,7 @@ const Students = () => {
         data: null,
         courseId: null
     });
- 
+
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
     const [loadingCRUD, setLoadingCRUD] = useState(false);
@@ -51,8 +52,6 @@ const Students = () => {
     const [studentsData, setStudentsData] = useState(null);
     const [selectedOption, setSelectedOption] = useState(studentsTrajectory[0].label);
     const [selectedCoach, setSelectedCoach] = useState('Assigned Coach');
-
-
     useEffect(() => {
         // Fetch data from API here
         if (selectedOption) {
@@ -315,39 +314,39 @@ const Students = () => {
     );
     /*eslint-disable */
 
-        const columns = [
-            {
-              headerName: 'Name', // Fallback text
-              field: 'name',
-              headerComponent: 'headerWithIcon', // Use the registered name
-              headerComponentParams: {
+    const columns = [
+        {
+            headerName: 'Name', // Fallback text
+            field: 'name',
+            headerComponent: 'headerWithIcon', // Use the registered name
+            headerComponentParams: {
                 icon: NameIcon,
                 displayName: 'Name'
-              },
-              filter: 'agSetColumnFilter',
-              sortable: true,
-              unSortIcon: true,
-              wrapText: true,
-              autoHeight: true,
-              cellRenderer: TextItemExpand,
-              resizable: false
             },
-            {
-                headerName: 'Email', // Fallback text
-                field: 'email',
-                headerComponent: 'headerWithIcon', // Use the registered name
-                headerComponentParams: {
-                  icon: EmailIcon,
-                  displayName: 'Email'
-                },
-                filter: 'agSetColumnFilter',
-                sortable: true,
-                unSortIcon: true,
-                wrapText: true,
-                autoHeight: true,
-                cellRenderer: TextExpand,
-                resizable: false
-              },
+            filter: 'agSetColumnFilter',
+            sortable: true,
+            unSortIcon: true,
+            wrapText: true,
+            autoHeight: true,
+            cellRenderer: TextItemExpand,
+            resizable: false
+        },
+        {
+            headerName: 'Email', // Fallback text
+            field: 'email',
+            headerComponent: 'headerWithIcon', // Use the registered name
+            headerComponentParams: {
+                icon: EmailIcon,
+                displayName: 'Email'
+            },
+            filter: 'agSetColumnFilter',
+            sortable: true,
+            unSortIcon: true,
+            wrapText: true,
+            autoHeight: true,
+            cellRenderer: TextExpand,
+            resizable: false
+        },
         // {
         //     headerName: 'Courses%',
         //     field: 'id',
@@ -413,8 +412,8 @@ const Students = () => {
             field: 'isActive',
             headerComponent: 'headerWithIcon',
             headerComponentParams: {
-              icon: StatusIcon,
-              displayName: 'Activate/Deactivate'
+                icon: StatusIcon,
+                displayName: 'Activate/Deactivate'
             },
             filter: 'agSetColumnFilter',
             cellRenderer: ToggleRenderer,
@@ -432,21 +431,30 @@ const Students = () => {
             field: 'Actions',
             headerComponent: 'headerWithIcon',
             headerComponentParams: {
-              icon: ActionIcon,
-              displayName: 'Actions'
+                icon: ActionIcon,
+                displayName: 'Actions'
             },
+            sortable: false,
+            filter: false,
+            resizable: false,
             // maxWidth: 100,
             cellRenderer: ActionsRenderer,
             cellRendererParams: {
                 onEditClick: handleEditClick,
                 onDeleteClick: handleDeleteClick
-            },
+            }
+        },
+        {
+            headerName: '+',
+            field: 'AddColumn',
             pinned: 'right',
             sortable: false,
             filter: false,
             resizable: false,
-            cellClass: ['d-flex', 'align-items-center', 'justify-content-center']
-        }
+            maxWidth: 60,
+          }
+          
+          
     ];
 
     const handleRoadmapUpdate = async (data, id) => {
@@ -473,9 +481,14 @@ const Students = () => {
         }
     };
 
-
-
-    const [visibleFields, setVisibleFields] = useState(['name', 'email', 'coachingTrajectory', 'isActive','Actions']);
+    const [visibleFields, setVisibleFields] = useState([
+        'name',
+        'email',
+        'coachingTrajectory',
+        'isActive',
+        'Actions',
+        'AddColumn'
+    ]);
 
     const filteredColumns = columns.filter((col) => visibleFields.includes(col.field));
 
@@ -483,9 +496,6 @@ const Students = () => {
         value: col.field,
         label: col.headerName
     }));
-
-
-
 
     return (
         <div className="students-page">
@@ -519,6 +529,7 @@ const Students = () => {
                     activeBtnTitle="Delete"
                 />
             )}
+
             <Table
                 columns={filteredColumns}
                 tableData={studentsData}
@@ -527,7 +538,6 @@ const Students = () => {
                 children={
                     <div className="button-wrapper">
                         {role === 'ADMIN' && (
-
                             <DropdownButton
                                 title={
                                     <div className="d-flex justify-content-between align-items-center gap-2">

@@ -9,7 +9,7 @@
 .custom_select__control,
 .dropdown-button-fix {
     .dropdown-toggle {
-        border-radius: 59px;
+        // border-radius: 59px;
         font-weight: 400;
         white-space: nowrap;
         background-color: transparent !important;
@@ -133,7 +133,7 @@
 
 .add-button {
     @include pagination-gradient;
-    border-radius: 59px;
+    // border-radius: 59px;
     color: #ffff !important;
     padding: 5px 20px;
     font-weight: 400;
@@ -143,7 +143,7 @@
 
 .submit-btn,
 .cancel-btn {
-    border-radius: 59px;
+    // border-radius: 59px;
     font-weight: 400;
     white-space: nowrap;
     border: none;
@@ -169,7 +169,7 @@
 
 .filter-button {
     background-color: transparent;
-    border-radius: 59px;
+    // border-radius: 59px;
     color: rgba(148, 148, 148, 1);
     font-weight: 400;
     white-space: nowrap;
@@ -377,7 +377,7 @@
     background-color: transparent !important;
     color: black !important;
     border: 1px solid rgba(3, 164, 194, 0.24) !important;
-    border-radius: 59px;
+    // border-radius: 59px;
     font-weight: 400;
     white-space: nowrap;
     border: none;
@@ -1228,6 +1228,13 @@ input:focus-visible {
 .ag-theme-alpine .ag-header-row span{
 color:#767c8b;
 }
+
+.ag-header-cell-resize::after {
+    height: 100% !important;
+    top: 0 !important;
+    width: 1px !important;
+}
+
 @media only screen and (max-width:1499px) {
     .detail-page-header {
         max-width: 950px;
