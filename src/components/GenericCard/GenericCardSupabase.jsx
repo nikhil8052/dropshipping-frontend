@@ -85,8 +85,10 @@ const GenericCard = ({
                             onClick={(e) => {
                                 const isToggleClick = e.target.className === 'form-check-input';
                                 if (isToggleClick) return;
+                                {console.log(role)}
                                 navigate(
-                                    role === 'student' && enroll && canAccessCourse
+                                    // role === 'student' && enroll && canAccessCourse
+                                    role === 'student'
                                         ? `/${role}/courses-supabase/enrolled-course/${createSlug(title)}`
                                         : `/${role}/courses-supabase/details/${createSlug(title)}`,
                                     {
@@ -151,7 +153,8 @@ const GenericCard = ({
                         const isToggleClick = e.target.className === 'form-check-input';
                         if (isToggleClick) return;
                         navigate(
-                            role === 'student' && enroll && canAccessCourse
+                            // role === 'student' && enroll && canAccessCourse
+                            role === 'student'
                                 ? `/${role}/courses-supabase/enrolled-course/${createSlug(title)}`
                                 : `/${role}/courses-supabase/details/${createSlug(title)}`,
                             {

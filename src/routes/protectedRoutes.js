@@ -10,6 +10,7 @@ const Students = lazy(() => import('@pages/Dashboard/Students/Students'));
 const StudentsSupbase = lazy(() => import('@pages/Dashboard/Students-supabase/Students'));
 const NewSupabaseStudent = lazy(() => import('@pages/Dashboard/Students-supabase/NewStudent/NewStudent'));
 const EnrolledCourseDetail = lazy(() => import('@pages/Dashboard/Courses/EnrolledCourseDetail'));
+const SupabaseEnrolledCourseDetail = lazy(() => import('@pages/Dashboard/Courses-supabase/EnrolledCourseDetail'));
 const Courses = lazy(() => import('@pages/Dashboard/Courses/Courses'));
 const CourseSupabase = lazy(() => import('@pages/Dashboard/Courses-supabase/Courses'));
 const Categories = lazy(() => import('@pages/Dashboard/Categories/Categories'));
@@ -448,6 +449,13 @@ export const studentRoutes = [
         exact: true,
         name: 'Courses',
         Component: EnrolledCourseDetail,
+        access: 'STUDENT'
+    },
+    {
+        path: 'courses-supabase/enrolled-course/:name?/:lec_name?',
+        exact: true,
+        name: 'Courses',
+        Component: SupabaseEnrolledCourseDetail,
         access: 'STUDENT'
     },
     {
