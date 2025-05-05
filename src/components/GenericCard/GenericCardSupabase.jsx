@@ -31,7 +31,6 @@ const GenericCard = ({
     onDelete,
     ...rest
 }) => {
-    console.warn(progress);
     const { userInfo } = useSelector((state) => state?.auth);
     const role = userInfo?.role?.toLowerCase();
     const navigate = useNavigate();
@@ -105,7 +104,6 @@ const GenericCard = ({
                             onClick={(e) => {
                                 const isToggleClick = e.target.className === 'form-check-input';
                                 if (isToggleClick) return;
-                                {console.log(role)}
                                 navigate(
                                     // role === 'student' && enroll && canAccessCourse
                                     role === 'student'
