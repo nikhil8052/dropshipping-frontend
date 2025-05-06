@@ -26,7 +26,6 @@ import StatusIcon from '../../../assets/images/status.svg';
 import ActionIcon from '../../../assets/images/action.svg';
 import Plus from '../../../assets/images/plus.svg';
 import AddColumnHeader from '../../../components/AddColumnHeader';
-import { MultiSelect } from 'primereact/multiselect';
 
 const Students = () => {
     const [showDeleteModal, setShowDeleteModal] = useState({
@@ -79,6 +78,7 @@ const Students = () => {
     }, [showColumnSelect]);
 
 
+
     useEffect(() => {
         // Fetch data from API here
         if (selectedOption) {
@@ -92,11 +92,11 @@ const Students = () => {
             setLoading(loading);
             const coaches = await axiosWrapper(
                 'GET',
-                // `${API_URL.SUPABASE_GET_ALL_STUDENTS}`,
                 `${API_URL.SUPABASE_GET_ALL_STUDENTS}?coachingTrajectory=${query || selectedOption}`,
                 {},
                 token
             );
+
             setStudentsData(coaches.data);
         } catch (error) {
             return;
@@ -269,6 +269,8 @@ const Students = () => {
         return percentages.length > 0 ? percentages.reduce((a, b) => a + b, 0) / percentages.length : 0;
     };
 
+
+
     /*eslint-disable */
     const ActionsRenderer = (props) => (
         <React.Fragment>
@@ -339,9 +341,47 @@ const Students = () => {
             </div>
         </div>
     );
+
+    const handleRoadmapUpdate = async (data, id) => {
+        if (id) {
+            setLoading(true);
+            try {
+                const url = `${API_URL.UPDATE_STUDENT.replace(':id', id)}`;
+                const method = 'PUT';
+
+                await axiosWrapper(
+                    method,
+                    url,
+                    {
+                        coursesRoadmap: data
+                    },
+                    token
+                );
+                fetchData();
+            } catch (error) {
+                setLoading(false);
+            } finally {
+                setLoading(false);
+            }
+        }
+    };
+
+
     /*eslint-disable */
 
-    const columns = [
+    // Start Dynamic Superbase Table 
+    const [visibleFields, setVisibleFields] = useState([
+        'name',
+        'email',
+        'coachingTrajectory',
+        'isActive',
+        'Actions',
+        'AddColumn'
+    ]);
+
+    const [supabaseAllCols, setSupabaseAllCols] = useState([]);
+
+    const [supabaseCols, setSupabaseCols] = useState([
         {
             headerName: 'Name', // Fallback text
             field: 'name',
@@ -374,41 +414,7 @@ const Students = () => {
             cellRenderer: TextExpand,
             resizable: false
         },
-        // {
-        //     headerName: 'Courses%',
-        //     field: 'id',
-        //     filter: 'agSetColumnFilter',
-        //     sortable: true,
-        //     unSortIcon: true,
-        //     resizable: false,
-        //     cellRenderer: ({ data: rowData }) => {
-        //         // Calculate the percentage of courses completed
-        //         const coursePercentage = calcPercentage(rowData);
-        //         return (
-        //             <div key={rowData?.id}>
-        //                 {coursePercentage === 0.0 || coursePercentage === '0.00'
-        //                     ? '--'
-        //                     : `${coursePercentage.toFixed(2)}%`}
-        //             </div>
-        //         );
-        //     }
-        // },
-        // {
-        //     headerName: 'Fee Status',
-        //     field: 'feeStatus',
-        //     filter: 'agSetColumnFilter',
-        //     sortable: true,
-        //     unSortIcon: true,
-        //     resizable: false,
-        //     cellRenderer: ({ data: rowData }) => {
-        //         const status = rowData.feeStatus || '--';
-        //         return (
-        //             <div className={`${status} fee-status`} key={rowData.id}>
-        //                 {status}
-        //             </div>
-        //         );
-        //     }
-        // },
+
         {
             headerName: 'HT / LT',
             field: 'coachingTrajectory',
@@ -421,19 +427,7 @@ const Students = () => {
                 return <div key={rowData.id}>{coachingTrajectory === COACH.COACH_TYPE.HIGH_TICKET ? 'HT' : 'LT'}</div>;
             }
         },
-        // {
-        //     headerName: 'Courses Roadmap',
-        //     field: 'coursesRoadmap',
-        //     filter: 'agSetColumnFilter',
-        //     sortable: false,
-        //     wrapText: true,
-        //     autoHeight: true,
-        //     resizable: false,
-        //     cellRenderer: LinkRenderer,
-        //     cellRendererParams: {
-        //         onRoadMapClick: handleCoursesRoadMapClick
-        //     }
-        // },
+
         {
             headerName: 'Activate/Deactivate',
             field: 'isActive',
@@ -461,7 +455,7 @@ const Students = () => {
                 icon: ActionIcon,
                 displayName: 'Actions'
             },
-            // maxWidth: 100,
+
             cellRenderer: ActionsRenderer,
             cellRendererParams: {
                 onEditClick: handleEditClick,
@@ -484,47 +478,53 @@ const Students = () => {
             resizable: false,
             cellRenderer: () => null
         }
-    ];
-
-    const handleRoadmapUpdate = async (data, id) => {
-        if (id) {
-            setLoading(true);
-            try {
-                const url = `${API_URL.UPDATE_STUDENT.replace(':id', id)}`;
-                const method = 'PUT';
-
-                await axiosWrapper(
-                    method,
-                    url,
-                    {
-                        coursesRoadmap: data
-                    },
-                    token
-                );
-                fetchData();
-            } catch (error) {
-                setLoading(false);
-            } finally {
-                setLoading(false);
-            }
-        }
-    };
-
-    const [visibleFields, setVisibleFields] = useState([
-        'name',
-        'email',
-        'coachingTrajectory',
-        'isActive',
-        'Actions',
-        'AddColumn'
     ]);
 
-    const filteredColumns = columns.filter((col) => visibleFields.includes(col.field));
+    useEffect(() => {
+        const fetchColumns = async () => {
+            try {
+                const excludedFields = ['name', 'email', 'coachingTrajectory', 'isActive', 'actions', 'AddColumn'];
+                const ENDPOINT = API_URL.SUPABASE_GET_COLUMNS.replace(':table', 'users');
+                const response = await axiosWrapper('GET', ENDPOINT, {}, token);
+                const columnNames = response.data
+                    .filter((col) => !excludedFields.includes(col))
+                    .map((col) => ({
+                        value: col,
+                        label: col
+                    }));
 
-    const columnOptions = columns.map((col) => ({
-        value: col.field,
-        label: col.headerName
+                const supaCols = columnNames.map((col) => {
+
+                    return {
+                        headerName: col.value,
+                        field: col.value,
+                        filter: 'agSetColumnFilter',
+                        sortable: true,
+                        unSortIcon: true,
+                        wrapText: true,
+                        autoHeight: true,
+                        resizable: false,
+
+                    }
+                });
+                setSupabaseAllCols([...columnNames, "AddColumn"]);
+                // setSupabaseCols([...supabaseCols, ...supaCols ]);
+
+            } catch (error) {
+                console.error('Error fetching columns:', error);
+            }
+        };
+        fetchColumns();
+    }, []);
+
+    // IF IT needs to be visible then show that else not 
+    const filteredColumns = supabaseCols.filter((col) => visibleFields.includes(col.field));
+    const columnOptions = supabaseAllCols.map((col) => ({
+        value: col.value,
+        label: col.label
     }));
+
+    // END  Dynamic Superbase Table 
 
     return (
         <div className="students-page">
@@ -578,7 +578,37 @@ const Students = () => {
                         options={columnOptions}
                         value={columnOptions.filter((opt) => visibleFields.includes(opt.value))}
                         onChange={(selectedOptions) => {
-                            setVisibleFields(selectedOptions.map((opt) => opt.value));
+
+                            const selectedValues = selectedOptions.map((opt) => opt.value);
+
+                            // Remove the values if they exists 
+
+
+                            const newCols = selectedValues
+                                .filter(val => !supabaseCols.some(col => col.field === val))
+                                .map((val) => ({
+                                    headerName: val,
+                                    field: val,
+                                    filter: 'agSetColumnFilter',
+                                    sortable: true,
+                                    unSortIcon: true,
+                                    wrapText: true,
+                                    autoHeight: true,
+                                    resizable: false,
+                                }));
+
+
+                            const updatedCols = [
+                                ...supabaseCols.slice(0, -1),
+                                ...newCols,
+                                supabaseCols[supabaseCols.length - 1]
+                            ];
+
+
+                            const updatedVisibleFields = Array.from(new Set([...visibleFields, ...selectedValues]));
+
+                            setSupabaseCols(updatedCols);
+                            setVisibleFields(updatedVisibleFields);
                             setShowColumnSelect(false);
                         }}
                         placeholder="Select columns..."
