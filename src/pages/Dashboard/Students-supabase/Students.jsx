@@ -381,7 +381,7 @@ const Students = () => {
 
     const [supabaseAllCols, setSupabaseAllCols] = useState([]);
 
-    const [supabaseCols, setSupabaseCols] = useState([
+    const initialTableCols=[
         {
             headerName: 'Name', // Fallback text
             field: 'name',
@@ -478,7 +478,8 @@ const Students = () => {
             resizable: false,
             cellRenderer: () => null
         }
-    ]);
+    ];
+    const [supabaseCols, setSupabaseCols] = useState([...initialTableCols]);
 
     useEffect(() => {
         const fetchColumns = async () => {
@@ -492,23 +493,9 @@ const Students = () => {
                         value: col,
                         label: col
                     }));
-
-                const supaCols = columnNames.map((col) => {
-
-                    return {
-                        headerName: col.value,
-                        field: col.value,
-                        filter: 'agSetColumnFilter',
-                        sortable: true,
-                        unSortIcon: true,
-                        wrapText: true,
-                        autoHeight: true,
-                        resizable: false,
-
-                    }
-                });
-                setSupabaseAllCols([...columnNames, "AddColumn"]);
-                // setSupabaseCols([...supabaseCols, ...supaCols ]);
+            
+                console.log( columnNames , " ALl columns ")
+                setSupabaseAllCols([...columnNames]);
 
             } catch (error) {
                 console.error('Error fetching columns:', error);
@@ -578,12 +565,8 @@ const Students = () => {
                         options={columnOptions}
                         value={columnOptions.filter((opt) => visibleFields.includes(opt.value))}
                         onChange={(selectedOptions) => {
-
                             const selectedValues = selectedOptions.map((opt) => opt.value);
-
                             // Remove the values if they exists 
-
-
                             const newCols = selectedValues
                                 .filter(val => !supabaseCols.some(col => col.field === val))
                                 .map((val) => ({

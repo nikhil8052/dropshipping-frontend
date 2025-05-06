@@ -785,7 +785,7 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
 
         const action = formikHelpers?.event?.nativeEvent?.submitter?.value;
 
-        console.log( values , " all the values of the submit ")
+     
         try {
             const formData = prepareFormData(values);
 
@@ -827,11 +827,15 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
                     }));
                 }
 
+                // setIsEditing(false)
+
+
             }
         } catch (err) {
             // handleError(err);
             console.log(err);
         } finally {
+            // setIsEditing(false)
             // setSubmitting(false);
             modelPopAction();
             setHasUnsavedChanges(false);

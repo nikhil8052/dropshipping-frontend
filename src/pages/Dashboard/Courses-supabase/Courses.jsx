@@ -29,9 +29,10 @@ const Courses = () => {
             }
         })
     );
-    
+
     const handleDragEnd = async (event) => {
-      
+
+   
         const { active, over } = event;
         if (active.id !== over?.id) {
             const oldIndex = items.indexOf(active.id);
@@ -44,8 +45,8 @@ const Courses = () => {
 
             setDisplayedCourses(newDisplayedCourses);
             const courses = newDisplayedCourses.map((course, index) => ({
-                course_id: course._id,      
-                sequence_id: index + 1     
+                course_id: course._id,
+                sequence_id: index + 1
             }));
             const response = await axiosWrapper('POST', API_URL.SUPABASE_REORDER_COURSE_VIEW, { courses }, userToken);
 
@@ -192,37 +193,37 @@ const Courses = () => {
     // };
     const getAllCourses = async () => {
         setLoading(true);
-    
+
         try {
             let constructedUrl = `${API_URL.SUPABASE_GET_ALL_COURSES}?search=${encodeURIComponent(search)}`;
-    
+
             if (role === 'STUDENT') {
                 constructedUrl += '&isEnrolled=true';
             }
-    
+
             if (coursesFilter && coursesFilter !== 'All Courses') {
                 const isActive = coursesFilter === 'Active Courses' ? true : false;
                 constructedUrl += `&isActive=${isActive}`;
             }
-    
+
             const response = await axiosWrapper('GET', constructedUrl, {}, userToken);
             const { data } = response;
             console.warn(data);
-    
+
             const formattedData = data.map((course) => {
                 // Step 1: Calculate Completion Percentage
                 const calculateCompletionPercentage = () => {
                     if (!course?.lectures || course?.lectures.length === 0) return 0;
-    
-                    const completedLectures = course.lectures.filter(lecture => 
+
+                    const completedLectures = course.lectures.filter(lecture =>
                         lecture.lecture_progress?.some(progress => progress.is_completed)
                     ).length;
-    
+
                     return (completedLectures / course.lectures.length) * 100;
                 };
-    
+
                 const completionPercentage = calculateCompletionPercentage();
-    
+
                 const baseCourseData = {
                     img: course?.thumbnail,
                     title: course?.title,
@@ -234,23 +235,23 @@ const Courses = () => {
                     coachName: course?.moduleManager,
                     _id: course?.id
                 };
-    
+
                 // Return the formatted course data with calculated progress
                 return baseCourseData;
             });
-    
+
             // Remove duplicates by course _id
             const uniqueCourses = Array.from(new Map(formattedData.map((item) => [item._id, item])).values());
-    
+
             setAllCourses(uniqueCourses);
-    
+
             // Step 2: Pagination Handling
             const initialDisplayedCourses = uniqueCourses.slice(0, itemsPerBatch);
             setDisplayedCourses(initialDisplayedCourses);
             setItems(initialDisplayedCourses.map((c) => c._id));
             setHasMore(uniqueCourses.length > itemsPerBatch);
             setHasLoaded(true);
-    
+
         } catch (error) {
             setHasMore(false);
             setHasLoaded(true);
@@ -258,7 +259,7 @@ const Courses = () => {
             setLoading(false);
         }
     };
-    
+
     const fetchMoreData = () => {
         if (loading) return; // Prevent multiple fetches
 
@@ -406,33 +407,33 @@ const Courses = () => {
                                 />
                             ))}
                             {role !== 'STUDENT' && (
-                            <div
-                                className="add-course-card"
-                                onClick={handleCreateClick}
-                                style={{
-                                    display: 'flex',
-                                    alignItems: 'center',
-                                    justifyContent: 'center',
-                                    border: '2px dashed #b1b1b0',
-                                    borderRadius: '12px',
-                                    height: '200px',
-                                    cursor: 'pointer',
-                                    height: '100%',
-                                    padding: '20px 0px',
-                                    gap: '10px'
-                                }}
-                            >
-                                <img
-                                    src={add}
-                                    alt="Add"
+                                <div
+                                    className="add-course-card"
+                                    onClick={handleCreateClick}
                                     style={{
-                                        width: '30px',
-                                        height: '30px',
-                                        filter: 'brightness(0) saturate(100%) invert(96%) sepia(5%) saturate(218%) hue-rotate(189deg) brightness(98%) contrast(91%)'
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        justifyContent: 'center',
+                                        border: '2px dashed #b1b1b0',
+                                        borderRadius: '12px',
+                                        height: '200px',
+                                        cursor: 'pointer',
+                                        height: '100%',
+                                        padding: '20px 0px',
+                                        gap: '10px'
                                     }}
-                                />
-                                <span style={{ color: '#b1b1b0' }}>New Course</span>
-                            </div>
+                                >
+                                    <img
+                                        src={add}
+                                        alt="Add"
+                                        style={{
+                                            width: '30px',
+                                            height: '30px',
+                                            filter: 'brightness(0) saturate(100%) invert(96%) sepia(5%) saturate(218%) hue-rotate(189deg) brightness(98%) contrast(91%)'
+                                        }}
+                                    />
+                                    <span style={{ color: '#b1b1b0' }}>New Course</span>
+                                </div>
                             )}
                         </InfiniteScroll>
                     </SortableContext>
