@@ -42,6 +42,7 @@ const EnrollFolderStructure = ({
     };
 
     return (
+        <div className="admin-left-sec">
         <div className="course-left">
             {topics.map((topic, topicIndex) => (
                 <div className="folder-detail" key={topic.id}>
@@ -136,6 +137,7 @@ const EnrollFolderStructure = ({
                 </div>
             )}
             <Tooltip id="my-tooltip2" />
+        </div>
         </div>
     );
 };

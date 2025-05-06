@@ -1375,6 +1375,7 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
                         <div className="course-detail-row">
                             <div className="row">
                                 <div className="col-lg-4 col-md-12">
+                                    <div className='admin-left-sec'>
                                     <div className="course-left">
                                         <div className="course-left-top">
                                             <h2 className="subhead">
@@ -1794,6 +1795,7 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
                                             //   </ul>
                                             // </div>
                                         )}
+                                    </div>
                                     </div>
                                 </div>
 

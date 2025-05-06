@@ -1515,7 +1515,7 @@
     // border-radius: 9px;
     position: relative;
     margin: 0;
-    margin-top: 1rem;
+    margin-top: 2rem;
     justify-content: space-between;
     // border: 0.5px solid rgba(0, 172, 212, 0.58);
     // padding: 30px;
@@ -1578,14 +1578,13 @@
     max-width: 18px;
 }
 
-.section-border.row .lec-left,
 .section-border.row .lecture-right,
-.corse-detail-box,
-.carousel-lecture {
+.corse-detail-box,.admin-left-sec,.search-lectures.lec-left {
     border: 1px solid #80808047;
     border-radius: 10px;
     padding: 10px !important;
     background-color: #fff;
+    width: 100%;
 }
 
 // .EnrolledCourseDetail .search-lectures,
@@ -1723,14 +1722,20 @@
 .main-panel:has(.EnrolledCourseDetail) .title-top {
     border: 1px solid rgba(128, 128, 128, 0.2784313725) !important;
     background-color: #fff !important;
-    padding: 10px;
+    padding: 0px 20px;
     border-radius: 10px;
     margin: 0px 10px;
-    gap: 10px;
+    gap: 30px;
     color: #6b7280 !important;
     span{
         color: #6b7280 !important;
         font-size: 14px !important;
         font-weight: 400 !important;
     }
+}
+
+.search-lectures.lec-left.btm-box {
+    background-color: transparent;
+    border: 0;
+    padding: 0;
 }
