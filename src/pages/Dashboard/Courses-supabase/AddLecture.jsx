@@ -224,27 +224,47 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
         }));
     };
 
+    // const toggleSwitch = async () => {
+    //     setIsPublishing(true);
+    //     const data = {
+    //         is_published: 'false'
+    //     };
+    //     setIsPublished(!isPublished);
+    //     const url = getApiUrl(isEditing, editingLecture?.id);
+    //     const method = isEditing ? 'PUT' : 'POST';
+    //     try {
+    //         await axiosWrapper(method, url, data, token);
+    //     } catch (err) {
+    //         setIsPublished((prev) => !prev);
+    //     } finally {
+    //         setIsPublishing(false);
+    //     }
+    // };
+
     const toggleSwitch = async () => {
         setIsPublishing(true);
+        const updatedIsPublished = !isPublished;
+    
+        setIsPublished(updatedIsPublished);
+    
         const data = {
-            is_published: 'false'
+            is_published: updatedIsPublished 
         };
-        setIsPublished(!isPublished);
+    
         const url = getApiUrl(isEditing, editingLecture?.id);
         const method = isEditing ? 'PUT' : 'POST';
+    
         try {
             await axiosWrapper(method, url, data, token);
         } catch (err) {
-            setIsPublished((prev) => !prev);
+            setIsPublished((prev) => !prev); 
         } finally {
             setIsPublishing(false);
         }
     };
-
-
-
-    // END DELETE RESOURCE 
-    // Add New Lecture which is unassinged
+    
+    
+    
     const addUnassignedLecture = async () => {
         const newLec = {
             name: 'New Lecture',
@@ -719,13 +739,14 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
             transcript: transcript,
             id: lecture.data?.id,
             courseId: lecture.data?.courseId,
-            quizzes: lecture?.data?.quizzes
+            quizzes: lecture?.data?.quizzes,
+            is_published: lecture?.data?.is_published || false,
         };
 
         setLectureQuizzes(lecture?.data?.quizzes || []);
 
         setEditingLecture(lectureDetail);
-
+        setIsPublished(lectureDetail?.is_published);
         setIsEditing(true);
 
         // Get the resouces of the lecture
@@ -1823,7 +1844,7 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
                                                     description: editingLecture?.description || '',
                                                     name: editingLecture?.name || '',
                                                     transcript: editingLecture?.transcript || '',
-                                                    id: editingLecture?.id || ''
+                                                    id: editingLecture?.id || '',
                                                     // quizzes: editingLecture?.quizzes || [],
                                                     // quizzes: lectureQuizzes || [],
                                                 }}
@@ -1953,6 +1974,7 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
                                                                         <div className="toggle-wrapper">
                                                                             <span className="toggle-label">
                                                                                 {isPublished ? 'Published' : 'Draft'}
+
                                                                             </span>
                                                                             <div className="switch">
                                                                                 <input
@@ -1964,6 +1986,7 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
                                                                                 <label htmlFor="switch2"></label>
                                                                             </div>
                                                                         </div>
+
                                                                     </>)}
                                                                     <Button type="button" className="cancel-btn" onClick={() => { setIsEditing(false) }}>
                                                                         Cancel

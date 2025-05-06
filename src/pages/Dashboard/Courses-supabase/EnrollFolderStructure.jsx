@@ -68,21 +68,22 @@ const EnrollFolderStructure = ({
                                             }}
                                         >
                                             {lecture.name}
-                                                {lecture.lecture_progress?.is_completed ? (
+                                                {lecture.lecture_progress[0]?.is_completed ? (
                                                     <img className='checkimg' src={checkicon} alt="Completed"
                                                         data-tooltip-id="my-tooltip2" 
                                                         data-tooltip-content="Already completed"/>
                                                 ) : (
-                                                    <img className='checkimg' 
-                                                        onClick={(e) => {
-                                                            e.stopPropagation();
-                                                            markLectureAsCompleted(lecture.id, lecture.courseId);
-                                                        }}
-                                                        src={checkicon2}  
-                                                        alt="Mark completed"
-                                                        data-tooltip-id="my-tooltip2"
-                                                        data-tooltip-content="Mark lecture as completed."
-                                                    />
+                                                    <></>
+                                                    // <img className='checkimg' 
+                                                    //     onClick={(e) => {
+                                                    //         e.stopPropagation();
+                                                    //         markLectureAsCompleted(lecture.id, lecture.courseId);
+                                                    //     }}
+                                                    //     src={checkicon2}  
+                                                    //     alt="Mark completed"
+                                                    //     data-tooltip-id="my-tooltip2"
+                                                    //     data-tooltip-content="Mark lecture as completed."
+                                                    // />
                                                 )}
                                         </li>
                                     );
@@ -113,7 +114,7 @@ const EnrollFolderStructure = ({
                                                 {lecture.lecture_progress[0]?.is_completed ? (
                                                     <img className='checkimg' src={checkicon} alt="Completed"
                                                         data-tooltip-id="my-tooltip2" 
-                                                        data-tooltip-content="Completed"/>
+                                                        data-tooltip-content="Already completed"/>
                                                 ) : (
                                                     <></>
                                                     // <img className='checkimg' 
