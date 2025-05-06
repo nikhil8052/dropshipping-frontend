@@ -97,7 +97,7 @@ const VerificationCode = () => {
                                                     </Button>
                                                 </FormikForm>
                                                 <Button
-                                                    className="back-btn"
+                                                    className="back-btn white"
                                                     type="button"
                                                     onClick={() => navigate('/login')}
                                                     disabled={isSubmitting || loading}

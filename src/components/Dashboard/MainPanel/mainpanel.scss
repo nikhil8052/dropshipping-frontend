@@ -73,14 +73,29 @@
     margin: auto;
 }
 
+.main-panel .main-content-wrapper:has(.course-top) .publish-course-wrapper {
+    max-width: 1440px;
+    margin: auto;
+    padding: 50px 30px 0px;
+}
+
 @media only screen and (max-width:1499px) {
 .main-panel .main-content-wrapper > div {
     max-width: 1100px;
     margin: auto;
 }
+
+.main-panel .main-content-wrapper:has(.course-top) .publish-course-wrapper {
+    max-width: 1100px;
+    padding: 30px 30px 0px;
+}
+
 }
 @media only screen and (max-width:767px) {
     .main-panel,.full-width-panel {
+        width: 100%;
+    }
+    .main-panel .main-content-wrapper:has(.course-top) .publish-course-wrapper {
         width: 100%;
     }
 }
