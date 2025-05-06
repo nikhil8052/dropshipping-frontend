@@ -371,7 +371,7 @@ const EnrolledCourseDetail = () => {
                         <span onClick={() => navigate(`/${role}/courses-supabase`)} style={{ cursor: 'pointer' }}>
                             Courses <img src={CaretRight} alt=">" />
                         </span>{' '}
-                        Enrolled Course Details
+                        { courseDetails.title}
                     </div>
                     <p className="no-data-wrapper">No Lecture Found</p>
                 </>
@@ -387,8 +387,8 @@ const EnrolledCourseDetail = () => {
                         </div>
                     ) : (
                         <>
-                            <div className="row">
-                                <div className='col-md-8'>
+                            <div className="enroll-top">
+                                <div className='top-box'>
                                 <div className="title-top">
                                     <span
                                         onClick={() => navigate(`/${role}/courses-supabase`)}
@@ -396,10 +396,10 @@ const EnrolledCourseDetail = () => {
                                     >
                                         Courses <img src={CaretRight} alt=">" />
                                     </span>{' '}
-                                    Enrolled Course Details <img src={CaretRight} alt=">" /> Lecture {activeIndex + 1}
+                                    { courseDetails.title} <img src={CaretRight} alt=">" /> Lecture {activeIndex + 1}
                                 </div>
                                 </div>
-                                <div className="col-md-4">
+                          
                                     {/* <InputGroup>
                                         <InputGroup.Text>
                                             <img src={Search} alt="Search" />
@@ -414,7 +414,7 @@ const EnrolledCourseDetail = () => {
                                             placeholder="Search"
                                         />
                                     </InputGroup> */}
-                                </div>
+                               
                             </div>
                             <Formik
                                 enableReinitialize
@@ -449,19 +449,12 @@ const EnrolledCourseDetail = () => {
                                             </div>
                                         </div>
                                         <Row className="section-border">
-                                            <Col sm={12} md={6} lg={4} xl={3}>
-                                                <div className="search-lectures lec-left">
-                                                    <div className="title-lecture-btns">
+                                            <Col sm={12} md={12} lg={4} xl={3}>
+                                            <div className='search-lectures lec-left mb-3' style={{height:'auto'}}>
+                                                <div className="title-lecture-btns">
                                                         <h1>{courseDetails?.title}</h1>
                                                     </div>
-
-                                                    <div className="lecture-btns">
-                                                    {/* <EnrollFolderStructure
-                                                        topics={topics}
-                                                        unassignedLectures={unassignedLectures}
-                                                        onLectureSelect={selectedLecture}
-                                                    /> */}
-                                                   <div className='progress-wrap'> 
+                                                    <div className='progress-wrap'> 
                                                    <CustomProgressBar progress={calculateCompletionPercentage().toFixed(2)} />
 
                                                         {/* <h3>Course Completion:</h3>
@@ -473,6 +466,17 @@ const EnrolledCourseDetail = () => {
                                                         />
                                                         <span>%</span> */}
                                                     </div>
+                                                </div>
+                                                <div className="search-lectures lec-left btm-box p-0">
+                                                    
+
+                                                    <div className="lecture-btns">
+                                                    {/* <EnrollFolderStructure
+                                                        topics={topics}
+                                                        unassignedLectures={unassignedLectures}
+                                                        onLectureSelect={selectedLecture}
+                                                    /> */}
+                                                  
                                                     <EnrollFolderStructure 
                                                         topics={topics}
                                                         unassignedLectures={unassignedLectures}
@@ -527,9 +531,10 @@ const EnrolledCourseDetail = () => {
                                                         ))} */}
                                                     </div>
                                                 </div>
+
                                             </Col>
                                             {/* eslint-disable  */}
-                                            <Col sm={12} md={6} lg={8} xl={9}>
+                                            <Col sm={12} md={12} lg={8} xl={9}>
                                             <div className="lecture-right">
                                             {lectureLoading? (
                                                 <LectureCurriculumSkeleton />

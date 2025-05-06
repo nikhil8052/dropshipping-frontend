@@ -127,7 +127,7 @@ const CourseDetail = () => {
 
             <div className="publish-course-wrapper">
                 <div className="row">
-                    <div className="col-md-4 col-sm-12">
+                    <div className="col-lg-4 col-md-12">
                         <div className="carousel-lecture">
                             <CarouselWrapper
                                 items={course?.lectures || []}
@@ -138,7 +138,7 @@ const CourseDetail = () => {
                             />
                         </div>
                     </div>
-                    <div className="col-md-8 col-sm-12">
+                    <div className="col-lg-8 col-md-12">
                         <div className="corse-detail-box">
                             {selectedLecture ? (
                                 <>
