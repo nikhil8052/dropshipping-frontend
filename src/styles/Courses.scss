@@ -1019,7 +1019,7 @@
             align-items: center;
 
             h1 {
-                font-size: $font-size-medium;
+                font-size: 1.1rem;
                 font-weight: $font-weight-regular;
                 margin-bottom: 0px;
             }
@@ -1032,7 +1032,7 @@
         }
 
         .lecture-btns {
-            margin-bottom: 48px;
+            // margin-bottom: 48px;
 
             @include respond-to($small-screen) {
                 padding-inline: 0px;
@@ -1152,7 +1152,7 @@
             align-items: center;
 
             h1 {
-                font-size: $font-size-medium;
+                font-size: 1.1rem;
                 font-weight: $font-weight-regular;
                 color: #1c1c1c;
                 margin-bottom: 0px;
@@ -1171,7 +1171,7 @@
             flex-direction: column;
             align-items: start;
             padding-block: 8px;
-            margin-bottom: 48px;
+            // margin-bottom: 48px;
             width: 100%;
 
             @include respond-to($small-screen) {
@@ -1584,14 +1584,14 @@
 .carousel-lecture {
     border: 1px solid #80808047;
     border-radius: 10px;
-    padding: 20px !important;
+    padding: 10px !important;
     background-color: #fff;
 }
 
-.EnrolledCourseDetail .search-lectures,
-.carousel-lecture {
-    height: 100%;
-}
+// .EnrolledCourseDetail .search-lectures,
+// .carousel-lecture {
+//     height: 100%;
+// }
 
 .EnrolledCourseDetail .search-input::placeholder {
     color: #000 !important;
@@ -1635,9 +1635,9 @@
         margin: 15px 0px;
     }
 
-    .EnrolledCourseDetail .search-lectures .lecture-btns {
-        margin-bottom: 25px;
-    }
+    // .EnrolledCourseDetail .search-lectures .lecture-btns {
+    //     margin-bottom: 25px;
+    // }
 
     .EnrolledCourseDetail .lecture-right {
         padding-top: 10px;
@@ -1718,4 +1718,19 @@
 
 .courses-button-wrapper * {
     font-size: 16px;
+}
+
+.main-panel:has(.EnrolledCourseDetail) .title-top {
+    border: 1px solid rgba(128, 128, 128, 0.2784313725) !important;
+    background-color: #fff !important;
+    padding: 10px;
+    border-radius: 10px;
+    margin: 0px 10px;
+    gap: 10px;
+    color: #6b7280 !important;
+    span{
+        color: #6b7280 !important;
+        font-size: 14px !important;
+        font-weight: 400 !important;
+    }
 }

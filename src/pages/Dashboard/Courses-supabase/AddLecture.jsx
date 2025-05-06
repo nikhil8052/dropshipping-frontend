@@ -1349,7 +1349,7 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
                     <div className="course-detail-tab">
                         <div className="course-detail-row">
                             <div className="row">
-                                <div className="col-lg-4 col-md-5">
+                                <div className="col-lg-4 col-md-12">
                                     <div className="course-left">
                                         <div className="course-left-top">
                                             <h2 className="subhead">
@@ -1772,7 +1772,7 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
                                     </div>
                                 </div>
 
-                                <div className="col-lg-8 col-md-7">
+                                <div className="col-lg-8 col-md-12">
                                     <div className="course-right">
                                         {/* new code  */}
                                         {!hasLectures && !isEditing ? (

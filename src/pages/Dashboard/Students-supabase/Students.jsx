@@ -26,7 +26,6 @@ import StatusIcon from '../../../assets/images/status.svg';
 import ActionIcon from '../../../assets/images/action.svg';
 import Plus from '../../../assets/images/plus.svg';
 import AddColumnHeader from '../../../components/AddColumnHeader';
-import { MultiSelect } from 'primereact/multiselect';
 
 const Students = () => {
     const [showDeleteModal, setShowDeleteModal] = useState({
