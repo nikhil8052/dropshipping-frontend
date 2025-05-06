@@ -55,7 +55,6 @@ const EnrolledCourseDetail = () => {
     const [course, setCourse] = useState(0);
     const [unassignedLectures, setUnassignedLectures] = useState([]);
     const [topics, setTopics] = useState([]);
-
     useEffect(() => {
         const processCourseData = (courseData) => {
             if (!courseData || !courseData.folders || !courseData.lectures) {
@@ -127,6 +126,8 @@ const EnrolledCourseDetail = () => {
     };
 
     const getCourseById = async (id, nextLecture) => {
+        console.log('next-lecture',nextLecture);
+        console.log('current-lecture',id);
         const { data } = await axiosWrapper('GET', `${API_URL.SUPABASE_GET_COURSE.replace(':id', id)}`, {}, token);
 
         setCurrentCourseID(id);
@@ -147,7 +148,8 @@ const EnrolledCourseDetail = () => {
         setFilteredLectures(data.lectures);
         const incompleteLectureIndex = data.lectures.find((lec) => !lec.completedBy?.includes(userInfo?.id));
         // Get the first lecture
-        if (nextLecture && activeIndex <= data?.lectures?.length - 1) {
+        // if (nextLecture && activeIndex <= data?.lectures?.length - 1) {
+        if (nextLecture) {
             getCurrentLecture(nextLecture);
         } else if (incompleteLectureIndex?.id !== undefined) {
             getCurrentLecture(incompleteLectureIndex?.id);
@@ -328,9 +330,45 @@ const EnrolledCourseDetail = () => {
         
         await axiosWrapper('PUT', URL, data, token);
         
+        let nextLecture = lectures
+        .slice(activeIndex + 1)
+        .find(lecture => !lecture.lecture_progress?.[0]?.is_completed);
+    
+        if (!nextLecture) {
+            nextLecture = lectures
+            .slice(0, activeIndex)
+            .find(lecture => !lecture.lecture_progress?.[0]?.is_completed);
+        }
+    
+        const targetLectureId = nextLecture?.id || lectures[activeIndex]?.id;
+          
+        
+    
         setSlugOnce(true);
-        getCourseById(currentCourseID, lectures[activeIndex]?.id);
+        // getCourseById(currentCourseID, lectures[activeIndex]?.id);
+        if (nextLecture) {
+            const newIndex = lectures.findIndex(lec => lec.id === targetLectureId);
+            setActiveIndex(newIndex);
+            updateLectureUrl(newIndex);
+            console.log(newIndex);
+            getCourseById(currentCourseID, targetLectureId);
+        } else {
+            getCourseById(currentCourseID, targetLectureId);
+        }
     };
+
+    const updateLectureUrl = (index) => {
+        if (lectures[index]?.name) {
+          const slug = createSlug(lectures[index].name);
+          const segments = location.pathname.split('/').filter(Boolean);
+          
+          if (segments[segments.length - 1] !== slug) {
+            const newSegments = segments.slice(0, -1).concat(slug);
+            navigate(`/${newSegments.join('/')}`, { replace: true });
+          }
+        }
+      };
+
     const handleLectureSelect = (lecture) => {
         setSelectedLecture(lecture);
     };
@@ -396,7 +434,11 @@ const EnrolledCourseDetail = () => {
                                     >
                                         Courses <img src={CaretRight} alt=">" />
                                     </span>{' '}
-                                    Enrolled Course Details <img src={CaretRight} alt=">" /> Lecture {activeIndex + 1}
+                                    {/* Enrolled Course Details */}
+                                    {courseDetails?.title || 'Enrolled Course Details'}
+                                     <img src={CaretRight} alt=">" /> 
+                                     {/* Lecture {activeIndex + 1} */}
+                                     {lectures[activeIndex]?.name}
                                 </div>
                                 </div>
                                 <div className="col-md-4">

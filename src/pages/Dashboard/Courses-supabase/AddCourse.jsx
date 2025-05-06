@@ -40,6 +40,7 @@ const AddNewCourse = () => {
     const courseId = location.state?.courseId ?? reduxCourseId ?? '';
 
     const [isOpenCoursePublishModal, setIsOpenCoursePublishModal] = useState(false);
+    const [isOpenCourseUnpublishModal, setIsOpenCourseUnpublishModal] = useState(false);
 
     // if( location.state.courseId){
     //     courseId=location.state.courseId
@@ -302,19 +303,38 @@ const AddNewCourse = () => {
 
 
     // PUBLISH UNPUBLISH  
+    // const toggleSwitch = () => {
+    //     console.log('working.....')
+    //     setIsOpenCoursePublishModal(!isPublished)
+    //     setIsPublished(!isPublished);
+    // };
+    
+    // const publishCourse = async () => {
+    //     setIsOpenCoursePublishModal(false)
+    //     const data ={
+    //         "isPublished": isPublished,
+    //     }
+    //     createOrUpdateCourse(data)
+    // };
     const toggleSwitch = () => {
-        setIsOpenCoursePublishModal(!isPublished)
-        setIsPublished(!isPublished);
+        setIsOpenCoursePublishModal(true); 
     };
-
     const publishCourse = async () => {
-        setIsOpenCoursePublishModal(false)
-        const data ={
-            "isPublished": isPublished,
+        setIsOpenCoursePublishModal(false);
+        const newIsPublished = !isPublished;
+        console.log('course data:',currentCourse);
+        try {
+            if (newIsPublished) {
+                await axiosWrapper('PUT', `${API_URL.SUPABASE_PUBLISH_COURSE.replace(':id', currentCourse)}`, {}, token);
+            } else {
+                await axiosWrapper('PUT', `${API_URL.SUPABASE_UNPUBLISH_COURSE.replace(':id', currentCourse)}`, {}, token);
+            }
+            setIsPublished(newIsPublished); 
+            getCourseById(currentCourse);
+        } catch (error) {
+            console.error('Error updating publish status:', error);
         }
-        createOrUpdateCourse(data)
     };
-
     // END PUBLISH UNPUBLISH 
 
     return loading ? (
@@ -405,7 +425,7 @@ const AddNewCourse = () => {
             </Tabs>
 
             {/* MODAL FOR PUBLISH THE LECTURE  */}
-            {isOpenCoursePublishModal && (
+            {/* {isOpenCoursePublishModal && (
                 <ConfirmationBox
                     show={isOpenCoursePublishModal}
                     onClose={toggleSwitch}
@@ -419,6 +439,20 @@ const AddNewCourse = () => {
                     cancelButtonTitle="Cancel"
                     activeBtnTitle="Publish"
                     modalClassName="coursemodal publishcourse"
+                />
+            )} */}
+            {isOpenCoursePublishModal && (
+                <ConfirmationBox
+                    show={isOpenCoursePublishModal}
+                    onClose={() => setIsOpenCoursePublishModal(false)}
+                    onConfirm={publishCourse}
+                    title={isPublished ? "Unpublish Your Course!" : "Publish Your Course!"}
+                    activeBtnTitle={isPublished ? "Unpublish" : "Publish"}
+                    cancelButtonTitle="Cancel"
+                    modalClassName="coursemodal publishcourse"
+                    nonActiveBtn="cancel-btn"
+                    activeBtn="submit-btn"
+                    customFooterClass="custom-footer-class"
                 />
             )}
             {/* END MODAL FOR PUBLISH THE LECTURE  */}

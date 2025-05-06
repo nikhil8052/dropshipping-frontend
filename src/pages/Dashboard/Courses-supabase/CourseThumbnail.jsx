@@ -12,7 +12,7 @@ import cross from '@icons/red-cross.svg';
 
 const CourseThumbnail = ({ value, onChange }) => {
 
-  console.log( value, " THUMB VALUE ")
+  // console.log( value, " THUMB VALUE ")
   const inputRef = useRef();
   const [loadingThum, setLoadingThumb] = useState(false);
   const [cropping, setCropping] = useState(false);
