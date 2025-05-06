@@ -26,6 +26,7 @@ import StatusIcon from '../../../assets/images/status.svg';
 import ActionIcon from '../../../assets/images/action.svg';
 import Plus from '../../../assets/images/plus.svg';
 import AddColumnHeader from '../../../components/AddColumnHeader';
+import { Badge } from 'react-bootstrap';
 
 const Students = () => {
     const [showDeleteModal, setShowDeleteModal] = useState({
@@ -280,6 +281,15 @@ const Students = () => {
                         <img src={editIcon} className="action-icon" alt="action-icon" />
                     </div>
                 </Col>
+                <Col lg={4} md={6} sm={6} xs={4} className="d-flex justify-content-center align-items-center">
+                    <Form.Check // prettier-ignore
+                        type="switch"
+                        className="toggle-button student-action-col"
+                        id={`custom-switch-${props.data.id}`}
+                        checked={props.data.isActive}
+                        onChange={() => props.onToggleClick(props.data)}
+                    />
+                </Col>
                 {role === 'COACH' ? (
                     <></>
                 ) : (
@@ -305,16 +315,29 @@ const Students = () => {
 
     /*eslint-disable */
     const ToggleRenderer = (props) => (
+        // <React.Fragment>
+        //     <Row style={{ width: '100%' }}>
+        //         <Col className="d-flex justify-content-center align-items-center">
+        //             <Form.Check // prettier-ignore
+        //                 type="switch"
+        //                 className="toggle-button"
+        //                 id={`custom-switch-${props.data.id}`}
+        //                 checked={props.data.isActive}
+        //                 onChange={() => props.onToggleClick(props.data)}
+        //             />
+        //         </Col>
+        //     </Row>
+        // </React.Fragment>
         <React.Fragment>
             <Row style={{ width: '100%' }}>
                 <Col className="d-flex justify-content-center align-items-center">
-                    <Form.Check // prettier-ignore
-                        type="switch"
-                        className="toggle-button"
-                        id={`custom-switch-${props.data.id}`}
-                        checked={props.data.isActive}
-                        onChange={() => props.onToggleClick(props.data)}
-                    />
+                    <Badge
+                        bg={props.data.isActive ? 'success' : 'danger'}
+                        style={{ padding: '0.5rem 0.5rem' }}
+                        // onClick={() => props.onToggleClick(props.data)}
+                    >
+                        {props.data.isActive ? 'Activate' : 'Deactivate'}
+                    </Badge>
                 </Col>
             </Row>
         </React.Fragment>
@@ -459,7 +482,8 @@ const Students = () => {
             cellRenderer: ActionsRenderer,
             cellRendererParams: {
                 onEditClick: handleEditClick,
-                onDeleteClick: handleDeleteClick
+                onDeleteClick: handleDeleteClick,
+                onToggleClick: handleToggleClick
             }
         },
         {
