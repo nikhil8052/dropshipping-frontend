@@ -369,7 +369,7 @@ const Students = () => {
 
     /*eslint-disable */
 
-    // Start Dynamic Superbase Table 
+    // Start Dynamic Superbase Table  SS 
     const [visibleFields, setVisibleFields] = useState([
         'name',
         'email',
@@ -381,7 +381,7 @@ const Students = () => {
 
     const [supabaseAllCols, setSupabaseAllCols] = useState([]);
 
-    const initialTableCols=[
+    const initialTableCols = [
         {
             headerName: 'Name', // Fallback text
             field: 'name',
@@ -487,15 +487,48 @@ const Students = () => {
                 const excludedFields = ['name', 'email', 'coachingTrajectory', 'isActive', 'actions', 'AddColumn'];
                 const ENDPOINT = API_URL.SUPABASE_GET_COLUMNS.replace(':table', 'users');
                 const response = await axiosWrapper('GET', ENDPOINT, {}, token);
-                const columnNames = response.data
+                console.log(response, " response from the API ENPOINT ")
+                const columnNames = response.data.superbaseCols
                     .filter((col) => !excludedFields.includes(col))
                     .map((col) => ({
                         value: col,
                         label: col
                     }));
-            
-                console.log( columnNames , " ALl columns ")
                 setSupabaseAllCols([...columnNames]);
+
+                console.log(response.data.tableSettings, " Add these cols after the init ")
+
+                let tableSettings = response.data.tableSettings;
+                // // Remove the values if they exists 
+                const newCols = tableSettings
+                    .map((val) => ({
+                        headerName: val.field,
+                        field: val.field,
+                        filter: 'agSetColumnFilter',
+                        sortable: true,
+                        unSortIcon: true,
+                        wrapText: true,
+                        autoHeight: true,
+                        resizable: false,
+                    }));
+
+
+                const updatedCols = [
+                    ...supabaseCols.slice(0, -1),
+                    ...newCols,
+                    supabaseCols[supabaseCols.length - 1]
+                ];
+                const updatedVisibleTableFields = tableSettings.map(item =>
+                    typeof item === 'string' ? item : item.field
+                );
+
+                const updatedVisibleFields = Array.from(new Set([...visibleFields, ...updatedVisibleTableFields]));
+
+                console.log(updatedVisibleFields, " updatedVisibleFields ")
+                setSupabaseCols(updatedCols);
+                setVisibleFields(updatedVisibleFields);
+
+
 
             } catch (error) {
                 console.error('Error fetching columns:', error);
@@ -564,7 +597,7 @@ const Students = () => {
                         isMulti
                         options={columnOptions}
                         value={columnOptions.filter((opt) => visibleFields.includes(opt.value))}
-                        onChange={(selectedOptions) => {
+                        onChange={async (selectedOptions) => {
                             const selectedValues = selectedOptions.map((opt) => opt.value);
                             // Remove the values if they exists 
                             const newCols = selectedValues
@@ -593,6 +626,18 @@ const Students = () => {
                             setSupabaseCols(updatedCols);
                             setVisibleFields(updatedVisibleFields);
                             setShowColumnSelect(false);
+                            if (newCols.length > 0) {
+                                try {
+                                   
+                                    const ENDPOINT = API_URL.SUPABASE_GET_COLUMNS.replace(':table', 'users');
+                                    const response = await axiosWrapper('POST', ENDPOINT, { newCols }, token);
+
+                                    console.log( response, " Add these new cols ")
+                                } catch (error) {
+                                    console.error("Failed to save columns to server:", error);
+                                }
+                            }
+
                         }}
                         placeholder="Select columns..."
                         classNamePrefix="select"

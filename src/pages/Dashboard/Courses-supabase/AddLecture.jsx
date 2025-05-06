@@ -826,16 +826,13 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
                         description:  updatedDes
                     }));
                 }
-
-                // setIsEditing(false)
-
-
+                setIsEditing(false)
             }
         } catch (err) {
             // handleError(err);
             console.log(err);
         } finally {
-            // setIsEditing(false)
+            setIsEditing(false)
             // setSubmitting(false);
             modelPopAction();
             setHasUnsavedChanges(false);
