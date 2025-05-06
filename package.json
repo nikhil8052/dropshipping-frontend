@@ -35,7 +35,6 @@
         "formik": "^2.4.5",
         "framer-motion": "^12.7.4",
         "he": "^1.2.0",
-        "primereact": "^10.9.5",
         "prop-types": "^15.8.1",
         "quill": "^2.0.2",
         "quill-image-resize": "^3.0.9",
