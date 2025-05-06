@@ -211,22 +211,22 @@ const Courses = () => {
     
             const formattedData = data.map((course) => {
                 // Step 1: Calculate Completion Percentage
-                // const calculateCompletionPercentage = () => {
-                //     if (!course?.lectures || course?.lectures.length === 0) return 0;
+                const calculateCompletionPercentage = () => {
+                    if (!course?.lectures || course?.lectures.length === 0) return 0;
     
-                //     const completedLectures = course.lectures.filter(lecture => 
-                //         lecture.lecture_progress?.some(progress => progress.is_completed)
-                //     ).length;
+                    const completedLectures = course.lectures.filter(lecture => 
+                        lecture.lecture_progress?.some(progress => progress.is_completed)
+                    ).length;
     
-                //     return (completedLectures / course.lectures.length) * 100;
-                // };
+                    return (completedLectures / course.lectures.length) * 100;
+                };
     
-                // const completionPercentage = calculateCompletionPercentage();
+                const completionPercentage = calculateCompletionPercentage();
     
                 const baseCourseData = {
                     img: course?.thumbnail,
                     title: course?.title,
-                    // progress: completionPercentage,
+                    progress: completionPercentage,
                     description: course?.description,
                     detail: course?.subtitle,
                     lectureNo: `Lectures: ${course?.lectures?.length || 0}`,
