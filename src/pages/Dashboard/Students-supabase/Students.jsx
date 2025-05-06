@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import Table from '@components/Table/Table';
 import { Button, Col, Row, DropdownButton, Dropdown, Form } from 'react-bootstrap';
 import Modal from '@components/Modal/Modal';
@@ -25,6 +25,8 @@ import EmailIcon from '../../../assets/images/email.svg';
 import StatusIcon from '../../../assets/images/status.svg';
 import ActionIcon from '../../../assets/images/action.svg';
 import Plus from '../../../assets/images/plus.svg';
+import AddColumnHeader from '../../../components/AddColumnHeader';
+import { MultiSelect } from 'primereact/multiselect';
 
 const Students = () => {
     const [showDeleteModal, setShowDeleteModal] = useState({
@@ -42,9 +44,7 @@ const Students = () => {
         data: null,
         courseId: null
     });
-    const [showColumnSelector, setShowColumnSelector] = useState(false);
-    const [selectAnchor, setSelectAnchor] = useState(null); // for positioning
-    
+
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
     const [loadingCRUD, setLoadingCRUD] = useState(false);
@@ -54,6 +54,31 @@ const Students = () => {
     const [studentsData, setStudentsData] = useState(null);
     const [selectedOption, setSelectedOption] = useState(studentsTrajectory[0].label);
     const [selectedCoach, setSelectedCoach] = useState('Assigned Coach');
+    const [showColumnSelect, setShowColumnSelect] = useState(false);
+    const [selectPosition, setSelectPosition] = useState({ top: 0, left: 0 });
+    const dropdownRef = useRef(null);
+    useEffect(() => {
+        const handleClickOutside = (event) => {
+            if (
+                dropdownRef.current &&
+                !dropdownRef.current.contains(event.target) &&
+                headerRef.current &&
+                !headerRef.current.contains(event.target)
+            ) {
+                setShowColumnSelect(false);
+            }
+        };
+
+        if (showColumnSelect) {
+            document.addEventListener('mousedown', handleClickOutside);
+        }
+
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutside);
+        };
+    }, [showColumnSelect]);
+
+
     useEffect(() => {
         // Fetch data from API here
         if (selectedOption) {
@@ -436,16 +461,29 @@ const Students = () => {
                 icon: ActionIcon,
                 displayName: 'Actions'
             },
-            sortable: false,
-            filter: false,
-            resizable: false,
             // maxWidth: 100,
             cellRenderer: ActionsRenderer,
             cellRendererParams: {
                 onEditClick: handleEditClick,
                 onDeleteClick: handleDeleteClick
             }
-        },   
+        },
+        {
+            headerName: '',
+            field: 'AddColumn',
+            maxWidth: 50,
+            headerComponent: (params) => (
+                <AddColumnHeader
+                    setShowColumnSelect={setShowColumnSelect}
+                    setSelectPosition={setSelectPosition}
+                    showColumnSelect={showColumnSelect}
+                />
+            ),
+            sortable: false,
+            filter: false,
+            resizable: false,
+            cellRenderer: () => null
+        }
     ];
 
     const handleRoadmapUpdate = async (data, id) => {
@@ -521,6 +559,78 @@ const Students = () => {
                 />
             )}
 
+            {showColumnSelect && (
+                <div
+                    ref={dropdownRef}
+                    style={{
+                        position: 'fixed',
+                        top: `${selectPosition.top}px`,
+                        left: `${selectPosition.left}px`,
+                        zIndex: 1000,
+                        backgroundColor: 'white',
+                        boxShadow: '0 2px 10px rgba(0,0,0,0.2)',
+                        width: '',
+                        borderRadius: '4px',
+                    }}
+                >
+                    <Select
+                        isMulti
+                        options={columnOptions}
+                        value={columnOptions.filter((opt) => visibleFields.includes(opt.value))}
+                        onChange={(selectedOptions) => {
+                            setVisibleFields(selectedOptions.map((opt) => opt.value));
+                            setShowColumnSelect(false);
+                        }}
+                        placeholder="Select columns..."
+                        classNamePrefix="select"
+                        menuIsOpen={true}
+                        styles={{
+                            control: (provided, state) => ({
+                                ...provided,
+                                minHeight: '36px',
+                                borderRadius: '6px',
+                                borderColor: state.isFocused ? '#4A90E2' : '#ccc',
+                                boxShadow: state.isFocused ? '0 0 0 2px rgba(74, 144, 226, 0.2)' : 'none',
+                                '&:hover': {
+                                    borderColor: '#4A90E2'
+                                }
+                            }),
+                            multiValue: (provided) => ({
+                                ...provided,
+                                backgroundColor: '#e1ecf4',
+                                borderRadius: '4px',
+                                padding: '2px'
+                            }),
+                            multiValueLabel: (provided) => ({
+                                ...provided,
+                                color: '#333'
+                            }),
+                            multiValueRemove: (provided) => ({
+                                ...provided,
+                                color: '#888',
+                                ':hover': {
+                                    backgroundColor: '#ccc',
+                                    color: '#000'
+                                }
+                            }),
+                            menu: (provided) => ({
+                                ...provided,
+                                borderRadius: '6px',
+                                zIndex: 9999
+                            }),
+                            dropdownIndicator: (provided) => ({
+                                ...provided,
+                                padding: 4
+                            }),
+                            clearIndicator: (provided) => ({
+                                ...provided,
+                                padding: 4
+                            })
+                        }}
+                    />
+                </div>
+            )}
+
             <Table
                 columns={filteredColumns}
                 tableData={studentsData}
@@ -586,7 +696,7 @@ const Students = () => {
                             <img className="mb-1" src={add} alt="add button" />
                             <span className="ms-1">Add New Student</span>
                         </Button>
-                        <Select
+                        {/* <Select
                             isMulti
                             options={columnOptions}
                             value={columnOptions.filter((opt) => visibleFields.includes(opt.value))}
@@ -596,7 +706,7 @@ const Students = () => {
                             placeholder="Select columns..."
                             className="basic-multi-select"
                             classNamePrefix="select"
-                        />
+                        /> */}
                     </div>
                 }
             />
