@@ -671,13 +671,13 @@ span.slect_span.selected {
         font-weight: 500;
         font-size: 16px;
         text-transform: capitalize;
-        color: #fff;
-        background-color: #000;
+        color: #000;
+        background-color: #fff;
         width: 100%;
         display: inline-block;
         padding: 13px 16px;
         border-radius: 4px;
-        margin-bottom: 8px;
+        // margin-bottom: 8px;
         display: flex;
         justify-content: space-between;
         align-items: center;
@@ -687,7 +687,7 @@ span.slect_span.selected {
     }
 
     a{
-            color: #fff !important;
+            color: #000 !important;
         }
     }
   
@@ -750,9 +750,9 @@ body:has(.course-detail-tab) {
     box-shadow: 0px 0px 14.86px 0px #0000000F;
 }
 
-.drop-box .dropdown img {
-    filter: brightness(0) saturate(100%) invert(44%) sepia(90%) saturate(728%) hue-rotate(158deg) brightness(92%) contrast(103%);
-}
+// .drop-box .dropdown img {
+//     filter: brightness(0) saturate(100%) invert(44%) sepia(90%) saturate(728%) hue-rotate(158deg) brightness(92%) contrast(103%);
+// }
 
 .detail-box .drop-box {
     height: 25px;
@@ -1376,10 +1376,6 @@ label.form-label {
     color: white !important;
 }
 
-.detail-box li.active_lecture>a {
-    color: #FFF;
-}
-
 .tab-buttons.editor-buttons button {
     background-color: transparent !important;
 }
@@ -1391,7 +1387,7 @@ label.form-label {
 }
 
 .detail-box li {
-    font-size: 1rem !important;
+    font-size: 15px !important;
 
     >div {
         overflow: hidden;
@@ -1416,7 +1412,6 @@ label.form-label {
     text-overflow: ellipsis;
     white-space: nowrap;
     transition: background 0.2s ease;
-    min-height: 28px;
 }
 
 label.custom_check span {
@@ -1551,6 +1546,48 @@ label.custom_check span {
 .lecture-curriculum .circle-loader {
     margin-left: 10px;
     border-radius: 15px;
+}
+
+// may06 NT
+.course-right-header .content {
+    font-size: 13px;
+}
+.detail-box li:hover {
+    color: #fff !important;
+}
+
+.search-lectures.btm-box,.section-border.row .lec-left.btm-box {
+    padding: 0 !important;
+}
+
+.search-lectures.btm-box .folder-detail {
+    padding: 10px 0px;
+    border-top: 1px solid #e5e7eb;
+    box-shadow: none;
+    margin-bottom: 0;
+}
+
+.search-lectures.btm-box .folder-detail:first-child{
+    border-top: 0px;
+}
+
+.search-lectures.btm-box .folder-detail .drop-box {
+    padding: 0px 10px;
+}
+
+.search-lectures.btm-box .detail-box li {
+    border-radius: 0px;
+    padding: 10px 20px;
+    gap: 10px;
+}
+
+.search-lectures.btm-box .detail-box li:hover {
+    background-color: #f3f4f6;
+    color:#000 !important;
+}
+
+.search-lectures.btm-box .detail-box li img {
+    max-width: 18px;
 }
 
 @media only screen and (max-width:991px) {

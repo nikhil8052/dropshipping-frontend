@@ -50,6 +50,8 @@ export const API_URL = {
     SUPABASE_DECODE_TOKEN: `${SUPABASE_USER_API_BASE}/token`,
     SUPABASE_SET_COURSES_ROADMAP: `${SUPABASE_USER_API_BASE}/set-courses-roadmap/:studentId`,
     SUPABASE_GET_USER: `${SUPABASE_USER_API_BASE}/:id`,
+    SUPABASE_GET_COLUMNS: `${SUPABASE_USER_API_BASE}/columns/:table`,
+
 
     // Students API
     CREATE_STUDENT: `${STUDENT_API_BASE}/create`,

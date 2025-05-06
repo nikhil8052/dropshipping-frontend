@@ -82,12 +82,12 @@
         padding: 1rem !important;
 
         .card-title {
-            font-size: 1.5rem;
+            font-size: 20px;
             font-weight: bold;
         }
 
         .card-coach {
-            font-size: 1.2rem;
+            font-size: 14px;
             margin-bottom: 10px;
             font-family: Inter;
             font-weight: 400;
@@ -261,18 +261,55 @@
     background-color: #fff;
 }
 
+// may06 NT
+.generic-card .course-title p {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    line-height: 1.2em;
+    max-height: 2.4em;
+    min-height: 3rem;
+    word-break: break-word;
+}
 
-@media only  screen and (max-width:1499px) {
+.generic-card .course-des p {
+    width: 100%;
+    display: -webkit-box !important;
+    -webkit-line-clamp: 3;
+    line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    line-height: 1.2em;
+}
+
+.generic-card .card-body {
+    padding-bottom: 2rem !important
+}
+
+.generic-card .card-body .card-coach {
+    margin-bottom: 25px;
+}
+
+.generic-card .progress-bar-container {
+    margin-top: auto;
+}
+
+
+@media only screen and (max-width:1499px) {
     .generic-card {
-        .card-body{
+        .card-body {
             .card-title {
-                font-size: 1.4rem;
+                font-size: 18px;
             }
-    
+
             .card-coach {
                 font-size: 1rem;
             }
-    
-        }  
+
+        }
     }
 }

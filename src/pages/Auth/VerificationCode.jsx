@@ -50,60 +50,72 @@ const VerificationCode = () => {
     return (
         <>
             <div className="auth-main-wrapper">
-                <Row className=" g-0">
-                    <LoginLeftSec />
-                    <Col xs={12} sm={12} md={12} lg={6}>
-                        <div className="auth-form-wrapper ">
-                            <div className="auth-form-data ">
-                                <h1 className="auth-title ">Enter Your Verification Code</h1>
-                                <h3 className="auth-form-title">
-                                    Please enter verification code which we sent you on your email for confirmation.
-                                </h3>
-                                <Formik
-                                    initialValues={initialValues}
-                                    validationSchema={validationSchema}
-                                    onSubmit={handleSubmit}
-                                    enableReinitialize
-                                >
-                                    {({ isSubmitting }) => (
-                                        <>
-                                            <FormikForm>
-                                                <div className="verification-input">
-                                                    <Input
-                                                        name="otp"
-                                                        placeholder="E.g 225465822"
-                                                        label="Verification Code"
-                                                        type="text"
-                                                        inputType="number"
-                                                    />
-                                                    <span
-                                                        className="resend-code cursor-pointer"
-                                                        onClick={resendOtpCode}
+                <div className="login-page-section">
+                    <div className="login-page">
+                        <LoginLeftSec />
+                        <Col className='login-center'>
+                            <div className="auth-form-wrapper ">
+                                <div className="auth-form-data ">
+                                    <h1 className="auth-title ">Enter Your Verification Code</h1>
+                                    <h3 className="auth-form-title">
+                                        Please enter verification code which we sent you on your email for confirmation.
+                                    </h3>
+                                    <Formik
+                                        initialValues={initialValues}
+                                        validationSchema={validationSchema}
+                                        onSubmit={handleSubmit}
+                                        enableReinitialize
+                                    >
+                                        {({ isSubmitting }) => (
+                                            <>
+                                                <FormikForm>
+                                                    <div className="verification-input">
+                                                        <Input
+                                                            name="otp"
+                                                            placeholder="E.g 225465822"
+                                                            label="Verification Code"
+                                                            type="text"
+                                                            inputType="number"
+                                                        />
+                                                        <span
+                                                            className="resend-code cursor-pointer"
+                                                            onClick={resendOtpCode}
+                                                        >
+                                                            Resend code
+                                                        </span>
+                                                    </div>
+                                                    <Button
+                                                        className="auth-login-button"
+                                                        type="submit"
+                                                        disabled={loading}
                                                     >
-                                                        Resend code
-                                                    </span>
-                                                </div>
-                                                <Button className="auth-login-button" type="submit" disabled={loading}>
-                                                    {isSubmitting ? <Spinner animation="border" size="sm" /> : 'Verify'}
+                                                        {isSubmitting ? (
+                                                            <Spinner animation="border" size="sm" />
+                                                        ) : (
+                                                            'Verify'
+                                                        )}
+                                                    </Button>
+                                                </FormikForm>
+                                                <Button
+                                                    className="back-btn"
+                                                    type="button"
+                                                    onClick={() => navigate('/login')}
+                                                    disabled={isSubmitting || loading}
+                                                >
+                                                    <FontAwesomeIcon className="me-2" icon={faArrowLeft} />
+                                                    Back to Login
                                                 </Button>
-                                            </FormikForm>
-                                            <Button
-                                                className="back-btn"
-                                                type="button"
-                                                onClick={() => navigate('/login')}
-                                                disabled={isSubmitting || loading}
-                                            >
-                                                <FontAwesomeIcon className="me-2" icon={faArrowLeft} />
-                                                Back to Login
-                                            </Button>
-                                        </>
-                                    )}
-                                </Formik>
-                                <Footer />
+                                            </>
+                                        )}
+                                    </Formik> 
+                                </div>
                             </div>
+                        </Col>
+                        <div className="copyright">
+                            <Footer />
                         </div>
-                    </Col>
-                </Row>
+                    </div>
+                </div>
             </div>
         </>
     );

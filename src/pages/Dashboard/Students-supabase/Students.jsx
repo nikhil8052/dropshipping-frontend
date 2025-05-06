@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import Table from '@components/Table/Table';
 import { Button, Col, Row, DropdownButton, Dropdown, Form } from 'react-bootstrap';
 import Modal from '@components/Modal/Modal';
@@ -25,6 +25,7 @@ import EmailIcon from '../../../assets/images/email.svg';
 import StatusIcon from '../../../assets/images/status.svg';
 import ActionIcon from '../../../assets/images/action.svg';
 import Plus from '../../../assets/images/plus.svg';
+import AddColumnHeader from '../../../components/AddColumnHeader';
 
 const Students = () => {
     const [showDeleteModal, setShowDeleteModal] = useState({
@@ -42,9 +43,7 @@ const Students = () => {
         data: null,
         courseId: null
     });
-    const [showColumnSelector, setShowColumnSelector] = useState(false);
-    const [selectAnchor, setSelectAnchor] = useState(null); // for positioning
-    
+
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
     const [loadingCRUD, setLoadingCRUD] = useState(false);
@@ -54,6 +53,32 @@ const Students = () => {
     const [studentsData, setStudentsData] = useState(null);
     const [selectedOption, setSelectedOption] = useState(studentsTrajectory[0].label);
     const [selectedCoach, setSelectedCoach] = useState('Assigned Coach');
+    const [showColumnSelect, setShowColumnSelect] = useState(false);
+    const [selectPosition, setSelectPosition] = useState({ top: 0, left: 0 });
+    const dropdownRef = useRef(null);
+    useEffect(() => {
+        const handleClickOutside = (event) => {
+            if (
+                dropdownRef.current &&
+                !dropdownRef.current.contains(event.target) &&
+                headerRef.current &&
+                !headerRef.current.contains(event.target)
+            ) {
+                setShowColumnSelect(false);
+            }
+        };
+
+        if (showColumnSelect) {
+            document.addEventListener('mousedown', handleClickOutside);
+        }
+
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutside);
+        };
+    }, [showColumnSelect]);
+
+
+
     useEffect(() => {
         // Fetch data from API here
         if (selectedOption) {
@@ -67,11 +92,11 @@ const Students = () => {
             setLoading(loading);
             const coaches = await axiosWrapper(
                 'GET',
-                // `${API_URL.SUPABASE_GET_ALL_STUDENTS}`,
                 `${API_URL.SUPABASE_GET_ALL_STUDENTS}?coachingTrajectory=${query || selectedOption}`,
                 {},
                 token
             );
+
             setStudentsData(coaches.data);
         } catch (error) {
             return;
@@ -244,6 +269,8 @@ const Students = () => {
         return percentages.length > 0 ? percentages.reduce((a, b) => a + b, 0) / percentages.length : 0;
     };
 
+
+
     /*eslint-disable */
     const ActionsRenderer = (props) => (
         <React.Fragment>
@@ -314,9 +341,47 @@ const Students = () => {
             </div>
         </div>
     );
+
+    const handleRoadmapUpdate = async (data, id) => {
+        if (id) {
+            setLoading(true);
+            try {
+                const url = `${API_URL.UPDATE_STUDENT.replace(':id', id)}`;
+                const method = 'PUT';
+
+                await axiosWrapper(
+                    method,
+                    url,
+                    {
+                        coursesRoadmap: data
+                    },
+                    token
+                );
+                fetchData();
+            } catch (error) {
+                setLoading(false);
+            } finally {
+                setLoading(false);
+            }
+        }
+    };
+
+
     /*eslint-disable */
 
-    const columns = [
+    // Start Dynamic Superbase Table 
+    const [visibleFields, setVisibleFields] = useState([
+        'name',
+        'email',
+        'coachingTrajectory',
+        'isActive',
+        'Actions',
+        'AddColumn'
+    ]);
+
+    const [supabaseAllCols, setSupabaseAllCols] = useState([]);
+
+    const initialTableCols=[
         {
             headerName: 'Name', // Fallback text
             field: 'name',
@@ -349,41 +414,7 @@ const Students = () => {
             cellRenderer: TextExpand,
             resizable: false
         },
-        // {
-        //     headerName: 'Courses%',
-        //     field: 'id',
-        //     filter: 'agSetColumnFilter',
-        //     sortable: true,
-        //     unSortIcon: true,
-        //     resizable: false,
-        //     cellRenderer: ({ data: rowData }) => {
-        //         // Calculate the percentage of courses completed
-        //         const coursePercentage = calcPercentage(rowData);
-        //         return (
-        //             <div key={rowData?.id}>
-        //                 {coursePercentage === 0.0 || coursePercentage === '0.00'
-        //                     ? '--'
-        //                     : `${coursePercentage.toFixed(2)}%`}
-        //             </div>
-        //         );
-        //     }
-        // },
-        // {
-        //     headerName: 'Fee Status',
-        //     field: 'feeStatus',
-        //     filter: 'agSetColumnFilter',
-        //     sortable: true,
-        //     unSortIcon: true,
-        //     resizable: false,
-        //     cellRenderer: ({ data: rowData }) => {
-        //         const status = rowData.feeStatus || '--';
-        //         return (
-        //             <div className={`${status} fee-status`} key={rowData.id}>
-        //                 {status}
-        //             </div>
-        //         );
-        //     }
-        // },
+
         {
             headerName: 'HT / LT',
             field: 'coachingTrajectory',
@@ -396,19 +427,7 @@ const Students = () => {
                 return <div key={rowData.id}>{coachingTrajectory === COACH.COACH_TYPE.HIGH_TICKET ? 'HT' : 'LT'}</div>;
             }
         },
-        // {
-        //     headerName: 'Courses Roadmap',
-        //     field: 'coursesRoadmap',
-        //     filter: 'agSetColumnFilter',
-        //     sortable: false,
-        //     wrapText: true,
-        //     autoHeight: true,
-        //     resizable: false,
-        //     cellRenderer: LinkRenderer,
-        //     cellRendererParams: {
-        //         onRoadMapClick: handleCoursesRoadMapClick
-        //     }
-        // },
+
         {
             headerName: 'Activate/Deactivate',
             field: 'isActive',
@@ -436,57 +455,63 @@ const Students = () => {
                 icon: ActionIcon,
                 displayName: 'Actions'
             },
-            sortable: false,
-            filter: false,
-            resizable: false,
-            // maxWidth: 100,
+
             cellRenderer: ActionsRenderer,
             cellRendererParams: {
                 onEditClick: handleEditClick,
                 onDeleteClick: handleDeleteClick
             }
-        },   
-    ];
-
-    const handleRoadmapUpdate = async (data, id) => {
-        if (id) {
-            setLoading(true);
-            try {
-                const url = `${API_URL.UPDATE_STUDENT.replace(':id', id)}`;
-                const method = 'PUT';
-
-                await axiosWrapper(
-                    method,
-                    url,
-                    {
-                        coursesRoadmap: data
-                    },
-                    token
-                );
-                fetchData();
-            } catch (error) {
-                setLoading(false);
-            } finally {
-                setLoading(false);
-            }
+        },
+        {
+            headerName: '',
+            field: 'AddColumn',
+            maxWidth: 50,
+            headerComponent: (params) => (
+                <AddColumnHeader
+                    setShowColumnSelect={setShowColumnSelect}
+                    setSelectPosition={setSelectPosition}
+                    showColumnSelect={showColumnSelect}
+                />
+            ),
+            sortable: false,
+            filter: false,
+            resizable: false,
+            cellRenderer: () => null
         }
-    };
+    ];
+    const [supabaseCols, setSupabaseCols] = useState([...initialTableCols]);
 
-    const [visibleFields, setVisibleFields] = useState([
-        'name',
-        'email',
-        'coachingTrajectory',
-        'isActive',
-        'Actions',
-        'AddColumn'
-    ]);
+    useEffect(() => {
+        const fetchColumns = async () => {
+            try {
+                const excludedFields = ['name', 'email', 'coachingTrajectory', 'isActive', 'actions', 'AddColumn'];
+                const ENDPOINT = API_URL.SUPABASE_GET_COLUMNS.replace(':table', 'users');
+                const response = await axiosWrapper('GET', ENDPOINT, {}, token);
+                const columnNames = response.data
+                    .filter((col) => !excludedFields.includes(col))
+                    .map((col) => ({
+                        value: col,
+                        label: col
+                    }));
+            
+                console.log( columnNames , " ALl columns ")
+                setSupabaseAllCols([...columnNames]);
 
-    const filteredColumns = columns.filter((col) => visibleFields.includes(col.field));
+            } catch (error) {
+                console.error('Error fetching columns:', error);
+            }
+        };
+        fetchColumns();
+    }, []);
 
-    const columnOptions = columns.map((col) => ({
-        value: col.field,
-        label: col.headerName
+    // IF IT needs to be visible then show that else not 
+    const filteredColumns = supabaseCols.filter((col) => visibleFields.includes(col.field));
+    const columnOptions = supabaseAllCols.map((col) => ({
+        value: col.value,
+        label: col.label
     }));
+
+    // END  Dynamic Superbase Table 
 
     return (
         <div className="students-page">
@@ -519,6 +544,104 @@ const Students = () => {
                     activeBtn="delete-button"
                     activeBtnTitle="Delete"
                 />
+            )}
+
+            {showColumnSelect && (
+                <div
+                    ref={dropdownRef}
+                    style={{
+                        position: 'fixed',
+                        top: `${selectPosition.top}px`,
+                        left: `${selectPosition.left}px`,
+                        zIndex: 1000,
+                        backgroundColor: 'white',
+                        boxShadow: '0 2px 10px rgba(0,0,0,0.2)',
+                        width: '',
+                        borderRadius: '4px',
+                    }}
+                >
+                    <Select
+                        isMulti
+                        options={columnOptions}
+                        value={columnOptions.filter((opt) => visibleFields.includes(opt.value))}
+                        onChange={(selectedOptions) => {
+                            const selectedValues = selectedOptions.map((opt) => opt.value);
+                            // Remove the values if they exists 
+                            const newCols = selectedValues
+                                .filter(val => !supabaseCols.some(col => col.field === val))
+                                .map((val) => ({
+                                    headerName: val,
+                                    field: val,
+                                    filter: 'agSetColumnFilter',
+                                    sortable: true,
+                                    unSortIcon: true,
+                                    wrapText: true,
+                                    autoHeight: true,
+                                    resizable: false,
+                                }));
+
+
+                            const updatedCols = [
+                                ...supabaseCols.slice(0, -1),
+                                ...newCols,
+                                supabaseCols[supabaseCols.length - 1]
+                            ];
+
+
+                            const updatedVisibleFields = Array.from(new Set([...visibleFields, ...selectedValues]));
+
+                            setSupabaseCols(updatedCols);
+                            setVisibleFields(updatedVisibleFields);
+                            setShowColumnSelect(false);
+                        }}
+                        placeholder="Select columns..."
+                        classNamePrefix="select"
+                        menuIsOpen={true}
+                        styles={{
+                            control: (provided, state) => ({
+                                ...provided,
+                                minHeight: '36px',
+                                borderRadius: '6px',
+                                borderColor: state.isFocused ? '#4A90E2' : '#ccc',
+                                boxShadow: state.isFocused ? '0 0 0 2px rgba(74, 144, 226, 0.2)' : 'none',
+                                '&:hover': {
+                                    borderColor: '#4A90E2'
+                                }
+                            }),
+                            multiValue: (provided) => ({
+                                ...provided,
+                                backgroundColor: '#e1ecf4',
+                                borderRadius: '4px',
+                                padding: '2px'
+                            }),
+                            multiValueLabel: (provided) => ({
+                                ...provided,
+                                color: '#333'
+                            }),
+                            multiValueRemove: (provided) => ({
+                                ...provided,
+                                color: '#888',
+                                ':hover': {
+                                    backgroundColor: '#ccc',
+                                    color: '#000'
+                                }
+                            }),
+                            menu: (provided) => ({
+                                ...provided,
+                                borderRadius: '6px',
+                                zIndex: 9999
+                            }),
+                            dropdownIndicator: (provided) => ({
+                                ...provided,
+                                padding: 4
+                            }),
+                            clearIndicator: (provided) => ({
+                                ...provided,
+                                padding: 4
+                            })
+                        }}
+                    />
+                </div>
             )}
 
             <Table
@@ -586,7 +709,7 @@ const Students = () => {
                             <img className="mb-1" src={add} alt="add button" />
                             <span className="ms-1">Add New Student</span>
                         </Button>
-                        <Select
+                        {/* <Select
                             isMulti
                             options={columnOptions}
                             value={columnOptions.filter((opt) => visibleFields.includes(opt.value))}
@@ -596,7 +719,7 @@ const Students = () => {
                             placeholder="Select columns..."
                             className="basic-multi-select"
                             classNamePrefix="select"
-                        />
+                        /> */}
                     </div>
                 }
             />
