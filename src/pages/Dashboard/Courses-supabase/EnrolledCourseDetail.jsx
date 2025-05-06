@@ -2,8 +2,6 @@ import { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import CaretRight from '@icons/CaretRight.svg';
-import CaretRightt from '@icons/CaretRightt.svg';
-import BreadHome from '@icons/BreadHome.svg';
 import { InputGroup, Button, Form, Col, Row } from 'react-bootstrap';
 import Search from '../../../assets/icons/Search.svg';
 import InactiveIcon from '../../../assets/icons/Icon-inactive-lec.svg';
@@ -26,6 +24,8 @@ import '../Courses-supabase/CourseNew.scss';
 import Loading from '@components/Loading/Loading';
 import CustomProgressBar from '../../../components/CustomProgressBar/CustomProgressBar';
 import LectureCurriculumSkeleton from '../../../components/LectureCurriculumSkeleton';
+import CaretRightt from '@icons/CaretRightt.svg';
+import BreadHome from '@icons/BreadHome.svg';
 
 const EnrolledCourseDetail = () => {
     const navigate = useNavigate();
@@ -60,27 +60,26 @@ const EnrolledCourseDetail = () => {
     useEffect(() => {
         const processCourseData = (courseData) => {
             if (!courseData || !courseData.folders || !courseData.lectures) {
-                console.error('Course data or lectures/folders missing');
+                console.error("Course data or lectures/folders missing");
                 return; // Exit if data is incomplete
             }
 
             // Process folders into topics
-            const processedTopics =
-                courseData.folders.map((folder) => ({
-                    id: folder.id,
-                    name: folder.name,
-                    lectures: folder.lectures || []
-                })) || [];
+            const processedTopics = courseData.folders.map(folder => ({
+                id: folder.id,
+                name: folder.name,
+                lectures: folder.lectures || []
+            })) || [];
 
             // Process unassigned lectures
-            const unassigned =
-                courseData.lectures.filter((lecture) => {
-                    // Check if folder_id is null, empty string, or undefined
-                    return !lecture.folder_id; // This will handle null, undefined, and empty string
-                }) || [];
+            const unassigned = courseData.lectures.filter(lecture => {
+                // Check if folder_id is null, empty string, or undefined
+                return !lecture.folder_id;  // This will handle null, undefined, and empty string
+            }) || [];
 
             setTopics(processedTopics);
             setUnassignedLectures(unassigned);
+
         };
 
         if (courseDetails) {
@@ -129,8 +128,8 @@ const EnrolledCourseDetail = () => {
     };
 
     const getCourseById = async (id, nextLecture) => {
-        console.log('next-lecture',nextLecture);
-        console.log('current-lecture',id);
+        console.log('next-lecture', nextLecture);
+        console.log('current-lecture', id);
         const { data } = await axiosWrapper('GET', `${API_URL.SUPABASE_GET_COURSE.replace(':id', id)}`, {}, token);
 
         setCurrentCourseID(id);
@@ -141,7 +140,8 @@ const EnrolledCourseDetail = () => {
             category: data.category || [],
             banner: data?.banner || '',
             lectures: data?.lectures || [],
-            folders: data?.folders || []
+            folders: data?.folders || [],
+
         });
         // Overall lectures
         setLectures(data.lectures);
@@ -211,6 +211,7 @@ const EnrolledCourseDetail = () => {
         };
         setInitialValues(initialValues);
         setLectureLoading(false);
+
     };
     const decodeHtmlEntities = (encodedString) => {
         const textarea = document.createElement('textarea');
@@ -330,21 +331,21 @@ const EnrolledCourseDetail = () => {
         };
 
         await axiosWrapper('PUT', URL, data, token);
-        
+
         let nextLecture = lectures
-        .slice(activeIndex + 1)
-        .find(lecture => !lecture.lecture_progress?.[0]?.is_completed);
-    
+            .slice(activeIndex + 1)
+            .find(lecture => !lecture.lecture_progress?.[0]?.is_completed);
+
         if (!nextLecture) {
             nextLecture = lectures
-            .slice(0, activeIndex)
-            .find(lecture => !lecture.lecture_progress?.[0]?.is_completed);
+                .slice(0, activeIndex)
+                .find(lecture => !lecture.lecture_progress?.[0]?.is_completed);
         }
-    
+
         const targetLectureId = nextLecture?.id || lectures[activeIndex]?.id;
-          
-        
-    
+
+
+
         setSlugOnce(true);
         // getCourseById(currentCourseID, lectures[activeIndex]?.id);
         if (nextLecture) {
@@ -360,15 +361,15 @@ const EnrolledCourseDetail = () => {
 
     const updateLectureUrl = (index) => {
         if (lectures[index]?.name) {
-          const slug = createSlug(lectures[index].name);
-          const segments = location.pathname.split('/').filter(Boolean);
-          
-          if (segments[segments.length - 1] !== slug) {
-            const newSegments = segments.slice(0, -1).concat(slug);
-            navigate(`/${newSegments.join('/')}`, { replace: true });
-          }
+            const slug = createSlug(lectures[index].name);
+            const segments = location.pathname.split('/').filter(Boolean);
+
+            if (segments[segments.length - 1] !== slug) {
+                const newSegments = segments.slice(0, -1).concat(slug);
+                navigate(`/${newSegments.join('/')}`, { replace: true });
+            }
         }
-      };
+    };
 
     const handleLectureSelect = (lecture) => {
         setSelectedLecture(lecture);
@@ -390,11 +391,13 @@ const EnrolledCourseDetail = () => {
                 // console.log(`Lecture ${index + 1} has no progress data.`);
             }
         });
-        const completedLectures = lectures.filter(
-            (lecture) => lecture.lecture_progress?.length > 0 && lecture.lecture_progress[0]?.is_completed
+        const completedLectures = lectures.filter(lecture =>
+            lecture.lecture_progress?.length > 0 &&
+            lecture.lecture_progress[0]?.is_completed
         ).length;
         return (completedLectures / lectures.length) * 100;
     };
+
 
     return (
         <>
@@ -405,11 +408,8 @@ const EnrolledCourseDetail = () => {
                     {filteredLectures.length === 0 ? (
                         <>
                             <div className="title-top">
-                                <span
-                                    onClick={() => navigate(`/${role}/courses-supabase`)}
-                                    style={{ cursor: 'pointer' }}
-                                >
-                                    Courses <img src={CaretRightt} alt=">" />
+                                <span onClick={() => navigate(`/${role}/courses-supabase`)} style={{ cursor: 'pointer' }}>
+                                    Courses <img src={CaretRight} alt=">" />
                                 </span>{' '}
                                 {courseDetails.title}
                             </div>
@@ -417,22 +417,13 @@ const EnrolledCourseDetail = () => {
                         </>
                     ) : (
                         <>
-                            <div className="enroll-top">
-                                <div className='top-box'>
-                                <div className="title-top">
-                                    <span
-                                        onClick={() => navigate(`/${role}/courses-supabase`)}
-                                        style={{ cursor: 'pointer' }}
-                                    >
-                                        Courses <img src={CaretRight} alt=">" />
-                                    </span>{' '}
-
-                                    {/* Enrolled Course Details */}
-                                    {courseDetails?.title || 'Enrolled Course Details'}
-                                     <img src={CaretRight} alt=">" /> 
-                                     {/* Lecture {activeIndex + 1} */}
-                                     {lectures[activeIndex]?.name}
-
+                            {accessRestricted ? (
+                                <div className="restricted-access-message">
+                                    <h3>Access Restricted</h3>
+                                    <p>
+                                        Your access to this course has been restricted. Please pay the next installment to
+                                        continue.
+                                    </p>
                                 </div>
                             ) : (
                                 <>
@@ -440,15 +431,15 @@ const EnrolledCourseDetail = () => {
                                         <div className="top-box">
                                             <div className="title-top">
                                                 <div className="bread-home">
-                                                <img src={BreadHome} alt="" onClick={() => navigate(`/${role}/courses-supabase`)}
-                                                    style={{ cursor: 'pointer' }}/>
+                                                    <img src={BreadHome} alt="" onClick={() => navigate(`/${role}/courses-supabase`)}
+                                                        style={{ cursor: 'pointer' }} />
                                                 </div>
                                                 {/* <span
-                                                    onClick={() => navigate(`/${role}/courses-supabase`)}
-                                                    style={{ cursor: 'pointer' }}
-                                                >
-                                                    Courses 
-                                                </span>{' '} */}
+                                                                                          onClick={() => navigate(`/${role}/courses-supabase`)}
+                                                                                          style={{ cursor: 'pointer' }}
+                                                                                      >
+                                                                                          Courses 
+                                                                                      </span>{' '} */}
                                                 <img src={CaretRightt} alt=">" />
                                                 {courseDetails.title} <img src={CaretRightt} alt=">" /> Lecture{' '}
                                                 {activeIndex + 1}
@@ -469,6 +460,7 @@ const EnrolledCourseDetail = () => {
                                             placeholder="Search"
                                         />
                                     </InputGroup> */}
+
                                     </div>
                                     <Formik
                                         enableReinitialize
@@ -504,19 +496,12 @@ const EnrolledCourseDetail = () => {
                                                 </div>
                                                 <Row className="section-border">
                                                     <Col sm={12} md={12} lg={4} xl={3}>
-                                                        <div
-                                                            className="search-lectures lec-left mb-3"
-                                                            style={{ height: 'auto' }}
-                                                        >
+                                                        <div className='search-lectures lec-left mb-3' style={{ height: 'auto' }}>
                                                             <div className="title-lecture-btns">
                                                                 <h1>{courseDetails?.title}</h1>
                                                             </div>
-                                                            <div className="progress-wrap">
-                                                                <CustomProgressBar
-                                                                    progress={calculateCompletionPercentage().toFixed(
-                                                                        2
-                                                                    )}
-                                                                />
+                                                            <div className='progress-wrap'>
+                                                                <CustomProgressBar progress={calculateCompletionPercentage().toFixed(2)} />
 
                                                                 {/* <h3>Course Completion:</h3>
                                                         <input 
@@ -529,6 +514,8 @@ const EnrolledCourseDetail = () => {
                                                             </div>
                                                         </div>
                                                         <div className="search-lectures lec-left btm-box p-0">
+
+
                                                             <div className="lecture-btns">
                                                                 {/* <EnrollFolderStructure
                                                         topics={topics}
@@ -541,9 +528,7 @@ const EnrolledCourseDetail = () => {
                                                                     unassignedLectures={unassignedLectures}
                                                                     filteredLectures={filteredLectures}
                                                                     onLectureSelect={(lecture) => {
-                                                                        const index = filteredLectures.findIndex(
-                                                                            (l) => l.id === lecture.id
-                                                                        );
+                                                                        const index = filteredLectures.findIndex(l => l.id === lecture.id);
                                                                         if (index !== -1) {
                                                                             handleButtonClick(index);
                                                                         }
@@ -592,137 +577,96 @@ const EnrolledCourseDetail = () => {
                                                         ))} */}
                                                             </div>
                                                         </div>
+
                                                     </Col>
                                                     {/* eslint-disable  */}
                                                     <Col sm={12} md={12} lg={8} xl={9}>
                                                         <div className="lecture-right">
                                                             {lectureLoading ? (
                                                                 <LectureCurriculumSkeleton />
-                                                            ) : (
-                                                                <>
-                                                                    {!continueQuiz && selectedLecture && (
-                                                                        <div className="lecture-curriculum">
-                                                                            <h2 className="title">
-                                                                                {selectedLecture.name}
-                                                                                {/* {selectedLecture.completedBy?.some(user => user.id === userInfo?.id) ?  <img className='checkimg' src={checkicon}   alt="Already completed"
+                                                            ) : (<>
+                                                                {!continueQuiz && selectedLecture && (
+                                                                    <div className="lecture-curriculum">
+                                                                        <h2 className="title">
+                                                                            {selectedLecture.name}
+                                                                            {/* {selectedLecture.completedBy?.some(user => user.id === userInfo?.id) ?  <img className='checkimg' src={checkicon}   alt="Already completed"
                                                                     data-tooltip-id="my-tooltip2" data-tooltip-place="top" 
                                                                      data-tooltip-content="Already completed"/> : <img className='checkimg' 
                                                                        onClick={() =>
                                                                     markLectureAsCompleted(selectedLecture?.id)
                                                                 }  src={checkicon2}  alt="Mark lecture as completed."
                                                                 data-tooltip-id="my-tooltip2"   data-tooltip-place="top" data-tooltip-content="Mark lecture as completed."/>} */}
-                                                                                {selectedLecture?.lecture_progress
-                                                                                    ?.is_completed ? (
-                                                                                    <img
-                                                                                        className="checkimg"
-                                                                                        src={checkicon}
-                                                                                        alt="Already completed"
-                                                                                        data-tooltip-id="my-tooltip2"
-                                                                                        data-tooltip-place="top"
-                                                                                        style={{ cursor: 'pointer' }}
-                                                                                        data-tooltip-content="Already completed"
-                                                                                    />
-                                                                                ) : (
-                                                                                    <img
-                                                                                        className="checkimg"
-                                                                                        onClick={() =>
-                                                                                            markLectureAsCompleted(
-                                                                                                selectedLecture?.id
-                                                                                            )
-                                                                                        }
-                                                                                        src={checkicon2}
-                                                                                        alt="Mark lecture as completed."
-                                                                                        data-tooltip-id="my-tooltip2"
-                                                                                        style={{ cursor: 'pointer' }}
-                                                                                        data-tooltip-place="top"
-                                                                                        data-tooltip-content="Mark lecture as completed."
-                                                                                    />
-                                                                                )}
-                                                                            </h2>
+                                                                            {selectedLecture?.lecture_progress?.is_completed ? <img className='checkimg' src={checkicon} alt="Already completed"
+                                                                                data-tooltip-id="my-tooltip2" data-tooltip-place="top" style={{ cursor: 'pointer' }}
+                                                                                data-tooltip-content="Already completed" /> : <img className='checkimg'
+                                                                                    onClick={() =>
+                                                                                        markLectureAsCompleted(selectedLecture?.id)
+                                                                                    } src={checkicon2} alt="Mark lecture as completed."
+                                                                                    data-tooltip-id="my-tooltip2" style={{ cursor: 'pointer' }} data-tooltip-place="top" data-tooltip-content="Mark lecture as completed." />}
 
-                                                                            <p
-                                                                                className="mb-2"
-                                                                                dangerouslySetInnerHTML={{
-                                                                                    __html: decodeHtmlEntities(
-                                                                                        selectedLecture.description
-                                                                                    )
-                                                                                }}
-                                                                            ></p>
-                                                                        </div>
-                                                                    )}
+                                                                        </h2>
 
-                                                                    {continueQuiz && selectedLecture && (
-                                                                        <div className="quiz-curriculum">
-                                                                            <h1 className="title">
-                                                                                Quiz {selectedLecture.name}:
-                                                                            </h1>
+                                                                        <p
+                                                                            className="mb-2"
+                                                                            dangerouslySetInnerHTML={{
+                                                                                __html: decodeHtmlEntities(selectedLecture.description)
+                                                                            }}
+                                                                        ></p>
+                                                                    </div>
+                                                                )}
 
-                                                                            {values?.mcqs.length > 0 && (
-                                                                                <>
-                                                                                    <p className="title mb-0 mt-2 fw-bold">
-                                                                                        Multiple Choice Questions (
-                                                                                        {values?.mcqs.length}/
-                                                                                        {values?.mcqs.length}) :
-                                                                                    </p>
-                                                                                    {values?.mcqs.map((mcq, index) => (
-                                                                                        <div
-                                                                                            className="add-quiz-question"
-                                                                                            key={index}
-                                                                                        >
-                                                                                            <div className="questions">
-                                                                                                <Form.Label>{`Q 0${index + 1}: ${mcq.question}`}</Form.Label>
-                                                                                                <div className="d-flex flex-wrap">
-                                                                                                    {mcq.options.map(
-                                                                                                        (
-                                                                                                            option,
-                                                                                                            idx
-                                                                                                        ) => (
-                                                                                                            <div
-                                                                                                                key={`inline-radio-${index}-${idx}`}
-                                                                                                                className="d-flex selectedLecture.quiz"
-                                                                                                            >
-                                                                                                                <Form.Check
-                                                                                                                    name={`mcqs[${index}].answer`}
-                                                                                                                    inline
-                                                                                                                    label={
-                                                                                                                        option
-                                                                                                                    }
-                                                                                                                    onChange={(
-                                                                                                                        e
-                                                                                                                    ) => {
-                                                                                                                        // Set field value in Formik
-                                                                                                                        setFieldValue(
-                                                                                                                            `mcqs[${index}].answer`,
-                                                                                                                            e
-                                                                                                                                .target
-                                                                                                                                .value
-                                                                                                                        );
-                                                                                                                    }}
-                                                                                                                    type="radio"
-                                                                                                                    id={`inline-radio-${index}-${idx}`}
-                                                                                                                    value={
-                                                                                                                        option
-                                                                                                                    }
-                                                                                                                />
-                                                                                                            </div>
-                                                                                                        )
-                                                                                                    )}
-                                                                                                </div>
-                                                                                                {/* Render the error message outside of the options loop */}
-                                                                                                <ErrorMessage
-                                                                                                    name={`mcqs[${index}].answer`}
-                                                                                                    component="div"
-                                                                                                    className="error"
-                                                                                                />
+                                                                {continueQuiz && selectedLecture && (
+                                                                    <div className="quiz-curriculum">
+                                                                        <h1 className="title">Quiz {selectedLecture.name}:</h1>
+
+                                                                        {values?.mcqs.length > 0 && (
+                                                                            <>
+                                                                                <p className="title mb-0 mt-2 fw-bold">
+                                                                                    Multiple Choice Questions ({values?.mcqs.length}/
+                                                                                    {values?.mcqs.length}) :
+                                                                                </p>
+                                                                                {values?.mcqs.map((mcq, index) => (
+                                                                                    <div className="add-quiz-question" key={index}>
+                                                                                        <div className="questions">
+                                                                                            <Form.Label>{`Q 0${index + 1}: ${mcq.question}`}</Form.Label>
+                                                                                            <div className="d-flex flex-wrap">
+                                                                                                {mcq.options.map((option, idx) => (
+                                                                                                    <div
+                                                                                                        key={`inline-radio-${index}-${idx}`}
+                                                                                                        className="d-flex selectedLecture.quiz"
+                                                                                                    >
+                                                                                                        <Form.Check
+                                                                                                            name={`mcqs[${index}].answer`}
+                                                                                                            inline
+                                                                                                            label={option}
+                                                                                                            onChange={(e) => {
+                                                                                                                // Set field value in Formik
+                                                                                                                setFieldValue(
+                                                                                                                    `mcqs[${index}].answer`,
+                                                                                                                    e.target.value
+                                                                                                                );
+                                                                                                            }}
+                                                                                                            type="radio"
+                                                                                                            id={`inline-radio-${index}-${idx}`}
+                                                                                                            value={option}
+                                                                                                        />
+                                                                                                    </div>
+                                                                                                ))}
                                                                                             </div>
+                                                                                            {/* Render the error message outside of the options loop */}
+                                                                                            <ErrorMessage
+                                                                                                name={`mcqs[${index}].answer`}
+                                                                                                component="div"
+                                                                                                className="error"
+                                                                                            />
                                                                                         </div>
-                                                                                    ))}
-                                                                                </>
-                                                                            )}
-                                                                        </div>
-                                                                    )}
-                                                                </>
-                                                            )}
+                                                                                    </div>
+                                                                                ))}
+                                                                            </>
+                                                                        )}
+                                                                    </div>
+                                                                )}
+                                                            </>)}
                                                         </div>
                                                     </Col>
                                                 </Row>
@@ -743,10 +687,7 @@ const EnrolledCourseDetail = () => {
                                                         <>
                                                             {
                                                                 /* Continue to Quiz Button */
-                                                                selectedLecture &&
-                                                                selectedLecture.quiz &&
-                                                                selectedLecture.quiz.mcqs &&
-                                                                selectedLecture.quiz.mcqs.length !== 0 ? (
+                                                                selectedLecture && selectedLecture.quiz && selectedLecture.quiz.mcqs && selectedLecture.quiz.mcqs.length !== 0 ? (
                                                                     <Button
                                                                         className="done-btn"
                                                                         type="button"
