@@ -1461,7 +1461,6 @@ label.custom_check span {
     display: flex;
     gap: 10px;
     flex-wrap: wrap;
-    margin-top: 1rem;
 }
 
 .publish-form-section .publish-course-wrapper {
@@ -1487,7 +1486,7 @@ label.custom_check span {
 .dp-main-box {
     display: flex;
     justify-content: space-between;
-    align-items: start;
+    align-items: center;
 }
 
 .dp-title-name p {
@@ -1625,6 +1624,11 @@ label.custom_check span {
     font-size: 16px !important;
     line-height: 1.6;
 }
+
+.db-cats:has(.cat-name) {
+    margin-top: 1rem;
+}
+
 @media only screen and (max-width:991px) {
     .access-container {
         flex-wrap: wrap;
