@@ -79,6 +79,14 @@
     padding: 50px 30px 0px;
 }
 
+.full-width {
+    max-width: 100% !important;
+}
+
+.main-panel:has(.full-width) .main-content-wrapper {
+    padding: 44px 30px !important;
+}
+
 @media only screen and (max-width:1499px) {
 .main-panel .main-content-wrapper > div {
     max-width: 1100px;

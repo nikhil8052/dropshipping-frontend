@@ -571,7 +571,7 @@ const Students = () => {
     // END  Dynamic Superbase Table 
 
     return (
-        <div className="students-page">
+        <div className="students-page full-width">
             <Helmet>
                 <title>Students | Dropship Academy</title>
             </Helmet>
