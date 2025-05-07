@@ -162,9 +162,6 @@ const RichTextEditor = (props) => {
         };
     }, []);
 
-
-
-
     const deleteResource = async (id) => {
         const ENDPOINT = API_URL.SUPABASE_DELETE_LECTURE_RESOURCE.replace(':id', id);
         const response = await axiosWrapper('POST', ENDPOINT, {}, token);
@@ -183,8 +180,6 @@ const RichTextEditor = (props) => {
             props.setResourceUrl(resourceToEdit.url ?? "");
         }
     }
-
-
 
     return (
         <div className="quill-editor lecture-quill-edit">

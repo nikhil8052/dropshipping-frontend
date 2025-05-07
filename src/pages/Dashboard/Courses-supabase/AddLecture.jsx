@@ -28,7 +28,6 @@ import 'react-edit-text/dist/index.css';
 import Edit2 from '../../../assets/icons/Dropdown.svg';
 
 const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCourseData }) => {
-
     const [loading, setLoading] = useState(false);
     const [isOpen, setIsOpen] = useState(false);
     const [currentActiveLectureID, setCurrentActiveLectureID] = useState(null);
@@ -84,18 +83,16 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
         }
     }, [topics]);
 
-
     useEffect(() => {
         if (initialData) {
             if (initialData.lecturess?.length > 0) {
                 setRightViewLecture(initialData.lecturess[0]);
-                setActiveLectureId(initialData.lecturess[0].id)
+                setActiveLectureId(initialData.lecturess[0].id);
             } else {
-                const folderWithLecture = initialData.folders?.find(folder => folder.lectures?.length > 0);
+                const folderWithLecture = initialData.folders?.find((folder) => folder.lectures?.length > 0);
                 if (folderWithLecture) {
                     setRightViewLecture(folderWithLecture.lectures[0]);
                     setActiveLectureId(folderWithLecture.lectures[0].id);
-
                 }
             }
         }
@@ -172,7 +169,6 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
             setUnassignedLectures((prev) => [...prev, ...newLectures]);
         }
 
-
         // set the folders and the topic well
         if (initialData?.folders) {
             const updatedTopics = initialData.folders.map((folder) => ({
@@ -195,27 +191,25 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
         }
     };
 
-
-
-    // DELETE FOLDER START 
+    // DELETE FOLDER START
     const deleteFolder = async (id) => {
         let ENDPOINT = API_URL.SUPABASE_COURSE_FOLDER_DELETE.replace(':id', id);
         try {
-            console.log(ENDPOINT)
+            console.log(ENDPOINT);
             const response = await axiosWrapper('DELETE', ENDPOINT, {}, token);
             if (response?.data) {
-                const folderToDelete = topics.find(folder => folder.id === id);
+                const folderToDelete = topics.find((folder) => folder.id === id);
                 if (folderToDelete) {
-                    setUnassignedLectures(prev => [...prev, ...(folderToDelete.lectures || [])]);
-                    setTopics(prev => prev.filter(folder => folder.id !== id));
+                    setUnassignedLectures((prev) => [...prev, ...(folderToDelete.lectures || [])]);
+                    setTopics((prev) => prev.filter((folder) => folder.id !== id));
                 }
             }
         } catch (error) {
             console.error('Failed to rename lecture:', error);
             return null;
         }
-    }
-    // DELETE FOLDER END 
+    };
+    // DELETE FOLDER END
 
     const toggleFolder = (index) => {
         setIsOpen((prevState) => ({
@@ -244,27 +238,25 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
     const toggleSwitch = async () => {
         setIsPublishing(true);
         const updatedIsPublished = !isPublished;
-    
+
         setIsPublished(updatedIsPublished);
-    
+
         const data = {
-            is_published: updatedIsPublished 
+            is_published: updatedIsPublished
         };
-    
+
         const url = getApiUrl(isEditing, editingLecture?.id);
         const method = isEditing ? 'PUT' : 'POST';
-    
+
         try {
             await axiosWrapper(method, url, data, token);
         } catch (err) {
-            setIsPublished((prev) => !prev); 
+            setIsPublished((prev) => !prev);
         } finally {
             setIsPublishing(false);
         }
     };
-    
-    
-    
+
     const addUnassignedLecture = async () => {
         const newLec = {
             name: 'New Lecture',
@@ -284,7 +276,6 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
     };
 
     const addResource = async () => {
-
         const urlPattern = /^(https?:\/\/)?([\w\d-]+\.)+[a-zA-Z]{2,}(\/\S*)?$/;
 
         if (!label.trim()) {
@@ -307,7 +298,7 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
         }
 
         let ENDPOINT = API_URL.SUPABASE_UPDATE_LECTURE_RESOURCE.replace(':id', currentActiveLectureID);
-        let METHOD = "POST";
+        let METHOD = 'POST';
 
         const lectureData = {
             model_id: currentActiveLectureID,
@@ -316,7 +307,7 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
             type: 'file',
             file_link: resourceFileUrl,
             url: resourceUrl,
-            showPopUp:true 
+            showPopUp: true
         };
 
         if (editResource === true && editResourceID) {
@@ -336,14 +327,12 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
             id: id,
             file_link: resourceFileUrl,
             type: isUrlProvided ? 'url' : 'file',
-            showPopUp: true 
+            showPopUp: true
         };
 
         // Update UI - replace if editing, or append if new
         if (editResource && editResourceID) {
-            setResources(prev =>
-                prev.map((r) => (r.id === editResourceID ? resource : r))
-            );
+            setResources((prev) => prev.map((r) => (r.id === editResourceID ? resource : r)));
         } else {
             setResources([...resources, resource]);
         }
@@ -619,11 +608,9 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
         setRenaming({ type: null, id: null });
 
         if (updated) {
-            if (type === "lecture") {
+            if (type === 'lecture') {
                 setUnassignedLectures((prev) =>
-                    prev.map((lecture) =>
-                        lecture.id === id ? { ...lecture, name: value.trim() } : lecture
-                    )
+                    prev.map((lecture) => (lecture.id === id ? { ...lecture, name: value.trim() } : lecture))
                 );
 
                 setTopics((prevTopics) =>
@@ -634,11 +621,9 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
                         )
                     }))
                 );
-            } else if (type === "folder") {
+            } else if (type === 'folder') {
                 setTopics((prevTopics) =>
-                    prevTopics.map((folder) =>
-                        folder.id === id ? { ...folder, name: value.trim() } : folder
-                    )
+                    prevTopics.map((folder) => (folder.id === id ? { ...folder, name: value.trim() } : folder))
                 );
             }
             // Clear modal and input only if renaming lecture (optional)
@@ -647,8 +632,6 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
             setSelectedLectureId(null);
         }
     };
-
-
 
     const handleDeleteSubmit = async () => {
         const deletedQuizId = showDeleteModal.quizId;
@@ -708,13 +691,13 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
 
     const { description } = {};
 
-    // GET FRESH LECTURE DATA 
+    // GET FRESH LECTURE DATA
     const getLectureData = async (id) => {
         const url = API_URL.SUPABASE_GET_LECTURE.replace(':id', id);
         const response = await axiosWrapper('GET', url, {}, token);
         return response;
     };
-    // END GET FRESH LECTURE DATA 
+    // END GET FRESH LECTURE DATA
 
     const loadLectureData = async (lecture) => {
         setCurrentActiveLectureID(lecture.id);
@@ -722,10 +705,8 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
         const lecData = await getLectureData(currentActiveLectureID);
     };
 
-
-    // EDIT THE LECTURE WHEN CLICK ON THE EDIT 
+    // EDIT THE LECTURE WHEN CLICK ON THE EDIT
     const handleEditClick = async (id) => {
-
         const lecture = await getLectureData(id);
         setRightViewLecture(lecture.data);
 
@@ -740,7 +721,7 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
             id: lecture.data?.id,
             courseId: lecture.data?.courseId,
             quizzes: lecture?.data?.quizzes,
-            is_published: lecture?.data?.is_published || false,
+            is_published: lecture?.data?.is_published || false
         };
 
         setLectureQuizzes(lecture?.data?.quizzes || []);
@@ -763,7 +744,7 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
         });
         setResources(resources);
     };
-    // END THE LECTURE EDIT FUNCTION 
+    // END THE LECTURE EDIT FUNCTION
 
     const getApiUrl = (isEditable, lectureId) => {
         return isEditable
@@ -773,7 +754,6 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
 
     const prepareFormData = (values) => {
         const formData = { ...values, courseId: editingLecture?.courseId };
-
 
         return formData;
     };
@@ -787,8 +767,6 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
         // setSubmitting(false);
     };
     const editClickLeture = (lecture) => {
-    
-    
         if (hasUnsavedChanges) {
             const confirmLeave = window.confirm('You have unsaved changes. Do you want to leave without saving?');
             if (!confirmLeave) {
@@ -806,7 +784,6 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
 
         const action = formikHelpers?.event?.nativeEvent?.submitter?.value;
 
-     
         try {
             const formData = prepareFormData(values);
 
@@ -817,7 +794,6 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
             // dispatch({ type: types.ALL_RECORDS, data: { keyOfData: 'currentCourseUpdate', data: true } });
 
             if (response?.data) {
-               
                 const updatedLectureId = response.data.id;
                 const updatedLectureName = response.data.name.trim();
                 const updatedDes = response.data.description;
@@ -825,7 +801,7 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
                 setUnassignedLectures((prevLectures) =>
                     prevLectures.map((lecture) =>
                         lecture.id === updatedLectureId
-                            ? { ...lecture, name: updatedLectureName, description:  updatedDes }
+                            ? { ...lecture, name: updatedLectureName, description: updatedDes }
                             : lecture
                     )
                 );
@@ -834,7 +810,7 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
                         ...folder,
                         lectures: folder.lectures.map((lecture) =>
                             lecture.id === updatedLectureId
-                                ? { ...lecture, name: updatedLectureName , description:  updatedDes  }
+                                ? { ...lecture, name: updatedLectureName, description: updatedDes }
                                 : lecture
                         )
                     }))
@@ -844,16 +820,16 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
                     setRightViewLecture((prevLecture) => ({
                         ...prevLecture,
                         name: updatedLectureName,
-                        description:  updatedDes
+                        description: updatedDes
                     }));
                 }
-                setIsEditing(false)
+                setIsEditing(false);
             }
         } catch (err) {
             // handleError(err);
             console.log(err);
         } finally {
-            setIsEditing(false)
+            setIsEditing(false);
             // setSubmitting(false);
             modelPopAction();
             setHasUnsavedChanges(false);
@@ -880,25 +856,20 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
         });
     };
 
-
     const handleDragEnd = (result) => {
         const { source, destination } = result;
 
         if (!destination) return;
         // If dropped in the same position
         if (source.droppableId === destination.droppableId && source.index === destination.index) {
-           
             return;
         }
 
-        if (
-            source.droppableId === 'unassigned' &&
-            destination.droppableId === 'unassigned'
-        ) {
+        if (source.droppableId === 'unassigned' && destination.droppableId === 'unassigned') {
             const newUnassigned = [...unassignedLectures];
             const [movedLecture] = newUnassigned.splice(source.index, 1);
             newUnassigned.splice(destination.index, 0, movedLecture);
-    
+
             setUnassignedLectures(newUnassigned);
             updateLectureSequences(newUnassigned); // Update order in DB or local state
             return;
@@ -955,7 +926,6 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
 
         // Moving between topics (existing logic)
         if (source.droppableId.startsWith('topic-') && destination.droppableId.startsWith('topic-')) {
-          
             const sourceTopicIndex = parseInt(source.droppableId.split('-')[1]);
             const destTopicIndex = parseInt(destination.droppableId.split('-')[1]);
 
@@ -986,31 +956,27 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
 
             return;
         }
-
-     
     };
 
     const updateLectureSequences = (lectureList) => {
         const payload = lectureList.map((lecture, index) => ({
             id: lecture.id,
-            order_id: index,
+            order_id: index
         }));
         updateLectureOrder(payload);
     };
 
-
     const updateLectureOrder = async (lectures) => {
         try {
-            let ENDPOINT = API_URL.SUPABASE_UPDATE_LECTURE_SEQUENCE
+            let ENDPOINT = API_URL.SUPABASE_UPDATE_LECTURE_SEQUENCE;
             const response = await axiosWrapper('PUT', ENDPOINT, { lectures }, token);
-
         } catch (error) {
             console.error('Failed to update lecture order', error);
         }
     };
 
     const unescapeHtml = (html) => {
-        const txt = document.createElement("textarea");
+        const txt = document.createElement('textarea');
         txt.innerHTML = html;
         return txt.value;
     };
@@ -1067,18 +1033,17 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
             return;
         }
 
-        let ENDPOINT = "";
-        if (type == "lecture") {
+        let ENDPOINT = '';
+        if (type == 'lecture') {
             ENDPOINT = API_URL.SUPABASE_UPDATE_LECTURE.replace(':id', id);
-
-        } else if (type == "folder") {
+        } else if (type == 'folder') {
             ENDPOINT = API_URL.SUPABASE_COURSE_FOLDER_UPDATE.replace(':id', id);
         }
 
         try {
             const payload = {
                 name: newTitle,
-                source: "rename"
+                source: 'rename'
             };
 
             const response = await axiosWrapper('PUT', ENDPOINT, payload, token);
@@ -1098,11 +1063,10 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
         try {
             const payload = {
                 name: lectureLabel,
-                source: "rename"
+                source: 'rename'
             };
 
             const response = await axiosWrapper('PUT', ENDPOINT, payload, token);
-
 
             if (response) {
                 setUnassignedLectures((prev) =>
@@ -1127,7 +1091,6 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
             console.error('Failed to rename lecture:', error);
             return null;
         }
-
     };
 
     const resourceFileChanged = async (e) => {
@@ -1254,7 +1217,6 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
                                         <input
                                             type="file"
                                             id="fileUpload"
-
                                             className="form-control"
                                             accept=".pdf,.doc,.docx,.png,.jpg,.jpeg,.mp4,.mov,.avi"
                                             onChange={(e) => resourceFileChanged(e)}
@@ -1266,7 +1228,7 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
                             nonActiveBtn="cancel-btn"
                             activeBtn="submit-btn"
                             cancelButtonTitle="Cancel"
-                            activeBtnTitle={editResource ? "Update" : "Add"}
+                            activeBtnTitle={editResource ? 'Update' : 'Add'}
                         />
                     )}
 
@@ -1377,208 +1339,246 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
                         <div className="course-detail-row">
                             <div className="row">
                                 <div className="col-lg-4 col-md-12">
-                                    <div className='admin-left-sec'>
-                                    <div className="course-left">
-                                        <div className="course-left-top">
-                                            <h2 className="subhead">
-                                                <EditText
-                                                    name="textbox1"
-                                                    defaultValue={title}
-                                                    inputClassName="editable-input"
-                                                />
-                                            </h2>
-                                            <div className="drop-box">
-                                                <Dropdown>
-                                                    <Dropdown.Toggle id="dropdown-basic">
-                                                        <div className="toggle-icon">
-                                                            <img src={Ellips} alt="" />
-                                                        </div>
-                                                    </Dropdown.Toggle>
-                                                    <Dropdown.Menu>
-                                                        {/* <Dropdown.Item href="javascript:void(0)">Edit Course</Dropdown.Item> */}
-                                                        <Dropdown.Item onClick={onBack}>Edit Course</Dropdown.Item>
-                                                        <Dropdown.Item onClick={addNewTopic}>Add Folder</Dropdown.Item>
-                                                        <Dropdown.Item onClick={addUnassignedLecture}>
-                                                            Add Lecture
-                                                        </Dropdown.Item>
+                                    <div className="admin-left-sec">
+                                        <div className="course-left">
+                                            <div className="course-left-top">
+                                                <h2 className="subhead">
+                                                    <EditText
+                                                        name="textbox1"
+                                                        defaultValue={title}
+                                                        inputClassName="editable-input"
+                                                    />
+                                                </h2>
+                                                <div className="drop-box">
+                                                    <Dropdown>
+                                                        <Dropdown.Toggle id="dropdown-basic">
+                                                            <div className="toggle-icon">
+                                                                <img src={Ellips} alt="" />
+                                                            </div>
+                                                        </Dropdown.Toggle>
+                                                        <Dropdown.Menu>
+                                                            {/* <Dropdown.Item href="javascript:void(0)">Edit Course</Dropdown.Item> */}
+                                                            <Dropdown.Item onClick={onBack}>Edit Course</Dropdown.Item>
+                                                            <Dropdown.Item onClick={addNewTopic}>
+                                                                Add Folder
+                                                            </Dropdown.Item>
+                                                            <Dropdown.Item onClick={addUnassignedLecture}>
+                                                                Add Lecture
+                                                            </Dropdown.Item>
 
-                                                        <Dropdown.Item href="javascript:void(0)">Delete</Dropdown.Item>
-                                                    </Dropdown.Menu>
-                                                </Dropdown>
+                                                            <Dropdown.Item href="javascript:void(0)">
+                                                                Delete
+                                                            </Dropdown.Item>
+                                                        </Dropdown.Menu>
+                                                    </Dropdown>
+                                                </div>
                                             </div>
-                                        </div>
-                                        {!hasLectures ? (
-                                            <>
-                                                {/* Folders code start  */}
-                                                <DragDropContext onDragEnd={handleDragEnd}>
-                                                    {topics.map((topic, topicIndex) => (
-                                                        <Droppable droppableId={`topic-${topicIndex}`} key={topicIndex}>
-                                                            {(provided) => (
-                                                                <div
-                                                                    className="folder-detail"
-                                                                    ref={provided.innerRef}
-                                                                    {...provided.droppableProps}
-                                                                >
-                                                                    {/* Topic Header */}
+                                            {!hasLectures ? (
+                                                <>
+                                                    {/* Folders code start  */}
+                                                    <DragDropContext onDragEnd={handleDragEnd}>
+                                                        {topics.map((topic, topicIndex) => (
+                                                            <Droppable
+                                                                droppableId={`topic-${topicIndex}`}
+                                                                key={topicIndex}
+                                                            >
+                                                                {(provided) => (
                                                                     <div
-                                                                        className="drop-box"
-                                                                        onClick={(e) => {
-                                                                            if (!e.target.closest('.editable-text')) {
-                                                                                toggleFolder(topicIndex);
-                                                                            }
-                                                                        }}
-                                                                        style={{ cursor: 'pointer' }}
+                                                                        className="folder-detail"
+                                                                        ref={provided.innerRef}
+                                                                        {...provided.droppableProps}
                                                                     >
-                                                                        <h3 className="editable-header">
-                                                                            {renaming.type === "folder" && renaming.id === topic.id ? (
-                                                                                <Spinner animation="border" size="sm" className="ms-2" />
-                                                                            ) : (
-                                                                                <EditText
-                                                                                    name="textbox2"
-                                                                                    defaultValue={topic.name}
-                                                                                    inputClassName="editable-input"
-                                                                                    onSave={({ value }) =>
-                                                                                        handleRename({ value, type: "folder", id: topic.id })
-                                                                                    }
-                                                                                />
-                                                                            )}
-                                                                        </h3>
-                                                                        <div className='folder-dd-name'>
-                                                                            <Dropdown align="end">
-                                                                                <Dropdown.Toggle variant="light" className="action-dropdown-toggle" id="dropdown-basic">
-                                                                                    <img src={Edit2} alt="" />
-                                                                                </Dropdown.Toggle>
-                                                                                <Dropdown.Menu>
-                                                                                    <Dropdown.Item onClick={() => deleteFolder(topic.id)}>Delete</Dropdown.Item>
-                                                                                </Dropdown.Menu>
-                                                                            </Dropdown>
-                                                                            <div
-                                                                                className={`folder-dropdown ${isOpen[topicIndex] ? 'rotated' : ''}`}
-                                                                            >
-                                                                                <img src={Drop} alt="" />
+                                                                        {/* Topic Header */}
+                                                                        <div
+                                                                            className="drop-box"
+                                                                            onClick={(e) => {
+                                                                                if (
+                                                                                    !e.target.closest('.editable-text')
+                                                                                ) {
+                                                                                    toggleFolder(topicIndex);
+                                                                                }
+                                                                            }}
+                                                                            style={{ cursor: 'pointer' }}
+                                                                        >
+                                                                            <h3 className="editable-header">
+                                                                                {renaming.type === 'folder' &&
+                                                                                renaming.id === topic.id ? (
+                                                                                    <Spinner
+                                                                                        animation="border"
+                                                                                        size="sm"
+                                                                                        className="ms-2"
+                                                                                    />
+                                                                                ) : (
+                                                                                    <EditText
+                                                                                        name="textbox2"
+                                                                                        defaultValue={topic.name}
+                                                                                        inputClassName="editable-input"
+                                                                                        onSave={({ value }) =>
+                                                                                            handleRename({
+                                                                                                value,
+                                                                                                type: 'folder',
+                                                                                                id: topic.id
+                                                                                            })
+                                                                                        }
+                                                                                    />
+                                                                                )}
+                                                                            </h3>
+                                                                            <div className="folder-dd-name">
+                                                                                <Dropdown align="end">
+                                                                                    <Dropdown.Toggle
+                                                                                        variant="light"
+                                                                                        className="action-dropdown-toggle"
+                                                                                        id="dropdown-basic"
+                                                                                    >
+                                                                                        <img src={Edit2} alt="" />
+                                                                                    </Dropdown.Toggle>
+                                                                                    <Dropdown.Menu>
+                                                                                        <Dropdown.Item
+                                                                                            onClick={() =>
+                                                                                                deleteFolder(topic.id)
+                                                                                            }
+                                                                                        >
+                                                                                            Delete
+                                                                                        </Dropdown.Item>
+                                                                                    </Dropdown.Menu>
+                                                                                </Dropdown>
+                                                                                <div
+                                                                                    className={`folder-dropdown ${isOpen[topicIndex] ? 'rotated' : ''}`}
+                                                                                >
+                                                                                    <img src={Drop} alt="" />
+                                                                                </div>
                                                                             </div>
                                                                         </div>
-                                                                    </div>
 
-                                                                    {/* Lectures */}
-                                                                    {isOpen[topicIndex] && (
-                                                                        <div className="detail-box">
-                                                                            <ul>
-                                                                                {topic.lectures.map(
-                                                                                    (lecture, lectureIndex) => (
-                                                                                        <Draggable
-                                                                                            key={lecture.id}
-                                                                                            draggableId={lecture.id.toString()}
-                                                                                            index={lectureIndex}
-                                                                                        >
-                                                                                            {(provided) => (
-                                                                                                <li
-                                                                                                    onClick={() => {
-                                                                                                        // setActiveLectureId(lecture.id);
-                                                                                                        // setPendingLectureId(lecture.id);
-                                                                                                        editClickLeture(lecture);
-                                                                                                        // setPublishLectureModel(
-                                                                                                        //     true
-                                                                                                        // );
-                                                                                                    }}
-                                                                                                    ref={provided.innerRef}
-                                                                                                    {...provided.draggableProps}
-                                                                                                    {...provided.dragHandleProps}
-                                                                                                    className={lecture.id === activeLectureId ? "active_lecture" : ""}
-
-                                                                                                >
-                                                                                                    <a
-                                                                                                        href="javascript:void(0)"
+                                                                        {/* Lectures */}
+                                                                        {isOpen[topicIndex] && (
+                                                                            <div className="detail-box">
+                                                                                <ul>
+                                                                                    {topic.lectures.map(
+                                                                                        (lecture, lectureIndex) => (
+                                                                                            <Draggable
+                                                                                                key={lecture.id}
+                                                                                                draggableId={lecture.id.toString()}
+                                                                                                index={lectureIndex}
+                                                                                            >
+                                                                                                {(provided) => (
+                                                                                                    <li
                                                                                                         onClick={() => {
-                                                                                                            setRightViewLecture(lecture)
+                                                                                                            // setActiveLectureId(lecture.id);
+                                                                                                            // setPendingLectureId(lecture.id);
+                                                                                                            editClickLeture(
+                                                                                                                lecture
+                                                                                                            );
+                                                                                                            // setPublishLectureModel(
+                                                                                                            //     true
+                                                                                                            // );
+                                                                                                        }}
+                                                                                                        ref={
+                                                                                                            provided.innerRef
                                                                                                         }
-
+                                                                                                        {...provided.draggableProps}
+                                                                                                        {...provided.dragHandleProps}
+                                                                                                        className={
+                                                                                                            lecture.id ===
+                                                                                                            activeLectureId
+                                                                                                                ? 'active_lecture'
+                                                                                                                : ''
                                                                                                         }
                                                                                                     >
-                                                                                                        {
-                                                                                                            lecture.name
-                                                                                                            // renaming.type === "lecture" && renaming.id === lecture.id ? (
-                                                                                                            //     <Spinner animation="border" size="sm" className="ms-2" />
-                                                                                                            // ) : (<EditText
-                                                                                                            //     name="textbox3"
-                                                                                                            //     defaultValue={
-                                                                                                            //         lecture.name ??
-                                                                                                            //         'ERROR'
-                                                                                                            //     }
-                                                                                                            //     inputClassName="editable-input"
-                                                                                                            //     onSave={({ value }) => handleRename({ value, type: "lecture", id: lecture.id })}
-                                                                                                            // />)
-                                                                                                        }
+                                                                                                        <a
+                                                                                                            href="javascript:void(0)"
+                                                                                                            onClick={() => {
+                                                                                                                setRightViewLecture(
+                                                                                                                    lecture
+                                                                                                                );
+                                                                                                            }}
+                                                                                                        >
+                                                                                                            {
+                                                                                                                lecture.name
+                                                                                                                // renaming.type === "lecture" && renaming.id === lecture.id ? (
+                                                                                                                //     <Spinner animation="border" size="sm" className="ms-2" />
+                                                                                                                // ) : (<EditText
+                                                                                                                //     name="textbox3"
+                                                                                                                //     defaultValue={
+                                                                                                                //         lecture.name ??
+                                                                                                                //         'ERROR'
+                                                                                                                //     }
+                                                                                                                //     inputClassName="editable-input"
+                                                                                                                //     onSave={({ value }) => handleRename({ value, type: "lecture", id: lecture.id })}
+                                                                                                                // />)
+                                                                                                            }
+                                                                                                        </a>
+                                                                                                        <div className="drop-box">
+                                                                                                            <Dropdown>
+                                                                                                                <Dropdown.Toggle id="dropdown-basic">
+                                                                                                                    <div className="toggle-icon">
+                                                                                                                        <img
+                                                                                                                            src={
+                                                                                                                                Ellips
+                                                                                                                            }
+                                                                                                                            alt=""
+                                                                                                                            onClick={() => {
+                                                                                                                                setSelectedLecture(
+                                                                                                                                    lectureIndex
+                                                                                                                                );
+                                                                                                                            }}
+                                                                                                                        />
+                                                                                                                    </div>
+                                                                                                                </Dropdown.Toggle>
+                                                                                                                <Dropdown.Menu>
+                                                                                                                    {isEditing ? (
+                                                                                                                        <Dropdown.Item
+                                                                                                                            href="javascript:void(0)"
+                                                                                                                            onClick={() => {
+                                                                                                                                setActiveLectureId(
+                                                                                                                                    lecture.id
+                                                                                                                                );
+                                                                                                                                setPendingLectureId(
+                                                                                                                                    lecture.id
+                                                                                                                                );
+                                                                                                                                setPublishLectureModel(
+                                                                                                                                    true
+                                                                                                                                );
+                                                                                                                            }}
+                                                                                                                        >
+                                                                                                                            Edit
+                                                                                                                        </Dropdown.Item>
+                                                                                                                    ) : (
+                                                                                                                        <Dropdown.Item
+                                                                                                                            href="javascript:void(0)"
+                                                                                                                            onClick={() => {
+                                                                                                                                setActiveLectureId(
+                                                                                                                                    lecture.id
+                                                                                                                                );
+                                                                                                                                handleEditClick(
+                                                                                                                                    lecture.id
+                                                                                                                                );
+                                                                                                                            }}
+                                                                                                                        >
+                                                                                                                            Edit
+                                                                                                                        </Dropdown.Item>
+                                                                                                                    )}
 
-                                                                                                    </a>
-                                                                                                    <div className="drop-box">
-                                                                                                        <Dropdown>
-                                                                                                            <Dropdown.Toggle id="dropdown-basic">
-                                                                                                                <div className="toggle-icon">
-                                                                                                                    <img
-                                                                                                                        src={
-                                                                                                                            Ellips
-                                                                                                                        }
-                                                                                                                        alt=""
-                                                                                                                        onClick={() => {
-                                                                                                                            setSelectedLecture(
-                                                                                                                                lectureIndex
-                                                                                                                            );
-                                                                                                                        }}
-                                                                                                                    />
-                                                                                                                </div>
-                                                                                                            </Dropdown.Toggle>
-                                                                                                            <Dropdown.Menu>
-                                                                                                                {isEditing ? (
                                                                                                                     <Dropdown.Item
-                                                                                                                        href="javascript:void(0)"
-                                                                                                                        onClick={() => {
-                                                                                                                            setActiveLectureId(lecture.id);
-                                                                                                                            setPendingLectureId(
-                                                                                                                                lecture.id
-                                                                                                                            );
-                                                                                                                            setPublishLectureModel(
-                                                                                                                                true
-                                                                                                                            );
-                                                                                                                        }}
-                                                                                                                    >
-                                                                                                                        Edit
-                                                                                                                    </Dropdown.Item>
-                                                                                                                ) : (
-                                                                                                                    <Dropdown.Item
-                                                                                                                        href="javascript:void(0)"
-                                                                                                                        onClick={() => {
-                                                                                                                            setActiveLectureId(lecture.id)
-                                                                                                                            handleEditClick(
-                                                                                                                                lecture.id
+                                                                                                                        onClick={() =>
+                                                                                                                            duplicateLecture(
+                                                                                                                                {
+                                                                                                                                    lectureId:
+                                                                                                                                        lecture.id,
+                                                                                                                                    topicIndex,
+                                                                                                                                    lectureIndex
+                                                                                                                                }
                                                                                                                             )
                                                                                                                         }
-                                                                                                                        }
                                                                                                                     >
-                                                                                                                        Edit
+                                                                                                                        Duplicate
                                                                                                                     </Dropdown.Item>
-                                                                                                                )}
 
-                                                                                                                <Dropdown.Item
-                                                                                                                    onClick={() =>
-                                                                                                                        duplicateLecture(
-                                                                                                                            {
-                                                                                                                                lectureId:
-                                                                                                                                    lecture.id,
-                                                                                                                                topicIndex,
-                                                                                                                                lectureIndex
-                                                                                                                            }
-                                                                                                                        )
-                                                                                                                    }
-                                                                                                                >
-                                                                                                                    Duplicate
-                                                                                                                </Dropdown.Item>
-
-                                                                                                                <Dropdown
-                                                                                                                    drop="right"
-                                                                                                                    as="div"
-                                                                                                                >
-                                                                                                                    {/* <Dropdown.Toggle
+                                                                                                                    <Dropdown
+                                                                                                                        drop="right"
+                                                                                                                        as="div"
+                                                                                                                    >
+                                                                                                                        {/* <Dropdown.Toggle
                                                                                                                         as="span"
                                                                                                                         className="dropdown-item"
                                                                                                                         style={{
@@ -1588,173 +1588,192 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
                                                                                                                         Move
                                                                                                                     </Dropdown.Toggle> */}
 
-                                                                                                                    <Dropdown.Item
-                                                                                                                        onClick={() =>
-                                                                                                                            handleLectureDeleteClick(
+                                                                                                                        <Dropdown.Item
+                                                                                                                            onClick={() =>
+                                                                                                                                handleLectureDeleteClick(
+                                                                                                                                    lecture.id
+                                                                                                                                )
+                                                                                                                            }
+                                                                                                                        >
+                                                                                                                            Delete
+                                                                                                                        </Dropdown.Item>
+                                                                                                                        <Dropdown.Item
+                                                                                                                            onClick={() => {
+                                                                                                                                setModalShowRename(
+                                                                                                                                    true
+                                                                                                                                );
+                                                                                                                                setSelectedLectureId(
+                                                                                                                                    lecture.id
+                                                                                                                                );
+                                                                                                                                setLectureLabel(
+                                                                                                                                    lecture.name
+                                                                                                                                );
+                                                                                                                            }}
+                                                                                                                        >
+                                                                                                                            Rename
+                                                                                                                        </Dropdown.Item>
+                                                                                                                    </Dropdown>
+                                                                                                                </Dropdown.Menu>
+                                                                                                            </Dropdown>
+                                                                                                        </div>
+                                                                                                    </li>
+                                                                                                )}
+                                                                                            </Draggable>
+                                                                                        )
+                                                                                    )}
+                                                                                    {provided.placeholder}
+                                                                                </ul>
+                                                                            </div>
+                                                                        )}
+                                                                    </div>
+                                                                )}
+                                                            </Droppable>
+                                                        ))}
+                                                        {/* Unassigned Lectures Section */}
+                                                        <Droppable droppableId="unassigned">
+                                                            {(provided) => (
+                                                                <div
+                                                                    className="unassigned-lectures"
+                                                                    ref={provided.innerRef}
+                                                                    {...provided.droppableProps}
+                                                                >
+                                                                    <div className="detail-box">
+                                                                        <ul>
+                                                                            {unassignedLectures.map(
+                                                                                (lecture, index) => (
+                                                                                    <Draggable
+                                                                                        key={`unassigned-${lecture.id}`}
+                                                                                        draggableId={`unassigned-${lecture.id}`}
+                                                                                        index={index}
+                                                                                    >
+                                                                                        {(provided) => (
+                                                                                            <li
+                                                                                                onClick={() => {
+                                                                                                    // setActiveLectureId(lecture.id);
+                                                                                                    // setPendingLectureId(lecture.id);
+
+                                                                                                    setRightViewLecture(
+                                                                                                        lecture
+                                                                                                    );
+                                                                                                    editClickLeture(
+                                                                                                        lecture
+                                                                                                    );
+                                                                                                    // setPublishLectureModel(
+                                                                                                    //     true
+                                                                                                    // );
+                                                                                                }}
+                                                                                                ref={provided.innerRef}
+                                                                                                {...provided.draggableProps}
+                                                                                                {...provided.dragHandleProps}
+                                                                                                className={
+                                                                                                    lecture.id ===
+                                                                                                    activeLectureId
+                                                                                                        ? 'active_lecture'
+                                                                                                        : ''
+                                                                                                }
+                                                                                            >
+                                                                                                {lecture?.name}
+
+                                                                                                <div className="drop-box">
+                                                                                                    <Dropdown>
+                                                                                                        <Dropdown.Toggle id="dropdown-basic">
+                                                                                                            <div className="toggle-icon">
+                                                                                                                <img
+                                                                                                                    src={
+                                                                                                                        Ellips
+                                                                                                                    }
+                                                                                                                    alt=""
+                                                                                                                />
+                                                                                                            </div>
+                                                                                                        </Dropdown.Toggle>
+                                                                                                        <Dropdown.Menu>
+                                                                                                            {isEditing ? (
+                                                                                                                <Dropdown.Item
+                                                                                                                    href="javascript:void(0)"
+                                                                                                                    onClick={() => {
+                                                                                                                        setActiveLectureId(
+                                                                                                                            lecture.id
+                                                                                                                        );
+                                                                                                                        setPendingLectureId(
+                                                                                                                            lecture.id
+                                                                                                                        );
+                                                                                                                        setPublishLectureModel(
+                                                                                                                            true
+                                                                                                                        );
+                                                                                                                    }}
+                                                                                                                >
+                                                                                                                    Edit
+                                                                                                                </Dropdown.Item>
+                                                                                                            ) : (
+                                                                                                                <Dropdown.Item
+                                                                                                                    href="javascript:void(0)"
+                                                                                                                    onClick={() => {
+                                                                                                                        setActiveLectureId(
+                                                                                                                            lecture.id
+                                                                                                                        );
+                                                                                                                        handleEditClick(
+                                                                                                                            lecture.id
+                                                                                                                        );
+                                                                                                                    }}
+                                                                                                                >
+                                                                                                                    Edit
+                                                                                                                </Dropdown.Item>
+                                                                                                            )}
+                                                                                                            <Dropdown.Item
+                                                                                                                onClick={() =>
+                                                                                                                    duplicateLecture(
+                                                                                                                        {
+                                                                                                                            lectureId:
                                                                                                                                 lecture.id
-                                                                                                                            )
                                                                                                                         }
-                                                                                                                    >
-                                                                                                                        Delete
-                                                                                                                    </Dropdown.Item>
-                                                                                                                    <Dropdown.Item
-                                                                                                                        onClick={() => {
-                                                                                                                            setModalShowRename(true);
-                                                                                                                            setSelectedLectureId(lecture.id);
-                                                                                                                            setLectureLabel(lecture.name);
-                                                                                                                        }}
-                                                                                                                    >
-                                                                                                                        Rename
-                                                                                                                    </Dropdown.Item>
-
-
-                                                                                                                </Dropdown>
-                                                                                                            </Dropdown.Menu>
-                                                                                                        </Dropdown>
-                                                                                                    </div>
-                                                                                                </li>
-                                                                                            )}
-                                                                                        </Draggable>
-                                                                                    )
-                                                                                )}
-                                                                                {provided.placeholder}
-                                                                            </ul>
-                                                                        </div>
-                                                                    )}
+                                                                                                                    )
+                                                                                                                }
+                                                                                                            >
+                                                                                                                Duplicate
+                                                                                                            </Dropdown.Item>
+                                                                                                            <Dropdown.Item
+                                                                                                                onClick={() =>
+                                                                                                                    handleLectureDeleteClick(
+                                                                                                                        lecture.id
+                                                                                                                    )
+                                                                                                                }
+                                                                                                            >
+                                                                                                                Delete
+                                                                                                            </Dropdown.Item>
+                                                                                                            <Dropdown.Item
+                                                                                                                onClick={() => {
+                                                                                                                    setModalShowRename(
+                                                                                                                        true
+                                                                                                                    );
+                                                                                                                    setSelectedLectureId(
+                                                                                                                        lecture.id
+                                                                                                                    );
+                                                                                                                    setLectureLabel(
+                                                                                                                        lecture.name
+                                                                                                                    );
+                                                                                                                }}
+                                                                                                            >
+                                                                                                                Rename
+                                                                                                            </Dropdown.Item>
+                                                                                                        </Dropdown.Menu>
+                                                                                                    </Dropdown>
+                                                                                                </div>
+                                                                                            </li>
+                                                                                        )}
+                                                                                    </Draggable>
+                                                                                )
+                                                                            )}
+                                                                        </ul>
+                                                                        {provided.placeholder}
+                                                                    </div>
                                                                 </div>
                                                             )}
                                                         </Droppable>
-                                                    ))}
-                                                    {/* Unassigned Lectures Section */}
-                                                    <Droppable droppableId="unassigned">
-                                                        {(provided) => (
-                                                            <div
-                                                                className="unassigned-lectures"
-                                                                ref={provided.innerRef}
-                                                                {...provided.droppableProps}
-                                                            >
-                                                                <div className="detail-box">
-                                                                    <ul>
-                                                                        {unassignedLectures.map((lecture, index) => (
-                                                                            <Draggable
-                                                                                key={`unassigned-${lecture.id}`}
-                                                                                draggableId={`unassigned-${lecture.id}`}
-                                                                                index={index}
-                                                                            >
-                                                                                {(provided) => (
-                                                                                    <li
-                                                                                        onClick={() => {
-                                                                                            // setActiveLectureId(lecture.id);
-                                                                                            // setPendingLectureId(lecture.id);
-                                                                            
-                                                                                            setRightViewLecture(lecture)
-                                                                                            editClickLeture(lecture);
-                                                                                            // setPublishLectureModel(
-                                                                                            //     true
-                                                                                            // );
-                                                                                           
-                                                                                            
-                                                                                        }}
-                                                                                        ref={provided.innerRef}
-                                                                                        {...provided.draggableProps}
-                                                                                        {...provided.dragHandleProps}
-                                                                                        className={lecture.id === activeLectureId ? "active_lecture" : ""}
-                                                                                    >
+                                                        {/* End Unassinged Lecture Section  */}
+                                                    </DragDropContext>
 
-                                                                                        {
-                                                                                            lecture?.name
-                                                                                            
-                                                                                        }
-
-                                                                                        <div className="drop-box">
-                                                                                            <Dropdown>
-                                                                                                <Dropdown.Toggle id="dropdown-basic">
-                                                                                                    <div className="toggle-icon">
-                                                                                                        <img
-                                                                                                            src={Ellips}
-                                                                                                            alt=""
-                                                                                                        />
-                                                                                                    </div>
-                                                                                                </Dropdown.Toggle>
-                                                                                                <Dropdown.Menu>
-                                                                                                    {isEditing ? (
-                                                                                                        <Dropdown.Item
-                                                                                                            href="javascript:void(0)"
-                                                                                                            onClick={() => {
-                                                                                                                setActiveLectureId(lecture.id);
-                                                                                                                setPendingLectureId(
-                                                                                                                    lecture.id
-                                                                                                                );
-                                                                                                                setPublishLectureModel(
-                                                                                                                    true
-                                                                                                                );
-                                                                                                            }}
-                                                                                                        >
-                                                                                                            Edit
-                                                                                                        </Dropdown.Item>
-                                                                                                    ) : (
-                                                                                                        <Dropdown.Item
-                                                                                                            href="javascript:void(0)"
-                                                                                                            onClick={() => {
-                                                                                                                setActiveLectureId(lecture.id);
-                                                                                                                handleEditClick(
-                                                                                                                    lecture.id
-                                                                                                                )
-                                                                                                            }
-                                                                                                            }
-                                                                                                        >
-                                                                                                            Edit
-                                                                                                        </Dropdown.Item>
-                                                                                                    )}
-                                                                                                    <Dropdown.Item
-                                                                                                        onClick={() =>
-                                                                                                            duplicateLecture(
-                                                                                                                {
-                                                                                                                    lectureId:
-                                                                                                                        lecture.id
-                                                                                                                }
-                                                                                                            )
-                                                                                                        }
-                                                                                                    >
-                                                                                                        Duplicate
-                                                                                                    </Dropdown.Item>
-                                                                                                    <Dropdown.Item
-                                                                                                        onClick={() =>
-                                                                                                            handleLectureDeleteClick(
-                                                                                                                lecture.id
-                                                                                                            )
-                                                                                                        }
-                                                                                                    >
-                                                                                                        Delete
-                                                                                                    </Dropdown.Item>
-                                                                                                    <Dropdown.Item
-                                                                                                        onClick={() => {
-                                                                                                            setModalShowRename(true);
-                                                                                                            setSelectedLectureId(lecture.id);
-                                                                                                            setLectureLabel(lecture.name);
-                                                                                                        }}
-                                                                                                    >
-                                                                                                        Rename
-                                                                                                    </Dropdown.Item>
-                                                                                                </Dropdown.Menu>
-                                                                                            </Dropdown>
-                                                                                        </div>
-                                                                                    </li>
-                                                                                )}
-                                                                            </Draggable>
-                                                                        ))}
-                                                                    </ul>
-                                                                    {provided.placeholder}
-                                                                </div>
-                                                            </div>
-                                                        )}
-                                                    </Droppable>
-                                                    {/* End Unassinged Lecture Section  */}
-                                                </DragDropContext>
-
-
-                                                {/* Show the Move Popup for unassigned lectures */}
-                                                {/* {showMovePopup &&
+                                                    {/* Show the Move Popup for unassigned lectures */}
+                                                    {/* {showMovePopup &&
                                                     selectedLecture &&
                                                     selectedLecture.topicIndex === null && (
                                                         <div className="popup-backdrop">
@@ -1784,20 +1803,20 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
                                                             </div>
                                                         </div>
                                                     )} */}
-                                            </>
-                                        ) : (
-                                            <></>
-                                            // <div className="detail-box">
-                                            //   <ul>
-                                            //     <li>
-                                            //       <a href="javascript:void(0)">New Page</a>
-                                            //       {/* ... existing dropdown ... */}
+                                                </>
+                                            ) : (
+                                                <></>
+                                                // <div className="detail-box">
+                                                //   <ul>
+                                                //     <li>
+                                                //       <a href="javascript:void(0)">New Page</a>
+                                                //       {/* ... existing dropdown ... */}
 
-                                            //     </li>
-                                            //   </ul>
-                                            // </div>
-                                        )}
-                                    </div>
+                                                //     </li>
+                                                //   </ul>
+                                                // </div>
+                                            )}
+                                        </div>
                                     </div>
                                 </div>
 
@@ -1809,7 +1828,7 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
                                                 {rightViewLecture ? (
                                                     <div className="new-page-view" key={rightViewLecture.id}>
                                                         <div className="course-right-header">
-                                                            <div className='course-right-name d-flex justify-content-between mb-3' >
+                                                            <div className="course-right-name d-flex justify-content-between mb-3">
                                                                 <h2 className="subhead">{rightViewLecture.name}</h2>
                                                                 <div
                                                                     className="img-box cursor-pointer"
@@ -1824,9 +1843,71 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
                                                                 //     __html: unescapeHtml(rightViewLecture.description) || ''
                                                                 // }}
                                                                 dangerouslySetInnerHTML={{
-                                                                    __html: decodeHtmlEntities(rightViewLecture.description)
+                                                                    __html: decodeHtmlEntities(
+                                                                        rightViewLecture.description
+                                                                    )
                                                                 }}
                                                             />
+                                                            {rightViewLecture.resources?.length > 0 && (
+                                                                <div className="card new-resource-main-card ">
+                                                                    <div className="card-body d-flex flex-column">
+                                                                        <h5 className="card-title">Resources</h5>
+                                                                        <div id="all_resources">
+                                                                            {rightViewLecture.resources.map(
+                                                                                (resource) => (
+                                                                                    <>
+                                                                                        <div
+                                                                                            key={resource.id}
+                                                                                            className={`resource-card ${index !== 0 ? 'mt-3' : ''}`}
+                                                                                        >
+                                                                                            <img
+                                                                                                src={resource.image}
+                                                                                                alt="Resource"
+                                                                                                className="resource-image"
+                                                                                            />
+                                                                                            <div className="resource-title">
+                                                                                                {resource.title}
+                                                                                            </div>
+                                                                                            <Dropdown align="end">
+                                                                                                <Dropdown.Toggle
+                                                                                                    variant="light"
+                                                                                                    className="action-dropdown-toggle"
+                                                                                                    id="dropdown-basic"
+                                                                                                >
+                                                                                                    <img
+                                                                                                        src={Edit2}
+                                                                                                        alt=""
+                                                                                                    />
+                                                                                                </Dropdown.Toggle>
+                                                                                                <Dropdown.Menu>
+                                                                                                    <Dropdown.Item
+                                                                                                        onClick={() =>
+                                                                                                            editResource(
+                                                                                                                resource.id
+                                                                                                            )
+                                                                                                        }
+                                                                                                    >
+                                                                                                        Edit
+                                                                                                    </Dropdown.Item>
+                                                                                                    <Dropdown.Item
+                                                                                                        onClick={() =>
+                                                                                                            deleteResource(
+                                                                                                                resource.id
+                                                                                                            )
+                                                                                                        }
+                                                                                                    >
+                                                                                                        Delete
+                                                                                                    </Dropdown.Item>
+                                                                                                </Dropdown.Menu>
+                                                                                            </Dropdown>
+                                                                                        </div>
+                                                                                    </>
+                                                                                )
+                                                                            )}
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            )}
                                                         </div>
                                                     </div>
                                                 ) : (
@@ -1841,7 +1922,6 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
                                                         a new lecture to get started.
                                                     </p>
                                                 )}
-
                                             </>
                                         ) : (
                                             <Formik
@@ -1851,16 +1931,16 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
                                                     description: editingLecture?.description || '',
                                                     name: editingLecture?.name || '',
                                                     transcript: editingLecture?.transcript || '',
-                                                    id: editingLecture?.id || '',
+                                                    id: editingLecture?.id || ''
                                                     // quizzes: editingLecture?.quizzes || [],
                                                     // quizzes: lectureQuizzes || [],
                                                 }}
                                                 validationSchema={validationSchema}
                                                 onSubmit={handleSubmit}
-                                            // onSubmit={(values) => {
-                                            //     handleSubmit(values);
-                                            //     setHasUnsavedChanges(false);
-                                            // }}
+                                                // onSubmit={(values) => {
+                                                //     handleSubmit(values);
+                                                //     setHasUnsavedChanges(false);
+                                                // }}
                                             >
                                                 {/* {({ isSubmitting, values, setFieldValue }) => ( */}
                                                 {({ isSubmitting, handleSubmit, setFieldValue, values, dirty }) => {
@@ -1958,7 +2038,12 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
                                                                                 <Dropdown.Item eventKey="add-resource">
                                                                                     Add Resource
                                                                                 </Dropdown.Item>
-                                                                                <Dropdown.Item eventKey="add-transcript" disabled={showTranscriptEditor === true}  >
+                                                                                <Dropdown.Item
+                                                                                    eventKey="add-transcript"
+                                                                                    disabled={
+                                                                                        showTranscriptEditor === true
+                                                                                    }
+                                                                                >
                                                                                     Add Transcript{' '}
                                                                                 </Dropdown.Item>
                                                                                 <Dropdown.Item eventKey="add-quiz">
@@ -1968,8 +2053,10 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
                                                                         </Dropdown>
                                                                     </div>
                                                                 </div>
-                                                                <div className="gap-3 d-flex" style={{ flexWrap: 'wrap' }}>
-
+                                                                <div
+                                                                    className="gap-3 d-flex"
+                                                                    style={{ flexWrap: 'wrap' }}
+                                                                >
                                                                     {isPublishing ? (
                                                                         <Spinner
                                                                             animation="border"
@@ -1977,28 +2064,40 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
                                                                             role="status"
                                                                             aria-hidden="true"
                                                                         />
-                                                                    ) : (<>
-                                                                        <div className="toggle-wrapper">
-                                                                            <span className="toggle-label">
-                                                                                {isPublished ? 'Published' : 'Draft'}
-
-                                                                            </span>
-                                                                            <div className="switch">
-                                                                                <input
-                                                                                    type="checkbox"
-                                                                                    id="switch2"
-                                                                                    checked={isPublished}
-                                                                                    onChange={toggleSwitch}
-                                                                                />
-                                                                                <label htmlFor="switch2"></label>
+                                                                    ) : (
+                                                                        <>
+                                                                            <div className="toggle-wrapper">
+                                                                                <span className="toggle-label">
+                                                                                    {isPublished
+                                                                                        ? 'Published'
+                                                                                        : 'Draft'}
+                                                                                </span>
+                                                                                <div className="switch">
+                                                                                    <input
+                                                                                        type="checkbox"
+                                                                                        id="switch2"
+                                                                                        checked={isPublished}
+                                                                                        onChange={toggleSwitch}
+                                                                                    />
+                                                                                    <label htmlFor="switch2"></label>
+                                                                                </div>
                                                                             </div>
-                                                                        </div>
-
-                                                                    </>)}
-                                                                    <Button type="button" className="cancel-btn" onClick={() => { setIsEditing(false) }}>
+                                                                        </>
+                                                                    )}
+                                                                    <Button
+                                                                        type="button"
+                                                                        className="cancel-btn"
+                                                                        onClick={() => {
+                                                                            setIsEditing(false);
+                                                                        }}
+                                                                    >
                                                                         Cancel
                                                                     </Button>
-                                                                    <Button type="submit" className="submit-btn" disabled={isSubmitting}>
+                                                                    <Button
+                                                                        type="submit"
+                                                                        className="submit-btn"
+                                                                        disabled={isSubmitting}
+                                                                    >
                                                                         {isSubmitting ? (
                                                                             <>
                                                                                 <Spinner
@@ -2009,13 +2108,13 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
                                                                                     aria-hidden="true"
                                                                                     className="me-2"
                                                                                 />
-
                                                                             </>
+                                                                        ) : isEditing ? (
+                                                                            'Update'
                                                                         ) : (
-                                                                            isEditing ? 'Update' : 'Update'
+                                                                            'Update'
                                                                         )}
                                                                     </Button>
-
                                                                 </div>
                                                             </div>
 
@@ -2049,7 +2148,10 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
                                                             {/* Display quizzes if available */}
                                                             {lectureQuizzes.length > 0 && (
                                                                 <div className="res">
-                                                                    <div className="quizz-wrap" style={{ width: '100%' }}>
+                                                                    <div
+                                                                        className="quizz-wrap"
+                                                                        style={{ width: '100%' }}
+                                                                    >
                                                                         {lectureQuizzes.map((quiz, index) => (
                                                                             <div
                                                                                 className="course-right-header border-0"
@@ -2072,7 +2174,9 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
                                                                                         src={trashIconRed}
                                                                                         alt="Delete"
                                                                                         onClick={() =>
-                                                                                            handleDeleteQuizClick(quiz.id)
+                                                                                            handleDeleteQuizClick(
+                                                                                                quiz.id
+                                                                                            )
                                                                                         }
                                                                                     />
                                                                                 </div>
