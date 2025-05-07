@@ -64,7 +64,7 @@ const Students = () => {
             //     !headerRef.current.contains(event.target)
             if (
                 dropdownRef.current &&
-                !dropdownRef.current.contains(event.target) 
+                !dropdownRef.current.contains(event.target)
             ) {
                 setShowColumnSelect(false);
             }
@@ -335,7 +335,7 @@ const Students = () => {
                     <Badge
                         bg={props.data.isActive ? 'success' : 'danger'}
                         style={{ padding: '0.5rem 0.5rem' }}
-                        // onClick={() => props.onToggleClick(props.data)}
+                    // onClick={() => props.onToggleClick(props.data)}
                     >
                         {props.data.isActive ? 'Active' : 'Inactive'}
                     </Badge>
@@ -621,40 +621,58 @@ const Students = () => {
                         value={columnOptions.filter((opt) => visibleFields.includes(opt.value))}
                         onChange={async (selectedOptions) => {
                             const selectedValues = selectedOptions.map((opt) => opt.value);
-                            // Remove the values if they exists 
+
+                            // Add new colums if any 
                             const newCols = selectedValues
                                 .filter(val => !supabaseCols.some(col => col.field === val))
                                 .map((val) => ({
                                     headerName: val,
                                     field: val,
-                                    filter: 'agSetColumnFilter',
-                                    sortable: true,
-                                    unSortIcon: true,
                                     wrapText: true,
                                     autoHeight: true,
                                     resizable: false,
                                 }));
 
-
+                            // All the columns new and last columns 
                             const updatedCols = [
                                 ...supabaseCols.slice(0, -1),
                                 ...newCols,
                                 supabaseCols[supabaseCols.length - 1]
                             ];
 
+                            // Here get the cols which really needs to be added 
+                            const filteredUpdatedCols = updatedCols.filter(col =>
+                                selectedValues.includes(col.field)
+                            );
 
-                            const updatedVisibleFields = Array.from(new Set([...visibleFields, ...selectedValues]));
+                            // New array with the shown columns 
+                            let lastUpdated = [
+                                ...initialTableCols.slice(0, -1),
+                                ...filteredUpdatedCols,
+                                initialTableCols[initialTableCols.length - 1]
+                            ];
 
-                            setSupabaseCols(updatedCols);
+
+                            const removedCols = updatedCols.filter(
+                                oldCol => !lastUpdated.some(newCol => newCol.field === oldCol.field)
+                            );
+
+                            let newVisibleArr = visibleFields.slice(0, 6);
+                            const updatedVisibleFields = Array.from(new Set([...newVisibleArr, ...selectedValues]));
+
+                            setSupabaseCols(lastUpdated);
                             setVisibleFields(updatedVisibleFields);
                             setShowColumnSelect(false);
-                            if (newCols.length > 0) {
-                                try {
-                                   
-                                    const ENDPOINT = API_URL.SUPABASE_GET_COLUMNS.replace(':table', 'users');
-                                    const response = await axiosWrapper('POST', ENDPOINT, { newCols }, token);
 
-                                    console.log( response, " Add these new cols ")
+                            if (newCols.length > 0 || removedCols.length>0) {
+                                try {
+                                    var payload={
+                                        "newCols":newCols ,
+                                        "removedCols" : removedCols 
+                                    }
+                                    const ENDPOINT = API_URL.SUPABASE_GET_COLUMNS.replace(':table', 'users');
+                                    const response = await axiosWrapper('POST', ENDPOINT, { payload }, token);
+
                                 } catch (error) {
                                     console.error("Failed to save columns to server:", error);
                                 }
