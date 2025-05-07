@@ -332,17 +332,6 @@ const EnrolledCourseDetail = () => {
 
         await axiosWrapper('PUT', URL, data, token);
 
-        // let nextLecture = lectures
-        //     .slice(activeIndex + 1)
-        //     .find(lecture => !lecture.lecture_progress?.[0]?.is_completed);
-
-        // if (!nextLecture) {
-        //     nextLecture = lectures
-        //         .slice(0, activeIndex)
-        //         .find(lecture => !lecture.lecture_progress?.[0]?.is_completed);
-        // }
-
-        // const targetLectureId = nextLecture?.id || lectures[activeIndex]?.id;
         let nextLecture;
 
         const currentLecture = lectures[activeIndex];
@@ -437,11 +426,22 @@ const EnrolledCourseDetail = () => {
                 <div className="EnrolledCourseDetail">
                     {filteredLectures.length === 0 ? (
                         <>
-                            <div className="title-top">
+                            {/* <div className="title-top">
                                 <span onClick={() => navigate(`/${role}/courses-supabase`)} style={{ cursor: 'pointer' }}>
                                     Courses <img src={CaretRight} alt=">" />
                                 </span>{' '}
                                 {courseDetails.title}
+                            </div> */}
+                            <div className="top-box">
+                                <div className="title-top">
+                                    <div className="bread-home">
+                                        <img src={BreadHome} alt="" onClick={() => navigate(`/${role}/courses-supabase`)}
+                                            style={{ cursor: 'pointer' }} />
+                                    </div>
+                                    <img src={CaretRightt} alt=">" />
+                                    {courseDetails.title} <img src={CaretRightt} alt=">" /> 
+                                    No Lecture Found
+                                </div>
                             </div>
                             <p className="no-data-wrapper">No Lecture Found</p>
                         </>
@@ -471,8 +471,10 @@ const EnrolledCourseDetail = () => {
                                                                                           Courses 
                                                                                       </span>{' '} */}
                                                 <img src={CaretRightt} alt=">" />
-                                                {courseDetails.title} <img src={CaretRightt} alt=">" /> Lecture{' '}
-                                                {activeIndex + 1}
+                                                {courseDetails.title} <img src={CaretRightt} alt=">" /> 
+                                                {lectures[activeIndex]?.name}
+                                                {/* Lecture{' '}
+                                                {activeIndex + 1} */}
                                             </div>
                                         </div>
 

@@ -164,7 +164,7 @@ const CourseDetail = () => {
         const slug = createSlug(selectedLecture?.name);
         const baseUrl = import.meta.env.VITE__APP_URL;
 
-        const link = `${baseUrl}/student/courses/enrolled-course/${courseSlug}/${slug}?m=direct&cid=${courseId}&lid=${selectedLecture?.id}`;
+        const link = `${baseUrl}/student/courses-supabase/enrolled-course/${courseSlug}/${slug}?m=direct&cid=${courseId}&lid=${selectedLecture?.id}`;
         console.log(link, ' LINK ');
         navigator.clipboard.writeText(link);
         setCopied(true);

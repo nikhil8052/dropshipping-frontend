@@ -29,7 +29,7 @@ const Courses = () => {
             }
         })
     );
-
+    
     const handleDragEnd = async (event) => {
 
    
@@ -65,31 +65,62 @@ const Courses = () => {
     const { userInfo, userToken } = useSelector((state) => state?.auth);
     const role = userInfo?.role;
     const itemsPerBatch = 50; // Number of courses to load per scroll
+    // function SortableItem({ course, id, onDelete }) {
+    //     const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({ id });
+
+    //     const style = {
+    //         transform: CSS.Transform.toString(transform),
+    //         transition: isDragging ? 'none' : 'transform 300ms ease', // Animate only others
+    //         cursor: isDragging ? 'grabbing' : 'grab',
+    //         zIndex: isDragging ? 999 : 'auto',
+    //         opacity: isDragging ? 0.7 : 1,
+    //         boxShadow: isDragging ? '0 8px 20px rgba(0, 161, 215, 0.16)' : 'none'
+    //     };
+
+    //     return (
+    //         <div ref={setNodeRef} style={style} {...attributes} {...listeners}>
+    //             <GenericCard
+    //                 key={course._id}
+    //                 {...course}
+    //                 onDelete={() => onDelete(course._id)}
+    //                 onChange={(e) => handleArchiveChange(e, course._id, course.archive)}
+    //                 canAccessCourse={true}
+    //             />
+    //         </div>
+    //     );
+    // }
     function SortableItem({ course, id, onDelete }) {
-        const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({ id });
-
+        const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({ 
+          id,
+          disabled: role === 'STUDENT'
+        });
+      
         const style = {
-            transform: CSS.Transform.toString(transform),
-            transition: isDragging ? 'none' : 'transform 300ms ease', // Animate only others
-            cursor: isDragging ? 'grabbing' : 'grab',
-            zIndex: isDragging ? 999 : 'auto',
-            opacity: isDragging ? 0.7 : 1,
-            boxShadow: isDragging ? '0 8px 20px rgba(0, 161, 215, 0.16)' : 'none'
+          transform: CSS.Transform.toString(transform),
+          transition: isDragging ? 'none' : 'transform 300ms ease',
+          cursor: role === 'STUDENT' ? 'default' : isDragging ? 'grabbing' : 'grab',
+          zIndex: isDragging ? 999 : 'auto',
+          opacity: isDragging ? 0.7 : 1,
+          boxShadow: isDragging ? '0 8px 20px rgba(0, 161, 215, 0.16)' : 'none'
         };
-
+      
         return (
-            <div ref={setNodeRef} style={style} {...attributes} {...listeners}>
-                <GenericCard
-                    key={course._id}
-                    {...course}
-                    onDelete={() => onDelete(course._id)}
-                    onChange={(e) => handleArchiveChange(e, course._id, course.archive)}
-                    canAccessCourse={true}
-                />
-            </div>
+          <div 
+            ref={setNodeRef} 
+            style={style} 
+            {...(role !== 'STUDENT' && attributes)} 
+            {...(role !== 'STUDENT' && listeners)}
+          >
+            <GenericCard
+              key={course._id}
+              {...course}
+              onDelete={() => onDelete(course._id)}
+              onChange={(e) => handleArchiveChange(e, course._id, course.archive)}
+              canAccessCourse={true}
+            />
+          </div>
         );
     }
-
     // Debounce search input to prevent excessive API calls
     const debounce = (func, delay) => {
         let debounceTimer;
