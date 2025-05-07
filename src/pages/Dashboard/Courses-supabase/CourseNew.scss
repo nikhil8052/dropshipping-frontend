@@ -604,7 +604,7 @@ span.slect_span.selected {
     justify-content: space-between;
     display: flex;
     align-items: center;
-    margin-bottom: 30px;
+    margin-bottom: 10px;
 }
 
 .course-left .dropdown-toggle {
@@ -664,7 +664,7 @@ span.slect_span.selected {
 }
 
 .detail-box {
-    margin-top: 10px;
+    margin: 10px 0px;
 
     li {
         list-style: none;
@@ -1120,9 +1120,9 @@ label.form-label {
     }
 }
 
-.new-page-view {
-    margin-bottom: 20px;
-}
+// .new-page-view {
+//     margin-bottom: 20px;
+// }
 
 .detail-box .drop-box .dropdown-menu {
     border: 1px solid #019ED8
