@@ -258,7 +258,7 @@ const CourseDetail = () => {
                                                                     </span>{' '} */}
                                     <img src={CaretRightt} alt=">" />
                                     {course.title}
-                                    <img src={CaretRightt} alt=">" /> Lecture 
+                                    <img src={CaretRightt} alt=">" /> {selectedLecture?.name} 
                                     {/* {activeIndex + 1} */}
                                 </div>
                             </div>
