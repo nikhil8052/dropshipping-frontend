@@ -59,11 +59,12 @@ const Students = () => {
     const dropdownRef = useRef(null);
     useEffect(() => {
         const handleClickOutside = (event) => {
+            // &&
+            //     headerRef.current &&
+            //     !headerRef.current.contains(event.target)
             if (
                 dropdownRef.current &&
-                !dropdownRef.current.contains(event.target) &&
-                headerRef.current &&
-                !headerRef.current.contains(event.target)
+                !dropdownRef.current.contains(event.target) 
             ) {
                 setShowColumnSelect(false);
             }
@@ -336,7 +337,7 @@ const Students = () => {
                         style={{ padding: '0.5rem 0.5rem' }}
                         // onClick={() => props.onToggleClick(props.data)}
                     >
-                        {props.data.isActive ? 'Activate' : 'Deactivate'}
+                        {props.data.isActive ? 'Active' : 'Inactive'}
                     </Badge>
                 </Col>
             </Row>
@@ -441,9 +442,9 @@ const Students = () => {
         {
             headerName: 'HT / LT',
             field: 'coachingTrajectory',
-            filter: 'agSetColumnFilter',
-            sortable: true,
-            unSortIcon: true,
+            // filter: 'agSetColumnFilter',
+            // sortable: true,
+            // unSortIcon: true,
             resizable: false,
             cellRenderer: ({ data: rowData }) => {
                 const coachingTrajectory = rowData.coachingTrajectory;
@@ -528,9 +529,6 @@ const Students = () => {
                     .map((val) => ({
                         headerName: val.field,
                         field: val.field,
-                        filter: 'agSetColumnFilter',
-                        sortable: true,
-                        unSortIcon: true,
                         wrapText: true,
                         autoHeight: true,
                         resizable: false,
