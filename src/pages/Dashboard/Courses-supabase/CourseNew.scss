@@ -1739,6 +1739,15 @@ label.custom_check span {
         font-size: 1rem;
     }
 
+    .enroll-top {
+        margin-bottom: 2rem !important;
+    }
+
+    .EnrolledCourseDetail .section-border.row {
+        flex-direction: column-reverse;
+        gap: 20px;
+    }
+
 }
 
 @media only screen and (max-width:767px) {
@@ -1822,6 +1831,10 @@ label.custom_check span {
     .dp-info p {
         font-size: 14px !important;
         line-height: 1.2;
+    }
+
+    .EnrolledCourseDetail .lecture-curriculum p{
+        font-size: 14px !important;
     }
 }
 
