@@ -1015,6 +1015,11 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
         return txt.value;
     };
 
+    const decodeHtmlEntities = (encodedString) => {
+        const textarea = document.createElement('textarea');
+        textarea.innerHTML = encodedString;
+        return textarea.value;
+    };
 
     const handleDeleteLecture = async () => {
         try {
@@ -1814,9 +1819,12 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
                                                                 </div>
                                                             </div>
                                                             <div
-                                                                className="content"
+                                                                className="content content-info-lecture"
+                                                                // dangerouslySetInnerHTML={{
+                                                                //     __html: unescapeHtml(rightViewLecture.description) || ''
+                                                                // }}
                                                                 dangerouslySetInnerHTML={{
-                                                                    __html: unescapeHtml(rightViewLecture.description) || ''
+                                                                    __html: decodeHtmlEntities(rightViewLecture.description)
                                                                 }}
                                                             />
                                                         </div>

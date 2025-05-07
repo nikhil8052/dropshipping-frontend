@@ -1604,8 +1604,27 @@ label.custom_check span {
 .main-panel .main-content-wrapper:has(.course-top) .publish-form-section {
     max-width: 100% !important;
 }
+.course-right-header .content.content-info-lecture p{
+    margin: 0px !important;
+    font-size: 16px !important;
+    line-height: 1.6;
+}
 
-
+.lecture-quill-edit .ql-editor p{
+    margin: 0px !important;
+    font-size: 16px !important;
+    line-height: 1.6; 
+}
+.modal-description .content.course-detail-info p {
+    margin: 0px !important;
+    font-size: 16px !important;
+    line-height: 1.6;
+}
+.EnrolledCourseDetail .lecture-curriculum p{
+    margin: 0px !important;
+    font-size: 16px !important;
+    line-height: 1.6;
+}
 @media only screen and (max-width:991px) {
     .access-container {
         flex-wrap: wrap;
@@ -1815,4 +1834,9 @@ label.custom_check span {
         font-size: 16px;
     }
 
+}
+
+
+.publish-course-wrapper p a {
+    color: #2da5f3 !important;
 }
