@@ -264,7 +264,7 @@ const CourseDetail = () => {
                                             </div>
                                             <div className="modal-description">
                                                 <div
-                                                    className="content"
+                                                    className="content course-detail-info"
                                                     dangerouslySetInnerHTML={{
                                                         __html: unescapeHtml(selectedLecture.description) || ''
                                                     }}

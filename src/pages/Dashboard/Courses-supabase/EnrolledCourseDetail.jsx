@@ -332,18 +332,48 @@ const EnrolledCourseDetail = () => {
 
         await axiosWrapper('PUT', URL, data, token);
 
-        let nextLecture = lectures
-            .slice(activeIndex + 1)
-            .find(lecture => !lecture.lecture_progress?.[0]?.is_completed);
+        // let nextLecture = lectures
+        //     .slice(activeIndex + 1)
+        //     .find(lecture => !lecture.lecture_progress?.[0]?.is_completed);
 
+        // if (!nextLecture) {
+        //     nextLecture = lectures
+        //         .slice(0, activeIndex)
+        //         .find(lecture => !lecture.lecture_progress?.[0]?.is_completed);
+        // }
+
+        // const targetLectureId = nextLecture?.id || lectures[activeIndex]?.id;
+        let nextLecture;
+
+        const currentLecture = lectures[activeIndex];
+        const currentFolderId = currentLecture?.folder_id;
+        
+        if (currentFolderId) {
+            nextLecture = lectures
+                .slice(activeIndex + 1)
+                .find(lecture => lecture.folder_id === currentFolderId && !lecture.lecture_progress?.[0]?.is_completed);
+        }
+        
+        if (!nextLecture) {
+            nextLecture = lectures
+                .slice(activeIndex + 1)
+                .find(lecture => !lecture.lecture_progress?.[0]?.is_completed);
+        }
+        
+        if (!nextLecture && currentFolderId) {
+            nextLecture = lectures
+                .slice(0, activeIndex) 
+                .find(lecture => lecture.folder_id === currentFolderId && !lecture.lecture_progress?.[0]?.is_completed);
+        }
+        
         if (!nextLecture) {
             nextLecture = lectures
                 .slice(0, activeIndex)
                 .find(lecture => !lecture.lecture_progress?.[0]?.is_completed);
         }
-
-        const targetLectureId = nextLecture?.id || lectures[activeIndex]?.id;
-
+        
+        const targetLectureId = nextLecture?.id || currentLecture?.id;
+        
 
 
         setSlugOnce(true);

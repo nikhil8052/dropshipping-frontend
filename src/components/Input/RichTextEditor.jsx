@@ -187,7 +187,7 @@ const RichTextEditor = (props) => {
 
 
     return (
-        <div className="quill-editor">
+        <div className="quill-editor lecture-quill-edit">
             <div id={`${props.id}`}>
                 <button className="ql-header" value="1">
                     H1
