@@ -1719,13 +1719,15 @@
     font-size: 16px;
 }
 
-.main-panel:has(.EnrolledCourseDetail) .title-top {
+.main-panel:has(.EnrolledCourseDetail) .top-box .title-top {
     border: 1px solid rgba(128, 128, 128, 0.2784313725) !important;
     background-color: #fff !important;
     padding: 0px 20px;
     border-radius: 10px;
     margin: 0px 10px;
     gap: 30px;
+    font-size: 14px;
+    font-weight: 400;
     color: #6b7280 !important;
     span{
         color: #6b7280 !important;

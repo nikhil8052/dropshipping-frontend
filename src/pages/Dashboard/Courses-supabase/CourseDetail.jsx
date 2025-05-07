@@ -1,4 +1,3 @@
-
 import { useEffect, useState } from 'react';
 import { Button } from 'react-bootstrap';
 import { useSelector } from 'react-redux';
@@ -18,6 +17,8 @@ import '../Courses-supabase/CourseNew.scss';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCopy } from '@fortawesome/free-solid-svg-icons';
 import Loading from '@components/Loading/Loading';
+import CaretRightt from '@icons/CaretRightt.svg';
+import BreadHome from '@icons/BreadHome.svg';
 
 const CourseDetail = () => {
     const navigate = useNavigate();
@@ -33,28 +34,27 @@ const CourseDetail = () => {
     const [topics, setTopics] = useState([]);
     const [unassignedLectures, setUnassignedLectures] = useState([]);
 
-
-
     const role = userInfo?.role;
     const courseId = location.state?.courseId;
     const isDetailPage =
         location.pathname === '/admin/courses-supabase/details' ||
         location.pathname === '/coach/courses-supabase/details';
 
-
     useEffect(() => {
         const processCourseData = (courseData) => {
             // Process folders into topics
-            const processedTopics = courseData.folders?.map(folder => ({
-                id: folder.id,
-                name: folder.name,
-                lectures: folder.lectures || []
-            })) || [];
+            const processedTopics =
+                courseData.folders?.map((folder) => ({
+                    id: folder.id,
+                    name: folder.name,
+                    lectures: folder.lectures || []
+                })) || [];
 
             // Process unassigned lectures
-            const unassigned = courseData.lectures?.filter((lecture) => {
-                return lecture.folder_id === null || lecture.folder_id === '';
-            }) || [];
+            const unassigned =
+                courseData.lectures?.filter((lecture) => {
+                    return lecture.folder_id === null || lecture.folder_id === '';
+                }) || [];
 
             setTopics(processedTopics);
             setUnassignedLectures(unassigned);
@@ -68,7 +68,7 @@ const CourseDetail = () => {
     const getCourseById = async (id) => {
         setLoading(true);
         const { data } = await axiosWrapper('GET', `${API_URL.SUPABASE_GET_COURSE.replace(':id', id)}`, {}, token);
-        console.log( data , " Couse data detail ")
+        console.log(data, ' Couse data detail ');
         const courseSlug = createSlug(data.title);
         setCourseSlug(courseSlug);
 
@@ -129,7 +129,6 @@ const CourseDetail = () => {
     };
 
     const handleLectureSelect = (lecture) => {
-
         const name = lecture?.title != null ? lecture.title : lecture?.name;
         if (lecture) {
             const slug = createSlug(name);
@@ -150,7 +149,7 @@ const CourseDetail = () => {
         setSelectedLecture(lecture);
     };
     const unescapeHtml = (html) => {
-        const txt = document.createElement("textarea");
+        const txt = document.createElement('textarea');
         txt.innerHTML = html;
         return txt.value;
     };
@@ -159,7 +158,12 @@ const CourseDetail = () => {
 
     const handleCopy = async () => {
         const courseId = course.id;
-        const { data } = await axiosWrapper('GET', `${API_URL.SUPABASE_GET_COURSE.replace(':id', courseId)}`, {}, token);
+        const { data } = await axiosWrapper(
+            'GET',
+            `${API_URL.SUPABASE_GET_COURSE.replace(':id', courseId)}`,
+            {},
+            token
+        );
         const courseSlug = createSlug(data.title);
         const slug = createSlug(selectedLecture?.name);
         const baseUrl = import.meta.env.VITE__APP_URL;
@@ -177,7 +181,6 @@ const CourseDetail = () => {
                 <Loading />
             ) : (
                 <div className="publish-form-section">
-
                     {role === 'STUDENT' ? (
                         <Link to={`/${role?.toLowerCase()}/courses-supabase`}>
                             <Button type="button" className="back-button">
@@ -195,53 +198,88 @@ const CourseDetail = () => {
                                     Courses <img src={CaretRight} alt=">" />{' '}
                                 </span>
                             )}
-                            <div className='detail-page-header'>
-                                <div className='dp-main-box'>
-                                    <div className='dp-title-name'> <p> {course.title} </p>
-                                    <div className='db-cats'>
-                                        {
-                                            course.categoryDetails.map((cat)=>{
-                                                return <>
-                                                 <div className='cat-name'>{cat.name} </div>
-                                                </>
-                                            })
-                                        }
-                                    </div> 
-
+                            <div className="detail-page-header">
+                                <div className="dp-main-box">
+                                    <div className="dp-title-name">
+                                        {' '}
+                                        <p> {course.title} </p>
+                                        <div className="db-cats">
+                                            {course.categoryDetails.map((cat) => {
+                                                return (
+                                                    <>
+                                                        <div className="cat-name">{cat.name} </div>
+                                                    </>
+                                                );
+                                            })}
+                                        </div>
                                     </div>
 
-                                <div className='dp-info'>
-                                    <p>
-                                        Total Lectures: {unassignedLectures.length + topics.reduce((acc, topic) => acc + (topic.lectures?.length || 0), 0)}
-                                    </p>
-                                    <Button
-                                        onClick={() => {
-                                            navigate(`/${role?.toLowerCase()}/courses-supabase/edit`, {
-                                                state: {
-                                                    isEdit: true,
-                                                    courseId: course.id,
-                                                    activeKey: "upload-files"
-                                                }
-                                            })
-                                        }
-
-                                        }
-                                        type="button"
-                                        className="submit-btn"
-                                    >
-                                        Edit
-                                    </Button>
-
+                                    <div className="dp-info">
+                                        <p>
+                                            Total Lectures:{' '}
+                                            {unassignedLectures.length +
+                                                topics.reduce((acc, topic) => acc + (topic.lectures?.length || 0), 0)}
+                                        </p>
+                                        <Button
+                                            onClick={() => {
+                                                navigate(`/${role?.toLowerCase()}/courses-supabase/edit`, {
+                                                    state: {
+                                                        isEdit: true,
+                                                        courseId: course.id,
+                                                        activeKey: 'upload-files'
+                                                    }
+                                                });
+                                            }}
+                                            type="button"
+                                            className="submit-btn"
+                                        >
+                                            Edit
+                                        </Button>
+                                    </div>
                                 </div>
-                                </div>
-
                             </div>
                         </div>
                     )}
 
                     <div className="publish-course-wrapper">
-                        <div className="row">
+                        <div className="EnrolledCourseDetail">
+                        <div className="enroll-top mb-5">
+                            <div className="top-box">
+                                <div className="title-top m-0">
+                                    <div className="bread-home">
+                                        <img
+                                            src={BreadHome}
+                                            alt=""
+                                            onClick={() => navigate(`/${role}/courses-supabase`)}
+                                            style={{ cursor: 'pointer' }}
+                                        />
+                                    </div>
+                                    {/* <span
+                                                                    </span>{' '} */}
+                                    <img src={CaretRightt} alt=">" />
+                                    {course.title}
+                                    <img src={CaretRightt} alt=">" /> Lecture 
+                                    {/* {activeIndex + 1} */}
+                                </div>
+                            </div>
 
+                            {/* <InputGroup>
+                                                                <InputGroup.Text>
+                                                                    <img src={Search} alt="Search" />
+                                                                </InputGroup.Text>
+                                                                <Form.Control
+                                                                    className="search-input"
+                                                                    type="text"
+                                                                    name="Search"
+                                                                    label="Search"
+                                                                    value={search}
+                                                                    onChange={onFilterTextChange}
+                                                                    placeholder="Search"
+                                                                />
+                                                            </InputGroup> */}
+                        </div>
+                        </div>
+                        <div className="row">
                             <div className="col-lg-4 col-md-12">
                                 <FolderStructureView
                                     topics={topics}
@@ -259,7 +297,11 @@ const CourseDetail = () => {
                                             <div className="product-details d-flex  justify-content-between">
                                                 <h3>{selectedLecture?.name}</h3>
                                                 <div>
-                                                    <FontAwesomeIcon style={{ cursor: 'pointer' }} icon={faCopy} onClick={handleCopy} />
+                                                    <FontAwesomeIcon
+                                                        style={{ cursor: 'pointer' }}
+                                                        icon={faCopy}
+                                                        onClick={handleCopy}
+                                                    />
                                                 </div>
                                             </div>
                                             <div className="modal-description">
@@ -345,7 +387,6 @@ const CourseDetail = () => {
                             )}
                         </div>
                     )} */}
-
                 </div>
             )}
         </>
