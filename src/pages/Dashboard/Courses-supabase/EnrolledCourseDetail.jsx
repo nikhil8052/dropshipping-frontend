@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState,useRef } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import CaretRight from '@icons/CaretRight.svg';
@@ -26,6 +26,7 @@ import CustomProgressBar from '../../../components/CustomProgressBar/CustomProgr
 import LectureCurriculumSkeleton from '../../../components/LectureCurriculumSkeleton';
 import CaretRightt from '@icons/CaretRightt.svg';
 import BreadHome from '@icons/BreadHome.svg';
+import Player from '@vimeo/player'; 
 
 const EnrolledCourseDetail = () => {
     const navigate = useNavigate();
@@ -51,12 +52,39 @@ const EnrolledCourseDetail = () => {
     const [courseDetails, setCourseDetails] = useState({});
     const [retryQuiz, setRetryQuiz] = useState(false);
     const [slugOnce, setSlugOnce] = useState(false);
-    // const [accessRestricted, setAccessRestricted] = useState(false);
-    const accessRestricted = false;
+    const [accessRestricted, setAccessRestricted] = useState(false);
+    // const accessRestricted = false;
 
     const [course, setCourse] = useState(0);
     const [unassignedLectures, setUnassignedLectures] = useState([]);
     const [topics, setTopics] = useState([]);
+
+
+    useEffect(() => {
+        const iframeElement = document.querySelector('iframe.ql-video');
+        
+        if (iframeElement) {
+        const player = new Player(iframeElement);
+
+        player.on('play', () => {
+            console.log('Video is playing...');
+        });
+
+        player.on('ended', async () => {
+            if (markLectureAsCompleted) {
+                await markLectureAsCompleted(selectedLecture.id, selectedLecture.courseId);
+            } else {
+                console.error('markLectureAsCompleted function is not defined');
+            }
+        });
+
+        return () => {
+            player.off('play');
+            player.off('ended');
+        };
+        }
+    }, [selectedLecture]);
+
     useEffect(() => {
         const processCourseData = (courseData) => {
             if (!courseData || !courseData.folders || !courseData.lectures) {
@@ -131,7 +159,15 @@ const EnrolledCourseDetail = () => {
         console.log('next-lecture', nextLecture);
         console.log('current-lecture', id);
         const { data } = await axiosWrapper('GET', `${API_URL.SUPABASE_GET_COURSE.replace(':id', id)}`, {}, token);
+        // setAccessRestricted(true);
+        // console.warn('return data:',data);
+        // console.warn('return data:',data?.AccessRestricted);
+        // if (data?.AccessRestricted) {
+        //     setAccessRestricted(true); 
+        //     setLoading(false);
 
+        //     return false; 
+        // }
         setCurrentCourseID(id);
         // Higher Level info
         setCourseDetails({
@@ -165,6 +201,7 @@ const EnrolledCourseDetail = () => {
         if (lid != null) {
             for (let idx = 0; idx < lectures.length; idx++) {
                 const lec = lectures[idx];
+                console.warn('lectures',lectures[idx]);
                 if (lec.id == lid) {
                     setActiveIndex(idx);
                     getCurrentLecture(lec.id);
