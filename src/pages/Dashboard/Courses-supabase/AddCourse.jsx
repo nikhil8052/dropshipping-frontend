@@ -28,7 +28,8 @@ const AddNewCourse = () => {
     const userInfo = useSelector((state) => state?.auth?.userInfo);
     const token = useSelector((state) => state?.auth?.userToken);
     const role = userInfo?.role?.toLowerCase();
-    const editMode = location.state?.isEdit || false;
+    // const editMode = location.state?.isEdit || false;
+    const editMode = location.pathname.includes('edit');
     // const courseId = location.state?.courseId;
     const [activeKey, setActiveKey] = useState('basic-information');
     const currentCourse = useSelector((state) => state?.root?.currentCourse);
@@ -41,7 +42,7 @@ const AddNewCourse = () => {
 
     const [isOpenCoursePublishModal, setIsOpenCoursePublishModal] = useState(false);
     const [isOpenCourseUnpublishModal, setIsOpenCourseUnpublishModal] = useState(false);
-
+    console.log(location)
     // if( location.state.courseId){
     //     courseId=location.state.courseId
     // }else {
@@ -344,7 +345,9 @@ const AddNewCourse = () => {
             <div className="title-top">
                 {/* onClick={() => navigate(`/${role}/courses-supabase`)}  */}
                 <span style={{ cursor: 'pointer' }}>
-                    Add Course
+                    {/* Add Course */}
+                    {editMode ? 'Edit Course' : 'Add Course'}
+
                 </span>
                 {/* {editMode ? 'Edit New Course' : 'Add New Course'} */}
                 <div className="toggle-wrapper">
