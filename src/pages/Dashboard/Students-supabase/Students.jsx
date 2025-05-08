@@ -735,7 +735,7 @@ const Students = () => {
                 onRowClicked={handleRowClick}
                 loading={loading}
                 children={
-                    <div className="button-wrapper">
+                    <div className="button-wrapper justify-content-start">
                         {role === 'ADMIN' && (
                             <DropdownButton
                                 title={
@@ -789,22 +789,6 @@ const Students = () => {
                                 </Dropdown.Item>
                             ))}
                         </DropdownButton>
-
-                        <Button className="add-button" onClick={handleCreateClick}>
-                            <img className="mb-1" src={add} alt="add button" />
-                            <span className="ms-1">Add New Student</span>
-                        </Button>
-                        {/* <Select
-                            isMulti
-                            options={columnOptions}
-                            value={columnOptions.filter((opt) => visibleFields.includes(opt.value))}
-                            onChange={(selectedOptions) => {
-                                setVisibleFields(selectedOptions.map((opt) => opt.value));
-                            }}
-                            placeholder="Select columns..."
-                            className="basic-multi-select"
-                            classNamePrefix="select"
-                        /> */}
                     </div>
                 }
             />
