@@ -326,24 +326,17 @@
 .property_section_main_div span {
     font-size: 14px;
     line-height: 1.2;
-    padding: 5px 0px;
 }
 
 .property_section_main_div svg {
     max-width: 16px;
 }
-.property_section_main_div > div{
-    padding: 10px;
-}
+
 
 .select__option {
     font-size: 14px;
 }
 
-.property-detail {
-    max-height: 300px;
-    overflow-y: scroll;
-}
 .property_section .cross {
     width: 20px;
     background-color: rgba(55, 53, 47, 0.06);
@@ -352,4 +345,51 @@
     display: flex;
     justify-content: center;
     align-items: center;
+}
+
+.property-detail .head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 13px;
+    text-transform: capitalize;
+    background-color: #fff;
+    padding: 5px 0px;
+}
+.scroll-box{
+    max-height: 200px;
+    overflow-y: scroll;
+}
+
+.property-detail .head p {
+    font-weight: 600;
+}
+
+.scroll-box div:hover {
+    background-color: #DEEBFF;
+}
+
+.scroll-box >div{
+    padding: 5px;
+    border-radius: 5px;
+    line-height: 1.2;
+    align-items: center;
+}
+
+.new-prop {
+    padding: 10px 5px;
+    border-top: 1px solid #ccc;
+}
+.new-prop *{
+    color: #D3D1CB ;
+    font-size: 14px;
+    font-weight: 400;
+}
+
+.col-list {
+    padding: 10px;
+}
+
+.col-list.hidden {
+    padding-top: 0;
 }

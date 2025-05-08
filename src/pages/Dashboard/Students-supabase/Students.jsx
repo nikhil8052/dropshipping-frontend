@@ -29,8 +29,7 @@ import AddColumnHeader from '../../../components/AddColumnHeader';
 import HideShowCols from '../../../components/HideShowCols';
 // import PropertiesPanel from '../../../components/PropertiesPanel';
 
-import { ChevronLeft, Eye, EyeOff,X , ChevronRight } from 'lucide-react';
-
+import { ChevronLeft, Eye, EyeOff, X, ChevronRight } from 'lucide-react';
 
 import { Badge } from 'react-bootstrap';
 
@@ -362,7 +361,7 @@ const Students = () => {
                     <Badge
                         bg={props.data.isActive ? 'success' : 'danger'}
                         style={{ padding: '0.5rem 0.5rem' }}
-                    // onClick={() => props.onToggleClick(props.data)}
+                        // onClick={() => props.onToggleClick(props.data)}
                     >
                         {props.data.isActive ? 'Active' : 'Inactive'}
                     </Badge>
@@ -574,30 +573,25 @@ const Students = () => {
 
             // setSupabaseCols(prev => prev.filter((_, i) => i !== indexInSupabase));
 
-            console.log( supabaseCols[indexInSupabase] , " IDX WITHOUT UPDATE ")
+            console.log(supabaseCols[indexInSupabase], ' IDX WITHOUT UPDATE ');
             let toggledValue = !supabaseCols[indexInSupabase];
-            setSupabaseCols(prev =>
-                prev.map((col, i) =>
-                    i === indexInSupabase ? { ...col, hide: !col.hide } : col
-                )
+            setSupabaseCols((prev) =>
+                prev.map((col, i) => (i === indexInSupabase ? { ...col, hide: !col.hide } : col))
             );
 
-
-        
-            var obj ={
+            var obj = {
                 ...supabaseCols[indexInSupabase],
-                hide:toggledValue
-            }
+                hide: toggledValue
+            };
 
             let hideCols = [obj];
             var payload = {
                 hideCols: hideCols
             };
 
-            console.log( payload , " EVERY TIME ")
+            console.log(payload, ' EVERY TIME ');
             const ENDPOINT = API_URL.SUPABASE_GET_COLUMNS.replace(':table', 'users');
             const response = await axiosWrapper('POST', ENDPOINT, { payload }, token);
-
         } else {
             // Show: add back at the original index from supabaseColsClone
             const originalIndex = supabaseColsClone.findIndex((obj) => obj.field === property.field);
@@ -606,10 +600,9 @@ const Students = () => {
             if (itemToShow) {
                 setSupabaseCols((prev) => {
                     const updated = [...prev];
-                    updated.splice(originalIndex, 0, itemToShow); 
+                    updated.splice(originalIndex, 0, itemToShow);
                     return updated;
                 });
-
             }
         }
 
@@ -637,7 +630,7 @@ const Students = () => {
 
                 let tableSettings = response.data.tableSettings;
                 // // Remove the values if they exists
-                const newCols = tableSettings.map((val) => (val));
+                const newCols = tableSettings.map((val) => val);
 
                 const updatedCols = [
                     ...supabaseCols.slice(0, -2),
@@ -679,29 +672,59 @@ const Students = () => {
                     <ChevronLeft className="w-5 h-5 text-gray-500" onClick={onClose} />
                     <h2 className="font-medium ml-2">Properties</h2>
                     <div className="cross">
-                    <X className="w-5 h-5 text-gray-500 cursor-pointer" onClick={onClose} />
+                        <X className="w-5 h-5 text-gray-500 cursor-pointer" onClick={onClose} />
                     </div>
                 </div>
 
                 {/* Properties List */}
-                <div className='property-detail'>
-                    {supabaseCols.map((property, index) => (
-                        <div
-                            key={index}
-                            className="flex items-center justify-content-between px-1 py-1 text-items cursor-pointer"
-                            onClick={() => toggle(property, index)}
-                        >
-                            <span className="ml-1">{property.field}</span>
-                            <div className="drop-wrapper">
-                                {property?.hide ? (
-                                    <EyeOff className="w-4 h-4 text-gray-500" />
-                                ) : (
-                                    <Eye className="w-4 h-4 text-gray-500" />
-                                )}
+                <div className="property-detail">
+                        <div className="list-all">
+                            <div className="col-list shown">
+                                <div className="head">
+                                    <p>shown in table</p>
+                                    <a href="">hide all</a>
+                                </div>
+                                <div className="scroll-box">
+                                {supabaseCols.map((property, index) => (
+                                <div
+                                    key={index}
+                                    className="flex items-center justify-content-between px-1 py-1 text-items cursor-pointer"
+                                    onClick={() => toggle(property, index)}
+                                >
+                                    <span className="ml-1">{property.field}</span>
+                                    <div className="drop-wrapper">
+                                        {property?.hide ? (
+                                            <EyeOff className="w-4 h-4 text-gray-500" />
+                                        ) : (
+                                            <Eye className="w-4 h-4 text-gray-500" />
+                                        )}
+                                    </div>
+                                </div>
+                            ))}
 
+                                </div>
+                            </div>
+                            <div className="col-list hidden">
+                                <div className="head">
+                                    <p>hidden in table</p>
+                                    <a href="">show all</a>
+                                </div>
+                                <div className="scroll-box">
+
+                                <div className="flex items-center justify-content-between px-1 py-1 text-items cursor-pointer">
+                                    <span className="ml-1"></span>
+                                    <div className="drop-wrapper">
+                                        <EyeOff className="w-4 h-4 text-gray-500" />
+
+                                        <Eye className="w-4 h-4 text-gray-500" />
+                                    </div>
+                                </div>
+                                </div>
+                            </div>
+                            <div className="new-prop">
+                                <a href="">+ New Property</a>
                             </div>
                         </div>
-                    ))}
                 </div>
             </div>
         );
