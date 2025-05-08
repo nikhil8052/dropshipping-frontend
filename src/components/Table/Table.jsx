@@ -123,7 +123,7 @@ const navigate = useNavigate();
                     <div className='col-sm-3 col-3 '>
                         {children}
                     </div>
-                    <div className='col-sm-6 col-6'>
+                    <div className='col-sm-6 col-7'>
                         <InputGroup>
                             <InputGroup.Text>
                                 <img src={Search} alt="Search" />
@@ -138,7 +138,7 @@ const navigate = useNavigate();
                             />
                         </InputGroup>
                     </div>
-                    <div className='col-sm-3 col-3 text-end'>
+                    <div className='col-sm-3 col-2 text-end'>
                     <Button className="add-button" onClick={handleCreateClick}>
                             <img className="mb-1" src={add} alt="add button" />
                             {/* <span className="ms-1">Add New Student</span> */}

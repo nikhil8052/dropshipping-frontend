@@ -19,7 +19,7 @@
 
         @media (max-width: $medium-screen) {
             & {
-                padding: 15px 5px !important;
+                padding: 15px 15px !important;
             }
         }
     }
@@ -107,7 +107,8 @@
         width: 100%;
     }
 
-    .main-panel .main-content-wrapper:has(.course-top) .publish-course-wrapper {
-        padding: 20px;
+    .main-panel .main-content-wrapper:has(.course-top) .publish-course-wrapper, .main-panel:has(.full-width) .main-content-wrapper {
+        padding: 20px !important;
     }
+
 }
