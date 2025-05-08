@@ -49,7 +49,6 @@ const Students = () => {
         courseId: null
     });
 
-
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
     const [loadingCRUD, setLoadingCRUD] = useState(false);
@@ -63,23 +62,19 @@ const Students = () => {
     const [showHideDiv, setShowHideDiv] = useState(false);
     // const [filteredColumns, setFilteredColumns] = useState(false);
 
-
     const [selectPosition, setSelectPosition] = useState({ top: 0, left: 0 });
     const [showHidePosition, setShowHidePosition] = useState({ top: 0, left: 0 });
 
     const dropdownRef = useRef(null);
     const showHideRef = useRef(null);
 
-    // Dropdown remove outside click 
+    // Dropdown remove outside click
     useEffect(() => {
         const handleClickOutside = (event) => {
             // &&
             //     headerRef.current &&
             //     !headerRef.current.contains(event.target)
-            if (
-                dropdownRef.current &&
-                !dropdownRef.current.contains(event.target)
-            ) {
+            if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
                 setShowColumnSelect(false);
             }
         };
@@ -92,17 +87,13 @@ const Students = () => {
             document.removeEventListener('mousedown', handleClickOutside);
         };
     }, [showColumnSelect]);
-    // Dropdown END remove outside click 
+    // Dropdown END remove outside click
 
-
-    // Hide show  remove outside click 
+    // Hide show  remove outside click
     useEffect(() => {
         const handleClickOutside = (event) => {
-            !headerRef.current.contains(event.target)
-            if (
-                showHideRef.current &&
-                !showHideRef.current.contains(event.target)
-            ) {
+            !headerRef.current.contains(event.target);
+            if (showHideRef.current && !showHideRef.current.contains(event.target)) {
                 setShowColumnSelect(false);
             }
         };
@@ -115,9 +106,7 @@ const Students = () => {
             document.removeEventListener('mousedown', handleClickOutside);
         };
     }, [showHideDiv]);
-    // Hide show  END remove outside click 
-
-
+    // Hide show  END remove outside click
 
     useEffect(() => {
         // Fetch data from API here
@@ -309,10 +298,6 @@ const Students = () => {
         return percentages.length > 0 ? percentages.reduce((a, b) => a + b, 0) / percentages.length : 0;
     };
 
-
-
-
-
     /*eslint-disable */
     const ActionsRenderer = (props) => (
         <React.Fragment>
@@ -375,7 +360,7 @@ const Students = () => {
                     <Badge
                         bg={props.data.isActive ? 'success' : 'danger'}
                         style={{ padding: '0.5rem 0.5rem' }}
-                    // onClick={() => props.onToggleClick(props.data)}
+                        // onClick={() => props.onToggleClick(props.data)}
                     >
                         {props.data.isActive ? 'Active' : 'Inactive'}
                     </Badge>
@@ -430,10 +415,9 @@ const Students = () => {
         }
     };
 
-
     /*eslint-disable */
 
-    // Start Dynamic Superbase Table  SS 
+    // Start Dynamic Superbase Table  SS
     const [visibleFields, setVisibleFields] = useState([
         'name',
         'email',
@@ -444,7 +428,7 @@ const Students = () => {
         'threeDots'
     ]);
 
-    // Show all the superbase cols 
+    // Show all the superbase cols
     const [supabaseAllCols, setSupabaseAllCols] = useState([]);
 
     const initialTableCols = [
@@ -562,7 +546,7 @@ const Students = () => {
             cellRenderer: () => null
         }
     ];
-    // Updated variable to show the data in the cols 
+    // Updated variable to show the data in the cols
     const [supabaseCols, setSupabaseCols] = useState([...initialTableCols]);
     const [supabaseColsClone, setSupabaseColsClone] = useState([...initialTableCols]);
     const [removedValues, setRemovedValues] = useState([]);
@@ -575,11 +559,11 @@ const Students = () => {
             setSupabaseColsClone(clonedArr);
         }
 
-        const indexInSupabase = supabaseCols.findIndex(obj => obj.field === property.field);
+        const indexInSupabase = supabaseCols.findIndex((obj) => obj.field === property.field);
 
         if (expandedEye[index] === false && indexInSupabase !== -1) {
             // Store removed item at the correct index
-            setRemovedValues(prev => {
+            setRemovedValues((prev) => {
                 const updated = [...prev];
                 updated[indexInSupabase] = supabaseCols[indexInSupabase];
                 return updated;
@@ -588,6 +572,7 @@ const Students = () => {
 
         if (indexInSupabase !== -1) {
             // Hide: remove from supabaseCols
+
             // setSupabaseCols(prev => prev.filter((_, i) => i !== indexInSupabase));
 
             setSupabaseCols(prev => 
@@ -596,13 +581,14 @@ const Students = () => {
                 )
             );
 
+
         } else {
             // Show: add back at the original index from supabaseColsClone
-            const originalIndex = supabaseColsClone.findIndex(obj => obj.field === property.field);
+            const originalIndex = supabaseColsClone.findIndex((obj) => obj.field === property.field);
             const itemToShow = supabaseColsClone[originalIndex];
 
             if (itemToShow) {
-                setSupabaseCols(prev => {
+                setSupabaseCols((prev) => {
                     const updated = [...prev];
                     updated.splice(originalIndex, 0, itemToShow); // insert at correct position
                     return updated;
@@ -610,12 +596,11 @@ const Students = () => {
             }
         }
         // Toggle the UI state
-        setExpandedEye(prev => ({
+        setExpandedEye((prev) => ({
             ...prev,
-            [index]: !prev[index],
+            [index]: !prev[index]
         }));
     };
-
 
     useEffect(() => {
         const fetchColumns = async () => {
@@ -629,36 +614,32 @@ const Students = () => {
                         value: col,
                         label: col
                     }));
-                // set the filters in the search box 
+                // set the filters in the search box
                 setSupabaseAllCols([...columnNames]);
 
                 let tableSettings = response.data.tableSettings;
-                // // Remove the values if they exists 
-                const newCols = tableSettings
-                    .map((val) => ({
-                        headerName: val.field,
-                        field: val.field,
-                        wrapText: true,
-                        autoHeight: true,
-                        resizable: false,
-                    }));
-
+                // // Remove the values if they exists
+                const newCols = tableSettings.map((val) => ({
+                    headerName: val.field,
+                    field: val.field,
+                    wrapText: true,
+                    autoHeight: true,
+                    resizable: false
+                }));
 
                 const updatedCols = [
                     ...supabaseCols.slice(0, -2),
                     ...newCols,
                     supabaseCols[supabaseCols.length - 2],
                     supabaseCols[supabaseCols.length - 1]
-
                 ];
-                const updatedVisibleTableFields = tableSettings.map(item =>
+                const updatedVisibleTableFields = tableSettings.map((item) =>
                     typeof item === 'string' ? item : item.field
                 );
 
                 const updatedVisibleFields = Array.from(new Set([...visibleFields, ...updatedVisibleTableFields]));
                 setSupabaseCols(updatedCols);
                 setVisibleFields(updatedVisibleFields);
-
             } catch (error) {
                 console.error('Error fetching columns:', error);
             }
@@ -666,7 +647,7 @@ const Students = () => {
         fetchColumns();
     }, []);
 
-    // IF IT needs to be visible then show that else not 
+    // IF IT needs to be visible then show that else not
     const filteredColumns = supabaseCols.filter((col) => visibleFields.includes(col.field));
 
     const columnOptions = supabaseAllCols.map((col) => ({
@@ -674,7 +655,7 @@ const Students = () => {
         label: col.label
     }));
 
-    // END  Dynamic Superbase Table 
+    // END  Dynamic Superbase Table
 
     function PropertiesPanel({ onClose }) {
         const [searchQuery, setSearchQuery] = useState('');
@@ -682,7 +663,7 @@ const Students = () => {
         return (
             <div className="w-80 bg-white rounded-lg shadow-md border border-gray-200 property_section_main_div">
                 {/* Header */}
-                <div className="flex items-center p-3 border-b border-gray-200 property_section">
+                <div className="flex items-center  border-b border-gray-200 property_section">
                     <ChevronLeft className="w-5 h-5 text-gray-500" onClick={onClose} />
                     <h2 className="font-medium ml-2">Properties</h2>
                 </div>
@@ -700,26 +681,28 @@ const Students = () => {
                     </div>
                 </div> */}
 
-
                 {/* Properties List */}
-                <div className="px-2">
+                <div>
                     {supabaseCols.map((property, index) => (
                         <div
                             key={index}
-                            className="flex items-center justify-between px-1 py-1 text-items cursor-pointer"
+                            className="flex items-center justify-content-between px-1 py-1 text-items cursor-pointer"
                             onClick={() => toggle(property, index)}
                         >
                             <span className="ml-1">{property.field}</span>
+                            <div className="drop-wrapper">
                             {expandedEye[index] ? (
                                 <EyeOff className="w-4 h-4 text-gray-500" />
                             ) : (
                                 <Eye className="w-4 h-4 text-gray-500" />
                             )}
+                            <div className="drop-box">
+
+                            </div>
+                            </div>
                         </div>
                     ))}
                 </div>
-
-
             </div>
         );
     }
@@ -768,7 +751,7 @@ const Students = () => {
                         backgroundColor: 'white',
                         boxShadow: '0 2px 10px rgba(0,0,0,0.2)',
                         width: '200px',
-                        borderRadius: '4px',
+                        borderRadius: '4px'
                     }}
                 >
                     <Select
@@ -778,31 +761,29 @@ const Students = () => {
                         onChange={async (selectedOptions) => {
                             const selectedValues = selectedOptions.map((opt) => opt.value);
 
-                            // Add new colums if any 
+                            // Add new colums if any
                             const newCols = selectedValues
-                                .filter(val => !supabaseCols.some(col => col.field === val))
+                                .filter((val) => !supabaseCols.some((col) => col.field === val))
                                 .map((val) => ({
                                     headerName: val,
                                     field: val,
                                     wrapText: true,
                                     autoHeight: true,
-                                    resizable: false,
+                                    resizable: false
                                 }));
 
-                            // All the columns new and last columns 
+                            // All the columns new and last columns
                             const updatedCols = [
                                 ...supabaseCols.slice(0, -2),
                                 ...newCols,
                                 supabaseCols[supabaseCols.length - 2],
-                                supabaseCols[supabaseCols.length - 1],
+                                supabaseCols[supabaseCols.length - 1]
                             ];
 
-                            // Here get the cols which really needs to be added 
-                            const filteredUpdatedCols = updatedCols.filter(col =>
-                                selectedValues.includes(col.field)
-                            );
+                            // Here get the cols which really needs to be added
+                            const filteredUpdatedCols = updatedCols.filter((col) => selectedValues.includes(col.field));
 
-                            // New array with the shown columns 
+                            // New array with the shown columns
                             let lastUpdated = [
                                 ...initialTableCols.slice(0, -2),
                                 ...filteredUpdatedCols,
@@ -810,9 +791,8 @@ const Students = () => {
                                 initialTableCols[initialTableCols.length - 1]
                             ];
 
-
                             const removedCols = updatedCols.filter(
-                                oldCol => !lastUpdated.some(newCol => newCol.field === oldCol.field)
+                                (oldCol) => !lastUpdated.some((newCol) => newCol.field === oldCol.field)
                             );
 
                             let newVisibleArr = visibleFields.slice(0, 6);
@@ -825,24 +805,21 @@ const Students = () => {
                             if (newCols.length > 0 || removedCols.length > 0) {
                                 try {
                                     var payload = {
-                                        "newCols": newCols,
-                                        "removedCols": removedCols
-                                    }
+                                        newCols: newCols,
+                                        removedCols: removedCols
+                                    };
                                     const ENDPOINT = API_URL.SUPABASE_GET_COLUMNS.replace(':table', 'users');
                                     const response = await axiosWrapper('POST', ENDPOINT, { payload }, token);
-
                                 } catch (error) {
-                                    console.error("Failed to save columns to server:", error);
+                                    console.error('Failed to save columns to server:', error);
                                 }
                             }
-
                         }}
                         placeholder="Select columns..."
                         classNamePrefix="select"
                         menuIsOpen={true}
                         components={{
-                            MultiValue: () => null,
-
+                            MultiValue: () => null
                         }}
                         styles={{
                             control: (provided, state) => ({
@@ -903,10 +880,9 @@ const Students = () => {
                         backgroundColor: 'white',
                         boxShadow: '0 2px 10px rgba(0,0,0,0.2)',
                         width: '',
-                        borderRadius: '4px',
+                        borderRadius: '4px'
                     }}
                 >
-
                     <div>
                         <PropertiesPanel onClose={() => setShowHideDiv(false)} />
                     </div>
