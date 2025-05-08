@@ -28,7 +28,7 @@ import ActionIcon from '../../../assets/images/action.svg';
 import AddColumnHeader from '../../../components/AddColumnHeader';
 import HideShowCols from '../../../components/HideShowCols';
 // import PropertiesPanel from '../../../components/PropertiesPanel';
-import { ChevronLeft, Eye, EyeOff , ChevronRight } from 'lucide-react';
+import { ChevronLeft, Eye, EyeOff, ChevronRight } from 'lucide-react';
 
 import { Badge } from 'react-bootstrap';
 
@@ -552,7 +552,7 @@ const Students = () => {
     const [removedValues, setRemovedValues] = useState([]);
     const [expandedEye, setExpandedEye] = useState({});
 
-    const toggle = (property, index) => {
+    const toggle = async (property, index) => {
         // Backup original columns only once
         if (!supabaseColsClone.length) {
             const clonedArr = supabaseCols.slice();
@@ -581,6 +581,16 @@ const Students = () => {
                 )
             );
 
+            let hideCols = [supabaseCols[indexInSupabase]];
+
+            var payload = {
+                hideCols: hideCols
+            };
+
+            const ENDPOINT = API_URL.SUPABASE_GET_COLUMNS.replace(':table', 'users');
+            const response = await axiosWrapper('POST', ENDPOINT, { payload }, token);
+
+
 
         } else {
             // Show: add back at the original index from supabaseColsClone
@@ -590,11 +600,24 @@ const Students = () => {
             if (itemToShow) {
                 setSupabaseCols((prev) => {
                     const updated = [...prev];
-                    updated.splice(originalIndex, 0, itemToShow); // insert at correct position
+                    updated.splice(originalIndex, 0, itemToShow); 
                     return updated;
                 });
             }
         }
+
+
+        // Prepare payload with the column to show
+        let showCols = [supabaseCols[indexInSupabase]];
+
+        var payload = {
+            hideCols: showCols
+        };
+
+        // Send the request to update show status in the backend
+        const ENDPOINT = API_URL.SUPABASE_GET_COLUMNS.replace(':table', 'users');
+        const response = await axiosWrapper('POST', ENDPOINT, { payload }, token);
+        
         // Toggle the UI state
         setExpandedEye((prev) => ({
             ...prev,
@@ -619,13 +642,7 @@ const Students = () => {
 
                 let tableSettings = response.data.tableSettings;
                 // // Remove the values if they exists
-                const newCols = tableSettings.map((val) => ({
-                    headerName: val.field,
-                    field: val.field,
-                    wrapText: true,
-                    autoHeight: true,
-                    resizable: false
-                }));
+                const newCols = tableSettings.map((val) => (val));
 
                 const updatedCols = [
                     ...supabaseCols.slice(0, -2),
@@ -683,7 +700,7 @@ const Students = () => {
                                 ) : (
                                     <Eye className="w-4 h-4 text-gray-500" />
                                 )}
-                               
+
                             </div>
                         </div>
                     ))}
