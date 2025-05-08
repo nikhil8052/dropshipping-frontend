@@ -1,4 +1,4 @@
-import { useEffect, useState, useDeferredValue } from 'react';
+import { useEffect, useState, useDeferredValue, useRef } from 'react';
 import { AgGridReact } from 'ag-grid-react';
 import 'ag-grid-community';
 import { InputGroup, Form, Row, Col, Button } from 'react-bootstrap';
@@ -8,6 +8,9 @@ import './Table.scss';
 import 'ag-grid-community/styles/ag-grid.css';
 import 'ag-grid-community/styles/ag-theme-alpine.css';
 import HeaderWithIcon from '../../components/HeaderWithIcon';
+import add from '@icons/add_white.svg';
+import { useNavigate } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 
 const gridComponents = {
     headerWithIcon: HeaderWithIcon
@@ -33,7 +36,7 @@ const Table = ({
           };
 
     const defferedSearch = useDeferredValue(search);
-
+const navigate = useNavigate();
     const onGridReady = (params) => {
         setGridApi(params.api);
         setGridColumnApi(params.columnApi);
@@ -77,12 +80,50 @@ const Table = ({
         suppressRowTransform: true,
         overlayNoRowsTemplate: '<span>No data found</span>'
     };
+    const { userInfo } = useSelector((state) => state?.auth);
+    const role = userInfo?.role?.toLowerCase();
+    const [showColumnSelect, setShowColumnSelect] = useState(false);
+    useEffect(() => {
+        const handleClickOutside = (event) => {
+            // &&
+            //     headerRef.current &&
+            //     !headerRef.current.contains(event.target)
+            if (
+                dropdownRef.current &&
+                !dropdownRef.current.contains(event.target)
+            ) {
+                setShowColumnSelect(false);
+            }
+        };
+
+        if (showColumnSelect) {
+            document.addEventListener('mousedown', handleClickOutside);
+        }
+
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutside);
+        };
+    }, [showColumnSelect]);
+
+    const handleCreateClick = () => {
+        // Handle create button click event here
+        navigate(`/${role}/students-supabase/new`);
+    };
+    const handleEditClick = (studentId) => {
+        // Handle edit action here
+        navigate(`/${role}/students-supabase/edit`, {
+            state: { studentId }
+        });
+    };
 
     return (
         <div className="ag-theme-alpine custom-table student-table" style={{ height: '100%', width: '100%' }}>
             <div className="top-bar">
-                <Row className=" student-table-row">
-                    <Col lg={inputLgSize || 6} md={12}>
+                <div className=" student-table-row justify-content-between align-items-center row" > 
+                    <div className='col-sm-3 col-3 '>
+                        {children}
+                    </div>
+                    <div className='col-sm-6 col-6'>
                         <InputGroup>
                             <InputGroup.Text>
                                 <img src={Search} alt="Search" />
@@ -96,11 +137,14 @@ const Table = ({
                                 placeholder="Search"
                             />
                         </InputGroup>
-                    </Col>
-                    <Col lg={childLgSize || 6} md={12}>
-                        {children}
-                    </Col>
-                </Row>
+                    </div>
+                    <div className='col-sm-3 col-3 text-end'>
+                    <Button className="add-button" onClick={handleCreateClick}>
+                            <img className="mb-1" src={add} alt="add button" />
+                            {/* <span className="ms-1">Add New Student</span> */}
+                        </Button>
+                    </div>
+                </div>
             </div>
             <div className="ag-theme-alpine" style={{ width: width ? width : '100%' }}>
                 {loading ? (

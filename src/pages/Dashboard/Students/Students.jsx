@@ -532,7 +532,7 @@ const Students = () => {
 
                         <Button className="add-button" onClick={handleCreateClick}>
                             <img className="mb-1" src={add} alt="add button" />
-                            <span className="ms-1">Add New Student</span>
+                            {/* <span className="ms-1">Add New Student</span> */}
                         </Button>
                     </div>
                 }
