@@ -117,6 +117,7 @@ const CourseDetail = () => {
 
     useEffect(() => {
         if (courseId) {
+
             getCourseById(courseId);
         }
     }, [courseId]);

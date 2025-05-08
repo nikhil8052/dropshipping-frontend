@@ -12,7 +12,15 @@ const FolderStructureView = ({ topics, unassignedLectures, onLectureSelect }) =>
             initialExpanded[index] = true;
         });
         setExpandedFolders(initialExpanded);
-    }, [topics]);
+
+        if (topics.length > 0 && topics[0].lectures.length > 0) {
+            setActiveLectureId(topics[0].lectures[0].id);
+            onLectureSelect(topics[0].lectures[0]); 
+        } else if (unassignedLectures.length > 0) {
+            setActiveLectureId(unassignedLectures[0].id);
+            onLectureSelect(unassignedLectures[0]);
+        }
+    }, [topics, unassignedLectures, onLectureSelect]);
 
     const toggleFolder = (folderIndex) => {
         setExpandedFolders(prev => ({
