@@ -335,3 +335,21 @@
 .property_section_main_div > div{
     padding: 10px;
 }
+
+.select__option {
+    font-size: 14px;
+}
+
+.property-detail {
+    max-height: 300px;
+    overflow-y: scroll;
+}
+.property_section .cross {
+    width: 20px;
+    background-color: rgba(55, 53, 47, 0.06);
+    height: 20px;
+    border-radius: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
