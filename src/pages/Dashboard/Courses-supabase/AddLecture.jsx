@@ -26,6 +26,8 @@ import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd';
 import { EditText } from 'react-edit-text';
 import 'react-edit-text/dist/index.css';
 import Edit2 from '../../../assets/icons/Dropdown.svg';
+import resourceImg from '../../../../public/resource_image.svg';
+import linkImg from '../../../../public/linkImg.svg';
 
 const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCourseData }) => {
 
@@ -68,6 +70,13 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
     const dispatch = useDispatch();
     const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
 
+    const [selectedResource, setSelectedResource] = useState(null);
+    const [showModal, setShowModal] = useState(false);
+    
+    const handleCloseModal = () => {
+        setSelectedResource(null);
+        setShowModal(false);
+    };
     // useEffect(() => {
     //     if (topics.length > 0) {
     //         setIsOpen({ 0: true }); // Open the first topic
@@ -313,7 +322,7 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
             model_id: currentActiveLectureID,
             model_type: 'lecture',
             name: label,
-            type: 'file',
+            type: isUrlProvided ? 'url' : 'file',
             file_link: resourceFileUrl,
             url: resourceUrl,
             showPopUp:true 
@@ -328,9 +337,9 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
         if (response) {
             id = response.data[0].id;
         }
-
+        var img = isUrlProvided ? 'linkImg.svg' : '/resource_image.svg';
         const resource = {
-            image: '/resource_image.svg',
+            image: img,
             url: resourceUrl,
             title: label,
             id: id,
@@ -1827,6 +1836,38 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
                                                                     __html: decodeHtmlEntities(rightViewLecture.description)
                                                                 }}
                                                             />
+                                                            {Array.isArray(rightViewLecture.resources) && rightViewLecture.resources.length > 0 && (
+                                                                <div className="modal-resources modal-description">
+                                                                    <div className="modal-resources-body">
+                                                                        <h5 className="fw-semibold mb-3">Resources</h5>
+                                                                        <div id="all_resources" className="d-flex flex-column gap-3">
+                                                                            {rightViewLecture.resources.map((resource) => (
+                                                                                <div
+                                                                                    key={resource?.id}
+                                                                                    className="d-flex align-items-center gap-2 cursor-pointer"
+                                                                                    style={{ cursor: 'pointer' }}
+                                                                                    onClick={() => {
+                                                                                        if (resource.url) {
+                                                                                            window.open(resource.url, '_blank');
+                                                                                        } else if (resource.file_link) {
+                                                                                            setSelectedResource(resource);
+                                                                                            // setShowModal(true);
+                                                                                        }
+                                                                                    }}
+                                                                                >
+                                                                                    <img
+                                                                                        src={resource.url ? linkImg : resourceImg}
+                                                                                        alt="Resource"
+                                                                                        className="img-fluid"
+                                                                                        style={{ width: '24px', height: '24px' }}
+                                                                                    />
+                                                                                    <div className="text-muted">{resource?.name}</div>
+                                                                                </div>
+                                                                            ))}
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            )}
                                                         </div>
                                                     </div>
                                                 ) : (

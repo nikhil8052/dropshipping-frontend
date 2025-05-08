@@ -27,6 +27,8 @@ import LectureCurriculumSkeleton from '../../../components/LectureCurriculumSkel
 import CaretRightt from '@icons/CaretRightt.svg';
 import BreadHome from '@icons/BreadHome.svg';
 import Player from '@vimeo/player'; 
+import resourceImg from '../../../../public/resource_image.svg';
+import linkImg from '../../../../public/linkImg.svg';
 
 const EnrolledCourseDetail = () => {
     const navigate = useNavigate();
@@ -59,6 +61,13 @@ const EnrolledCourseDetail = () => {
     const [unassignedLectures, setUnassignedLectures] = useState([]);
     const [topics, setTopics] = useState([]);
 
+    const [selectedResource, setSelectedResource] = useState(null);
+    const [showModal, setShowModal] = useState(false);
+    
+    const handleCloseModal = () => {
+        setSelectedResource(null);
+        setShowModal(false);
+    };
 
     useEffect(() => {
         const iframeElement = document.querySelector('iframe.ql-video');
@@ -454,6 +463,7 @@ const EnrolledCourseDetail = () => {
         return (completedLectures / lectures.length) * 100;
     };
 
+    
 
     return (
         <>
@@ -681,6 +691,40 @@ const EnrolledCourseDetail = () => {
                                                                                 __html: decodeHtmlEntities(selectedLecture.description)
                                                                             }}
                                                                         ></p>
+                                                                        {Array.isArray(selectedLecture.resources) && selectedLecture.resources.length > 0 && (
+                                                                            <div className="modal-resources modal-description">
+                                                                                <div className="modal-resources-body">
+                                                                                    <h5 className="fw-semibold mb-3">Resources</h5>
+                                                                                    <div id="all_resources" className="d-flex flex-column gap-3">
+                                                                                        {selectedLecture.resources.map((resource) => (
+                                                                                            <div
+                                                                                                key={resource?.id}
+                                                                                                className="d-flex align-items-center gap-2 cursor-pointer"
+                                                                                                style={{ cursor: 'pointer' }}
+                                                                                                onClick={() => {
+                                                                                                    if (resource.url) {
+                                                                                                        window.open(resource.url, '_blank');
+                                                                                                    } else if (resource.file_link) {
+                                                                                                        setSelectedResource(resource);
+                                                                                                        // setShowModal(true);
+                                                                                                    }
+                                                                                                }}
+                                                                                            >
+                                                                                                <img
+                                                                                                    src={resource.url ? linkImg : resourceImg}
+                                                                                                    alt="Resource"
+                                                                                                    className="img-fluid"
+                                                                                                    style={{ width: '24px', height: '24px' }}
+                                                                                                />
+                                                                                                <div className="text-muted">{resource?.name}</div>
+                                                                                            </div>
+                                                                                        ))}
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                        )}
+
+
                                                                     </div>
                                                                 )}
 
@@ -793,6 +837,38 @@ const EnrolledCourseDetail = () => {
                                     </Formik>
                                 </>
                             )}
+                            {/* {selectedResource && (
+                                <>
+                                <div
+                                    className={`custom-fullscreen-modal ${showModal ? 'show d-block' : ''}`}
+                                    tabIndex="-1"
+                                    role="dialog"
+                                >
+                                    <div className="custom-modal-overlay" onClick={handleCloseModal}></div>
+
+                                    <div className="custom-modal-content">
+                                        <img
+                                            src={selectedResource.file_link}
+                                            alt={selectedResource.name}
+                                            className="custom-modal-image"
+                                        />
+
+                                        <div className="custom-modal-actions">
+                                            <a href={selectedResource.file_link} download className="action-btn">
+                                                ⬇️
+                                            </a>
+                                            <button onClick={handleCloseModal} className="action-btn">
+                                                ❌
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                                </>
+                            )} */}
+
+
+
+
                         </>
                     )}
                 </div>

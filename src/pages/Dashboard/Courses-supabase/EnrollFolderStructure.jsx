@@ -12,7 +12,7 @@ const EnrollFolderStructure = ({
   selectedLectureId,  // Prop that tracks the currently selected lecture
   userInfo,
   markLectureAsCompleted,
-  accessRestricted
+  accessRestricted,
 }) => {
     const [expandedFolders, setExpandedFolders] = useState({});
 
