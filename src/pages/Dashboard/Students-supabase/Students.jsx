@@ -24,8 +24,12 @@ import NameIcon from '../../../assets/images/profile.svg';
 import EmailIcon from '../../../assets/images/email.svg';
 import StatusIcon from '../../../assets/images/status.svg';
 import ActionIcon from '../../../assets/images/action.svg';
-import Plus from '../../../assets/images/plus.svg';
+// import Plus from '../../../assets/images/plus.svg';
 import AddColumnHeader from '../../../components/AddColumnHeader';
+import HideShowCols from '../../../components/HideShowCols';
+// import PropertiesPanel from '../../../components/PropertiesPanel';
+import { ChevronLeft, Eye, EyeOff } from 'lucide-react';
+
 import { Badge } from 'react-bootstrap';
 
 const Students = () => {
@@ -45,6 +49,7 @@ const Students = () => {
         courseId: null
     });
 
+
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
     const [loadingCRUD, setLoadingCRUD] = useState(false);
@@ -55,8 +60,17 @@ const Students = () => {
     const [selectedOption, setSelectedOption] = useState(studentsTrajectory[0].label);
     const [selectedCoach, setSelectedCoach] = useState('Assigned Coach');
     const [showColumnSelect, setShowColumnSelect] = useState(false);
+    const [showHideDiv, setShowHideDiv] = useState(false);
+    // const [filteredColumns, setFilteredColumns] = useState(false);
+
+
     const [selectPosition, setSelectPosition] = useState({ top: 0, left: 0 });
+    const [showHidePosition, setShowHidePosition] = useState({ top: 0, left: 0 });
+
     const dropdownRef = useRef(null);
+    const showHideRef = useRef(null);
+
+    // Dropdown remove outside click 
     useEffect(() => {
         const handleClickOutside = (event) => {
             // &&
@@ -78,6 +92,30 @@ const Students = () => {
             document.removeEventListener('mousedown', handleClickOutside);
         };
     }, [showColumnSelect]);
+    // Dropdown END remove outside click 
+
+
+    // Hide show  remove outside click 
+    useEffect(() => {
+        const handleClickOutside = (event) => {
+            !headerRef.current.contains(event.target)
+            if (
+                showHideRef.current &&
+                !showHideRef.current.contains(event.target)
+            ) {
+                setShowColumnSelect(false);
+            }
+        };
+
+        if (showHideDiv) {
+            document.addEventListener('mousedown', handleClickOutside);
+        }
+
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutside);
+        };
+    }, [showHideDiv]);
+    // Hide show  END remove outside click 
 
 
 
@@ -273,6 +311,8 @@ const Students = () => {
 
 
 
+
+
     /*eslint-disable */
     const ActionsRenderer = (props) => (
         <React.Fragment>
@@ -400,7 +440,8 @@ const Students = () => {
         'coachingTrajectory',
         'isActive',
         'Actions',
-        'AddColumn'
+        'AddColumn',
+        'threeDots'
     ]);
 
     const [supabaseAllCols, setSupabaseAllCols] = useState([]);
@@ -502,9 +543,66 @@ const Students = () => {
             filter: false,
             resizable: false,
             cellRenderer: () => null
+        },
+        {
+            headerName: '',
+            field: 'threeDots',
+            maxWidth: 50,
+            headerComponent: (params) => (
+                <HideShowCols
+                    setShowHideDiv={setShowHideDiv}
+                    setShowHidePosition={setShowHidePosition}
+                    showHideDiv={showHideDiv}
+                />
+            ),
+            sortable: false,
+            filter: false,
+            resizable: false,
+            cellRenderer: () => null
         }
     ];
+    // Updated variable to show the data in the cols 
     const [supabaseCols, setSupabaseCols] = useState([...initialTableCols]);
+    const [supabaseColsClone, setSupabaseColsClone] = useState([...initialTableCols]);
+    const [removedValues, setRemovedValues] = useState([]);
+    const [expandedEye, setExpandedEye] = useState({});
+
+    const toggle = (property, index) => {
+         
+
+        
+        // Clone supabaseCols only once to preserve the original state
+        if (!supabaseColsClone.length) {
+            const clonedArr = supabaseCols.slice();
+            setSupabaseColsClone(clonedArr);
+        }
+    
+        const indexInSupabase = supabaseCols.findIndex(obj => obj.field === property.field);
+    
+        // if( expandedEye[index]==false ){
+        //     setRemovedValues(...removedValues,supabaseCols[indexInSupabase])
+        // }
+
+        if (indexInSupabase !== -1) {
+            // Item is visible → remove it (hide)
+            setSupabaseCols(prev => prev.filter((_, i) => i !== indexInSupabase));
+        } else {
+            // Item is hidden → re-add it (show)
+            const itemToShow = supabaseColsClone.find(obj => obj.field === property.field);
+            if (itemToShow) {
+                setSupabaseCols(prev => [...prev, itemToShow]);
+            }
+        }
+
+        // console.log( removedValues)
+    
+        // Toggle the UI state
+        setExpandedEye(prev => ({
+            ...prev,
+            [index]: !prev[index],
+        }));
+    };
+
 
     useEffect(() => {
         const fetchColumns = async () => {
@@ -512,7 +610,6 @@ const Students = () => {
                 const excludedFields = ['name', 'email', 'coachingTrajectory', 'isActive', 'actions', 'AddColumn'];
                 const ENDPOINT = API_URL.SUPABASE_GET_COLUMNS.replace(':table', 'users');
                 const response = await axiosWrapper('GET', ENDPOINT, {}, token);
-                console.log(response, " response from the API ENPOINT ")
                 const columnNames = response.data.superbaseCols
                     .filter((col) => !excludedFields.includes(col))
                     .map((col) => ({
@@ -521,7 +618,6 @@ const Students = () => {
                     }));
                 setSupabaseAllCols([...columnNames]);
 
-                console.log(response.data.tableSettings, " Add these cols after the init ")
 
                 let tableSettings = response.data.tableSettings;
                 // // Remove the values if they exists 
@@ -545,12 +641,8 @@ const Students = () => {
                 );
 
                 const updatedVisibleFields = Array.from(new Set([...visibleFields, ...updatedVisibleTableFields]));
-
-                console.log(updatedVisibleFields, " updatedVisibleFields ")
                 setSupabaseCols(updatedCols);
                 setVisibleFields(updatedVisibleFields);
-
-
 
             } catch (error) {
                 console.error('Error fetching columns:', error);
@@ -561,12 +653,61 @@ const Students = () => {
 
     // IF IT needs to be visible then show that else not 
     const filteredColumns = supabaseCols.filter((col) => visibleFields.includes(col.field));
+
     const columnOptions = supabaseAllCols.map((col) => ({
         value: col.value,
         label: col.label
     }));
 
     // END  Dynamic Superbase Table 
+
+    function PropertiesPanel({ onClose }) {
+        const [searchQuery, setSearchQuery] = useState('');
+
+        return (
+            <div className="w-80 bg-white rounded-lg shadow-md border border-gray-200 property_section_main_div">
+                {/* Header */}
+                <div className="flex items-center p-3 border-b border-gray-200 property_section">
+                    <ChevronLeft className="w-5 h-5 text-gray-500"  onClick={onClose}/>
+                    <h2 className="font-medium ml-2">Properties</h2>
+                </div>
+
+                {/* Search Bar */}
+                <div className="p-3">
+                    <div className="relative">
+                        <input
+                            type="text"
+                            placeholder="Search for a property..."
+                            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300"
+                            value={searchQuery}
+                            onChange={(e) => setSearchQuery(e.target.value)}
+                        />
+                    </div>
+                </div>
+
+
+                {/* Properties List */}
+                <div className="px-2">
+                    {initialTableCols.map((property, index) => (
+                        <div
+                            key={index}
+                            className="flex items-center justify-between px-1 py-1 text-items cursor-pointer"
+                            onClick={() => toggle(property, index )}
+                        >
+                            <span className="ml-1">{property.field}</span>
+                            {expandedEye[index] ? (
+                                <EyeOff className="w-4 h-4 text-gray-500" />
+                            ) : (
+                                <Eye className="w-4 h-4 text-gray-500" />
+                            )}
+                        </div>
+                    ))}
+                </div>
+
+
+            </div>
+        );
+    }
 
     return (
         <div className="students-page full-width">
@@ -664,11 +805,11 @@ const Students = () => {
                             setVisibleFields(updatedVisibleFields);
                             setShowColumnSelect(false);
 
-                            if (newCols.length > 0 || removedCols.length>0) {
+                            if (newCols.length > 0 || removedCols.length > 0) {
                                 try {
-                                    var payload={
-                                        "newCols":newCols ,
-                                        "removedCols" : removedCols 
+                                    var payload = {
+                                        "newCols": newCols,
+                                        "removedCols": removedCols
                                     }
                                     const ENDPOINT = API_URL.SUPABASE_GET_COLUMNS.replace(':table', 'users');
                                     const response = await axiosWrapper('POST', ENDPOINT, { payload }, token);
@@ -682,6 +823,10 @@ const Students = () => {
                         placeholder="Select columns..."
                         classNamePrefix="select"
                         menuIsOpen={true}
+                        components={{
+                            MultiValue: () => null,
+
+                        }}
                         styles={{
                             control: (provided, state) => ({
                                 ...provided,
@@ -729,8 +874,31 @@ const Students = () => {
                 </div>
             )}
 
+            {/* Show Hide div HH   */}
+            {showHideDiv && (
+                <div
+                    ref={dropdownRef}
+                    style={{
+                        position: 'fixed',
+                        top: `${selectPosition.top}px`,
+                        left: `${selectPosition.left}px`,
+                        zIndex: 1000,
+                        backgroundColor: 'white',
+                        boxShadow: '0 2px 10px rgba(0,0,0,0.2)',
+                        width: '',
+                        borderRadius: '4px',
+                    }}
+                >
+
+                    <div>
+                        <PropertiesPanel onClose={() => setShowHideDiv(false)} />
+                    </div>
+                </div>
+            )}
+
+            {/* Show hide div end  */}
             <Table
-                columns={filteredColumns}
+                columns={supabaseCols}
                 tableData={studentsData}
                 onRowClicked={handleRowClick}
                 loading={loading}
