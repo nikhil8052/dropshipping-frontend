@@ -444,6 +444,7 @@ const Students = () => {
         'threeDots'
     ]);
 
+    // Show all the superbase cols 
     const [supabaseAllCols, setSupabaseAllCols] = useState([]);
 
     const initialTableCols = [
@@ -573,9 +574,9 @@ const Students = () => {
             const clonedArr = supabaseCols.slice();
             setSupabaseColsClone(clonedArr);
         }
-    
+
         const indexInSupabase = supabaseCols.findIndex(obj => obj.field === property.field);
-    
+
         if (expandedEye[index] === false && indexInSupabase !== -1) {
             // Store removed item at the correct index
             setRemovedValues(prev => {
@@ -584,7 +585,7 @@ const Students = () => {
                 return updated;
             });
         }
-    
+
         if (indexInSupabase !== -1) {
             // Hide: remove from supabaseCols
             setSupabaseCols(prev => prev.filter((_, i) => i !== indexInSupabase));
@@ -592,7 +593,7 @@ const Students = () => {
             // Show: add back at the original index from supabaseColsClone
             const originalIndex = supabaseColsClone.findIndex(obj => obj.field === property.field);
             const itemToShow = supabaseColsClone[originalIndex];
-    
+
             if (itemToShow) {
                 setSupabaseCols(prev => {
                     const updated = [...prev];
@@ -601,7 +602,6 @@ const Students = () => {
                 });
             }
         }
-    
         // Toggle the UI state
         setExpandedEye(prev => ({
             ...prev,
@@ -622,8 +622,8 @@ const Students = () => {
                         value: col,
                         label: col
                     }));
+                // set the filters in the search box 
                 setSupabaseAllCols([...columnNames]);
-
 
                 let tableSettings = response.data.tableSettings;
                 // // Remove the values if they exists 
@@ -638,9 +638,11 @@ const Students = () => {
 
 
                 const updatedCols = [
-                    ...supabaseCols.slice(0, -1),
+                    ...supabaseCols.slice(0, -2),
                     ...newCols,
+                    supabaseCols[supabaseCols.length - 2],
                     supabaseCols[supabaseCols.length - 1]
+
                 ];
                 const updatedVisibleTableFields = tableSettings.map(item =>
                     typeof item === 'string' ? item : item.field
@@ -674,7 +676,7 @@ const Students = () => {
             <div className="w-80 bg-white rounded-lg shadow-md border border-gray-200 property_section_main_div">
                 {/* Header */}
                 <div className="flex items-center p-3 border-b border-gray-200 property_section">
-                    <ChevronLeft className="w-5 h-5 text-gray-500"  onClick={onClose}/>
+                    <ChevronLeft className="w-5 h-5 text-gray-500" onClick={onClose} />
                     <h2 className="font-medium ml-2">Properties</h2>
                 </div>
 
@@ -694,11 +696,11 @@ const Students = () => {
 
                 {/* Properties List */}
                 <div className="px-2">
-                    {initialTableCols.map((property, index) => (
+                    {supabaseCols.map((property, index) => (
                         <div
                             key={index}
                             className="flex items-center justify-between px-1 py-1 text-items cursor-pointer"
-                            onClick={() => toggle(property, index )}
+                            onClick={() => toggle(property, index)}
                         >
                             <span className="ml-1">{property.field}</span>
                             {expandedEye[index] ? (
@@ -782,9 +784,10 @@ const Students = () => {
 
                             // All the columns new and last columns 
                             const updatedCols = [
-                                ...supabaseCols.slice(0, -1),
+                                ...supabaseCols.slice(0, -2),
                                 ...newCols,
-                                supabaseCols[supabaseCols.length - 1]
+                                supabaseCols[supabaseCols.length - 2],
+                                supabaseCols[supabaseCols.length - 1],
                             ];
 
                             // Here get the cols which really needs to be added 
@@ -794,8 +797,9 @@ const Students = () => {
 
                             // New array with the shown columns 
                             let lastUpdated = [
-                                ...initialTableCols.slice(0, -1),
+                                ...initialTableCols.slice(0, -2),
                                 ...filteredUpdatedCols,
+                                initialTableCols[initialTableCols.length - 2],
                                 initialTableCols[initialTableCols.length - 1]
                             ];
 
