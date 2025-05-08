@@ -29,7 +29,7 @@ import AddColumnHeader from '../../../components/AddColumnHeader';
 import HideShowCols from '../../../components/HideShowCols';
 // import PropertiesPanel from '../../../components/PropertiesPanel';
 
-import { ChevronLeft, Eye, EyeOff,X , ChevronRight } from 'lucide-react';
+import { ChevronLeft, Eye, EyeOff, X, ChevronRight } from 'lucide-react';
 
 
 import { Badge } from 'react-bootstrap';
@@ -448,7 +448,8 @@ const Students = () => {
             wrapText: true,
             autoHeight: true,
             cellRenderer: TextItemExpand,
-            resizable: false
+            resizable: false,
+            default: true
         },
         {
             headerName: 'Email', // Fallback text
@@ -464,7 +465,8 @@ const Students = () => {
             wrapText: true,
             autoHeight: true,
             cellRenderer: TextExpand,
-            resizable: false
+            resizable: false,
+            default: true
         },
 
         {
@@ -474,6 +476,7 @@ const Students = () => {
             // sortable: true,
             // unSortIcon: true,
             resizable: false,
+            default: true,
             cellRenderer: ({ data: rowData }) => {
                 const coachingTrajectory = rowData.coachingTrajectory;
                 return <div key={rowData.id}>{coachingTrajectory === COACH.COACH_TYPE.HIGH_TICKET ? 'HT' : 'LT'}</div>;
@@ -497,6 +500,7 @@ const Students = () => {
             sortable: false,
             filter: false,
             resizable: false,
+            default: true,
             cellClass: ['d-flex', 'align-items-center']
         },
         {
@@ -508,6 +512,7 @@ const Students = () => {
                 displayName: 'Actions'
             },
 
+            default: true,
             cellRenderer: ActionsRenderer,
             cellRendererParams: {
                 onEditClick: handleEditClick,
@@ -529,12 +534,14 @@ const Students = () => {
             sortable: false,
             filter: false,
             resizable: false,
+            default: true,
             cellRenderer: () => null
         },
         {
             headerName: '',
             field: 'threeDots',
             maxWidth: 50,
+            default: true,
             headerComponent: (params) => (
                 <HideShowCols
                     setShowHideDiv={setShowHideDiv}
@@ -576,7 +583,7 @@ const Students = () => {
 
             const currentItem = supabaseCols[indexInSupabase];
             const toggledHide = !currentItem.hide;
-            
+
             // 1. Prepare the object with the updated `hide` value
             const obj = {
                 ...currentItem,
@@ -594,7 +601,7 @@ const Students = () => {
                 hideCols: hideCols
             };
 
-       
+
             const ENDPOINT = API_URL.SUPABASE_GET_COLUMNS.replace(':table', 'users');
             const response = await axiosWrapper('POST', ENDPOINT, { payload }, token);
 
@@ -606,7 +613,7 @@ const Students = () => {
             if (itemToShow) {
                 setSupabaseCols((prev) => {
                     const updated = [...prev];
-                    updated.splice(originalIndex, 0, itemToShow); 
+                    updated.splice(originalIndex, 0, itemToShow);
                     return updated;
                 });
 
@@ -679,25 +686,38 @@ const Students = () => {
                     <ChevronLeft className="w-5 h-5 text-gray-500" onClick={onClose} />
                     <h2 className="font-medium ml-2">Properties</h2>
                     <div className="cross">
-                    <X className="w-5 h-5 text-gray-500 cursor-pointer" onClick={onClose} />
+                        <X className="w-5 h-5 text-gray-500 cursor-pointer" onClick={onClose} />
                     </div>
                 </div>
 
                 {/* Properties List */}
                 <div className='property-detail'>
-                    {supabaseCols.slice(0,-2).map((property, index) => (
+                    {supabaseCols.slice(0, -2).map((property, index) => (
                         <div
                             key={index}
-                            className="flex items-center justify-content-between px-1 py-1 text-items cursor-pointer"
-                            onClick={() => toggle(property, index)}
+                            className={`flex items-center justify-between px-1 py-1 text-items ${property.default ? 'cursor-not-allowed opacity-50' : 'cursor-pointer'
+                                }`}
+                            onClick={() => {
+                                if (!property.default) toggle(property, index);
+                            }}
                         >
                             <span className="ml-1">{property.field}</span>
                             <div className="drop-wrapper">
-                                {property?.hide ? (
+
+                                {property.default === true ? (
+                                    // If the column is default, show disabled Eye icon
+                                    <div className="w-6 h-6 flex items-center justify-center bg-gray-200 rounded cursor-not-allowed opacity-50">
+                                        <Eye className="w-4 h-4 text-gray-500" />
+                                    </div>
+                                ) : property.hide ? (
+                                    // If not default and hidden, show EyeOff
                                     <EyeOff className="w-4 h-4 text-gray-500" />
                                 ) : (
+                                    // If not default and visible, show Eye
                                     <Eye className="w-4 h-4 text-gray-500" />
                                 )}
+
+
 
                             </div>
                         </div>
