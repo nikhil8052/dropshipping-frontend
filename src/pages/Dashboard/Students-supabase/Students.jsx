@@ -572,7 +572,16 @@ const Students = () => {
 
         if (indexInSupabase !== -1) {
             // Hide: remove from supabaseCols
-            setSupabaseCols((prev) => prev.filter((_, i) => i !== indexInSupabase));
+
+            // setSupabaseCols(prev => prev.filter((_, i) => i !== indexInSupabase));
+
+            setSupabaseCols(prev => 
+                prev.map((col, i) => 
+                    i === indexInSupabase ? { ...col, hide: !col.hide } : col
+                )
+            );
+
+
         } else {
             // Show: add back at the original index from supabaseColsClone
             const originalIndex = supabaseColsClone.findIndex((obj) => obj.field === property.field);
