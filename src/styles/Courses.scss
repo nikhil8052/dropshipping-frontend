@@ -1084,7 +1084,7 @@
 .viewProgress-footer {
     display: flex;
     justify-content: end;
-    border-top: 1px solid rgba(233, 234, 240, 1);
+    // border-top: 1px solid rgba(233, 234, 240, 1);
     padding-top: 24px;
     margin-bottom: 40px;
 
@@ -1585,6 +1585,7 @@
     padding: 10px !important;
     background-color: #fff;
     width: 100%;
+    overflow: hidden;
 }
 
 // .EnrolledCourseDetail .search-lectures,
@@ -1630,7 +1631,7 @@
     }
 
     .EnrolledCourseDetail .section-border.row {
-        padding: 15px;
+        // padding: 15px;
         margin: 15px 0px;
     }
 
@@ -1740,4 +1741,42 @@
     background-color: transparent;
     border: 0;
     padding: 0;
+}
+
+@media only screen and (max-width:767px) {
+    .main-panel:has(.EnrolledCourseDetail) .top-box .title-top {
+        flex-wrap: wrap;
+        gap: 10px 5px;
+        padding:10px 8px;
+    }
+    
+    .main-panel:has(.EnrolledCourseDetail) .top-box .title-top >img {
+        max-width: 12px;
+    }
+
+    .EnrolledCourseDetail .lecture-curriculum {
+        margin-top: 0px;
+        padding: 20px 5px;
+    }
+
+    .EnrolledCourseDetail .lecture-curriculum .title{
+        font-size: 16px;
+    }
+
+    .detail-page-header{
+        padding: 15px;
+    }
+
+    .dp-main-box {
+        gap: 20px;
+    }
+
+    .dp-title-name {
+        width: 60%;
+    }
+
+    .dp-info {
+        width: 39%;
+        gap: 10px;
+    }
 }

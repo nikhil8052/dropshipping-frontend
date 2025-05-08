@@ -229,7 +229,7 @@
 }
 
 .generic-card .dropdown-item {
-    padding: 10px 15px;
+    padding: 5px 15px;
     font-weight: 500;
     cursor: pointer !important;
 }
@@ -287,7 +287,7 @@
 }
 
 .generic-card .card-body {
-    padding-bottom: 2rem !important
+    padding-bottom: 1.5rem !important
 }
 
 .generic-card .card-body .card-coach {
@@ -311,5 +311,14 @@
             }
 
         }
+    }
+}
+
+@media only screen and (max-width:767px) {
+    .generic-card .course-title p{
+        min-height: 2rem;
+    }
+    .generic-card .card-body .card-coach {
+        margin-bottom: 12px;
     }
 }

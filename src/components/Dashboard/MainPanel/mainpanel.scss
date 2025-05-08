@@ -106,4 +106,8 @@
     .main-panel .main-content-wrapper:has(.course-top) .publish-course-wrapper {
         width: 100%;
     }
+
+    .main-panel .main-content-wrapper:has(.course-top) .publish-course-wrapper {
+        padding: 20px;
+    }
 }

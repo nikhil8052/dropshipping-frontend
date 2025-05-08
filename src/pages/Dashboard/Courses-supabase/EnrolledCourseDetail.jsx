@@ -740,7 +740,7 @@ const EnrolledCourseDetail = () => {
                                                     </Col>
                                                 </Row>
                                                 <Tooltip id="my-tooltip2" />
-                                                <div className="viewProgress-footer mx-auto">
+                                                <div className="viewProgress-footer mx-auto d-none">
                                                     {continueQuiz ? (
                                                         <Button
                                                             className="done-btn"
