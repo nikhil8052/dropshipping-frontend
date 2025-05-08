@@ -663,9 +663,9 @@ const Students = () => {
         return (
             <div className="w-80 bg-white rounded-lg shadow-md border border-gray-200 property_section_main_div">
                 {/* Header */}
-                <div className="flex items-center  border-b border-gray-200 property_section">
-                    <ChevronLeft className="w-5 h-5 text-gray-500" onClick={onClose} />
+                <div className="flex items-center justify-content-between border-b border-gray-200 property_section">
                     <h2 className="font-medium ml-2">Properties</h2>
+                    <ChevronLeft className="w-5 h-5 text-gray-500" onClick={onClose} />
                 </div>
 
                 {/* Search Bar */}
