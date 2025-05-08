@@ -568,10 +568,7 @@ const Students = () => {
     const [expandedEye, setExpandedEye] = useState({});
 
     const toggle = (property, index) => {
-         
-
-        
-        // Clone supabaseCols only once to preserve the original state
+        // Backup original columns only once
         if (!supabaseColsClone.length) {
             const clonedArr = supabaseCols.slice();
             setSupabaseColsClone(clonedArr);
@@ -579,22 +576,31 @@ const Students = () => {
     
         const indexInSupabase = supabaseCols.findIndex(obj => obj.field === property.field);
     
-        // if( expandedEye[index]==false ){
-        //     setRemovedValues(...removedValues,supabaseCols[indexInSupabase])
-        // }
-
+        if (expandedEye[index] === false && indexInSupabase !== -1) {
+            // Store removed item at the correct index
+            setRemovedValues(prev => {
+                const updated = [...prev];
+                updated[indexInSupabase] = supabaseCols[indexInSupabase];
+                return updated;
+            });
+        }
+    
         if (indexInSupabase !== -1) {
-            // Item is visible → remove it (hide)
+            // Hide: remove from supabaseCols
             setSupabaseCols(prev => prev.filter((_, i) => i !== indexInSupabase));
         } else {
-            // Item is hidden → re-add it (show)
-            const itemToShow = supabaseColsClone.find(obj => obj.field === property.field);
+            // Show: add back at the original index from supabaseColsClone
+            const originalIndex = supabaseColsClone.findIndex(obj => obj.field === property.field);
+            const itemToShow = supabaseColsClone[originalIndex];
+    
             if (itemToShow) {
-                setSupabaseCols(prev => [...prev, itemToShow]);
+                setSupabaseCols(prev => {
+                    const updated = [...prev];
+                    updated.splice(originalIndex, 0, itemToShow); // insert at correct position
+                    return updated;
+                });
             }
         }
-
-        // console.log( removedValues)
     
         // Toggle the UI state
         setExpandedEye(prev => ({
