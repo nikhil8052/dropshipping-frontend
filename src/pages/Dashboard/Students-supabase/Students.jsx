@@ -881,7 +881,7 @@ const Students = () => {
                 onRowClicked={handleRowClick}
                 loading={loading}
                 children={
-                    <div className="button-wrapper justify-content-start">
+                    <div className="button-wrapper">
                         {role === 'ADMIN' && (
                             <DropdownButton
                                 title={
