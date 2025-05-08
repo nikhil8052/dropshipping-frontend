@@ -309,10 +309,29 @@
     background: white;
     box-shadow: rgba(0, 0, 0, 0.1) 0px 14px 28px -6px, rgba(0, 0, 0, 0.06) 0px 2px 4px -1px, rgba(84, 72, 49, 0.08) 0px 0px 0px 1px;
     overflow: hidden;
-    padding: 20px;
 }
 
 .property_section_main_div h2{
     font-size: 1rem;
     margin-bottom: 0;
+}
+.property_section {
+    border-bottom: 1px solid #ccc;
+    padding: 10px;
+}
+
+.property_section_main_div {
+    padding: 10px 0px;
+}
+.property_section_main_div span {
+    font-size: 14px;
+    line-height: 1.2;
+    padding: 5px 0px;
+}
+
+.property_section_main_div svg {
+    max-width: 16px;
+}
+.property_section_main_div > div{
+    padding: 10px;
 }
