@@ -696,7 +696,7 @@ const Students = () => {
 
                 {/* Properties List */}
                 <div className="px-2">
-                    {initialTableCols.map((property, index) => (
+                    {supabaseCols.map((property, index) => (
                         <div
                             key={index}
                             className="flex items-center justify-between px-1 py-1 text-items cursor-pointer"
@@ -784,9 +784,10 @@ const Students = () => {
 
                             // All the columns new and last columns 
                             const updatedCols = [
-                                ...supabaseCols.slice(0, -1),
+                                ...supabaseCols.slice(0, -2),
                                 ...newCols,
-                                supabaseCols[supabaseCols.length - 1]
+                                supabaseCols[supabaseCols.length - 2],
+                                supabaseCols[supabaseCols.length - 1],
                             ];
 
                             // Here get the cols which really needs to be added 
@@ -796,8 +797,9 @@ const Students = () => {
 
                             // New array with the shown columns 
                             let lastUpdated = [
-                                ...initialTableCols.slice(0, -1),
+                                ...initialTableCols.slice(0, -2),
                                 ...filteredUpdatedCols,
+                                initialTableCols[initialTableCols.length - 2],
                                 initialTableCols[initialTableCols.length - 1]
                             ];
 
