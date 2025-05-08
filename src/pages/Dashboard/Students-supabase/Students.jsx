@@ -679,7 +679,7 @@ const Students = () => {
                 </div>
 
                 {/* Search Bar */}
-                <div className="p-3">
+                {/* <div className="p-3">
                     <div className="relative">
                         <input
                             type="text"
@@ -689,7 +689,7 @@ const Students = () => {
                             onChange={(e) => setSearchQuery(e.target.value)}
                         />
                     </div>
-                </div>
+                </div> */}
 
 
                 {/* Properties List */}
