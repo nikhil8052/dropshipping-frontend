@@ -10,7 +10,7 @@ import editIcon from '@icons/edit_square.svg';
 import deleteIcon from '@icons/trash-2.svg';
 import downArrow from '@icons/down-arrow.svg';
 import add from '@icons/add_white.svg';
-import { COACH, coachDummyData, studentsTrajectory } from '../../../data/data';
+import { COACH, coachDummyData, studentsTrajectory ,studentsTrajectoryStatus} from '../../../data/data';
 import { useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { API_URL } from '../../../utils/apiUrl';
@@ -58,7 +58,8 @@ const Students = () => {
     const token = useSelector((state) => state?.auth?.userToken);
     const role = userInfo?.role?.toLowerCase();
     const [studentsData, setStudentsData] = useState(null);
-    const [selectedOption, setSelectedOption] = useState(studentsTrajectory[0].label);
+    const [selectedOption, setSelectedOption] = useState(studentsTrajectory[0].value);
+    const [selectedOption2, setSelectedOption2] = useState(studentsTrajectoryStatus[0].value);
     const [selectedCoach, setSelectedCoach] = useState('Assigned Coach');
     const [showColumnSelect, setShowColumnSelect] = useState(false);
     const [showHideDiv, setShowHideDiv] = useState(false);
@@ -71,6 +72,16 @@ const Students = () => {
     const showHideRef = useRef(null);
 
     // Dropdown remove outside click
+    const selectedOptionRef = useRef(selectedOption);
+    const selectedOption2Ref = useRef(selectedOption2);
+    useEffect(() => {
+        selectedOptionRef.current = selectedOption;
+    }, [selectedOption]);
+      
+    useEffect(() => {
+        selectedOption2Ref.current = selectedOption2;
+    }, [selectedOption2]);
+      
     useEffect(() => {
         const handleClickOutside = (event) => {
             // &&
@@ -111,19 +122,32 @@ const Students = () => {
     // Hide show  END remove outside click
 
     useEffect(() => {
-        // Fetch data from API here
-        if (selectedOption) {
-            fetchData(selectedOption);
+        if (selectedOption && selectedOption2) {
+            fetchData(selectedOption, selectedOption2);
         }
-    }, [selectedOption]);
+    }, [selectedOption, selectedOption2]);
 
-    const fetchData = async (query, loading = true) => {
+    // useEffect(() => {
+    //     // Fetch data from API here
+    //     if (selectedOption) {
+    //         fetchData(selectedOption);
+    //     }
+    // }, [selectedOption]);
+    // useEffect(() => {
+    //     // Fetch data from API here
+    //     if (selectedOption2) {
+    //         fetchData(selectedOption);
+    //     }
+    // }, [selectedOption2]);
+    const fetchData = async (query, query2, loading = true) => {
         // Later we will replace this with actual API call
+        console.log(`${API_URL.SUPABASE_GET_ALL_STUDENTS}?coachingTrajectory=${query || selectedOption}&isActive=${query2 || selectedOption2}`)
+        // return false;
         try {
             setLoading(loading);
             const coaches = await axiosWrapper(
                 'GET',
-                `${API_URL.SUPABASE_GET_ALL_STUDENTS}?coachingTrajectory=${query || selectedOption}`,
+                `${API_URL.SUPABASE_GET_ALL_STUDENTS}?coachingTrajectory=${query || selectedOption}&isActive=${query2 || selectedOption2}`,
                 {},
                 token
             );
@@ -135,7 +159,19 @@ const Students = () => {
             setLoading(false);
         }
     };
-
+    // const fetchData = async (coachingTrajectory, isActive, loading = true) => {
+    //     try {
+    //         setLoading(loading);
+    //         const url = `${API_URL.SUPABASE_GET_ALL_STUDENTS}?coachingTrajectory=${coachingTrajectory}&isActive=${isActive}`;
+    //         const response = await axiosWrapper('GET', url, {}, token);
+    //         setStudentsData(response.data);
+    //     } catch (error) {
+    //         console.error('Error fetching data:', error);
+    //     } finally {
+    //         setLoading(false);
+    //     }
+    // };
+    
     const handleRowClick = (event) => {
         // Handle row click event here
         if (selectedRowId === event.data.id) {
@@ -261,22 +297,44 @@ const Students = () => {
     };
 
     const handleOptionChange = (option) => {
+        console.log('option',option)
         setSelectedOption(option);
     };
-
-    const handleToggleClick = async (student) => {
-        setLoadingCRUD(true);
-        let url = '';
-        if (student.isActive) {
-            url = `${API_URL.SUPABASE_DEACTIVATE_STUDENT.replace(':id', student?.id)}`;
-        } else {
-            url = `${API_URL.SUPABASE_ACTIVATE_STUDENT.replace(':id', student?.id)}`;
-        }
-        await axiosWrapper('PUT', url, {}, token);
-        fetchData(selectedOption, false);
-        setLoadingCRUD(false);
+    const handleOptionChange2 = (option2) => {
+        setSelectedOption2(option2);
     };
 
+    // const handleToggleClick = async (student) => {
+    //     setLoadingCRUD(true);
+    //     let url = '';
+    //     if (student.isActive) {
+    //         url = `${API_URL.SUPABASE_DEACTIVATE_STUDENT.replace(':id', student?.id)}`;
+    //     } else {
+    //         url = `${API_URL.SUPABASE_ACTIVATE_STUDENT.replace(':id', student?.id)}`;
+    //     }
+    //     await axiosWrapper('PUT', url, {}, token);
+    //     fetchData(selectedOption, false);
+    //     setLoadingCRUD(false);
+    // };
+    const handleToggleClick = async (student) => {
+        console.log('selectedOption',selectedOption, 'selectedOption2',selectedOption2);
+        console.log('Live values from ref:', selectedOptionRef.current, selectedOption2Ref.current);
+
+        // return false;
+        setLoadingCRUD(true);
+        try {
+            const url = student.isActive
+                ? API_URL.SUPABASE_DEACTIVATE_STUDENT.replace(':id', student.id)
+                : API_URL.SUPABASE_ACTIVATE_STUDENT.replace(':id', student.id);
+            await axiosWrapper('PUT', url, {}, token);
+            // Pass current selectedOption and selectedOption2 to fetchData
+            fetchData(selectedOptionRef.current, selectedOption2Ref.current, false);
+        } catch (error) {
+            console.error('Error toggling student status:', error);
+        } finally {
+            setLoadingCRUD(false);
+        }
+    };
     const calcPercentage = (rowData) => {
         const courses = rowData.coursesRoadmap || [];
 
@@ -955,7 +1013,7 @@ const Students = () => {
                                     <img src={downArrow} alt="Down arrow" />
                                 </div>
                             }
-                            defaultValue={studentsTrajectory[0].label}
+                            defaultValue={studentsTrajectory[0].value}
                             className="dropdown-button-fix"
                         >
                             {studentsTrajectory.map((option) => (
@@ -966,6 +1024,35 @@ const Students = () => {
                                     className="my-1 ms-2"
                                 >
                                     <span className="coach-name">{option.label}</span>
+                                </Dropdown.Item>
+                            ))}
+                        </DropdownButton>
+
+                        {/* filter for status  */}
+                        <DropdownButton
+                            title={
+                                <div className="d-flex justify-content-between align-items-center gap-2">
+                                    <span>
+                                        {
+                                            studentsTrajectoryStatus.find(
+                                                (s) => s.value === selectedOption2 || s.label === selectedOption2
+                                            ).label
+                                        }
+                                    </span>
+                                    <img src={downArrow} alt="Down arrow" />
+                                </div>
+                            }
+                            defaultValue={studentsTrajectoryStatus[0].value}
+                            className="dropdown-button-fix"
+                        >
+                            {studentsTrajectoryStatus.map((option2) => (
+                                <Dropdown.Item
+                                    key={option2.id}
+                                    onClick={() => handleOptionChange2(option2.value)}
+                                    eventKey={option2}
+                                    className="my-1 ms-2"
+                                >
+                                    <span className="coach-name">{option2.label}</span>
                                 </Dropdown.Item>
                             ))}
                         </DropdownButton>
