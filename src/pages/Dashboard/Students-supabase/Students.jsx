@@ -28,7 +28,7 @@ import ActionIcon from '../../../assets/images/action.svg';
 import AddColumnHeader from '../../../components/AddColumnHeader';
 import HideShowCols from '../../../components/HideShowCols';
 // import PropertiesPanel from '../../../components/PropertiesPanel';
-import { ChevronLeft, Eye, EyeOff, ChevronRight } from 'lucide-react';
+import { ChevronLeft, Eye, EyeOff , ChevronRight } from 'lucide-react';
 
 import { Badge } from 'react-bootstrap';
 
@@ -601,11 +601,7 @@ const Students = () => {
             [index]: !prev[index]
         }));
     };
-    const [activeDropdownIndex, setActiveDropdownIndex] = useState(null);
 
-    const handleChevronClick = (index) => {
-        setActiveDropdownIndex((prev) => (prev === index ? null : index));
-    };
     useEffect(() => {
         const fetchColumns = async () => {
             try {
@@ -675,36 +671,22 @@ const Students = () => {
                 {/* Properties List */}
                 <div>
                     {supabaseCols.map((property, index) => (
-                        <div key={index} className="relative">
-                            <div
-                                className="flex items-center justify-between px-1 py-1 cursor-pointer"
-                                onClick={() => toggle(property, index)}
-                            >
-                                <span className="ml-1">{property.field}</span>
-                                <div className="drop-wrapper" onClick={(e) => {
-                                    e.stopPropagation(); // Prevent toggle on parent click
-                                    handleChevronClick(index);
-                                }}>
-                                    {property.hide ? (
-                                        <EyeOff className="w-4 h-4 text-gray-500" />
-                                    ) : (
-                                        <Eye className="w-4 h-4 text-gray-500" />
-                                    )}
-                                    <div className="drop-box">
-                                        <ChevronRight className="w-4 h-4 text-gray-500" />
-                                    </div>
-                                </div>
+                        <div
+                            key={index}
+                            className="flex items-center justify-content-between px-1 py-1 text-items cursor-pointer"
+                            onClick={() => toggle(property, index)}
+                        >
+                            <span className="ml-1">{property.field}</span>
+                            <div className="drop-wrapper">
+                                {expandedEye[index] ? (
+                                    <EyeOff className="w-4 h-4 text-gray-500" />
+                                ) : (
+                                    <Eye className="w-4 h-4 text-gray-500" />
+                                )}
+                               
                             </div>
-
-                            {/* Side dropdown */}
-                            {activeDropdownIndex === index && (
-                                <div className="absolute left-full top-0 ml-2 w-40 bg-white shadow-lg border rounded p-2 z-10">
-                                    <div>Delete</div>
-                                </div>
-                            )}
                         </div>
                     ))}
-
                 </div>
             </div>
         );
