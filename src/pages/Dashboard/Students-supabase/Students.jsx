@@ -574,27 +574,27 @@ const Students = () => {
 
             // setSupabaseCols(prev => prev.filter((_, i) => i !== indexInSupabase));
 
-            console.log( supabaseCols[indexInSupabase] , " IDX WITHOUT UPDATE ")
-            let toggledValue = !supabaseCols[indexInSupabase];
+            const currentItem = supabaseCols[indexInSupabase];
+            const toggledHide = !currentItem.hide;
+            
+            // 1. Prepare the object with the updated `hide` value
+            const obj = {
+                ...currentItem,
+                hide: toggledHide
+            };
+
             setSupabaseCols(prev =>
                 prev.map((col, i) =>
                     i === indexInSupabase ? { ...col, hide: !col.hide } : col
                 )
             );
 
-
-        
-            var obj ={
-                ...supabaseCols[indexInSupabase],
-                hide:toggledValue
-            }
-
             let hideCols = [obj];
             var payload = {
                 hideCols: hideCols
             };
 
-            console.log( payload , " EVERY TIME ")
+       
             const ENDPOINT = API_URL.SUPABASE_GET_COLUMNS.replace(':table', 'users');
             const response = await axiosWrapper('POST', ENDPOINT, { payload }, token);
 
@@ -685,7 +685,7 @@ const Students = () => {
 
                 {/* Properties List */}
                 <div className='property-detail'>
-                    {supabaseCols.map((property, index) => (
+                    {supabaseCols.slice(0,-2).map((property, index) => (
                         <div
                             key={index}
                             className="flex items-center justify-content-between px-1 py-1 text-items cursor-pointer"
