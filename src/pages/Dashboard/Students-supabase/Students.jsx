@@ -108,38 +108,38 @@ const Students = () => {
     //         fetchData(selectedOption);
     //     }
     // }, [selectedOption2]);
-    // const fetchData = async (query, loading = true) => {
-    //     // Later we will replace this with actual API call
-    //     console.log(`${API_URL.SUPABASE_GET_ALL_STUDENTS}?coachingTrajectory=${query || selectedOption}&isActive=${selectedOption2}`)
-    //     // return false;
-    //     try {
-    //         setLoading(loading);
-    //         const coaches = await axiosWrapper(
-    //             'GET',
-    //             `${API_URL.SUPABASE_GET_ALL_STUDENTS}?coachingTrajectory=${query || selectedOption}&isActive=${selectedOption2}`,
-    //             {},
-    //             token
-    //         );
-
-    //         setStudentsData(coaches.data);
-    //     } catch (error) {
-    //         return;
-    //     } finally {
-    //         setLoading(false);
-    //     }
-    // };
-    const fetchData = async (coachingTrajectory, isActive, loading = true) => {
+    const fetchData = async (query, query2, loading = true) => {
+        // Later we will replace this with actual API call
+        console.log(`${API_URL.SUPABASE_GET_ALL_STUDENTS}?coachingTrajectory=${query || selectedOption}&isActive=${query2 || selectedOption2}`)
+        // return false;
         try {
             setLoading(loading);
-            const url = `${API_URL.SUPABASE_GET_ALL_STUDENTS}?coachingTrajectory=${coachingTrajectory}&isActive=${isActive}`;
-            const response = await axiosWrapper('GET', url, {}, token);
-            setStudentsData(response.data);
+            const coaches = await axiosWrapper(
+                'GET',
+                `${API_URL.SUPABASE_GET_ALL_STUDENTS}?coachingTrajectory=${query || selectedOption}&isActive=${query2 || selectedOption2}`,
+                {},
+                token
+            );
+
+            setStudentsData(coaches.data);
         } catch (error) {
-            console.error('Error fetching data:', error);
+            return;
         } finally {
             setLoading(false);
         }
     };
+    // const fetchData = async (coachingTrajectory, isActive, loading = true) => {
+    //     try {
+    //         setLoading(loading);
+    //         const url = `${API_URL.SUPABASE_GET_ALL_STUDENTS}?coachingTrajectory=${coachingTrajectory}&isActive=${isActive}`;
+    //         const response = await axiosWrapper('GET', url, {}, token);
+    //         setStudentsData(response.data);
+    //     } catch (error) {
+    //         console.error('Error fetching data:', error);
+    //     } finally {
+    //         setLoading(false);
+    //     }
+    // };
     
     const handleRowClick = (event) => {
         // Handle row click event here
@@ -297,7 +297,6 @@ const Students = () => {
                 : API_URL.SUPABASE_ACTIVATE_STUDENT.replace(':id', student.id);
             await axiosWrapper('PUT', url, {}, token);
             // Pass current selectedOption and selectedOption2 to fetchData
-            console.log('selectedOption',selectedOption, 'selectedOption2',selectedOption2)
             fetchData(selectedOptionRef.current, selectedOption2Ref.current, false);
         } catch (error) {
             console.error('Error toggling student status:', error);
