@@ -270,15 +270,49 @@
 }
 
 .student-action-col input {
-    width:50px !important;
-    height:20px !important;
-    cursor:pointer !important;
+    width: 50px !important;
+    height: 20px !important;
+    cursor: pointer !important;
 }
 
-.property_section_main_div .text-items{
+.property_section_main_div .text-items {
     display: flex !important;
 }
-.property_section{
+
+.property_section {
     display: flex !important;
     gap: 10px !important;
+}
+
+// May 08
+.students-page .css-2ru6o-menu {
+    margin-top: 0px;
+    border-radius: 0px 0px 10px 10px;
+    box-shadow: none;
+    border: 1px solid #ccc;
+    overflow: hidden;
+    border-top: 0px;
+}
+
+.students-page .css-1a1idlt-control {
+    border-bottom: 0px;
+    border-bottom-right-radius: 0px;
+    border-bottom-left-radius: 0px;
+}
+
+.ag-cell-wrapper span {
+    word-break: break-word;
+}
+
+.property_section_main_div {
+    border-radius: 10px;
+    background: white;
+    box-shadow: rgba(0, 0, 0, 0.1) 0px 14px 28px -6px, rgba(0, 0, 0, 0.06) 0px 2px 4px -1px, rgba(84, 72, 49, 0.08) 0px 0px 0px 1px;
+    overflow: hidden;
+    padding: 20px;
+}
+
+.property_section_main_div h2{
+    font-size: 1rem;
+    margin-bottom: 0;
 }
