@@ -560,9 +560,7 @@ const Students = () => {
             const clonedArr = supabaseCols.slice();
             setSupabaseColsClone(clonedArr);
         }
-
         const indexInSupabase = supabaseCols.findIndex((obj) => obj.field === property.field);
-
         if (expandedEye[index] === false && indexInSupabase !== -1) {
             // Store removed item at the correct index
             setRemovedValues((prev) => {
@@ -571,28 +569,34 @@ const Students = () => {
                 return updated;
             });
         }
-
         if (indexInSupabase !== -1) {
             // Hide: remove from supabaseCols
 
             // setSupabaseCols(prev => prev.filter((_, i) => i !== indexInSupabase));
 
+            console.log( supabaseCols[indexInSupabase] , " IDX WITHOUT UPDATE ")
+            let toggledValue = !supabaseCols[indexInSupabase];
             setSupabaseCols(prev =>
                 prev.map((col, i) =>
                     i === indexInSupabase ? { ...col, hide: !col.hide } : col
                 )
             );
 
-            let hideCols = [supabaseCols[indexInSupabase]];
 
+        
+            var obj ={
+                ...supabaseCols[indexInSupabase],
+                hide:toggledValue
+            }
+
+            let hideCols = [obj];
             var payload = {
                 hideCols: hideCols
             };
 
+            console.log( payload , " EVERY TIME ")
             const ENDPOINT = API_URL.SUPABASE_GET_COLUMNS.replace(':table', 'users');
             const response = await axiosWrapper('POST', ENDPOINT, { payload }, token);
-
-
 
         } else {
             // Show: add back at the original index from supabaseColsClone
@@ -605,21 +609,10 @@ const Students = () => {
                     updated.splice(originalIndex, 0, itemToShow); 
                     return updated;
                 });
+
             }
         }
 
-
-        // Prepare payload with the column to show
-        let showCols = [supabaseCols[indexInSupabase]];
-
-        var payload = {
-            hideCols: showCols
-        };
-
-        // Send the request to update show status in the backend
-        const ENDPOINT = API_URL.SUPABASE_GET_COLUMNS.replace(':table', 'users');
-        const response = await axiosWrapper('POST', ENDPOINT, { payload }, token);
-        
         // Toggle the UI state
         setExpandedEye((prev) => ({
             ...prev,
@@ -700,7 +693,7 @@ const Students = () => {
                         >
                             <span className="ml-1">{property.field}</span>
                             <div className="drop-wrapper">
-                                {expandedEye[index] ? (
+                                {property?.hide ? (
                                     <EyeOff className="w-4 h-4 text-gray-500" />
                                 ) : (
                                     <Eye className="w-4 h-4 text-gray-500" />
