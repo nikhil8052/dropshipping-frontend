@@ -1628,7 +1628,27 @@ label.custom_check span {
 .db-cats:has(.cat-name) {
     margin-top: 1rem;
 }
+.detail-box li.active_lecture > a {
+    color: #fff !important;
+}
 
+.detail-box li.active_lecture:hover > a {
+    color: #000 !important;
+}
+
+@media only screen and (max-width:1199px) {
+.dp-title-name p {
+    font-size: 1.5rem;
+}
+
+.dp-title-name {
+    width: 55%;
+}
+
+.dp-info {
+    width: 44%;
+}
+}
 
 @media only screen and (max-width:991px) {
     .access-container {
@@ -1749,6 +1769,36 @@ label.custom_check span {
         gap: 20px;
     }
 
+    .main-panel .main-content-wrapper:has(.course-top) .publish-course-wrapper > .row {
+        flex-direction: column-reverse;
+    }
+
+    .admin-left-sec {
+        margin-top: 20px;
+    }
+
+    .cat-name, .dp-info .submit-btn {
+        font-size: 14px;
+        line-height: 1.4;
+    }
+
+    .db-cats:has(.cat-name) {
+        margin-top: 0.2rem;
+    }
+    .dp-info {
+        gap: 5px;
+    }
+
+    .main-panel:has(.publish-form-section) .course-top {
+        padding: 20px 0px;
+    }
+    .dp-main-box{
+        align-items: start;
+    }
+
+    .course-detail-row > .row {
+        flex-direction: column-reverse;
+    }
 }
 
 @media only screen and (max-width:767px) {
@@ -1786,7 +1836,7 @@ label.custom_check span {
     }
 
     .course-right {
-        margin-top: 50px;
+        margin-top: 20px;
     }
 
     .custom-radio {
@@ -1837,6 +1887,13 @@ label.custom_check span {
     .EnrolledCourseDetail .lecture-curriculum p{
         font-size: 14px !important;
     }
+
+    .product-details h3 {
+        font-size: 18px;
+    }
+    .course-right .formgroup input[type=text] {
+        width: 100% !important;
+    }
 }
 
 @media only screen and (max-width:575px) {
@@ -1850,6 +1907,52 @@ label.custom_check span {
 
     .confirmation-modal:has(.add-link-form) .form-group.res-file label {
         font-size: 16px;
+    }
+
+    .detail-page-header {
+        padding: 0px 15px;
+    }
+
+    .dp-title-name {
+        width: 48%;
+    }
+    .dp-info {
+        width: 52%;
+    }
+    .modal-description .content.course-detail-info p,.course-right-header .content.content-info-lecture p{
+        font-size: 14px !important;
+    }
+    .dp-main-box {
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        text-align: center;
+    }
+    
+    .dp-info {
+        width: 100%;
+        align-items: center;
+    }
+    
+    .dp-title-name {
+        width: 100%;
+    }
+    
+    .dp-main-box * {
+        justify-content: center;
+    }
+    .lecture-quill-edit .ql-editor p{
+        font-size: 14px !important;
+    }
+
+    .toggle-wrapper .toggle-label {
+        font-size: 14px;
+    }
+
+    .access-option {
+        flex: 0 0 100%;
+        border-right: 0px;
+        border-bottom: 0px;
     }
 
 }

@@ -294,3 +294,20 @@
         max-width: 1100px;
     }
 }
+
+@media only screen and (max-width:1199px) {
+.student-table .ag-theme-alpine {
+    margin-top: 4rem;
+}
+}
+
+@media only screen and (max-width:767px) {
+    .student-table .top-bar {
+        padding: 15px 5px;
+    }
+
+    .custom-table * {
+        font-size: 14px;
+    }
+}
+
