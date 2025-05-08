@@ -681,7 +681,7 @@ const Students = () => {
                 </div>
 
                 {/* Search Bar */}
-                <div className="p-3">
+                {/* <div className="p-3">
                     <div className="relative">
                         <input
                             type="text"
@@ -691,7 +691,7 @@ const Students = () => {
                             onChange={(e) => setSearchQuery(e.target.value)}
                         />
                     </div>
-                </div>
+                </div> */}
 
 
                 {/* Properties List */}
@@ -760,7 +760,7 @@ const Students = () => {
                         zIndex: 1000,
                         backgroundColor: 'white',
                         boxShadow: '0 2px 10px rgba(0,0,0,0.2)',
-                        width: '',
+                        width: '200px',
                         borderRadius: '4px',
                     }}
                 >
