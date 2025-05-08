@@ -1875,7 +1875,23 @@ export const studentsTrajectory = [
         id: 3
     }
 ];
-
+export const studentsTrajectoryStatus = [
+    {
+        label: 'All',
+        value: 'all',
+        id: 1
+    },
+    {
+        label: 'ACTIVE',
+        value: 'TRUE',
+        id: 2
+    },
+    {
+        label: 'INACTIVE',
+        value: 'FALSE',
+        id: 3
+    }
+];
 export const paymentFilters = [
     {
         label: 'All',
