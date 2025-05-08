@@ -19,6 +19,8 @@ import { faCopy } from '@fortawesome/free-solid-svg-icons';
 import Loading from '@components/Loading/Loading';
 import CaretRightt from '@icons/CaretRightt.svg';
 import BreadHome from '@icons/BreadHome.svg';
+import resourceImg from '../../../../public/resource_image.svg';
+import linkImg from '../../../../public/linkImg.svg';
 
 const CourseDetail = () => {
     const navigate = useNavigate();
@@ -39,6 +41,15 @@ const CourseDetail = () => {
     const isDetailPage =
         location.pathname === '/admin/courses-supabase/details' ||
         location.pathname === '/coach/courses-supabase/details';
+
+
+    const [selectedResource, setSelectedResource] = useState(null);
+    const [showModal, setShowModal] = useState(false);
+    
+    const handleCloseModal = () => {
+        setSelectedResource(null);
+        setShowModal(false);
+    };
 
     useEffect(() => {
         const processCourseData = (courseData) => {
@@ -77,6 +88,7 @@ const CourseDetail = () => {
             return {
                 id: lecture.id,
                 name: lecture.name,
+                resources:lecture.resources || null,
                 transcript: lecture?.transcript || '',
                 folder_id: lecture.folder_id,
                 type: lecture.file ? 'pdf' : 'video',
@@ -312,6 +324,38 @@ const CourseDetail = () => {
                                                     }}
                                                 />
                                             </div>
+                                            {Array.isArray(selectedLecture.resources) && selectedLecture.resources.length > 0 && (
+                                                <div className="modal-resources modal-description">
+                                                    <div className="modal-resources-body">
+                                                        <h5 className="fw-semibold mb-3">Resources</h5>
+                                                        <div id="all_resources" className="d-flex flex-column gap-3">
+                                                            {selectedLecture.resources.map((resource) => (
+                                                                <div
+                                                                    key={resource?.id}
+                                                                    className="d-flex align-items-center gap-2 cursor-pointer"
+                                                                    style={{ cursor: 'pointer' }}
+                                                                    onClick={() => {
+                                                                        if (resource.url) {
+                                                                            window.open(resource.url, '_blank');
+                                                                        } else if (resource.file_link) {
+                                                                            setSelectedResource(resource);
+                                                                            // setShowModal(true);
+                                                                        }
+                                                                    }}
+                                                                >
+                                                                    <img
+                                                                        src={resource.url ? linkImg : resourceImg}
+                                                                        alt="Resource"
+                                                                        className="img-fluid"
+                                                                        style={{ width: '24px', height: '24px' }}
+                                                                    />
+                                                                    <div className="text-muted">{resource?.name}</div>
+                                                                </div>
+                                                            ))}
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            )}
                                             {/* {selectedLecture?.transcript && (
                                         <>
                                         <h3>Transcript</h3>
