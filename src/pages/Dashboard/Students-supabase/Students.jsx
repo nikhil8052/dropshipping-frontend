@@ -94,9 +94,9 @@ const Students = () => {
     // Hide show  remove outside click
     useEffect(() => {
         const handleClickOutside = (event) => {
-            !headerRef.current.contains(event.target);
+            // !headerRef.current.contains(event.target);
             if (showHideRef.current && !showHideRef.current.contains(event.target)) {
-                setShowColumnSelect(false);
+                setShowHideDiv(false);
             }
         };
 
