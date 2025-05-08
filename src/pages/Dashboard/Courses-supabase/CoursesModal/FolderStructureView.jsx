@@ -1,9 +1,10 @@
 import Drop from '../../../../assets/images/droparrow.png';
 import { useState, useEffect } from 'react';
 
-const FolderStructureView = ({ topics, unassignedLectures, onLectureSelect }) => {
+const FolderStructureView = ({ topics, unassignedLectures, onLectureSelect ,selectedLectureId }) => {
     const [expandedFolders, setExpandedFolders] = useState({});
     const [activeLectureId, setActiveLectureId] = useState(null);
+    const [activeLectureIdFirst, setActiveLectureIdFirst] = useState(false);
 
     // Open all folders by default on initial load
     useEffect(() => {
@@ -13,12 +14,20 @@ const FolderStructureView = ({ topics, unassignedLectures, onLectureSelect }) =>
         });
         setExpandedFolders(initialExpanded);
 
-        if (topics.length > 0 && topics[0].lectures.length > 0) {
-            setActiveLectureId(topics[0].lectures[0].id);
-            onLectureSelect(topics[0].lectures[0]); 
-        } else if (unassignedLectures.length > 0) {
-            setActiveLectureId(unassignedLectures[0].id);
-            onLectureSelect(unassignedLectures[0]);
+        if(!activeLectureIdFirst){
+            if (topics.length > 0 && topics[0].lectures.length > 0) {
+                setActiveLectureId(topics[0].lectures[0].id);
+                onLectureSelect(topics[0].lectures[0]); 
+                setActiveLectureIdFirst(true);
+
+            } 
+            else if (unassignedLectures.length > 0) {
+                console.log(unassignedLectures.length);
+                setActiveLectureId(unassignedLectures[0].id);
+                onLectureSelect(unassignedLectures[0]);
+                setActiveLectureIdFirst(true);
+
+            }
         }
     }, [topics, unassignedLectures, onLectureSelect]);
 
