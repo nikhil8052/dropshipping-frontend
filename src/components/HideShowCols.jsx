@@ -1,5 +1,5 @@
 import React, { useRef } from 'react';
-import Plus from '../assets/images/plus.svg';
+import Dot from '../assets/icons/dot.svg';
 
 const HideShowCols = ({ setShowHideDiv, setShowHidePosition }) => {
   const headerRef = useRef(null);
@@ -22,9 +22,9 @@ const HideShowCols = ({ setShowHideDiv, setShowHidePosition }) => {
       className="add-column-header"
       onClick={handleClick}
     >
-      <img src={Plus} alt="Add column" style={{ width: '16px', height: '16px', cursor: 'pointer' }} />
+      <img src={Dot} alt="Add column" style={{ width: '16px', height: '16px', cursor: 'pointer' }} />
     </div>
   );
 };
 
-export default HideShowCols; // Make sure this line exists
+export default HideShowCols; 

@@ -864,7 +864,7 @@ const Students = () => {
                         zIndex: 1000,
                         backgroundColor: 'white',
                         boxShadow: '0 2px 10px rgba(0,0,0,0.2)',
-                        width: '',
+                        width: '250px',
                         borderRadius: '4px'
                     }}
                 >
