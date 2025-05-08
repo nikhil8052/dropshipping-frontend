@@ -28,7 +28,9 @@ import ActionIcon from '../../../assets/images/action.svg';
 import AddColumnHeader from '../../../components/AddColumnHeader';
 import HideShowCols from '../../../components/HideShowCols';
 // import PropertiesPanel from '../../../components/PropertiesPanel';
-import { ChevronLeft, Eye, EyeOff, ChevronRight } from 'lucide-react';
+
+import { ChevronLeft, Eye, EyeOff,X , ChevronRight } from 'lucide-react';
+
 
 import { Badge } from 'react-bootstrap';
 
@@ -678,15 +680,18 @@ const Students = () => {
         const [searchQuery, setSearchQuery] = useState('');
 
         return (
-            <div className="w-80 bg-white rounded-lg shadow-md border border-gray-200 property_section_main_div">
+            <div className=" property_section_main_div">
                 {/* Header */}
-                <div className="flex items-center  border-b border-gray-200 property_section">
+                <div className="flex items-center justify-content-between border-b border-gray-200 property_section">
                     <ChevronLeft className="w-5 h-5 text-gray-500" onClick={onClose} />
                     <h2 className="font-medium ml-2">Properties</h2>
+                    <div className="cross">
+                    <X className="w-5 h-5 text-gray-500 cursor-pointer" onClick={onClose} />
+                    </div>
                 </div>
 
                 {/* Properties List */}
-                <div>
+                <div className='property-detail'>
                     {supabaseCols.map((property, index) => (
                         <div
                             key={index}
@@ -873,15 +878,14 @@ const Students = () => {
             {/* Show Hide div HH   */}
             {showHideDiv && (
                 <div
-                    ref={dropdownRef}
+                    ref={showHideRef}
                     style={{
                         position: 'fixed',
-                        top: `${selectPosition.top}px`,
-                        left: `${selectPosition.left}px`,
+                        top: `${showHidePosition.top}px`,
+                        left: `${showHidePosition.left}px`,
                         zIndex: 1000,
                         backgroundColor: 'white',
-                        boxShadow: '0 2px 10px rgba(0,0,0,0.2)',
-                        width: '250px',
+                        width: '200px',
                         borderRadius: '4px'
                     }}
                 >

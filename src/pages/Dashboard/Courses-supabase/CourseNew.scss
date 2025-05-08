@@ -682,15 +682,15 @@ span.slect_span.selected {
         justify-content: space-between;
         align-items: center;
 
-         &:hover{
-                background-color: #00b5d1;
-    }
+        &:hover {
+            background-color: #00b5d1;
+        }
 
-    a{
+        a {
             color: #000 !important;
         }
     }
-  
+
 }
 
 
@@ -1435,12 +1435,14 @@ label.custom_check span {
     color: #343837 !important;
 }
 
-.course-right-header{
+.course-right-header {
     display: block !important;
 }
+
 .course-right-header p {
     word-break: break-all;
 }
+
 .main-panel:has(.publish-form-section)>.title-top {
     position: absolute;
     top: 0;
@@ -1467,7 +1469,8 @@ label.custom_check span {
     margin-top: 10rem;
 }
 
-.cat-name,.dp-info .submit-btn {
+.cat-name,
+.dp-info .submit-btn {
     background: linear-gradient(183.91deg, #00C7CC 3.2%, #009CD8 96.81%);
     font-weight: 400;
     font-size: 16px;
@@ -1505,7 +1508,7 @@ label.custom_check span {
     padding: 5px 15px;
 }
 
-.dp-info .submit-btn{
+.dp-info .submit-btn {
     cursor: pointer;
 }
 
@@ -1550,13 +1553,15 @@ label.custom_check span {
 // may06 NT
 .course-right-header .content {
     font-size: 13px;
-} 
+}
 
 .detail-box li:hover {
     color: #fff !important;
 }
 
-.search-lectures.btm-box,.section-border.row .lec-left.btm-box,.admin-left-sec {
+.search-lectures.btm-box,
+.section-border.row .lec-left.btm-box,
+.admin-left-sec {
     padding: 0 !important;
 }
 
@@ -1567,26 +1572,26 @@ label.custom_check span {
     margin-bottom: 0;
 }
 
- .folder-detail:first-child{
+.folder-detail:first-child {
     border-top: 0px;
 }
 
- .folder-detail .drop-box {
+.folder-detail .drop-box {
     padding: 0px 10px;
 }
 
- .detail-box li {
+.detail-box li {
     border-radius: 0px;
     padding: 10px 20px;
     gap: 10px;
 }
 
- .detail-box li:hover {
+.detail-box li:hover {
     background-color: #f3f4f6;
-    color:#000 !important;
+    color: #000 !important;
 }
 
- .detail-box li img {
+.detail-box li img {
     max-width: 18px;
 }
 
@@ -1603,23 +1608,26 @@ label.custom_check span {
 .main-panel .main-content-wrapper:has(.course-top) .publish-form-section {
     max-width: 100% !important;
 }
-.course-right-header .content.content-info-lecture p{
+
+.course-right-header .content.content-info-lecture p {
     margin: 0px !important;
     font-size: 16px !important;
     line-height: 1.6;
 }
 
-.lecture-quill-edit .ql-editor p{
+.lecture-quill-edit .ql-editor p {
     margin: 0px !important;
     font-size: 16px !important;
-    line-height: 1.6; 
+    line-height: 1.6;
 }
+
 .modal-description .content.course-detail-info p {
     margin: 0px !important;
     font-size: 16px !important;
     line-height: 1.6;
 }
-.EnrolledCourseDetail .lecture-curriculum p{
+
+.EnrolledCourseDetail .lecture-curriculum p {
     margin: 0px !important;
     font-size: 16px !important;
     line-height: 1.6;
@@ -1628,26 +1636,31 @@ label.custom_check span {
 .db-cats:has(.cat-name) {
     margin-top: 1rem;
 }
-.detail-box li.active_lecture > a {
+
+.detail-box li.active_lecture>a {
     color: #fff !important;
 }
 
-.detail-box li.active_lecture:hover > a {
+.detail-box li.active_lecture:hover>a {
     color: #000 !important;
 }
 
+.student-table-row {
+    width: 100%;
+}
+
 @media only screen and (max-width:1199px) {
-.dp-title-name p {
-    font-size: 1.5rem;
-}
+    .dp-title-name p {
+        font-size: 1.5rem;
+    }
 
-.dp-title-name {
-    width: 55%;
-}
+    .dp-title-name {
+        width: 55%;
+    }
 
-.dp-info {
-    width: 44%;
-}
+    .dp-info {
+        width: 44%;
+    }
 }
 
 @media only screen and (max-width:991px) {
@@ -1751,6 +1764,7 @@ label.custom_check span {
     .tab-buttons.editor-buttons button {
         font-size: 14px;
     }
+
     .dp-title-name p {
         font-size: 1rem;
     }
@@ -1769,7 +1783,7 @@ label.custom_check span {
         gap: 20px;
     }
 
-    .main-panel .main-content-wrapper:has(.course-top) .publish-course-wrapper > .row {
+    .main-panel .main-content-wrapper:has(.course-top) .publish-course-wrapper>.row {
         flex-direction: column-reverse;
     }
 
@@ -1777,7 +1791,8 @@ label.custom_check span {
         margin-top: 20px;
     }
 
-    .cat-name, .dp-info .submit-btn {
+    .cat-name,
+    .dp-info .submit-btn {
         font-size: 14px;
         line-height: 1.4;
     }
@@ -1785,6 +1800,7 @@ label.custom_check span {
     .db-cats:has(.cat-name) {
         margin-top: 0.2rem;
     }
+
     .dp-info {
         gap: 5px;
     }
@@ -1792,11 +1808,12 @@ label.custom_check span {
     .main-panel:has(.publish-form-section) .course-top {
         padding: 20px 0px;
     }
-    .dp-main-box{
+
+    .dp-main-box {
         align-items: start;
     }
 
-    .course-detail-row > .row {
+    .course-detail-row>.row {
         flex-direction: column-reverse;
     }
 }
@@ -1879,18 +1896,20 @@ label.custom_check span {
     .toggle-wrapper .toggle-label {
         font-size: 16px;
     }
+
     .dp-info p {
         font-size: 14px !important;
         line-height: 1.2;
     }
 
-    .EnrolledCourseDetail .lecture-curriculum p{
+    .EnrolledCourseDetail .lecture-curriculum p {
         font-size: 14px !important;
     }
 
     .product-details h3 {
         font-size: 18px;
     }
+
     .course-right .formgroup input[type=text] {
         width: 100% !important;
     }
@@ -1916,32 +1935,37 @@ label.custom_check span {
     .dp-title-name {
         width: 48%;
     }
+
     .dp-info {
         width: 52%;
     }
-    .modal-description .content.course-detail-info p,.course-right-header .content.content-info-lecture p{
+
+    .modal-description .content.course-detail-info p,
+    .course-right-header .content.content-info-lecture p {
         font-size: 14px !important;
     }
+
     .dp-main-box {
         align-items: center;
         justify-content: center;
         flex-direction: column;
         text-align: center;
     }
-    
+
     .dp-info {
         width: 100%;
         align-items: center;
     }
-    
+
     .dp-title-name {
         width: 100%;
     }
-    
+
     .dp-main-box * {
         justify-content: center;
     }
-    .lecture-quill-edit .ql-editor p{
+
+    .lecture-quill-edit .ql-editor p {
         font-size: 14px !important;
     }
 
