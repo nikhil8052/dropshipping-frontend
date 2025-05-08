@@ -28,7 +28,9 @@ import ActionIcon from '../../../assets/images/action.svg';
 import AddColumnHeader from '../../../components/AddColumnHeader';
 import HideShowCols from '../../../components/HideShowCols';
 // import PropertiesPanel from '../../../components/PropertiesPanel';
-import { ChevronLeft, Eye, EyeOff,X } from 'lucide-react';
+
+import { ChevronLeft, Eye, EyeOff,X , ChevronRight } from 'lucide-react';
+
 
 import { Badge } from 'react-bootstrap';
 
@@ -360,7 +362,7 @@ const Students = () => {
                     <Badge
                         bg={props.data.isActive ? 'success' : 'danger'}
                         style={{ padding: '0.5rem 0.5rem' }}
-                        // onClick={() => props.onToggleClick(props.data)}
+                    // onClick={() => props.onToggleClick(props.data)}
                     >
                         {props.data.isActive ? 'Active' : 'Inactive'}
                     </Badge>
@@ -552,7 +554,7 @@ const Students = () => {
     const [removedValues, setRemovedValues] = useState([]);
     const [expandedEye, setExpandedEye] = useState({});
 
-    const toggle = (property, index) => {
+    const toggle = async (property, index) => {
         // Backup original columns only once
         if (!supabaseColsClone.length) {
             const clonedArr = supabaseCols.slice();
@@ -575,11 +577,21 @@ const Students = () => {
 
             // setSupabaseCols(prev => prev.filter((_, i) => i !== indexInSupabase));
 
-            setSupabaseCols(prev => 
-                prev.map((col, i) => 
+            setSupabaseCols(prev =>
+                prev.map((col, i) =>
                     i === indexInSupabase ? { ...col, hide: !col.hide } : col
                 )
             );
+
+            let hideCols = [supabaseCols[indexInSupabase]];
+
+            var payload = {
+                hideCols: hideCols
+            };
+
+            const ENDPOINT = API_URL.SUPABASE_GET_COLUMNS.replace(':table', 'users');
+            const response = await axiosWrapper('POST', ENDPOINT, { payload }, token);
+
 
 
         } else {
@@ -590,11 +602,24 @@ const Students = () => {
             if (itemToShow) {
                 setSupabaseCols((prev) => {
                     const updated = [...prev];
-                    updated.splice(originalIndex, 0, itemToShow); // insert at correct position
+                    updated.splice(originalIndex, 0, itemToShow); 
                     return updated;
                 });
             }
         }
+
+
+        // Prepare payload with the column to show
+        let showCols = [supabaseCols[indexInSupabase]];
+
+        var payload = {
+            hideCols: showCols
+        };
+
+        // Send the request to update show status in the backend
+        const ENDPOINT = API_URL.SUPABASE_GET_COLUMNS.replace(':table', 'users');
+        const response = await axiosWrapper('POST', ENDPOINT, { payload }, token);
+        
         // Toggle the UI state
         setExpandedEye((prev) => ({
             ...prev,
@@ -619,13 +644,7 @@ const Students = () => {
 
                 let tableSettings = response.data.tableSettings;
                 // // Remove the values if they exists
-                const newCols = tableSettings.map((val) => ({
-                    headerName: val.field,
-                    field: val.field,
-                    wrapText: true,
-                    autoHeight: true,
-                    resizable: false
-                }));
+                const newCols = tableSettings.map((val) => (val));
 
                 const updatedCols = [
                     ...supabaseCols.slice(0, -2),
@@ -671,19 +690,6 @@ const Students = () => {
                     </div>
                 </div>
 
-                {/* Search Bar */}
-                {/* <div className="p-3">
-                    <div className="relative">
-                        <input
-                            type="text"
-                            placeholder="Search for a property..."
-                            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300"
-                            value={searchQuery}
-                            onChange={(e) => setSearchQuery(e.target.value)}
-                        />
-                    </div>
-                </div> */}
-
                 {/* Properties List */}
                 <div className='property-detail'>
                     {supabaseCols.map((property, index) => (
@@ -694,14 +700,12 @@ const Students = () => {
                         >
                             <span className="ml-1">{property.field}</span>
                             <div className="drop-wrapper">
-                            {expandedEye[index] ? (
-                                <EyeOff className="w-4 h-4 text-gray-500" />
-                            ) : (
-                                <Eye className="w-4 h-4 text-gray-500" />
-                            )}
-                            <div className="drop-box">
+                                {expandedEye[index] ? (
+                                    <EyeOff className="w-4 h-4 text-gray-500" />
+                                ) : (
+                                    <Eye className="w-4 h-4 text-gray-500" />
+                                )}
 
-                            </div>
                             </div>
                         </div>
                     ))}
@@ -898,7 +902,7 @@ const Students = () => {
                 onRowClicked={handleRowClick}
                 loading={loading}
                 children={
-                    <div className="button-wrapper justify-content-start">
+                    <div className="button-wrapper">
                         {role === 'ADMIN' && (
                             <DropdownButton
                                 title={
