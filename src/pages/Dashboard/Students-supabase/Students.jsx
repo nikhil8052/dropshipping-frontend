@@ -28,7 +28,7 @@ import ActionIcon from '../../../assets/images/action.svg';
 import AddColumnHeader from '../../../components/AddColumnHeader';
 import HideShowCols from '../../../components/HideShowCols';
 // import PropertiesPanel from '../../../components/PropertiesPanel';
-import { ChevronLeft, Eye, EyeOff } from 'lucide-react';
+import { ChevronLeft, Eye, EyeOff , ChevronRight } from 'lucide-react';
 
 import { Badge } from 'react-bootstrap';
 
@@ -360,7 +360,7 @@ const Students = () => {
                     <Badge
                         bg={props.data.isActive ? 'success' : 'danger'}
                         style={{ padding: '0.5rem 0.5rem' }}
-                        // onClick={() => props.onToggleClick(props.data)}
+                    // onClick={() => props.onToggleClick(props.data)}
                     >
                         {props.data.isActive ? 'Active' : 'Inactive'}
                     </Badge>
@@ -575,8 +575,8 @@ const Students = () => {
 
             // setSupabaseCols(prev => prev.filter((_, i) => i !== indexInSupabase));
 
-            setSupabaseCols(prev => 
-                prev.map((col, i) => 
+            setSupabaseCols(prev =>
+                prev.map((col, i) =>
                     i === indexInSupabase ? { ...col, hide: !col.hide } : col
                 )
             );
@@ -668,19 +668,6 @@ const Students = () => {
                     <h2 className="font-medium ml-2">Properties</h2>
                 </div>
 
-                {/* Search Bar */}
-                {/* <div className="p-3">
-                    <div className="relative">
-                        <input
-                            type="text"
-                            placeholder="Search for a property..."
-                            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300"
-                            value={searchQuery}
-                            onChange={(e) => setSearchQuery(e.target.value)}
-                        />
-                    </div>
-                </div> */}
-
                 {/* Properties List */}
                 <div>
                     {supabaseCols.map((property, index) => (
@@ -691,14 +678,14 @@ const Students = () => {
                         >
                             <span className="ml-1">{property.field}</span>
                             <div className="drop-wrapper">
-                            {expandedEye[index] ? (
-                                <EyeOff className="w-4 h-4 text-gray-500" />
-                            ) : (
-                                <Eye className="w-4 h-4 text-gray-500" />
-                            )}
-                            <div className="drop-box">
-
-                            </div>
+                                {expandedEye[index] ? (
+                                    <EyeOff className="w-4 h-4 text-gray-500" />
+                                ) : (
+                                    <Eye className="w-4 h-4 text-gray-500" />
+                                )}
+                                <div className="drop-box">
+                                <ChevronRight className="w-4 h-4 text-gray-500" />
+                                </div>
                             </div>
                         </div>
                     ))}
