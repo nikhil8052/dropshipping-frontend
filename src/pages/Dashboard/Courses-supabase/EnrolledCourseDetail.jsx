@@ -190,7 +190,7 @@ const EnrolledCourseDetail = () => {
         if (nextLecture) {
             getCurrentLecture(nextLecture);
         } else if (incompleteLectureIndex?.id !== undefined) {
-            getCurrentLecture(incompleteLectureIndex?.id);
+            // getCurrentLecture(incompleteLectureIndex?.id);
         } else {
             getCurrentLecture(data.lectures[0]?.id);
         }
