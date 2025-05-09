@@ -11,11 +11,11 @@ const MainPanel = (props) => {
 
     useEffect(() => {
         const handleResize = () => {
-            // if (window.innerWidth <= 768) {
-                // dispatch(collapseSidebar(true));
-                // dispatch(toggleAutoCollapse(true));
+        //     if (window.innerWidth <= 768) {
+        //         dispatch(collapseSidebar(true));
+        //         dispatch(toggleAutoCollapse(true));
         // }
-            //     return;
+        //         return;
             dispatch(collapseSidebar(false));
             dispatch(toggleAutoCollapse(false));
         };
