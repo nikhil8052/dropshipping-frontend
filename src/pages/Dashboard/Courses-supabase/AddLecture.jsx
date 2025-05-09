@@ -776,6 +776,20 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
 
 
     // EDIT THE LECTURE WHEN CLICK ON THE EDIT 
+    const handleCancelSetEditing = async (id) => {
+        setLectureLoading(true);
+        setIsEditing(false);
+        try {
+            const response = await getLectureData(id);
+            setRightViewLecture(response.data);
+        } catch (error) {
+            console.error('Failed to fetch lecture data:', error);
+        } finally {
+            setLectureLoading(false);
+            
+        }
+    };
+    
     const handleEditClick = async (id) => {
 
         const lecture = await getLectureData(id);
@@ -911,6 +925,8 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
                 const updatedLectureId = response.data.id;
                 const updatedLectureName = response.data.name.trim();
                 const updatedDes = response.data.description;
+                const updatedTranscript = response?.data?.transcript;
+                const updatedResourses = response?.data?.resourses;
 
                 setUnassignedLectures((prevLectures) =>
                     prevLectures.map((lecture) =>
@@ -931,9 +947,13 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
                 );
 
                 if (rightViewLecture?.id === updatedLectureId) {
+                    // console.log('prevLecture',prevLecture)
+                    // console.log('prevLecture',prevLecture)
                     setRightViewLecture((prevLecture) => ({
                         ...prevLecture,
                         name: updatedLectureName,
+                        resourses: updatedResourses,
+                        transcript: updatedTranscript,
                         description:  updatedDes
                     }));
                 }
@@ -2138,7 +2158,10 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
                                                                         </div>
 
                                                                     </>)}
-                                                                    <Button type="button" className="cancel-btn" onClick={() => { setIsEditing(false) }}>
+                                                                    <Button type="button" className="cancel-btn" onClick={() => {
+                                                                        //  setIsEditing(false)
+                                                                        handleCancelSetEditing(editingLecture?.id)
+                                                                         }}>
                                                                         Cancel
                                                                     </Button>
                                                                     <Button type="submit" className="submit-btn" disabled={isSubmitting}>

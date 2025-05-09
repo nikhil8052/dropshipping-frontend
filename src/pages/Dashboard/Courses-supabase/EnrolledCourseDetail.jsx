@@ -759,6 +759,17 @@ const EnrolledCourseDetail = () => {
                                                                             </div>
                                                                         )}
 
+                                                                    {selectedLecture?.transcript && (
+                                                                        <div className="modal-description">
+                                                                            <h5 className='fw-semibold my-3'>Transcript</h5>
+                                                                            <div
+                                                                                className="content"
+                                                                                dangerouslySetInnerHTML={{
+                                                                                    __html: decodeHtmlEntities(selectedLecture?.transcript) || ''
+                                                                                }}
+                                                                                />
+                                                                        </div>
+                                                                    )}
 
                                                                     </div>
                                                                 )}
