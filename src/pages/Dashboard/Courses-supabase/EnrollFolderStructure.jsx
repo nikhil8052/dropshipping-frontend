@@ -15,7 +15,10 @@ const EnrollFolderStructure = ({
   accessRestricted,
 }) => {
     const [expandedFolders, setExpandedFolders] = useState({});
-
+    const queryParams = new URLSearchParams(location.search);
+    const cid = queryParams.get('cid');
+    const lid = queryParams.get('lid');
+    const medium = queryParams.get('m');
     // Open all folders by default on initial load
     useEffect(() => {
         const initialExpanded = {};
@@ -30,9 +33,11 @@ const EnrollFolderStructure = ({
                 ? topics[0].lectures[0] 
                 : unassignedLectures[0];
 
-            if (firstLecture) {
-                console.log('firstLecture',firstLecture)
-                onLectureSelect(firstLecture);  // Notify parent about the first selection
+            if(!lid){
+                if (firstLecture) {
+                    console.log('firstLecture',firstLecture)
+                    onLectureSelect(firstLecture);  // Notify parent about the first selection
+                }
             }
         }
     }, [topics, unassignedLectures, onLectureSelect, selectedLectureId]);
