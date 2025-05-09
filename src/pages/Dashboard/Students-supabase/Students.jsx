@@ -861,26 +861,30 @@ const Students = () => {
             <div className="property_section_main_div">
                 {/* Header */}
                 <div className="flex items-center justify-between border-b border-gray-200 property_section">
+                    <div className="left-box d-flex gap-10 align-items-center">
                     <ChevronLeft className="w-5 h-5 text-gray-500" onClick={onClose} />
                     <h2 className="font-medium ml-2">Properties</h2>
+                    </div>
+                    <div className="close">
                     <X className="w-5 h-5 text-gray-500 cursor-pointer" onClick={onClose} />
+                    </div>
                 </div>
-                <div className="px-2 py-2 border-b border-gray-100">
+                <div className="px-2 py-2">
                     <input
                         type="text"
                         placeholder="Search properties..."
                         value={searchQuery}
                         onChange={(e) => setSearchQuery(e.target.value)}
-                        className="w-full text-sm px-2 py-1 border rounded focus:outline-none focus:ring-1 focus:ring-blue-400"
+                        className="w-full rounded focus:outline-none focus:ring-1 focus:ring-blue-400"
                     />
                 </div>
                 <DragDropContext onDragEnd={handleDragEnd}>
                     <div className="property-detail">
 
-                        <div className="flex items-center justify-between mt-3 mb-1 hide-text-main-dev">
-                            <p className="text-sm text-gray-500 font-semibold">Table Fields</p>
+                        <div className="flex items-center justify-between  mb-1 hide-text-main-dev">
+                            <p className=" text-gray-500 font-semibold">Table Fields</p>
                             <span
-                                className="text-xs text-blue-600 hover:underline cursor-pointer"
+                                className=" text-blue-600  cursor-pointer show-all-text"
                                 onClick={handleHideAll}
                             >
                                 Hide all
@@ -896,7 +900,7 @@ const Students = () => {
                                 <span className="ml-1">{property.field}</span>
                                 <div className="drop-wrapper">
                                     <div className="w-6 h-6 flex items-center justify-center bg-gray-200 rounded cursor-not-allowed opacity-50">
-                                        <Eye className="w-4 h-4 text-gray-500" />
+                                        <Eye className="text-gray-500" />
                                     </div>
                                 </div>
                             </div>
@@ -918,12 +922,12 @@ const Students = () => {
                                                 >
                                                     <div className='flex drag-drop-item-left'>
                                                         <div className="drop-wrapper">
-                                                            <GripVertical className="w-4 h-4 text-gray-400 cursor-grab" />
+                                                            <GripVertical className=" text-gray-400 cursor-grab" />
                                                         </div>
                                                         <span className="ml-1">{property.field}</span>
                                                     </div>
                                                     <div className="drop-wrapper">
-                                                        <Eye className="w-4 h-4 text-gray-500" />
+                                                        <Eye className=" text-gray-500" />
                                                     </div>
                                                 </div>
                                             )}
@@ -937,7 +941,7 @@ const Students = () => {
                         {/* Hidden Draggable Zone */}
                         {hiddenFields.length > 0 && (
                             <div className="flex items-center justify-between mt-2 mb-1 hide-text-main-dev">
-                                <p className="text-sm text-gray-500 font-semibold ">Hiddens</p>
+                                <p className=" text-gray-500 font-semibold ">Hiddens</p>
                                 <span
                                     className="show-all-text"
                                     onClick={handleShowAllHidden}
@@ -984,7 +988,7 @@ const Students = () => {
                         setShowHideDiv(false);
                         setShowColumnSelect(true)
 
-                        }}  > Add New Property </p>
+                        }} className='cursor-pointer' > + Add New Property </p>
                 </div>
               
             </div>
@@ -1159,12 +1163,12 @@ const Students = () => {
                     ref={showHideRef}
                     style={{
                         position: 'fixed',
+                          bottom: '20px',
                         top: `${showHidePosition.top}px`,
                         left: `${showHidePosition.left}px`,
                         zIndex: 1000,
-                        backgroundColor: 'white',
-                        width: '200px',
-                        borderRadius: '4px'
+                        width: '',
+                        borderRadius: '4px',
                     }}
                 >
                     <div>
