@@ -8,11 +8,16 @@ const HideShowCols = ({ setShowHideDiv, setShowHidePosition }) => {
     e.stopPropagation();
     if (headerRef.current) {
       const rect = headerRef.current.getBoundingClientRect();
-      setShowHidePosition({
-        top: rect.bottom + window.scrollY + 0,
+      const position = {
+        top: rect.bottom + window.scrollY,
         left: rect.left + window.scrollX - 200,
-      });
+      };
+      setShowHidePosition(position);
       setShowHideDiv(prev => !prev);
+      // Also pass this position up to parent for column selector
+      if (typeof onPositionChange === 'function') {
+        onPositionChange(position);
+      }
     }
   };
 
@@ -22,9 +27,10 @@ const HideShowCols = ({ setShowHideDiv, setShowHidePosition }) => {
       className="add-column-header"
       onClick={handleClick}
     >
-      <img src={Dot} alt="Add column" style={{ width: '16px', height: '16px', cursor: 'pointer' }} />
+      <img src={Dot} alt="Menu" style={{ width: '16px', height: '16px', cursor: 'pointer' }} />
     </div>
   );
 };
+
 
 export default HideShowCols; 
