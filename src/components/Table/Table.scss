@@ -297,7 +297,7 @@
 
 @media only screen and (max-width:1199px) {
 .student-table .ag-theme-alpine {
-    margin-top: 4rem;
+    margin-top: 8rem;
 }
 }
 
@@ -308,6 +308,10 @@
 
     .custom-table * {
         font-size: 14px;
+    }
+
+    .student-table .ag-theme-alpine {
+        margin-top: 6rem;
     }
 }
 
