@@ -3,9 +3,9 @@ import { Skeleton } from '@mui/material';
 
 const LectureCurriculumSkeleton = () => {
     return (
-        <div className="lecture-curriculum">
+        <div className="lecture-curriculum new-page-view">
             <div className="title-container">
-                <Skeleton variant="text" width="60%" height={30} />
+                <Skeleton className='my-2' variant="text" width="60%" height={30} />
 
                 <Skeleton variant="circle" width={30} height={30} className="circle-loader" />
             </div>

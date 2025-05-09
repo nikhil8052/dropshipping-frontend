@@ -13,8 +13,8 @@ import Edit2 from '../../assets/icons/Dropdown.svg';
 import { useSelector } from 'react-redux';
 import { API_URL } from '../../utils/apiUrl';
 import axiosWrapper from '../../utils/api';
-import resourceImg from '../../../public/resource_image.svg';
-import linkImg from '../../../public/linkImg.svg';
+import resourceImg from '@icons/resource_image.svg';
+import linkImg from '@icons/linkImg.svg';
 
 const Block = Quill.import('blots/block');
 
@@ -277,7 +277,7 @@ const RichTextEditor = (props) => {
                                 <>
                                     <div key={resource.id} className={`resource-card ${index !== 0 ? 'mt-3' : ''}`}>
                                         {/* <img src={resource.image} alt="Resource" className="resource-image" /> */}
-                                        <img src={resource.url ? linkImg : resourceImg} alt="Resource" className="resource-image" />
+                                        <img src={resource.type === 'url' ? linkImg : resourceImg} alt="Resource" className="resource-image" />
                                         <div className="resource-title">{resource.title}</div>
                                         <Dropdown align="end">
                                             <Dropdown.Toggle variant="light" className="action-dropdown-toggle" id="dropdown-basic">
