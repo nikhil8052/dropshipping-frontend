@@ -28,7 +28,7 @@ const LectureCard = ({ item, courseId, courseSlug }) => {
         const baseUrl = import.meta.env.VITE__APP_URL;
 
         const link = `${baseUrl}/student/courses/enrolled-course/${courseSlug}/${slug}?m=direct&cid=${courseId}&lid=${item.id}`;
-        console.log(link, ' LINK ');
+    
         navigator.clipboard.writeText(link);
         setCopied(true);
         alert('Link has been copied to clipboard');
