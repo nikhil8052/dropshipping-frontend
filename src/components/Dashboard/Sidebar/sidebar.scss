@@ -550,4 +550,13 @@
     .sidebar .side-nav-wrapper {
         padding-bottom: 15px;
     }
+
+    .sidebar .container {
+        padding: 0;
+    }
+    .sidebar.hide-sidebar .container{
+        padding: 0px 15px;
+    }
+    
 }
+
