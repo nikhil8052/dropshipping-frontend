@@ -393,7 +393,8 @@
 }
 
 .show-all-text {
-    color: rgb(35, 131, 226);
+    color: rgb(35, 131, 226) !important;
+    cursor: pointer;
 }
 
 .main-panel:has(.students-page) .property_section_main_div input {
@@ -420,6 +421,7 @@
     border-radius: 4px;
     margin: 2px;
     padding: 5px 8px !important;
+
 }
 
 .students-page .property_section_main_div .text-items:hover{
