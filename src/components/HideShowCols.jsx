@@ -1,23 +1,20 @@
 import React, { useRef } from 'react';
 import Dot from '../assets/icons/dot.svg';
 
-const HideShowCols = ({ setShowHideDiv, setShowHidePosition }) => {
+const HideShowCols = ({ setShowHideDiv, setShowHidePosition, setSelectPosition }) => {
   const headerRef = useRef(null);
 
   const handleClick = (e) => {
     e.stopPropagation();
     if (headerRef.current) {
       const rect = headerRef.current.getBoundingClientRect();
-      const position = {
+      const newPosition = {
         top: rect.bottom + window.scrollY,
         left: rect.left + window.scrollX - 200,
       };
-      setShowHidePosition(position);
+      setShowHidePosition(newPosition);
+      setSelectPosition(newPosition); // Also update select position
       setShowHideDiv(prev => !prev);
-      // Also pass this position up to parent for column selector
-      if (typeof onPositionChange === 'function') {
-        onPositionChange(position);
-      }
     }
   };
 
