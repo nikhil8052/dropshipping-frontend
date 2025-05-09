@@ -19,8 +19,9 @@ import { faCopy } from '@fortawesome/free-solid-svg-icons';
 import Loading from '@components/Loading/Loading';
 import CaretRightt from '@icons/CaretRightt.svg';
 import BreadHome from '@icons/BreadHome.svg';
-import resourceImg from '../../../../public/resource_image.svg';
-import linkImg from '../../../../public/linkImg.svg';
+import resourceImg from '@icons/resource_image.svg';
+import linkImg from '@icons/linkImg.svg';
+import ResourcesModel from '@components/ConfirmationBox/ResourcesModel';
 
 const CourseDetail = () => {
     const navigate = useNavigate();
@@ -51,6 +52,41 @@ const CourseDetail = () => {
         setShowModal(false);
     };
 
+    const [showDownloadModel, setShowDownloadModel] = useState({
+        show: false,
+        title: '',
+        isEditable: false,
+        lectureId: null,
+        initialValues: null
+    });
+    const handleDownloadModelClick = (resource) => {
+        console.log(resource?.file_link);
+        setShowDownloadModel({
+            show: true,
+            title: resource?.name,
+            file_link: resource?.file_link,
+            isEditable: false,
+            lectureId: resource?.id,
+            initialValues: null
+        });
+    };
+    const handleDownloadModelClose = () => {
+        setShowDownloadModel({
+            show: false,
+            title: 'Delete Lecture',
+            isEditable: false,
+            lectureId: null,
+            initialValues: null
+        });
+    };
+    const handleDownloadImg = () => {
+        const fileUrl = showDownloadModel?.file_link;
+        if (fileUrl) {
+            window.open(fileUrl, '_blank', 'noopener,noreferrer');
+        } else {
+            console.warn('No file URL available to open.');
+        }
+    };
     useEffect(() => {
         const processCourseData = (courseData) => {
             // Process folders into topics
@@ -335,16 +371,16 @@ const CourseDetail = () => {
                                                                     className="d-flex align-items-center gap-2 cursor-pointer"
                                                                     style={{ cursor: 'pointer' }}
                                                                     onClick={() => {
-                                                                        if (resource.url) {
+                                                                        if (resource?.type === 'url') {
                                                                             window.open(resource.url, '_blank');
-                                                                        } else if (resource.file_link) {
-                                                                            setSelectedResource(resource);
+                                                                        } else if (resource?.type === 'file') {
+                                                                            handleDownloadModelClick(resource)
                                                                             // setShowModal(true);
                                                                         }
                                                                     }}
                                                                 >
                                                                     <img
-                                                                        src={resource.url ? linkImg : resourceImg}
+                                                                        src={resource?.type === 'url' ? linkImg : resourceImg}
                                                                         alt="Resource"
                                                                         className="img-fluid"
                                                                         style={{ width: '24px', height: '24px' }}
@@ -356,17 +392,17 @@ const CourseDetail = () => {
                                                     </div>
                                                 </div>
                                             )}
-                                            {/* {selectedLecture?.transcript && (
-                                        <>
-                                        <h3>Transcript</h3>
-                                        <div
-                                            className="content"
-                                            dangerouslySetInnerHTML={{
-                                                __html: unescapeHtml(selectedLecture.transcript) || ''
-                                            }}
-                                            />
-                                        </>
-                                    )} */}
+                                            {selectedLecture?.transcript && (
+                                                <div className="modal-description">
+                                                    <h5 className='fw-semibold my-3'>Transcript</h5>
+                                                    <div
+                                                        className="content"
+                                                        dangerouslySetInnerHTML={{
+                                                            __html: unescapeHtml(selectedLecture.transcript) || ''
+                                                        }}
+                                                        />
+                                                </div>
+                                            )}
 
                                             {/* {selectedLecture?.dataType === 'file' ? (
                                         <>
@@ -432,6 +468,25 @@ const CourseDetail = () => {
                         </div>
                     )} */}
                 </div>
+            )}
+            {showDownloadModel.show && (
+                <ResourcesModel
+                    show={showDownloadModel.show}
+                    onClose={handleDownloadModelClose}
+                    // loading={loadingCRUD}
+                    title={showDownloadModel?.title}
+                    file_link={showDownloadModel?.file_link}
+                    body={
+                        <div className='img-resource-wrap'>
+                            <img className="img-resource" src={showDownloadModel?.file_link} alt="Resource Preview" />
+                        </div>
+                    }
+                    customFooterClass="custom-footer-class"
+                    nonActiveBtn="cancel-button"
+                    activeBtn="delete-button"
+                    activeBtnTitle="Delete"
+                    onConfirm={handleDownloadImg}
+                />
             )}
         </>
     );

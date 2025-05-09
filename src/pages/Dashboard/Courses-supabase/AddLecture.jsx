@@ -26,8 +26,10 @@ import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd';
 import { EditText } from 'react-edit-text';
 import 'react-edit-text/dist/index.css';
 import Edit2 from '../../../assets/icons/Dropdown.svg';
-import resourceImg from '../../../../public/resource_image.svg';
-import linkImg from '../../../../public/linkImg.svg';
+import resourceImg from '../../../assets/icons/resource_image.svg';
+import linkImg from '../../../assets/icons/linkImg.svg';
+import ResourcesModel from '@components/ConfirmationBox/ResourcesModel';
+import LectureCurriculumSkeleton from '@components/LectureCurriculumSkeleton';
 
 const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCourseData }) => {
 
@@ -72,7 +74,8 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
 
     const [selectedResource, setSelectedResource] = useState(null);
     const [showModal, setShowModal] = useState(false);
-    
+    const [lectureLoading, setLectureLoading] = useState(false);
+
     const handleCloseModal = () => {
         setSelectedResource(null);
         setShowModal(false);
@@ -93,6 +96,42 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
         }
     }, [topics]);
 
+    const [showDownloadModel, setShowDownloadModel] = useState({
+        show: false,
+        title: '',
+        isEditable: false,
+        lectureId: null,
+        initialValues: null
+    });
+    const handleDownloadModelClick = (resource) => {
+        console.log(resource?.file_link);
+        // return false;
+        setShowDownloadModel({
+            show: true,
+            title: resource?.name,
+            file_link: resource?.file_link,
+            isEditable: false,
+            lectureId: resource?.id,
+            initialValues: null
+        });
+    };
+    const handleDownloadModelClose = () => {
+        setShowDownloadModel({
+            show: false,
+            title: 'Delete Lecture',
+            isEditable: false,
+            lectureId: null,
+            initialValues: null
+        });
+    };
+    const handleDownloadImg = () => {
+        const fileUrl = showDownloadModel?.file_link;
+        if (fileUrl) {
+            window.open(fileUrl, '_blank', 'noopener,noreferrer');
+        } else {
+            console.warn('No file URL available to open.');
+        }
+    };
 
     useEffect(() => {
         if (initialData) {
@@ -175,7 +214,9 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
             const newLectures = initialData.lecturess.map((lecture) => ({
                 name: lecture.name,
                 id: lecture.id,
-                description: lecture.description
+                description: lecture.description,
+                resources: lecture?.resources,
+                transcript: lecture?.transcript,
             }));
 
             setUnassignedLectures((prev) => [...prev, ...newLectures]);
@@ -187,7 +228,9 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
             const updatedTopics = initialData.folders.map((folder) => ({
                 name: folder.name,
                 id: folder.id,
-                lectures: folder.lectures
+                lectures: folder.lectures,
+                resources: lecture?.resources,
+                transcript: lecture?.transcript,
             }));
             setTopics(updatedTopics);
         }
@@ -309,6 +352,7 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
             alert('Please enter a valid URL.');
             return;
         }
+        console.log(isUrlProvided ? 'url' : 'file');
 
         if (!isFileProvided && !isValidUrl) {
             alert('Please provide either a file or a valid URL.');
@@ -317,7 +361,6 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
 
         let ENDPOINT = API_URL.SUPABASE_UPDATE_LECTURE_RESOURCE.replace(':id', currentActiveLectureID);
         let METHOD = "POST";
-
         const lectureData = {
             model_id: currentActiveLectureID,
             model_type: 'lecture',
@@ -795,21 +838,59 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
         }
         // setSubmitting(false);
     };
-    const editClickLeture = (lecture) => {
+    // const editClickLeture = async (lecture) => {
     
     
+    //     if (hasUnsavedChanges) {
+    //         const confirmLeave = window.confirm('You have unsaved changes. Do you want to leave without saving?');
+    //         if (!confirmLeave) {
+    //             return;
+    //         }
+    //     }
+    //     setActiveLectureId(lecture.id);
+    //     setHasUnsavedChanges(false);
+    //     setIsEditing(false);
+    //     // setRightViewLecture(lecture);
+    //     const lectureData = await getLectureData(lecture.id);
+    //     setRightViewLecture(lectureData.data);
+    //     console.log('click data',lecture);
+
+    // };
+    const editClickLeture = async (lecture) => {
+        // Start loading state
+        setLectureLoading(true);
+    
+        // Check for unsaved changes and prompt if necessary
         if (hasUnsavedChanges) {
             const confirmLeave = window.confirm('You have unsaved changes. Do you want to leave without saving?');
             if (!confirmLeave) {
+                setLectureLoading(false); // Ensure we stop the loading state if the user chooses to stay
                 return;
             }
         }
+    
+        // Reset states before editing
         setActiveLectureId(lecture.id);
         setHasUnsavedChanges(false);
         setIsEditing(false);
-        setRightViewLecture(lecture);
+    
+        try {
+            // Fetch lecture data from API
+            const lectureData = await getLectureData(lecture.id);
+            setRightViewLecture(lectureData.data);
+    
+            console.log('Lecture data:', lectureData); // Optionally log for debugging
+    
+        } catch (error) {
+            // Handle any errors that occur during the fetch
+            console.error('Error fetching lecture data:', error);
+            alert('There was an error fetching the lecture data. Please try again later.');
+        } finally {
+            // Stop loading state, even if there's an error
+            setLectureLoading(false);
+        }
     };
-
+    
     const handleSubmit = async (values, { setSubmitting, resetForm, ...formikHelpers }) => {
         // setSubmitting(true);
 
@@ -1145,7 +1226,9 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
         formData.append('files', file);
         formData.append('name', file.name);
         const mediaFile = await axiosWrapper('POST', API_URL.UPLOAD_MEDIA, formData, '', true);
-        setResourceFileUrl('/resource_image.svg');
+        console.log('media file ::',mediaFile?.data[0]?.path);
+        // setResourceFileUrl('/resource_image.svg');
+        setResourceFileUrl(mediaFile?.data[0]?.path);
     };
 
     const handlePublishCourseModal = () => {
@@ -1814,67 +1897,86 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
                                     <div className="course-right">
                                         {/* new code  */}
                                         {!hasLectures && !isEditing ? (
+                                            
                                             <>
+                                                
+                                                
                                                 {rightViewLecture ? (
-                                                    <div className="new-page-view" key={rightViewLecture.id}>
-                                                        <div className="course-right-header">
-                                                            <div className='course-right-name d-flex justify-content-between mb-3' >
-                                                                <h2 className="subhead">{rightViewLecture.name}</h2>
-                                                                <div
-                                                                    className="img-box cursor-pointer"
-                                                                    onClick={() => handleEditClick(rightViewLecture.id)}
-                                                                >
-                                                                    <img src={PencilEdit} alt="Edit" />
-                                                                </div>
-                                                            </div>
-                                                            <div
-                                                                className="content content-info-lecture"
-                                                                // dangerouslySetInnerHTML={{
-                                                                //     __html: unescapeHtml(rightViewLecture.description) || ''
-                                                                // }}
-                                                                dangerouslySetInnerHTML={{
-                                                                    __html: decodeHtmlEntities(rightViewLecture.description)
-                                                                }}
-                                                            />
-                                                            {Array.isArray(rightViewLecture.resources) && rightViewLecture.resources.length > 0 && (
-                                                                <div className="modal-resources modal-description">
-                                                                    <div className="modal-resources-body">
-                                                                        <h5 className="fw-semibold mb-3">Resources</h5>
-                                                                        <div id="all_resources" className="d-flex flex-column gap-3">
-                                                                            {rightViewLecture.resources.map((resource) => (
-                                                                                <div
-                                                                                    key={resource?.id}
-                                                                                    className="d-flex align-items-center gap-2 cursor-pointer"
-                                                                                    style={{ cursor: 'pointer' }}
-                                                                                    onClick={() => {
-                                                                                        if (resource.url) {
-                                                                                            window.open(resource.url, '_blank');
-                                                                                        } else if (resource.file_link) {
-                                                                                            setSelectedResource(resource);
-                                                                                            // setShowModal(true);
-                                                                                        }
-                                                                                    }}
-                                                                                >
-                                                                                    <img
-                                                                                        src={resource.url ? linkImg : resourceImg}
-                                                                                        alt="Resource"
-                                                                                        className="img-fluid"
-                                                                                        style={{ width: '24px', height: '24px' }}
-                                                                                    />
-                                                                                    <div className="text-muted">{resource?.name}</div>
-                                                                                </div>
-                                                                            ))}
-                                                                        </div>
+                                                    lectureLoading ? (
+                                                        <LectureCurriculumSkeleton />
+                                                    ) : (
+                                                        <div className="new-page-view" key={rightViewLecture.id}>
+                                                            <div className="course-right-header">
+                                                                <div className="course-right-name d-flex justify-content-between mb-3">
+                                                                    <h2 className="subhead">{rightViewLecture.name}</h2>
+                                                                    <div
+                                                                        className="img-box cursor-pointer"
+                                                                        onClick={() => handleEditClick(rightViewLecture.id)}
+                                                                    >
+                                                                        <img src={PencilEdit} alt="Edit" />
                                                                     </div>
                                                                 </div>
-                                                            )}
+
+                                                                {/* Render description with decodeHtmlEntities safely */}
+                                                                <div
+                                                                    className="content content-info-lecture"
+                                                                    dangerouslySetInnerHTML={{
+                                                                        __html: decodeHtmlEntities(rightViewLecture.description || '')
+                                                                    }}
+                                                                />
+
+                                                                {/* Resources Section */}
+                                                                {Array.isArray(rightViewLecture.resources) && rightViewLecture.resources.length > 0 && (
+                                                                    <div className="modal-resources my-3">
+                                                                        <div className="modal-resources-body">
+                                                                            <h2 className="subhead my-3">Resources</h2>
+                                                                            <div id="all_resources" className="d-flex flex-column gap-3">
+                                                                                {rightViewLecture.resources.map((resource) => (
+                                                                                    <div
+                                                                                        key={resource?.id}
+                                                                                        className="d-flex align-items-center gap-2 cursor-pointer"
+                                                                                        onClick={() => {
+                                                                                            if (resource?.type === 'url') {
+                                                                                                window.open(resource.url, '_blank');
+                                                                                            } else if (resource?.type === 'file') {
+                                                                                                handleDownloadModelClick(resource);
+                                                                                            }
+                                                                                        }}
+                                                                                    >
+                                                                                        <img
+                                                                                            src={resource.type === 'url' ? linkImg : resourceImg}
+                                                                                            alt="Resource"
+                                                                                            className="img-fluid"
+                                                                                            style={{ width: '24px', height: '24px' }}
+                                                                                        />
+                                                                                        <div className="text-muted">{resource?.name}</div>
+                                                                                    </div>
+                                                                                ))}
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                )}
+
+                                                                {/* Transcript Section */}
+                                                                {rightViewLecture.transcript && (
+                                                                    <>
+                                                                        <h2 className="subhead my-3">Transcript</h2>
+                                                                        <div
+                                                                            className="content content-info-lecture"
+                                                                            dangerouslySetInnerHTML={{
+                                                                                __html: decodeHtmlEntities(rightViewLecture.transcript || '')
+                                                                            }}
+                                                                        />
+                                                                    </>
+                                                                )}
+                                                            </div>
                                                         </div>
-                                                    </div>
+                                                    )
                                                 ) : (
                                                     <p className="no-lectures-message">
                                                         You don’t have any lectures yet.{' '}
                                                         <span
-                                                            onClick={() => addUnassignedLecture()}
+                                                            onClick={addUnassignedLecture}
                                                             style={{ cursor: 'pointer', color: '#007bff' }}
                                                         >
                                                             Add
@@ -2150,6 +2252,25 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
                         </div>
                     </div>
                 </>
+            )}
+            {showDownloadModel.show && (
+                <ResourcesModel
+                    show={showDownloadModel.show}
+                    onClose={handleDownloadModelClose}
+                    // loading={loadingCRUD}
+                    title={showDownloadModel?.title}
+                    file_link={showDownloadModel?.file_link}
+                    body={
+                        <div className='img-resource-wrap'>
+                            <img className="img-resource" src={showDownloadModel?.file_link} alt="Resource Preview" />
+                        </div>
+                    }
+                    customFooterClass="custom-footer-class"
+                    nonActiveBtn="cancel-button"
+                    activeBtn="delete-button"
+                    activeBtnTitle="Delete"
+                    onConfirm={handleDownloadImg}
+                />
             )}
         </>
     );

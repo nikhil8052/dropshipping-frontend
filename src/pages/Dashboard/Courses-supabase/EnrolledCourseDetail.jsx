@@ -27,8 +27,9 @@ import LectureCurriculumSkeleton from '../../../components/LectureCurriculumSkel
 import CaretRightt from '@icons/CaretRightt.svg';
 import BreadHome from '@icons/BreadHome.svg';
 import Player from '@vimeo/player'; 
-import resourceImg from '../../../../public/resource_image.svg';
-import linkImg from '../../../../public/linkImg.svg';
+import resourceImg from '../../../assets/icons/resource_image.svg';
+import linkImg from '../../../assets/icons/linkImg.svg';
+import ResourcesModel from '@components/ConfirmationBox/ResourcesModel';
 
 const EnrolledCourseDetail = () => {
     const navigate = useNavigate();
@@ -462,9 +463,42 @@ const EnrolledCourseDetail = () => {
         ).length;
         return (completedLectures / lectures.length) * 100;
     };
-
+    const [showDownloadModel, setShowDownloadModel] = useState({
+        show: false,
+        title: '',
+        isEditable: false,
+        lectureId: null,
+        initialValues: null
+    });
+    const handleDownloadModelClick = (resource) => {
+        setShowDownloadModel({
+            show: true,
+            title: resource?.name,
+            file_link: resource?.file_link,
+            isEditable: false,
+            lectureId: resource?.id,
+            initialValues: null
+        });
+    };
+    const handleDownloadModelClose = () => {
+        setShowDownloadModel({
+            show: false,
+            title: 'Delete Lecture',
+            isEditable: false,
+            lectureId: null,
+            initialValues: null
+        });
+    };
+    const handleDownloadImg = () => {
+        const fileUrl = showDownloadModel?.file_link;
+        if (fileUrl) {
+            window.open(fileUrl, '_blank', 'noopener,noreferrer');
+        } else {
+            console.warn('No file URL available to open.');
+        }
+    };
     
-
+    
     return (
         <>
             {loading ? (
@@ -705,7 +739,8 @@ const EnrolledCourseDetail = () => {
                                                                                                     if (resource.url) {
                                                                                                         window.open(resource.url, '_blank');
                                                                                                     } else if (resource.file_link) {
-                                                                                                        setSelectedResource(resource);
+                                                                                                        // setSelectedResource(resource);
+                                                                                                        handleDownloadModelClick(resource)
                                                                                                         // setShowModal(true);
                                                                                                     }
                                                                                                 }}
@@ -865,8 +900,25 @@ const EnrolledCourseDetail = () => {
                                 </div>
                                 </>
                             )} */}
-
-
+                            {showDownloadModel.show && (
+                                <ResourcesModel
+                                    show={showDownloadModel.show}
+                                    onClose={handleDownloadModelClose}
+                                    // loading={loadingCRUD}
+                                    title={showDownloadModel?.title}
+                                    file_link={showDownloadModel?.file_link}
+                                    body={
+                                        <div className='img-resource-wrap'>
+                                            <img className="img-resource" src={showDownloadModel?.file_link} alt="Resource Preview" />
+                                        </div>
+                                    }
+                                    customFooterClass="custom-footer-class"
+                                    nonActiveBtn="cancel-button"
+                                    activeBtn="delete-button"
+                                    activeBtnTitle="Delete"
+                                    onConfirm={handleDownloadImg}
+                                />
+                            )}
 
 
                         </>

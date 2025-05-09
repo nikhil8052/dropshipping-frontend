@@ -73,3 +73,77 @@
         }
     }
 }
+
+
+// resources modal css
+.res-modal .modal-dialog {
+    max-width: 100%;
+    margin: 0;
+    padding: 0;
+    border-radius: 0px !important;
+}
+
+.res-modal {
+    padding: 0 !important;
+    border-radius: 0px !important;
+}
+
+.modal-content {
+    border-radius: 0px;
+    background-color: #333333bd;
+}
+
+.res-modal .modal-header {
+    border: 0px;
+}
+
+.res-modal .modal-title {
+    color: #fff;
+}
+
+.res-modal .resources-wrap-btn {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    justify-content: center;
+}
+
+.res-modal .resources-wrap-btn .img-res-download {
+    background-color: #fff;
+    height: 40px;
+    width: 40px;
+    justify-content: center;
+    border-radius: 50%;
+}
+
+.res-modal .resources-wrap-btn .img-res-download img {
+    max-width: 15px;
+}
+
+.res-modal .img-resource-wrap img {
+    height: 100%;
+    width: 100%;
+    max-width: 800px;
+    min-width: 800px;
+    margin: auto;
+    border-radius: 20px;
+    max-height: 400px;
+    object-fit: cover;
+}
+
+.res-modal .modal-content {
+    min-height: 100vh;
+}
+
+.res-modal .modal-body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 15px;
+}
+
+@media only screen and (max-width:991px){
+.res-modal .img-resource-wrap img {
+    min-width: 100%;
+}
+}
