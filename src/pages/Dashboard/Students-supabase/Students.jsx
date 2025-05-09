@@ -766,43 +766,7 @@ const Students = () => {
         const visibleFields = filteredCustomFields.filter((p) => !p.hide);
         const hiddenFields = filteredCustomFields.filter((p) => p.hide);
 
-        // const handleDragEnd = (result) => {
-        //     const { source, destination } = result;
-        //     if (!destination) return;
 
-        //     const items = Array.from(supabaseCols.slice(0, -2)); // all fields except the last 2
-        //     const defaultFields = items.filter((p) => p.default);
-        //     const customFields = items.filter((p) => !p.default);
-
-        //     const visible = customFields.filter((p) => !p.hide);
-        //     const hidden = customFields.filter((p) => p.hide);
-
-        //     let updatedVisible = [...visible];
-        //     let updatedHidden = [...hidden];
-
-        //     // Determine moving source list and item
-        //     const sourceList = source.droppableId === 'visible' ? updatedVisible : updatedHidden;
-        //     const destList = destination.droppableId === 'visible' ? updatedVisible : updatedHidden;
-
-        //     const [movedItem] = sourceList.splice(source.index, 1);
-
-        //     // Update item's visibility if moved between lists
-        //     if (source.droppableId !== destination.droppableId) {
-        //         movedItem.hide = destination.droppableId === 'hidden';
-        //     }
-
-        //     destList.splice(destination.index, 0, movedItem);
-
-        //     // Re-construct final columns: default fields + updated visible + updated hidden + untouched last 2
-        //     const finalCols = [
-        //         ...defaultFields,
-        //         ...updatedVisible,
-        //         ...updatedHidden,
-        //         ...supabaseCols.slice(-2),
-        //     ];
-
-        //     setSupabaseCols(finalCols);
-        // };
 
         const handleDragEnd = async (result) => {
             const { source, destination } = result;
@@ -862,11 +826,11 @@ const Students = () => {
                 {/* Header */}
                 <div className="flex items-center justify-between border-b border-gray-200 property_section">
                     <div className="left-box d-flex gap-10 align-items-center">
-                    <ChevronLeft className="w-5 h-5 text-gray-500" onClick={onClose} />
-                    <h2 className="font-medium ml-2">Properties</h2>
+                        <ChevronLeft className="w-5 h-5 text-gray-500" onClick={onClose} />
+                        <h2 className="font-medium ml-2">Properties</h2>
                     </div>
                     <div className="close">
-                    <X className="w-5 h-5 text-gray-500 cursor-pointer" onClick={onClose} />
+                        <X className="w-5 h-5 text-gray-500 cursor-pointer" onClick={onClose} />
                     </div>
                 </div>
                 <div className="px-2 py-2">
@@ -988,9 +952,9 @@ const Students = () => {
                         setShowHideDiv(false);
                         setShowColumnSelect(true)
 
-                        }} className='cursor-pointer' > + Add New Property </p>
+                    }} className='cursor-pointer' > + Add New Property </p>
                 </div>
-              
+
             </div>
         );
     }
@@ -1163,7 +1127,7 @@ const Students = () => {
                     ref={showHideRef}
                     style={{
                         position: 'fixed',
-                          bottom: '20px',
+                        bottom: '20px',
                         top: `${showHidePosition.top}px`,
                         left: `${showHidePosition.left}px`,
                         zIndex: 1000,
