@@ -171,7 +171,7 @@ const RichTextEditor = (props) => {
         const ENDPOINT = API_URL.SUPABASE_DELETE_LECTURE_RESOURCE.replace(':id', id);
         const response = await axiosWrapper('POST', ENDPOINT, {}, token);
         props.setResources(prev => prev.filter(resource => resource.id !== id));
-        console.log(response, " This is the response from the delte resource ")
+      
     }
 
     const editResource = async (id) => {

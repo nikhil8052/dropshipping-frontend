@@ -282,6 +282,7 @@
 .property_section {
     display: flex !important;
     gap: 10px !important;
+    justify-content: space-between;
 }
 
 // May 08
@@ -311,29 +312,33 @@
     overflow: hidden;
 }
 
-.property_section_main_div h2{
+.property_section_main_div h2 {
     font-size: 1rem;
     margin-bottom: 0;
 }
+
 .property_section {
-    border-bottom: 1px solid #ccc;
+    // border-bottom: 1px solid #ccc;
     padding: 10px;
 }
 
 .property_section_main_div {
     padding: 10px 0px;
 }
+
 .property_section_main_div span {
     font-size: 14px;
     line-height: 1.2;
     padding: 5px 0px;
+    color: #32302c;
 }
 
 .property_section_main_div svg {
     max-width: 16px;
 }
-.property_section_main_div > div{
-    padding: 10px;
+
+.property_section_main_div>div {
+    padding: 12px;
 }
 
 .select__option {
@@ -344,6 +349,7 @@
     max-height: 300px;
     overflow-y: scroll;
 }
+
 .property_section .cross {
     width: 20px;
     background-color: rgba(55, 53, 47, 0.06);
@@ -361,6 +367,72 @@
 .students-page .property_section_main_div .text-items {
     justify-content: space-between;
 }
+
 .students-page .student-table-row {
     width: 100% !important;
+}
+
+.drag-drop-item-left {
+    display: flex;
+    gap: 7px;
+    align-items: center;
+}
+
+.hide-text-main-dev {
+    display: flex;
+    justify-content: space-between;
+}
+
+.hide-text-main-dev>p {
+    font-size: 12px;
+    color: #787774;
+}
+
+.hide-text-main-dev span {
+    font-size: 12px;
+}
+
+.show-all-text {
+    color: rgb(35, 131, 226);
+}
+
+.main-panel:has(.students-page) .property_section_main_div input {
+    width: 100%;
+    font-size: 14px;
+    line-height: 20px;
+    border-radius: 6px;
+    box-shadow: rgba(15, 15, 15, 0.1) 0px 0px 0px 1px inset;
+    background-color: #f7f7f5 !important;
+    padding: 8px !important;
+    outline: 0px !important;
+    border: 0px !important;
+}
+
+.main-panel:has(.students-page) .property_section_main_div input:focus {
+    box-shadow: rgba(35, 131, 226, 0.57) 0px 0px 0px 1px inset, rgba(35, 131, 226, 0.35) 0px 0px 0px 2px;
+}
+
+.left-box {
+    gap: 5px;
+}
+
+.students-page .property_section_main_div .text-items {
+    border-radius: 4px;
+    margin: 2px;
+    padding: 5px 8px !important;
+}
+
+.students-page .property_section_main_div .text-items:hover{
+    background-color: #f7f7f5;
+}
+
+.new-property-div {
+    padding-bottom: 0 !important;
+    border-top: 1px solid #d3d1cb;
+}
+
+.new-property-div p {
+    margin: 0;
+    color: #787774;
+    font-size: 14px;
 }
