@@ -364,3 +364,21 @@
 .students-page .student-table-row {
     width: 100% !important;
 }
+
+.drag-drop-item-left{
+    display: flex ;
+    gap: 7px ;
+}
+
+.hide-text-main-dev{
+    display: flex ;
+    justify-content: space-between;
+}
+
+.hide-text-main-dev > p{
+    font-size: 14px ;
+} 
+.show-all-text{
+    color: blue ;
+    text-decoration: underline;
+}

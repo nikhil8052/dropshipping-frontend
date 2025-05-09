@@ -10,7 +10,7 @@ import editIcon from '@icons/edit_square.svg';
 import deleteIcon from '@icons/trash-2.svg';
 import downArrow from '@icons/down-arrow.svg';
 import add from '@icons/add_white.svg';
-import { COACH, coachDummyData, studentsTrajectory ,studentsTrajectoryStatus} from '../../../data/data';
+import { COACH, coachDummyData, studentsTrajectory, studentsTrajectoryStatus } from '../../../data/data';
 import { useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { API_URL } from '../../../utils/apiUrl';
@@ -29,7 +29,8 @@ import AddColumnHeader from '../../../components/AddColumnHeader';
 import HideShowCols from '../../../components/HideShowCols';
 // import PropertiesPanel from '../../../components/PropertiesPanel';
 
-import { ChevronLeft, Eye, EyeOff, X, ChevronRight } from 'lucide-react';
+import { ChevronLeft, Eye, EyeOff, X, GripVertical } from 'lucide-react';
+import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd';
 
 
 import { Badge } from 'react-bootstrap';
@@ -77,11 +78,11 @@ const Students = () => {
     useEffect(() => {
         selectedOptionRef.current = selectedOption;
     }, [selectedOption]);
-      
+
     useEffect(() => {
         selectedOption2Ref.current = selectedOption2;
     }, [selectedOption2]);
-      
+
     useEffect(() => {
         const handleClickOutside = (event) => {
             // &&
@@ -171,7 +172,7 @@ const Students = () => {
     //         setLoading(false);
     //     }
     // };
-    
+
     const handleRowClick = (event) => {
         // Handle row click event here
         if (selectedRowId === event.data.id) {
@@ -297,7 +298,7 @@ const Students = () => {
     };
 
     const handleOptionChange = (option) => {
-        console.log('option',option)
+        console.log('option', option)
         setSelectedOption(option);
     };
     const handleOptionChange2 = (option2) => {
@@ -317,7 +318,7 @@ const Students = () => {
     //     setLoadingCRUD(false);
     // };
     const handleToggleClick = async (student) => {
-        console.log('selectedOption',selectedOption, 'selectedOption2',selectedOption2);
+        console.log('selectedOption', selectedOption, 'selectedOption2', selectedOption2);
         console.log('Live values from ref:', selectedOptionRef.current, selectedOption2Ref.current);
 
         // return false;
@@ -734,56 +735,262 @@ const Students = () => {
 
     // END  Dynamic Superbase Table
 
+
     function PropertiesPanel({ onClose }) {
         const [searchQuery, setSearchQuery] = useState('');
 
+        const handleShowAllHidden = () => {
+            const updatedCols = supabaseCols.map((col) =>
+                !col.default && col.hide ? { ...col, hide: false } : col
+            );
+            setSupabaseCols(updatedCols);
+        };
+
+        const handleHideAll = () => {
+            const updatedCols = supabaseCols.map((col) =>
+                !col.default ? { ...col, hide: true } : col
+            );
+            setSupabaseCols(updatedCols);
+        };
+
+        // const defaultFields = supabaseCols.slice(0, -2).filter((p) => p.default);
+        // const visibleFields = supabaseCols.slice(0, -2).filter((p) => !p.default && !p.hide);
+        // const hiddenFields = supabaseCols.slice(0, -2).filter((p) => !p.default && p.hide);
+
+        const defaultFields = supabaseCols.slice(0, -2).filter((p) => p.default);
+
+        const filteredCustomFields = supabaseCols
+            .slice(0, -2)
+            .filter((p) => !p.default && p.field.toLowerCase().includes(searchQuery.toLowerCase()));
+
+        const visibleFields = filteredCustomFields.filter((p) => !p.hide);
+        const hiddenFields = filteredCustomFields.filter((p) => p.hide);
+
+        // const handleDragEnd = (result) => {
+        //     const { source, destination } = result;
+        //     if (!destination) return;
+
+        //     const items = Array.from(supabaseCols.slice(0, -2)); // all fields except the last 2
+        //     const defaultFields = items.filter((p) => p.default);
+        //     const customFields = items.filter((p) => !p.default);
+
+        //     const visible = customFields.filter((p) => !p.hide);
+        //     const hidden = customFields.filter((p) => p.hide);
+
+        //     let updatedVisible = [...visible];
+        //     let updatedHidden = [...hidden];
+
+        //     // Determine moving source list and item
+        //     const sourceList = source.droppableId === 'visible' ? updatedVisible : updatedHidden;
+        //     const destList = destination.droppableId === 'visible' ? updatedVisible : updatedHidden;
+
+        //     const [movedItem] = sourceList.splice(source.index, 1);
+
+        //     // Update item's visibility if moved between lists
+        //     if (source.droppableId !== destination.droppableId) {
+        //         movedItem.hide = destination.droppableId === 'hidden';
+        //     }
+
+        //     destList.splice(destination.index, 0, movedItem);
+
+        //     // Re-construct final columns: default fields + updated visible + updated hidden + untouched last 2
+        //     const finalCols = [
+        //         ...defaultFields,
+        //         ...updatedVisible,
+        //         ...updatedHidden,
+        //         ...supabaseCols.slice(-2),
+        //     ];
+
+        //     setSupabaseCols(finalCols);
+        // };
+
+        const handleDragEnd = async (result) => {
+            const { source, destination } = result;
+            if (!destination) return;
+
+            const items = Array.from(supabaseCols.slice(0, -2)); // all fields except the last 2
+            const defaultFields = items.filter((p) => p.default);
+            const customFields = items.filter((p) => !p.default);
+
+            const visible = customFields.filter((p) => !p.hide);
+            const hidden = customFields.filter((p) => p.hide);
+
+            let updatedVisible = [...visible];
+            let updatedHidden = [...hidden];
+
+            const sourceList = source.droppableId === 'visible' ? updatedVisible : updatedHidden;
+            const destList = destination.droppableId === 'visible' ? updatedVisible : updatedHidden;
+
+            const [movedItem] = sourceList.splice(source.index, 1);
+
+            let toggledHide = movedItem.hide;
+            if (source.droppableId !== destination.droppableId) {
+                toggledHide = destination.droppableId === 'hidden';
+                movedItem.hide = toggledHide;
+
+                // Send API call to update visibility
+                const obj = {
+                    ...movedItem,
+                    hide: toggledHide,
+                };
+
+                const hideCols = [obj];
+                const payload = { hideCols };
+                const ENDPOINT = API_URL.SUPABASE_GET_COLUMNS.replace(':table', 'users');
+
+                try {
+                    await axiosWrapper('POST', ENDPOINT, { payload }, token);
+                } catch (error) {
+                    console.error('Failed to update field visibility:', error);
+                }
+            }
+
+            destList.splice(destination.index, 0, movedItem);
+
+            const finalCols = [
+                ...defaultFields,
+                ...updatedVisible,
+                ...updatedHidden,
+                ...supabaseCols.slice(-2),
+            ];
+
+            setSupabaseCols(finalCols);
+        };
+
         return (
-            <div className=" property_section_main_div">
+            <div className="property_section_main_div">
                 {/* Header */}
-                <div className="flex items-center justify-content-between border-b border-gray-200 property_section">
+                <div className="flex items-center justify-between border-b border-gray-200 property_section">
                     <ChevronLeft className="w-5 h-5 text-gray-500" onClick={onClose} />
                     <h2 className="font-medium ml-2">Properties</h2>
-                    <div className="cross">
-                        <X className="w-5 h-5 text-gray-500 cursor-pointer" onClick={onClose} />
-                    </div>
+                    <X className="w-5 h-5 text-gray-500 cursor-pointer" onClick={onClose} />
                 </div>
+                <div className="px-2 py-2 border-b border-gray-100">
+                    <input
+                        type="text"
+                        placeholder="Search properties..."
+                        value={searchQuery}
+                        onChange={(e) => setSearchQuery(e.target.value)}
+                        className="w-full text-sm px-2 py-1 border rounded focus:outline-none focus:ring-1 focus:ring-blue-400"
+                    />
+                </div>
+                <DragDropContext onDragEnd={handleDragEnd}>
+                    <div className="property-detail">
 
-                {/* Properties List */}
-                <div className='property-detail'>
-                    {supabaseCols.slice(0, -2).map((property, index) => (
-                        <div
-                            key={index}
-                            className={`flex items-center justify-between px-1 py-1 text-items ${property.default ? 'cursor-not-allowed opacity-50' : 'cursor-pointer'
-                                }`}
-                            onClick={() => {
-                                if (!property.default) toggle(property, index);
-                            }}
-                        >
-                            <span className="ml-1">{property.field}</span>
-                            <div className="drop-wrapper">
+                        <div className="flex items-center justify-between mt-3 mb-1 hide-text-main-dev">
+                            <p className="text-sm text-gray-500 font-semibold">Table Fields</p>
+                            <span
+                                className="text-xs text-blue-600 hover:underline cursor-pointer"
+                                onClick={handleHideAll}
+                            >
+                                Hide all
+                            </span>
+                        </div>
 
-                                {property.default === true ? (
-                                    // If the column is default, show disabled Eye icon
+                        {/* Default fields */}
+                        {defaultFields.map((property) => (
+                            <div
+                                key={property.field}
+                                className="flex items-center justify-between px-1 py-1 text-items cursor-not-allowed opacity-50"
+                            >
+                                <span className="ml-1">{property.field}</span>
+                                <div className="drop-wrapper">
                                     <div className="w-6 h-6 flex items-center justify-center bg-gray-200 rounded cursor-not-allowed opacity-50">
                                         <Eye className="w-4 h-4 text-gray-500" />
                                     </div>
-                                ) : property.hide ? (
-                                    // If not default and hidden, show EyeOff
-                                    <EyeOff className="w-4 h-4 text-gray-500" />
-                                ) : (
-                                    // If not default and visible, show Eye
-                                    <Eye className="w-4 h-4 text-gray-500" />
-                                )}
-
-
-
+                                </div>
                             </div>
-                        </div>
-                    ))}
+                        ))}
+
+                        {/* Visible Draggable Zone */}
+                        <Droppable droppableId="visible">
+                            {(provided) => (
+                                <div ref={provided.innerRef} {...provided.droppableProps}>
+                                    {visibleFields.map((property, index) => (
+                                        <Draggable key={property.field} draggableId={property.field} index={index}>
+                                            {(provided) => (
+                                                <div
+                                                    ref={provided.innerRef}
+                                                    {...provided.draggableProps}
+                                                    {...provided.dragHandleProps}
+                                                    className="flex items-center justify-between px-1 py-1 text-items cursor-pointer"
+                                                    onClick={() => toggle(property, index)}
+                                                >
+                                                    <div className='flex drag-drop-item-left'>
+                                                        <div className="drop-wrapper">
+                                                            <GripVertical className="w-4 h-4 text-gray-400 cursor-grab" />
+                                                        </div>
+                                                        <span className="ml-1">{property.field}</span>
+                                                    </div>
+                                                    <div className="drop-wrapper">
+                                                        <Eye className="w-4 h-4 text-gray-500" />
+                                                    </div>
+                                                </div>
+                                            )}
+                                        </Draggable>
+                                    ))}
+                                    {provided.placeholder}
+                                </div>
+                            )}
+                        </Droppable>
+
+                        {/* Hidden Draggable Zone */}
+                        {hiddenFields.length > 0 && (
+                            <div className="flex items-center justify-between mt-2 mb-1 hide-text-main-dev">
+                                <p className="text-sm text-gray-500 font-semibold ">Hiddens</p>
+                                <span
+                                    className="show-all-text"
+                                    onClick={handleShowAllHidden}
+                                >
+                                    Show all
+                                </span>
+                            </div>
+                        )}
+
+                        <Droppable droppableId="hidden">
+                            {(provided) => (
+                                <div ref={provided.innerRef} {...provided.droppableProps}>
+                                    {hiddenFields.map((property, index) => (
+                                        <Draggable key={property.field} draggableId={property.field} index={index}>
+                                            {(provided) => (
+                                                <div
+                                                    ref={provided.innerRef}
+                                                    {...provided.draggableProps}
+                                                    {...provided.dragHandleProps}
+                                                    className="flex items-center justify-between px-1 py-1 text-items cursor-pointer"
+                                                    onClick={() => toggle(property, index)}
+                                                >
+                                                    <div className='flex drag-drop-item-left'>
+                                                        <div className="drop-wrapper">
+                                                            <GripVertical className="w-4 h-4 text-gray-400 cursor-grab" />
+                                                        </div>
+                                                        <span className="ml-1">{property.field}</span>
+                                                    </div>
+                                                    <div className="drop-wrapper">
+                                                        <EyeOff className="w-4 h-4 text-gray-500" />
+                                                    </div>
+                                                </div>
+                                            )}
+                                        </Draggable>
+                                    ))}
+                                    {provided.placeholder}
+                                </div>
+                            )}
+                        </Droppable>
+                    </div>
+                </DragDropContext>
+                <div className='new-property-div'>
+                    <p onClick={() => {
+                        setShowHideDiv(false);
+                        setShowColumnSelect(true)
+
+                        }}  > Add New Property </p>
                 </div>
+              
             </div>
         );
     }
+
 
     return (
         <div className="students-page full-width">
