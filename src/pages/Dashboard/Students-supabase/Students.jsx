@@ -32,7 +32,6 @@ import HideShowCols from '../../../components/HideShowCols';
 import { ChevronLeft, Eye, EyeOff, X, GripVertical } from 'lucide-react';
 import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd';
 
-
 import { Badge } from 'react-bootstrap';
 
 const Students = () => {
@@ -142,7 +141,9 @@ const Students = () => {
     // }, [selectedOption2]);
     const fetchData = async (query, query2, loading = true) => {
         // Later we will replace this with actual API call
-        console.log(`${API_URL.SUPABASE_GET_ALL_STUDENTS}?coachingTrajectory=${query || selectedOption}&isActive=${query2 || selectedOption2}`)
+        console.log(
+            `${API_URL.SUPABASE_GET_ALL_STUDENTS}?coachingTrajectory=${query || selectedOption}&isActive=${query2 || selectedOption2}`
+        );
         // return false;
         try {
             setLoading(loading);
@@ -298,7 +299,7 @@ const Students = () => {
     };
 
     const handleOptionChange = (option) => {
-        console.log('option', option)
+        console.log('option', option);
         setSelectedOption(option);
     };
     const handleOptionChange2 = (option2) => {
@@ -421,7 +422,7 @@ const Students = () => {
                     <Badge
                         bg={props.data.isActive ? 'success' : 'danger'}
                         style={{ padding: '0.5rem 0.5rem' }}
-                    // onClick={() => props.onToggleClick(props.data)}
+                        // onClick={() => props.onToggleClick(props.data)}
                     >
                         {props.data.isActive ? 'Active' : 'Inactive'}
                     </Badge>
@@ -649,10 +650,8 @@ const Students = () => {
                 hide: toggledHide
             };
 
-            setSupabaseCols(prev =>
-                prev.map((col, i) =>
-                    i === indexInSupabase ? { ...col, hide: !col.hide } : col
-                )
+            setSupabaseCols((prev) =>
+                prev.map((col, i) => (i === indexInSupabase ? { ...col, hide: !col.hide } : col))
             );
 
             let hideCols = [obj];
@@ -660,10 +659,8 @@ const Students = () => {
                 hideCols: hideCols
             };
 
-
             const ENDPOINT = API_URL.SUPABASE_GET_COLUMNS.replace(':table', 'users');
             const response = await axiosWrapper('POST', ENDPOINT, { payload }, token);
-
         } else {
             // Show: add back at the original index from supabaseColsClone
             const originalIndex = supabaseColsClone.findIndex((obj) => obj.field === property.field);
@@ -675,7 +672,6 @@ const Students = () => {
                     updated.splice(originalIndex, 0, itemToShow);
                     return updated;
                 });
-
             }
         }
 
@@ -703,7 +699,7 @@ const Students = () => {
 
                 let tableSettings = response.data.tableSettings;
                 // // Remove the values if they exists
-                const newCols = tableSettings.map((val) => (val));
+                const newCols = tableSettings.map((val) => val);
 
                 const updatedCols = [
                     ...supabaseCols.slice(0, -2),
@@ -735,21 +731,16 @@ const Students = () => {
 
     // END  Dynamic Superbase Table
 
-
     function PropertiesPanel({ onClose }) {
         const [searchQuery, setSearchQuery] = useState('');
 
         const handleShowAllHidden = () => {
-            const updatedCols = supabaseCols.map((col) =>
-                !col.default && col.hide ? { ...col, hide: false } : col
-            );
+            const updatedCols = supabaseCols.map((col) => (!col.default && col.hide ? { ...col, hide: false } : col));
             setSupabaseCols(updatedCols);
         };
 
         const handleHideAll = () => {
-            const updatedCols = supabaseCols.map((col) =>
-                !col.default ? { ...col, hide: true } : col
-            );
+            const updatedCols = supabaseCols.map((col) => (!col.default ? { ...col, hide: true } : col));
             setSupabaseCols(updatedCols);
         };
 
@@ -831,7 +822,7 @@ const Students = () => {
                 // Send API call to update visibility
                 const obj = {
                     ...movedItem,
-                    hide: toggledHide,
+                    hide: toggledHide
                 };
 
                 const hideCols = [obj];
@@ -847,12 +838,7 @@ const Students = () => {
 
             destList.splice(destination.index, 0, movedItem);
 
-            const finalCols = [
-                ...defaultFields,
-                ...updatedVisible,
-                ...updatedHidden,
-                ...supabaseCols.slice(-2),
-            ];
+            const finalCols = [...defaultFields, ...updatedVisible, ...updatedHidden, ...supabaseCols.slice(-2)];
 
             setSupabaseCols(finalCols);
         };
@@ -862,11 +848,11 @@ const Students = () => {
                 {/* Header */}
                 <div className="flex items-center justify-between border-b border-gray-200 property_section">
                     <div className="left-box d-flex gap-10 align-items-center">
-                    <ChevronLeft className="w-5 h-5 text-gray-500" onClick={onClose} />
-                    <h2 className="font-medium ml-2">Properties</h2>
+                        <ChevronLeft className="w-5 h-5 text-gray-500" onClick={onClose} />
+                        <h2 className="font-medium ml-2">Properties</h2>
                     </div>
                     <div className="close">
-                    <X className="w-5 h-5 text-gray-500 cursor-pointer" onClick={onClose} />
+                        <X className="w-5 h-5 text-gray-500 cursor-pointer" onClick={onClose} />
                     </div>
                 </div>
                 <div className="px-2 py-2">
@@ -880,13 +866,9 @@ const Students = () => {
                 </div>
                 <DragDropContext onDragEnd={handleDragEnd}>
                     <div className="property-detail">
-
                         <div className="flex items-center justify-between  mb-1 hide-text-main-dev">
                             <p className=" text-gray-500 font-semibold">Table Fields</p>
-                            <span
-                                className=" text-blue-600  cursor-pointer show-all-text"
-                                onClick={handleHideAll}
-                            >
+                            <span className=" text-blue-600  cursor-pointer show-all-text" onClick={handleHideAll}>
                                 Hide all
                             </span>
                         </div>
@@ -920,7 +902,7 @@ const Students = () => {
                                                     className="flex items-center justify-between px-1 py-1 text-items cursor-pointer"
                                                     onClick={() => toggle(property, index)}
                                                 >
-                                                    <div className='flex drag-drop-item-left'>
+                                                    <div className="flex drag-drop-item-left">
                                                         <div className="drop-wrapper">
                                                             <GripVertical className=" text-gray-400 cursor-grab" />
                                                         </div>
@@ -942,10 +924,7 @@ const Students = () => {
                         {hiddenFields.length > 0 && (
                             <div className="flex items-center justify-between mt-2 mb-1 hide-text-main-dev">
                                 <p className=" text-gray-500 font-semibold ">Hiddens</p>
-                                <span
-                                    className="show-all-text"
-                                    onClick={handleShowAllHidden}
-                                >
+                                <span className="show-all-text" onClick={handleShowAllHidden}>
                                     Show all
                                 </span>
                             </div>
@@ -964,7 +943,7 @@ const Students = () => {
                                                     className="flex items-center justify-between px-1 py-1 text-items cursor-pointer"
                                                     onClick={() => toggle(property, index)}
                                                 >
-                                                    <div className='flex drag-drop-item-left'>
+                                                    <div className="flex drag-drop-item-left">
                                                         <div className="drop-wrapper">
                                                             <GripVertical className="w-4 h-4 text-gray-400 cursor-grab" />
                                                         </div>
@@ -983,18 +962,21 @@ const Students = () => {
                         </Droppable>
                     </div>
                 </DragDropContext>
-                <div className='new-property-div'>
-                    <p onClick={() => {
-                        setShowHideDiv(false);
-                        setShowColumnSelect(true)
-
-                        }} className='cursor-pointer' > + Add New Property </p>
+                <div className="new-property-div">
+                    <p
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            setShowHideDiv(false);
+                            setShowColumnSelect(true);
+                        }}
+                        className="cursor-pointer"
+                    >
+                        + Add New Property
+                    </p>
                 </div>
-              
             </div>
         );
     }
-
 
     return (
         <div className="students-page full-width">
@@ -1029,20 +1011,20 @@ const Students = () => {
                 />
             )}
 
-            {showColumnSelect && (
-                <div
-                    ref={dropdownRef}
-                    style={{
-                        position: 'fixed',
-                        top: `${selectPosition.top}px`,
-                        left: `${selectPosition.left}px`,
-                        zIndex: 1000,
-                        backgroundColor: 'white',
-                        boxShadow: '0 2px 10px rgba(0,0,0,0.2)',
-                        width: '200px',
-                        borderRadius: '4px'
-                    }}
-                >
+{showColumnSelect && (
+  <div
+    ref={dropdownRef}
+    style={{
+      position: 'fixed',
+      top: `${selectPosition.top}px`,
+      left: `${selectPosition.left}px`,
+      zIndex: 1000,
+      backgroundColor: 'white',
+      boxShadow: '0 2px 10px rgba(0,0,0,0.2)',
+      width: '200px',
+      borderRadius: '4px'
+    }}
+  >
                     <Select
                         isMulti
                         options={columnOptions}
@@ -1163,12 +1145,12 @@ const Students = () => {
                     ref={showHideRef}
                     style={{
                         position: 'fixed',
-                          bottom: '20px',
+                        bottom: '20px',
                         top: `${showHidePosition.top}px`,
                         left: `${showHidePosition.left}px`,
                         zIndex: 1000,
                         width: '',
-                        borderRadius: '4px',
+                        borderRadius: '4px'
                     }}
                 >
                     <div>
