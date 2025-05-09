@@ -604,8 +604,9 @@ const Students = () => {
             default: true,
             headerComponent: (params) => (
                 <HideShowCols
-                    setShowHideDiv={setShowHideDiv}
-                    setShowHidePosition={setShowHidePosition}
+                setShowHideDiv={setShowHideDiv}
+                setShowHidePosition={setShowHidePosition}
+                setSelectPosition={setSelectPosition}
                     showHideDiv={showHideDiv}
                 />
             ),
@@ -1011,20 +1012,20 @@ const Students = () => {
                 />
             )}
 
-{showColumnSelect && (
-  <div
-    ref={dropdownRef}
-    style={{
-      position: 'fixed',
-      top: `${selectPosition.top}px`,
-      left: `${selectPosition.left}px`,
-      zIndex: 1000,
-      backgroundColor: 'white',
-      boxShadow: '0 2px 10px rgba(0,0,0,0.2)',
-      width: '200px',
-      borderRadius: '4px'
-    }}
-  >
+            {showColumnSelect && (
+                <div
+                    ref={dropdownRef}
+                    style={{
+                        position: 'fixed',
+                        top: `${selectPosition.top}px`,
+                        left: `${selectPosition.left}px`,
+                        zIndex: 1000,
+                        backgroundColor: 'white',
+                        boxShadow: '0 2px 10px rgba(0,0,0,0.2)',
+                        width: '200px',
+                        borderRadius: '4px'
+                    }}
+                >
                     <Select
                         isMulti
                         options={columnOptions}
