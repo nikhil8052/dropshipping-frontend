@@ -1,5 +1,15 @@
 @import '../../../constants/colors.scss';
 @import '../../../constants/typography.scss';
+
+:root {
+    --vh: 100%;
+  }
+  
+  .sidebar {
+    height: calc(var(--vh, 1vh) * 100);
+  }
+
+  
 .sidebar {
     position: fixed;
     border-top-right-radius: 1rem;
@@ -507,6 +517,8 @@
 .sidebar .side-nav-wrapper .side-nav-scroll {
     padding: 0 !important;
 }
+
+
 
 @media only screen and (max-width:767px) {
     .main-panel,.full-width-panel {
