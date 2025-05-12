@@ -504,6 +504,10 @@
     color: grey;
 }
 
+.sidebar .side-nav-wrapper .side-nav-scroll {
+    padding: 0 !important;
+}
+
 @media only screen and (max-width:767px) {
     .main-panel,.full-width-panel {
         width: 100%;
@@ -542,7 +546,7 @@
         display: none;
     }
     .sidebar.hide-sidebar .brand-logo {
-        margin: 22px 0px;
+        padding: 22px 0px;
     }
     .sidebar.hide-sidebar .menu-toggler {
         top: 14px;
@@ -557,6 +561,12 @@
     .sidebar.hide-sidebar .container{
         padding: 0px 10px;
     }
-    
+    .hide-sidebar .nav a,.sidebar .nav a {
+        width: max-content !important;
+    }
+
+    .sidebar a span {
+        display: none !important;
+    }
 }
 
