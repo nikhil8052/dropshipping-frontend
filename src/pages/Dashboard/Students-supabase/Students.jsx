@@ -364,12 +364,12 @@ const Students = () => {
     const ActionsRenderer = (props) => (
         <React.Fragment>
             <Row style={{ width: '100%' }}>
-                <Col lg={4} md={6} sm={6} xs={4} className="d-flex justify-content-center align-items-center">
-                    <div className="action-button edit-button" onClick={() => props.onEditClick(props.data.id)}>
+                <Col lg={4} md={4} sm={4} xs={4} className="d-flex justify-content-center align-items-center">
+                    <div className="action-button  utyu edit-button" onClick={() => props.onEditClick(props.data.id)}>
                         <img src={editIcon} className="action-icon" alt="action-icon" />
                     </div>
                 </Col>
-                <Col lg={4} md={6} sm={6} xs={4} className="d-flex justify-content-center align-items-center">
+                <Col lg={4} md={4} sm={4} xs={4} className="d-flex justify-content-center align-items-center">
                     <Form.Check // prettier-ignore
                         type="switch"
                         className="toggle-button student-action-col"
@@ -381,7 +381,7 @@ const Students = () => {
                 {role === 'COACH' ? (
                     <></>
                 ) : (
-                    <Col lg={1} md={6} sm={6} xs={4} className="d-flex justify-content-center align-items-center">
+                    <Col lg={1} md={4} sm={4} xs={4} className="d-flex justify-content-center align-items-center">
                         <div
                             className="btn-light action-button delete-button"
                             onClick={() => props.onDeleteClick(props.data.id)}
@@ -604,9 +604,9 @@ const Students = () => {
             default: true,
             headerComponent: (params) => (
                 <HideShowCols
-                setShowHideDiv={setShowHideDiv}
-                setShowHidePosition={setShowHidePosition}
-                setSelectPosition={setSelectPosition}
+                    setShowHideDiv={setShowHideDiv}
+                    setShowHidePosition={setShowHidePosition}
+                    setSelectPosition={setSelectPosition}
                     showHideDiv={showHideDiv}
                 />
             ),
@@ -732,7 +732,7 @@ const Students = () => {
 
     // END  Dynamic Superbase Table
 
-    function PropertiesPanel({ onClose }) {
+    const PropertiesPanel = React.memo(function PropertiesPanel({ onClose }) {
         const [searchQuery, setSearchQuery] = useState('');
 
         const handleShowAllHidden = () => {
@@ -847,6 +847,7 @@ const Students = () => {
         return (
             <div className="property_section_main_div">
                 {/* Header */}
+                <div className="property-head">
                 <div className="flex items-center justify-between border-b border-gray-200 property_section">
                     <div className="left-box d-flex gap-10 align-items-center">
                         <ChevronLeft className="w-5 h-5 text-gray-500" onClick={onClose} />
@@ -865,6 +866,8 @@ const Students = () => {
                         className="w-full rounded focus:outline-none focus:ring-1 focus:ring-blue-400"
                     />
                 </div>
+                </div>
+                <div className="property-scrollable-content">
                 <DragDropContext onDragEnd={handleDragEnd}>
                     <div className="property-detail">
                         <div className="flex items-center justify-between  mb-1 hide-text-main-dev">
@@ -963,6 +966,7 @@ const Students = () => {
                         </Droppable>
                     </div>
                 </DragDropContext>
+                </div>
                 <div className="new-property-div">
                     <p
                         onClick={(e) => {
@@ -977,7 +981,7 @@ const Students = () => {
                 </div>
             </div>
         );
-    }
+    });
 
     return (
         <div className="students-page full-width">
@@ -1151,10 +1155,19 @@ const Students = () => {
                         left: `${showHidePosition.left}px`,
                         zIndex: 1000,
                         width: '',
-                        borderRadius: '4px'
+                        borderRadius: '4px',
+                        maxHeight: '80vh'
                     }}
                 >
-                    <div>
+                    <div
+                        style={{
+                            overflowY: 'auto',
+                            maxHeight: 'calc(80vh - 50px)',
+                            padding: '10px',
+                            scrollbarWidth: 'none',
+                            msOverflowStyle: 'none'
+                        }}
+                    >
                         <PropertiesPanel onClose={() => setShowHideDiv(false)} />
                     </div>
                 </div>
