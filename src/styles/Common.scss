@@ -920,8 +920,8 @@ button.menu-toggler {
     }
 
     .add-course-form form div:last-child .col>div {
-        flex-direction: column;
-        margin-top: 3rem !important;
+        // flex-direction: column;
+        margin-top: 1rem !important;
     }
 
     .formgroup input[type=text],
@@ -1068,9 +1068,9 @@ input:focus-visible {
 }
 
 .main-panel:has(.new-student-page-wrapper) .title-top span,
-.title-top p {
+.main-panel:has(.new-student-page-wrapper) .title-top p {
     font-weight: 600;
-    font-size: 20px;
+    font-size: 16px;
     color: #1D2026;
     line-height: 1.2;
 }
@@ -1096,14 +1096,6 @@ input:focus-visible {
     filter: brightness(0) saturate(100%) invert(0%) sepia(100%) saturate(0%) hue-rotate(252deg) brightness(105%) contrast(101%);
 }
 
-.main-panel:has(.new-student-page-wrapper) .title-top span,
-.title-top p {
-    font-weight: 600;
-    font-size: 20px;
-    color: #1D2026;
-    line-height: 25.51px;
-}
-
 .main-panel:has(.new-student-page-wrapper) .title-top {
     gap: 10px;
 }
@@ -1120,7 +1112,7 @@ input:focus-visible {
 .main-panel:has(.new-student-page-wrapper) .image-preview {
     display: flex;
     justify-content: start;
-    height: 180px;
+    // height: 180px;
     cursor: pointer;
     align-items: center;
     gap: 1.5rem;
@@ -1131,7 +1123,7 @@ input:focus-visible {
 .main-panel:has(.new-student-page-wrapper) .image-preview {
     display: flex;
     justify-content: start;
-    height: 180px;
+    // height: 180px;
     cursor: pointer;
     align-items: center;
     gap: 1.5rem;
