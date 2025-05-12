@@ -42,7 +42,7 @@ const AddNewCourse = () => {
 
     const [isOpenCoursePublishModal, setIsOpenCoursePublishModal] = useState(false);
     const [isOpenCourseUnpublishModal, setIsOpenCourseUnpublishModal] = useState(false);
-    console.log(location)
+
     // if( location.state.courseId){
     //     courseId=location.state.courseId
     // }else {
@@ -323,7 +323,6 @@ const AddNewCourse = () => {
     const publishCourse = async () => {
         setIsOpenCoursePublishModal(false);
         const newIsPublished = !isPublished;
-        console.log('course data:',currentCourse);
         try {
             if (newIsPublished) {
                 await axiosWrapper('PUT', `${API_URL.SUPABASE_PUBLISH_COURSE.replace(':id', currentCourse)}`, {}, token);
