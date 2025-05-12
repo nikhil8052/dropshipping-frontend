@@ -16,7 +16,7 @@
     // background: linear-gradient(146.86deg, #0A2B2C 19.75%, #001720 86.2%);
     background: linear-gradient(146.86deg, #2a2e2e 19.75%, #09181e 86.2%);
     transition: all 0.5s cubic-bezier(0.685, 0.0473, 0.346, 1);
-    overflow: hidden;
+    // overflow: hidden;
     box-shadow: 0px 0px 14px 0px #00C7CC inset;
 
     &::after {
@@ -544,9 +544,23 @@
     padding: 0 !important;
 }
 
-.sidebar {
-    min-height: calc(var(--dvh, 1vh) * 100);
-  }
+// .sidebar {
+//     min-height: calc(var(--dvh, 1vh) * 100);
+//   }
+
+  .side-bar-btm {
+    margin-top: auto;
+    padding: 40px 0px;
+}
+
+.sidebar.hide-sidebar .container {
+    height: 100%;
+}
+
+.sidebar .side-nav-wrapper {
+    height: 100% !important;
+    justify-content: space-between;
+}
 
 @media only screen and (max-width:767px) {
 
@@ -615,6 +629,28 @@
 
     .sidebar a span {
         display: none !important;
+    }
+    .side-bar-btm {
+        padding: 30px 0px;
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+    }
+
+    .sidebar.hide-sidebar .side-bar-btm {
+        width: auto;
+        opacity: 1;
+    }
+
+    .sidebar .side-bar-btm{
+        width: 0px;
+        opacity: 0;
+    }
+
+    .sidebar .side-nav-wrapper {
+        padding-bottom: 0;
+        overflow: unset !important;
     }
 
 }
