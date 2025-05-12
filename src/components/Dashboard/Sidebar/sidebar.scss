@@ -550,17 +550,13 @@
 
   .side-bar-btm {
     margin-top: auto;
-    padding: 40px 0px;
+    padding: 40px 0px 0px;
 }
 
 .sidebar.hide-sidebar .container {
     height: 100%;
 }
 
-.sidebar .side-nav-wrapper {
-    height: 100% !important;
-    justify-content: space-between;
-}
 
 @media only screen and (max-width:767px) {
 
@@ -653,4 +649,8 @@
         overflow: unset !important;
     }
 
+    .sidebar .side-nav-wrapper {
+        height: 100% !important;
+        justify-content: space-between;
+    }
 }
