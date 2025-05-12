@@ -627,7 +627,7 @@
         display: none !important;
     }
     .side-bar-btm {
-        padding: 30px 0px;
+        padding: 20px 0px 40px;
         position: fixed;
         bottom: 0;
         left: 0;
@@ -652,5 +652,9 @@
     .sidebar .side-nav-wrapper {
         height: 100% !important;
         justify-content: space-between;
+    }
+
+    .sidebar .side-nav-wrapper .side-nav-scroll {
+        max-height: 260px;
     }
 }
