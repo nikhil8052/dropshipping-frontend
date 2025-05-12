@@ -22,6 +22,23 @@ import { adminSidebarItems, coachSidebarItems, studentSidebarItems } from './sid
 import { getFormattedTimes, trimLongText } from '../../../utils/common';
 
 const Sidebar = () => {
+
+    useEffect(() => {
+        const setRealHeight = () => {
+            const vh = window.innerHeight * 0.01;
+            document.documentElement.style.setProperty('--dvh', `${vh}px`);
+        };
+
+        setRealHeight();
+        window.addEventListener('resize', setRealHeight);
+        window.addEventListener('orientationchange', setRealHeight);
+
+        return () => {
+            window.removeEventListener('resize', setRealHeight);
+            window.removeEventListener('orientationchange', setRealHeight);
+        };
+    }, []);
+    
     const dispatch = useDispatch();
     const token = useSelector((state) => state?.auth?.userToken);
     const collapsed = useSelector((state) => state.theme.collapsed);
@@ -46,7 +63,6 @@ const Sidebar = () => {
         // if (role === 'STUDENT' && userInfo?.roadMap && userInfo?.roadmapAccess === true) {
             if (role === 'STUDENT' && userInfo?.roadMap && userInfo?.roadmapAccess == 'true') {
       
-
             const roadmapItem = {
                 id: 'roadmap',
                 name: 'Roadmap',
