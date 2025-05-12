@@ -118,10 +118,6 @@
         padding: 20px !important;
     }
 
-    .sidebar a span {
-        display: none;
-    }
-
     .sidebar .side-bar-profile .profile-name {
         display: none;
     }
@@ -144,15 +140,15 @@
     }
 
     .sidebar.hide-sidebar .brand-logo,.sidebar .brand-logo  {
-        margin: 35px 0px;
+        padding:35px 0px;
+        margin: 0;
     }
-
-
     .sidebar .side-nav-wrapper {
-        height: calc(100vh - 90px);
+        height: calc(100vh - 104px);
     }
 
-    .sidebar .nav {
+    .sidebar .nav, .sidebar.hide-sidebar .nav {
         align-items: center;
     }
+
 }
