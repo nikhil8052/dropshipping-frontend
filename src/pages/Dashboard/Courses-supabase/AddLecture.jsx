@@ -104,7 +104,7 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
         initialValues: null
     });
     const handleDownloadModelClick = (resource) => {
-        console.log(resource?.file_link);
+        
         // return false;
         setShowDownloadModel({
             show: true,
@@ -228,10 +228,12 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
             const updatedTopics = initialData.folders.map((folder) => ({
                 name: folder.name,
                 id: folder.id,
-                lectures: folder.lectures,
-                resources: lecture?.resources,
-                transcript: lecture?.transcript,
-            }));
+                lectures: (folder?.lectures || []).map((lecture) => ({
+                  ...lecture,
+                  resources: lecture.resources,
+                  transcript: lecture.transcript,
+                })),
+              }));
             setTopics(updatedTopics);
         }
     }, [initialData]);
