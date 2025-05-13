@@ -1,25 +1,28 @@
 import React, { useRef } from 'react';
 import Dot from '../assets/icons/dot.svg';
 
-const HideShowCols = React.memo(({ setShowHideDiv, setShowHidePosition, setSelectPosition }) => {
+const HideShowCols = ({ showHideDiv, setShowHideDiv, setShowHidePosition, setSelectPosition }) => {
   const headerRef = useRef(null);
 
   const handleClick = (e) => {
     e.stopPropagation();
+
+    if (showHideDiv) {
+      // Panel is already open; just close it
+      setShowHideDiv(false);
+      return;
+    }
+
+    // Only calculate position when opening
     if (headerRef.current) {
       const rect = headerRef.current.getBoundingClientRect();
-      // Use useMemo-equivalent pattern here
       const newPosition = {
         top: rect.bottom + window.scrollY,
         left: rect.left + window.scrollX - 200,
       };
-      
-      // Batch updates if possible
-      setShowHideDiv(prev => {
-        setShowHidePosition(newPosition);
-        setSelectPosition(newPosition);
-        return !prev;
-      });
+      setShowHidePosition(newPosition);
+      setSelectPosition(newPosition);
+      setShowHideDiv(true);
     }
   };
 
@@ -32,7 +35,7 @@ const HideShowCols = React.memo(({ setShowHideDiv, setShowHidePosition, setSelec
       <img src={Dot} alt="Menu" style={{ width: '16px', height: '16px', cursor: 'pointer' }} />
     </div>
   );
-});
+};
 
 
 export default HideShowCols; 

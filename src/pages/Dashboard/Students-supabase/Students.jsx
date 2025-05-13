@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState, useRef,useCallback,useMemo } from 'react';
 import Table from '@components/Table/Table';
 import { Button, Col, Row, DropdownButton, Dropdown, Form } from 'react-bootstrap';
 import Modal from '@components/Modal/Modal';
@@ -364,12 +364,12 @@ const Students = () => {
     const ActionsRenderer = (props) => (
         <React.Fragment>
             <Row style={{ width: '100%' }}>
-                <Col lg={4} md={6} sm={6} xs={4} className="d-flex justify-content-center align-items-center">
-                    <div className="action-button edit-button" onClick={() => props.onEditClick(props.data.id)}>
+                <Col lg={4} md={4} sm={4} xs={4} className="d-flex justify-content-center align-items-center">
+                    <div className="action-button  utyu edit-button" onClick={() => props.onEditClick(props.data.id)}>
                         <img src={editIcon} className="action-icon" alt="action-icon" />
                     </div>
                 </Col>
-                <Col lg={4} md={6} sm={6} xs={4} className="d-flex justify-content-center align-items-center">
+                <Col lg={4} md={4} sm={4} xs={4} className="d-flex justify-content-center align-items-center">
                     <Form.Check // prettier-ignore
                         type="switch"
                         className="toggle-button student-action-col"
@@ -381,7 +381,7 @@ const Students = () => {
                 {role === 'COACH' ? (
                     <></>
                 ) : (
-                    <Col lg={1} md={6} sm={6} xs={4} className="d-flex justify-content-center align-items-center">
+                    <Col lg={1} md={4} sm={4} xs={4} className="d-flex justify-content-center align-items-center">
                         <div
                             className="btn-light action-button delete-button"
                             onClick={() => props.onDeleteClick(props.data.id)}
@@ -604,9 +604,9 @@ const Students = () => {
             default: true,
             headerComponent: (params) => (
                 <HideShowCols
-                setShowHideDiv={setShowHideDiv}
-                setShowHidePosition={setShowHidePosition}
-                setSelectPosition={setSelectPosition}
+                    setShowHideDiv={setShowHideDiv}
+                    setShowHidePosition={setShowHidePosition}
+                    setSelectPosition={setSelectPosition}
                     showHideDiv={showHideDiv}
                 />
             ),
@@ -622,51 +622,46 @@ const Students = () => {
     const [removedValues, setRemovedValues] = useState([]);
     const [expandedEye, setExpandedEye] = useState({});
 
-    const toggle = async (property, index) => {
+    const toggle = useCallback(async (property, index) => {
+        const scrollContainer = document.querySelector('.property-scrollable-content');
+        const scrollPosition = scrollContainer.scrollTop; // Preserve scroll position
+    
         // Backup original columns only once
         if (!supabaseColsClone.length) {
             const clonedArr = supabaseCols.slice();
             setSupabaseColsClone(clonedArr);
         }
+    
         const indexInSupabase = supabaseCols.findIndex((obj) => obj.field === property.field);
-        if (expandedEye[index] === false && indexInSupabase !== -1) {
-            // Store removed item at the correct index
-            setRemovedValues((prev) => {
-                const updated = [...prev];
-                updated[indexInSupabase] = supabaseCols[indexInSupabase];
-                return updated;
-            });
-        }
+    
+        // If the field exists in the original columns
         if (indexInSupabase !== -1) {
-            // Hide: remove from supabaseCols
-
-            // setSupabaseCols(prev => prev.filter((_, i) => i !== indexInSupabase));
-
             const currentItem = supabaseCols[indexInSupabase];
             const toggledHide = !currentItem.hide;
-
-            // 1. Prepare the object with the updated `hide` value
+    
+            const updatedCols = supabaseCols.map((col, i) =>
+                i === indexInSupabase ? { ...col, hide: toggledHide } : col
+            );
+            setSupabaseCols(updatedCols);
+    
             const obj = {
                 ...currentItem,
                 hide: toggledHide
             };
-
-            setSupabaseCols((prev) =>
-                prev.map((col, i) => (i === indexInSupabase ? { ...col, hide: !col.hide } : col))
-            );
-
-            let hideCols = [obj];
-            var payload = {
-                hideCols: hideCols
-            };
-
+    
+            const payload = { hideCols: [obj] };
             const ENDPOINT = API_URL.SUPABASE_GET_COLUMNS.replace(':table', 'users');
-            const response = await axiosWrapper('POST', ENDPOINT, { payload }, token);
+    
+            try {
+                await axiosWrapper('POST', ENDPOINT, { payload }, token);
+            } catch (error) {
+                console.error('Failed to update field visibility:', error);
+            }
         } else {
-            // Show: add back at the original index from supabaseColsClone
+            // Handle the case where the item is not found and needs to be restored
             const originalIndex = supabaseColsClone.findIndex((obj) => obj.field === property.field);
             const itemToShow = supabaseColsClone[originalIndex];
-
+    
             if (itemToShow) {
                 setSupabaseCols((prev) => {
                     const updated = [...prev];
@@ -675,13 +670,20 @@ const Students = () => {
                 });
             }
         }
-
-        // Toggle the UI state
+    
+        // Restore scroll position after the state change for eye toggle
+        requestAnimationFrame(() => {
+            scrollContainer.scrollTop = scrollPosition;
+        });
+    
+        // Toggle visibility of the eye icon
         setExpandedEye((prev) => ({
             ...prev,
             [index]: !prev[index]
         }));
-    };
+    
+    }, [supabaseCols, supabaseColsClone, token]);
+    
 
     useEffect(() => {
         const fetchColumns = async () => {
@@ -732,252 +734,226 @@ const Students = () => {
 
     // END  Dynamic Superbase Table
 
-    function PropertiesPanel({ onClose }) {
+    const PropertiesPanel = React.memo(function PropertiesPanel({ onClose }) {
         const [searchQuery, setSearchQuery] = useState('');
-
-        const handleShowAllHidden = () => {
-            const updatedCols = supabaseCols.map((col) => (!col.default && col.hide ? { ...col, hide: false } : col));
-            setSupabaseCols(updatedCols);
-        };
-
-        const handleHideAll = () => {
-            const updatedCols = supabaseCols.map((col) => (!col.default ? { ...col, hide: true } : col));
-            setSupabaseCols(updatedCols);
-        };
-
-        // const defaultFields = supabaseCols.slice(0, -2).filter((p) => p.default);
-        // const visibleFields = supabaseCols.slice(0, -2).filter((p) => !p.default && !p.hide);
-        // const hiddenFields = supabaseCols.slice(0, -2).filter((p) => !p.default && p.hide);
-
-        const defaultFields = supabaseCols.slice(0, -2).filter((p) => p.default);
-
-        const filteredCustomFields = supabaseCols
-            .slice(0, -2)
-            .filter((p) => !p.default && p.field.toLowerCase().includes(searchQuery.toLowerCase()));
-
-        const visibleFields = filteredCustomFields.filter((p) => !p.hide);
-        const hiddenFields = filteredCustomFields.filter((p) => p.hide);
-
-        // const handleDragEnd = (result) => {
-        //     const { source, destination } = result;
-        //     if (!destination) return;
-
-        //     const items = Array.from(supabaseCols.slice(0, -2)); // all fields except the last 2
-        //     const defaultFields = items.filter((p) => p.default);
-        //     const customFields = items.filter((p) => !p.default);
-
-        //     const visible = customFields.filter((p) => !p.hide);
-        //     const hidden = customFields.filter((p) => p.hide);
-
-        //     let updatedVisible = [...visible];
-        //     let updatedHidden = [...hidden];
-
-        //     // Determine moving source list and item
-        //     const sourceList = source.droppableId === 'visible' ? updatedVisible : updatedHidden;
-        //     const destList = destination.droppableId === 'visible' ? updatedVisible : updatedHidden;
-
-        //     const [movedItem] = sourceList.splice(source.index, 1);
-
-        //     // Update item's visibility if moved between lists
-        //     if (source.droppableId !== destination.droppableId) {
-        //         movedItem.hide = destination.droppableId === 'hidden';
-        //     }
-
-        //     destList.splice(destination.index, 0, movedItem);
-
-        //     // Re-construct final columns: default fields + updated visible + updated hidden + untouched last 2
-        //     const finalCols = [
-        //         ...defaultFields,
-        //         ...updatedVisible,
-        //         ...updatedHidden,
-        //         ...supabaseCols.slice(-2),
-        //     ];
-
-        //     setSupabaseCols(finalCols);
-        // };
-
-        const handleDragEnd = async (result) => {
-            const { source, destination } = result;
-            if (!destination) return;
-
-            const items = Array.from(supabaseCols.slice(0, -2)); // all fields except the last 2
-            const defaultFields = items.filter((p) => p.default);
-            const customFields = items.filter((p) => !p.default);
-
-            const visible = customFields.filter((p) => !p.hide);
-            const hidden = customFields.filter((p) => p.hide);
-
-            let updatedVisible = [...visible];
-            let updatedHidden = [...hidden];
-
-            const sourceList = source.droppableId === 'visible' ? updatedVisible : updatedHidden;
-            const destList = destination.droppableId === 'visible' ? updatedVisible : updatedHidden;
-
-            const [movedItem] = sourceList.splice(source.index, 1);
-
-            let toggledHide = movedItem.hide;
-            if (source.droppableId !== destination.droppableId) {
-                toggledHide = destination.droppableId === 'hidden';
-                movedItem.hide = toggledHide;
-
-                // Send API call to update visibility
-                const obj = {
-                    ...movedItem,
-                    hide: toggledHide
-                };
-
-                const hideCols = [obj];
-                const payload = { hideCols };
-                const ENDPOINT = API_URL.SUPABASE_GET_COLUMNS.replace(':table', 'users');
-
-                try {
-                    await axiosWrapper('POST', ENDPOINT, { payload }, token);
-                } catch (error) {
-                    console.error('Failed to update field visibility:', error);
-                }
-            }
-
-            destList.splice(destination.index, 0, movedItem);
-
-            const finalCols = [...defaultFields, ...updatedVisible, ...updatedHidden, ...supabaseCols.slice(-2)];
-
-            setSupabaseCols(finalCols);
-        };
-
-        return (
-            <div className="property_section_main_div">
-                {/* Header */}
-                <div className="flex items-center justify-between border-b border-gray-200 property_section">
-                    <div className="left-box d-flex gap-10 align-items-center">
-                        <ChevronLeft className="w-5 h-5 text-gray-500" onClick={onClose} />
-                        <h2 className="font-medium ml-2">Properties</h2>
-                    </div>
-                    <div className="close">
-                        <X className="w-5 h-5 text-gray-500 cursor-pointer" onClick={onClose} />
-                    </div>
-                </div>
-                <div className="px-2 py-2">
-                    <input
-                        type="text"
-                        placeholder="Search properties..."
-                        value={searchQuery}
-                        onChange={(e) => setSearchQuery(e.target.value)}
-                        className="w-full rounded focus:outline-none focus:ring-1 focus:ring-blue-400"
-                    />
-                </div>
-                <DragDropContext onDragEnd={handleDragEnd}>
-                    <div className="property-detail">
-                        <div className="flex items-center justify-between  mb-1 hide-text-main-dev">
-                            <p className=" text-gray-500 font-semibold">Table Fields</p>
-                            <span className=" text-blue-600  cursor-pointer show-all-text" onClick={handleHideAll}>
-                                Hide all
-                            </span>
-                        </div>
-
-                        {/* Default fields */}
-                        {defaultFields.map((property) => (
-                            <div
-                                key={property.field}
-                                className="flex items-center justify-between px-1 py-1 text-items cursor-not-allowed opacity-50"
-                            >
-                                <span className="ml-1">{property.field}</span>
-                                <div className="drop-wrapper">
-                                    <div className="w-6 h-6 flex items-center justify-center bg-gray-200 rounded cursor-not-allowed opacity-50">
-                                        <Eye className="text-gray-500" />
-                                    </div>
-                                </div>
-                            </div>
-                        ))}
-
-                        {/* Visible Draggable Zone */}
-                        <Droppable droppableId="visible">
-                            {(provided) => (
-                                <div ref={provided.innerRef} {...provided.droppableProps}>
-                                    {visibleFields.map((property, index) => (
-                                        <Draggable key={property.field} draggableId={property.field} index={index}>
-                                            {(provided) => (
-                                                <div
-                                                    ref={provided.innerRef}
-                                                    {...provided.draggableProps}
-                                                    {...provided.dragHandleProps}
-                                                    className="flex items-center justify-between px-1 py-1 text-items cursor-pointer"
-                                                    onClick={() => toggle(property, index)}
-                                                >
-                                                    <div className="flex drag-drop-item-left">
-                                                        <div className="drop-wrapper">
-                                                            <GripVertical className=" text-gray-400 cursor-grab" />
-                                                        </div>
-                                                        <span className="ml-1">{property.field}</span>
-                                                    </div>
-                                                    <div className="drop-wrapper">
-                                                        <Eye className=" text-gray-500" />
-                                                    </div>
-                                                </div>
-                                            )}
-                                        </Draggable>
-                                    ))}
-                                    {provided.placeholder}
-                                </div>
-                            )}
-                        </Droppable>
-
-                        {/* Hidden Draggable Zone */}
-                        {hiddenFields.length > 0 && (
-                            <div className="flex items-center justify-between mt-2 mb-1 hide-text-main-dev">
-                                <p className=" text-gray-500 font-semibold ">Hiddens</p>
-                                <span className="show-all-text" onClick={handleShowAllHidden}>
-                                    Show all
-                                </span>
-                            </div>
-                        )}
-
-                        <Droppable droppableId="hidden">
-                            {(provided) => (
-                                <div ref={provided.innerRef} {...provided.droppableProps}>
-                                    {hiddenFields.map((property, index) => (
-                                        <Draggable key={property.field} draggableId={property.field} index={index}>
-                                            {(provided) => (
-                                                <div
-                                                    ref={provided.innerRef}
-                                                    {...provided.draggableProps}
-                                                    {...provided.dragHandleProps}
-                                                    className="flex items-center justify-between px-1 py-1 text-items cursor-pointer"
-                                                    onClick={() => toggle(property, index)}
-                                                >
-                                                    <div className="flex drag-drop-item-left">
-                                                        <div className="drop-wrapper">
-                                                            <GripVertical className="w-4 h-4 text-gray-400 cursor-grab" />
-                                                        </div>
-                                                        <span className="ml-1">{property.field}</span>
-                                                    </div>
-                                                    <div className="drop-wrapper">
-                                                        <EyeOff className="w-4 h-4 text-gray-500" />
-                                                    </div>
-                                                </div>
-                                            )}
-                                        </Draggable>
-                                    ))}
-                                    {provided.placeholder}
-                                </div>
-                            )}
-                        </Droppable>
-                    </div>
-                </DragDropContext>
-                <div className="new-property-div">
-                    <p
-                        onClick={(e) => {
-                            e.stopPropagation();
-                            setShowHideDiv(false);
-                            setShowColumnSelect(true);
-                        }}
-                        className="cursor-pointer"
-                    >
-                        + Add New Property
-                    </p>
-                </div>
-            </div>
+        const scrollRef = useRef(null);
+        const defaultFields = useMemo(
+          () => supabaseCols.slice(0, -2).filter((p) => p.default),
+          [supabaseCols]
         );
-    }
+      
+        const filteredCustomFields = useMemo(
+          () =>
+            supabaseCols
+              .slice(0, -2)
+              .filter((p) => !p.default && p.field.toLowerCase().includes(searchQuery.toLowerCase())),
+          [supabaseCols, searchQuery]
+        );
+      
+        const visibleFields = useMemo(
+          () => filteredCustomFields.filter((p) => !p.hide),
+          [filteredCustomFields]
+        );
+        const hiddenFields = useMemo(
+          () => filteredCustomFields.filter((p) => p.hide),
+          [filteredCustomFields]
+        );
+      
+        const handleShowAllHidden = useCallback(() => {
+          const updatedCols = supabaseCols.map((col) => (!col.default && col.hide ? { ...col, hide: false } : col));
+          setSupabaseCols(updatedCols);
+        }, [supabaseCols]);
+      
+        const handleHideAll = useCallback(() => {
+          const updatedCols = supabaseCols.map((col) => (!col.default ? { ...col, hide: true } : col));
+          setSupabaseCols(updatedCols);
+        }, [supabaseCols]);
+      
+        const handleDragEnd = async (result) => {
+          const { source, destination } = result;
+          if (!destination) return;
+      
+          const scrollPosition = document.querySelector('.property-scrollable-content')?.scrollTop;
+      
+          const items = Array.from(supabaseCols.slice(0, -2));
+          const defaultFields = items.filter((p) => p.default);
+          const customFields = items.filter((p) => !p.default);
+          const visible = customFields.filter((p) => !p.hide);
+          const hidden = customFields.filter((p) => p.hide);
+      
+          let updatedVisible = [...visible];
+          let updatedHidden = [...hidden];
+      
+          const sourceList = source.droppableId === 'visible' ? updatedVisible : updatedHidden;
+          const destList = destination.droppableId === 'visible' ? updatedVisible : updatedHidden;
+      
+          const [movedItem] = sourceList.splice(source.index, 1);
+      
+          if (source.droppableId !== destination.droppableId) {
+            movedItem.hide = destination.droppableId === 'hidden';
+      
+            const payload = { hideCols: [movedItem] };
+            const ENDPOINT = API_URL.SUPABASE_GET_COLUMNS.replace(':table', 'users');
+            try {
+              await axiosWrapper('POST', ENDPOINT, { payload }, token);
+            } catch (error) {
+              console.error('Failed to update field visibility:', error);
+            }
+          }
+      
+          destList.splice(destination.index, 0, movedItem);
+      
+          const finalCols = [...defaultFields, ...updatedVisible, ...updatedHidden, ...supabaseCols.slice(-2)];
+          setSupabaseCols(finalCols);
+      
+          setTimeout(() => {
+            document.querySelector('.property-scrollable-content').scrollTop = scrollPosition;
+          }, 0);
+        };
+      
+        const toggle = useCallback(
+          async (property) => {
+            const indexInSupabase = supabaseCols.findIndex((obj) => obj.field === property.field);
+            if (indexInSupabase !== -1) {
+              const currentItem = supabaseCols[indexInSupabase];
+              const toggledHide = !currentItem.hide;
+              const updatedItem = { ...currentItem, hide: toggledHide };
+      
+              setSupabaseCols((prev) =>
+                prev.map((col, i) => (i === indexInSupabase ? updatedItem : col))
+              );
+      
+              const payload = { hideCols: [updatedItem] };
+              const ENDPOINT = API_URL.SUPABASE_GET_COLUMNS.replace(':table', 'users');
+              try {
+                await axiosWrapper('POST', ENDPOINT, { payload }, token);
+              } catch (error) {
+                console.error('Toggle visibility failed:', error);
+              }
+            }
+          },
+          [supabaseCols]
+        );
+      
+        const DraggableRow = React.memo(({ property, index, isHidden }) => (
+          <Draggable draggableId={property.field} index={index}>
+            {(provided) => (
+              <div
+                ref={provided.innerRef}
+                {...provided.draggableProps}
+                {...provided.dragHandleProps}
+                className="flex items-center justify-between px-1 py-1 text-items cursor-pointer"
+                onClick={() => toggle(property)}
+              >
+                <div className="flex drag-drop-item-left">
+                  <div className="drop-wrapper">
+                    <GripVertical className="text-gray-400 cursor-grab" />
+                  </div>
+                  <span className="ml-1">{property.field}</span>
+                </div>
+                <div className="drop-wrapper">
+                  {isHidden ? <EyeOff className="text-gray-500" /> : <Eye className="text-gray-500" />}
+                </div>
+              </div>
+            )}
+          </Draggable>
+        ));
+      
+        return (
+          <div className="property_section_main_div">
+            <div className="property-head">
+              <div className="flex items-center justify-between border-b border-gray-200 property_section">
+                <div className="left-box d-flex gap-10 align-items-center">
+                  <ChevronLeft className="w-5 h-5 text-gray-500" onClick={onClose} />
+                  <h2 className="font-medium ml-2">Properties</h2>
+                </div>
+                <X className="w-5 h-5 text-gray-500 cursor-pointer" onClick={onClose} />
+              </div>
+              <div className="search">
+                <input
+                  type="text"
+                  placeholder="Search properties..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="w-full rounded focus:outline-none focus:ring-1 focus:ring-blue-400"
+                />
+              </div>
+            </div>
+      
+            <div className="property-scrollable-content" style={{ height: '280px', overflowY: 'auto' }}   ref={scrollRef}>
+              <DragDropContext onDragEnd={handleDragEnd}>
+                <div className="property-detail">
+                  <div className="flex items-center justify-between mb-1 hide-text-main-dev">
+                    <p className="text-gray-500 font-semibold">Table Fields</p>
+                    <span className="text-blue-600 cursor-pointer show-all-text" onClick={handleHideAll}>
+                      Hide all
+                    </span>
+                  </div>
+      
+                  {defaultFields.map((property) => (
+                    <div
+                      key={property.field}
+                      className="flex items-center justify-between px-1 py-1 text-items cursor-not-allowed opacity-50"
+                    >
+                      <span className="ml-1">{property.field}</span>
+                      <div className="drop-wrapper">
+                        <div className="w-6 h-6 flex items-center justify-center bg-gray-200 rounded cursor-not-allowed opacity-50">
+                          <Eye className="text-gray-500" />
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+      
+                  <Droppable droppableId="visible">
+                    {(provided) => (
+                      <div ref={provided.innerRef} {...provided.droppableProps}>
+                        {visibleFields.map((property, index) => (
+                          <DraggableRow key={property.field} property={property} index={index} isHidden={false} />
+                        ))}
+                        {provided.placeholder}
+                      </div>
+                    )}
+                  </Droppable>
+      
+                  {hiddenFields.length > 0 && (
+                    <div className="flex items-center justify-between mt-2 mb-1 hide-text-main-dev">
+                      <p className="text-gray-500 font-semibold">Hiddens</p>
+                      <span className="show-all-text" onClick={handleShowAllHidden}>
+                        Show all
+                      </span>
+                    </div>
+                  )}
+      
+                  <Droppable droppableId="hidden">
+                    {(provided) => (
+                      <div ref={provided.innerRef} {...provided.droppableProps}>
+                        {hiddenFields.map((property, index) => (
+                          <DraggableRow key={property.field} property={property} index={index} isHidden={true} />
+                        ))}
+                        {provided.placeholder}
+                      </div>
+                    )}
+                  </Droppable>
+                </div>
+              </DragDropContext>
+            </div>
+      
+            <div className="new-property-div">
+              <p
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setShowHideDiv(false);
+                  setShowColumnSelect(true);
+                }}
+                className="cursor-pointer"
+              >
+                + Add New Property
+              </p>
+            </div>
+          </div>
+        );
+      });
+      
 
     return (
         <div className="students-page full-width">
@@ -1151,7 +1127,7 @@ const Students = () => {
                         left: `${showHidePosition.left}px`,
                         zIndex: 1000,
                         width: '',
-                        borderRadius: '4px'
+                        borderRadius: '4px',
                     }}
                 >
                     <div>

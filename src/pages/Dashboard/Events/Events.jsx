@@ -173,7 +173,7 @@ const Events = () => {
 
                 <Col lg={3} md={4} sm={4} xs={4} className="d-flex justify-content-center align-items-center">
                     <div
-                        className="action-button edit-button"
+                        className="action-button  edit-button"
                         onClick={
                             props.data.createdBy?._id.toString() !== userInfo?._id.toString()
                                 ? () => toast.error('Only event host can edit events!')
