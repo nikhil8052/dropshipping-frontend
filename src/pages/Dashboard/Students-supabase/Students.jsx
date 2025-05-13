@@ -31,8 +31,8 @@ import HideShowCols from '../../../components/HideShowCols';
 
 import { ChevronLeft, Eye, EyeOff, X, GripVertical } from 'lucide-react';
 import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd';
-
 import { Badge } from 'react-bootstrap';
+
 
 const Students = () => {
     const [showDeleteModal, setShowDeleteModal] = useState({
@@ -141,9 +141,7 @@ const Students = () => {
     // }, [selectedOption2]);
     const fetchData = async (query, query2, loading = true) => {
         // Later we will replace this with actual API call
-        console.log(
-            `${API_URL.SUPABASE_GET_ALL_STUDENTS}?coachingTrajectory=${query || selectedOption}&isActive=${query2 || selectedOption2}`
-        );
+     
         // return false;
         try {
             setLoading(loading);
@@ -154,6 +152,7 @@ const Students = () => {
                 token
             );
 
+            console.log( coaches , "Data ")
             setStudentsData(coaches.data);
         } catch (error) {
             return;
@@ -422,7 +421,7 @@ const Students = () => {
                     <Badge
                         bg={props.data.isActive ? 'success' : 'danger'}
                         style={{ padding: '0.5rem 0.5rem' }}
-                        // onClick={() => props.onToggleClick(props.data)}
+                    // onClick={() => props.onToggleClick(props.data)}
                     >
                         {props.data.isActive ? 'Active' : 'Inactive'}
                     </Badge>
@@ -604,9 +603,9 @@ const Students = () => {
             default: true,
             headerComponent: (params) => (
                 <HideShowCols
-                setShowHideDiv={setShowHideDiv}
-                setShowHidePosition={setShowHidePosition}
-                setSelectPosition={setSelectPosition}
+                    setShowHideDiv={setShowHideDiv}
+                    setShowHidePosition={setShowHidePosition}
+                    setSelectPosition={setSelectPosition}
                     showHideDiv={showHideDiv}
                 />
             ),
@@ -758,49 +757,13 @@ const Students = () => {
         const visibleFields = filteredCustomFields.filter((p) => !p.hide);
         const hiddenFields = filteredCustomFields.filter((p) => p.hide);
 
-        // const handleDragEnd = (result) => {
-        //     const { source, destination } = result;
-        //     if (!destination) return;
 
-        //     const items = Array.from(supabaseCols.slice(0, -2)); // all fields except the last 2
-        //     const defaultFields = items.filter((p) => p.default);
-        //     const customFields = items.filter((p) => !p.default);
-
-        //     const visible = customFields.filter((p) => !p.hide);
-        //     const hidden = customFields.filter((p) => p.hide);
-
-        //     let updatedVisible = [...visible];
-        //     let updatedHidden = [...hidden];
-
-        //     // Determine moving source list and item
-        //     const sourceList = source.droppableId === 'visible' ? updatedVisible : updatedHidden;
-        //     const destList = destination.droppableId === 'visible' ? updatedVisible : updatedHidden;
-
-        //     const [movedItem] = sourceList.splice(source.index, 1);
-
-        //     // Update item's visibility if moved between lists
-        //     if (source.droppableId !== destination.droppableId) {
-        //         movedItem.hide = destination.droppableId === 'hidden';
-        //     }
-
-        //     destList.splice(destination.index, 0, movedItem);
-
-        //     // Re-construct final columns: default fields + updated visible + updated hidden + untouched last 2
-        //     const finalCols = [
-        //         ...defaultFields,
-        //         ...updatedVisible,
-        //         ...updatedHidden,
-        //         ...supabaseCols.slice(-2),
-        //     ];
-
-        //     setSupabaseCols(finalCols);
-        // };
 
         const handleDragEnd = async (result) => {
             const { source, destination } = result;
             if (!destination) return;
 
-            const items = Array.from(supabaseCols.slice(0, -2)); // all fields except the last 2
+            const items = Array.from(supabaseCols.slice(0, -2));
             const defaultFields = items.filter((p) => p.default);
             const customFields = items.filter((p) => !p.default);
 
