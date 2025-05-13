@@ -345,10 +345,10 @@
     font-size: 14px;
 }
 
-// .property-detail {
-//     max-height: 300px;
-//     overflow-y: scroll;
-// }
+.property-scrollable-content {
+    height: 280px;
+    overflow-y: auto;
+  }
 
 .property_section .cross {
     width: 20px;
