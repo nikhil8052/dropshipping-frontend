@@ -71,6 +71,33 @@ const EnrolledCourseDetail = () => {
         setShowModal(false);
     };
 
+    const feedbackReasons = [
+        { id: 'a58c8311-6508-489a-b70a-c5bdff8b8b41', label: 'Too fast' },
+        { id: 'e6722756-f793-45ef-b892-7d744e0c7c96', label: 'Too slow' },
+        { id: 'c633efa1-b7a1-47ab-b79d-a0f496586be3', label: 'Poor explanation' },
+        { id: '6ed8525a-c781-40b0-ba7b-7aeffb2f7e5e', label: 'Technical issues' },
+        { id: '6909e220-c6a4-441a-ba81-42adc3d8d87a', label: 'Other' }
+    ];
+
+    const inputOptions = feedbackReasons.reduce((acc, item) => {
+        acc[item.id] = item.label;
+        return acc;
+    }, {});
+
+
+    // useEffect(() => {
+    //     const fetchReasons = async () => {
+    //         try {
+    //             const { data } = await axiosWrapper('GET', `${API_URL.SUPABASE_LECTURE_FEEBACK_REASONS}`, token);
+    //             console.log(data, "Data responses");
+    //         } catch (error) {
+    //             console.error("Error fetching reasons:", error);
+    //         }
+    //     };
+    
+    //     fetchReasons();
+    // }, []);
+
     useEffect(() => {
         const iframeElement = document.querySelector('iframe.ql-video');
         let hasCalledNearEndFunction = false;
@@ -183,18 +210,7 @@ const EnrolledCourseDetail = () => {
         });
     };
 
-    const feedbackReasons = [
-        { id: 'a58c8311-6508-489a-b70a-c5bdff8b8b41', label: 'Too fast' },
-        { id: 'e6722756-f793-45ef-b892-7d744e0c7c96', label: 'Too slow' },
-        { id: 'c633efa1-b7a1-47ab-b79d-a0f496586be3', label: 'Poor explanation' },
-        { id: '6ed8525a-c781-40b0-ba7b-7aeffb2f7e5e', label: 'Technical issues' },
-        { id: '6909e220-c6a4-441a-ba81-42adc3d8d87a', label: 'Other' }
-    ];
 
-    const inputOptions = feedbackReasons.reduce((acc, item) => {
-        acc[item.id] = item.label;
-        return acc;
-    }, {});
 
 
     const handleNearVideoEnd = () => {
