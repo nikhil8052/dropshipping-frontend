@@ -1,4 +1,4 @@
-import { useEffect, useState,useRef } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import CaretRight from '@icons/CaretRight.svg';
@@ -26,10 +26,11 @@ import CustomProgressBar from '../../../components/CustomProgressBar/CustomProgr
 import LectureCurriculumSkeleton from '../../../components/LectureCurriculumSkeleton';
 import CaretRightt from '@icons/CaretRightt.svg';
 import BreadHome from '@icons/BreadHome.svg';
-import Player from '@vimeo/player'; 
+import Player from '@vimeo/player';
 import resourceImg from '../../../assets/icons/resource_image.svg';
 import linkImg from '../../../assets/icons/linkImg.svg';
 import ResourcesModel from '@components/ConfirmationBox/ResourcesModel';
+import Swal from 'sweetalert2';
 
 const EnrolledCourseDetail = () => {
     const navigate = useNavigate();
@@ -64,7 +65,7 @@ const EnrolledCourseDetail = () => {
 
     const [selectedResource, setSelectedResource] = useState(null);
     const [showModal, setShowModal] = useState(false);
-    
+
     const handleCloseModal = () => {
         setSelectedResource(null);
         setShowModal(false);
@@ -73,39 +74,39 @@ const EnrolledCourseDetail = () => {
     useEffect(() => {
         const iframeElement = document.querySelector('iframe.ql-video');
         let hasCalledNearEndFunction = false;
-        
+
         if (iframeElement) {
-        const player = new Player(iframeElement);
+            const player = new Player(iframeElement);
 
-        player.on('play', () => {
-            console.log('Video is playing...');
-        });
+            player.on('play', () => {
+                console.log('Video is playing...');
+            });
 
-        player.on('ended', async () => {
-            if (markLectureAsCompleted) {
-                await markLectureAsCompleted(selectedLecture.id, selectedLecture.courseId);
-            } else {
-                console.error('markLectureAsCompleted function is not defined');
-            }
-        });
+            player.on('ended', async () => {
+                if (markLectureAsCompleted) {
+                    await markLectureAsCompleted(selectedLecture.id, selectedLecture.courseId);
+                } else {
+                    console.error('markLectureAsCompleted function is not defined');
+                }
+            });
 
 
-        player.on('timeupdate', ({ seconds, duration }) => {
-            const timeLeft = duration - seconds;
+            player.on('timeupdate', ({ seconds, duration }) => {
+                const timeLeft = duration - seconds;
 
-            if (timeLeft <= 20 && !hasCalledNearEndFunction) {
-                hasCalledNearEndFunction = true;
-                console.log('Less than 20 seconds remaining...');
-                handleNearVideoEnd(); // Replace with your actual function
-            }
-        });
+                if (timeLeft <= 20 && !hasCalledNearEndFunction) {
+                    hasCalledNearEndFunction = true;
+                    console.log('Less than 20 seconds remaining...');
+                    handleNearVideoEnd(); // Replace with your actual function
+                }
+            });
 
-        return () => {
-            player.off('play');
-            player.off('ended');
-            player.off('timeupdate');
+            return () => {
+                player.off('play');
+                player.off('ended');
+                player.off('timeupdate');
 
-        };
+            };
         }
     }, [selectedLecture]);
 
@@ -141,11 +142,78 @@ const EnrolledCourseDetail = () => {
 
 
     const handleNearVideoEnd = () => {
-        console.log("Triggering function because video is near end");
-        // Your logic here
+        Swal.fire({
+            title: 'How was the video?',
+            position: 'bottom-end',
+            showConfirmButton: true,
+            showCancelButton: true,
+            confirmButtonText: '👍 Like',
+            cancelButtonText: '👎 Dislike',
+            backdrop: false,
+            toast: true,
+            timer: 10000,
+            timerProgressBar: true,
+        }).then((result) => {
+            if (result.isConfirmed) {
+                console.log('User liked the video');
+                handleVideoFeedback('like'); // replace with your actual logic
+            } else if (result.dismiss === Swal.DismissReason.cancel) {
+                console.log('User disliked the video');
+                handleVideoFeedback('dislike'); // replace with your actual logic
+            }
+        });
+
     };
 
 
+
+    const handleVideoFeedback = async (state) => {
+        if (state === "dislike") {
+            const { value: reason } = await Swal.fire({
+                title: 'Why didn\'t you like the video?',
+                input: 'select',
+                inputOptions: {
+                    boring: 'It was boring',
+                    confusing: 'It was confusing',
+                    lowQuality: 'Poor audio/video quality',
+                    irrelevant: 'Not relevant to the topic',
+                    other: 'Other',
+                },
+                inputPlaceholder: 'Select a reason',
+                showCancelButton: true,
+                confirmButtonText: 'Submit',
+                cancelButtonText: 'Cancel',
+            });
+
+            if (reason) {
+                console.log("Selected reason:", reason);
+
+                // Call your API here
+                try {
+                    await sendDislikeFeedback(reason);
+                    Swal.fire({
+                        toast: true,
+                        position: 'bottom-end',
+                        icon: 'success',
+                        title: 'Thanks for your feedback!',
+                        showConfirmButton: false,
+                        timer: 3000
+                    });
+                } catch (error) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: 'Failed to submit feedback. Please try again.',
+                    });
+                }
+            }
+        }
+    };
+
+
+    const sendDislikeFeedback = async (reason) => {
+        return true;
+    }
 
     let courseId = location.state?.courseId;
     // const courseId = location.state?.courseId;
@@ -233,7 +301,7 @@ const EnrolledCourseDetail = () => {
         if (lid != null) {
             for (let idx = 0; idx < lectures.length; idx++) {
                 const lec = lectures[idx];
-                console.warn('lectures',lectures[idx]);
+                console.warn('lectures', lectures[idx]);
                 if (lec.id == lid) {
                     setActiveIndex(idx);
                     getCurrentLecture(lec.id);
@@ -405,33 +473,33 @@ const EnrolledCourseDetail = () => {
 
         const currentLecture = lectures[activeIndex];
         const currentFolderId = currentLecture?.folder_id;
-        
+
         if (currentFolderId) {
             nextLecture = lectures
                 .slice(activeIndex + 1)
                 .find(lecture => lecture.folder_id === currentFolderId && !lecture.lecture_progress?.[0]?.is_completed);
         }
-        
+
         if (!nextLecture) {
             nextLecture = lectures
                 .slice(activeIndex + 1)
                 .find(lecture => !lecture.lecture_progress?.[0]?.is_completed);
         }
-        
+
         if (!nextLecture && currentFolderId) {
             nextLecture = lectures
-                .slice(0, activeIndex) 
+                .slice(0, activeIndex)
                 .find(lecture => lecture.folder_id === currentFolderId && !lecture.lecture_progress?.[0]?.is_completed);
         }
-        
+
         if (!nextLecture) {
             nextLecture = lectures
                 .slice(0, activeIndex)
                 .find(lecture => !lecture.lecture_progress?.[0]?.is_completed);
         }
-        
+
         const targetLectureId = nextLecture?.id || currentLecture?.id;
-        
+
 
 
         setSlugOnce(true);
@@ -519,8 +587,8 @@ const EnrolledCourseDetail = () => {
             console.warn('No file URL available to open.');
         }
     };
-    
-    
+
+
     return (
         <>
             {loading ? (
@@ -542,7 +610,7 @@ const EnrolledCourseDetail = () => {
                                             style={{ cursor: 'pointer' }} />
                                     </div>
                                     <img src={CaretRightt} alt=">" />
-                                    {courseDetails.title} <img src={CaretRightt} alt=">" /> 
+                                    {courseDetails.title} <img src={CaretRightt} alt=">" />
                                     No Lecture Found
                                 </div>
                             </div>
@@ -574,7 +642,7 @@ const EnrolledCourseDetail = () => {
                                                                                           Courses 
                                                                                       </span>{' '} */}
                                                 <img src={CaretRightt} alt=">" />
-                                                {courseDetails.title} <img src={CaretRightt} alt=">" /> 
+                                                {courseDetails.title} <img src={CaretRightt} alt=">" />
                                                 {lectures[activeIndex]?.name}
                                                 {/* Lecture{' '}
                                                 {activeIndex + 1} */}
@@ -631,23 +699,14 @@ const EnrolledCourseDetail = () => {
                                                 </div>
                                                 <Row className="section-border">
                                                     <Col sm={12} md={12} lg={4} xl={3}>
-                                                        <div className='search-lectures lec-left mb-3' style={{ height: 'auto' }}>
+                                                        {/* <div className='search-lectures lec-left mb-3' style={{ height: 'auto' }}>
                                                             <div className="title-lecture-btns">
                                                                 <h1>{courseDetails?.title}</h1>
                                                             </div>
                                                             <div className='progress-wrap'>
                                                                 <CustomProgressBar progress={calculateCompletionPercentage().toFixed(2)} />
-
-                                                                {/* <h3>Course Completion:</h3>
-                                                        <input 
-                                                            type="number" 
-                                                            value={calculateCompletionPercentage().toFixed(2)} 
-                                                            readOnly
-                                                            style={{ width: '100px', textAlign: 'center', fontSize: '16px' }}
-                                                        />
-                                                        <span>%</span> */}
                                                             </div>
-                                                        </div>
+                                                        </div> */}
                                                         <div className="search-lectures lec-left btm-box p-0">
 
 
@@ -721,79 +780,92 @@ const EnrolledCourseDetail = () => {
                                                                 <LectureCurriculumSkeleton />
                                                             ) : (<>
                                                                 {!continueQuiz && selectedLecture && (
-                                                                    <div className="lecture-curriculum">
-                                                                        <h2 className="title">
-                                                                            {selectedLecture.name}
-                                                                            {/* {selectedLecture.completedBy?.some(user => user.id === userInfo?.id) ?  <img className='checkimg' src={checkicon}   alt="Already completed"
+                                                                    <>
+                                                                        <div className='right-view-course-detail'>
+                                                                            <div className='search-lectures lec-left mb-3' style={{ height: 'auto' }}>
+                                                                                <div className="title-lecture-btns">
+                                                                                    <h1>{courseDetails?.title}</h1>
+                                                                                </div>
+                                                                                <div className='progress-wrap'>
+                                                                                    <CustomProgressBar progress={calculateCompletionPercentage().toFixed(2)} />
+                                                                                </div>
+                                                                            </div>
+
+                                                                        </div>
+                                                                        <div className="lecture-curriculum">
+                                                                            <h2 className="title">
+                                                                                {selectedLecture.name}
+                                                                                {/* {selectedLecture.completedBy?.some(user => user.id === userInfo?.id) ?  <img className='checkimg' src={checkicon}   alt="Already completed"
                                                                     data-tooltip-id="my-tooltip2" data-tooltip-place="top" 
                                                                      data-tooltip-content="Already completed"/> : <img className='checkimg' 
                                                                        onClick={() =>
                                                                     markLectureAsCompleted(selectedLecture?.id)
                                                                 }  src={checkicon2}  alt="Mark lecture as completed."
                                                                 data-tooltip-id="my-tooltip2"   data-tooltip-place="top" data-tooltip-content="Mark lecture as completed."/>} */}
-                                                                            {selectedLecture?.lecture_progress?.is_completed ? <img className='checkimg' src={checkicon} alt="Already completed"
-                                                                                data-tooltip-id="my-tooltip2" data-tooltip-place="top" style={{ cursor: 'pointer' }}
-                                                                                data-tooltip-content="Already completed" /> : <img className='checkimg'
-                                                                                    onClick={() =>
-                                                                                        markLectureAsCompleted(selectedLecture?.id)
-                                                                                    } src={checkicon2} alt="Mark lecture as completed."
-                                                                                    data-tooltip-id="my-tooltip2" style={{ cursor: 'pointer' }} data-tooltip-place="top" data-tooltip-content="Mark lecture as completed." />}
+                                                                                {selectedLecture?.lecture_progress?.is_completed ? <img className='checkimg' src={checkicon} alt="Already completed"
+                                                                                    data-tooltip-id="my-tooltip2" data-tooltip-place="top" style={{ cursor: 'pointer' }}
+                                                                                    data-tooltip-content="Already completed" /> : <img className='checkimg'
+                                                                                        onClick={() =>
+                                                                                            markLectureAsCompleted(selectedLecture?.id)
+                                                                                        } src={checkicon2} alt="Mark lecture as completed."
+                                                                                        data-tooltip-id="my-tooltip2" style={{ cursor: 'pointer' }} data-tooltip-place="top" data-tooltip-content="Mark lecture as completed." />}
 
-                                                                        </h2>
+                                                                            </h2>
 
-                                                                        <p
-                                                                            className="mb-2"
-                                                                            dangerouslySetInnerHTML={{
-                                                                                __html: decodeHtmlEntities(selectedLecture.description)
-                                                                            }}
-                                                                        ></p>
-                                                                        {Array.isArray(selectedLecture.resources) && selectedLecture.resources.length > 0 && (
-                                                                            <div className="modal-resources modal-description">
-                                                                                <div className="modal-resources-body">
-                                                                                    <h5 className="fw-semibold mb-3">Resources</h5>
-                                                                                    <div id="all_resources" className="d-flex flex-column gap-3">
-                                                                                        {selectedLecture.resources.map((resource) => (
-                                                                                            <div
-                                                                                                key={resource?.id}
-                                                                                                className="d-flex align-items-center gap-2 cursor-pointer"
-                                                                                                style={{ cursor: 'pointer' }}
-                                                                                                onClick={() => {
-                                                                                                    if (resource.url) {
-                                                                                                        window.open(resource.url, '_blank');
-                                                                                                    } else if (resource.file_link) {
-                                                                                                        // setSelectedResource(resource);
-                                                                                                        handleDownloadModelClick(resource)
-                                                                                                        // setShowModal(true);
-                                                                                                    }
-                                                                                                }}
-                                                                                            >
-                                                                                                <img
-                                                                                                    src={resource.url ? linkImg : resourceImg}
-                                                                                                    alt="Resource"
-                                                                                                    className="img-fluid"
-                                                                                                    style={{ width: '24px', height: '24px' }}
-                                                                                                />
-                                                                                                <div className="text-muted">{resource?.name}</div>
-                                                                                            </div>
-                                                                                        ))}
+                                                                            <p
+                                                                                className="mb-2"
+                                                                                dangerouslySetInnerHTML={{
+                                                                                    __html: decodeHtmlEntities(selectedLecture.description)
+                                                                                }}
+                                                                            ></p>
+                                                                            {Array.isArray(selectedLecture.resources) && selectedLecture.resources.length > 0 && (
+                                                                                <div className="modal-resources modal-description">
+                                                                                    <div className="modal-resources-body">
+                                                                                        <h5 className="fw-semibold mb-3">Resources</h5>
+                                                                                        <div id="all_resources" className="d-flex flex-column gap-3">
+                                                                                            {selectedLecture.resources.map((resource) => (
+                                                                                                <div
+                                                                                                    key={resource?.id}
+                                                                                                    className="d-flex align-items-center gap-2 cursor-pointer"
+                                                                                                    style={{ cursor: 'pointer' }}
+                                                                                                    onClick={() => {
+                                                                                                        if (resource.url) {
+                                                                                                            window.open(resource.url, '_blank');
+                                                                                                        } else if (resource.file_link) {
+                                                                                                            // setSelectedResource(resource);
+                                                                                                            handleDownloadModelClick(resource)
+                                                                                                            // setShowModal(true);
+                                                                                                        }
+                                                                                                    }}
+                                                                                                >
+                                                                                                    <img
+                                                                                                        src={resource.url ? linkImg : resourceImg}
+                                                                                                        alt="Resource"
+                                                                                                        className="img-fluid"
+                                                                                                        style={{ width: '24px', height: '24px' }}
+                                                                                                    />
+                                                                                                    <div className="text-muted">{resource?.name}</div>
+                                                                                                </div>
+                                                                                            ))}
+                                                                                        </div>
                                                                                     </div>
                                                                                 </div>
-                                                                            </div>
-                                                                        )}
+                                                                            )}
 
-                                                                    {selectedLecture?.transcript && (
-                                                                        <div className="modal-description">
-                                                                            <h5 className='fw-semibold my-3'>Transcript</h5>
-                                                                            <div
-                                                                                className="content"
-                                                                                dangerouslySetInnerHTML={{
-                                                                                    __html: decodeHtmlEntities(selectedLecture?.transcript) || ''
-                                                                                }}
-                                                                                />
+                                                                            {selectedLecture?.transcript && (
+                                                                                <div className="modal-description">
+                                                                                    <h5 className='fw-semibold my-3'>Transcript</h5>
+                                                                                    <div
+                                                                                        className="content"
+                                                                                        dangerouslySetInnerHTML={{
+                                                                                            __html: decodeHtmlEntities(selectedLecture?.transcript) || ''
+                                                                                        }}
+                                                                                    />
+                                                                                </div>
+                                                                            )}
+
                                                                         </div>
-                                                                    )}
-
-                                                                    </div>
+                                                                    </>
                                                                 )}
 
                                                                 {continueQuiz && selectedLecture && (
