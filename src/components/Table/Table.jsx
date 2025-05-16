@@ -146,12 +146,7 @@ const navigate = useNavigate();
                     </div>
                 </div>
             </div>
-            <div className='student stats student-stats'>
-                <div>
-                    <h3> Total counts : {tableData?.length}</h3>
-                </div>
-
-            </div>
+     
             <div className="ag-theme-alpine" style={{ width: width ? width : '100%' }}>
                 {loading ? (
                     <Loading />

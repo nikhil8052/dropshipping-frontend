@@ -74,6 +74,8 @@ const EnrolledCourseDetail = () => {
     useEffect(() => {
         const iframeElement = document.querySelector('iframe.ql-video');
         let hasCalledNearEndFunction = false;
+        let hasCalledNear10EndFunction = false;
+
 
         if (iframeElement) {
             const player = new Player(iframeElement);
@@ -91,15 +93,28 @@ const EnrolledCourseDetail = () => {
             });
 
 
+
+
             player.on('timeupdate', ({ seconds, duration }) => {
                 const timeLeft = duration - seconds;
 
-                if (timeLeft <= 20 && !hasCalledNearEndFunction) {
-                    hasCalledNearEndFunction = true;
-                    console.log('Less than 20 seconds remaining...');
-                    handleNearVideoEnd(); // Replace with your actual function
+                if (timeLeft <= 10 && !hasCalledNear10EndFunction) {
+                    hasCalledNear10EndFunction = true;
+                    moveNextLecSwal();
                 }
             });
+
+
+
+            // player.on('timeupdate', ({ seconds, duration }) => {
+            //     const timeLeft = duration - seconds;
+
+            //     if (timeLeft <= 20 && !hasCalledNearEndFunction) {
+            //         hasCalledNearEndFunction = true;
+            //         console.log('Less than 20 seconds remaining...');
+            //         handleNearVideoEnd(); // Replace with your actual function
+            //     }
+            // });
 
             return () => {
                 player.off('play');
@@ -140,6 +155,29 @@ const EnrolledCourseDetail = () => {
         }
     }, [courseDetails]);
 
+    const moveNextLecSwal = () => {
+        Swal.fire({
+            title: 'How was the video?',
+            position: 'bottom-end',
+            showConfirmButton: true,
+            showCancelButton: true,
+            confirmButtonText: '👍 Like',
+            cancelButtonText: '👎 Dislike',
+            backdrop: false,
+            toast: true,
+            timer: 10000,
+            timerProgressBar: true,
+        }).then((result) => {
+            if (result.isConfirmed) {
+                console.log('User liked the video');
+                handleVideoFeedback('like'); // replace with your actual logic
+            } else if (result.dismiss === Swal.DismissReason.cancel) {
+                console.log('User disliked the video');
+                handleVideoFeedback('dislike'); // replace with your actual logic
+            }
+        });
+
+    }
 
     const handleNearVideoEnd = () => {
         Swal.fire({
