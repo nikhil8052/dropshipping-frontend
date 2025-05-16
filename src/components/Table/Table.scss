@@ -324,15 +324,16 @@
 
 // date- 16may 
 
-div#ag-30 {
+.ag-paging-panel.ag-unselectable {
     display: grid;
+    justify-content: end !important;
 }
 
 
 .pages_count {
     display: flex;
     justify-content: end;
-    max-width: 500px;
+    max-width: 600px;
     gap: 15px;
     bottom: calc(0% + 2px);
     position: absolute;
@@ -376,4 +377,8 @@ div#ag-30 {
 
 .main-panel  .main-content-wrapper .ag-theme-alpine.custom-table.student-table {
     position: static;
+}
+
+.ag-paging-panel.ag-unselectable >  .ag-paging-page-summary-panel{
+    margin: 0px !important;
 }
