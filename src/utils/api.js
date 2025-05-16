@@ -20,7 +20,7 @@ axios.interceptors.response.use(
                 text: successMessage,
                 icon: 'success',
                 showConfirmButton: false,
-                timer: 2000, 
+                timer: 1000, 
                 timerProgressBar: true 
             });
             // toast.success(successMessage);
