@@ -81,11 +81,12 @@ const EnrolledCourseDetail = () => {
             const player = new Player(iframeElement);
 
             player.on('play', () => {
-                console.log('Video is playing...');
+
             });
 
             player.on('ended', async () => {
                 if (markLectureAsCompleted) {
+                    handleNearVideoEnd();
                     await markLectureAsCompleted(selectedLecture.id, selectedLecture.courseId);
                 } else {
                     console.error('markLectureAsCompleted function is not defined');
@@ -104,17 +105,6 @@ const EnrolledCourseDetail = () => {
                 }
             });
 
-
-
-            // player.on('timeupdate', ({ seconds, duration }) => {
-            //     const timeLeft = duration - seconds;
-
-            //     if (timeLeft <= 20 && !hasCalledNearEndFunction) {
-            //         hasCalledNearEndFunction = true;
-            //         console.log('Less than 20 seconds remaining...');
-            //         handleNearVideoEnd(); // Replace with your actual function
-            //     }
-            // });
 
             return () => {
                 player.off('play');
@@ -157,104 +147,87 @@ const EnrolledCourseDetail = () => {
 
     const moveNextLecSwal = () => {
         Swal.fire({
-            title: 'How was the video?',
+            title: 'Move to next lecture?',
             position: 'bottom-end',
             showConfirmButton: true,
             showCancelButton: true,
-            confirmButtonText: '👍 Like',
-            cancelButtonText: '👎 Dislike',
+            confirmButtonText: '➡️ Move',
+            cancelButtonText: '❌ Dismiss',
             backdrop: false,
             toast: true,
             timer: 10000,
             timerProgressBar: true,
-        }).then((result) => {
+        }).then(async (result) => {
             if (result.isConfirmed) {
-                console.log('User liked the video');
-                handleVideoFeedback('like'); // replace with your actual logic
+                if (markLectureAsCompleted) {
+                    await markLectureAsCompleted(selectedLecture.id, selectedLecture.courseId);
+                }
             } else if (result.dismiss === Swal.DismissReason.cancel) {
-                console.log('User disliked the video');
-                handleVideoFeedback('dislike'); // replace with your actual logic
+                console.log('Popup dismissed');
             }
         });
+    };
+    
+    const feedbackReasons = [
+        { id: 'a5b05a23-3d9c-47e0-a26e-609a8737f8ae', label: 'Too fast' },
+        { id: 'a5b05a23-3d9c-47e0-a36e-609a8737f8ae', label: 'Too slow' },
+        { id: 'a5b05a23-3d9c-47e0-a46e-609a8737f8ae', label: 'Poor explanation' },
+        { id: 'a5b05a23-3d9c-47e0-a56e-609a8737f8ae', label: 'Technical issues' },
+        { id: 'a5b05a23-3d9c-47e0-a66e-609a8737f8ae', label: 'Other' }
+    ];
 
-    }
+    const inputOptions = feedbackReasons.reduce((acc, item) => {
+        acc[item.id] = item.label;
+        return acc;
+    }, {});
+
 
     const handleNearVideoEnd = () => {
         Swal.fire({
             title: 'How was the video?',
-            position: 'bottom-end',
+            icon: 'question',
             showConfirmButton: true,
             showCancelButton: true,
             confirmButtonText: '👍 Like',
             cancelButtonText: '👎 Dislike',
-            backdrop: false,
-            toast: true,
-            timer: 10000,
-            timerProgressBar: true,
+            position: 'center',
+            allowOutsideClick: false,
+            allowEscapeKey: false,
         }).then((result) => {
             if (result.isConfirmed) {
-                console.log('User liked the video');
-                handleVideoFeedback('like'); // replace with your actual logic
+                handleVideoFeedback('like');
             } else if (result.dismiss === Swal.DismissReason.cancel) {
-                console.log('User disliked the video');
-                handleVideoFeedback('dislike'); // replace with your actual logic
+                Swal.fire({
+                    title: 'Why did you dislike it?',
+                    input: 'select',
+                    inputOptions: inputOptions,
+                    inputPlaceholder: 'Select a reason',
+                    showCancelButton: true,
+                    confirmButtonText: 'Submit',
+                }).then((feedbackResult) => {
+                    if (feedbackResult.isConfirmed && feedbackResult.value) {
+                        sendDislikeFeedback('dislike', feedbackResult.value);
+                    }
+                });
             }
         });
-
     };
 
 
 
-    const handleVideoFeedback = async (state) => {
-        if (state === "dislike") {
-            const { value: reason } = await Swal.fire({
-                title: 'Why didn\'t you like the video?',
-                input: 'select',
-                inputOptions: {
-                    boring: 'It was boring',
-                    confusing: 'It was confusing',
-                    lowQuality: 'Poor audio/video quality',
-                    irrelevant: 'Not relevant to the topic',
-                    other: 'Other',
-                },
-                inputPlaceholder: 'Select a reason',
-                showCancelButton: true,
-                confirmButtonText: 'Submit',
-                cancelButtonText: 'Cancel',
-            });
 
-            if (reason) {
-                console.log("Selected reason:", reason);
+    const sendDislikeFeedback = async (type, id ) => {
 
-                // Call your API here
-                try {
-                    await sendDislikeFeedback(reason);
-                    Swal.fire({
-                        toast: true,
-                        position: 'bottom-end',
-                        icon: 'success',
-                        title: 'Thanks for your feedback!',
-                        showConfirmButton: false,
-                        timer: 3000
-                    });
-                } catch (error) {
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Error',
-                        text: 'Failed to submit feedback. Please try again.',
-                    });
-                }
-            }
-        }
-    };
-
-
-    const sendDislikeFeedback = async (reason) => {
         const lid = selectedLecture.id;
         const URL = `${API_URL.SUPABASE_MARK_LECTURE_REVIEW.replace(':id', lid)}`;
 
-        console.log(URL, "This is the URL ")
-        const response = await axiosWrapper('PUT', URL, {}, token);
+        const payload=  {
+
+            'lecture_id':lid , 
+            'reason_id':id
+        }; 
+
+        const response = await axiosWrapper('PUT', URL, {payload}, token);
 
         console.log(response)
 
@@ -499,12 +472,6 @@ const EnrolledCourseDetail = () => {
         }
     };
 
-    // const markLectureAsCompleted = async (lectureId) => {
-    //     const URL = `${API_URL.SUPABASE_MARK_LECTURE_COMPLETED.replace(':id', lectureId)}`;
-    //     await axiosWrapper('PUT', URL, {}, token);
-    //     setSlugOnce(true);
-    //     getCourseById(currentCourseID, lectures[activeIndex]?.id);
-    // };
 
     const markLectureAsCompleted = async (lectureId, courseId) => {
         const URL = `${API_URL.SUPABASE_MARK_LECTURE_COMPLETED.replace(':id', lectureId)}`;
@@ -513,7 +480,12 @@ const EnrolledCourseDetail = () => {
             courseId
         };
 
-        await axiosWrapper('PUT', URL, data, token);
+        try {
+            await axiosWrapper('PUT', URL, data, token);
+        } catch (error) {
+            console.error("Failed to mark lecture as completed:", error);
+
+        }
 
         let nextLecture;
 
