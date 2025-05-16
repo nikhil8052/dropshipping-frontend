@@ -72,6 +72,7 @@ const EnrolledCourseDetail = () => {
 
     useEffect(() => {
         const iframeElement = document.querySelector('iframe.ql-video');
+        let hasCalledNearEndFunction = false;
         
         if (iframeElement) {
         const player = new Player(iframeElement);
@@ -88,9 +89,22 @@ const EnrolledCourseDetail = () => {
             }
         });
 
+
+        player.on('timeupdate', ({ seconds, duration }) => {
+            const timeLeft = duration - seconds;
+
+            if (timeLeft <= 20 && !hasCalledNearEndFunction) {
+                hasCalledNearEndFunction = true;
+                console.log('Less than 20 seconds remaining...');
+                handleNearVideoEnd(); // Replace with your actual function
+            }
+        });
+
         return () => {
             player.off('play');
             player.off('ended');
+            player.off('timeupdate');
+
         };
         }
     }, [selectedLecture]);
@@ -124,6 +138,14 @@ const EnrolledCourseDetail = () => {
             processCourseData(courseDetails);
         }
     }, [courseDetails]);
+
+
+    const handleNearVideoEnd = () => {
+        console.log("Triggering function because video is near end");
+        // Your logic here
+    };
+
+
 
     let courseId = location.state?.courseId;
     // const courseId = location.state?.courseId;

@@ -422,7 +422,7 @@ const Students = () => {
                     <Badge
                         bg={props.data.isActive ? 'success' : 'danger'}
                         style={{ padding: '0.5rem 0.5rem' }}
-                        // onClick={() => props.onToggleClick(props.data)}
+                    // onClick={() => props.onToggleClick(props.data)}
                     >
                         {props.data.isActive ? 'Active' : 'Inactive'}
                     </Badge>
@@ -532,9 +532,6 @@ const Students = () => {
         {
             headerName: 'HT / LT',
             field: 'coachingTrajectory',
-            // filter: 'agSetColumnFilter',
-            // sortable: true,
-            // unSortIcon: true,
             resizable: false,
             default: true,
             cellRenderer: ({ data: rowData }) => {
@@ -604,9 +601,9 @@ const Students = () => {
             default: true,
             headerComponent: (params) => (
                 <HideShowCols
-                setShowHideDiv={setShowHideDiv}
-                setShowHidePosition={setShowHidePosition}
-                setSelectPosition={setSelectPosition}
+                    setShowHideDiv={setShowHideDiv}
+                    setShowHidePosition={setShowHidePosition}
+                    setSelectPosition={setSelectPosition}
                     showHideDiv={showHideDiv}
                 />
             ),
@@ -875,7 +872,7 @@ const Students = () => {
                         </div>
 
                         {/* Default fields */}
-                        {defaultFields.map((property) => (
+                        {/* {defaultFields.map((property) => (
                             <div
                                 key={property.field}
                                 className="flex items-center justify-between px-1 py-1 text-items cursor-not-allowed opacity-50"
@@ -887,7 +884,7 @@ const Students = () => {
                                     </div>
                                 </div>
                             </div>
-                        ))}
+                        ))} */}
 
                         {/* Visible Draggable Zone */}
                         <Droppable droppableId="visible">
