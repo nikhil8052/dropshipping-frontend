@@ -125,6 +125,13 @@ const EnrolledCourseDetail = () => {
 
             player.on('ended', async () => {
 
+
+                if (markLectureAsCompleted) {
+                    await markLectureAsCompleted(selectedLecture.id, selectedLecture.courseId);
+                } else {
+                    console.error('markLectureAsCompleted function is not defined');
+                }
+
                 if (
                     selectedLecture?.feedbackInserted === false ||
                     selectedLecture?.feedbackInserted === 'false'
@@ -132,17 +139,10 @@ const EnrolledCourseDetail = () => {
 
                     handleNearVideoEnd();
                 }
-
-                if (markLectureAsCompleted) {
-                    await markLectureAsCompleted(selectedLecture.id, selectedLecture.courseId);
-                } else {
-                    console.error('markLectureAsCompleted function is not defined');
-                }
             });
 
             player.on('timeupdate', ({ seconds, duration }) => {
                 const timeLeft = duration - seconds;
-
                 if (timeLeft <= 10 && !hasCalledNear10EndFunction) {
                     hasCalledNear10EndFunction = true;
                     moveNextLecSwal();
@@ -197,8 +197,16 @@ const EnrolledCourseDetail = () => {
             confirmButtonText: 'Next Lecture',
             cancelButtonText: 'Close',
             backdrop: false,
-            toast: true,
-            timer: 1000,
+            heightAuto: false,
+            width: '400px', // 👈 Make it wider
+            padding: '1.5em',
+            customClass: {
+                popup: 'swal-wide',
+                title: 'swal-title',
+                confirmButton: 'swal-confirm',
+                cancelButton: 'swal-cancel'
+            },
+            timer: 12000,
             timerProgressBar: true,
         }).then(async (result) => {
             if (result.isConfirmed) {
@@ -237,7 +245,7 @@ const EnrolledCourseDetail = () => {
             allowEscapeKey: false,
         }).then((result) => {
             if (result.isConfirmed) {
-                handleVideoFeedback('like');
+                sendDislikeFeedback('like');
             } else if (result.dismiss === Swal.DismissReason.cancel) {
                 Swal.fire({
                     title: 'Why did you dislike it?',
@@ -260,11 +268,15 @@ const EnrolledCourseDetail = () => {
 
     const sendDislikeFeedback = async (type, id) => {
 
+        if (type == 'like') {
+            if (markLectureAsCompleted) {
+                await markLectureAsCompleted(selectedLecture.id, selectedLecture.courseId);
+            }
+            return
+        }
         const lid = selectedLecture.id;
         const URL = `${API_URL.SUPABASE_MARK_LECTURE_REVIEW.replace(':id', lid)}`;
-
         const payload = {
-
             'lecture_id': lid,
             'reason_id': id
         };
@@ -570,7 +582,7 @@ const EnrolledCourseDetail = () => {
             const newIndex = lectures.findIndex(lec => lec.id === targetLectureId);
             setActiveIndex(newIndex);
             updateLectureUrl(newIndex);
-           
+
             getCourseById(currentCourseID, targetLectureId);
         } else {
             getCourseById(currentCourseID, targetLectureId);
