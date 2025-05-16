@@ -212,7 +212,15 @@ const EnrolledCourseDetail = () => {
 
 
     const sendDislikeFeedback = async (reason) => {
-        return true;
+        const lid = selectedLecture.id;
+        const URL = `${API_URL.SUPABASE_MARK_LECTURE_REVIEW.replace(':id', lid)}`;
+
+        console.log(URL, "This is the URL ")
+        const response = await axiosWrapper('PUT', URL, {}, token);
+
+        console.log(response)
+
+
     }
 
     let courseId = location.state?.courseId;
@@ -697,6 +705,20 @@ const EnrolledCourseDetail = () => {
                                                         ))}
                                                     </div>
                                                 </div>
+                                                <Row className='mt-2'>
+                                                    <div className='right-view-course-detail'>
+                                                        <div className='search-lectures lec-left mb-1' style={{ height: 'auto' }}>
+                                                            <div className="title-lecture-btns">
+                                                                <h1>{courseDetails?.title}</h1>
+                                                            </div>
+                                                            <div className='progress-wrap'>
+                                                                <CustomProgressBar progress={calculateCompletionPercentage().toFixed(2)} />
+                                                            </div>
+                                                        </div>
+
+                                                    </div>
+
+                                                </Row>
                                                 <Row className="section-border">
                                                     <Col sm={12} md={12} lg={4} xl={3}>
                                                         {/* <div className='search-lectures lec-left mb-3' style={{ height: 'auto' }}>
@@ -781,17 +803,7 @@ const EnrolledCourseDetail = () => {
                                                             ) : (<>
                                                                 {!continueQuiz && selectedLecture && (
                                                                     <>
-                                                                        <div className='right-view-course-detail'>
-                                                                            <div className='search-lectures lec-left mb-3' style={{ height: 'auto' }}>
-                                                                                <div className="title-lecture-btns">
-                                                                                    <h1>{courseDetails?.title}</h1>
-                                                                                </div>
-                                                                                <div className='progress-wrap'>
-                                                                                    <CustomProgressBar progress={calculateCompletionPercentage().toFixed(2)} />
-                                                                                </div>
-                                                                            </div>
 
-                                                                        </div>
                                                                         <div className="lecture-curriculum">
                                                                             <h2 className="title">
                                                                                 {selectedLecture.name}
