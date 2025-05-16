@@ -71,32 +71,44 @@ const EnrolledCourseDetail = () => {
         setShowModal(false);
     };
 
-    const feedbackReasons = [
-        { id: 'a58c8311-6508-489a-b70a-c5bdff8b8b41', label: 'Too fast' },
-        { id: 'e6722756-f793-45ef-b892-7d744e0c7c96', label: 'Too slow' },
-        { id: 'c633efa1-b7a1-47ab-b79d-a0f496586be3', label: 'Poor explanation' },
-        { id: '6ed8525a-c781-40b0-ba7b-7aeffb2f7e5e', label: 'Technical issues' },
-        { id: '6909e220-c6a4-441a-ba81-42adc3d8d87a', label: 'Other' }
-    ];
-
-    const inputOptions = feedbackReasons.reduce((acc, item) => {
-        acc[item.id] = item.label;
-        return acc;
-    }, {});
+    const [feedbackReasons, setFeedbackReasons] = useState([]);
+    const [inputOptions, setInputOptions] = useState({});
 
 
-    // useEffect(() => {
-    //     const fetchReasons = async () => {
-    //         try {
-    //             const { data } = await axiosWrapper('GET', `${API_URL.SUPABASE_LECTURE_FEEBACK_REASONS}`, token);
-    //             console.log(data, "Data responses");
-    //         } catch (error) {
-    //             console.error("Error fetching reasons:", error);
-    //         }
-    //     };
-    
-    //     fetchReasons();
-    // }, []);
+
+    useEffect(() => {
+        const fetchReasons = async () => {
+            try {
+                const response = await axiosWrapper(
+                    'GET',
+                    `${API_URL.SUPABASE_LECTURE_FEEBACK_REASONS}`,
+                    {},
+                    token
+                );
+
+                const reasons = response?.data?.reasons || [];
+
+                // Ensure the reasons have `id` and `label`
+                const formattedReasons = reasons.map((reason) => ({
+                    id: reason.id,
+                    label: reason.title
+                }));
+
+                setFeedbackReasons(formattedReasons);
+
+                const options = formattedReasons.reduce((acc, item) => {
+                    acc[item.id] = item.label;
+                    return acc;
+                }, {});
+
+                setInputOptions(options);
+            } catch (error) {
+                console.error('Error fetching reasons:', error);
+            }
+        };
+
+        fetchReasons();
+    }, [token]);
 
     useEffect(() => {
         const iframeElement = document.querySelector('iframe.ql-video');
@@ -177,7 +189,6 @@ const EnrolledCourseDetail = () => {
     }, [courseDetails]);
 
     const moveNextLecSwal = () => {
-
         Swal.fire({
             title: 'Move to next lecture?',
             position: 'bottom-end',
@@ -187,7 +198,7 @@ const EnrolledCourseDetail = () => {
             cancelButtonText: 'Close',
             backdrop: false,
             toast: true,
-            timer: 10000,
+            timer: 1000,
             timerProgressBar: true,
         }).then(async (result) => {
             if (result.isConfirmed) {
@@ -559,7 +570,7 @@ const EnrolledCourseDetail = () => {
             const newIndex = lectures.findIndex(lec => lec.id === targetLectureId);
             setActiveIndex(newIndex);
             updateLectureUrl(newIndex);
-            console.log(newIndex);
+           
             getCourseById(currentCourseID, targetLectureId);
         } else {
             getCourseById(currentCourseID, targetLectureId);
