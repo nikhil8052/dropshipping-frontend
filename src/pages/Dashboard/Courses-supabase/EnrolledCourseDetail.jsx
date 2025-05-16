@@ -127,18 +127,19 @@ const EnrolledCourseDetail = () => {
 
 
                 if (markLectureAsCompleted) {
+                    if (
+                        selectedLecture?.feedbackInserted === false ||
+                        selectedLecture?.feedbackInserted === 'false'
+                    ) {
+                        handleNearVideoEnd();
+                    }
+
                     await markLectureAsCompleted(selectedLecture.id, selectedLecture.courseId);
                 } else {
                     console.error('markLectureAsCompleted function is not defined');
                 }
 
-                if (
-                    selectedLecture?.feedbackInserted === false ||
-                    selectedLecture?.feedbackInserted === 'false'
-                ) {
 
-                    handleNearVideoEnd();
-                }
             });
 
             player.on('timeupdate', ({ seconds, duration }) => {
@@ -198,7 +199,7 @@ const EnrolledCourseDetail = () => {
             cancelButtonText: 'Close',
             backdrop: false,
             heightAuto: false,
-            width: '400px', // 👈 Make it wider
+            width: '400px',
             padding: '1.5em',
             customClass: {
                 popup: 'swal-wide',
