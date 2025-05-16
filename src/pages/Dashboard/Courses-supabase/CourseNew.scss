@@ -1999,11 +1999,13 @@ label.custom_check span {
     margin-top: 16px !important;
 }
 
-.lecture-right .lecture-curriculum > p p {
+.lecture-right .lecture-curriculum>p p {
     font-size: 15px !important;
     font-weight: 600;
 }
-.lecture-right .lecture-curriculum .modal-resources.modal-description h5  , .lecture-right .lecture-curriculum .modal-description h5{
+
+.lecture-right .lecture-curriculum .modal-resources.modal-description h5,
+.lecture-right .lecture-curriculum .modal-description h5 {
     font-size: 22px;
 }
 
