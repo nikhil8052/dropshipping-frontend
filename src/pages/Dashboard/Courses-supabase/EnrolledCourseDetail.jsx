@@ -85,16 +85,21 @@ const EnrolledCourseDetail = () => {
             });
 
             player.on('ended', async () => {
-                if (markLectureAsCompleted) {
+
+                if (
+                    selectedLecture?.feedbackInserted === false ||
+                    selectedLecture?.feedbackInserted === 'false'
+                ) {
+
                     handleNearVideoEnd();
+                }
+
+                if (markLectureAsCompleted) {
                     await markLectureAsCompleted(selectedLecture.id, selectedLecture.courseId);
                 } else {
                     console.error('markLectureAsCompleted function is not defined');
                 }
             });
-
-
-
 
             player.on('timeupdate', ({ seconds, duration }) => {
                 const timeLeft = duration - seconds;
@@ -110,7 +115,6 @@ const EnrolledCourseDetail = () => {
                 player.off('play');
                 player.off('ended');
                 player.off('timeupdate');
-
             };
         }
     }, [selectedLecture]);
@@ -146,19 +150,30 @@ const EnrolledCourseDetail = () => {
     }, [courseDetails]);
 
     const moveNextLecSwal = () => {
+
         Swal.fire({
             title: 'Move to next lecture?',
             position: 'bottom-end',
             showConfirmButton: true,
             showCancelButton: true,
-            confirmButtonText: '➡️ Move',
-            cancelButtonText: '❌ Dismiss',
+            confirmButtonText: 'Next Lecture',
+            cancelButtonText: 'Close',
             backdrop: false,
             toast: true,
             timer: 10000,
             timerProgressBar: true,
         }).then(async (result) => {
             if (result.isConfirmed) {
+                const iframeElement = document.querySelector('iframe.ql-video');
+                if (iframeElement) {
+                    const player = new Player(iframeElement);
+                    try {
+                        await player.pause();
+                    } catch (error) {
+                        console.error('Error pausing Vimeo video:', error);
+                    }
+                }
+
                 if (markLectureAsCompleted) {
                     await markLectureAsCompleted(selectedLecture.id, selectedLecture.courseId);
                 }
@@ -167,13 +182,13 @@ const EnrolledCourseDetail = () => {
             }
         });
     };
-    
+
     const feedbackReasons = [
-        { id: 'a5b05a23-3d9c-47e0-a26e-609a8737f8ae', label: 'Too fast' },
-        { id: 'a5b05a23-3d9c-47e0-a36e-609a8737f8ae', label: 'Too slow' },
-        { id: 'a5b05a23-3d9c-47e0-a46e-609a8737f8ae', label: 'Poor explanation' },
-        { id: 'a5b05a23-3d9c-47e0-a56e-609a8737f8ae', label: 'Technical issues' },
-        { id: 'a5b05a23-3d9c-47e0-a66e-609a8737f8ae', label: 'Other' }
+        { id: 'a58c8311-6508-489a-b70a-c5bdff8b8b41', label: 'Too fast' },
+        { id: 'e6722756-f793-45ef-b892-7d744e0c7c96', label: 'Too slow' },
+        { id: 'c633efa1-b7a1-47ab-b79d-a0f496586be3', label: 'Poor explanation' },
+        { id: '6ed8525a-c781-40b0-ba7b-7aeffb2f7e5e', label: 'Technical issues' },
+        { id: '6909e220-c6a4-441a-ba81-42adc3d8d87a', label: 'Other' }
     ];
 
     const inputOptions = feedbackReasons.reduce((acc, item) => {
@@ -216,18 +231,18 @@ const EnrolledCourseDetail = () => {
 
 
 
-    const sendDislikeFeedback = async (type, id ) => {
+    const sendDislikeFeedback = async (type, id) => {
 
         const lid = selectedLecture.id;
         const URL = `${API_URL.SUPABASE_MARK_LECTURE_REVIEW.replace(':id', lid)}`;
 
-        const payload=  {
+        const payload = {
 
-            'lecture_id':lid , 
-            'reason_id':id
-        }; 
+            'lecture_id': lid,
+            'reason_id': id
+        };
 
-        const response = await axiosWrapper('PUT', URL, {payload}, token);
+        const response = await axiosWrapper('PUT', URL, { payload }, token);
 
         console.log(response)
 
@@ -275,8 +290,7 @@ const EnrolledCourseDetail = () => {
     };
 
     const getCourseById = async (id, nextLecture) => {
-        console.log('next-lecture', nextLecture);
-        console.log('current-lecture', id);
+
         const { data } = await axiosWrapper('GET', `${API_URL.SUPABASE_GET_COURSE.replace(':id', id)}`, {}, token);
         // setAccessRestricted(true);
         // console.warn('return data:',data);
@@ -354,6 +368,9 @@ const EnrolledCourseDetail = () => {
         if (!id) return;
         setLectureLoading(true);
         const { data } = await axiosWrapper('GET', `${API_URL.SUPABASE_GET_LECTURE.replace(':id', id)}`, {}, token);
+
+        console.log(data, " This is the current fetched lecture from the server now! ")
+
         setSelectedLecture(data);
         const mcqs = data.quiz?.mcqs;
 
