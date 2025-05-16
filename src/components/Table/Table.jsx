@@ -14,7 +14,7 @@ import { useSelector } from 'react-redux';
 
 const gridComponents = {
     headerWithIcon: HeaderWithIcon
-  };
+};
 
 const Table = ({
     columns,
@@ -31,18 +31,22 @@ const Table = ({
     const [gridApi, setGridApi] = useState(null);
     const [gridColumnApi, setGridColumnApi] = useState(null);
     const [search, setSearch] = useState('');
-       const gridComponents = {
-            headerWithIcon: HeaderWithIcon
-          };
+    const gridRef = useRef();
 
     const defferedSearch = useDeferredValue(search);
-const navigate = useNavigate();
+    const navigate = useNavigate();
+
     const onGridReady = (params) => {
         setGridApi(params.api);
         setGridColumnApi(params.columnApi);
-
-        // Auto-size all columns based on their content
         params.columnApi.autoSizeAllColumns();
+
+        updatePaginationInfo(params.api);
+
+        // Listen to pagination change
+        params.api.addEventListener('paginationChanged', () => {
+            updatePaginationInfo(params.api);
+        });
     };
 
     useEffect(() => {
@@ -69,6 +73,43 @@ const navigate = useNavigate();
         gridApi.exportDataAsCsv();
     };
 
+    const [pageSize, setPageSize] = useState(20);
+
+    const [paginationInfo, setPaginationInfo] = useState({
+        from: 0,
+        to: 0,
+        total: 0,
+    });
+
+    const updatePaginationInfo = (api) => {
+        const currentPage = api.paginationGetCurrentPage(); // 0-based
+        const pageSize = api.paginationGetPageSize();
+        const totalRows = api.paginationGetRowCount();
+
+        if (totalRows === 0) {
+            setPaginationInfo({ from: 0, to: 0, total: 0 });
+            return;
+        }
+
+        const from = currentPage * pageSize + 1;
+        const to = Math.min((currentPage + 1) * pageSize, totalRows);
+
+        setPaginationInfo({ from, to, total: totalRows });
+    };
+
+    const handlePageSizeChange = (e) => {
+        const newSize = Number(e.target.value);
+        setPageSize(newSize);
+        gridRef.current.api.paginationSetPageSize(newSize);
+        updatePaginationInfo(gridRef.current.api);
+    };
+
+    useEffect(() => {
+        if (gridApi) {
+            updatePaginationInfo(gridApi);
+        }
+    }, [tableData, gridApi]);
+
     const gridOptions = {
         domLayout: 'autoHeight',
         suppressAutoSize: true,
@@ -80,14 +121,14 @@ const navigate = useNavigate();
         suppressRowTransform: true,
         overlayNoRowsTemplate: '<span>No data found</span>'
     };
+
     const { userInfo } = useSelector((state) => state?.auth);
     const role = userInfo?.role?.toLowerCase();
     const [showColumnSelect, setShowColumnSelect] = useState(false);
+    const dropdownRef = useRef(null);
+
     useEffect(() => {
         const handleClickOutside = (event) => {
-            // &&
-            //     headerRef.current &&
-            //     !headerRef.current.contains(event.target)
             if (
                 dropdownRef.current &&
                 !dropdownRef.current.contains(event.target)
@@ -106,11 +147,9 @@ const navigate = useNavigate();
     }, [showColumnSelect]);
 
     const handleCreateClick = () => {
-        // Handle create button click event here
         navigate(`/${role}/students-supabase/new`);
     };
     const handleEditClick = (studentId) => {
-        // Handle edit action here
         navigate(`/${role}/students-supabase/edit`, {
             state: { studentId }
         });
@@ -119,7 +158,7 @@ const navigate = useNavigate();
     return (
         <div className="ag-theme-alpine custom-table student-table" style={{ height: '100%', width: '100%' }}>
             <div className="top-bar">
-                <div className=" student-table-row justify-content-between align-items-center row" > 
+                <div className=" student-table-row justify-content-between align-items-center row" >
                     <div className='col-sm-3 col-3 '>
                         {children}
                     </div>
@@ -139,43 +178,64 @@ const navigate = useNavigate();
                         </InputGroup>
                     </div>
                     <div className='col-sm-3 col-2 text-end'>
-                    <Button className="add-button" onClick={handleCreateClick}>
+                        <Button className="add-button" onClick={handleCreateClick}>
                             <img className="mb-1" src={add} alt="add button" />
-                            {/* <span className="ms-1">Add New Student</span> */}
                         </Button>
                     </div>
                 </div>
             </div>
-     
+
             <div className="ag-theme-alpine" style={{ width: width ? width : '100%' }}>
                 {loading ? (
                     <Loading />
                 ) : (
-                    <AgGridReact
-                        gridOptions={gridOptions}
-                        columnDefs={columns}
-                        rowData={tableData} // Concatenate empty rows
-                        animateRows={true}
-                        rowSelection="multiple"
-                        sizeRowsToFit
-                        onGridReady={onGridReady}
-                        loadingOverlayComponent={Loading}
-                        onRowClicked={onRowClicked}
-                        suppressMenuHide={true}
-                        floatingFilter={true}
-                        pagination={true}
-                        paginationPageSize={20}
-                        rowClass="data-table-row"
-                        headerClass="data-table-header"
-                        suppressCellFocus={true}
-                        suppressSizeToFit={true}
-                        groupSelectsChildren={true}
-                        suppressAggFuncInHeader={true}
-                        rowHeight={57}
-                        suppressMovableColumns={true}
-                        components={gridComponents}
-                        
-                    />
+                    <>
+
+
+                        <AgGridReact
+                            ref={gridRef}
+                            gridOptions={gridOptions}
+                            columnDefs={columns}
+                            rowData={tableData}
+                            animateRows={true}
+                            rowSelection="multiple"
+                            sizeRowsToFit
+                            onGridReady={onGridReady}
+                            loadingOverlayComponent={Loading}
+                            onRowClicked={onRowClicked}
+                            suppressMenuHide={true}
+                            floatingFilter={true}
+                            pagination={true}
+                            paginationPageSize={pageSize}
+                            rowClass="data-table-row"
+                            headerClass="data-table-header"
+                            suppressCellFocus={true}
+                            suppressSizeToFit={true}
+                            groupSelectsChildren={true}
+                            suppressAggFuncInHeader={true}
+                            rowHeight={57}
+                            suppressMovableColumns={true}
+                            components={gridComponents}
+                        />
+                        {gridApi && (<>
+                            <div style={{ marginBottom: '10px' }}>
+                                <label>
+                                    Show rows:&nbsp;
+                                    <select value={pageSize} onChange={handlePageSizeChange}>
+                                        <option value={10}>10</option>
+                                        <option value={20}>20</option>
+                                        <option value={50}>50</option>
+                                        <option value={100}>100</option>
+                                    </select>
+                                </label>
+                            </div>
+
+                            <div className="pagination-summary text-muted mt-2">
+                                Showing <strong>{paginationInfo.from}</strong>–<strong>{paginationInfo.to}</strong> of <strong>{paginationInfo.total}</strong> records
+                            </div>
+                        </>
+                        )}
+                    </>
                 )}
                 {onExportCsv && (
                     <Button id={`${exportFileName}`} onClick={exportToCsv} className="d-none">
