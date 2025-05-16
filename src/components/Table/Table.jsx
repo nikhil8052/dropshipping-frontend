@@ -218,9 +218,10 @@ const Table = ({
                             components={gridComponents}
                         />
                         {gridApi && (<>
-                            <div style={{ marginBottom: '10px' }}>
+                           <div className="pages_count">
+                           <div className="pages_count_left">
                                 <label>
-                                    Show rows:&nbsp;
+                                Page Size:&nbsp;
                                     <select value={pageSize} onChange={handlePageSizeChange}>
                                         <option value={10}>10</option>
                                         <option value={20}>20</option>
@@ -230,9 +231,10 @@ const Table = ({
                                 </label>
                             </div>
 
-                            <div className="pagination-summary text-muted mt-2">
+                            <div className="pagination-summary text-muted">
                                 Showing <strong>{paginationInfo.from}</strong>–<strong>{paginationInfo.to}</strong> of <strong>{paginationInfo.total}</strong> records
                             </div>
+                           </div>
                         </>
                         )}
                     </>

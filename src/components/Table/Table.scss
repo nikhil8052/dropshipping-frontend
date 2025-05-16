@@ -315,3 +315,63 @@
     }
 }
 
+
+
+
+
+
+
+
+// date- 16may 
+
+div#ag-30 {
+    display: grid;
+}
+
+
+.pages_count {
+    display: flex;
+    justify-content: end;
+    max-width: 500px;
+    gap: 15px;
+    bottom: calc(0% + 2px);
+    position: absolute;
+    left: 0%;
+    align-items: center;
+}
+
+.ag-theme-alpine {
+    position: relative;
+}
+
+.pages_count .pages_count_left select {
+    background-color: #00a6d6;
+    border: none;
+    border-radius: 5px;
+    margin-left: 2px;
+    padding: 8px 8px;
+}
+
+
+
+
+.pages_count .pages_count_left label {
+    font-size: 20px;
+}
+
+.pages_count .pagination-summary {
+    font-size: 20px;
+}
+
+.pages_count .pagination-summary strong {
+    font-size: 20px;
+}
+
+.pages_count .pages_count_left select option {
+    font-size: 10px !important;
+}
+
+
+
+
+
