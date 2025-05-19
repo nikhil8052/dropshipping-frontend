@@ -40,7 +40,6 @@ jobs:
               echo "🚀 No changes, skipping npm install and pm2 restart."
             else
               echo "🔄 Changes detected, running npm install, build, and pm2 restart."
-              npm install --legacy-peer-devs
               npm run build
               pm2 restart dropship-ui-3000
             fi
