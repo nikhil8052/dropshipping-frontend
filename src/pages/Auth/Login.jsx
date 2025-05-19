@@ -4,7 +4,7 @@ import { Button, Col, Row, Spinner } from 'react-bootstrap';
 import { Link, useNavigate } from 'react-router-dom';
 import Input from '@components/Input/Input';
 import * as Yup from 'yup';
-import { Form as FormikForm, Formik } from 'formik';
+// import { Form as FormikForm, Formik, ErrorMessage  } from 'formik';
 import { loginUser } from '@redux/auth/auth_actions';
 import { Helmet } from 'react-helmet';
 import LoginLeftSec from './LoginLeftSec';
@@ -13,6 +13,8 @@ import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import './auth.scss';
 import Rightloginimg from '@images/rightimg2.png';
+import { TextField } from '@mui/material';
+import { Field, Formik, Form as FormikForm, ErrorMessage } from 'formik';
 
 const Login = () => {
     const dispatch = useDispatch();
@@ -88,19 +90,47 @@ const Login = () => {
                                     >
                                         {({ isSubmitting }) => (
                                             <FormikForm>
-                                                <Input
-                                                    name="email"
-                                                    placeholder="E-mail"
-                                                    label="E-mail adres"
-                                                    type="text"
-                                                />
+                                                {/* Email Field */}
+                                                <Field name="email">
+                                                    {({ field, meta }) => (
+                                                        <TextField
+                                                            {...field}
+                                                            label="E-mail adres"
+                                                            placeholder="E-mail"
+                                                            type="email"
+                                                            fullWidth
+                                                            variant="outlined"
+                                                            // error={meta.touched && Boolean(meta.error)}
+                                                            // helperText={meta.touched && meta.error}
+                                                            margin="normal"
+                                                            InputProps={{
+                                                                className: 'custom-input-transparent'
+                                                            }}
+                                                        />
+                                                    )}
+                                                </Field>
+
+                                                {/* Password Field with toggle */}
                                                 <div className="input-password-container">
-                                                    <Input
-                                                        name="password"
-                                                        placeholder="Wachtwoord"
-                                                        label="Wachtwoord"
-                                                        type={showPassword ? 'text' : 'password'}
-                                                    />
+                                                    <Field name="password">
+                                                        {({ field, meta }) => (
+                                                            <TextField
+                                                                {...field}
+                                                                label="Wachtwoord"
+                                                                placeholder="Wachtwoord"
+                                                                type={showPassword ? 'text' : 'password'}
+                                                                fullWidth
+                                                                variant="outlined"
+                                                                // error={meta.touched && Boolean(meta.error)}
+                                                                // helperText={meta.touched && meta.error}
+                                                                margin="normal"
+                                                                InputProps={{
+                                                                    className: 'custom-input-ktransparent'
+                                                                }}
+                                                                
+                                                            />
+                                                        )}
+                                                    </Field>
 
                                                     <FontAwesomeIcon
                                                         icon={showPassword ? faEyeSlash : faEye}
@@ -110,9 +140,9 @@ const Login = () => {
                                                     />
                                                 </div>
 
-                                                <div className=" d-flex flex-column ">
+                                                <div className="d-flex flex-column">
                                                     <Link className="auth-link ms-auto" to="/forgot-password">
-                                                    Wachtwoord vergeten?
+                                                        Wachtwoord vergeten?
                                                     </Link>
                                                     <Button
                                                         className="auth-login-button"
