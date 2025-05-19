@@ -1729,7 +1729,7 @@ label.custom_check span {
     border: 1px solid #ccc;
     border-radius: 8px;
     font-size: 14px;
-    width: 100%;
+    width: 70%;
     outline: none;
     background-color: #f9f9f9;
     transition: border 0.2s;
@@ -1741,7 +1741,7 @@ label.custom_check span {
   }
   
   .swal-dislike-confirm {
-    background-color: #ef4444 !important; /* red */
+    background-color: #FF2C32 !important; /* red */
     color: white !important;
     border-radius: 6px !important;
     padding: 10px 20px !important;
@@ -1749,8 +1749,8 @@ label.custom_check span {
   }
   
   .swal-dislike-cancel {
-    background-color: #e5e7eb !important; /* light gray */
-    color: #374151 !important;           /* dark text */
+    background-color: #FFEEEE !important; /* light gray */
+    color: #6E7485 !important;           /* dark text */
     border-radius: 6px !important;
     padding: 10px 20px !important;
   }
@@ -1764,7 +1764,23 @@ label.custom_check span {
     padding: 10px 20px;
     margin-left: 10px;
   }
-  
+
+  .like-btn {
+    background-color: #0399c5 !important; /* green */
+    color: white !important;
+    font-weight: 600;
+    border-radius: 8px;
+    padding: 10px 20px;
+  }
+
+  .dislike-btn {
+    background-color: #CCECF7 !important; /* red */
+    color: #019ED8 !important;
+    font-weight: 600;
+    border-radius: 8px;
+    padding: 10px 20px;
+  }
+
 // END POP
 @media only screen and (max-width:1199px) {
     .dp-title-name p {

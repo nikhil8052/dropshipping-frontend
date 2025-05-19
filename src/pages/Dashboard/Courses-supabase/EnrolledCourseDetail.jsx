@@ -209,11 +209,11 @@ const EnrolledCourseDetail = () => {
             timer: 12000,
             timerProgressBar: true,
             didOpen: () => {
-                const iframeElement = document.querySelector('iframe.ql-video');
-                if (iframeElement && typeof Player !== 'undefined') {
-                    const player = new Player(iframeElement);
-                    player.pause().catch(console.error);
-                }
+                // const iframeElement = document.querySelector('iframe.ql-video');
+                // if (iframeElement && typeof Player !== 'undefined') {
+                //     const player = new Player(iframeElement);
+                //     player.pause().catch(console.error);
+                // }
             },
         }).then(async (result) => {
             if (result.isConfirmed) {
@@ -246,13 +246,15 @@ const EnrolledCourseDetail = () => {
             imageAlt: 'Feedback Icon',
             showConfirmButton: true,
             showCancelButton: true,
-            confirmButtonText: '👍 Like',
-            cancelButtonText: '👎 Dislike',
+            confirmButtonText: '😊 Like',
+            cancelButtonText: '😟 Dislike',
             position: 'center',
             allowOutsideClick: false,
             allowEscapeKey: false,
             customClass: {
                 popup: 'swal-shadow-popup',
+                confirmButton: 'like-btn',
+                cancelButton: 'dislike-btn',
             },
         }).then((result) => {
             if (result.isConfirmed) {
