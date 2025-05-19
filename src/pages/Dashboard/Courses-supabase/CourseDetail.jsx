@@ -264,7 +264,7 @@ const CourseDetail = () => {
 
                                     <div className="dp-info">
                                         <p>
-                                            Total Lectures:{' '}
+                                            Aantal videos :{' '}
                                             {unassignedLectures.length +
                                                 topics.reduce((acc, topic) => acc + (topic.lectures?.length || 0), 0)}
                                         </p>

@@ -18,7 +18,7 @@ axios.interceptors.response.use(
             Swal.fire({
                 title: 'Ingelogd',
                 text: successMessage,
-                html: '<div class="congrats-text"></div>',
+                
                 showCloseButton: true,
                 icon: 'success',
                 showConfirmButton: false,
