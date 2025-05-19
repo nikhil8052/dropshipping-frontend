@@ -241,11 +241,12 @@ const EnrolledCourseDetail = () => {
 
     const handleNearVideoEnd = () => {
         Swal.fire({
-            title: 'How was the video?',
+            title: '<span class="swal-custom-title">How was the video?</span>',
             imageUrl: '/like_dislike.png',
             imageAlt: 'Feedback Icon',
             showConfirmButton: true,
             showCancelButton: true,
+            showCloseButton: true,
             confirmButtonText: '😊 Like',
             cancelButtonText: '😟 Dislike',
             position: 'center',
@@ -261,7 +262,7 @@ const EnrolledCourseDetail = () => {
                 sendDislikeFeedback('like');
             } else if (result.dismiss === Swal.DismissReason.cancel) {
                 Swal.fire({
-                    title: 'Why did you dislike it?',
+                    title: '<span class="swal-dislike-title">Why did you dislike it?</span>',
                     input: 'select',
                     inputOptions: inputOptions,
                     inputPlaceholder: 'Select a reason',
