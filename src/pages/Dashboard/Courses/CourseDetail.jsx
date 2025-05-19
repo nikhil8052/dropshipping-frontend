@@ -5,6 +5,8 @@ import { useLocation, Link, useNavigate } from 'react-router-dom';
 import CaretRight from '@icons/CaretRight.svg';
 import CaretLeft from '@icons/CaretLeft.svg';
 import CarouselWrapper from '../../../components/Carousel/CarouselWrapper';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faPen } from '@fortawesome/free-solid-svg-icons';
 import axiosWrapper from '../../../utils/api';
 import { API_URL } from '../../../utils/apiUrl';
 import '../../../styles/Courses.scss';
