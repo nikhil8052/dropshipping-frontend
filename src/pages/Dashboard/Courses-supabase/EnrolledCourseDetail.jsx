@@ -71,8 +71,30 @@ const EnrolledCourseDetail = () => {
         setShowModal(false);
     };
 
-    const [feedbackReasons, setFeedbackReasons] = useState([]);
+    const [feedbackReasons, setFeedbackReasons] = useState([
+        {
+            id:'e6722756-f793-45ef-b892-7d744e0c7c96',
+            label:'Too slow'
+
+        },
+        {
+            id:'c633efa1-b7a1-47ab-b79d-a0f496586be3',
+            label:'Poor explanation'
+
+        },
+        {
+            id:'a58c8311-6508-489a-b70a-c5bdff8b8b41',
+            label:'Too fast'
+
+        },
+        {
+            id:'6ed8525a-c781-40b0-ba7b-7aeffb2f7e5e',
+            label:'Technical issues'
+
+        },
+    ]);
     const [inputOptions, setInputOptions] = useState({});
+
 
 
 
@@ -279,6 +301,32 @@ const EnrolledCourseDetail = () => {
                 }).then((feedbackResult) => {
                     if (feedbackResult.isConfirmed && feedbackResult.value) {
                         sendDislikeFeedback('dislike', feedbackResult.value);
+
+                        // Show the text filed for more information 
+                        Swal.fire({
+                            title: '<span class="swal-dislike-title">Tell us more about this reason?</span>',
+                            input: 'textarea',
+                            inputPlaceholder: 'Your feedback here...',
+                            showCancelButton: true,
+                            confirmButtonText: 'Submit',
+                            cancelButtonText: 'Skip',
+                            customClass: {
+                                popup: 'swal-more-feedback-popup',
+                                input: 'swal-more-feedback-textarea',
+                                confirmButton: 'like-btn',
+                                cancelButton: 'dislike-btn'
+                            },
+                            inputAttributes: {
+                                'aria-label': 'More detailed feedback'
+                            }
+                        }).then((moreFeedbackResult) => {
+                            if (moreFeedbackResult.isConfirmed && moreFeedbackResult.value) {
+                          
+                                // sendDislikeFeedback('dislike_more_details', moreFeedbackResult.value);
+                            }
+                            
+                        });
+
                     }
                 });
             }

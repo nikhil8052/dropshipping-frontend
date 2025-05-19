@@ -70,7 +70,7 @@ export const sideBarItems = [
     },
     {
         id: 9,
-        name: 'Logout',
+        name: 'Uitloggen',
         iconLight: logout, // Replace with
         access: roles
     }
@@ -163,14 +163,14 @@ export const adminSidebarItems = [
     // },
     {
         id: 9,
-        name: 'Courses',
+        name: 'Cursus',
         iconLight: courses,
         linkTo: '/admin/courses-supabase',
         pathCombinations: ['/admin/courses-supabase', '/admin/courses-supabase/new', '/admin/courses-supabase/edit', '/admin/courses-supabase/details']
     },
     {
         id: 10,
-        name: 'Students',
+        name: 'Studenten',
         iconLight: student, 
         linkTo: '/admin/students-supabase',
         pathCombinations: ['/admin/students-supabase', '/admin/students-supabase/new', '/admin/students-supabase/edit', '/admin/students-supabase/details']
@@ -222,7 +222,7 @@ export const coachSidebarItems = [
     },
     {
         id: 6,
-        name: 'Logout',
+        name: 'Uitloggen',
         iconLight: logout // Replace with
     }
 ];
@@ -244,7 +244,7 @@ export const studentSidebarItems = [
     // },
     {
         id: 3,
-        name: 'Courses',
+        name: 'Cursus',
         iconLight: courses, // Replace with your icon
         linkTo: '/student/courses-supabase',
         pathCombinations: ['/student/courses-supabase', '/student/courses-supabase/details']
