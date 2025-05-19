@@ -22,6 +22,7 @@ import BreadHome from '@icons/BreadHome.svg';
 import resourceImg from '@icons/resource_image.svg';
 import linkImg from '@icons/linkImg.svg';
 import ResourcesModel from '@components/ConfirmationBox/ResourcesModel';
+import { faPen } from '@fortawesome/free-solid-svg-icons';
 
 const CourseDetail = () => {
     const navigate = useNavigate();
@@ -281,7 +282,7 @@ const CourseDetail = () => {
                                             type="button"
                                             className="submit-btn"
                                         >
-                                            Edit
+                                            <FontAwesomeIcon icon={faPen} />
                                         </Button>
                                     </div>
                                 </div>
