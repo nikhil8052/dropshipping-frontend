@@ -16,8 +16,10 @@ axios.interceptors.response.use(
 
             const successMessage = response?.data?.message || response?.data?.desc || 'Operation successful';
             Swal.fire({
-                title: 'Success!',
+                title: 'Ingelogd',
                 text: successMessage,
+                html: '<div class="congrats-text"></div>',
+                showCloseButton: true,
                 icon: 'success',
                 showConfirmButton: false,
                 timer: 1000,
