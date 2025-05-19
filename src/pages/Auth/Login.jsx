@@ -90,15 +90,15 @@ const Login = () => {
                                             <FormikForm>
                                                 <Input
                                                     name="email"
-                                                    placeholder="E.g kathrine1122@gmail.com"
-                                                    label="Email Address"
+                                                    placeholder="E-mail"
+                                                    label="E-mail adres"
                                                     type="text"
                                                 />
                                                 <div className="input-password-container">
                                                     <Input
                                                         name="password"
-                                                        placeholder="Password"
-                                                        label="Password"
+                                                        placeholder="Wachtwoord"
+                                                        label="Wachtwoord"
                                                         type={showPassword ? 'text' : 'password'}
                                                     />
 
@@ -112,7 +112,7 @@ const Login = () => {
 
                                                 <div className=" d-flex flex-column ">
                                                     <Link className="auth-link ms-auto" to="/forgot-password">
-                                                        Forgot password?
+                                                    Wachtwoord vergeten?
                                                     </Link>
                                                     <Button
                                                         className="auth-login-button"
