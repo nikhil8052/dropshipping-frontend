@@ -20,6 +20,14 @@ jobs:
         
       - name: Install dependencies 
         run: npm install 
-        
+
+      - name: Deploy to EC2 
+        uses: applyboy/ssh-action@v1.0.0
+        with:
+          host: ${{ secrets.STAGING_EC2_HOST }}
+          user: ${{ secrets.STAGING_EC2_USER }}
+          key: ${{ secrets.STAGING_EC2_SSH_KEY }}
+
+
 
 
