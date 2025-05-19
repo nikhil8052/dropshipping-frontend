@@ -1796,6 +1796,12 @@ label.custom_check span {
     font-size: 20px;
     font-family: 'Montserrat';
   }
+
+  .publish-form-section .detail-page-header .dp-main-box .dp-info {
+    width: 23%;
+    align-items: center;
+    flex-direction: row;
+}
 // END POP
 @media only screen and (max-width:1199px) {
     .dp-title-name p {
