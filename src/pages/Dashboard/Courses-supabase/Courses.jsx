@@ -54,7 +54,7 @@ const Courses = () => {
     };
 
     const [search, setSearch] = useState('');
-    const [coursesFilter, setCoursesFilter] = useState('All Courses');
+    const [coursesFilter, setCoursesFilter] = useState('Alle cursussen');
     const [allCourses, setAllCourses] = useState([]); // Store all fetched courses
     const [displayedCourses, setDisplayedCourses] = useState([]); // Courses currently displayed
     const [hasMore, setHasMore] = useState(true);
@@ -371,7 +371,7 @@ const Courses = () => {
                         name="Search"
                         label="Search"
                         onChange={onFilterTextChange}
-                        placeholder="Search"
+                        placeholder="Zoekennpm"
                     />
                 </InputGroup>
 
@@ -407,7 +407,7 @@ const Courses = () => {
                             ))}
                         </DropdownButton>
                         <Button className="add-button" onClick={handleCreateClick}>
-                            <img src={add} alt="" /> <span className="ms-1">Add New Course</span>
+                            <img src={add} alt="" /> <span className="ms-1">Toevoegen</span>
                         </Button>
                     </div>
                 )}
