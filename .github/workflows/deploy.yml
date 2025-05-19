@@ -16,10 +16,10 @@ jobs:
       - name: setup the node 
         uses: actions/setup-node@v3
         with: 
-          node-version: '20'
+          node-version: '23.11.0'
         
       - name: Install dependencies 
-        run: npm install 
+        run: npm install --legacy-peer-devs
 
       - name: Deploy to EC2 
         uses: appleboy/ssh-action@v1.0.0
@@ -27,6 +27,13 @@ jobs:
           host: ${{ secrets.STAGING_EC2_HOST }}
           username: ${{ secrets.STAGING_EC2_USER }}
           key: ${{ secrets.STAGING_EC2_SSH_KEY }}
+          script: |
+            cd /home/ubuntu/mern
+            pwd 
+            cd /home/ubuntu/mern/ui 
+            git pull origin staging 
+
+
 
 
 
