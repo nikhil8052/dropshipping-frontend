@@ -14,11 +14,15 @@ axios.interceptors.response.use(
                 return response;
             }
 
-            const successMessage = response?.data?.message || response?.data?.desc || 'Operation successful';
+            let successMessage = response?.data?.message || response?.data?.desc || 'Operation successful';
+
+            if( successMessage=="DONTSHOW"){
+                successMessage="";
+            }
+            
             Swal.fire({
                 title: 'Ingelogd',
                 text: successMessage,
-                
                 showCloseButton: true,
                 icon: 'success',
                 showConfirmButton: false,
