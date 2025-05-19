@@ -33,6 +33,8 @@ jobs:
             pwd
             cd /home/ubuntu/mern/ui || { echo "❌ /ui folder missing"; exit 1; }
             pwd
+            git config --global credential.helper store
+            echo "https://${{ secrets.GITHUB_TOKEN }}@github.com" > ~/.git-credentials
             git pull origin staging || { echo "❌ git pull failed"; exit 1; }
             echo "✅ Deployment script finished."
 
