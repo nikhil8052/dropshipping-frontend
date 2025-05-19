@@ -206,7 +206,7 @@ const EnrolledCourseDetail = () => {
             allowOutsideClick: true,
             allowEscapeKey: true,
             focusConfirm: false,
-            timer: 12000,
+            timer: 12000000,
             timerProgressBar: true,
             didOpen: () => {
                 // const iframeElement = document.querySelector('iframe.ql-video');
