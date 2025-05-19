@@ -80,7 +80,7 @@ const Login = () => {
                                 </div> */}
                                 <div className="auth-form-data">
                                     <h1 className="auth-title ">Login</h1>
-                                    <h3 className="auth-form-title">Please enter your account details.</h3>
+                                    {/* <h3 className="auth-form-title">Please enter your account details.</h3> */}
                                     <Formik
                                         initialValues={inititialValues}
                                         validationSchema={validationSchema}

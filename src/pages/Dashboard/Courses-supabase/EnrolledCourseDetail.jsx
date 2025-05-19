@@ -73,29 +73,36 @@ const EnrolledCourseDetail = () => {
 
     const [feedbackReasons, setFeedbackReasons] = useState([
         {
-            id:'e6722756-f793-45ef-b892-7d744e0c7c96',
-            label:'Too slow'
+            id: 'e6722756-f793-45ef-b892-7d744e0c7c96',
+            label: 'Too slow'
 
         },
         {
-            id:'c633efa1-b7a1-47ab-b79d-a0f496586be3',
-            label:'Poor explanation'
+            id: 'c633efa1-b7a1-47ab-b79d-a0f496586be3',
+            label: 'Poor explanation'
 
         },
         {
-            id:'a58c8311-6508-489a-b70a-c5bdff8b8b41',
-            label:'Too fast'
+            id: 'a58c8311-6508-489a-b70a-c5bdff8b8b41',
+            label: 'Too fast'
 
         },
         {
-            id:'6ed8525a-c781-40b0-ba7b-7aeffb2f7e5e',
-            label:'Technical issues'
+            id: '6ed8525a-c781-40b0-ba7b-7aeffb2f7e5e',
+            label: 'Technical issues'
 
         },
     ]);
-    const [inputOptions, setInputOptions] = useState({});
+    const [inputOptions, setInputOptions] = useState();
 
 
+    useEffect(() => {
+        const options = feedbackReasons.reduce((acc, item) => {
+            acc[item.id] = item.label;
+            return acc;
+        }, {});
+        setInputOptions(options);
+    }, [feedbackReasons]);
 
 
     useEffect(() => {
@@ -301,8 +308,6 @@ const EnrolledCourseDetail = () => {
                 }).then((feedbackResult) => {
                     if (feedbackResult.isConfirmed && feedbackResult.value) {
                         sendDislikeFeedback('dislike', feedbackResult.value);
-
-                        // Show the text filed for more information 
                         Swal.fire({
                             title: '<span class="swal-dislike-title">Tell us more about this reason?</span>',
                             input: 'textarea',
@@ -321,10 +326,10 @@ const EnrolledCourseDetail = () => {
                             }
                         }).then((moreFeedbackResult) => {
                             if (moreFeedbackResult.isConfirmed && moreFeedbackResult.value) {
-                          
-                                // sendDislikeFeedback('dislike_more_details', moreFeedbackResult.value);
+
+                                sendDislikeFeedback('dislike_more_details', moreFeedbackResult.value);
                             }
-                            
+
                         });
 
                     }
@@ -344,18 +349,24 @@ const EnrolledCourseDetail = () => {
             }
             return
         }
+
         const lid = selectedLecture.id;
+
+
+
         const URL = `${API_URL.SUPABASE_MARK_LECTURE_REVIEW.replace(':id', lid)}`;
-        const payload = {
+        let payload = {
             'lecture_id': lid,
-            'reason_id': id
+            'reason_id': id,
+            'update': false
         };
 
+        if (type == "dislike_more_details") {
+            payload.update = true;
+            payload.more_info = id;
+        }
         const response = await axiosWrapper('PUT', URL, { payload }, token);
-
         console.log(response)
-
-
     }
 
     let courseId = location.state?.courseId;
@@ -477,8 +488,6 @@ const EnrolledCourseDetail = () => {
         if (!id) return;
         setLectureLoading(true);
         const { data } = await axiosWrapper('GET', `${API_URL.SUPABASE_GET_LECTURE.replace(':id', id)}`, {}, token);
-
-        console.log(data, " This is the current fetched lecture from the server now! ")
 
         setSelectedLecture(data);
         const mcqs = data.quiz?.mcqs;
