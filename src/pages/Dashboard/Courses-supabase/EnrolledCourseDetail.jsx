@@ -263,6 +263,7 @@ const EnrolledCourseDetail = () => {
             } else if (result.dismiss === Swal.DismissReason.cancel) {
                 Swal.fire({
                     title: '<span class="swal-dislike-title">Why did you dislike it?</span>',
+                    html: '<div class="congrats-text"><p>Oops!</p></div>',
                     input: 'select',
                     inputOptions: inputOptions,
                     inputPlaceholder: 'Select a reason',
