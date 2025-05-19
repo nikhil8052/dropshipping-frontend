@@ -1649,6 +1649,154 @@ label.custom_check span {
     width: 100%;
 }
 
+
+
+
+// POP UP 
+/* Custom SweetAlert2 Styles */
+.swal2-popup.custom-congrats {
+    padding: 2em 1.5em;
+    width: 340px;
+    border-radius: 1rem;
+    background: white;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+    font-family: 'Inter', sans-serif;
+    text-align: center;
+    position: fixed !important;
+    bottom: 1.5rem;
+    right: 1.5rem;
+    transform: none !important;
+}
+
+.swal2-title.congrats-title {
+    font-size: 1.5rem;
+    color: #36c187;
+    margin-top: 1rem;
+    font-weight: 600;
+}
+
+.swal2-html-container.congrats-text {
+    color: #6b7280;
+    font-size: 0.9rem;
+    margin: 0.5rem 0 1.5rem;
+}
+
+.swal2-confirm.done-btn {
+    background-color: #36c187 !important;
+    color: white !important;
+    border-radius: 6px !important;
+    font-weight: 600 !important;
+    padding: 0.5em 1.5em !important;
+    font-size: 0.875rem !important;
+    box-shadow: none !important;
+}
+
+// .swal-shadow-popup {
+//     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+//     border-radius: 12px;
+//     padding: 20px;
+// }
+
+.swal-shadow-popup {
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+    border-radius: 16px;
+    padding: 24px;
+    width: 380px !important;
+    animation: popupFadeIn 0.3s ease;
+}
+
+@keyframes popupFadeIn {
+    from {
+        transform: scale(0.95);
+        opacity: 0;
+    }
+
+    to {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+
+.swal-dislike-popup {
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+    border-radius: 14px;
+    padding: 24px;
+    width: 380px !important;
+  }
+  
+  .swal-dislike-select {
+    padding: 10px 14px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 14px;
+    width: 70%;
+    outline: none;
+    margin-left: 48px !important;
+    background-color: #f9f9f9;
+    transition: border 0.2s;
+  }
+  
+  .swal-dislike-select:focus {
+    border-color: #4f46e5;
+    background-color: #fff;
+  }
+  
+  .swal-dislike-confirm {
+    background-color: #FF2C32 !important; /* red */
+    color: white !important;
+    border-radius: 6px !important;
+    padding: 10px 20px !important;
+    font-weight: bold;
+  }
+  
+  .swal-dislike-cancel {
+    background-color: #FFEEEE !important; /* light gray */
+    color: #6E7485 !important;           /* dark text */
+    border-radius: 6px !important;
+    padding: 10px 20px !important;
+  }
+
+
+  .dismiss-btn {
+    background-color: #e5e7eb !important; /* light gray */
+    color: #374151 !important; /* dark text */
+    font-weight: 500;
+    border-radius: 8px;
+    padding: 10px 20px;
+    margin-left: 10px;
+  }
+
+  .like-btn {
+    background-color: #0399c5 !important; /* green */
+    color: white !important;
+    font-weight: 600;
+    border-radius: 8px;
+    padding: 10px 20px;
+  }
+
+  .dislike-btn {
+    background-color: #CCECF7 !important; /* red */
+    color: #019ED8 !important;
+    font-weight: 600;
+    border-radius: 8px;
+    padding: 10px 20px;
+  }
+
+  .swal-custom-title {
+    color: #6E7485; 
+    font-weight: 500;
+    font-size: 25px;
+    font-family: 'Montserrat';
+  }
+
+  .swal-dislike-title{
+    color: #6E7485; 
+    font-weight: 500;
+    font-size: 20px;
+    font-family: 'Montserrat';
+  }
+// END POP
 @media only screen and (max-width:1199px) {
     .dp-title-name p {
         font-size: 1.5rem;
@@ -2008,4 +2156,3 @@ label.custom_check span {
 .lecture-right .lecture-curriculum .modal-description h5 {
     font-size: 22px;
 }
-

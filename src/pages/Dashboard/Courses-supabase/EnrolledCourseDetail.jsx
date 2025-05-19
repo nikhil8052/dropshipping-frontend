@@ -191,24 +191,30 @@ const EnrolledCourseDetail = () => {
 
     const moveNextLecSwal = () => {
         Swal.fire({
-            title: 'Move to next lecture?',
-            position: 'bottom-end',
-            showConfirmButton: true,
-            showCancelButton: true,
+            title: '<strong class="congrats-title">Congratulations!</strong>',
+            html: '<div class="congrats-text">You\'re moving on to the next lecture.</div>',
             confirmButtonText: 'Next Lecture',
-            cancelButtonText: 'Close',
-            backdrop: false,
-            heightAuto: false,
-            width: '400px',
-            padding: '1.5em',
+            cancelButtonText: 'Dismiss',
+            showCancelButton: true,
+            showCloseButton: false,
             customClass: {
-                popup: 'swal-wide',
-                title: 'swal-title',
-                confirmButton: 'swal-confirm',
-                cancelButton: 'swal-cancel'
+                popup: 'custom-congrats',
+                confirmButton: 'done-btn',
             },
-            timer: 12000,
+            showCloseButton: false,
+            backdrop: false,
+            allowOutsideClick: true,
+            allowEscapeKey: true,
+            focusConfirm: false,
+            timer: 12000000,
             timerProgressBar: true,
+            didOpen: () => {
+                // const iframeElement = document.querySelector('iframe.ql-video');
+                // if (iframeElement && typeof Player !== 'undefined') {
+                //     const player = new Player(iframeElement);
+                //     player.pause().catch(console.error);
+                // }
+            },
         }).then(async (result) => {
             if (result.isConfirmed) {
                 const iframeElement = document.querySelector('iframe.ql-video');
@@ -235,26 +241,41 @@ const EnrolledCourseDetail = () => {
 
     const handleNearVideoEnd = () => {
         Swal.fire({
-            title: 'How was the video?',
-            icon: 'question',
+            title: '<span class="swal-custom-title">How was the video?</span>',
+            imageUrl: '/like_dislike.png',
+            imageAlt: 'Feedback Icon',
             showConfirmButton: true,
             showCancelButton: true,
-            confirmButtonText: '👍 Like',
-            cancelButtonText: '👎 Dislike',
+            showCloseButton: true,
+            confirmButtonText: '😊 Like',
+            cancelButtonText: '😟 Dislike',
             position: 'center',
             allowOutsideClick: false,
             allowEscapeKey: false,
+            customClass: {
+                popup: 'swal-shadow-popup',
+                confirmButton: 'like-btn',
+                cancelButton: 'dislike-btn',
+            },
         }).then((result) => {
             if (result.isConfirmed) {
                 sendDislikeFeedback('like');
             } else if (result.dismiss === Swal.DismissReason.cancel) {
                 Swal.fire({
-                    title: 'Why did you dislike it?',
+                    title: '<span class="swal-dislike-title">Why did you dislike it?</span>',
+                    html: '<div class="congrats-text"><p>Oops!</p></div>',
                     input: 'select',
                     inputOptions: inputOptions,
                     inputPlaceholder: 'Select a reason',
                     showCancelButton: true,
                     confirmButtonText: 'Submit',
+                    imageUrl: '/opps_image.png',
+                    customClass: {
+                        popup: 'swal-dislike-popup',
+                        input: 'swal-dislike-select',
+                        confirmButton: 'swal-dislike-confirm',
+                        cancelButton: 'swal-dislike-cancel'
+                    }
                 }).then((feedbackResult) => {
                     if (feedbackResult.isConfirmed && feedbackResult.value) {
                         sendDislikeFeedback('dislike', feedbackResult.value);
