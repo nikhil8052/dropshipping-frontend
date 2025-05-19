@@ -28,10 +28,13 @@ jobs:
           username: ${{ secrets.STAGING_EC2_USER }}
           key: ${{ secrets.STAGING_EC2_SSH_KEY }}
           script: |
-            cd /home/ubuntu/mern
-            pwd 
-            cd /home/ubuntu/mern/ui 
-            git pull origin staging 
+            echo "🏁 Starting SSH deploy..."
+            cd /home/ubuntu/mern || { echo "❌ /mern folder missing"; exit 1; }
+            pwd
+            cd /home/ubuntu/mern/ui || { echo "❌ /ui folder missing"; exit 1; }
+            pwd
+            git pull origin staging || { echo "❌ git pull failed"; exit 1; }
+            echo "✅ Deployment script finished."
 
 
 
