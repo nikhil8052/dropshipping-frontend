@@ -35,7 +35,7 @@ jobs:
             pwd
             git config --global credential.helper store
             echo "https://${{ secrets.REPO_TOKEN }}@github.com" > ~/.git-credentials
-            git pull origin staging || { echo "❌ git pull failed"; exit 1; }
+            git pull origin staging
             echo "✅ Deployment script finished."
 
 
