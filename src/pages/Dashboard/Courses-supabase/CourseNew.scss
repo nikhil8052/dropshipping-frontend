@@ -1691,17 +1691,17 @@ label.custom_check span {
     box-shadow: none !important;
 }
 
-.swal-shadow-popup {
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
-    /* subtle shadow */
-    border-radius: 12px;
-    padding: 20px;
-}
+// .swal-shadow-popup {
+//     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+//     border-radius: 12px;
+//     padding: 20px;
+// }
 
 .swal-shadow-popup {
     box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
     border-radius: 16px;
     padding: 24px;
+    width: 380px !important;
     animation: popupFadeIn 0.3s ease;
 }
 
@@ -1721,7 +1721,8 @@ label.custom_check span {
 .swal-dislike-popup {
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
     border-radius: 14px;
-    padding: 20px;
+    padding: 24px;
+    width: 380px !important;
   }
   
   .swal-dislike-select {
@@ -1731,6 +1732,7 @@ label.custom_check span {
     font-size: 14px;
     width: 70%;
     outline: none;
+    margin-left: 48px !important;
     background-color: #f9f9f9;
     transition: border 0.2s;
   }
@@ -1781,6 +1783,19 @@ label.custom_check span {
     padding: 10px 20px;
   }
 
+  .swal-custom-title {
+    color: #6E7485; 
+    font-weight: 500;
+    font-size: 25px;
+    font-family: 'Montserrat';
+  }
+
+  .swal-dislike-title{
+    color: #6E7485; 
+    font-weight: 500;
+    font-size: 20px;
+    font-family: 'Montserrat';
+  }
 // END POP
 @media only screen and (max-width:1199px) {
     .dp-title-name p {
