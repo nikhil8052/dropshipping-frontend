@@ -65,7 +65,7 @@ const Sidebar = () => {
       
             const roadmapItem = {
                 id: 'roadmap',
-                name: 'Roadmap',
+                name: 'Routekaart',
                 iconLight: faRoad,
                 linkTo: '/student/roadmap'
             };
@@ -163,7 +163,7 @@ const Sidebar = () => {
                     show={modalShow}
                     onClose={handleLogoutClick}
                     loading={false}
-                    title="Logout"
+                    title="Uitloggen"
                     body="Are you sure you want to Logout?"
                     onConfirm={() => dispatch(logoutUser())}
                     customFooterClass="custom-footer-class"
@@ -275,7 +275,7 @@ const Sidebar = () => {
                             </div>
                             <button className="logout-btn active-item" onClick={handleLogoutClick}>
                                 <img src={logoutIcon} alt="Logout" className="logout-icon" />
-                                <span> LOGOUT</span>
+                                <span> Uitloggen</span>
                             </button>
                         </div>
                     </div>
