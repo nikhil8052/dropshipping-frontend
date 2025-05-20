@@ -220,11 +220,11 @@ const EnrolledCourseDetail = () => {
 
     const moveNextLecSwal = () => {
         Swal.fire({
-            title: '<strong class="congrats-title">Congratulations!</strong>',
-            html: '<div class="congrats-text">You\'re moving on to the next lecture.</div>',
-            confirmButtonText: 'Next Lecture',
+            title: '<strong class="congrats-title">Gefeliciteerd!</strong>',
+            html: '<div class="congrats-text">De video is afgelopen en je kan door naar de volgende.</div>',
+            confirmButtonText: 'Done',
             cancelButtonText: 'Dismiss',
-            showCancelButton: true,
+            showCancelButton: false,
             showCloseButton: false,
             customClass: {
                 popup: 'custom-congrats',
@@ -268,76 +268,85 @@ const EnrolledCourseDetail = () => {
 
 
 
-    const handleNearVideoEnd = () => {
-        Swal.fire({
-            title: '<span class="swal-custom-title">How was the video?</span>',
-            imageUrl: '/like_dislike.png',
-            imageAlt: 'Feedback Icon',
-            showConfirmButton: true,
-            showCancelButton: true,
-            showCloseButton: true,
-            confirmButtonText: '😊 Like',
-            cancelButtonText: '😟 Dislike',
-            position: 'center',
-            allowOutsideClick: false,
-            allowEscapeKey: false,
-            customClass: {
-                popup: 'swal-shadow-popup',
-                confirmButton: 'like-btn',
-                cancelButton: 'dislike-btn',
-            },
-        }).then((result) => {
-            if (result.isConfirmed) {
-                sendDislikeFeedback('like');
-            } else if (result.dismiss === Swal.DismissReason.cancel) {
-                Swal.fire({
-                    title: '<span class="swal-dislike-title">Why did you dislike it?</span>',
-                    html: '<div class="congrats-text"><p>Oops!</p></div>',
-                    input: 'select',
-                    inputOptions: inputOptions,
-                    inputPlaceholder: 'Select a reason',
-                    showCancelButton: true,
-                    confirmButtonText: 'Submit',
-                    imageUrl: '/opps_image.png',
-                    customClass: {
-                        popup: 'swal-dislike-popup',
-                        input: 'swal-dislike-select',
-                        confirmButton: 'swal-dislike-confirm',
-                        cancelButton: 'swal-dislike-cancel'
+        const handleNearVideoEnd = () => {
+            Swal.fire({
+                title: '<span class="swal-custom-title">Wat vond je van de video?</span>',
+                imageUrl: '/like_dislike.png',
+                imageAlt: 'Feedback Icon',
+                showConfirmButton: true,
+                showCancelButton: true,
+                showCloseButton: true,
+                confirmButtonText: ' ', 
+                cancelButtonText: ' ',  
+                position: 'center',
+                allowOutsideClick: false,
+                allowEscapeKey: false,
+                customClass: {
+                    popup: 'swal-shadow-popup',
+                    confirmButton: 'like-btn',
+                    cancelButton: 'dislike-btn',
+                },
+                didRender: () => {
+                    const confirmBtn = Swal.getConfirmButton();
+                    const cancelBtn = Swal.getCancelButton();
+        
+                    if (confirmBtn) {
+                        confirmBtn.innerHTML = `<img src="/thumbs_up.png" alt="Goed" style="height:24px; vertical-align:middle; margin-right:6px;"> Goed`;
                     }
-                }).then((feedbackResult) => {
-                    if (feedbackResult.isConfirmed && feedbackResult.value) {
-                        sendDislikeFeedback('dislike', feedbackResult.value);
-                        Swal.fire({
-                            title: '<span class="swal-dislike-title">Tell us more about this reason?</span>',
-                            input: 'textarea',
-                            inputPlaceholder: 'Your feedback here...',
-                            showCancelButton: true,
-                            confirmButtonText: 'Submit',
-                            cancelButtonText: 'Skip',
-                            customClass: {
-                                popup: 'swal-more-feedback-popup',
-                                input: 'swal-more-feedback-textarea',
-                                confirmButton: 'like-btn',
-                                cancelButton: 'dislike-btn'
-                            },
-                            inputAttributes: {
-                                'aria-label': 'More detailed feedback'
-                            }
-                        }).then((moreFeedbackResult) => {
-                            if (moreFeedbackResult.isConfirmed && moreFeedbackResult.value) {
-
-                                sendDislikeFeedback('dislike_more_details', moreFeedbackResult.value);
-                            }
-
-                        });
-
+        
+                    if (cancelBtn) {
+                        cancelBtn.innerHTML = `<img src="/thumbs_down.png" alt="Slecht" style="height:24px; vertical-align:middle; margin-right:6px;"> Slecht`;
                     }
-                });
-            }
-        });
-    };
-
+                }
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    sendDislikeFeedback('like');
+                } else if (result.dismiss === Swal.DismissReason.cancel) {
+                    Swal.fire({
+                        title: '<div class="congrats-text"><p>Jammer!</p></div>',
+                        html: '<span class="swal-dislike-title">Waarom vond je de video slecht?</span>',
+                        input: 'select',
+                        inputOptions: inputOptions,
+                        inputPlaceholder: 'Selecteer een reden...',
+                        showCancelButton: true,
+                        confirmButtonText: 'Submit',
+                        imageUrl: '/opps_image.png',
+                        customClass: {
+                            popup: 'swal-dislike-popup',
+                            input: 'swal-dislike-select',
+                            confirmButton: 'swal-dislike-confirm',
+                            cancelButton: 'swal-dislike-cancel'
+                        }
+                    }).then((feedbackResult) => {
+                        if (feedbackResult.isConfirmed && feedbackResult.value) {
+                            sendDislikeFeedback('dislike', feedbackResult.value);
+                            Swal.fire({
+                                title: '<span class="swal-dislike-title">Tell us more about this reason?</span>',
+                                input: 'textarea',
+                                inputPlaceholder: 'Your feedback here...',
+                                showCancelButton: true,
+                                confirmButtonText: 'Submit',
+                                cancelButtonText: 'Skip',
+                                customClass: {
+                                    popup: 'swal-more-feedback-popup',
+                                    input: 'swal-more-feedback-textarea',
+                                    confirmButton: 'like-btn',
+                                    cancelButton: 'dislike-btn'
+                                },
+                                inputAttributes: {
+                                    'aria-label': 'More detailed feedback'
+                                }
+                            }).then((moreFeedbackResult) => {
+                                if (moreFeedbackResult.isConfirmed && moreFeedbackResult.value) {
+                                    sendDislikeFeedback('dislike_more_details', moreFeedbackResult.value);
+                                }
+                            });
+                        }
+                    });
+                }
+            });
+        };
+    
 
 
 

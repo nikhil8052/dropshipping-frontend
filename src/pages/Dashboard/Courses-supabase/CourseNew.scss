@@ -1722,7 +1722,7 @@ label.custom_check span {
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
     border-radius: 14px;
     padding: 24px;
-    width: 380px !important;
+    width: 455px !important;
   }
   
   .swal-dislike-select {
@@ -2167,4 +2167,22 @@ label.custom_check span {
     border-radius: 120px;
     font-weight: 500;
     font-size: 14px;
+}
+
+.swal2-popup.swal2-modal.swal-shadow-popup.swal2-show {
+    max-width: 400px;
+    width: 100% !important;
+}
+
+.swal2-popup.swal2-modal.swal-shadow-popup.swal2-show h2 {
+    padding: 0px;
+}
+
+.swal2-popup.swal2-modal.swal-shadow-popup.swal2-show h2 span {
+    display: block;
+}
+
+.swal2-popup.swal2-modal.swal-shadow-popup.swal2-show .swal2-actions button:last-child {
+    background-color: #FF2C32A3 !important;
+    color: #fff !important;
 }
