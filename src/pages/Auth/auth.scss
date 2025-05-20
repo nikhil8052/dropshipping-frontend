@@ -382,3 +382,46 @@
     min-width: 100%;
 }
 }
+
+
+.custom-input-transparent{
+    background: transparent !important;
+}
+
+input{
+    background: transparent !important;
+    border-radius: none !important;
+}
+.custom-input-ktransparent input{
+    border-radius: none !important;
+    border-radius: 6px !important;
+    border: none !important;
+    background-color: transparent !important;
+    outline: 1.5px solid #17a2b8 !important;
+    color: #fff;
+    box-shadow:none !important;
+}
+
+.auth-main-wrapper input[type=password]:focus , .custom-input-transparent input:focus{
+    outline: none !important;
+}
+.auth-main-wrapper input[type=password] , .custom-input-transparent input{
+    border-radius: 6px !important;
+    border: none !important;
+    background-color: transparent !important;
+    outline: 1.5px solid #17a2b8 !important;
+    color: #fff;
+    box-shadow:none !important;
+}
+.auth-main-wrapper input[type=password]{
+    padding: 16.5px 10px;
+}
+.input-password-container > div{
+    position: relative;
+}
+.input-password-container > svg {
+    position: absolute;
+    top: 50%;
+    transform: translate(0%, -30%);
+}
+
