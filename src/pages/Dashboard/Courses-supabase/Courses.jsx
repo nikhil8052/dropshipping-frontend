@@ -371,7 +371,7 @@ const Courses = () => {
                         name="Search"
                         label="Search"
                         onChange={onFilterTextChange}
-                        placeholder="Zoekennpm"
+                        placeholder="Zoeken"
                     />
                 </InputGroup>
 
