@@ -70,8 +70,8 @@ const ResetPassword = () => {
             <div className="auth-main-wrapper">
                 <Row className="section" style={{ justifyContent: 'center' }} >
                     <LoginLeftSec />
-                    <Col xs={12} sm={12} md={12} lg={6}>
-                        <div className="auth-form-wrapper ">
+                    <Col xs={12} sm={12} md={12} lg={12}>
+                        <div className="auth-form-wrapper auto-reset-wrapper ">    
                             <div className="auth-form-data ">
                                 <h1 className="auth-title ">Reset Password</h1>
                                 <h3 className="auth-form-title">

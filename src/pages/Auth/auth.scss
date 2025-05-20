@@ -293,7 +293,7 @@
     background-size: cover;
     display: flex;
     flex-direction: column;
-    opacity: 70%;
+    // opacity: 70%;
     background-blend-mode: overlay;
     min-height: 100vh;
 }
@@ -425,3 +425,169 @@ input{
     transform: translate(0%, -30%);
 }
 
+//  date - 20may 
+// chnaged this css 
+// .layout_public:has(.auth-main-wrapper) {
+//     background-image: url("/src/assets/images/login2.png");
+//     background-position: center;
+//     background-repeat: no-repeat;
+//     background-size: cover;
+//     display: flex;
+//     flex-direction: column;
+//     opacity: 70%;
+//     background-blend-mode: overlay;
+//     min-height: 100vh;
+// }
+
+
+
+.auth-login-wrapper {
+    background-color: #fff;
+    background-image: unset;
+    box-shadow: unset;
+}
+
+.auth-login-wrapper h1.auth-title {
+    color: #000;
+    margin: auto;
+}
+.auth-login-wrapper  form > div  label {
+    color: #000 !important;
+}
+.auth-login-wrapper .custom-input-transparent , .custom-input-ktransparent{
+    background: transparent !important;
+}
+.auth-login-wrapper .custom-input-ktransparent input{
+    color: #000 !important;
+}
+.auth-login-wrapper .auth-main-wrapper input:-webkit-autofill{
+    border: 1px solid rgb(1 189 207 / 0%) !important;
+}
+.auth-login-wrapper .MuiInputBase-root.MuiOutlinedInput-root.MuiInputBase-colorPrimary.MuiInputBase-fullWidth.MuiInputBase-formControl.custom-input-transparent.css-1blp12k-MuiInputBase-root-MuiOutlinedInput-root:hover fieldset , .MuiInputBase-root.MuiOutlinedInput-root.MuiInputBase-colorPrimary.MuiInputBase-fullWidth.MuiInputBase-formControl.custom-input-ktransparent.css-1blp12k-MuiInputBase-root-MuiOutlinedInput-root:hover fieldset{
+    border: 1px solid #3498db;
+}
+
+.auth-login-wrapper .MuiInputBase-root.MuiOutlinedInput-root.MuiInputBase-colorPrimary.MuiInputBase-fullWidth.MuiInputBase-formControl.custom-input-transparent.css-1blp12k-MuiInputBase-root-MuiOutlinedInput-root .css-1ll44ll-MuiOutlinedInput-notchedOutline , .MuiInputBase-root.MuiOutlinedInput-root.MuiInputBase-colorPrimary.MuiInputBase-fullWidth.MuiInputBase-formControl.custom-input-ktransparent.css-1blp12k-MuiInputBase-root-MuiOutlinedInput-root  fieldset.MuiOutlinedInput-notchedOutline.css-1ll44ll-MuiOutlinedInput-notchedOutline{
+    border: 1px solid #3498db !important;
+    // border-color: #3498db;
+    background-color: #fff !important;
+}
+.auth-login-wrapper .custom-input-transparent input {
+    color: #000;
+}
+.auth-login-wrapper a.auth-link.ms-auto {
+    color: #0d8de0;
+}
+.auth-login-wrapper .custom-input-ktransparent input::placeholder{
+    color: #000;
+}
+
+.auth-login-wrapper .custom-input-transparent input, .auth-login-wrapper .custom-input-ktransparent input {
+    color: #000;
+    position: relative;
+    z-index: 1;
+    outline: none  !important;
+}
+
+// for get pass 
+
+.auth-forget-wrapper {
+    background-color: #fff !important;
+    background-image: unset;
+    box-shadow: unset;
+}
+.auth-forget-wrapper h1 {
+    color: #000;
+    margin: auto;
+} 
+.auth-forget-wrapper h3 {
+    color: #000;
+}
+
+.auth-forget-wrapper form .formgroup label {
+    color: #000;
+}
+
+.auth-forget-wrapper form .formgroup input.form-control , .auth-forget-wrapper button  svg path , .auth-forget-wrapper button , .auth-forget-wrapper form .formgroup input.form-control::placeholder{
+    color: #000 !important;
+}
+
+.custom-input-transparent .MuiOutlinedInput-root {
+    background-color: transparent !important;
+  }
+  
+
+// 
+
+// .auth-login-wrapper .custom-input-transparent input:-webkit-autofill ,.auth-login-wrapper .custom-input-ktransparent input:-webkit-autofill {
+//     -webkit-box-shadow: 0 0 0 1000px transparent inset !important;
+//     -webkit-text-fill-color: #000 !important; /* Or any text color you want */
+//     transition: background-color 5000s ease-in-out 0s;
+      
+//   }
+  
+  .auth-code-wrapper {
+    background-color: #fff !important;
+    background-image: unset;
+    box-shadow: unset;
+}
+
+  .auth-code-wrapper h1.auth-title , .auto-reset-wrapper h1 {
+    color: #000;
+    text-align: center;
+}
+
+.auth-code-wrapper h3 {
+    color: #000;
+    text-align: center;
+    margin: auto;
+}
+
+.auth-code-wrapper form .verification-input label {
+    color: #000;
+    text-align: center;
+}
+
+
+// 
+.auto-reset-wrapper {
+    background-color: #fff !important;
+    background-image: unset;
+    box-shadow: unset;
+    padding: 40px;
+    border-radius: 20px;
+    max-width: 600px;
+    margin: auto;
+}
+.auto-reset-wrapper h1.auth-title {
+    color: #000;
+}
+
+.auto-reset-wrapper h3.auth-form-title {
+    color: #000;
+}
+.auto-reset-wrapper form .input-password-container .formgroup label {
+    color: #000;
+}
+
+.auto-reset-wrapper form .input-password-container .formgroup input {
+    color: #000;
+}
+.auto-reset-wrapper button {
+    width: 100%;
+    margin: 20px 0px;
+}
+.auto-reset-wrapper button svg path{
+
+    color: #000;
+}
+
+.auto-reset-wrapper .auth-form-data > div p {
+    color: #000;
+    text-align: center;
+    margin: 0px;
+}
+
+.auto-reset-wrapper .auth-form-data > div {
+    margin: auto;
+}

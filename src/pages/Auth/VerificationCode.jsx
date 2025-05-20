@@ -53,7 +53,7 @@ const VerificationCode = () => {
                 <div className="login-page-section">
                     <div className="login-page">
                         <LoginLeftSec />
-                        <Col className='login-center'>
+                        <Col className='login-center auth-code-wrapper'>
                             <div className="auth-form-wrapper ">
                                 <div className="auth-form-data ">
                                     <h1 className="auth-title ">Enter Your Verification Code</h1>
