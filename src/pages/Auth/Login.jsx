@@ -96,7 +96,7 @@ const Login = () => {
                                                         <TextField
                                                             {...field}
                                                             label="E-mail adres"
-                                                            placeholder="E-mail"
+                                                            placeholder="E-mail adres"
                                                             type="email"
                                                             fullWidth
                                                             variant="outlined"

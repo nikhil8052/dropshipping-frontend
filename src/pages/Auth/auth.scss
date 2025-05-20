@@ -425,3 +425,11 @@ input{
     transform: translate(0%, -30%);
 }
 
+
+
+.auth-main-wrapper input[type=password]::placeholder{
+    color: #fff !important;
+}
+.custom-input-transparent fieldset legend span {
+    color: #bcbdbd !important;
+}
