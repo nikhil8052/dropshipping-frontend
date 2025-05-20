@@ -591,3 +591,26 @@ input{
 .auto-reset-wrapper .auth-form-data > div {
     margin: auto;
 }
+
+.input-password-container>div {
+    position: relative !important;
+}
+
+
+.auth-code-wrapper .verification-input input.form-control {
+    color: #000 !important;
+}
+
+
+
+.input-password-container svg path {
+    color: #000;
+}
+
+.input-password-container>svg {
+    top: calc(50% + 16px) !important;
+}
+
+.auto-reset-wrapper  input[type=password]:focus{
+    border: 1.5px solid #17a2b8 !important;
+}
