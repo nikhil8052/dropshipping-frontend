@@ -173,7 +173,7 @@ const Table = ({
                                 name="Search"
                                 label="Search"
                                 onChange={onFilterTextChange}
-                                placeholder="Search"
+                                placeholder="Zoeken"
                             />
                         </InputGroup>
                     </div>

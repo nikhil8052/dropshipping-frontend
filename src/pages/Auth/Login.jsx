@@ -75,8 +75,8 @@ const Login = () => {
                 <div className="login-page-section">
                     <div className="login-page">
                         <LoginLeftSec />
-                        <Col className="login-center">
-                            <div className="auth-form-wrapper">
+                        <Col className="login-center auth-login-wrapper">
+                            <div className="auth-form-wrapper ">
                                 {/* <div className='left-img col-md-6'>
                                  <img src={Rightloginimg} alt="" />
                                 </div> */}
@@ -96,8 +96,9 @@ const Login = () => {
                                                         <TextField
                                                             {...field}
                                                             label="E-mail adres"
-                                                            placeholder="E-mail"
+                                                            placeholder="E-mail adres"
                                                             type="email"
+                                                            autoComplete="new-email"
                                                             fullWidth
                                                             variant="outlined"
                                                             // error={meta.touched && Boolean(meta.error)}
@@ -105,7 +106,10 @@ const Login = () => {
                                                             margin="normal"
                                                             InputProps={{
                                                                 className: 'custom-input-transparent'
-                                                            }}
+                                                            }
+
+                                                        }
+                                                      
                                                         />
                                                     )}
                                                 </Field>

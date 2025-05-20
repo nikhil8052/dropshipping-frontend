@@ -49,7 +49,7 @@ const ForgotPassword = () => {
                 <div className="login-page-section">
                 <div className="login-page">
                     <LoginLeftSec />
-                    <Col className='login-center'>
+                    <Col className='login-center auth-forget-wrapper'>
                         <div className="auth-form-wrapper ">
                             <div className="auth-form-data ">
                                 <h1 className="auth-title ">Forgot Password</h1>
@@ -80,7 +80,7 @@ const ForgotPassword = () => {
                                                 </Button>
                                             </FormikForm>
                                             <Button
-                                                className="back-btn white"
+                                                className="back-btn "
                                                 type="button"
                                                 onClick={() => navigate('/login')}
                                                 disabled={isSubmitting || loading}
