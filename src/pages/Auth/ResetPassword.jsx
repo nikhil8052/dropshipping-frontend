@@ -114,6 +114,7 @@ const ResetPassword = () => {
                                                         className={`eye-icon-password ${showPassword.confirmPassword ? 'visible' : ''}`}
                                                         color="rgba(200, 202, 216, 1)"
                                                     />
+                                                    
                                                 </div>
 
                                                 <Button className="auth-login-button" type="submit" disabled={loading}>
