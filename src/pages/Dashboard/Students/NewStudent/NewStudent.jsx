@@ -34,6 +34,8 @@ import PhoneInputField from '../../../../components/Input/PhoneInput';
 // import PaymentStatusOneTime from './Payments/PaymentStatusOneTime';
 // import PaymentStatusInstallments from './Payments/PaymentStatusInstallments';
 // import Card from '@components/Card/Card';
+import { faEye, faEyeSlash, faCopy } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 const NewStudent = () => {
     const inputRef = useRef();
@@ -51,6 +53,8 @@ const NewStudent = () => {
     const [studentProducts, setStudentProducts] = useState([]);
     const [loadingCRUD, setLoadingCRUD] = useState(false);
     const [categories, setCategories] = useState([]);
+    const [passwordError, setPasswordError] = useState("");
+
     // const [isRefetch, setIsRefetch] = useState(false);
     const isRefetch = false;
     // Form state
@@ -64,7 +68,8 @@ const NewStudent = () => {
         coursesRoadmap: [],
         category: [],
         roadMap: 'ROAD_MAP_ONE',
-        roadmapAccess:'false' 
+        roadmapAccess: 'false',
+        password: ''
         // paymentType: '',
         // installmentFrequency: '',
         // installmentCount: 0,
@@ -145,7 +150,6 @@ const NewStudent = () => {
         const response = await axiosWrapper('GET', API_URL.GET_STUDENT.replace(':id', id), {}, token);
         const student = response.data;
 
-        console.log( student , " DD ")
         // return 
         const coursesRoadmap = student.coursesRoadmap.map((course) => ({
             value: course?._id,
@@ -171,7 +175,8 @@ const NewStudent = () => {
             coachingTrajectory: student?.coachingTrajectory || '',
             roadMap: student?.roadMap || 'ROAD_MAP_ONE',
             coursesRoadmap: student?.coursesRoadmap.map((c) => c?._id),
-            roadmapAccess:String(student?.roadmapAccess || 'false'), 
+            roadmapAccess: String(student?.roadmapAccess || 'false'),
+            password: ''
             // paymentType: student?.paymentType || 'one-time', // Default to 'one-time' if not present
             // installmentFrequency: student?.installmentFrequency || '',
             // installmentCount: student?.installmentCount || 0,
@@ -257,18 +262,31 @@ const NewStudent = () => {
     };
 
     const handleFormSubmit = async (values, { resetForm, setSubmitting }) => {
-        let formData = { ...values,
+        let formData = {
+            ...values,
             avatar: studentPhoto,
-            category: values.category.map((cat) => cat.value) };
+            category: values.category.map((cat) => cat.value)
+        };
 
-
-            // console.log(formData, "DD ");
-            // return 
-        // If updating an existing student, exclude the email field
-        if (studentId) {
-            const { email, ...rest } = formData;
-            formData = rest;
+        if (formData.password.length > 0) {
+            if (formData.confirm_password != formData.password) {
+                setPasswordError(" Password Does not match!")
+                setTimeout(() => {
+                    setPasswordError("");
+                }, 5000);
+                console.error(" Error not matchedc the password ")
+                return;
+            }
         }
+
+        delete formData.confirm_password;
+        // console.log(formData, "DD ");
+        // return 
+        // If updating an existing student, exclude the email field
+        // if (studentId) {
+        //     const { email, ...rest } = formData;
+        //     formData = rest;
+        // }
 
         const url = studentId ? `${API_URL.UPDATE_STUDENT.replace(':id', studentId)}` : API_URL.CREATE_STUDENT;
         const method = studentId ? 'PUT' : 'POST';
@@ -422,6 +440,28 @@ const NewStudent = () => {
         { label: 'Yes', value: 'true' },
         { label: 'No', value: 'false' }
     ];
+
+
+    const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+
+    const [showPassword, setShowPassword] = useState(false);
+
+    const [copiedPassword, setCopiedPassword] = useState(false);
+    const [copiedConfirmPassword, setCopiedConfirmPassword] = useState(false);
+
+    const copyToClipboard = (fieldName) => {
+        const input = document.querySelector(`input[name="${fieldName}"]`);
+        if (input && input.value) {
+            navigator.clipboard.writeText(input.value);
+            if (fieldName === "password") {
+                setCopiedPassword(true);
+                setTimeout(() => setCopiedPassword(false), 1500);
+            } else if (fieldName === "confirm_password") {
+                setCopiedConfirmPassword(true);
+                setTimeout(() => setCopiedConfirmPassword(false), 1500);
+            }
+        }
+    };
 
     return (
         <div className="new-student-page-wrapper">
@@ -970,8 +1010,8 @@ const NewStudent = () => {
                                         </Col> */}
                                         {/* Road Map access  */}
                                         <Col md={12} xs={12} >
-                                           <label className="field-label">Roadmap Access</label>
-                                           <Field
+                                            <label className="field-label">Roadmap Access</label>
+                                            <Field
                                                 name="roadmapAccess"
                                                 className="field-select-control"
                                                 type="text"
@@ -1020,6 +1060,74 @@ const NewStudent = () => {
                                             />
                                         </Col>
                                     </Row>
+                                    {studentId && (
+        <>
+          <Row>
+            {/* Password Field */}
+            <Col md={6} xs={12}>
+              <label className="field-label">Password</label>
+              <div className="position-relative">
+                <Field
+                  name="password"
+                  className="field-control pe-5"
+                  type={showPassword ? "text" : "password"}
+                  placeholder="Enter password"
+                />
+                {/* Eye icon */}
+                <FontAwesomeIcon
+                  icon={showPassword ? faEyeSlash : faEye}
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="position-absolute top-50 end-0 translate-middle-y me-5"
+                  color="#6c757d"
+                  style={{ cursor: "pointer" }}
+                />
+                {/* Copy icon */}
+                <FontAwesomeIcon
+                  icon={faCopy}
+                  onClick={() => copyToClipboard("password")}
+                  className="position-absolute top-50 end-0 translate-middle-y me-2"
+                  color={copiedPassword ? "green" : "#6c757d"}
+                  style={{ cursor: "pointer" }}
+                  title={copiedPassword ? "Copied!" : "Copy password"}
+                />
+              </div>
+              <ErrorMessage name="password" component="div" className="error" />
+            </Col>
+
+            {/* Confirm Password Field */}
+            <Col md={6} xs={12}>
+              <label className="field-label">Confirm Password</label>
+              <div className="position-relative">
+                <Field
+                  name="confirm_password"
+                  className="field-control pe-5"
+                  type={showConfirmPassword ? "text" : "password"}
+                  placeholder="Enter confirm password"
+                />
+                {/* Eye icon */}
+                <FontAwesomeIcon
+                  icon={showConfirmPassword ? faEyeSlash : faEye}
+                  onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                  className="position-absolute top-50 end-0 translate-middle-y me-5"
+                  color="#6c757d"
+                  style={{ cursor: "pointer" }}
+                />
+                {/* Copy icon */}
+                <FontAwesomeIcon
+                  icon={faCopy}
+                  onClick={() => copyToClipboard("confirm_password")}
+                  className="position-absolute top-50 end-0 translate-middle-y me-2"
+                  color={copiedConfirmPassword ? "green" : "#6c757d"}
+                  style={{ cursor: "pointer" }}
+                  title={copiedConfirmPassword ? "Copied!" : "Copy confirm password"}
+                />
+              </div>
+              <div className="error mt-2">{passwordError}</div>
+            </Col>
+          </Row>
+        </>
+      )}
+
                                 </div>
 
                                 {/* <Row>
@@ -1098,6 +1206,7 @@ const NewStudent = () => {
                                         <CarouselWrapper items={studentProducts} type="product" />
                                     </>
                                 )}
+
                                 <Row>
                                     <Col>
                                         <div className="mt-3 d-flex justify-content-end gap-3">
@@ -1115,8 +1224,8 @@ const NewStudent = () => {
                                                         ? 'Saving Changes...'
                                                         : 'Adding Student...'
                                                     : studentId
-                                                      ? 'Save Changes'
-                                                      : 'Add Student'}
+                                                        ? 'Save Changes'
+                                                        : 'Add Student'}
                                             </Button>
                                         </div>
                                     </Col>
