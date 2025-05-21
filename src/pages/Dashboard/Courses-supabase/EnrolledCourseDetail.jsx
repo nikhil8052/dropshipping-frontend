@@ -222,10 +222,10 @@ const EnrolledCourseDetail = () => {
         Swal.fire({
             title: '<strong class="congrats-title">Gefeliciteerd!</strong>',
             html: '<div class="congrats-text">De video is afgelopen en je kan door naar de volgende.</div>',
-            confirmButtonText: 'Done',
+            confirmButtonText: 'Next Lecture',
             cancelButtonText: 'Dismiss',
-            showCancelButton: false,
-            showCloseButton: false,
+            showCancelButton: true,
+            showCloseButton: true,
             customClass: {
                 popup: 'custom-congrats',
                 confirmButton: 'done-btn',
