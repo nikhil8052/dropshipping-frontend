@@ -607,10 +607,61 @@ input{
     color: #000;
 }
 
-.input-password-container>svg {
+.input-password-container > svg {
     top: calc(50% + 16px) !important;
 }
 
 .auto-reset-wrapper  input[type=password]:focus{
     border: 1.5px solid #17a2b8 !important;
+}
+
+.auth-login-wrapper .input-password-container > svg {
+    top: calc(50% + 0px) !important;
+    z-index: 7;
+}
+
+// .auth-login-wrapper input:-webkit-autofill,
+// .auth-login-wrapper input:-webkit-autofill:hover,
+// .auth-login-wrapper input:-webkit-autofill:focus,
+// .auth-login-wrapper input:-webkit-autofill:active {
+//     -webkit-box-shadow: 0 0 0px 1000px #fff inset !important; /* White background */
+//     box-shadow: 0 0 0px 1000px #fff inset !important;
+//     -webkit-text-fill-color: #000 !important; /* Text color */
+//     transition: background-color 5000s ease-in-out 0s; /* Hack to prevent re-color */
+// }
+
+.auth-login-wrapper form > div label {
+    color: #000 !important;
+    z-index: 6;
+    background-color: #fff;
+}
+.auth-login-wrapper input:-webkit-autofill,
+.auth-login-wrapper input:-webkit-autofill:hover,
+.auth-login-wrapper input:-webkit-autofill:focus,
+.auth-login-wrapper input:-webkit-autofill:active,
+
+
+
+
+
+.auth-forget-wrapper input:-webkit-autofill,
+.auth-forget-wrapper input:-webkit-autofill:hover,
+.auth-forget-wrapper input:-webkit-autofill:focus,
+.auth-forget-wrapper input:-webkit-autofill:active,
+
+
+.auth-code-wrapper input:-webkit-autofill,
+.auth-code-wrapper input:-webkit-autofill:hover,
+.auth-code-wrapper input:-webkit-autofill:focus,
+.auth-code-wrapper input:-webkit-autofill:active,
+
+.auto-reset-wrapper input:-webkit-autofill,
+.auto-reset-wrapper input:-webkit-autofill:hover,
+.auto-reset-wrapper input:-webkit-autofill:focus,
+.auto-reset-wrapper input:-webkit-autofill:active
+{
+  -webkit-box-shadow: 0 0 0 1000px transparent inset !important;
+  box-shadow: 0 0 0 1000px transparent inset !important;
+  -webkit-text-fill-color: #000 !important; /* or your desired text color */
+  transition: background-color 9999s ease-out, color 9999s ease-out;
 }
