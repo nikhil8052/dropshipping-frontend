@@ -13,6 +13,8 @@ import FormControl from '@mui/material/FormControl';
 import '../../Courses-supabase/CourseNew.scss';
 import StudentCourseCategory from './StudentCourseCategory';
 import imagePreview2 from '../../../../assets/icons/Thumbnail.svg';
+import { faEye, faEyeSlash, faCopy } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import {
     Row,
@@ -58,6 +60,7 @@ const NewStudent = () => {
     const [categories, setCategories] = useState([]);
     const [selectedCategories, setSelectedCategories] = useState([]);
     const isRefetch = false;
+    const [passwordError, setPasswordError] = useState("");
 
     const [studentData, setStudentData] = useState({
         name: '',
@@ -220,11 +223,32 @@ const NewStudent = () => {
 
     const handleFormSubmit = async (values, { resetForm, setSubmitting }) => {
         let formData = { ...values, avatar: studentPhoto, category: values.category.map((cat) => cat.value) };
-        console.log(formData);
-        if (studentId) {
-            const { email, ...rest } = formData;
-            formData = rest;
+
+
+        const strongPasswordRegex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[ !"#$%&'()*+,-./:;<=>?@[\\\]^_`{|}~¡¢£¤¥¦§¨©ª«¬®ˉ°±²³´µ¶¸¹º»¼½¾¿ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖ×ØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõö÷øùúûüýþÿ])[A-Za-z\d !"#$%&'()*+,-./:;<=>?@[\\\]^_`{|}~¡¢£¤¥¦§¨©ª«¬®ˉ°±²³´µ¶¸¹º»¼½¾¿ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖ×ØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõö÷øùúûüýþÿ]{4,20}$/;
+
+        if (formData.password?.length > 0) {
+           
+            if (!strongPasswordRegex.test(formData.password.trim())) {
+                setPasswordError("Password is not strong. Please fill in a strong password (letters, numbers & symbols).");
+                setTimeout(() => setPasswordError(""), 5000);
+                return;
+            }
+
+            if (formData.confirm_password !== formData.password) {
+                setPasswordError("Password does not match!");
+                setTimeout(() => setPasswordError(""), 5000);
+                return;
+            }
         }
+
+        delete formData.confirm_password;
+
+        // if (studentId) {
+        //     const { email, ...rest } = formData;
+        //     formData = rest;
+        // }
+
 
         const url = studentId
             ? `${API_URL.SUPABASE_UPDATE_STUDENT.replace(':id', studentId)}`
@@ -376,6 +400,13 @@ const NewStudent = () => {
         { label: 'No', value: 'false' }
     ];
 
+    const [showPassword, setShowPassword] = useState(false);
+    const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+
+    const handleCopy = (field) => {
+        navigator.clipboard.writeText(values[field] || '');
+    };
+
     return (
         <div className="new-student-page-wrapper">
             <div className="title-top">
@@ -395,89 +426,89 @@ const NewStudent = () => {
                         {({ isSubmitting, handleSubmit, values, setFieldValue }) => (
                             <Form onSubmit={handleSubmit}>
                                 <div className="box-row">
-                                <Row className="mb-5">
-                                    <Col>
-                                        <div className="student-upload thumbnail-block">
-                                            {studentPhoto ? (
-                                                <label className="field-label fw-bold">Profile image</label>
-                                            ) : (
-                                                <label className="field-label">UPLOAD PHOTO</label>
-                                            )}
-                                            <div className="image_wrapper">
-                                                <Field name="studentPhoto">
-                                                    {({ field }) => (
-                                                        <>
-                                                            <input
-                                                                ref={inputRef}
-                                                                accept=".jpg,.jpeg,.png"
-                                                                {...field}
-                                                                type="file"
-                                                                style={{ display: 'none' }}
-                                                                onChange={handleFileChange}
-                                                            />
-                                                            {studentPhoto ? (
-                                                                <div className="image-renderer">
-                                                                    <div className="img-wrapper">
+                                    <Row className="mb-5">
+                                        <Col>
+                                            <div className="student-upload thumbnail-block">
+                                                {studentPhoto ? (
+                                                    <label className="field-label fw-bold">Profile image</label>
+                                                ) : (
+                                                    <label className="field-label">UPLOAD PHOTO</label>
+                                                )}
+                                                <div className="image_wrapper">
+                                                    <Field name="studentPhoto">
+                                                        {({ field }) => (
+                                                            <>
+                                                                <input
+                                                                    ref={inputRef}
+                                                                    accept=".jpg,.jpeg,.png"
+                                                                    {...field}
+                                                                    type="file"
+                                                                    style={{ display: 'none' }}
+                                                                    onChange={handleFileChange}
+                                                                />
+                                                                {studentPhoto ? (
+                                                                    <div className="image-renderer">
+                                                                        <div className="img-wrapper">
+                                                                            <img
+                                                                                src={
+                                                                                    typeof studentPhoto === 'string'
+                                                                                        ? studentPhoto
+                                                                                        : URL.createObjectURL(studentPhoto)
+                                                                                }
+                                                                                alt=""
+                                                                                style={{
+                                                                                    width: '200px',
+                                                                                    height: '128px'
+                                                                                }}
+                                                                            />
+                                                                            <div
+                                                                                className="overlay-image"
+                                                                                onClick={(e) => {
+                                                                                    e.preventDefault();
+                                                                                    inputRef.current.click();
+                                                                                }}
+                                                                            >
+                                                                                Edit
+                                                                            </div>
+                                                                            <span>{studentPhoto.name}</span>
+                                                                        </div>
+                                                                    </div>
+                                                                ) : (
+                                                                    <div className="image-preview">
                                                                         <img
-                                                                            src={
-                                                                                typeof studentPhoto === 'string'
-                                                                                    ? studentPhoto
-                                                                                    : URL.createObjectURL(studentPhoto)
-                                                                            }
-                                                                            alt=""
-                                                                            style={{
-                                                                                width: '200px',
-                                                                                height: '128px'
-                                                                            }}
-                                                                        />
-                                                                        <div
-                                                                            className="overlay-image"
                                                                             onClick={(e) => {
                                                                                 e.preventDefault();
                                                                                 inputRef.current.click();
                                                                             }}
-                                                                        >
-                                                                            Edit
-                                                                        </div>
-                                                                        <span>{studentPhoto.name}</span>
-                                                                    </div>
-                                                                </div>
-                                                            ) : (
-                                                                <div className="image-preview">
-                                                                    <img
-                                                                        onClick={(e) => {
-                                                                            e.preventDefault();
-                                                                            inputRef.current.click();
-                                                                        }}
-                                                                        src={imagePreview2}
-                                                                        alt=""
-                                                                    />
-                                                                    <span>
-                                                                        {/* Upload student picture here
+                                                                            src={imagePreview2}
+                                                                            alt=""
+                                                                        />
+                                                                        <span>
+                                                                            {/* Upload student picture here
                                                                         <br />
                                                                         Supported formats:{' '}
                                                                         <strong>.jpg, .jpeg, or .png</strong>
                                                                         <br /> */}
-                                                                        <Button
-                                                                            onClick={(e) => {
-                                                                                e.preventDefault();
-                                                                                inputRef.current.click();
-                                                                            }}
-                                                                            className="upload-image-btn"
-                                                                        >
-                                                                            Upload Image{' '}
-                                                                            <img src={UploadSimple} alt="Upload Btn" />
-                                                                        </Button>
-                                                                    </span>
-                                                                </div>
-                                                            )}
-                                                        </>
-                                                    )}
-                                                </Field>
+                                                                            <Button
+                                                                                onClick={(e) => {
+                                                                                    e.preventDefault();
+                                                                                    inputRef.current.click();
+                                                                                }}
+                                                                                className="upload-image-btn"
+                                                                            >
+                                                                                Upload Image{' '}
+                                                                                <img src={UploadSimple} alt="Upload Btn" />
+                                                                            </Button>
+                                                                        </span>
+                                                                    </div>
+                                                                )}
+                                                            </>
+                                                        )}
+                                                    </Field>
+                                                </div>
                                             </div>
-                                        </div>
-                                    </Col>
-                                </Row>
+                                        </Col>
+                                    </Row>
                                     <Row>
                                         <Col md={6} xs={12} className="form-group">
                                             <TextField
@@ -687,6 +718,72 @@ const NewStudent = () => {
                                             <ErrorMessage name="category" component="div" className="error" />
                                         </Col>
                                     </Row>
+                                    {
+                                        studentId && (
+                                            <>
+                                                <Row>
+                                                    <Col md={6} xs={12} className="form-group">
+                                                        <label className="field-label">Password</label>
+                                                        <div className="position-relative">
+                                                            <Field
+                                                                name="password"
+                                                                className="field-control pe-5"
+                                                                type={showPassword ? 'text' : 'password'}
+                                                                placeholder="Enter password"
+                                                            />
+                                                            {/* Eye Icon */}
+                                                            <FontAwesomeIcon
+                                                                icon={showPassword ? faEyeSlash : faEye}
+                                                                onClick={() => setShowPassword(!showPassword)}
+                                                                className="position-absolute top-50 end-0 translate-middle-y me-3"
+                                                                color="#6c757d"
+                                                                style={{ cursor: 'pointer', zIndex: 2 }}
+                                                            />
+                                                            {/* Copy Icon */}
+                                                            <FontAwesomeIcon
+                                                                icon={faCopy}
+                                                                onClick={() => handleCopy('password')}
+                                                                className="position-absolute top-50 end-0 translate-middle-y me-5"
+                                                                color="#6c757d"
+                                                                style={{ cursor: 'pointer', zIndex: 2 }}
+                                                            />
+                                                        </div>
+                                                    </Col>
+
+                                                    <Col md={6} xs={12} className="form-group">
+                                                        <label className="field-label">Confirm Password</label>
+                                                        <div className="position-relative">
+                                                            <Field
+                                                                name="confirm_password"
+                                                                className="field-control pe-5"
+                                                                type={showConfirmPassword ? 'text' : 'password'}
+                                                                placeholder="Enter confirm password"
+                                                            />
+                                                            {/* Eye Icon */}
+                                                            <FontAwesomeIcon
+                                                                icon={showConfirmPassword ? faEyeSlash : faEye}
+                                                                onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                                                                className="position-absolute top-50 end-0 translate-middle-y me-3"
+                                                                color="#6c757d"
+                                                                style={{ cursor: 'pointer', zIndex: 2 }}
+                                                            />
+                                                            {/* Copy Icon */}
+                                                            <FontAwesomeIcon
+                                                                icon={faCopy}
+                                                                onClick={() => handleCopy('confirm_password')}
+                                                                className="position-absolute top-50 end-0 translate-middle-y me-5"
+                                                                color="#6c757d"
+                                                                style={{ cursor: 'pointer', zIndex: 2 }}
+                                                            />
+                                                        </div>
+                                                        <div className="error mt-3 lh-base ">{passwordError}</div>
+                                                    </Col>
+                                                </Row>
+                                            </>
+                                        )
+                                    }
+
+
                                 </div>
 
                                 <Row>
@@ -723,8 +820,8 @@ const NewStudent = () => {
                                                         ? 'Saving Changes...'
                                                         : 'Adding Student...'
                                                     : studentId
-                                                      ? 'Save Changes'
-                                                      : 'Add Student'}
+                                                        ? 'Save Changes'
+                                                        : 'Add Student'}
                                             </Button>
                                         </div>
                                     </Col>
