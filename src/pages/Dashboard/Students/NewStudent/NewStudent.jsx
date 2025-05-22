@@ -11,7 +11,8 @@ import {
     Col,
     Button,
     DropdownButton,
-    Dropdown
+    Dropdown,
+
 
     //  Badge
 } from 'react-bootstrap';
@@ -31,11 +32,13 @@ import { getFileObjectFromBlobUrl } from '../../../../utils/utils';
 import '../../../../styles/Students.scss';
 import '../../../../styles/Common.scss';
 import PhoneInputField from '../../../../components/Input/PhoneInput';
+
 // import PaymentStatusOneTime from './Payments/PaymentStatusOneTime';
 // import PaymentStatusInstallments from './Payments/PaymentStatusInstallments';
 // import Card from '@components/Card/Card';
 import { faEye, faEyeSlash, faCopy } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { Modal as BootstrapModal } from 'react-bootstrap';
 
 const NewStudent = () => {
     const inputRef = useRef();
@@ -54,10 +57,18 @@ const NewStudent = () => {
     const [loadingCRUD, setLoadingCRUD] = useState(false);
     const [categories, setCategories] = useState([]);
     const [passwordError, setPasswordError] = useState("");
+    const [password, setPassword] = useState('');
+    const [confirmPassword, setConfirmPassword] = useState('');
 
+    const [passwordModal, setPasswordModal] = useState(false)
     // const [isRefetch, setIsRefetch] = useState(false);
     const isRefetch = false;
     // Form state
+    const modalRef = useRef();
+    const [show, setShow] = useState(false);
+    const openModal = () => setShow(true);
+    const closeModal = () => setPasswordModal(false);
+
     const [studentData, setStudentData] = useState({
         name: '',
         email: '',
@@ -461,6 +472,36 @@ const NewStudent = () => {
                 setTimeout(() => setCopiedConfirmPassword(false), 1500);
             }
         }
+    };
+
+    const handlePasswordSubmit = async  () => {
+
+        if (password.length > 0) {
+            if (confirmPassword != password) {
+                setPasswordError(" Password Does not match!")
+                setTimeout(() => {
+                    setPasswordError("");
+                }, 5000);
+                console.error(" Error not matchedc the password ")
+                return;
+            }
+        }
+
+        const url = studentId ? `${API_URL.UPDATE_STUDENT.replace(':id', studentId)}` : API_URL.CREATE_STUDENT;
+        const method = studentId ? 'PUT' : 'POST';
+        const formData = {
+            password: password,
+            email: studentData.email,
+            name: studentData.name,
+        }
+        try {
+            await axiosWrapper(method, url, formData, token);
+       
+            closeModal();
+        } catch (error) {
+           
+        }
+
     };
 
     return (
@@ -1060,74 +1101,7 @@ const NewStudent = () => {
                                             />
                                         </Col>
                                     </Row>
-                                    {studentId && (
-        <>
-          <Row>
-            {/* Password Field */}
-            <Col md={6} xs={12}>
-              <label className="field-label">Password</label>
-              <div className="position-relative">
-                <Field
-                  name="password"
-                  className="field-control pe-5"
-                  type={showPassword ? "text" : "password"}
-                  placeholder="Enter password"
-                />
-                {/* Eye icon */}
-                <FontAwesomeIcon
-                  icon={showPassword ? faEyeSlash : faEye}
-                  onClick={() => setShowPassword(!showPassword)}
-                  className="position-absolute top-50 end-0 translate-middle-y me-5"
-                  color="#6c757d"
-                  style={{ cursor: "pointer" }}
-                />
-                {/* Copy icon */}
-                <FontAwesomeIcon
-                  icon={faCopy}
-                  onClick={() => copyToClipboard("password")}
-                  className="position-absolute top-50 end-0 translate-middle-y me-2"
-                  color={copiedPassword ? "green" : "#6c757d"}
-                  style={{ cursor: "pointer" }}
-                  title={copiedPassword ? "Copied!" : "Copy password"}
-                />
-              </div>
-              <ErrorMessage name="password" component="div" className="error" />
-            </Col>
-
-            {/* Confirm Password Field */}
-            <Col md={6} xs={12}>
-              <label className="field-label">Confirm Password</label>
-              <div className="position-relative">
-                <Field
-                  name="confirm_password"
-                  className="field-control pe-5"
-                  type={showConfirmPassword ? "text" : "password"}
-                  placeholder="Enter confirm password"
-                />
-                {/* Eye icon */}
-                <FontAwesomeIcon
-                  icon={showConfirmPassword ? faEyeSlash : faEye}
-                  onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                  className="position-absolute top-50 end-0 translate-middle-y me-5"
-                  color="#6c757d"
-                  style={{ cursor: "pointer" }}
-                />
-                {/* Copy icon */}
-                <FontAwesomeIcon
-                  icon={faCopy}
-                  onClick={() => copyToClipboard("confirm_password")}
-                  className="position-absolute top-50 end-0 translate-middle-y me-2"
-                  color={copiedConfirmPassword ? "green" : "#6c757d"}
-                  style={{ cursor: "pointer" }}
-                  title={copiedConfirmPassword ? "Copied!" : "Copy confirm password"}
-                />
-              </div>
-              <div className="error mt-2">{passwordError}</div>
-            </Col>
-          </Row>
-        </>
-      )}
-
+                              
                                 </div>
 
                                 {/* <Row>
@@ -1218,6 +1192,16 @@ const NewStudent = () => {
                                             >
                                                 Cancel
                                             </Button>
+                                            <Button
+                                                type="button"
+
+                                                onClick={() => setPasswordModal(true)}
+                                                className="cancel-btn"
+
+                                            >
+                                                Change password
+                                            </Button>
+
                                             <Button type="submit" className="submit-btn" disabled={isSubmitting}>
                                                 {isSubmitting
                                                     ? studentId
@@ -1250,6 +1234,91 @@ const NewStudent = () => {
                             activeBtnTitle="Update"
                         />
                     )}
+
+                    <BootstrapModal show={passwordModal} size="medium" centered>
+                        <BootstrapModal.Header closeButton>
+                            <BootstrapModal.Title className="modal-title">Change Password</BootstrapModal.Title>
+                        </BootstrapModal.Header>
+                        <BootstrapModal.Body className="modal-content">
+                            <Row>
+                                {/* Password Field */}
+                                <Col md={12} xs={12}>
+                                    <label className="field-label">Password</label>
+                                    <div className="position-relative">
+                                        <input
+                                            name="password"
+                                            className="field-control pe-5"
+                                            type={showPassword ? "text" : "password"}
+                                            placeholder="Enter password"
+                                            value={password}
+                                            onChange={(e) => setPassword(e.target.value)}
+                                        />
+                                        {/* Eye icon */}
+                                        <FontAwesomeIcon
+                                            icon={showPassword ? faEyeSlash : faEye}
+                                            onClick={() => setShowPassword(!showPassword)}
+                                            className="position-absolute top-50 end-0 translate-middle-y me-5"
+                                            color="#6c757d"
+                                            style={{ cursor: "pointer" }}
+                                        />
+                                        {/* Copy icon */}
+                                        <FontAwesomeIcon
+                                            icon={faCopy}
+                                            onClick={() => copyToClipboard(password)}
+                                            className="position-absolute top-50 end-0 translate-middle-y me-2"
+                                            color={copiedPassword ? "green" : "#6c757d"}
+                                            style={{ cursor: "pointer" }}
+                                            title={copiedPassword ? "Copied!" : "Copy password"}
+                                        />
+                                    </div>
+                                </Col>
+
+                                {/* Confirm Password Field */}
+                                <Col md={12} xs={12}>
+                                    <label className="field-label">Confirm Password</label>
+                                    <div className="position-relative">
+                                        <input
+                                            name="confirm_password"
+                                            className="field-control pe-5"
+                                            type={showConfirmPassword ? "text" : "password"}
+                                            placeholder="Enter confirm password"
+                                            value={confirmPassword}
+                                            onChange={(e) => setConfirmPassword(e.target.value)}
+                                        />
+                                        {/* Eye icon */}
+                                        <FontAwesomeIcon
+                                            icon={showConfirmPassword ? faEyeSlash : faEye}
+                                            onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                                            className="position-absolute top-50 end-0 translate-middle-y me-5"
+                                            color="#6c757d"
+                                            style={{ cursor: "pointer" }}
+                                        />
+                                        {/* Copy icon */}
+                                        <FontAwesomeIcon
+                                            icon={faCopy}
+                                            onClick={() => copyToClipboard(confirmPassword)}
+                                            className="position-absolute top-50 end-0 translate-middle-y me-2"
+                                            color={copiedConfirmPassword ? "green" : "#6c757d"}
+                                            style={{ cursor: "pointer" }}
+                                            title={copiedConfirmPassword ? "Copied!" : "Copy confirm password"}
+                                        />
+                                    </div>
+                                    <div className="error mt-2">{passwordError}</div>
+                                </Col>
+                            </Row>
+
+                        </BootstrapModal.Body>
+                        <BootstrapModal.Footer>
+                            <Button variant="secondary" onClick={closeModal}>
+                                Close
+                            </Button>
+                            <Button variant="primary" onClick={handlePasswordSubmit}>
+                                Submit
+                            </Button>
+                        </BootstrapModal.Footer>
+
+                    </BootstrapModal>
+
                 </Container>
             </div>
         </div>
