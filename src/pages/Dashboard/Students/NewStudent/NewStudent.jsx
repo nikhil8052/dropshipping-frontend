@@ -1203,15 +1203,22 @@ const NewStudent = () => {
                                             >
                                                 Cancel
                                             </Button>
-                                            <Button
-                                                type="button"
+                                            {
+                                                studentId && (
 
-                                                onClick={() => setPasswordModal(true)}
-                                                className="submit-btn"
+                                                    <Button
+                                                        type="button"
 
-                                            >
-                                                Change password
-                                            </Button>
+                                                        onClick={() => setPasswordModal(true)}
+                                                        className="submit-btn"
+
+                                                    >
+                                                        Change password
+                                                    </Button>
+
+                                                )
+                                            }
+
 
                                             <Button type="submit" className="submit-btn" disabled={isSubmitting}>
                                                 {isSubmitting
