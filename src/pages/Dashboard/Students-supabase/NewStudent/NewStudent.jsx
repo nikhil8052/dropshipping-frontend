@@ -394,8 +394,12 @@ const NewStudent = () => {
     const passwordChangePopUp = () => {
         MySwal.fire({
             title: 'Change Password',
+            customClass: {
+                confirmButton: 'submit-btn',
+                cancelButton:'cancel-btn'
+            },
             html: (
-                <div className="flex flex-col gap-2 items-start">
+                <div className="flex flex-col gap-2 items-start change_pass">
                     <div className="relative w-full ">
                         <input
                             type="password"
@@ -403,19 +407,18 @@ const NewStudent = () => {
                             placeholder="New Password"
                             className="swal2-input pr-10"
                         />
-                   
-                            <FontAwesomeIcon
-                                icon={faEye}
-                                className="absolute top-1/2 right-8 transform -translate-y-1/2 cursor-pointer"
-                                onClick={() => toggleVisibility('new-password', 'eye-icon')}
-                                id="eye-icon"
-                            />
-                            <FontAwesomeIcon
-                                icon={faCopy}
-                                className="absolute top-1/2 right-2 transform -translate-y-1/2 cursor-pointer"
-                                onClick={() => copyToClipboard('new-password')}
-                            />
-                   
+                        <FontAwesomeIcon
+                            icon={faEye}
+                            className="absolute top-1/2 right-8 transform -translate-y-1/2 cursor-pointer"
+                            onClick={() => toggleVisibility('new-password', 'eye-icon')}
+                            id="eye-icon"
+                        />
+                        <FontAwesomeIcon
+                            icon={faCopy}
+                            className="absolute top-1/2 right-2 transform -translate-y-1/2 cursor-pointer"
+                            onClick={() => copyToClipboard('new-password')}
+                        />
+
 
                     </div>
 
@@ -426,19 +429,19 @@ const NewStudent = () => {
                             placeholder="Confirm New Password"
                             className="swal2-input pr-10"
                         />
-                     
-                            <FontAwesomeIcon
-                                icon={faEye}
-                                className="mr-3 absolute top-1/2 right-8 transform -translate-y-1/2 cursor-pointer"
-                                onClick={() => toggleVisibility('confirm-password', 'eye-icon-confirm')}
-                                id="eye-icon-confirm"
-                            />
-                            <FontAwesomeIcon
-                                icon={faCopy}
-                                className="absolute top-1/2 right-2 transform -translate-y-1/2 cursor-pointer"
-                                onClick={() => copyToClipboard('confirm-password')}
-                            />
-                   
+
+                        <FontAwesomeIcon
+                            icon={faEye}
+                            className="mr-3 absolute top-1/2 right-8 transform -translate-y-1/2 cursor-pointer"
+                            onClick={() => toggleVisibility('confirm-password', 'eye-icon-confirm')}
+                            id="eye-icon-confirm"
+                        />
+                        <FontAwesomeIcon
+                            icon={faCopy}
+                            className="absolute top-1/2 right-2 transform -translate-y-1/2 cursor-pointer"
+                            onClick={() => copyToClipboard('confirm-password')}
+                        />
+
 
                     </div>
                 </div>
@@ -463,20 +466,26 @@ const NewStudent = () => {
                 window.copyToClipboard = (inputId) => {
                     const input = document.getElementById(inputId);
                     navigator.clipboard.writeText(input.value).then(() => {
-                        Swal.fire({
-                            toast: true,
-                            position: 'top-end',
-                            icon: 'success',
-                            title: 'Copied to clipboard',
-                            showConfirmButton: false,
-                            timer: 1000,
-                        });
+                        // Swal.fire({
+                        //     toast: true,
+                        //     position: 'top-end',
+                        //     icon: 'success',
+                        //     title: 'Copied to clipboard',
+                        //     showConfirmButton: false,
+                        //     timer: 1000,
+                        // });
+                        alert("Password Copied!")
                     });
                 };
             },
             preConfirm: () => {
                 const password = document.getElementById('new-password').value;
                 const confirm = document.getElementById('confirm-password').value;
+
+                if (password.length <= 0 || confirm.length <= 0) {
+                    Swal.showValidationMessage('Password cannot be empty!');
+                    return false;
+                }
                 if (!password || !confirm) {
                     Swal.showValidationMessage('All fields are required');
                     return false;

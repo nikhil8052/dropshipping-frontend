@@ -2069,6 +2069,23 @@ label.custom_check span {
     }
 }
 
+.admin-left-sec .course-left .folder-detail > div .drop-box {
+    display: flex;
+    justify-content: start;
+    position: relative;
+}
+
+
+.admin-left-sec .course-left .folder-detail > div .drop-box  >div:last-child {
+    position: absolute;
+    right: 20px;
+}
+
+.add-course-form .field-control, .field-select-control {
+    background-color: #fff !important;
+    padding: 0px;
+}
+
 @media only screen and (max-width:575px) {
     .select-label {
         grid-template-columns: repeat(1, 1fr);
@@ -2185,4 +2202,41 @@ label.custom_check span {
 .swal2-popup.swal2-modal.swal-shadow-popup.swal2-show .swal2-actions button:last-child {
     background-color: #FF2C32A3 !important;
     color: #fff !important;
+}
+
+
+// date 22may
+
+
+.change_pass > div input{
+    margin: 0px;
+    background: transparent !important;
+    border: none !important;
+    outline: none !important;
+    width: 100%;
+}
+
+.change_pass > div {
+    margin-bottom: 11px;
+    border: 1.5px solid #000;
+    border-radius: 10px;
+    position: relative;
+}
+.change_pass > div > svg.svg-inline--fa {
+    position: absolute;
+    top: 50%;
+    content: "";
+    right: 45px;
+    transform: translate(0%, -30%);
+}
+.change_pass > div svg.svg-inline--fa.fa-copy {
+    position: absolute;
+    right: 15px;
+    transform: translateY(-40%);
+}
+
+.change_pass > div input:focus{
+    outline: none !important;
+    box-shadow: none !important;
+     
 }
