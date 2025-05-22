@@ -479,6 +479,15 @@ const NewStudent = () => {
     const handlePasswordSubmit = async () => {
 
         setPassSubmitting(true)
+        if( password.length<=0 || confirmPassword.length<=0 ){
+            setPasswordError(" Password cannot be empty!")
+            setTimeout(() => {
+                setPasswordError("");
+            }, 5000);
+            setPassSubmitting(false)
+            return;
+        }
+
         if (password.length > 0) {
             if (confirmPassword != password) {
                 setPasswordError(" Password Does not match!")
