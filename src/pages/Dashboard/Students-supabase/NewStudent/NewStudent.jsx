@@ -40,7 +40,6 @@ import { getFileObjectFromBlobUrl } from '../../../../utils/utils';
 import '../../../../styles/Students.scss';
 import '../../../../styles/Common.scss';
 import PhoneInputField from '../../../../components/Input/PhoneInput';
-
 const MySwal = withReactContent(Swal);
 
 const NewStudent = () => {
@@ -466,15 +465,8 @@ const NewStudent = () => {
                 window.copyToClipboard = (inputId) => {
                     const input = document.getElementById(inputId);
                     navigator.clipboard.writeText(input.value).then(() => {
-                        // Swal.fire({
-                        //     toast: true,
-                        //     position: 'top-end',
-                        //     icon: 'success',
-                        //     title: 'Copied to clipboard',
-                        //     showConfirmButton: false,
-                        //     timer: 1000,
-                        // });
-                        alert("Password Copied!")
+                        toast.success('Copied to clipboard!');
+                   
                     });
                 };
             },

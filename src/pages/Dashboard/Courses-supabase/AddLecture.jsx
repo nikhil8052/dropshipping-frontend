@@ -402,7 +402,6 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
             setResources([...resources, resource]);
         }
 
-        // ✅ Reset state after done
         setModalShow(false);
         setEditResource(false);
         setEditResourceID(null);
@@ -895,7 +894,7 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
             const lectureData = await getLectureData(lecture.id);
             setRightViewLecture(lectureData.data);
 
-            console.log('Lecture data:', lectureData); // Optionally log for debugging
+         
 
         } catch (error) {
             // Handle any errors that occur during the fetch
@@ -1003,10 +1002,6 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
             return;
         }
 
-
-        return ; 
-        
-        // NEW: Handle topic reordering
         if (source.droppableId === 'topics-container' && destination.droppableId === 'topics-container') {
             const newTopics = [...topics];
             const [movedTopic] = newTopics.splice(source.index, 1);
@@ -1018,6 +1013,7 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
             updateTopicSequences(newTopics);
             return;
         }
+
 
         // Reordering within unassigned lectures
         if (
@@ -1085,11 +1081,9 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
         if (source.droppableId.startsWith('topic-') && destination.droppableId.startsWith('topic-')) {
             const sourceTopicIndex = parseInt(source.droppableId.split('-')[1]);
             const destTopicIndex = parseInt(destination.droppableId.split('-')[1]);
-
             if (sourceTopicIndex === destTopicIndex && source.index === destination.index) {
                 return;
             }
-
             const newTopics = [...topics];
             const movedLecture = newTopics[sourceTopicIndex].lectures[source.index];
 
@@ -1101,11 +1095,8 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
             const folder_id = newTopics[destTopicIndex].id;
             const lecture_id = movedLecture.id;
             moveLectureDND(lecture_id, folder_id);
-
             setTopics(newTopics);
-
             updateLectureSequences(newTopics[destTopicIndex].lectures);
-
             // Also update source topic if lecture was moved out of it
             if (sourceTopicIndex !== destTopicIndex) {
                 updateLectureSequences(newTopics[sourceTopicIndex].lectures);
@@ -1122,12 +1113,12 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
                 order_id: index + 1, // Adjust according to your sequence format
             }));
 
-            let topics = topicSequenceData ; 
-      
+            let topics = topicSequenceData;
+
             let ENDPOINT = API_URL.SUPABASE_UPDATE_TOPIC_SEQUENCE
             const response = await axiosWrapper('PUT', ENDPOINT, { topics }, token);
 
-            
+
         } catch (error) {
             console.error('Error updating topic sequences:', error);
             // Handle error appropriately
@@ -1581,7 +1572,7 @@ const AddNewLecture = ({ onNext, onBack, initialData, setStepComplete, updateCou
                                                                                             >
                                                                                                 {/* Topic Header */}
                                                                                                 <div
-                                                                                                    className="drop-box"
+                                                                                                    className="drop-box topic_box"
                                                                                                     onClick={(e) => {
                                                                                                         if (!e.target.closest('.editable-text')) {
                                                                                                             toggleFolder(topicIndex);

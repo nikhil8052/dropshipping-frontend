@@ -2069,14 +2069,14 @@ label.custom_check span {
     }
 }
 
-.admin-left-sec .course-left .folder-detail > div .drop-box {
+.admin-left-sec .course-left .folder-detail > div .topic_box {
     display: flex;
     justify-content: start;
     position: relative;
 }
 
 
-.admin-left-sec .course-left .folder-detail > div .drop-box  >div:last-child {
+.admin-left-sec .course-left .folder-detail > div .topic_box  >div:last-child {
     position: absolute;
     right: 20px;
 }
@@ -2240,3 +2240,6 @@ label.custom_check span {
     box-shadow: none !important;
      
 }
+
+
+.detail-box ul li .drop-box{}
