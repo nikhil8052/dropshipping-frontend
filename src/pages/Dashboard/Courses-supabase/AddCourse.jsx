@@ -135,6 +135,8 @@ const AddNewCourse = () => {
             //         token
             //       );
             // }
+
+       
             const description = textParser(data.description);
 
             // Map categories to { label, value } format
