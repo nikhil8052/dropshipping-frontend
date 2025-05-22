@@ -59,6 +59,8 @@ const NewStudent = () => {
     const [passwordError, setPasswordError] = useState("");
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
+    const [passSubmitting, setPassSubmitting] = useState(false);
+
 
     const [passwordModal, setPasswordModal] = useState(false)
     // const [isRefetch, setIsRefetch] = useState(false);
@@ -474,8 +476,9 @@ const NewStudent = () => {
         }
     };
 
-    const handlePasswordSubmit = async  () => {
+    const handlePasswordSubmit = async () => {
 
+        setPassSubmitting(true)
         if (password.length > 0) {
             if (confirmPassword != password) {
                 setPasswordError(" Password Does not match!")
@@ -483,6 +486,8 @@ const NewStudent = () => {
                     setPasswordError("");
                 }, 5000);
                 console.error(" Error not matchedc the password ")
+                setPassSubmitting(false)
+
                 return;
             }
         }
@@ -496,10 +501,16 @@ const NewStudent = () => {
         }
         try {
             await axiosWrapper(method, url, formData, token);
-       
+
+            setPassSubmitting(false)
+
             closeModal();
         } catch (error) {
-           
+            setPassSubmitting(false)
+
+        } finally {
+            setPassSubmitting(false)
+
         }
 
     };
@@ -1101,7 +1112,7 @@ const NewStudent = () => {
                                             />
                                         </Col>
                                     </Row>
-                              
+
                                 </div>
 
                                 {/* <Row>
@@ -1196,7 +1207,7 @@ const NewStudent = () => {
                                                 type="button"
 
                                                 onClick={() => setPasswordModal(true)}
-                                                className="cancel-btn"
+                                                className="submit-btn"
 
                                             >
                                                 Change password
@@ -1235,7 +1246,7 @@ const NewStudent = () => {
                         />
                     )}
 
-                    <BootstrapModal  show={passwordModal} size="medium" centered>
+                    <BootstrapModal show={passwordModal} size="medium" centered>
                         <BootstrapModal.Header >
                             <BootstrapModal.Title className="modal-title">Change Password</BootstrapModal.Title>
                         </BootstrapModal.Header>
@@ -1309,11 +1320,11 @@ const NewStudent = () => {
 
                         </BootstrapModal.Body>
                         <BootstrapModal.Footer>
-                            <Button variant="secondary" onClick={closeModal}>
+                            <Button className='cancel-btn cancel-btn-pass' onClick={closeModal}>
                                 Close
                             </Button>
-                            <Button variant="primary" onClick={handlePasswordSubmit}>
-                                Submit
+                            <Button className='submit-btn' onClick={handlePasswordSubmit}>
+                                {passSubmitting ? "Updating..." : "Submit"}
                             </Button>
                         </BootstrapModal.Footer>
 
