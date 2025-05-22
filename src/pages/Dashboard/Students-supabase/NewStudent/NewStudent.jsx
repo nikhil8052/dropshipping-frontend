@@ -15,7 +15,8 @@ import StudentCourseCategory from './StudentCourseCategory';
 import imagePreview2 from '../../../../assets/icons/Thumbnail.svg';
 import { faEye, faEyeSlash, faCopy } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-
+import withReactContent from 'sweetalert2-react-content';
+import Swal from 'sweetalert2';
 import {
     Row,
     Col,
@@ -39,6 +40,8 @@ import { getFileObjectFromBlobUrl } from '../../../../utils/utils';
 import '../../../../styles/Students.scss';
 import '../../../../styles/Common.scss';
 import PhoneInputField from '../../../../components/Input/PhoneInput';
+
+const MySwal = withReactContent(Swal);
 
 const NewStudent = () => {
     const inputRef = useRef();
@@ -225,29 +228,10 @@ const NewStudent = () => {
         let formData = { ...values, avatar: studentPhoto, category: values.category.map((cat) => cat.value) };
 
 
-        const strongPasswordRegex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[ !"#$%&'()*+,-./:;<=>?@[\\\]^_`{|}~¡¢£¤¥¦§¨©ª«¬®ˉ°±²³´µ¶¸¹º»¼½¾¿ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖ×ØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõö÷øùúûüýþÿ])[A-Za-z\d !"#$%&'()*+,-./:;<=>?@[\\\]^_`{|}~¡¢£¤¥¦§¨©ª«¬®ˉ°±²³´µ¶¸¹º»¼½¾¿ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖ×ØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõö÷øùúûüýþÿ]{4,20}$/;
-
-        if (formData.password?.length > 0) {
-           
-            if (!strongPasswordRegex.test(formData.password.trim())) {
-                setPasswordError("Password is not strong. Please fill in a strong password (letters, numbers & symbols).");
-                setTimeout(() => setPasswordError(""), 5000);
-                return;
-            }
-
-            if (formData.confirm_password !== formData.password) {
-                setPasswordError("Password does not match!");
-                setTimeout(() => setPasswordError(""), 5000);
-                return;
-            }
+        if (studentId) {
+            const { email, ...rest } = formData;
+            formData = rest;
         }
-
-        delete formData.confirm_password;
-
-        // if (studentId) {
-        //     const { email, ...rest } = formData;
-        //     formData = rest;
-        // }
 
 
         const url = studentId
@@ -406,6 +390,147 @@ const NewStudent = () => {
     const handleCopy = (field) => {
         navigator.clipboard.writeText(values[field] || '');
     };
+
+    const passwordChangePopUp = () => {
+        MySwal.fire({
+            title: 'Change Password',
+            html: (
+                <div className="flex flex-col gap-2 items-start">
+                    <div className="relative w-full ">
+                        <input
+                            type="password"
+                            id="new-password"
+                            placeholder="New Password"
+                            className="swal2-input pr-10"
+                        />
+                   
+                            <FontAwesomeIcon
+                                icon={faEye}
+                                className="absolute top-1/2 right-8 transform -translate-y-1/2 cursor-pointer"
+                                onClick={() => toggleVisibility('new-password', 'eye-icon')}
+                                id="eye-icon"
+                            />
+                            <FontAwesomeIcon
+                                icon={faCopy}
+                                className="absolute top-1/2 right-2 transform -translate-y-1/2 cursor-pointer"
+                                onClick={() => copyToClipboard('new-password')}
+                            />
+                   
+
+                    </div>
+
+                    <div className="relative w-full ">
+                        <input
+                            type="password"
+                            id="confirm-password"
+                            placeholder="Confirm New Password"
+                            className="swal2-input pr-10"
+                        />
+                     
+                            <FontAwesomeIcon
+                                icon={faEye}
+                                className="mr-3 absolute top-1/2 right-8 transform -translate-y-1/2 cursor-pointer"
+                                onClick={() => toggleVisibility('confirm-password', 'eye-icon-confirm')}
+                                id="eye-icon-confirm"
+                            />
+                            <FontAwesomeIcon
+                                icon={faCopy}
+                                className="absolute top-1/2 right-2 transform -translate-y-1/2 cursor-pointer"
+                                onClick={() => copyToClipboard('confirm-password')}
+                            />
+                   
+
+                    </div>
+                </div>
+            ),
+            focusConfirm: false,
+            didOpen: () => {
+                // Add toggle and copy logic
+                window.toggleVisibility = (inputId, iconId) => {
+                    const input = document.getElementById(inputId);
+                    const icon = document.getElementById(iconId);
+                    if (input.type === 'password') {
+                        input.type = 'text';
+                        icon.classList.remove('fa-eye');
+                        icon.classList.add('fa-eye-slash');
+                    } else {
+                        input.type = 'password';
+                        icon.classList.remove('fa-eye-slash');
+                        icon.classList.add('fa-eye');
+                    }
+                };
+
+                window.copyToClipboard = (inputId) => {
+                    const input = document.getElementById(inputId);
+                    navigator.clipboard.writeText(input.value).then(() => {
+                        Swal.fire({
+                            toast: true,
+                            position: 'top-end',
+                            icon: 'success',
+                            title: 'Copied to clipboard',
+                            showConfirmButton: false,
+                            timer: 1000,
+                        });
+                    });
+                };
+            },
+            preConfirm: () => {
+                const password = document.getElementById('new-password').value;
+                const confirm = document.getElementById('confirm-password').value;
+                if (!password || !confirm) {
+                    Swal.showValidationMessage('All fields are required');
+                    return false;
+                }
+                const strongPasswordRegex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[ !"#$%&'()*+,-./:;<=>?@[\\\]^_`{|}~¡¢£¤¥¦§¨©ª«¬®ˉ°±²³´µ¶¸¹º»¼½¾¿ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖ×ØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõö÷øùúûüýþÿ])[A-Za-z\d !"#$%&'()*+,-./:;<=>?@[\\\]^_`{|}~¡¢£¤¥¦§¨©ª«¬®ˉ°±²³´µ¶¸¹º»¼½¾¿ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖ×ØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõö÷øùúûüýþÿ]{4,20}$/;
+                if (!strongPasswordRegex.test(password.trim())) {
+                    Swal.showValidationMessage('Password is not strong. Use letters, numbers & symbols.');
+                    return false;
+                }
+                if (confirm !== password) {
+                    Swal.showValidationMessage('Passwords do not match!');
+                    return false;
+                }
+                return { password, confirm };
+            },
+            showCancelButton: true,
+            confirmButtonText: 'Change Password',
+        }).then(async (result) => {
+            if (result.isConfirmed) {
+
+                Swal.fire({
+                    title: 'Updating...',
+                    allowOutsideClick: false,
+                    didOpen: () => {
+                        Swal.showLoading();
+                    },
+                });
+
+                const { password } = result.value;
+
+                const url = studentId
+                    ? `${API_URL.SUPABASE_UPDATE_STUDENT.replace(':id', studentId)}`
+                    : API_URL.SUPABASE_CREATE_STUDENT;
+                const method = studentId ? 'PUT' : 'POST';
+
+                const formData = {
+                    email: studentData.email,
+                    name: studentData.name,
+                    password: password
+
+                }
+                try {
+                    await axiosWrapper(method, url, formData, token);
+                    Swal.fire('Success', 'Password changed successfully!', 'success');
+
+                } catch (error) {
+                    Swal.fire('Error', error);
+                }
+
+
+            }
+        });
+
+    }
 
     return (
         <div className="new-student-page-wrapper">
@@ -718,71 +843,6 @@ const NewStudent = () => {
                                             <ErrorMessage name="category" component="div" className="error" />
                                         </Col>
                                     </Row>
-                                    {
-                                        studentId && (
-                                            <>
-                                                <Row>
-                                                    <Col md={6} xs={12} className="form-group">
-                                                        <label className="field-label">Password</label>
-                                                        <div className="position-relative">
-                                                            <Field
-                                                                name="password"
-                                                                className="field-control pe-5"
-                                                                type={showPassword ? 'text' : 'password'}
-                                                                placeholder="Enter password"
-                                                            />
-                                                            {/* Eye Icon */}
-                                                            <FontAwesomeIcon
-                                                                icon={showPassword ? faEyeSlash : faEye}
-                                                                onClick={() => setShowPassword(!showPassword)}
-                                                                className="position-absolute top-50 end-0 translate-middle-y me-3"
-                                                                color="#6c757d"
-                                                                style={{ cursor: 'pointer', zIndex: 2 }}
-                                                            />
-                                                            {/* Copy Icon */}
-                                                            <FontAwesomeIcon
-                                                                icon={faCopy}
-                                                                onClick={() => handleCopy('password')}
-                                                                className="position-absolute top-50 end-0 translate-middle-y me-5"
-                                                                color="#6c757d"
-                                                                style={{ cursor: 'pointer', zIndex: 2 }}
-                                                            />
-                                                        </div>
-                                                    </Col>
-
-                                                    <Col md={6} xs={12} className="form-group">
-                                                        <label className="field-label">Confirm Password</label>
-                                                        <div className="position-relative">
-                                                            <Field
-                                                                name="confirm_password"
-                                                                className="field-control pe-5"
-                                                                type={showConfirmPassword ? 'text' : 'password'}
-                                                                placeholder="Enter confirm password"
-                                                            />
-                                                            {/* Eye Icon */}
-                                                            <FontAwesomeIcon
-                                                                icon={showConfirmPassword ? faEyeSlash : faEye}
-                                                                onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                                                                className="position-absolute top-50 end-0 translate-middle-y me-3"
-                                                                color="#6c757d"
-                                                                style={{ cursor: 'pointer', zIndex: 2 }}
-                                                            />
-                                                            {/* Copy Icon */}
-                                                            <FontAwesomeIcon
-                                                                icon={faCopy}
-                                                                onClick={() => handleCopy('confirm_password')}
-                                                                className="position-absolute top-50 end-0 translate-middle-y me-5"
-                                                                color="#6c757d"
-                                                                style={{ cursor: 'pointer', zIndex: 2 }}
-                                                            />
-                                                        </div>
-                                                        <div className="error mt-3 lh-base ">{passwordError}</div>
-                                                    </Col>
-                                                </Row>
-                                            </>
-                                        )
-                                    }
-
 
                                 </div>
 
@@ -814,6 +874,14 @@ const NewStudent = () => {
                                             >
                                                 Cancel
                                             </Button>
+                                            {
+                                                studentId && (
+                                                    <Button type="button" className="submit-btn" onClick={() => passwordChangePopUp()}>
+                                                        Change Password
+                                                    </Button>
+                                                )
+                                            }
+
                                             <Button type="submit" className="submit-btn" disabled={isSubmitting}>
                                                 {isSubmitting
                                                     ? studentId
