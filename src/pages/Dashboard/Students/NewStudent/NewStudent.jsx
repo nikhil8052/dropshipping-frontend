@@ -505,7 +505,7 @@ const NewStudent = () => {
     };
 
     return (
-        <div className="new-student-page-wrapper">
+        <div className="new-student-page-wrapper new_css_student">
             <div className="title-top">
                 <span onClick={() => navigate(`/${role}/students`)} style={{ cursor: 'pointer' }}>
                     Students <img src={CaretRight} alt=">" />
@@ -1235,11 +1235,11 @@ const NewStudent = () => {
                         />
                     )}
 
-                    <BootstrapModal show={passwordModal} size="medium" centered>
-                        <BootstrapModal.Header closeButton>
+                    <BootstrapModal  show={passwordModal} size="medium" centered>
+                        <BootstrapModal.Header >
                             <BootstrapModal.Title className="modal-title">Change Password</BootstrapModal.Title>
                         </BootstrapModal.Header>
-                        <BootstrapModal.Body className="modal-content">
+                        <BootstrapModal.Body className="modal-content chnage_pass">
                             <Row>
                                 {/* Password Field */}
                                 <Col md={12} xs={12}>

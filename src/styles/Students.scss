@@ -257,3 +257,32 @@
     max-height: 35px;
     overflow-y: scroll !important;
 }
+
+
+
+// date- 22may 
+.chnage_pass label.field-label {
+    color: #000 !important;
+}
+
+.chnage_pass input {
+    background-color: #fff !important;
+    border: 1.5px solid #000 !important;
+    color: #000;
+}
+
+.chnage_pass input::placeholder{
+    color: #a1acb1 !important;
+}
+
+.chnage_pass svg {
+    position: absolute;
+    content: "";
+    transform: translateY(calc(-100% + -7px)) !important;
+}
+
+.chnage_pass input:focus{
+    background-color: #fff !important;
+    border: 1.5px solid #000 !important;
+    color: #000 !important;
+}
