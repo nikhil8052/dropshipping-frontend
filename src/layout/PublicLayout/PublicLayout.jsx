@@ -9,6 +9,7 @@ const PublicLayout = () => {
     const navigate = useNavigate();
     const location = useLocation();
     const isRedirectUrl = location.pathname.includes('redirect');
+    const isAuthSuperbase = location.pathname === '/auth-superbase';
 
     useEffect(() => {
         if (isLoggedIn && !isRedirectUrl) {
@@ -16,7 +17,7 @@ const PublicLayout = () => {
             else if (role === 'COACH') navigate('/coach');
             else if (role === 'STUDENT') navigate('/student/courses');
         } else if (isLoggedIn && isRedirectUrl) {
-            // also set the state if any in the url
+           
             navigate(location.pathname + location.search);
         } else {
             navigate('/login');
@@ -24,13 +25,13 @@ const PublicLayout = () => {
     }, [isLoggedIn, role, isRedirectUrl]);
 
     return (
-<div className='layout_public'>
-<React.Fragment>
-            <Suspense fallback={<Loading centered />}>
-                <Outlet />
-            </Suspense>
-        </React.Fragment>
-</div>
+        <div className='layout_public'>
+            <React.Fragment>
+                <Suspense fallback={<Loading centered />}>
+                    <Outlet />
+                </Suspense>
+            </React.Fragment>
+        </div>
     );
 };
 

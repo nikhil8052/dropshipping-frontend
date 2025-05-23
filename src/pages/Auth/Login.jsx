@@ -13,6 +13,7 @@ import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import './auth.scss';
 import Rightloginimg from '@images/rightimg2.png'
+import { supabase } from '../../utils/superbase.js';
 
 const Login = () => {
     const dispatch = useDispatch();
@@ -25,6 +26,41 @@ const Login = () => {
         email: '',
         password: ''
     };
+
+    useEffect(() => {
+        const checkAuth = async () => {
+            try {
+                const { data: { session }, error } = await supabase.auth.getSession();
+                if (error) throw error;
+                if (session) {
+                    console.log("Active session found:", session.user.email);
+                    handleAlreadyAuthenticated(session.user);
+                    return;
+                }
+                const { data: { user } } = await supabase.auth.getUser();
+                if (user) {
+                    console.log("User found:", user.email);
+                    handleAlreadyAuthenticated(user);
+                    return;
+                }
+
+                console.log("No active session found");
+            } catch (error) {
+                console.error("Auth check error:", error.message);
+            }
+        };
+
+        checkAuth();
+
+    }, []);
+
+
+    const handleAlreadyAuthenticated = (user) => {
+        console.log("Handling already authenticated user:", user.email);
+        // Add any additional logic you want to execute
+    };
+
+
 
     const validationSchema = Yup.object().shape({
         email: Yup.string()
@@ -64,6 +100,22 @@ const Login = () => {
         setShowPassword(!showPassword);
     };
 
+    const handleGoogleLogin = async () => {
+        const { test } = await supabase.auth.signOut();
+
+        const { error } = await supabase.auth.signInWithOAuth({
+            provider: 'google',
+            options: {
+                redirectTo: window.location.origin + '/auth-superbase'
+            }
+        });
+        if (error) {
+            console.error('Google login error:', error.message);
+        }
+    };
+
+
+
     return (
         <React.Fragment>
             <Helmet>
@@ -81,6 +133,7 @@ const Login = () => {
                                 <div className="auth-form-data">
                                     <h1 className="auth-title ">Login</h1>
                                     <h3 className="auth-form-title">Please enter your account details.</h3>
+                                    <button onClick={handleGoogleLogin}>Login with Google</button>
                                     <Formik
                                         initialValues={inititialValues}
                                         validationSchema={validationSchema}
@@ -129,12 +182,12 @@ const Login = () => {
                                             </FormikForm>
                                         )}
                                     </Formik>
-                                    
+
                                 </div>
                             </div>
                         </div>
                         <div className='copyright'>
-                        <Footer />
+                            <Footer />
                         </div>
                     </div>
                 </div>
