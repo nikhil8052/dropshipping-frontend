@@ -22,23 +22,6 @@ import { adminSidebarItems, coachSidebarItems, studentSidebarItems } from './sid
 import { getFormattedTimes, trimLongText } from '../../../utils/common';
 
 const Sidebar = () => {
-
-    // useEffect(() => {
-    //     const setRealHeight = () => {
-    //         const vh = window.innerHeight * 0.01;
-    //         document.documentElement.style.setProperty('--dvh', `${vh}px`);
-    //     };
-
-    //     setRealHeight();
-    //     window.addEventListener('resize', setRealHeight);
-    //     window.addEventListener('orientationchange', setRealHeight);
-
-    //     return () => {
-    //         window.removeEventListener('resize', setRealHeight);
-    //         window.removeEventListener('orientationchange', setRealHeight);
-    //     };
-    // }, []);
-
     const dispatch = useDispatch();
     const token = useSelector((state) => state?.auth?.userToken);
     const collapsed = useSelector((state) => state.theme.collapsed);
@@ -55,14 +38,14 @@ const Sidebar = () => {
     const sideBarStudentEventModal = role === 'STUDENT';
 
     const updateSidebarItems = useCallback(() => {
-        const items = 
-            role === 'ADMIN' ? [...adminSidebarItems] : 
-            role === 'COACH' ? [...coachSidebarItems] : 
-            [...studentSidebarItems];
-      
-        // if (role === 'STUDENT' && userInfo?.roadMap && userInfo?.roadmapAccess === true) {
-            if (role === 'STUDENT' && userInfo?.roadMap && userInfo?.roadmapAccess == 'true') {
-      
+        const items =
+            role === 'ADMIN' ? [...adminSidebarItems] :
+                role === 'COACH' ? [...coachSidebarItems] :
+                    [...studentSidebarItems];
+
+    
+        if (role === 'STUDENT' && userInfo?.roadMap && userInfo?.roadmapAccess == 'true') {
+
             const roadmapItem = {
                 id: 'roadmap',
                 name: 'Routekaart',
@@ -84,27 +67,13 @@ const Sidebar = () => {
         updateSidebarItems();
     }, [updateSidebarItems]);
 
-    const getUpcomingEvent = useCallback(async () => {
-        if (!sideBarStudentEventModal) return;
-        
-        try {
-            const response = await axiosWrapper('GET', API_URL.GET_UPCOMING_EVENTS, {}, token);
-            setEventData(response.data[0] || {});
-        } catch (error) {
-            console.error('Error fetching upcoming events:', error);
-        }
-    }, [sideBarStudentEventModal, token]);
-
-    useEffect(() => {
-        // getUpcomingEvent();
-    }, [getUpcomingEvent]);
 
     const selectActiveItem = useCallback(() => {
         if (!updatedItems.length) return;
 
         const findActiveItem = (items) => {
             for (const item of items) {
-                if (location.pathname === item.linkTo || 
+                if (location.pathname === item.linkTo ||
                     (item.linkTo !== '/' && location.pathname.startsWith(`${item.linkTo}/`))) {
                     return item;
                 }
@@ -148,13 +117,7 @@ const Sidebar = () => {
         setModalShow(!modalShow);
     };
 
-    const handleButtonClick = () => {
-        if (eventData?.typeOfEvent === 'ONLINE') {
-            window.open(eventData?.meetingLink, '_blank');
-        } else if (eventData?.location) {
-            window.open(eventData?.location, '_blank');
-        }
-    };
+
 
     return (
         <React.Fragment>
@@ -213,45 +176,6 @@ const Sidebar = () => {
                                     )
                                 )}
                             </Nav>
-
-                            {/* {sideBarStudentEventModal && eventData && (
-                                <div className="side-bar-event">
-                                    <Card className="custom-event-card">
-                                        <Card.Header className="d-flex flex-column align-items-start">
-                                            <div className="d-flex align-items-center mb-2 w-100">
-                                                <div className="calendar-icon me-2"></div>
-                                                <Card.Text className="mb-0 text-start text-nowrap">
-                                                    Upcoming Event
-                                                </Card.Text>
-                                            </div>
-                                            <div className="d-flex align-items-center justify-content-center w-100">
-                                                <Card.Text className="mb-0 text-nowrap">
-                                                    <img src={dotBlue} alt="Dot" /> {trimLongText(eventData?.topic, 15)}
-                                                </Card.Text>
-                                            </div>
-                                        </Card.Header>
-                                        <Card.Body>
-                                            <div className="d-flex align-items-center justify-content-between mb-2 px-2">
-                                                <Card.Text className="mb-0 event-time">
-                                                    {getFormattedTimes(eventData?.dateTime).startTime}
-                                                </Card.Text>
-                                                <div className="exchange-icon"></div>
-                                                <Card.Text className="mb-0 event-time">
-                                                    {getFormattedTimes(eventData?.dateTime).endTime}
-                                                </Card.Text>
-                                            </div>
-                                            <Button 
-                                                onClick={handleButtonClick} 
-                                                className="w-100 mt-3 zoom-btn"
-                                                disabled={!eventData?.meetingLink && !eventData?.location}
-                                            >
-                                                <div className="zoom-icon me-2"></div>
-                                                {eventData?.typeOfEvent === 'ONLINE' ? 'Go to Zoom link' : 'View Location'}
-                                            </Button>
-                                        </Card.Body>
-                                    </Card>
-                                </div>
-                            )} */}
                         </div>
 
                         <div className={`side-bar-btm ${sideBarStudentEventModal ? 'remove-auto' : ''}`}>

@@ -227,7 +227,13 @@ input[type='radio']:checked {
 .main-panel:has(.students-page) input,.main-panel:has(.students-page) .form-select,.main-panel:has(.students-page)  .form-control {
     background-color: #fff !important;
 }
+.main-panel{
+    background-color: #fff !important;
 
+}
+.main-content-wrapper{
+    background-color: #fff !important;
+}
 .swal2-container * {
     font-family: "Montserrat" !important;
 }

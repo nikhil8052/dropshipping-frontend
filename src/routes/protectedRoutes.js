@@ -34,6 +34,10 @@ const AllStudentsSupabase = lazy(() => import('@pages/Dashboard/Courses-supabase
 const ViewProgress = lazy(() => import('@pages/Dashboard/Courses/ViewProgress'));
 const CallBack = lazy(() => import('@pages/Auth/Callback'));
 
+
+// Now are the routes for the v2 
+const V2Dashboard = lazy(() => import('@pages/Dashboard/Dashboard/v2/Dashboard'));
+
 export const adminRoutes = [
     {
         index: true,
@@ -277,7 +281,17 @@ export const adminRoutes = [
         name: 'EventsCallback',
         Component: CallBack,
         access: 'ADMIN'
-    }
+    },
+
+    // V2 Routes 
+    {
+        path: 'v2',
+        exact: true,
+        name: 'V2Dashboard',
+        Component: V2Dashboard,
+        access: 'ADMIN'
+    },
+
 ];
 export const coachesRoutes = [
     {
