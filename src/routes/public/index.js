@@ -8,12 +8,21 @@ const VerificationCode = lazy(() => import('@pages/Auth/VerificationCode'));
 const ResetPassword = lazy(() => import('@pages/Auth/ResetPassword'));
 const CallBack = lazy(() => import('@pages/Auth/Callback'));
 
+const AuthSuperbase = lazy(() => import('@pages/Auth/AuthSuperbase'));
+
 const publicRoutes = [
     {
         path: 'login',
         exact: true,
         name: 'Login',
         Component: Login,
+        access: 'public'
+    },
+    {
+        path: 'auth/callback',
+        exact: true,
+        name: 'Auth',
+        Component: AuthSuperbase,
         access: 'public'
     },
     {

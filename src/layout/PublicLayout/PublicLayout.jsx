@@ -9,6 +9,8 @@ const PublicLayout = () => {
     const navigate = useNavigate();
     const location = useLocation();
     const isRedirectUrl = location.pathname.includes('redirect');
+    const isAuthUrl = location.pathname.includes('auth/callback');
+
 
     useEffect(() => {
         if (isLoggedIn && !isRedirectUrl) {
@@ -19,7 +21,10 @@ const PublicLayout = () => {
         } else if (isLoggedIn && isRedirectUrl) {
             // also set the state if any in the url
             navigate(location.pathname + location.search);
-        } else {
+        } else if(isAuthUrl){
+            navigate(location.pathname + location.search);
+        }
+            else{
             navigate('/login');
         }
     }, [isLoggedIn, role, isRedirectUrl]);

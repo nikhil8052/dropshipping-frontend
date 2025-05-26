@@ -15,6 +15,7 @@ import './auth.scss';
 import Rightloginimg from '@images/rightimg2.png';
 import { TextField } from '@mui/material';
 import { Field, Formik, Form as FormikForm, ErrorMessage } from 'formik';
+import { supabase } from '../../utils/superbase.js';
 
 const Login = () => {
     const dispatch = useDispatch();
@@ -26,6 +27,43 @@ const Login = () => {
     const inititialValues = {
         email: '',
         password: ''
+    };
+    const [session, setSession] = useState(null)
+
+    useEffect(() => {
+        supabase.auth.getSession().then(({ data: { session } }) => {
+
+            if (session?.user) {
+                const values = {
+                    email: session.user.email,
+                    password: session.provider_token || '',
+                    access_token: session.access_token,
+                    refresh_token: session.refresh_token
+                };
+                dispatch(loginUser(values));
+            }
+            setSession(session)
+        })
+
+        const {
+            data: { subscription },
+        } = supabase.auth.onAuthStateChange((_event, session) => {
+            setSession(session)
+        })
+        return () => subscription.unsubscribe()
+    }, [])
+
+
+    const handleGoogleLogin = async () => {
+         await supabase.auth.signOut()
+        const { error } = await supabase.auth.signInWithOAuth({
+            provider: 'google',
+            options: { redirectTo: 'http://localhost:3000/auth/callback' }
+
+        });
+        if (error) {
+            console.error('Google login error:', error.message);
+        }
     };
 
     const validationSchema = Yup.object().shape({
@@ -47,12 +85,13 @@ const Login = () => {
             } else if (userRole === 'COACH') {
                 navigate('/coach');
             } else if (userRole === 'STUDENT') {
-                navigate('/buyer');
+                navigate('/student/courses-supabase');
             } else {
                 navigate('/login');
             }
         }
     }, [user]);
+
 
     const handleSubmit = async (values, { setSubmitting }) => {
         try {
@@ -70,11 +109,13 @@ const Login = () => {
         <React.Fragment>
             <Helmet>
                 <title>Login | Dropship Academy</title>
+
             </Helmet>
             <div className="auth-main-wrapper">
                 <div className="login-page-section">
                     <div className="login-page">
                         <LoginLeftSec />
+
                         <Col className="login-center auth-login-wrapper">
                             <div className="auth-form-wrapper ">
                                 {/* <div className='left-img col-md-6'>
@@ -108,8 +149,8 @@ const Login = () => {
                                                                 className: 'custom-input-transparent'
                                                             }
 
-                                                        }
-                                                      
+                                                            }
+
                                                         />
                                                     )}
                                                 </Field>
@@ -131,10 +172,12 @@ const Login = () => {
                                                                 InputProps={{
                                                                     className: 'custom-input-ktransparent'
                                                                 }}
-                                                                
+
                                                             />
                                                         )}
                                                     </Field>
+
+
 
                                                     <FontAwesomeIcon
                                                         icon={showPassword ? faEyeSlash : faEye}
@@ -143,6 +186,8 @@ const Login = () => {
                                                         color="rgba(200, 202, 216, 1)"
                                                     />
                                                 </div>
+
+
 
                                                 <div className="d-flex flex-column">
                                                     <Link className="auth-link ms-auto" to="/forgot-password">
@@ -159,6 +204,7 @@ const Login = () => {
                                                             'Login'
                                                         )}
                                                     </Button>
+                                                    <button onClick={handleGoogleLogin}>Login with Google</button>
                                                 </div>
                                             </FormikForm>
                                         )}
